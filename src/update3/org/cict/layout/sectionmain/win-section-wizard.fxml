@@ -288,376 +288,380 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox fx:id="vbox_multi" maxHeight="1.7976931348623157E308" prefWidth="695.0" spacing="40.0">
+            <StackPane fx:id="stack_multi">
                <children>
-                  <VBox prefWidth="663.0" spacing="20.0">
+                  <VBox fx:id="vbox_multi" maxHeight="1.7976931348623157E308" prefWidth="695.0" spacing="40.0">
                      <children>
-                        <HBox>
+                        <VBox prefWidth="663.0" spacing="20.0">
                            <children>
-                              <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../section_images/bullet_section.png" />
-                                 </image>
-                              </ImageView>
-                              <Label graphicTextGap="10.0" styleClass="metro-title-33" text="Automatic Section Creation" textFill="WHITE" wrapText="true">
-                                 <font>
-                                    <Font size="33.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets left="10.0" />
-                                 </padding>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <Label fx:id="lbl_auto_term" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="My Semester" textFill="WHITE">
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                                 <graphic>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <HBox>
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../section_images/calendar_white.png" />
+                                          <Image url="@../section_images/bullet_section.png" />
                                        </image>
                                     </ImageView>
-                                 </graphic>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets top="-20.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets left="58.0" />
-                           </padding>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../section_images/arrow_right_fill.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label prefHeight="50.0" prefWidth="942.0" text="Create sections automatically by checking the selected year levels and assigning a given range of sections. You can include Internship sections alongside with the regular sections. Options and choices may differ based on curriculum types" wrapText="true">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="20.0" />
-                                 </HBox.margin>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <VBox spacing="10.0">
-                                 <children>
-                                    <HBox spacing="20.0">
-                                       <children>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../section_images/arrow_right_fill.png" />
-                                             </image>
-                                             <HBox.margin>
-                                                <Insets left="10.0" />
-                                             </HBox.margin>
-                                          </ImageView>
-                                          <JFXCheckBox fx:id="chk_first" checkedColor="WHITE" prefWidth="210.0" text="Include 1st Year" textFill="WHITE" unCheckedColor="WHITE">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets left="-10.0" />
-                                             </HBox.margin>
-                                          </JFXCheckBox>
-                                       </children>
-                                    </HBox>
-                                    <HBox fx:id="hbox_first" spacing="20.0">
-                                       <children>
-                                          <Label text="From">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_first_from" prefWidth="150.0" styleClass="metro-combo-box" />
-                                          <Label text="To">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_first_to" prefWidth="150.0" styleClass="metro-combo-box" />
-                                       </children>
+                                    <Label graphicTextGap="10.0" styleClass="metro-title-33" text="Automatic Section Creation" textFill="WHITE" wrapText="true">
+                                       <font>
+                                          <Font size="33.0" />
+                                       </font>
                                        <padding>
-                                          <Insets left="60.0" />
+                                          <Insets left="10.0" />
                                        </padding>
-                                    </HBox>
+                                    </Label>
                                  </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                        <HBox spacing="30.0">
-                           <children>
-                              <VBox spacing="10.0">
+                              </HBox>
+                              <HBox>
                                  <children>
-                                    <HBox spacing="20.0">
-                                       <children>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                    <Label fx:id="lbl_auto_term" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="My Semester" textFill="WHITE">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../section_images/arrow_right_fill.png" />
+                                                <Image url="@../section_images/calendar_white.png" />
                                              </image>
-                                             <HBox.margin>
-                                                <Insets left="10.0" />
-                                             </HBox.margin>
                                           </ImageView>
-                                          <JFXCheckBox fx:id="chk_second" checkedColor="WHITE" prefWidth="210.0" text="Include 2nd Year" textFill="WHITE" unCheckedColor="WHITE">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets left="-10.0" />
-                                             </HBox.margin>
-                                          </JFXCheckBox>
-                                       </children>
-                                    </HBox>
-                                    <HBox fx:id="hbox_second" spacing="20.0">
-                                       <children>
-                                          <Label text="From">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_second_from" prefWidth="150.0" styleClass="metro-combo-box" />
-                                          <Label text="To">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_second_to" prefWidth="150.0" styleClass="metro-combo-box" />
-                                       </children>
-                                       <padding>
-                                          <Insets left="60.0" />
-                                       </padding>
-                                    </HBox>
+                                       </graphic>
+                                    </Label>
                                  </children>
-                              </VBox>
-                              <VBox spacing="10.0">
+                                 <VBox.margin>
+                                    <Insets top="-20.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="58.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox>
                                  <children>
-                                    <HBox spacing="20.0">
-                                       <children>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../section_images/arrow_right_fill.png" />
-                                             </image>
-                                             <HBox.margin>
-                                                <Insets left="10.0" />
-                                             </HBox.margin>
-                                          </ImageView>
-                                          <JFXCheckBox fx:id="chk_second_ojt" checkedColor="WHITE" prefWidth="210.0" text="2nd Year OJT" textFill="WHITE" unCheckedColor="WHITE">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets left="-10.0" />
-                                             </HBox.margin>
-                                          </JFXCheckBox>
-                                       </children>
-                                    </HBox>
-                                    <HBox fx:id="hbox_second_ojt" spacing="20.0">
-                                       <children>
-                                          <Label text="From">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_second_ojt_from" prefWidth="150.0" styleClass="metro-combo-box" />
-                                          <Label text="To">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_second_ojt_to" prefWidth="150.0" styleClass="metro-combo-box" />
-                                       </children>
-                                       <padding>
-                                          <Insets left="60.0" />
-                                       </padding>
-                                    </HBox>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../section_images/arrow_right_fill.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefHeight="50.0" prefWidth="942.0" text="Create sections automatically by checking the selected year levels and assigning a given range of sections. You can include Internship sections alongside with the regular sections. Options and choices may differ based on curriculum types" wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="20.0" />
+                                       </HBox.margin>
+                                    </Label>
                                  </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <VBox spacing="10.0">
+                              </HBox>
+                              <HBox>
                                  <children>
-                                    <HBox spacing="20.0">
+                                    <VBox spacing="10.0">
                                        <children>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../section_images/arrow_right_fill.png" />
-                                             </image>
-                                             <HBox.margin>
-                                                <Insets left="10.0" />
-                                             </HBox.margin>
-                                          </ImageView>
-                                          <JFXCheckBox fx:id="chk_third" checkedColor="WHITE" prefWidth="210.0" text="Include 3rd Year" textFill="WHITE" unCheckedColor="WHITE">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets left="-10.0" />
-                                             </HBox.margin>
-                                          </JFXCheckBox>
+                                          <HBox spacing="20.0">
+                                             <children>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../section_images/arrow_right_fill.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <JFXCheckBox fx:id="chk_first" checkedColor="WHITE" prefWidth="210.0" text="Include 1st Year" textFill="WHITE" unCheckedColor="WHITE">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="-10.0" />
+                                                   </HBox.margin>
+                                                </JFXCheckBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="hbox_first" spacing="20.0">
+                                             <children>
+                                                <Label text="From">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_first_from" prefWidth="150.0" styleClass="metro-combo-box" />
+                                                <Label text="To">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_first_to" prefWidth="150.0" styleClass="metro-combo-box" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="60.0" />
+                                             </padding>
+                                          </HBox>
                                        </children>
-                                    </HBox>
-                                    <HBox fx:id="hbox_third" spacing="20.0">
-                                       <children>
-                                          <Label text="From">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_third_from" prefWidth="150.0" styleClass="metro-combo-box" />
-                                          <Label text="To">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_third_to" prefWidth="150.0" styleClass="metro-combo-box" />
-                                       </children>
-                                       <padding>
-                                          <Insets left="60.0" />
-                                       </padding>
-                                    </HBox>
+                                    </VBox>
                                  </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                        <HBox spacing="30.0">
-                           <children>
-                              <VBox spacing="10.0">
+                              </HBox>
+                              <HBox spacing="30.0">
                                  <children>
-                                    <HBox spacing="20.0">
+                                    <VBox spacing="10.0">
                                        <children>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../section_images/arrow_right_fill.png" />
-                                             </image>
-                                             <HBox.margin>
-                                                <Insets left="10.0" />
-                                             </HBox.margin>
-                                          </ImageView>
-                                          <JFXCheckBox fx:id="chk_fourth" checkedColor="WHITE" prefWidth="210.0" text="Include 4th Year" textFill="WHITE" unCheckedColor="WHITE">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets left="-10.0" />
-                                             </HBox.margin>
-                                          </JFXCheckBox>
+                                          <HBox spacing="20.0">
+                                             <children>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../section_images/arrow_right_fill.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <JFXCheckBox fx:id="chk_second" checkedColor="WHITE" prefWidth="210.0" text="Include 2nd Year" textFill="WHITE" unCheckedColor="WHITE">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="-10.0" />
+                                                   </HBox.margin>
+                                                </JFXCheckBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="hbox_second" spacing="20.0">
+                                             <children>
+                                                <Label text="From">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_second_from" prefWidth="150.0" styleClass="metro-combo-box" />
+                                                <Label text="To">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_second_to" prefWidth="150.0" styleClass="metro-combo-box" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="60.0" />
+                                             </padding>
+                                          </HBox>
                                        </children>
-                                    </HBox>
-                                    <HBox fx:id="hbox_fourth" spacing="20.0">
+                                    </VBox>
+                                    <VBox spacing="10.0">
                                        <children>
-                                          <Label text="From">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_fourth_from" prefWidth="150.0" styleClass="metro-combo-box" />
-                                          <Label text="To">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_fourth_to" prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <HBox spacing="20.0">
+                                             <children>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../section_images/arrow_right_fill.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <JFXCheckBox fx:id="chk_second_ojt" checkedColor="WHITE" prefWidth="210.0" text="2nd Year OJT" textFill="WHITE" unCheckedColor="WHITE">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="-10.0" />
+                                                   </HBox.margin>
+                                                </JFXCheckBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="hbox_second_ojt" spacing="20.0">
+                                             <children>
+                                                <Label text="From">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_second_ojt_from" prefWidth="150.0" styleClass="metro-combo-box" />
+                                                <Label text="To">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_second_ojt_to" prefWidth="150.0" styleClass="metro-combo-box" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="60.0" />
+                                             </padding>
+                                          </HBox>
                                        </children>
-                                       <padding>
-                                          <Insets left="60.0" />
-                                       </padding>
-                                    </HBox>
+                                    </VBox>
                                  </children>
-                              </VBox>
-                              <VBox spacing="10.0">
+                              </HBox>
+                              <HBox>
                                  <children>
-                                    <HBox spacing="20.0">
+                                    <VBox spacing="10.0">
                                        <children>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../section_images/arrow_right_fill.png" />
-                                             </image>
-                                             <HBox.margin>
-                                                <Insets left="10.0" />
-                                             </HBox.margin>
-                                          </ImageView>
-                                          <JFXCheckBox fx:id="chk_fourth_ojt" checkedColor="WHITE" prefWidth="210.0" text="4th Year OJT" textFill="WHITE" unCheckedColor="WHITE">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets left="-10.0" />
-                                             </HBox.margin>
-                                          </JFXCheckBox>
+                                          <HBox spacing="20.0">
+                                             <children>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../section_images/arrow_right_fill.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <JFXCheckBox fx:id="chk_third" checkedColor="WHITE" prefWidth="210.0" text="Include 3rd Year" textFill="WHITE" unCheckedColor="WHITE">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="-10.0" />
+                                                   </HBox.margin>
+                                                </JFXCheckBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="hbox_third" spacing="20.0">
+                                             <children>
+                                                <Label text="From">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_third_from" prefWidth="150.0" styleClass="metro-combo-box" />
+                                                <Label text="To">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_third_to" prefWidth="150.0" styleClass="metro-combo-box" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="60.0" />
+                                             </padding>
+                                          </HBox>
                                        </children>
-                                    </HBox>
-                                    <HBox fx:id="hbox_fourth_ojt" spacing="20.0">
-                                       <children>
-                                          <Label text="From">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_fourth_ojt_from" prefWidth="150.0" styleClass="metro-combo-box" />
-                                          <Label text="To">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_fourth_ojt_to" prefWidth="150.0" styleClass="metro-combo-box" />
-                                       </children>
-                                       <padding>
-                                          <Insets left="60.0" />
-                                       </padding>
-                                    </HBox>
+                                    </VBox>
                                  </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT">
-                           <children>
-                              <JFXButton fx:id="btn_multi_create" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Create" textFill="WHITE">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="60.0" right="20.0" />
-                                 </HBox.margin>
-                              </JFXButton>
-                              <JFXButton fx:id="btn_multi_back" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Back" textFill="WHITE">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                                 <HBox.margin>
+                              </HBox>
+                              <HBox spacing="30.0">
+                                 <children>
+                                    <VBox spacing="10.0">
+                                       <children>
+                                          <HBox spacing="20.0">
+                                             <children>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../section_images/arrow_right_fill.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <JFXCheckBox fx:id="chk_fourth" checkedColor="WHITE" prefWidth="210.0" text="Include 4th Year" textFill="WHITE" unCheckedColor="WHITE">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="-10.0" />
+                                                   </HBox.margin>
+                                                </JFXCheckBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="hbox_fourth" spacing="20.0">
+                                             <children>
+                                                <Label text="From">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_fourth_from" prefWidth="150.0" styleClass="metro-combo-box" />
+                                                <Label text="To">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_fourth_to" prefWidth="150.0" styleClass="metro-combo-box" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="60.0" />
+                                             </padding>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox spacing="10.0">
+                                       <children>
+                                          <HBox spacing="20.0">
+                                             <children>
+                                                <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../section_images/arrow_right_fill.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <JFXCheckBox fx:id="chk_fourth_ojt" checkedColor="WHITE" prefWidth="210.0" text="4th Year OJT" textFill="WHITE" unCheckedColor="WHITE">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets left="-10.0" />
+                                                   </HBox.margin>
+                                                </JFXCheckBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox fx:id="hbox_fourth_ojt" spacing="20.0">
+                                             <children>
+                                                <Label text="From">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_fourth_ojt_from" prefWidth="150.0" styleClass="metro-combo-box" />
+                                                <Label text="To">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_fourth_ojt_to" prefWidth="150.0" styleClass="metro-combo-box" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="60.0" />
+                                             </padding>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <JFXButton fx:id="btn_multi_create" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Create" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="60.0" right="20.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="btn_multi_back" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Back" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                 </children>
+                                 <VBox.margin>
                                     <Insets />
-                                 </HBox.margin>
-                              </JFXButton>
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets right="50.0" top="10.0" />
+                                 </padding>
+                              </HBox>
                            </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
                            <padding>
-                              <Insets right="50.0" top="10.0" />
+                              <Insets left="20.0" />
                            </padding>
-                        </HBox>
+                        </VBox>
                      </children>
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
                   </VBox>
                </children>
-            </VBox>
+            </StackPane>
          </children>
       </StackPane>
    </children>

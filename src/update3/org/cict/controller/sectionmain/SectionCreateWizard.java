@@ -45,6 +45,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.propertymanager.FormFormat;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -773,4 +774,43 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
         }
     }
+
+    private class CreateRegularSectionsAuto extends Transaction {
+
+        private HashMap<Integer, Boolean> yearsToCreate = new HashMap<>();
+        private HashMap<Integer, SectionMeta> sectionNames = new HashMap<>();
+
+        @Override
+        protected boolean transaction() {
+            /**
+             * create local session.
+             */
+            Session localSession = Mono.orm().openSession();
+            org.hibernate.Transaction dataTx = localSession.beginTransaction();
+
+            for (Integer yearlevel = 1; yearlevel <= 4; yearlevel++) {
+
+                if (!yearsToCreate.get(yearlevel)) {
+                    continue;
+                }
+
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
+        }
+
+    }
+
+    private class SectionMeta {
+
+        private ArrayList<String> normalSections;
+        private ArrayList<String> internSections;
+
+    }
+
 }
