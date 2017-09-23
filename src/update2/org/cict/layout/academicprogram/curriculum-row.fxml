@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="1000.0" spacing="10.0" style="-fx-border-color: #2B89E0;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label contentDisplay="TOP" graphicTextGap="0.0" text="Major">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/major.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+      <Label accessibleText="lbl_major" text="Graphics Design">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label accessibleText="lbl_name" alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="216.0" text="BSIT REVISED MAJOR IN GRAPHICS(16-17)" HBox.hgrow="ALWAYS">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label contentDisplay="TOP" graphicTextGap="0.0" text="Ladderized">
+         <graphic>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/ladder.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+      <Label accessibleText="lbl_ladderized" prefHeight="40.0" prefWidth="47.0" text="Yes">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <Label contentDisplay="TOP" graphicTextGap="0.0" text="Years">
+         <graphic>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/years.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+      <Label accessibleText="lbl_years" prefWidth="30.0" text="4">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <JFXButton accessibleText="btn_details" style="-fx-background-color: #2B89E0;" text="Details" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </JFXButton>
+      <VBox accessibleText="btn_deleteCurriculum" alignment="CENTER" style="-fx-background-color: #D14134; -fx-border-color: #D14134;">
+         <children>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/delete96px.png" />
+               </image>
+            </ImageView>
+         </children>
+         <HBox.margin>
+            <Insets bottom="15.0" top="15.0" />
+         </HBox.margin>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="10.0" right="10.0" />
+   </padding>
+</HBox>

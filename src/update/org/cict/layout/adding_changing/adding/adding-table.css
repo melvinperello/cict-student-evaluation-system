@@ -1,0 +1,12 @@
+
+/* Global Class for row */
+.simple-table-row {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: dashed;
+}
+
+.simple-table-row:hover .simple-table-cell {
+    -fx-background-color: #CDCDCD;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}

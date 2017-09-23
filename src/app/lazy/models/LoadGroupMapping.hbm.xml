@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.LoadGroupMapping" table="load_group" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="SUBJECT_id" type="java.lang.Integer">
+<column name="SUBJECT_id" length="10"/>
+</property>
+<property name="LOADSEC_id" type="java.lang.Integer">
+<column name="LOADSEC_id" length="10"/>
+</property>
+<property name="faculty" type="java.lang.Integer">
+<column name="faculty" length="10"/>
+</property>
+<property name="group_type" type="java.lang.String">
+<column name="group_type" length="50"/>
+</property>
+<property name="added_date" type="java.util.Date">
+<column name="added_date" length="19"/>
+</property>
+<property name="added_by" type="java.lang.Integer">
+<column name="added_by" length="10"/>
+</property>
+<property name="removed_date" type="java.util.Date">
+<column name="removed_date" length="19"/>
+</property>
+<property name="removed_by" type="java.lang.Integer">
+<column name="removed_by" length="10"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

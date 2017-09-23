@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.CurriculumMapping" table="curriculum" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="ACADPROG_id" type="java.lang.Integer">
+<column name="ACADPROG_id" length="10"/>
+</property>
+<property name="major" type="java.lang.String">
+<column name="major" length="50"/>
+</property>
+<property name="name" type="java.lang.String">
+<column name="name" length="50"/>
+</property>
+<property name="description" type="java.lang.String">
+<column name="description" length="50"/>
+</property>
+<property name="ladderization" type="java.lang.String">
+<column name="ladderization" length="50"/>
+</property>
+<property name="ladderization_type" type="java.lang.String">
+<column name="ladderization_type" length="50"/>
+</property>
+<property name="study_years" type="java.lang.Integer">
+<column name="study_years" length="10"/>
+</property>
+<property name="created_date" type="java.util.Date">
+<column name="created_date" length="19"/>
+</property>
+<property name="created_by" type="java.lang.Integer">
+<column name="created_by" length="10"/>
+</property>
+<property name="updated_date" type="java.util.Date">
+<column name="updated_date" length="19"/>
+</property>
+<property name="updated_by" type="java.lang.Integer">
+<column name="updated_by" length="10"/>
+</property>
+<property name="removed_date" type="java.util.Date">
+<column name="removed_date" length="19"/>
+</property>
+<property name="removed_by" type="java.lang.Integer">
+<column name="removed_by" length="10"/>
+</property>
+<property name="implemented" type="java.lang.Integer">
+<column name="implemented" length="3"/>
+</property>
+<property name="implementation_date" type="java.util.Date">
+<column name="implementation_date" length="19"/>
+</property>
+<property name="implemented_by" type="java.lang.Integer">
+<column name="implemented_by" length="10"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

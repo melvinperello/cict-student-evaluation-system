@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cict.authentication.LoginController">
+   <children>
+      <AnchorPane id="AnchorPane" fx:id="pnlLoading">
+         <children>
+            <ImageView fitHeight="279.0" fitWidth="287.0" layoutX="115.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../res/gif/initloading2.gif" />
+               </image>
+            </ImageView>
+            <AnchorPane layoutX="41.0" layoutY="14.0" prefHeight="67.0" prefWidth="200.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-color: #2B89E0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label graphicTextGap="10.0" layoutX="14.0" prefHeight="67.0" prefWidth="230.0" style="-fx-text-fill: #FFFFFF;" text="C I C T |" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="System Bold" size="44.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../res/img/cict_96px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label layoutX="244.0" layoutY="17.0" prefHeight="34.0" prefWidth="230.0" style="-fx-text-fill: #FFFFFF;" text="Evaluation System" AnchorPane.topAnchor="17.0">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <Label alignment="CENTER" layoutX="179.0" layoutY="311.0" text="Getting System Ready . . ." textFill="#40a8d9" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="34.0" fitWidth="39.0" layoutX="14.0" layoutY="452.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../res/img/logocircle.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="58.0" layoutY="461.0" text="Monosync Studio | EMS v 1.0 - beta" textFill="#26627c" />
+         </children>
+      </AnchorPane>
+      <AnchorPane id="AnchorPane" fx:id="pnlLogin" visible="false">
+         <children>
+            <AnchorPane layoutX="41.0" layoutY="14.0" prefHeight="67.0" prefWidth="200.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-background-color: #2983D5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="17.0" prefHeight="34.0" prefWidth="137.0" text="EMS v1.0a | " textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="151.0" layoutY="19.0" prefHeight="34.0" prefWidth="327.0" text="College of Information and Communications Technology" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <ImageView fitHeight="34.0" fitWidth="39.0" layoutX="14.0" layoutY="452.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../res/img/logocircle.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="58.0" layoutY="461.0" text="Monosync Studio" textFill="#2983d5" />
+            <AnchorPane layoutX="69.0" layoutY="167.0">
+               <children>
+                  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #4E4E4E; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8),4, 0, 0, 0);">
+                     <children>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <image>
+                              <Image url="@../../../res/img/User_96px.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <TextField fx:id="txtUsername" layoutX="76.0" layoutY="3.0" prefHeight="54.0" prefWidth="287.0" promptText="Username" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </TextField>
+                  <AnchorPane layoutY="78.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #4E4E4E; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8),4, 0, 0, 0);">
+                     <children>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                           <image>
+                              <Image url="@../../../res/img/Lock_96px.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <PasswordField fx:id="txtPassword" layoutX="76.0" layoutY="81.0" prefHeight="54.0" prefWidth="287.0" promptText="Password" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4, 0, 0, 0);">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </PasswordField>
+               </children>
+            </AnchorPane>
+            <JFXButton fx:id="btnLogin" buttonType="RAISED" defaultButton="true" layoutX="143.0" layoutY="319.0" prefHeight="48.0" prefWidth="137.0" stylesheets="@src/css/button.css" text="Login">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btnExit" buttonType="RAISED" cancelButton="true" layoutX="295.0" layoutY="319.0" prefHeight="48.0" prefWidth="137.0" stylesheets="@src/css/button.css" text="Exit">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </JFXButton>
+            <ImageView fx:id="imgInvUser" fitHeight="40.0" fitWidth="40.0" layoutX="439.0" layoutY="176.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../res/img/Cancel_96px.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgInvPassword" fitHeight="40.0" fitWidth="40.0" layoutX="439.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../res/img/Cancel_96px.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="btnRegister" layoutX="364.0" layoutY="459.0" text="Register Account" textFill="#2983d5">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="btn_forgotpass" layoutX="297.0" layoutY="383.0" text="Forgot Password?" textFill="#2baaff">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

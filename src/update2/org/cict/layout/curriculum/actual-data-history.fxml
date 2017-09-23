@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="927.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox minHeight="-Infinity" prefHeight="105.0" prefWidth="927.0" style="-fx-border-color: #1E89F3; -fx-border-width: 3;" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="150.0">
+               <children>
+                  <ImageView fitHeight="94.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../org/cict/evaluation/student/history/src/img/bulsu_96px.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="40.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="527.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="lbl_title" alignment="CENTER" text="ACTUAL DATA HISTORY" textFill="#255580">
+                     <font>
+                        <Font name="System Bold" size="35.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbl_name" alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="396.0" text="ACT (15-16)" textAlignment="CENTER" textFill="#208ceb" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="25.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbl_description" alignment="CENTER" text="BS INFORMATION TECHNOLOGY MAJOR IN GRAPHICS" textAlignment="CENTER" textFill="#078bff" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font></Label>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="70.0" right="70.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="150.0">
+               <children>
+                  <ImageView fitHeight="94.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../org/cict/evaluation/student/history/src/img/cict_96px.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" right="40.0" top="10.0" />
+               </padding>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
+         </padding>
+      </HBox>
+      <VBox fx:id="vbox_list" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="515.0" prefWidth="927.0" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" left="20.0" right="20.0" />
+         </padding>
+         <children>
+            <Label style="-fx-border-color: #1E89F3; -fx-border-radius: 10;" text="NO ACTUAL DATA FOUND" textFill="#434a55">
+               <font>
+                  <Font name="System Bold" size="35.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="58.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/no%20data.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+            </Label>
+         </children></VBox>
+   </children>
+</VBox>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Label maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="Section Management" textFill="WHITE" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="btn_home" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-nav-button" text="Home" textFill="WHITE">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </JFXButton>
+         </children>
+         <padding>
+            <Insets left="10.0" right="20.0" />
+         </padding>
+      </HBox>
+      <HBox prefWidth="200.0" spacing="30.0">
+         <children>
+            <Label fx:id="lbl_current_term" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="AY 2016 - 2017 First Semester" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../section_images/calendar_white.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </HBox>
+      <VBox>
+         <children>
+            <HBox>
+               <children>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../section_images/stat_white.png" />
+                     </image>
+                  </ImageView>
+                  <Label graphicTextGap="10.0" styleClass="metro-title-33" text="Section Statistics" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="33.0" />
+                     </font>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <StackPane fx:id="stack_statistics">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+               <children>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/arrow_right.png" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="190.0">
+                           <children>
+                              <Label fx:id="lbl_stat_regular" alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefWidth="190.0" text="999" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-30.0" top="-30.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" text="Regular" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/arrow_right.png" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER" prefHeight="111.0" prefWidth="190.0">
+                           <children>
+                              <Label fx:id="lbl_stat_special" alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefWidth="166.0" text="112" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-30.0" top="-30.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" text="Special" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/arrow_right.png" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER" prefHeight="111.0" prefWidth="190.0">
+                           <children>
+                              <Label fx:id="lbl_stat_midyear" alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefWidth="166.0" text="23" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-30.0" top="-30.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" text="Midyear" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/arrow_right.png" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER" prefHeight="111.0" prefWidth="190.0">
+                           <children>
+                              <Label fx:id="lbl_stat_tutorial" alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefWidth="166.0" text="0" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="80.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-30.0" top="-30.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="TOP" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" text="Tutorial" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="30.0" left="80.0" top="30.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </StackPane>
+            <HBox>
+               <children>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../section_images/list_white.png" />
+                     </image>
+                  </ImageView>
+                  <Label graphicTextGap="10.0" styleClass="metro-title-33" text="Section List" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="33.0" />
+                     </font>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="20.0" top="30.0" />
+         </VBox.margin>
+      </VBox>
+      <StackPane fx:id="stack_section_type" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="10.0" right="20.0" />
+         </VBox.margin>
+         <children>
+            <VBox fx:id="vbox_section_type" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
+         </children>
+      </StackPane>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

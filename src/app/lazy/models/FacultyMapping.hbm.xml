@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.FacultyMapping" table="faculty" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="bulsu_id" type="java.lang.String">
+<column name="bulsu_id" length="50"/>
+</property>
+<property name="last_name" type="java.lang.String">
+<column name="last_name" length="100"/>
+</property>
+<property name="first_name" type="java.lang.String">
+<column name="first_name" length="100"/>
+</property>
+<property name="middle_name" type="java.lang.String">
+<column name="middle_name" length="100"/>
+</property>
+<property name="gender" type="java.lang.String">
+<column name="gender" length="100"/>
+</property>
+<property name="rank" type="java.lang.String">
+<column name="rank" length="50"/>
+</property>
+<property name="designation" type="java.lang.String">
+<column name="designation" length="50"/>
+</property>
+<property name="transaction_pin" type="java.lang.String">
+<column name="transaction_pin" length="6"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

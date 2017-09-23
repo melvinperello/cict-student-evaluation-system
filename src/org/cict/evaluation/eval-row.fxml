@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="296.0" style="-fx-background-color: #384B65; -fx-border-color: #CDD1D7;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label accessibleText="number" text="1" textFill="#cbd0eb">
+         <font>
+            <Font name="System Bold" size="33.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="234.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label accessibleText="id" text="2014112478" textFill="#cde0ff">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label accessibleText="name" text="De La Cruz, Joemar" textFill="#c9e3ff">
+               <font>
+                  <Font size="11.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="5.0" />
+               </padding>
+            </Label>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false">
+               <children>
+                  <JFXButton layoutX="76.0" layoutY="16.0" prefHeight="25.0" prefWidth="46.0" style="-fx-background-color: #F76C83;" text="Skip" textFill="WHITE" />
+                  <JFXButton style="-fx-background-color: #46CDAC;" text="Done" textFill="WHITE" />
+               </children>
+            </HBox>
+         </children>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <padding>
+            <Insets bottom="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="10.0" />
+   </padding>
+</HBox>

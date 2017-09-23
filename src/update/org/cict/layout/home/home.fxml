@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="application_root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="update.org.cict.controller.home.Home">
+   <children>
+      <Button fx:id="btn_evaluation" layoutX="103.0" layoutY="155.0" mnemonicParsing="false" prefHeight="113.0" prefWidth="137.0" text="Evaluation" />
+      <Button fx:id="btn_adding" layoutX="258.0" layoutY="155.0" mnemonicParsing="false" prefHeight="113.0" prefWidth="137.0" text="Adding/Changing" />
+      <Button fx:id="btn_academic_programs" layoutX="479.0" layoutY="219.0" mnemonicParsing="false" text="academic PRgorams" />
+      <Button fx:id="btn_section" layoutX="301.0" layoutY="347.0" mnemonicParsing="false" text="Button" />
+   </children>
+</AnchorPane>

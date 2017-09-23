@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<changes>
+    <update id = "1" date = "07/23/2017" updated_by = "jhmvin">
+        <feature>fix mono-fw</feature>
+        <feature>Added suggestion search.</feature>
+    </update>
+</changes>

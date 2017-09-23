@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="67.0" prefWidth="1024.0" style="-fx-background-color: #2B89E0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" style="-fx-text-fill: #FFFFFF;" text="Find Subject">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="41.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/Search_64px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+      </AnchorPane>
+      <HBox alignment="CENTER_LEFT" layoutY="110.0" prefHeight="67.0" prefWidth="980.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="67.0">
+         <children>
+            <ImageView fitHeight="50.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@img/Books_96px.png" />
+               </image>
+            </ImageView>
+            <TextField fx:id="txtSearch" prefHeight="37.0" prefWidth="393.0" promptText=" e.g.  IT 113">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <JFXButton fx:id="btnSearch" alignment="CENTER" graphicTextGap="10.0" prefHeight="19.0" prefWidth="128.0" style="-fx-background-color: #27AE60; -fx-text-fill: #FFFFFF;" text="Search">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../org/cict/evaluation/sectionviewer/src/img/Search_64px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+         <padding>
+            <Insets right="20.0" top="20.0" />
+         </padding>
+      </HBox>
+      <AnchorPane layoutX="185.0" layoutY="132.0" prefHeight="468.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="132.0">
+         <children>
+            <StackPane layoutX="110.0" layoutY="88.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane fx:id="anchor_result" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <HBox fx:id="hbox_greet" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                           <children>
+                              <ImageView fitHeight="131.0" fitWidth="128.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@img/Books_96px.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <VBox alignment="CENTER_LEFT" prefHeight="128.0" prefWidth="400.0">
+                                 <children>
+                                    <Label text="Let's start searching" wrapText="true">
+                                       <font>
+                                          <Font name="System Bold" size="28.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="300.0" startX="-100.0" />
+                                    <Label prefHeight="129.0" prefWidth="480.0" text="Search the subject by it's code, and we're done." wrapText="true">
+                                       <font>
+                                          <Font size="25.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="hbox_no_result" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="169.0" prefWidth="1000.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                           <children>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@img/notebook.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <VBox alignment="CENTER_LEFT" prefHeight="163.0" prefWidth="357.0">
+                                 <children>
+                                    <Label text="No Subject Found" wrapText="true">
+                                       <font>
+                                          <Font name="System Bold" size="28.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="250.0" startX="-100.0" />
+                                    <Label text="The subject is not existing. Do you mind to add it instead?" wrapText="true">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </Label>
+                                    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                       <children>
+                                          <Button fx:id="btn_add_new_subject" mnemonicParsing="false" prefHeight="40.0" prefWidth="121.0" style="-fx-background-color: #2ECC71;" text="Okay, I'll add it" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Button>
+                                          <Button fx:id="btn_cancel" mnemonicParsing="false" prefHeight="40.0" prefWidth="121.0" style="-fx-background-color: #C0392B;" text="No, I don't" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Button>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="hbox_search" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                           <children>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../res/gif/hashgif.gif" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
+                                 <children>
+                                    <Label text="Searching Every Corner . . ." wrapText="true">
+                                       <font>
+                                          <Font name="System Bold" size="28.0" />
+                                       </font>
+                                    </Label>
+                                    <Line endX="340.0" startX="-100.0" />
+                                    <Label text="You can search using the subject code (e.g. &quot;IT 215&quot;). Don't worry I'm not case sensitive, Happy to help !" textAlignment="JUSTIFY" wrapText="true">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets top="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="anchor_view" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <VBox fx:id="vbox_subjects" layoutX="28.0" layoutY="14.0" prefHeight="434.0" prefWidth="951.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="14.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

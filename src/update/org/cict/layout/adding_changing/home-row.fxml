@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView accessibleText="img_row_extension" fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../res/img/plus_sign.png" />
+         </image>
+      </ImageView>
+      <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+         <children>
+            <Label accessibleText="code" maxWidth="1.7976931348623157E308" text="SOCSCI 113" textFill="#434a55">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label accessibleText="descript" maxWidth="1.7976931348623157E308" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#434a55">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER">
+         <children>
+            <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../res/img/lec.png" />
+               </image>
+            </ImageView>
+            <Label text="LEC" textFill="#656d79">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <Label accessibleText="lec" prefHeight="32.0" prefWidth="40.0" text="3.0">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER" layoutX="519.0" layoutY="10.0">
+         <children>
+            <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../res/img/lab.png" />
+               </image>
+            </ImageView>
+            <Label text="LAB" textFill="#656d79">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <Label accessibleText="lab" layoutX="552.0" layoutY="23.0" prefHeight="32.0" prefWidth="38.0" text="3.0">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label accessibleText="section" layoutX="627.0" layoutY="23.0" prefHeight="27.0" prefWidth="168.0" text="BSIT 4A-G1">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <HBox.margin>
+            <Insets right="10.0" />
+         </HBox.margin>
+         <graphic>
+            <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../res/img/room.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+   </children>
+   <padding>
+      <Insets left="10.0" />
+   </padding>
+</HBox>

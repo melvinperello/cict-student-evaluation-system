@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.AcademicTermMapping" table="academic_term" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="school_year" type="java.lang.String">
+<column name="school_year" length="50"/>
+</property>
+<property name="semester" type="java.lang.String">
+<column name="semester" length="50"/>
+</property>
+<property name="semester_regular" type="java.lang.Integer">
+<column name="semester_regular" length="10"/>
+</property>
+<property name="current" type="java.lang.Integer">
+<column name="current" length="10"/>
+</property>
+<property name="evaluation_start" type="java.util.Date">
+<column name="evaluation_start" length="19"/>
+</property>
+<property name="evaluation_end" type="java.util.Date">
+<column name="evaluation_end" length="19"/>
+</property>
+<property name="adding_start" type="java.util.Date">
+<column name="adding_start" length="19"/>
+</property>
+<property name="adding_end" type="java.util.Date">
+<column name="adding_end" length="19"/>
+</property>
+<property name="type" type="java.lang.String">
+<column name="type" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

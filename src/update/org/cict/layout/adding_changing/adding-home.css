@@ -1,0 +1,26 @@
+.root {
+
+}
+
+/* Header Designs */
+/*#header-panel {
+    -fx-background-color: #2B89E0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+#header-panel > .label {
+    -fx-font-weight: bold;
+    -fx-font-size: 31px;
+    -fx-text-fill: white;
+}*/
+
+#header-buttons > .button:hover {
+    -fx-background-color: #727272;
+}
+
+
+
+
+
+
+

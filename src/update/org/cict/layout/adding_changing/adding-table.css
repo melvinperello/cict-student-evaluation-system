@@ -1,0 +1,81 @@
+/*------------------*/
+
+/* Global for row extension */
+.simple-table-row-extension {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: dashed;
+}
+
+.btn-remove {
+
+
+    -fx-pref-height: 15px;
+    -fx-pref-width: 100px;
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-background-color: #D9524E;
+}
+
+.btn-change {
+
+    -fx-pref-height: 15px;
+    -fx-pref-width: 100px;
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-background-color: #5CB85C;
+}
+
+/* Global Class for row */
+.simple-table-row {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: dashed;
+}
+
+.simple-table-row:hover .simple-table-cell {
+    -fx-background-color: #AFAFAE;
+    -fx-text-fill: white;
+}
+
+/* custom names*/
+
+.table-cell-content-extend:hover {
+    -fx-cursor: hand;
+}
+
+.table-cell-content-code {
+    -fx-font-size: 30px;
+
+}
+
+.table-cell-content-description {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.table-cell-content-image-label {
+    -fx-graphic-text-gap: 3.0;
+    -fx-font-size: 10px;
+}
+
+.table-cell-content-units {
+    -fx-font-size: 30.0;
+}
+
+.table-cell-content-section {
+    -fx-font-size: 20px;
+    -fx-content-display: left;
+}
+
+
+.table-mutate-as-changed{
+    -fx-background-color: #F0AD4E;
+}
+
+.table-mutate-as-removed{
+    -fx-background-color: #D9524E;
+}
+
+.table-mutate-as-added{
+    -fx-background-color: #7ACE42;
+}
+

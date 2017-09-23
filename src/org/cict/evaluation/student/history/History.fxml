@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="927.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="95.0" prefWidth="927.0" style="-fx-background-color: #2983D5;" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox alignment="CENTER" prefHeight="50.0" prefWidth="150.0">
+               <children>
+                  <ImageView fitHeight="94.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@src/img/bulsu_96px.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="40.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="50.0" prefWidth="339.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER" text="EVALUATION HISTORY" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="35.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblName" alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="396.0" text="DE LA CRUZ, JOEMAR NUCOM" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblCourse" alignment="CENTER" text="BS INFORMATION TECHNOLOGY" textAlignment="CENTER" textFill="#f8f4f4" VBox.vgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="70.0" right="70.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="150.0">
+               <children>
+                  <ImageView fitHeight="94.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@src/img/cict_96px.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" right="40.0" top="10.0" />
+               </padding>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
+         </padding>
+      </HBox>
+      <VBox alignment="CENTER_LEFT" />
+      <VBox prefHeight="540.0" prefWidth="927.0" VBox.vgrow="ALWAYS">
+         <children>
+            <JFXTreeTableView fx:id="tblEvaluation" focusTraversable="false" prefHeight="601.0" prefWidth="907.0" stylesheets="@src/css/table.css" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+            </JFXTreeTableView>
+            <VBox alignment="CENTER_RIGHT" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button fx:id="btnBack" mnemonicParsing="false" prefHeight="36.0" prefWidth="126.0" stylesheets="@src/css/button.css" text="Close" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

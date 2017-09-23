@@ -1,0 +1,63 @@
+
+/* Global Class for row */
+.simple-table-row {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: dashed;
+}
+
+.simple-table-row:hover .simple-table-cell {
+    -fx-background-color: #727272;
+    -fx-text-fill: white;
+}
+
+/* custom names*/
+.table-cell-content-code {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #15315C;
+}
+
+.table-cell-content-description {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #15315C;
+}
+.table-cell-content-units {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #15315C;
+}
+.table-cell-content-image-label {
+    -fx-graphic-text-gap: 3.0;
+    -fx-font-size: 10px;
+    -fx-text-fill: #15315C;
+}
+
+.table-cell-content-view {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #15315C;
+}
+.table-cell-content-view:hover {
+    -fx-cursor: hand;
+}
+
+
+/* custom names*/
+.table-cell-content-section {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #15315C;
+}
+
+.table-cell-content-subject {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #15315C;
+}
+
+.table-cell-content-count {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #15315C;
+}

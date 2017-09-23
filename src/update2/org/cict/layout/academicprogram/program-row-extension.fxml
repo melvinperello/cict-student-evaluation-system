@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="600.0" prefWidth="1178.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #2B89E0;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox spacing="20.0">
+         <children>
+            <Label text="Program Information">
+               <font>
+                  <Font size="27.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/Course_64px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <VBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="659.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <JFXButton accessibleText="btn_delete" maxHeight="1.7976931348623157E308" prefHeight="43.0" prefWidth="192.0" style="-fx-background-color: #DB4437;" text="Delete Program" textFill="WHITE">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/delete96px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Label prefHeight="30.0" prefWidth="140.0" text="Program Code">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField accessibleText="txt_program_code" text="BSIT">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Label prefHeight="30.0" text="Floor Assignment" visible="false">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField accessibleText="txt_floor_assignment" alignment="CENTER" prefWidth="60.0" text="3" visible="false">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <Label text="Created Date:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label accessibleText="lbl_created_date" text="06/25/2014 07:42 PM">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label text="Creator:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label accessibleText="lbl_created_by" text="EVELYN S. SAMSON">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+         <children>
+            <Label prefHeight="30.0" prefWidth="140.0" text="Program Name">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField accessibleText="txt_program_name" prefWidth="500.0" text="BS INFORMATION TECHNOLOGY" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <JFXButton accessibleText="btn_save_changes" style="-fx-background-color: #1784BF;" text="Save Changes" textFill="WHITE">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/save.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Label prefHeight="30.0" text="Status:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label accessibleText="lbl_status" prefHeight="30.0" text="UNIMPLEMENTED">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label prefHeight="30.0" text="Saved Date:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label accessibleText="lbl_implementation_date" prefHeight="30.0" text="N/A">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label prefHeight="30.0" text="Saved By:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label accessibleText="lbl_implemented_by" prefHeight="30.0" text="N/A">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets left="20.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: #DB4437;">
+         <children>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/reminder.png" />
+               </image>
+            </ImageView>
+            <VBox>
+               <children>
+                  <Label prefHeight="30.0" text="REMINDER" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="30.0" text="If you save this Academic Program, only  changing of Floor Assignment and Adding of New Curriculums will be allowed." textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="10.0">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+         <children>
+            <VBox prefHeight="60.0" prefWidth="736.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Curriculums">
+                     <font>
+                        <Font size="27.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/Graduation%20Cap_64px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <padding>
+                        <Insets bottom="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </VBox>
+            <ComboBox accessibleText="cmb_sort" opacity="0.86" prefHeight="35.0" prefWidth="180.0" style="-fx-border-color: #95A5A6; -fx-border-radius: 5; -fx-text-fill: #2980B9;" />
+            <VBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="180.0">
+               <children>
+                  <JFXButton accessibleText="btn_newCurriculum" maxHeight="1.7976931348623157E308" style="-fx-background-color: #02D17F;" text="New Curriculum" textFill="WHITE">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </VBox>
+         </children>
+      </HBox>
+      <VBox accessibleText="vbox_curriculum_table_holder" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #2B89E0;" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="50.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

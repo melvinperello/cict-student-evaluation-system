@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="100.0" spacing="20.0" style="-fx-border-color: #fff;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView accessibleText="img_row_extension" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/show_extension.png" />
+         </image>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </ImageView>
+      <Label accessibleText="lbl_code" minWidth="-Infinity" prefWidth="200.0" text="BSIT" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="35.0" />
+         </font>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </Label>
+      <Label accessibleText="lbl_name" maxWidth="1.7976931348623157E308" text="BS INFORMATION TECHNOLOGY" HBox.hgrow="ALWAYS">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label contentDisplay="TOP" graphicTextGap="0.0" text="Curriculums">
+         <graphic>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/Graduation%20Cap_64px.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label accessibleText="lbl_count" minWidth="-Infinity" prefWidth="70.0" text="12">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <JFXButton accessibleText="btn_information" prefHeight="47.0" prefWidth="117.0" style="-fx-background-color: #059E4B;" text="SAVE" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXButton>
+   </children>
+   <padding>
+      <Insets left="20.0" right="20.0" />
+   </padding>
+</HBox>

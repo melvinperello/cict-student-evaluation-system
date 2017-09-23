@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.StatusBar?>
+
+<AnchorPane id="AnchorPane" prefHeight="700.0" prefWidth="1024.0" style="-fx-background-color: #fff;" stylesheets="@credittree/credit-tree.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane layoutY="14.0" prefHeight="46.0" prefWidth="1024.0" style="-fx-background-color: #2B89E0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="lbl_title" layoutX="14.0" layoutY="8.0" prefHeight="34.0" prefWidth="366.0" style="-fx-text-fill: #fff;" text="Credit Subjects">
+               <font>
+                  <Font name="System Bold" size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="58.0" prefHeight="46.0" prefWidth="1024.0" style="-fx-background-color: #03A9F5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0">
+         <children>
+            <Label fx:id="lbl_STUDENT_id" layoutX="14.0" layoutY="8.0" prefHeight="32.0" prefWidth="149.0" style="-fx-text-fill: #fff;" text="2014113844 " AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="561.0" AnchorPane.topAnchor="8.0">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_STUDENT_name" layoutX="177.0" layoutY="8.0" prefHeight="32.0" prefWidth="277.0" style="-fx-text-fill: #fff;" text="Perello Jhon Melvin Nieto" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="8.0">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_CURRICULUM_name" layoutX="476.0" layoutY="7.0" prefHeight="32.0" prefWidth="277.0" style="-fx-text-fill: #fff;" text="BSIT (11-12) Revised" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="476.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="7.0">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="879.0" layoutY="46.0" AnchorPane.bottomAnchor="620.0" AnchorPane.leftAnchor="1230.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="55.0">
+         <children>
+            <JFXButton fx:id="btn_save" layoutY="6.0" maxHeight="46.0" minHeight="46.0" prefHeight="46.0" prefWidth="114.0" stylesheets="@src/css/button.css" text="Save" textFill="#f8f1f1">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+      <HBox fx:id="hbox_main" layoutX="14.0" layoutY="119.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="120.0" />
+      <StatusBar fx:id="status_bar" layoutX="55.0" layoutY="691.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+   </children>
+</AnchorPane>

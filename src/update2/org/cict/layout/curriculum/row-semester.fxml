@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="800.0" spacing="10.0" style="-fx-border-color: #20529e; -fx-border-width: 1;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView accessibleText="btn_extension" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../academicprogram/images/show_extension.png" />
+         </image>
+      </ImageView>
+      <Label accessibleText="lbl_year_level" prefHeight="64.0" prefWidth="161.0" text="FOURTH YEAR" textFill="#295e8d" HBox.hgrow="ALWAYS">
+         <font>
+            <Font name="System Bold" size="21.0" />
+         </font>
+      </Label>
+      <Label accessibleText="lbl_semester" layoutX="103.0" layoutY="13.0" prefHeight="64.0" prefWidth="163.0" text="Second Semester" textFill="#295e8d" HBox.hgrow="ALWAYS">
+         <font>
+            <Font name="System Bold" size="19.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+         <children>
+            <Label contentDisplay="TOP" graphicTextGap="0.0" text="Subjects">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/subjects.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label accessibleText="lbl_subjects" text="9" textFill="#295e8d">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <Label contentDisplay="TOP" graphicTextGap="0.0" text="Units">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/units.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+            </Label>
+            <Label accessibleText="lbl_units" text="27.0" textFill="#295e8d">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <JFXButton accessibleText="btn_add_subject" style="-fx-background-color: #5CB85C;" text="Add Subject" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../academicprogram/images/add.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+            </JFXButton>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets left="20.0" right="20.0" />
+   </padding>
+</HBox>

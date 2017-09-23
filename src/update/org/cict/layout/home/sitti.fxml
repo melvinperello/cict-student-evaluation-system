@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchor_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="444.0" prefWidth="694.0" style="-fx-border-color: #00ADE1; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="btn_close" layoutX="643.0" layoutY="9.0" prefHeight="28.0" prefWidth="43.0">
+         <graphic>
+            <ImageView fitHeight="41.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../org/cict/evaluation/src/img/Close%20Window_48px.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+      <AnchorPane fx:id="anchor_1" layoutX="20.0" layoutY="89.0" prefHeight="248.0" prefWidth="648.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label alignment="TOP_LEFT" layoutX="253.0" layoutY="115.0" prefHeight="43.0" prefWidth="389.0" text="The student's current load is                units." wrapText="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <HBox layoutX="249.0" layoutY="32.0" prefHeight="68.0" prefWidth="684.0" style="-fx-background-color: #00ADE1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Label alignment="TOP_LEFT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="79.0" prefWidth="85.0" text="Hi" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="68.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="250.0" top="-15.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label text=", its me again!" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="27.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets top="30.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <ImageView fitHeight="248.0" fitWidth="248.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../org/cict/evaluation/src/img/blue-fox.png" />
+               </image>
+            </ImageView>
+            <AnchorPane layoutX="500.0" layoutY="86.0" prefHeight="90.0" prefWidth="85.0">
+               <children>
+                  <Label fx:id="lbl_total_units" layoutY="13.0" prefHeight="50.0" prefWidth="85.0" text="20.0" textAlignment="CENTER" textFill="#434a55">
+                     <font>
+                        <Font name="System Bold" size="34.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <Label fx:id="lbl_message" alignment="TOP_LEFT" layoutX="253.0" layoutY="168.0" prefHeight="79.0" prefWidth="389.0" text="Let's see if I can find some suggestion of subjects, Click Next." wrapText="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <JFXButton fx:id="btn_next" layoutX="562.0" layoutY="391.0" prefHeight="37.0" prefWidth="111.0" style="-fx-background-color: #4E87E3;" text="Next" textFill="#fafbff">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </JFXButton>
+      <AnchorPane fx:id="anchor_2" layoutX="10.0" layoutY="58.0" prefHeight="396.0" prefWidth="684.0" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <Label fx:id="lbl_message2" layoutX="25.0" layoutY="59.0" prefHeight="80.0" prefWidth="617.0" text="Base on the student's current status, here are my subject suggestions:" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <VBox fx:id="vbox_list" layoutX="25.0" layoutY="130.0" prefHeight="197.0" prefWidth="494.0" style="-fx-background-color: #4E87E3;" />
+            <VBox alignment="CENTER_LEFT" layoutY="8.0" prefHeight="50.0" prefWidth="684.0" style="-fx-background-color: #00ADE1;" AnchorPane.leftAnchor="0.0">
+               <children>
+                  <Label fx:id="lbl_title" maxWidth="1.7976931348623157E308" prefHeight="37.0" prefWidth="417.0" text="Here are the unacquired subjects." textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="29.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+            </VBox>
+            <JFXButton fx:id="btn_previous" layoutX="432.0" layoutY="346.0" prefHeight="37.0" prefWidth="111.0" style="-fx-background-color: #46BC98;" text="Previous" textFill="#fafbff">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btn_next1" layoutX="556.0" layoutY="346.0" prefHeight="37.0" prefWidth="111.0" style="-fx-background-color: #F44336;" text="Close" textFill="#fafbff">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </JFXButton>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="525.0" layoutY="177.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../org/cict/evaluation/src/img/blue-fox.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
