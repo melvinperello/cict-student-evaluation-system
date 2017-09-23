@@ -45,15 +45,14 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.propertymanager.FormFormat;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
+import java.util.Locale;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -277,10 +276,19 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         FormFormat.CustomFormat sectionNameFilter = new FormFormat().new CustomFormat();
         sectionNameFilter.setMaxCharacters(1);
         sectionNameFilter.setStringFilter(text -> {
-            /**
-             * Custom Filter.
-             */
-            return StringUtils.isAlpha(text);
+            // custom filter
+            if (StringUtils.isAlpha(text)) {
+                sectionNameFilter.setMaxCharacters(1);
+                return true;
+            }
+            if (StringUtils.isNumeric(text)) {
+                if (text.equals("0")) {
+                    return false;
+                }
+                sectionNameFilter.setMaxCharacters(2);
+                return true;
+            }
+            return false;
         });
         sectionNameFilter.setFilterAction(filterAction -> {
             //System.out.println(filterAction.getFilterMessage());
@@ -526,8 +534,25 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         setComboBoxLimit(cmb_second_to, cmb_second_ojt_from, 1, this.cmb_second_from);
         setComboBoxLimit(cmb_second_ojt_from, cmb_second_ojt_to, 1, this.cmb_second_from, this.cmb_second_to);
 
+        // third year
+        setComboBoxLimit(this.cmb_third_from, cmb_third_to, 0);
+
+        //fourth
+        setComboBoxLimit(this.cmb_fourth_from, cmb_fourth_to, 0);
+        // ojt
+        setComboBoxLimit(cmb_fourth_to, cmb_fourth_ojt_from, 1, this.cmb_fourth_from);
+        setComboBoxLimit(cmb_fourth_ojt_from, cmb_fourth_ojt_to, 1, this.cmb_fourth_from, this.cmb_fourth_to);
+
     }
 
+    /**
+     * Set Limits to combo box.
+     *
+     * @param source
+     * @param self
+     * @param extra
+     * @param padding
+     */
     private void setComboBoxLimit(ComboBox<String> source, ComboBox<String> self, int extra, ComboBox<String>... padding) {
 
         addComboBoxContents(0, source);
@@ -541,11 +566,6 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             addComboBoxContents(selfStart, self);
             self.getSelectionModel().select(0);
 
-            /**
-             * call padding change.
-             */
-            if (source.getSelectionModel().isEmpty()) {
-            }
         });
         source.getSelectionModel().select(0);
 
@@ -558,15 +578,30 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 // list is only 1
             }
             refBox.getSelectionModel().select(storeIndex);
+        }
+
+        if (padding.length == 2) {
+
+            source.getItems().addListener((ListChangeListener.Change<? extends String> c) -> {
+                if (c.getList().isEmpty()) {
+                    self.getItems().clear();
+                }
+            });
 
         }
     }
 
+    /**
+     * Load combo box values.
+     *
+     * @param index
+     * @param comboBox
+     */
     private void addComboBoxContents(int index, ComboBox<String> comboBox) {
         /**
          * Setup list set.
          */
-        String charSet = "abcdefghijklmnopqrstuvxyz";
+        String charSet = "abcdefghijklmnopqrstuvxyz".toUpperCase(Locale.ENGLISH);
         ArrayList<String> charList = new ArrayList<>();
         for (Character c : charSet.toCharArray()) {
             charList.add(c.toString());
