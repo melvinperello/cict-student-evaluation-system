@@ -45,11 +45,15 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.propertymanager.FormFormat;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -251,6 +255,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         resetControls();
 
         addCheckBoxListeners();
+        this.addComboBoxListeners();
     }
 
     private void addTextFilters() {
@@ -394,7 +399,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     }
 
     /**
-     * Behavior of components dependent on the corresponing checkbox.
+     * Behavior of components dependent on the corresponding checkbox.
      */
     private void addCheckBoxListeners() {
         this.chk_first.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -509,6 +514,38 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private void disableFourthYearOjt() {
         hbox_fourth_ojt.setDisable(true);
+    }
+
+    private void addComboBoxListeners() {
+        comboBoxContents(0, this.cmb_first_from);
+
+        this.cmb_first_from.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            comboBoxContents((int) newValue, this.cmb_first_to);
+            this.cmb_first_to.getSelectionModel().select(0);
+        });
+
+        this.cmb_first_from.getSelectionModel().select(0);
+    }
+
+    private void comboBoxContents(int index, ComboBox<String> comboBox) {
+        /**
+         * Setup list set.
+         */
+        String charSet = "abcdefghijklmnopqrstuvxyz";
+        ArrayList<String> charList = new ArrayList<>();
+        for (Character c : charSet.toCharArray()) {
+            charList.add(c.toString());
+        }
+
+        /**
+         * Add to observable.
+         */
+        ObservableList<String> listModel = FXCollections.observableArrayList();
+        for (int x = index; x < charSet.length(); x++) {
+            listModel.add(charList.get(x));
+        }
+        comboBox.getItems().clear();
+        comboBox.getItems().addAll(listModel);
     }
 
     /**
