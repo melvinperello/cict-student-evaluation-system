@@ -45,6 +45,8 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.propertymanager.FormFormat;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -247,6 +249,8 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         this.addTextFilters();
 
         resetControls();
+
+        addCheckBoxListeners();
     }
 
     private void addTextFilters() {
@@ -389,6 +393,60 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     }
 
+    /**
+     * Behavior of components dependent on the corresponing checkbox.
+     */
+    private void addCheckBoxListeners() {
+        this.chk_first.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableFirstYear();
+            } else {
+                disableFirstYear();
+            }
+        });
+
+        this.chk_second.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableSecondYear();
+            } else {
+                disableSecondYear();
+            }
+        });
+
+        this.chk_second_ojt.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableSecondYearOjt();
+            } else {
+                disableSecondYearOjt();
+            }
+        });
+
+        this.chk_third.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableThirdYear();
+            } else {
+                disableThirdYear();
+            }
+        });
+
+        this.chk_fourth.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableFourthYear();
+            } else {
+                disableFourthYear();
+            }
+        });
+
+        this.chk_fourth_ojt.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableFourthYearOjt();
+            } else {
+                disableFourthYearOjt();
+            }
+        });
+    }
+
+    // enables
     private void enableFirstYear() {
         hbox_first.setDisable(false);
     }
@@ -404,6 +462,53 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private void enableThirdYear() {
         hbox_third.setDisable(false);
+    }
+
+    private void enableFourthYear() {
+        hbox_second.setDisable(false);
+        this.chk_second_ojt.setDisable(false);
+    }
+
+    private void enableFourthYearOjt() {
+        hbox_second_ojt.setDisable(false);
+    }
+
+    // disables
+    private void disableFirstYear() {
+        hbox_first.setDisable(true);
+    }
+
+    private void disableSecondYear() {
+        hbox_second.setDisable(true);
+        this.chk_second_ojt.setDisable(true);
+
+        //
+        this.chk_second_ojt.setSelected(false);
+        this.chk_second_ojt.setDisable(true);
+        hbox_second_ojt.setDisable(true);
+    }
+
+    private void disableSecondYearOjt() {
+        hbox_second_ojt.setDisable(true);
+    }
+
+    //
+    private void disableThirdYear() {
+        hbox_third.setDisable(true);
+    }
+
+    private void disableFourthYear() {
+        hbox_fourth.setDisable(true);
+        this.chk_fourth_ojt.setDisable(true);
+
+        //
+        this.chk_fourth_ojt.setSelected(false);
+        this.chk_fourth_ojt.setDisable(true);
+        hbox_fourth_ojt.setDisable(true);
+    }
+
+    private void disableFourthYearOjt() {
+        hbox_fourth_ojt.setDisable(true);
     }
 
     /**
