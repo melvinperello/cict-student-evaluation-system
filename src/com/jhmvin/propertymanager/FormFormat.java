@@ -24,10 +24,10 @@
 package com.jhmvin.propertymanager;
 
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 /**
+ * Form Validation.
  *
  * @author Jhon Melvin
  */
@@ -127,7 +127,7 @@ public class FormFormat {
                 }
 
                 if (stringFilter.customFilter(newValue)) {
-                    
+
                 } else {
                     filterEvent.setFilterMessage("UNMATCHED");
                     filterAction.filterEvent(filterEvent);

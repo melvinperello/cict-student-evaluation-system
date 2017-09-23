@@ -365,7 +365,7 @@
                                                 <Insets left="10.0" />
                                              </HBox.margin>
                                           </ImageView>
-                                          <JFXCheckBox fx:id="chk_first_year" checkedColor="WHITE" prefWidth="210.0" text="Include 1st Year" textFill="WHITE" unCheckedColor="WHITE">
+                                          <JFXCheckBox fx:id="chk_first" checkedColor="WHITE" prefWidth="210.0" text="Include 1st Year" textFill="WHITE" unCheckedColor="WHITE">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -375,7 +375,7 @@
                                           </JFXCheckBox>
                                        </children>
                                     </HBox>
-                                    <HBox spacing="20.0">
+                                    <HBox fx:id="hbox_first" spacing="20.0">
                                        <children>
                                           <Label text="From">
                                              <font>
@@ -412,7 +412,7 @@
                                                 <Insets left="10.0" />
                                              </HBox.margin>
                                           </ImageView>
-                                          <JFXCheckBox fx:id="chk_second_year" checkedColor="WHITE" prefWidth="210.0" text="Include 2nd Year" textFill="WHITE" unCheckedColor="WHITE">
+                                          <JFXCheckBox fx:id="chk_second" checkedColor="WHITE" prefWidth="210.0" text="Include 2nd Year" textFill="WHITE" unCheckedColor="WHITE">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -422,20 +422,20 @@
                                           </JFXCheckBox>
                                        </children>
                                     </HBox>
-                                    <HBox spacing="20.0">
+                                    <HBox fx:id="hbox_second" spacing="20.0">
                                        <children>
                                           <Label text="From">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_second_from" prefWidth="150.0" styleClass="metro-combo-box" />
                                           <Label text="To">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_second_to" prefWidth="150.0" styleClass="metro-combo-box" />
                                        </children>
                                        <padding>
                                           <Insets left="60.0" />
@@ -455,7 +455,7 @@
                                                 <Insets left="10.0" />
                                              </HBox.margin>
                                           </ImageView>
-                                          <JFXCheckBox fx:id="chk_second_year_ojt" checkedColor="WHITE" prefWidth="210.0" text="2nd Year OJT" textFill="WHITE" unCheckedColor="WHITE">
+                                          <JFXCheckBox fx:id="chk_second_ojt" checkedColor="WHITE" prefWidth="210.0" text="2nd Year OJT" textFill="WHITE" unCheckedColor="WHITE">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -465,20 +465,20 @@
                                           </JFXCheckBox>
                                        </children>
                                     </HBox>
-                                    <HBox spacing="20.0">
+                                    <HBox fx:id="hbox_second_ojt" spacing="20.0">
                                        <children>
                                           <Label text="From">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_second_ojt_from" prefWidth="150.0" styleClass="metro-combo-box" />
                                           <Label text="To">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_second_ojt_to" prefWidth="150.0" styleClass="metro-combo-box" />
                                        </children>
                                        <padding>
                                           <Insets left="60.0" />
@@ -502,7 +502,7 @@
                                                 <Insets left="10.0" />
                                              </HBox.margin>
                                           </ImageView>
-                                          <JFXCheckBox checkedColor="WHITE" prefWidth="210.0" text="Include 3rd Year" textFill="WHITE" unCheckedColor="WHITE">
+                                          <JFXCheckBox fx:id="chk_third" checkedColor="WHITE" prefWidth="210.0" text="Include 3rd Year" textFill="WHITE" unCheckedColor="WHITE">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -512,20 +512,20 @@
                                           </JFXCheckBox>
                                        </children>
                                     </HBox>
-                                    <HBox spacing="20.0">
+                                    <HBox fx:id="hbox_third" spacing="20.0">
                                        <children>
                                           <Label text="From">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_third_from" prefWidth="150.0" styleClass="metro-combo-box" />
                                           <Label text="To">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_third_to" prefWidth="150.0" styleClass="metro-combo-box" />
                                        </children>
                                        <padding>
                                           <Insets left="60.0" />
@@ -549,7 +549,7 @@
                                                 <Insets left="10.0" />
                                              </HBox.margin>
                                           </ImageView>
-                                          <JFXCheckBox checkedColor="WHITE" prefWidth="210.0" text="Include 4th Year" textFill="WHITE" unCheckedColor="WHITE">
+                                          <JFXCheckBox fx:id="chk_fourth" checkedColor="WHITE" prefWidth="210.0" text="Include 4th Year" textFill="WHITE" unCheckedColor="WHITE">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -559,20 +559,20 @@
                                           </JFXCheckBox>
                                        </children>
                                     </HBox>
-                                    <HBox spacing="20.0">
+                                    <HBox fx:id="hbox_fourth" spacing="20.0">
                                        <children>
                                           <Label text="From">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_fourth_from" prefWidth="150.0" styleClass="metro-combo-box" />
                                           <Label text="To">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_fourth_to" prefWidth="150.0" styleClass="metro-combo-box" />
                                        </children>
                                        <padding>
                                           <Insets left="60.0" />
@@ -592,7 +592,7 @@
                                                 <Insets left="10.0" />
                                              </HBox.margin>
                                           </ImageView>
-                                          <JFXCheckBox checkedColor="WHITE" prefWidth="210.0" text="4th Year OJT" textFill="WHITE" unCheckedColor="WHITE">
+                                          <JFXCheckBox fx:id="chk_fourth_ojt" checkedColor="WHITE" prefWidth="210.0" text="4th Year OJT" textFill="WHITE" unCheckedColor="WHITE">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -602,20 +602,20 @@
                                           </JFXCheckBox>
                                        </children>
                                     </HBox>
-                                    <HBox spacing="20.0">
+                                    <HBox fx:id="hbox_fourth_ojt" spacing="20.0">
                                        <children>
                                           <Label text="From">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_fourth_ojt_from" prefWidth="150.0" styleClass="metro-combo-box" />
                                           <Label text="To">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox prefWidth="150.0" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_fourth_ojt_to" prefWidth="150.0" styleClass="metro-combo-box" />
                                        </children>
                                        <padding>
                                           <Insets left="60.0" />
@@ -627,7 +627,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <JFXButton fx:id="btn_back121" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Create" textFill="WHITE">
+                              <JFXButton fx:id="btn_multi_create" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Create" textFill="WHITE">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
