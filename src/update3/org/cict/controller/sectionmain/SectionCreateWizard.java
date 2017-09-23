@@ -34,6 +34,7 @@ import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
 import update3.org.cict.SectionConstants;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.async.TransactionException;
@@ -44,10 +45,11 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.propertymanager.FormFormat;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
-import java.util.Locale;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
@@ -120,7 +122,79 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     private Label lbl_auto_term;
 
     @FXML
-    private JFXButton btn_back121;
+    private JFXCheckBox chk_first;
+
+    @FXML
+    private HBox hbox_first;
+
+    @FXML
+    private ComboBox<String> cmb_first_from;
+
+    @FXML
+    private ComboBox<String> cmb_first_to;
+
+    @FXML
+    private JFXCheckBox chk_second;
+
+    @FXML
+    private HBox hbox_second;
+
+    @FXML
+    private ComboBox<String> cmb_second_from;
+
+    @FXML
+    private ComboBox<String> cmb_second_to;
+
+    @FXML
+    private JFXCheckBox chk_second_ojt;
+
+    @FXML
+    private HBox hbox_second_ojt;
+
+    @FXML
+    private ComboBox<String> cmb_second_ojt_from;
+
+    @FXML
+    private ComboBox<String> cmb_second_ojt_to;
+
+    @FXML
+    private JFXCheckBox chk_third;
+
+    @FXML
+    private HBox hbox_third;
+
+    @FXML
+    private ComboBox<String> cmb_third_from;
+
+    @FXML
+    private ComboBox<String> cmb_third_to;
+
+    @FXML
+    private JFXCheckBox chk_fourth;
+
+    @FXML
+    private HBox hbox_fourth;
+
+    @FXML
+    private ComboBox<String> cmb_fourth_from;
+
+    @FXML
+    private ComboBox<String> cmb_fourth_to;
+
+    @FXML
+    private JFXCheckBox chk_fourth_ojt;
+
+    @FXML
+    private HBox hbox_fourth_ojt;
+
+    @FXML
+    private ComboBox<String> cmb_fourth_ojt_from;
+
+    @FXML
+    private ComboBox<String> cmb_fourth_ojt_to;
+
+    @FXML
+    private JFXButton btn_multi_create;
 
     @FXML
     private JFXButton btn_multi_back;
@@ -171,6 +245,8 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         this.lbl_auto_term.textProperty().bind(this.lbl_single_term.textProperty());
 
         this.addTextFilters();
+
+        resetControls();
     }
 
     private void addTextFilters() {
@@ -279,6 +355,55 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_single_create, () -> {
             this.createRegularSingle();
         });
+    }
+
+    private void resetControls() {
+        /**
+         * First Year Controls.
+         */
+        this.chk_first.setSelected(false);
+        hbox_first.setDisable(true);
+
+        /**
+         * Second Years.
+         */
+        this.chk_second.setSelected(false);
+        this.chk_second_ojt.setSelected(false);
+        this.hbox_second.setDisable(true);
+        this.hbox_second_ojt.setDisable(true);
+        this.chk_second_ojt.setDisable(true);
+
+        /**
+         * Third Year
+         */
+        this.chk_third.setSelected(false);
+        this.hbox_third.setDisable(true);
+        /**
+         * Fourth
+         */
+        this.chk_fourth.setSelected(false);
+        this.chk_fourth_ojt.setSelected(false);
+        this.chk_fourth_ojt.setDisable(true);
+        this.hbox_fourth.setDisable(true);
+        this.hbox_fourth_ojt.setDisable(true);
+
+    }
+
+    private void enableFirstYear() {
+        hbox_first.setDisable(false);
+    }
+
+    private void enableSecondYear() {
+        hbox_second.setDisable(false);
+        this.chk_second_ojt.setDisable(false);
+    }
+
+    private void enableSecondYearOjt() {
+        hbox_second_ojt.setDisable(false);
+    }
+
+    private void enableThirdYear() {
+        hbox_third.setDisable(false);
     }
 
     /**
