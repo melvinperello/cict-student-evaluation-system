@@ -518,17 +518,17 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private void addComboBoxListeners() {
         // first years
-        setComboBoxLimit(this.cmb_first_from, cmb_first_to, true);
+        setComboBoxLimit(this.cmb_first_from, cmb_first_to, 0);
 
         // second years
-        setComboBoxLimit(this.cmb_second_from, cmb_second_to, true);
+        setComboBoxLimit(this.cmb_second_from, cmb_second_to, 0);
         // ojt
-        setComboBoxLimit(cmb_second_to, cmb_second_ojt_from, false, this.cmb_second_from);
-        setComboBoxLimit(cmb_second_ojt_from, cmb_second_ojt_from, true, this.cmb_second_from, this.cmb_second_to);
+        setComboBoxLimit(cmb_second_to, cmb_second_ojt_from, 1, this.cmb_second_from);
+        setComboBoxLimit(cmb_second_ojt_from, cmb_second_ojt_to, 1, this.cmb_second_from, this.cmb_second_to);
 
     }
 
-    private void setComboBoxLimit(ComboBox<String> source, ComboBox<String> self, boolean inGroup, ComboBox<String>... padding) {
+    private void setComboBoxLimit(ComboBox<String> source, ComboBox<String> self, int extra, ComboBox<String>... padding) {
 
         addComboBoxContents(0, source);
         source.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
@@ -537,13 +537,29 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             for (ComboBox<String> comboBox : padding) {
                 selfStart += comboBox.getSelectionModel().getSelectedIndex();
             }
-            if (!inGroup) {
-                selfStart += 1;
-            }
+            selfStart += extra;
             addComboBoxContents(selfStart, self);
             self.getSelectionModel().select(0);
+
+            /**
+             * call padding change.
+             */
+            if (source.getSelectionModel().isEmpty()) {
+            }
         });
         source.getSelectionModel().select(0);
+
+        if (padding.length != 0) {
+            ComboBox refBox = padding[0];
+            int storeIndex = refBox.getSelectionModel().getSelectedIndex();
+            try {
+                refBox.getSelectionModel().select(1);
+            } catch (Exception e) {
+                // list is only 1
+            }
+            refBox.getSelectionModel().select(storeIndex);
+
+        }
     }
 
     private void addComboBoxContents(int index, ComboBox<String> comboBox) {
@@ -561,7 +577,11 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          */
         ObservableList<String> listModel = FXCollections.observableArrayList();
         for (int x = index; x < charSet.length(); x++) {
-            listModel.add(charList.get(x));
+            try {
+                listModel.add(charList.get(x));
+            } catch (Exception e) {
+                //
+            }
         }
         comboBox.getItems().clear();
         comboBox.getItems().addAll(listModel);
