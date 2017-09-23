@@ -517,17 +517,36 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     }
 
     private void addComboBoxListeners() {
-        comboBoxContents(0, this.cmb_first_from);
+        // first years
+        setComboBoxLimit(this.cmb_first_from, cmb_first_to, true);
 
-        this.cmb_first_from.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            comboBoxContents((int) newValue, this.cmb_first_to);
-            this.cmb_first_to.getSelectionModel().select(0);
-        });
+        // second years
+        setComboBoxLimit(this.cmb_second_from, cmb_second_to, true);
+        // ojt
+        setComboBoxLimit(cmb_second_to, cmb_second_ojt_from, false, this.cmb_second_from);
+        setComboBoxLimit(cmb_second_ojt_from, cmb_second_ojt_from, true, this.cmb_second_from, this.cmb_second_to);
 
-        this.cmb_first_from.getSelectionModel().select(0);
     }
 
-    private void comboBoxContents(int index, ComboBox<String> comboBox) {
+    private void setComboBoxLimit(ComboBox<String> source, ComboBox<String> self, boolean inGroup, ComboBox<String>... padding) {
+
+        addComboBoxContents(0, source);
+        source.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            int selfStart = (int) newValue;
+
+            for (ComboBox<String> comboBox : padding) {
+                selfStart += comboBox.getSelectionModel().getSelectedIndex();
+            }
+            if (!inGroup) {
+                selfStart += 1;
+            }
+            addComboBoxContents(selfStart, self);
+            self.getSelectionModel().select(0);
+        });
+        source.getSelectionModel().select(0);
+    }
+
+    private void addComboBoxContents(int index, ComboBox<String> comboBox) {
         /**
          * Setup list set.
          */

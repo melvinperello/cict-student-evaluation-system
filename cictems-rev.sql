@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1391 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1395 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Dumping data for table cictems.account_faculty_attempt: ~194 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
@@ -322,7 +322,11 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(1387, 13, '2017-09-23 22:50:36', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(1388, 13, '2017-09-23 22:55:11', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(1389, 13, '2017-09-23 22:58:27', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(1390, 13, '2017-09-23 23:02:52', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(1390, 13, '2017-09-23 23:02:52', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1391, 1, '2017-09-24 00:30:35', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1392, 1, '2017-09-24 00:31:28', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1393, 1, '2017-09-24 00:39:14', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1394, 1, '2017-09-24 00:54:00', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -341,70 +345,12 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1237 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1241 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Dumping data for table cictems.account_faculty_session: ~59 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
-	(1178, 1, '2017-09-22 17:54:27', '2017-09-22 18:00:27', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-09-22 18:02:15', 'EVALUATION_SYSTEM', 1),
-	(1179, 1, '2017-09-22 18:02:16', '2017-09-22 18:04:46', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-09-22 18:07:21', 'EVALUATION_SYSTEM', 1),
-	(1180, 1, '2017-09-22 18:07:22', '2017-09-22 18:10:22', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-09-22 18:17:03', 'EVALUATION_SYSTEM', 1),
-	(1181, 1, '2017-09-22 18:17:04', '2017-09-22 18:21:04', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-09-22 18:21:21', 'EVALUATION_SYSTEM', 1),
-	(1182, 1, '2017-09-22 18:21:23', '2017-09-22 18:22:53', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-09-22 18:24:01', 'EVALUATION_SYSTEM', 1),
-	(1183, 1, '2017-09-22 18:24:02', '2017-09-22 18:25:03', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-09-22 18:24:08', 'EVALUATION_SYSTEM', 1),
-	(1184, 1, '2017-09-22 18:27:59', '2017-09-24 00:25:24', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1),
-	(1185, 13, '2017-09-22 19:24:06', '2017-09-22 19:29:06', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-22 19:28:25', 'EVALUATION_SYSTEM', 1),
-	(1186, 13, '2017-09-23 00:29:47', '2017-09-23 00:32:47', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:32:12', 'EVALUATION_SYSTEM', 1),
-	(1187, 13, '2017-09-23 00:32:44', '2017-09-23 00:34:14', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:33:26', 'EVALUATION_SYSTEM', 1),
-	(1188, 13, '2017-09-23 00:33:59', '2017-09-23 00:36:30', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:35:43', 'EVALUATION_SYSTEM', 1),
-	(1189, 13, '2017-09-23 00:38:42', '2017-09-23 00:43:13', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:42:36', 'EVALUATION_SYSTEM', 1),
-	(1190, 13, '2017-09-23 00:43:27', '2017-09-23 00:45:28', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:44:55', 'EVALUATION_SYSTEM', 1),
-	(1191, 13, '2017-09-23 00:45:36', '2017-09-23 00:48:07', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:47:22', 'EVALUATION_SYSTEM', 1),
-	(1192, 13, '2017-09-23 00:48:25', '2017-09-23 00:49:55', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:49:05', 'EVALUATION_SYSTEM', 1),
-	(1193, 13, '2017-09-23 00:55:20', '2017-09-23 00:58:21', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 00:57:32', 'EVALUATION_SYSTEM', 1),
-	(1194, 13, '2017-09-23 00:58:13', '2017-09-23 01:03:43', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 01:02:46', 'EVALUATION_SYSTEM', 1),
-	(1195, 13, '2017-09-23 09:49:17', '2017-09-23 09:55:17', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 09:54:24', 'EVALUATION_SYSTEM', 1),
-	(1196, 13, '2017-09-23 10:30:29', '2017-09-23 10:32:30', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 10:31:45', 'EVALUATION_SYSTEM', 1),
-	(1197, 13, '2017-09-23 10:32:18', '2017-09-23 10:46:19', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 10:45:36', 'EVALUATION_SYSTEM', 1),
-	(1198, 13, '2017-09-23 10:46:45', '2017-09-23 10:50:15', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 10:49:23', 'EVALUATION_SYSTEM', 1),
-	(1199, 13, '2017-09-23 10:50:13', '2017-09-23 11:14:13', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 11:13:19', 'EVALUATION_SYSTEM', 1),
-	(1200, 13, '2017-09-23 11:13:50', '2017-09-23 11:19:20', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 11:18:23', 'EVALUATION_SYSTEM', 1),
-	(1201, 13, '2017-09-23 11:19:12', '2017-09-23 11:33:12', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 11:32:33', 'EVALUATION_SYSTEM', 1),
-	(1202, 13, '2017-09-23 11:33:08', '2017-09-23 11:43:08', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 11:42:32', 'EVALUATION_SYSTEM', 1),
-	(1203, 13, '2017-09-23 11:43:04', '2017-09-23 11:47:05', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 11:46:09', 'EVALUATION_SYSTEM', 1),
-	(1204, 13, '2017-09-23 11:46:49', '2017-09-23 12:00:19', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 11:59:38', 'EVALUATION_SYSTEM', 1),
-	(1205, 13, '2017-09-23 12:02:57', '2017-09-23 12:08:27', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 12:07:33', 'EVALUATION_SYSTEM', 1),
-	(1206, 13, '2017-09-23 12:17:59', '2017-09-23 12:20:59', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 12:23:30', 'EVALUATION_SYSTEM', 1),
-	(1207, 13, '2017-09-23 12:23:32', '2017-09-23 12:26:02', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 12:26:34', 'EVALUATION_SYSTEM', 1),
-	(1208, 13, '2017-09-23 12:26:35', '2017-09-23 12:30:06', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 12:29:06', 'EVALUATION_SYSTEM', 1),
-	(1209, 13, '2017-09-23 14:21:25', '2017-09-23 14:24:55', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 14:24:01', 'EVALUATION_SYSTEM', 1),
-	(1210, 13, '2017-09-23 14:24:32', '2017-09-23 14:28:02', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 14:27:07', 'EVALUATION_SYSTEM', 1),
-	(1211, 13, '2017-09-23 14:27:37', '2017-09-23 14:41:08', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 14:40:24', 'EVALUATION_SYSTEM', 1),
-	(1212, 13, '2017-09-23 14:40:58', '2017-09-23 14:43:28', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 14:42:47', 'EVALUATION_SYSTEM', 1),
-	(1213, 13, '2017-09-23 14:43:16', '2017-09-23 14:50:16', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 14:49:28', 'EVALUATION_SYSTEM', 1),
-	(1214, 13, '2017-09-23 14:52:22', '2017-09-23 15:05:23', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 15:04:50', 'EVALUATION_SYSTEM', 1),
-	(1215, 13, '2017-09-23 17:26:13', '2017-09-23 17:30:13', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 17:29:15', 'EVALUATION_SYSTEM', 1),
-	(1216, 13, '2017-09-23 17:30:39', '2017-09-23 17:32:39', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 17:31:46', 'EVALUATION_SYSTEM', 1),
-	(1217, 13, '2017-09-23 17:32:27', '2017-09-23 17:36:27', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 17:35:46', 'EVALUATION_SYSTEM', 1),
-	(1218, 13, '2017-09-23 17:39:23', '2017-09-23 18:47:23', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 18:46:44', 'EVALUATION_SYSTEM', 1),
-	(1219, 13, '2017-09-23 18:51:34', '2017-09-23 18:55:35', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 18:54:55', 'EVALUATION_SYSTEM', 1),
-	(1220, 13, '2017-09-23 18:55:39', '2017-09-23 19:08:39', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 19:08:05', 'EVALUATION_SYSTEM', 1),
-	(1221, 13, '2017-09-23 19:08:41', '2017-09-23 19:22:11', '%192.168.0.105@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 19:21:17', 'EVALUATION_SYSTEM', 1),
-	(1222, 13, '2017-09-23 19:45:37', '2017-09-23 20:26:08', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 20:25:09', 'EVALUATION_SYSTEM', 1),
-	(1223, 13, '2017-09-23 20:26:27', '2017-09-23 20:32:58', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 20:32:05', 'EVALUATION_SYSTEM', 1),
-	(1224, 13, '2017-09-23 20:38:48', '2017-09-23 20:41:48', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 20:41:04', 'EVALUATION_SYSTEM', 1),
-	(1225, 13, '2017-09-23 20:44:07', '2017-09-23 20:45:08', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 20:44:33', 'EVALUATION_SYSTEM', 1),
-	(1226, 13, '2017-09-23 20:48:57', '2017-09-23 20:50:58', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 20:50:07', 'EVALUATION_SYSTEM', 1),
-	(1227, 13, '2017-09-23 20:52:41', '2017-09-23 21:13:41', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 21:13:00', 'EVALUATION_SYSTEM', 1),
-	(1228, 13, '2017-09-23 21:13:48', '2017-09-23 21:44:18', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 21:43:29', 'EVALUATION_SYSTEM', 1),
-	(1229, 13, '2017-09-23 21:44:27', '2017-09-23 21:46:58', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 21:45:58', 'EVALUATION_SYSTEM', 1),
-	(1230, 13, '2017-09-23 21:46:33', '2017-09-23 21:54:03', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 21:53:27', 'EVALUATION_SYSTEM', 1),
-	(1231, 13, '2017-09-23 21:56:59', '2017-09-23 22:36:29', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 22:35:41', 'EVALUATION_SYSTEM', 1),
-	(1232, 13, '2017-09-23 22:36:17', '2017-09-23 22:48:18', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 22:47:38', 'EVALUATION_SYSTEM', 1),
-	(1233, 13, '2017-09-23 22:50:36', '2017-09-23 22:55:36', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 22:54:42', 'EVALUATION_SYSTEM', 1),
-	(1234, 13, '2017-09-23 22:55:11', '2017-09-23 22:58:42', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 22:57:59', 'EVALUATION_SYSTEM', 1),
-	(1235, 13, '2017-09-23 22:58:27', '2017-09-23 23:00:58', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 23:00:02', 'EVALUATION_SYSTEM', 1),
-	(1236, 13, '2017-09-23 23:02:53', '2017-09-23 23:08:53', '%192.168.20.10@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-09-23 23:08:05', 'EVALUATION_SYSTEM', 1);
+	(1240, 1, '2017-09-24 00:54:00', '2017-09-24 00:56:00', '%192.168.254.149@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -1309,7 +1255,7 @@ CREATE TABLE IF NOT EXISTS `linked_marshall_session` (
   CONSTRAINT `marshall_session_fk_from_student_cict_id` FOREIGN KEY (`cict_id`) REFERENCES `student` (`cict_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_marshall_session: ~1 rows (approximately)
+-- Dumping data for table cictems.linked_marshall_session: ~0 rows (approximately)
 /*!40000 ALTER TABLE `linked_marshall_session` DISABLE KEYS */;
 INSERT INTO `linked_marshall_session` (`ses_id`, `cict_id`, `account_id`, `name`, `org`, `imei`, `session_start`, `session_end`, `status`, `active`) VALUES
 	(21, 59, 24, 'MERCADO JELYN CARLOS', 'NONE', '867542024313101', '2017-09-13 23:11:29', NULL, 'ONLINE', 1);
@@ -1390,7 +1336,7 @@ CREATE TABLE IF NOT EXISTS `linked_settings` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_settings: ~1 rows (approximately)
+-- Dumping data for table cictems.linked_settings: ~0 rows (approximately)
 /*!40000 ALTER TABLE `linked_settings` DISABLE KEYS */;
 INSERT INTO `linked_settings` (`id`, `floor_3_max`, `floor_4_max`, `floor_3_name`, `floor_4_name`, `floor_3_last`, `floor_4_last`, `floor_3_cut`, `floor_4_cut`, `created_by`, `created_date`, `active`) VALUES
 	(1, 1000, 1000, '3FLR/IT8', '4FLR/CT6', 25, 0, 0, 1, 1, '2017-09-10 08:25:36', 1);
