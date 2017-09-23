@@ -465,12 +465,12 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     }
 
     private void enableFourthYear() {
-        hbox_second.setDisable(false);
-        this.chk_second_ojt.setDisable(false);
+        hbox_fourth.setDisable(false);
+        this.chk_fourth_ojt.setDisable(false);
     }
 
     private void enableFourthYearOjt() {
-        hbox_second_ojt.setDisable(false);
+        hbox_fourth_ojt.setDisable(false);
     }
 
     // disables
