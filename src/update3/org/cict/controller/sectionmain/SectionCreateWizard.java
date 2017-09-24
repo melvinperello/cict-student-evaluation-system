@@ -704,6 +704,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         }
     }
 
+    public void createRegularMulti() {
+        CreateRegularSectionsAuto multiTx = new CreateRegularSectionsAuto();
+    }
+
     //--------------------------------------------------------------------------
     private class CreateRegularSection extends Transaction {
 
@@ -724,6 +728,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     .eq((DB.load_section()._group), secionGroup)
                     .eq(DB.load_section().CURRICULUM_id, curriculumMapping.getId())
                     .eq(DB.load_section().ACADTERM_id, currentTerm.getId())
+                    .eq(DB.load_section().type, SectionConstants.REGULAR)
                     .active()
                     .first();
 
@@ -808,12 +813,17 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private class CreateRegularSectionsAuto extends Transaction {
 
+        private void sout(Object message) {
+            System.out.println(this.getClass().getSimpleName() + ": " + message.toString());
+        }
+
         private HashMap<Integer, Boolean> yearsToCreate;
         private HashMap<Integer, SectionMeta> sectionNames;
         private CurriculumMapping curMap;
 
         @Override
         protected boolean transaction() {
+            sout("transaction started");
             AcademicTermMapping currentTerm = SystemProperties
                     .instance()
                     .getCurrentAcademicTerm();
@@ -822,9 +832,20 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
              */
             Session localSession = Mono.orm().openSession();
             org.hibernate.Transaction dataTx = localSession.beginTransaction();
-
+            
+            sout("Session started");
+            /**
+             * Database partial transaction count;
+             */
+            int mutation_count = 0;
             for (Integer yearlevel = 1; yearlevel <= 4; yearlevel++) {
+                /**
+                 * If not included proceed to next year level.
+                 */
+                sout(" - - - - - - - - - - - - - - - - - - - - -");
+                sout("Year Level: " + yearlevel);
                 if (!yearsToCreate.get(yearlevel)) {
+                    sout("Not Included Skipping . . .");
                     continue;
                 }
 
@@ -841,6 +862,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                         .active()
                         .all();
 
+                /**
+                 * Error Throw if the the curriculum has empty subjects.
+                 */
                 for (CurriculumSubjectMapping curSub : curriculumSubjects) {
                     SubjectMapping subject = Database.connect().subject()
                             .getPrimary(curSub.getSUBJECT_id());
@@ -860,24 +884,192 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                         break;
                     }
                 }
+                
+                sout("Regular Sem: " + semester);
+                sout("OJT Sem: " + String.valueOf(ojtSem));
+                
 
+                /**
+                 * Section Creation.
+                 */
                 SectionMeta meta = sectionNames.get(yearlevel);
 
                 ArrayList<String> normal = meta.normalSections;
                 ArrayList<String> ojt = meta.internSections;
 
                 /**
-                 * Create Regular Sections.
+                 * Create Regular Sections. Throws Transaction error for failed
+                 * insertion.
                  */
+                int normal_mutation_count = 0;
                 if (normal != null) {
                     for (String regNames : normal) {
-
+                        for (Integer group = 1; group <= 2; group++) {
+                            normal_mutation_count += insertSection(
+                                    regNames,
+                                    yearlevel,
+                                    group,
+                                    currentTerm,
+                                    localSession,
+                                    dataTx,
+                                    semester);
+                        }
                     }
                 }
 
+                /**
+                 * Create OJT Sections. Throws Transaction error for failed
+                 * insertion.
+                 */
+                int ojt_mutation_count = 0;
+                if (ojt != null) {
+                    /**
+                     * If OJT names are existing.
+                     */
+                    if (ojtSem != null) {
+                        /**
+                         * If the curriculum has an ojt subject.
+                         */
+                        for (String regNames : ojt) {
+                            for (Integer group = 1; group <= 2; group++) {
+                                ojt_mutation_count += insertSection(
+                                        regNames,
+                                        yearlevel,
+                                        group,
+                                        currentTerm,
+                                        localSession,
+                                        dataTx,
+                                        ojtSem);
+                            }
+                        }
+                    }
+                }
+
+                mutation_count += (ojt_mutation_count + normal_mutation_count);
             }
 
+            /**
+             * commit changes if no errors were thrown.
+             */
+            dataTx.commit();
+            localSession.close();
             return true;
+        }
+
+        /**
+         * Insert section function.
+         *
+         * @param regNames
+         * @param yearlevel
+         * @param group
+         * @param currentTerm
+         * @param localSession
+         * @param dataTx
+         * @param semester
+         */
+        private int insertSection(
+                // parameters.
+                String regNames,
+                Integer yearlevel,
+                Integer group,
+                AcademicTermMapping currentTerm,
+                Session localSession,
+                org.hibernate.Transaction dataTx,
+                Integer semester) {
+            /**
+             * marker if this function has created a change in the session.
+             */
+            int mutated = 0;
+            /**
+             * search if exist.
+             */
+            LoadSectionMapping exist = Mono.orm().newSearch(Database.connect().load_section())
+                    .eq(DB.load_section().section_name, regNames)
+                    .eq((DB.load_section().year_level), yearlevel)
+                    .eq((DB.load_section()._group), group)
+                    .eq(DB.load_section().CURRICULUM_id, this.curMap.getId())
+                    .eq(DB.load_section().ACADTERM_id, this.curMap.getId())
+                    .eq(DB.load_section().type, SectionConstants.REGULAR)
+                    .active()
+                    .first();
+
+            if (exist != null) {
+                System.out.println(exist.getSection_name());
+                sout("Section Existing");
+                /**
+                 * Skip this group.
+                 */
+                return mutated;
+            }
+
+            /**
+             * When not existing proceed to creation.
+             */
+            LoadSectionMapping newLoadSection = MapFactory.map().load_section();
+            newLoadSection.setACADTERM_id(currentTerm.getId());
+            newLoadSection.setACADPROG_id(this.curMap.getACADPROG_id());
+            newLoadSection.setCURRICULUM_id(this.curMap.getId());
+            newLoadSection.setSection_name(regNames);
+            newLoadSection.setYear_level(yearlevel);
+            newLoadSection.set_group(group);
+            newLoadSection.setType(SectionConstants.REGULAR);
+            newLoadSection.setCollege("CICT");
+            newLoadSection.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
+            newLoadSection.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
+
+            /**
+             * Insert section temporarily.
+             */
+            int temp_section_id = Database.connect()
+                    .load_section()
+                    .transactionalInsert(localSession, newLoadSection);
+
+            if (temp_section_id <= 0) {
+                /**
+                 * Throw exception.
+                 */
+                dataTx.rollback();
+                /**
+                 * make this transaction trigger fail call back.
+                 */
+                throw new TransactionException("load_section insertion error");
+            }
+
+            /**
+             * Get Subjects from curriculum
+             */
+            ArrayList<CurriculumSubjectMapping> subjects = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                    .eq(DB.curriculum_subject().CURRICULUM_id, curMap.getId())
+                    .eq(DB.curriculum_subject().year, yearlevel)
+                    .eq(DB.curriculum_subject().semester, currentTerm.getSemester_regular())
+                    .active(Order.asc(DB.curriculum_subject().id))
+                    .all();
+
+            for (CurriculumSubjectMapping subject : subjects) {
+                LoadGroupMapping loadGroup = MapFactory.map().load_group();
+                loadGroup.setSUBJECT_id(subject.getSUBJECT_id());
+                loadGroup.setLOADSEC_id(temp_section_id);
+                loadGroup.setGroup_type("REGULAR");
+                loadGroup.setAdded_date(Mono.orm().getServerTime().getDateWithFormat());
+                loadGroup.setAdded_by(CollegeFaculty.instance().getFACULTY_ID());
+
+                int temp_load_group = Database.connect().load_section()
+                        .transactionalInsert(localSession, loadGroup);
+
+                if (temp_load_group <= 0) {
+                    /**
+                     * Throw exception.
+                     */
+                    dataTx.rollback();
+                    throw new TransactionException("load_group insertion error");
+                }
+            }
+
+            /**
+             * Something has changed in the session.
+             */
+            mutated = 1;
+            return mutated;
         }
 
         @Override
