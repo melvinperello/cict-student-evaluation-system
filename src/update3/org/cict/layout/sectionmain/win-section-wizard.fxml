@@ -218,7 +218,7 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox fx:id="vbox_main" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" spacing="40.0" visible="false">
+            <VBox fx:id="vbox_main" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" spacing="40.0">
                <children>
                   <VBox prefWidth="663.0" spacing="20.0">
                      <children>
@@ -288,7 +288,7 @@
                   </VBox>
                </children>
             </VBox>
-            <StackPane fx:id="stack_multi">
+            <StackPane fx:id="stack_multi" visible="false">
                <children>
                   <VBox fx:id="vbox_multi" maxHeight="1.7976931348623157E308" prefWidth="695.0" spacing="40.0">
                      <children>

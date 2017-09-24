@@ -32,6 +32,7 @@ import app.lazy.models.Database;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
+import app.lazy.models.SubjectMapping;
 import update3.org.cict.SectionConstants;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -56,8 +57,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
+import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.Session;
@@ -205,6 +208,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_multi_back;
 
+    @FXML
+    private StackPane stack_multi;
+
     public SectionCreateWizard() {
         //
     }
@@ -237,7 +243,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Default visibility.
          */
         this.vbox_main.setVisible(true);
-        this.vbox_multi.setVisible(false);
+        this.stack_multi.setVisible(false);
         this.vbox_single.setVisible(false);
 
         /**
@@ -250,19 +256,44 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         this.lbl_single_term.setText(SystemProperties.instance().getCurrentTermString());
         this.lbl_auto_term.textProperty().bind(this.lbl_single_term.textProperty());
 
+        /**
+         * Automatic creation, checks the curriculum type whether to disabled 1
+         * and 2 or 3 and 4.
+         */
+        this.checkCurriculumType();
+        /**
+         * Single Creation Text Filter.
+         */
         this.addTextFilters();
 
-        resetControls();
-
-        addCheckBoxListeners();
+        this.resetControls();
+        this.addCheckBoxListeners();
         this.addComboBoxListeners();
+    }
+
+    private void checkCurriculumType() {
+        String type = curriculumMap.getLadderization_type();
+        if (type.equalsIgnoreCase("NONE")) {
+            // continous
+        } else if (type.equalsIgnoreCase("PREPARATORY")) {
+            // 1 and 2 only
+            this.chk_third.setDisable(true);
+            chk_fourth.setDisable(true);
+        } else if (type.equalsIgnoreCase("PREPARATORY")) {
+            //3 and 4 only
+            this.chk_first.setDisable(true);
+            this.chk_second.setDisable(true);
+        }
+
     }
 
     private void addTextFilters() {
         /**
          * Filter Year Level.
          */
-        FormFormat.IntegerFormat yearFilter = new FormFormat().new IntegerFormat();
+        FormFormat formFormatter = new FormFormat();
+
+        FormFormat.IntegerFormat yearFilter = formFormatter.new IntegerFormat();
         yearFilter.setMinLimit(1);
         yearFilter.setMaxLimit(4);
         yearFilter.setFilterAction(filter -> {
@@ -274,7 +305,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         /**
          * Filter Section Name.
          */
-        FormFormat.CustomFormat sectionNameFilter = new FormFormat().new CustomFormat();
+        FormFormat.CustomFormat sectionNameFilter = formFormatter.new CustomFormat();
         sectionNameFilter.setMaxCharacters(1);
         sectionNameFilter.setStringFilter(text -> {
             // custom filter
@@ -300,7 +331,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         /**
          * Filter Group.
          */
-        FormFormat.IntegerFormat groupFilter = new FormFormat().new IntegerFormat();
+        FormFormat.IntegerFormat groupFilter = formFormatter.new IntegerFormat();
         groupFilter.setMinLimit(1);
         groupFilter.setMaxLimit(2);
         groupFilter.setFilterAction(filter -> {
@@ -351,9 +382,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          */
         super.addClickEvent(btn_multi_creation, () -> {
             Animate.fade(vbox_main, SectionConstants.FADE_SPEED, () -> {
-                vbox_multi.setVisible(true);
+                stack_multi.setVisible(true);
                 vbox_main.setVisible(false);
-            }, vbox_multi);
+            }, stack_multi);
         });
 
         /**
@@ -362,7 +393,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_multi_back, () -> {
             Animate.fade(vbox_main, SectionConstants.FADE_SPEED, () -> {
                 vbox_main.setVisible(true);
-                vbox_multi.setVisible(false);
+                stack_multi.setVisible(false);
 
             }, vbox_main);
         });
@@ -408,7 +439,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     }
 
     /**
-     * Behavior of components dependent on the corresponding checkbox.
+     * Behavior of components dependent on the corresponding check box.
      */
     private void addCheckBoxListeners() {
         this.chk_first.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -777,11 +808,15 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private class CreateRegularSectionsAuto extends Transaction {
 
-        private HashMap<Integer, Boolean> yearsToCreate = new HashMap<>();
-        private HashMap<Integer, SectionMeta> sectionNames = new HashMap<>();
+        private HashMap<Integer, Boolean> yearsToCreate;
+        private HashMap<Integer, SectionMeta> sectionNames;
+        private CurriculumMapping curMap;
 
         @Override
         protected boolean transaction() {
+            AcademicTermMapping currentTerm = SystemProperties
+                    .instance()
+                    .getCurrentAcademicTerm();
             /**
              * create local session.
              */
@@ -789,9 +824,55 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             org.hibernate.Transaction dataTx = localSession.beginTransaction();
 
             for (Integer yearlevel = 1; yearlevel <= 4; yearlevel++) {
-
                 if (!yearsToCreate.get(yearlevel)) {
                     continue;
+                }
+
+                /**
+                 * Determine the OJT semester.
+                 */
+                Integer semester = currentTerm.getSemester_regular();
+                Integer ojtSem = null;
+
+                ArrayList<CurriculumSubjectMapping> curriculumSubjects = Mono.orm()
+                        .newSearch(Database.connect().curriculum_subject())
+                        .eq(DB.curriculum_subject().year, yearlevel)
+                        .eq(DB.curriculum_subject().CURRICULUM_id, curMap.getId())
+                        .active()
+                        .all();
+
+                for (CurriculumSubjectMapping curSub : curriculumSubjects) {
+                    SubjectMapping subject = Database.connect().subject()
+                            .getPrimary(curSub.getSUBJECT_id());
+
+                    if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+
+                        if (curSub.getSemester().equals(1)) {
+                            /**
+                             * If OJT is in the first semester.
+                             */
+                            semester = 2;
+                            ojtSem = 1;
+                        } else if (curSub.getSemester().equals(2)) {
+                            semester = 1;
+                            ojtSem = 2;
+                        }
+                        break;
+                    }
+                }
+
+                SectionMeta meta = sectionNames.get(yearlevel);
+
+                ArrayList<String> normal = meta.normalSections;
+                ArrayList<String> ojt = meta.internSections;
+
+                /**
+                 * Create Regular Sections.
+                 */
+                if (normal != null) {
+                    for (String regNames : normal) {
+
+                    }
                 }
 
             }
