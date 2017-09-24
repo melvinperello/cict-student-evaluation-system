@@ -618,7 +618,7 @@
                                                             </JFXCheckBox>
                                                          </children>
                                                       </HBox>
-                                                      <HBox fx:id="hbox_fourth1" spacing="20.0">
+                                                      <HBox fx:id="hbox_ojt" spacing="20.0">
                                                          <children>
                                                             <Label text="From">
                                                                <font>

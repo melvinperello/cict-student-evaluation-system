@@ -199,6 +199,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_multi_back;
 
+    @FXML
+    private HBox hbox_ojt;
+
     public SectionCreateWizard() {
         //
     }
@@ -243,6 +246,11 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
         this.lbl_single_term.setText(SystemProperties.instance().getCurrentTermString());
         this.lbl_auto_term.textProperty().bind(this.lbl_single_term.textProperty());
+
+        /**
+         * Populate char set.
+         */
+        this.populateCharSet();
 
         /**
          * Automatic creation, checks the curriculum type whether to disabled 1
@@ -427,6 +435,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
         this.hbox_fourth.setDisable(true);
 
+        this.chk_ojt.setSelected(false);
+        hbox_ojt.setDisable(true);
+
     }
 
     /**
@@ -462,6 +473,14 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 enableFourthYear();
             } else {
                 disableFourthYear();
+            }
+        });
+
+        this.chk_ojt.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                hbox_ojt.setDisable(false);
+            } else {
+                hbox_ojt.setDisable(true);
             }
         });
 
@@ -519,6 +538,8 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         //fourth
         setComboBoxLimit(this.cmb_fourth_from, cmb_fourth_to, 0);
 
+        // ojt
+        setComboBoxLimit(this.cmb_ojt_from, this.cmb_ojt_to, 0);
     }
 
     /**
@@ -568,26 +589,39 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     }
 
     /**
+     * Combo box contents.
+     */
+    private ArrayList<String> charList = new ArrayList<>();
+
+    /**
+     * Populates the charList. RUN ONLY ONCE.
+     */
+    private ArrayList<String> populateCharSet() {
+        /**
+         * Setup list set.
+         */
+        String charSet = "abcdefghijklmnopqrstuvxyz".toUpperCase(Locale.ENGLISH);
+        this.charList = new ArrayList<>();
+        for (Character c : charSet.toCharArray()) {
+            charList.add(c.toString());
+        }
+
+        return charList;
+    }
+
+    /**
      * Load combo box values.
      *
      * @param index
      * @param comboBox
      */
     private void addComboBoxContents(int index, ComboBox<String> comboBox) {
-        /**
-         * Setup list set.
-         */
-        String charSet = "abcdefghijklmnopqrstuvxyz".toUpperCase(Locale.ENGLISH);
-        ArrayList<String> charList = new ArrayList<>();
-        for (Character c : charSet.toCharArray()) {
-            charList.add(c.toString());
-        }
 
         /**
          * Add to observable.
          */
         ObservableList<String> listModel = FXCollections.observableArrayList();
-        for (int x = index; x < charSet.length(); x++) {
+        for (int x = index; x < charList.size(); x++) {
             try {
                 listModel.add(charList.get(x));
             } catch (Exception e) {
@@ -650,8 +684,23 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     public void createRegularMulti() {
         CreateRegularSectionsAuto multiTx = new CreateRegularSectionsAuto();
+        /**
+         * Create Control Group.
+         */
+        ArrayList<ControlGroup> controlList = new ArrayList<>();
+        controlList.add(new ControlGroup(1, chk_first, cmb_first_from, cmb_first_to));
+        controlList.add(new ControlGroup(2, chk_second, cmb_second_from, cmb_second_to));
+        controlList.add(new ControlGroup(3, chk_third, cmb_third_from, cmb_third_to));
+        controlList.add(new ControlGroup(4, chk_fourth, cmb_fourth_from, cmb_fourth_to));
+
+        /**
+         * Add Curriculum Mapping.
+         */
         multiTx.curMap = this.curriculumMap;
 
+        /**
+         * Get Selected CheckBox.
+         */
         HashMap<Integer, Boolean> createList = new HashMap<>();
         createList.put(1, Boolean.TRUE);
         createList.put(2, Boolean.TRUE);
@@ -721,6 +770,53 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         });
 
         multiTx.transact();
+
+    }
+
+    private class ControlGroup {
+
+        private Integer year;
+        private JFXCheckBox checkBox;
+        private ComboBox<String> cmbFrom;
+        private ComboBox<String> cmbTo;
+
+        public ControlGroup(Integer year, JFXCheckBox checkBox, ComboBox<String> cmbFrom, ComboBox<String> cmbTo) {
+            this.year = year;
+            this.checkBox = checkBox;
+            this.cmbFrom = cmbFrom;
+            this.cmbTo = cmbTo;
+        }
+
+        public ArrayList<String> list() {
+            ArrayList<String> listRange = new ArrayList<>();
+
+            ArrayList<String> charList = populateCharSet();
+            /**
+             * Loop through all the listed char set.
+             */
+            String initString = this.cmbFrom.getSelectionModel().getSelectedItem().toUpperCase().trim();
+            String endString = this.cmbTo.getSelectionModel().getSelectedItem().toUpperCase().trim();
+            boolean isFirstMatch = false;
+            for (String string : charList) {
+
+                if (isFirstMatch) {
+                    listRange.add(string.toUpperCase());
+                } else {
+                    if (string.equalsIgnoreCase(initString)) {
+                        // first match detected.
+                        isFirstMatch = true;
+                    }
+                }
+
+                /**
+                 * check for end string.
+                 */
+                if (string.equalsIgnoreCase(endString)) {
+                    break;
+                }
+            }
+            return listRange;
+        }
 
     }
 
