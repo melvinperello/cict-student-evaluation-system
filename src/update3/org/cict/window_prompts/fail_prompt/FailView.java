@@ -46,7 +46,7 @@ public class FailView extends SceneFX {
     public FailView(StackPane stackPane) {
         this.stackPane = stackPane;
         this.emptyBox = Mono.fx().create()
-                .setPackageName("update3.org.cict.window_prompts.empty_prompt")
+                .setPackageName("update3.org.cict.window_prompts.fail_prompt")
                 .setFxmlDocument("pane-fail")
                 .makeFX()
                 .pullOutLayout();

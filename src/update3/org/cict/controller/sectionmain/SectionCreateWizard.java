@@ -65,6 +65,9 @@ import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import update3.org.cict.layout.default_loader.LoaderView;
+import update3.org.cict.window_prompts.fail_prompt.FailView;
+import update3.org.cict.window_prompts.success_prompt.SuccessView;
 
 /**
  *
@@ -227,9 +230,20 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         this.curriculumType = curriculumType;
     }
 
+    private LoaderView loaderMulti;
+    private SuccessView successMulti;
+    private FailView failMulti;
+
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+        /**
+         * Loaders.
+         */
+        loaderMulti = new LoaderView(stack_multi);
+        successMulti = new SuccessView(stack_multi);
+        failMulti = new FailView(stack_multi);
+
         /**
          * Default visibility.
          */
@@ -352,15 +366,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Back to Section List.
          */
         super.addClickEvent(btn_back, () -> {
-            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
-                super.replaceRoot(winRegularSectionControllerFx.getApplicationRoot());
-
-            }, winRegularSectionControllerFx.getApplicationRoot());
-            // refresh section list.
-            winRegularSectionControllerFx.
-                    <WinRegularSectionsController>getController()
-                    .fetchSections();
-
+            onBtnBack();
         });
 
         /**
@@ -416,6 +422,21 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_multi_create, () -> {
             createRegularMulti();
         });
+    }
+
+    private void onBtnBack() {
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(winRegularSectionControllerFx.getApplicationRoot());
+
+        }, winRegularSectionControllerFx.getApplicationRoot());
+        // refresh section list.
+        winRegularSectionControllerFx.
+                <WinRegularSectionsController>getController()
+                .fetchSections();
+
+        loaderMulti.detach();
+        failMulti.detach();
+        successMulti.detach();
     }
 
     private void resetControls() {
@@ -691,7 +712,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         }
     }
 
+    private Integer OJT_YEAR = null;
+
     public void createRegularMulti() {
+        this.OJT_YEAR = null;
         CreateRegularSectionsAuto multiTx = new CreateRegularSectionsAuto();
         /**
          * Create Control Group.
@@ -715,12 +739,36 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         HashMap<Integer, SectionMeta> sectionNames = new HashMap<>();
         for (ControlGroup cg : controlList) {
             createList.put(cg.year, cg.checkBox.isSelected());
+
             /**
              * Add contents.
              */
             SectionMeta sectionMeta = new SectionMeta();
             sectionMeta.normalSections = cg.list();
             sectionMeta.internSections = null;
+            /**
+             * OJT
+             */
+            if (this.OJT_YEAR != null) {
+                sout("OJT FOUND");
+                // if OJT was found.
+                if (chk_ojt.isSelected()) {
+                    sout("OJT SELECTED");
+                    if (!cg.checkBox.isSelected()) {
+                        sout("OJT YEAR NOT SELECTED");
+                        // if ojt was selected but the year is not selected.
+                        createList.put(cg.year, true);
+                        sectionMeta.normalSections = new ArrayList<>();
+                    }
+
+                    // if OJT was selected.
+                    sectionMeta.internSections
+                            = new ControlGroup(null, null, cmb_ojt_from, cmb_ojt_to).list();
+                    // make null
+                    this.OJT_YEAR = null;
+                }
+            }
+
             /**
              * Add to meta.
              */
@@ -731,22 +779,59 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         multiTx.sectionNames = sectionNames;
 
         multiTx.whenStarted(() -> {
+            loaderMulti.setMessage("Just A Moment");
+            loaderMulti.attach();
             sout("Scheduled >>>>>>");
         });
         multiTx.whenCancelled(() -> {
+            loaderMulti.detach();
+
             sout("CANCELED >>>>>>");
         });
         multiTx.whenFailed(() -> {
+            loaderMulti.detach();
+
+            failMulti.setMessage("Something Went Wrong !");
+            failMulti.getButton().setText("Ok");
+            super.addClickEvent(failMulti.getButton(), () -> {
+                failMulti.detach();
+            });
+            failMulti.attach();
             sout("FUCKiNG FAILED");
         });
         multiTx.whenSuccess(() -> {
+            loaderMulti.detach();
+
+            successMulti.setMessage("Operation Completed Successfully");
+            successMulti.getButton().setText("View");
+            super.addClickEvent(successMulti.getButton(), () -> {
+                onBtnBack();
+                successMulti.detach();
+            });
+            successMulti.attach();
+
             sout("COMITTED SUCCESS");
         });
         multiTx.whenFinished(() -> {
             sout("DONE");
         });
 
-        multiTx.transact();
+        /**
+         * Check for internship subject.
+         */
+        LocateInternship findInternTx = new LocateInternship();
+        findInternTx.curMap = this.curriculumMap;
+        findInternTx.whenSuccess(() -> {
+            OJT_YEAR = findInternTx.OJT_YEAR;
+            multiTx.transact();
+        });
+        findInternTx.whenFinished(() -> {
+            if (findInternTx.OJT_YEAR == null) {
+                // no internship found.
+            }
+        });
+
+        findInternTx.transact();
 
     }
 
@@ -902,6 +987,51 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         }
     }
 
+    /**
+     * Finds the internship subject across the curriculum.
+     */
+    private class LocateInternship extends Transaction {
+
+        private CurriculumMapping curMap;
+        private Integer OJT_YEAR = null;
+
+        @Override
+        protected boolean transaction() {
+            ArrayList<CurriculumSubjectMapping> curriculumSubjects = Mono.orm()
+                    .newSearch(Database.connect().curriculum_subject())
+                    .eq(DB.curriculum_subject().CURRICULUM_id, curMap.getId())
+                    .active()
+                    .all();
+
+            /**
+             * Error Throw if the the curriculum has empty subjects.
+             */
+            if (curriculumSubjects == null) {
+                return true;
+            }
+
+            for (CurriculumSubjectMapping curSub : curriculumSubjects) {
+                SubjectMapping subject = Database.connect().subject()
+                        .getPrimary(curSub.getSUBJECT_id());
+
+                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                    this.OJT_YEAR = curSub.getYear();
+                    // ojt found
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
+        }
+    }
+
+    /**
+     * Creates multiple regular sections.
+     */
     private class CreateRegularSectionsAuto extends Transaction {
 
         private void sout(Object message) {

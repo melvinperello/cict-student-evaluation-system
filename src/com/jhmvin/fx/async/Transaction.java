@@ -22,11 +22,18 @@ public abstract class Transaction {
     private Thread supportThread;
     private long restTime = 0;
 
-    private EventHandler<WorkerStateEvent> onCancel;
-    private EventHandler<WorkerStateEvent> onFailure;
+    private EventHandler<WorkerStateEvent> onCancel = (WorkerStateEvent wsEvent) -> {
+        this.onFinished.call();
+    };
+    private EventHandler<WorkerStateEvent> onFailure = (WorkerStateEvent wsEvent) -> {
+        this.onFinished.call();
+    };
+    private EventHandler<WorkerStateEvent> onSuccess = (WorkerStateEvent wsEvent) -> {
+        this.onFinished.call();
+    };
+    
     private EventHandler<WorkerStateEvent> onRunning;
     private EventHandler<WorkerStateEvent> onSchedule;
-    private EventHandler<WorkerStateEvent> onSuccess;
 
     // extended event
     private SimpleEvent onFinished = () -> {

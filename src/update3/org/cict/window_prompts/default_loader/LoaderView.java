@@ -64,7 +64,7 @@ public class LoaderView extends SceneFX {
     }
 
     public void detach() {
-        Attachment.attach(stackPane, loadingBox);
+        Attachment.detach(stackPane, loadingBox);
     }
 
 }

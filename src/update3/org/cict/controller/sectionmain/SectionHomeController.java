@@ -124,6 +124,12 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
             this.statisticsLoader.setMessage("Loading Statistics");
             this.statisticsLoader.attach();
         });
+        sectionStatData.whenCancelled(() -> {
+            System.out.println("Cancel");
+        });
+        sectionStatData.whenFailed(() -> {
+            System.out.println("Failed");
+        });
         sectionStatData.whenSuccess(() -> {
             lbl_stat_regular.setText(sectionStatData.regularSectionCount);
             lbl_stat_special.setText(sectionStatData.specialSectionCount);
@@ -232,6 +238,12 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
             this.sectionLoader.attach();
         });
 
+        curriculumTx.whenCancelled(() -> {
+            System.out.println("Cancelled");
+        });
+        curriculumTx.whenFailed(() -> {
+            System.out.println("failed");
+        });
         curriculumTx.whenSuccess(() -> {
             /**
              * Load regular section data

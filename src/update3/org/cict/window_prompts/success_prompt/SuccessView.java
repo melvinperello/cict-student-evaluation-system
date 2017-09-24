@@ -45,7 +45,7 @@ public class SuccessView extends SceneFX {
     public SuccessView(StackPane stackPane) {
         this.stackPane = stackPane;
         this.emptyBox = Mono.fx().create()
-                .setPackageName("update3.org.cict.window_prompts.empty_prompt")
+                .setPackageName("update3.org.cict.window_prompts.success_prompt")
                 .setFxmlDocument("pane-success")
                 .makeFX()
                 .pullOutLayout();
