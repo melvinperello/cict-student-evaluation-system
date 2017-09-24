@@ -290,8 +290,17 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         FormFormat formFormatter = new FormFormat();
 
         FormFormat.IntegerFormat yearFilter = formFormatter.new IntegerFormat();
-        yearFilter.setMinLimit(1);
-        yearFilter.setMaxLimit(4);
+        if (curriculumMap.getLadderization_type().equalsIgnoreCase("NONE")) {
+            yearFilter.setMinLimit(1);
+            yearFilter.setMaxLimit(4);
+        } else if (curriculumMap.getLadderization_type().equalsIgnoreCase("PREPARATORY")) {
+            yearFilter.setMinLimit(1);
+            yearFilter.setMaxLimit(2);
+        } else if (curriculumMap.getLadderization_type().equalsIgnoreCase("CONSEQUENT")) {
+            yearFilter.setMinLimit(3);
+            yearFilter.setMaxLimit(4);
+        }
+
         yearFilter.setFilterAction(filter -> {
             //System.out.println(filter.getFilterMessage());
             // do something when filter fails.
@@ -692,63 +701,31 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         controlList.add(new ControlGroup(2, chk_second, cmb_second_from, cmb_second_to));
         controlList.add(new ControlGroup(3, chk_third, cmb_third_from, cmb_third_to));
         controlList.add(new ControlGroup(4, chk_fourth, cmb_fourth_from, cmb_fourth_to));
-
         /**
          * Add Curriculum Mapping.
          */
         multiTx.curMap = this.curriculumMap;
 
         /**
-         * Get Selected CheckBox.
+         * Loop to controls.
          */
+        // year levels to create.
         HashMap<Integer, Boolean> createList = new HashMap<>();
-        createList.put(1, Boolean.TRUE);
-        createList.put(2, Boolean.TRUE);
-        createList.put(3, Boolean.TRUE);
-        createList.put(4, Boolean.TRUE);
-
-        SectionMeta sm1 = new SectionMeta();
-        ArrayList<String> sn1 = new ArrayList<>();
-        sn1.add("A");
-        sn1.add("B");
-        sn1.add("C");
-        sm1.normalSections = sn1;
-
-        SectionMeta sm2 = new SectionMeta();
-        ArrayList<String> sn2 = new ArrayList<>();
-        sn2.add("A");
-        sn2.add("B");
-        sn2.add("C");
-
-        sm2.normalSections = sn2;
-
-        SectionMeta sm3 = new SectionMeta();
-        ArrayList<String> sn3 = new ArrayList<>();
-        sn3.add("A");
-        sn3.add("B");
-        sn3.add("C");
-
-        sm3.normalSections = sn3;
-
-        SectionMeta sm4 = new SectionMeta();
-        ArrayList<String> sn4 = new ArrayList<>();
-        sn4.add("A");
-        sn4.add("B");
-        sn4.add("C");
-
-        sm4.normalSections = sn4;
-
-        ArrayList<String> sn4_ojt = new ArrayList<>();
-        sn4_ojt.add("D");
-        sn4_ojt.add("E");
-        sn4_ojt.add("F");
-        sm4.internSections = sn4_ojt;
-
+        // section meta.
         HashMap<Integer, SectionMeta> sectionNames = new HashMap<>();
-        sectionNames.put(1, sm1);
-        sectionNames.put(2, sm2);
-        sectionNames.put(3, sm3);
-        sectionNames.put(4, sm4);
+        for (ControlGroup cg : controlList) {
+            createList.put(cg.year, cg.checkBox.isSelected());
+            /**
+             * Add contents.
+             */
+            SectionMeta sectionMeta = new SectionMeta();
+            sectionMeta.normalSections = cg.list();
+            sectionMeta.internSections = null;
+            /**
+             * Add to meta.
+             */
+            sectionNames.put(cg.year, sectionMeta);
+        }
 
         multiTx.yearsToCreate = createList;
         multiTx.sectionNames = sectionNames;
@@ -799,13 +776,15 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             boolean isFirstMatch = false;
             for (String string : charList) {
 
-                if (isFirstMatch) {
-                    listRange.add(string.toUpperCase());
-                } else {
+                if (!isFirstMatch) {
                     if (string.equalsIgnoreCase(initString)) {
                         // first match detected.
                         isFirstMatch = true;
                     }
+                }
+
+                if (isFirstMatch) {
+                    listRange.add(string.toUpperCase());
                 }
 
                 /**
@@ -1106,7 +1085,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
             if (exist != null) {
                 System.out.println(exist.getSection_name());
-                sout("Section Existing");
+                sout("section is existing skipping . . .");
                 /**
                  * Skip this group.
                  */
@@ -1135,6 +1114,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     .load_section()
                     .transactionalInsert(localSession, newLoadSection);
 
+            sout("Temporarily Inserted " + regNames + "-" + group);
             if (temp_section_id <= 0) {
                 /**
                  * Throw exception.
@@ -1143,6 +1123,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 /**
                  * make this transaction trigger fail call back.
                  */
+                sout("Error inserting " + regNames + "-" + group + " Throwing Error.");
                 throw new TransactionException("load_section insertion error");
             }
 
@@ -1156,6 +1137,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     .active(Order.asc(DB.curriculum_subject().id))
                     .all();
 
+            sout("Fetching subjects from curriculum");
             for (CurriculumSubjectMapping subject : subjects) {
                 LoadGroupMapping loadGroup = MapFactory.map().load_group();
                 loadGroup.setSUBJECT_id(subject.getSUBJECT_id());
@@ -1167,11 +1149,13 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 int temp_load_group = Database.connect().load_section()
                         .transactionalInsert(localSession, loadGroup);
 
+                sout("Temporarily Inserted LoadGroup");
                 if (temp_load_group <= 0) {
                     /**
                      * Throw exception.
                      */
                     dataTx.rollback();
+                    sout("Error Inserting LoadGroup Throwing error.");
                     throw new TransactionException("load_group insertion error");
                 }
             }
