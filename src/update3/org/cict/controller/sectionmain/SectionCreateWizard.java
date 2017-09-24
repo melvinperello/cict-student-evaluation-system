@@ -43,6 +43,7 @@ import com.jhmvin.fx.controls.MonoText;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.fx.notify.snackbars.Snackbar;
 import com.jhmvin.propertymanager.FormFormat;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
@@ -421,10 +422,26 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Create Multiple Sections.
          */
         super.addClickEvent(btn_multi_create, () -> {
+
+            if (!atleastOneIsCheck(chk_first, chk_second, chk_third, chk_fourth, chk_ojt)) {
+                Mono.fx().snackbar().showError(application_root, "Please check atleast one option to continue.");
+                return;
+            }
             // verify first the internship subject.
             // then call the create multi.
             this.checkForInternship();
         });
+    }
+
+    private boolean atleastOneIsCheck(JFXCheckBox... checkboxes) {
+        boolean oneIsCheck = false;
+        for (JFXCheckBox checkboxe : checkboxes) {
+            if (checkboxe.isSelected()) {
+                oneIsCheck = true;
+                break;
+            }
+        }
+        return oneIsCheck;
     }
 
     private void onBtnBack() {
