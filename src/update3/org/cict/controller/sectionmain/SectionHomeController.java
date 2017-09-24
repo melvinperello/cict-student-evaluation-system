@@ -498,6 +498,11 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
                             .active(Order.desc(DB.curriculum().id))
                             .all();
 
+            if (curriculums == null) {
+                // send an empty list no curriculms.
+                return true;
+            }
+
             for (CurriculumMapping curriculum : curriculums) {
 
                 AcademicProgramMapping course = Database.connect().academic_program()
