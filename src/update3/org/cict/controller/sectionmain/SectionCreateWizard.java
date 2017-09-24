@@ -420,7 +420,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Create Multiple Sections.
          */
         super.addClickEvent(btn_multi_create, () -> {
-            createRegularMulti();
+            // verify first the internship subject.
+            // then call the create multi.
+            this.checkForInternship();
         });
     }
 
@@ -715,7 +717,6 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     private Integer OJT_YEAR = null;
 
     public void createRegularMulti() {
-        this.OJT_YEAR = null;
         CreateRegularSectionsAuto multiTx = new CreateRegularSectionsAuto();
         /**
          * Create Control Group.
@@ -738,6 +739,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         // section meta.
         HashMap<Integer, SectionMeta> sectionNames = new HashMap<>();
         for (ControlGroup cg : controlList) {
+            System.out.println("LOOP OJT: " + this.OJT_YEAR);
             createList.put(cg.year, cg.checkBox.isSelected());
 
             /**
@@ -754,18 +756,24 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 // if OJT was found.
                 if (chk_ojt.isSelected()) {
                     sout("OJT SELECTED");
+                    //
+
                     if (!cg.checkBox.isSelected()) {
                         sout("OJT YEAR NOT SELECTED");
-                        // if ojt was selected but the year is not selected.
-                        createList.put(cg.year, true);
-                        sectionMeta.normalSections = new ArrayList<>();
+                        System.out.println(cg.year);
+                        if (cg.year.equals(OJT_YEAR)) {
+                            sout("OJT ADJUST");
+                            // if ojt was selected but the year is not selected.
+                            createList.put(cg.year, true);
+                            sectionMeta.normalSections = new ArrayList<>();
+                        }
                     }
 
                     // if OJT was selected.
                     sectionMeta.internSections
                             = new ControlGroup(null, null, cmb_ojt_from, cmb_ojt_to).list();
-                    // make null
-                    this.OJT_YEAR = null;
+                    
+                    
                 }
             }
 
@@ -774,6 +782,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
              */
             sectionNames.put(cg.year, sectionMeta);
         }
+        /**
+         * Make null.
+         */
+        this.OJT_YEAR = null;
 
         multiTx.yearsToCreate = createList;
         multiTx.sectionNames = sectionNames;
@@ -816,23 +828,36 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             sout("DONE");
         });
 
+        multiTx.transact();
+    }
+
+    /**
+     * Call this on the button that will trigger create multi to verify first
+     * the existence of an Internship subject.
+     */
+    private void checkForInternship() {
+        this.OJT_YEAR = null;
         /**
          * Check for internship subject.
          */
         LocateInternship findInternTx = new LocateInternship();
         findInternTx.curMap = this.curriculumMap;
         findInternTx.whenSuccess(() -> {
-            OJT_YEAR = findInternTx.OJT_YEAR;
-            multiTx.transact();
+            this.OJT_YEAR = findInternTx.OJT_YEAR;
+            System.out.println(String.valueOf(this.OJT_YEAR));
+            /**
+             * Start Creation.
+             */
+            createRegularMulti();
         });
         findInternTx.whenFinished(() -> {
             if (findInternTx.OJT_YEAR == null) {
                 // no internship found.
+                System.out.println("NOT FOuND");
             }
         });
 
         findInternTx.transact();
-
     }
 
     private class ControlGroup {
