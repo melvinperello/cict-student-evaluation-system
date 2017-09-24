@@ -70,7 +70,7 @@ import org.hibernate.criterion.Order;
  *
  * @author Jhon Melvin
  */
-public class SectionCreateWizard extends SceneFX implements ControllerFX {
+public class SectionCreateWizardBACKUP extends SceneFX implements ControllerFX {
 
     public void sout(Object message) {
         System.out.println(this.getClass().getSimpleName() + ": " + message.toString());
@@ -125,9 +125,6 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     private JFXButton btn_multi_creation;
 
     @FXML
-    private StackPane stack_multi;
-
-    @FXML
     private VBox vbox_multi;
 
     @FXML
@@ -158,6 +155,18 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     private ComboBox<String> cmb_second_to;
 
     @FXML
+    private JFXCheckBox chk_second_ojt;
+
+    @FXML
+    private HBox hbox_second_ojt;
+
+    @FXML
+    private ComboBox<String> cmb_second_ojt_from;
+
+    @FXML
+    private ComboBox<String> cmb_second_ojt_to;
+
+    @FXML
     private JFXCheckBox chk_third;
 
     @FXML
@@ -182,16 +191,16 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     private ComboBox<String> cmb_fourth_to;
 
     @FXML
-    private JFXCheckBox chk_ojt;
+    private JFXCheckBox chk_fourth_ojt;
 
     @FXML
-    private HBox hbox_fourth1;
+    private HBox hbox_fourth_ojt;
 
     @FXML
-    private ComboBox<String> cmb_ojt_from;
+    private ComboBox<String> cmb_fourth_ojt_from;
 
     @FXML
-    private ComboBox<String> cmb_ojt_to;
+    private ComboBox<String> cmb_fourth_ojt_to;
 
     @FXML
     private JFXButton btn_multi_create;
@@ -199,7 +208,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_multi_back;
 
-    public SectionCreateWizard() {
+    @FXML
+    private StackPane stack_multi;
+
+    public SectionCreateWizardBACKUP() {
         //
     }
 
@@ -412,8 +424,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Second Years.
          */
         this.chk_second.setSelected(false);
-
+        this.chk_second_ojt.setSelected(false);
         this.hbox_second.setDisable(true);
+        this.hbox_second_ojt.setDisable(true);
+        this.chk_second_ojt.setDisable(true);
 
         /**
          * Third Year
@@ -424,8 +438,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Fourth
          */
         this.chk_fourth.setSelected(false);
-
+        this.chk_fourth_ojt.setSelected(false);
+        this.chk_fourth_ojt.setDisable(true);
         this.hbox_fourth.setDisable(true);
+        this.hbox_fourth_ojt.setDisable(true);
 
     }
 
@@ -449,6 +465,14 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             }
         });
 
+        this.chk_second_ojt.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableSecondYearOjt();
+            } else {
+                disableSecondYearOjt();
+            }
+        });
+
         this.chk_third.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue) {
                 enableThirdYear();
@@ -465,6 +489,13 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             }
         });
 
+        this.chk_fourth_ojt.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                enableFourthYearOjt();
+            } else {
+                disableFourthYearOjt();
+            }
+        });
     }
 
     // enables
@@ -474,7 +505,11 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private void enableSecondYear() {
         hbox_second.setDisable(false);
+        this.chk_second_ojt.setDisable(false);
+    }
 
+    private void enableSecondYearOjt() {
+        hbox_second_ojt.setDisable(false);
     }
 
     private void enableThirdYear() {
@@ -483,7 +518,11 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private void enableFourthYear() {
         hbox_fourth.setDisable(false);
+        this.chk_fourth_ojt.setDisable(false);
+    }
 
+    private void enableFourthYearOjt() {
+        hbox_fourth_ojt.setDisable(false);
     }
 
     // disables
@@ -493,7 +532,16 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private void disableSecondYear() {
         hbox_second.setDisable(true);
+        this.chk_second_ojt.setDisable(true);
 
+        //
+        this.chk_second_ojt.setSelected(false);
+        this.chk_second_ojt.setDisable(true);
+        hbox_second_ojt.setDisable(true);
+    }
+
+    private void disableSecondYearOjt() {
+        hbox_second_ojt.setDisable(true);
     }
 
     //
@@ -503,7 +551,16 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     private void disableFourthYear() {
         hbox_fourth.setDisable(true);
+        this.chk_fourth_ojt.setDisable(true);
 
+        //
+        this.chk_fourth_ojt.setSelected(false);
+        this.chk_fourth_ojt.setDisable(true);
+        hbox_fourth_ojt.setDisable(true);
+    }
+
+    private void disableFourthYearOjt() {
+        hbox_fourth_ojt.setDisable(true);
     }
 
     private void addComboBoxListeners() {
@@ -512,12 +569,18 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
         // second years
         setComboBoxLimit(this.cmb_second_from, cmb_second_to, 0);
+        // ojt
+        setComboBoxLimit(cmb_second_to, cmb_second_ojt_from, 1, this.cmb_second_from);
+        setComboBoxLimit(cmb_second_ojt_from, cmb_second_ojt_to, 1, this.cmb_second_from, this.cmb_second_to);
 
         // third year
         setComboBoxLimit(this.cmb_third_from, cmb_third_to, 0);
 
         //fourth
         setComboBoxLimit(this.cmb_fourth_from, cmb_fourth_to, 0);
+        // ojt
+        setComboBoxLimit(cmb_fourth_to, cmb_fourth_ojt_from, 1, this.cmb_fourth_from);
+        setComboBoxLimit(cmb_fourth_ojt_from, cmb_fourth_ojt_to, 1, this.cmb_fourth_from, this.cmb_fourth_to);
 
     }
 
