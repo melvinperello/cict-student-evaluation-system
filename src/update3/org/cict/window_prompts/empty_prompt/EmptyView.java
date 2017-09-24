@@ -29,6 +29,7 @@ import com.jhmvin.fx.display.SceneFX;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import update3.org.cict.window_prompts.Attachment;
 import update3.org.cict.window_prompts.Visibility;
 
 /**
@@ -36,12 +37,12 @@ import update3.org.cict.window_prompts.Visibility;
  * @author Jhon Melvin
  */
 public class EmptyView extends SceneFX {
-
+    
     private VBox emptyBox;
     private Label loadingMessaage;
     private StackPane stackPane;
     private JFXButton btn_refresh;
-
+    
     public EmptyView(StackPane stackPane) {
         this.stackPane = stackPane;
         this.emptyBox = Mono.fx().create()
@@ -49,48 +50,28 @@ public class EmptyView extends SceneFX {
                 .setFxmlDocument("pane-empty")
                 .makeFX()
                 .pullOutLayout();
-
+        
         this.loadingMessaage = super.searchAccessibilityText(emptyBox, "lbl_message");
         this.btn_refresh = super.searchAccessibilityText(emptyBox, "btn_refresh");
     }
-
+    
     public void setMessage(String text) {
         if (text == null) {
             return;
         }
         this.loadingMessaage.setText(text);
     }
-
+    
     public JFXButton getButton() {
         return this.btn_refresh;
     }
-
+    
     public void attach() {
-        /**
-         * Remove if existing.
-         */
-        this.stackPane.getChildren().remove(this.emptyBox);
-        //
-        Visibility.hideChildren(this.stackPane);
-        stackPane.getChildren().add(this.emptyBox);
-        this.emptyBox.toFront();
-        /**
-         * Bind Width to parent.
-         */
-        this.emptyBox.prefWidthProperty().bind(this.stackPane.widthProperty());
-        this.emptyBox.maxWidthProperty().bind(this.stackPane.maxWidthProperty());
-        this.emptyBox.minWidthProperty().bind(this.stackPane.minWidthProperty());
-        /**
-         * Bind height to parent.
-         */
-        this.emptyBox.prefHeightProperty().bind(this.stackPane.heightProperty());
-        this.emptyBox.maxHeightProperty().bind(this.stackPane.maxHeightProperty());
-        this.emptyBox.minHeightProperty().bind(this.stackPane.minHeightProperty());
+        Attachment.attach(stackPane, emptyBox);
     }
-
+    
     public void detach() {
-        this.stackPane.getChildren().remove(this.emptyBox);
-        Visibility.showChildren(this.stackPane);
+        Attachment.detach(stackPane, emptyBox);
     }
-
+    
 }

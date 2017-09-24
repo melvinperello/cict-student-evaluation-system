@@ -21,35 +21,37 @@
  * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
  *
  */
-package update3.org.cict.layout.default_loader;
+package update3.org.cict.window_prompts.success_prompt;
 
+import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.SceneFX;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import update3.org.cict.window_prompts.Attachment;
-import update3.org.cict.window_prompts.Visibility;
 
 /**
  *
  * @author Jhon Melvin
  */
-public class LoaderView extends SceneFX {
+public class SuccessView extends SceneFX {
 
-    private VBox loadingBox;
+    private VBox emptyBox;
     private Label loadingMessaage;
     private StackPane stackPane;
+    private JFXButton btn_ok;
 
-    public LoaderView(StackPane stackPane) {
+    public SuccessView(StackPane stackPane) {
         this.stackPane = stackPane;
-        this.loadingBox = Mono.fx().create()
-                .setPackageName("update3.org.cict.window_prompts.default_loader")
-                .setFxmlDocument("pane-loading")
+        this.emptyBox = Mono.fx().create()
+                .setPackageName("update3.org.cict.window_prompts.empty_prompt")
+                .setFxmlDocument("pane-success")
                 .makeFX()
                 .pullOutLayout();
 
-        this.loadingMessaage = super.searchAccessibilityText(loadingBox, "lbl_loading");
+        this.loadingMessaage = super.searchAccessibilityText(emptyBox, "lbl_message");
+        this.btn_ok = super.searchAccessibilityText(emptyBox, "btn_refresh");
     }
 
     public void setMessage(String text) {
@@ -59,12 +61,16 @@ public class LoaderView extends SceneFX {
         this.loadingMessaage.setText(text);
     }
 
+    public JFXButton getButton() {
+        return this.btn_ok;
+    }
+
     public void attach() {
-        Attachment.attach(stackPane, loadingBox);
+        Attachment.attach(stackPane, emptyBox);
     }
 
     public void detach() {
-        Attachment.attach(stackPane, loadingBox);
+        Attachment.detach(stackPane, emptyBox);
     }
 
 }
