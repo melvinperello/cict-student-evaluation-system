@@ -22,7 +22,7 @@
                   <Font size="26.0" />
                </font>
             </Label>
-            <JFXButton fx:id="btn_back" prefHeight="40.0" prefWidth="100.0" styleClass="metro-nav-button" text="Cancel" textFill="WHITE">
+            <JFXButton fx:id="btn_back" prefHeight="40.0" prefWidth="100.0" styleClass="metro-nav-button" text="Back" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font>

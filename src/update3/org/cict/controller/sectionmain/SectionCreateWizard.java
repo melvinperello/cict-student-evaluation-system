@@ -53,6 +53,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -772,8 +773,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     // if OJT was selected.
                     sectionMeta.internSections
                             = new ControlGroup(null, null, cmb_ojt_from, cmb_ojt_to).list();
-                    
-                    
+
                 }
             }
 
@@ -791,6 +791,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         multiTx.sectionNames = sectionNames;
 
         multiTx.whenStarted(() -> {
+            multiNav(false);
             loaderMulti.setMessage("Just A Moment");
             loaderMulti.attach();
             sout("Scheduled >>>>>>");
@@ -826,9 +827,16 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         });
         multiTx.whenFinished(() -> {
             sout("DONE");
+            multiNav(true);
         });
 
         multiTx.transact();
+    }
+
+    private void multiNav(boolean enable) {
+        this.btn_back.setDisable(!enable);
+        this.btn_multi_create.setDisable(!enable);
+        this.btn_multi_back.setDisable(!enable);
     }
 
     /**
@@ -842,6 +850,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          */
         LocateInternship findInternTx = new LocateInternship();
         findInternTx.curMap = this.curriculumMap;
+        findInternTx.whenStarted(() -> {
+            super.cursorWait();
+            multiNav(false);
+        });
         findInternTx.whenSuccess(() -> {
             this.OJT_YEAR = findInternTx.OJT_YEAR;
             System.out.println(String.valueOf(this.OJT_YEAR));
@@ -855,6 +867,8 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 // no internship found.
                 System.out.println("NOT FOuND");
             }
+            multiNav(true);
+            super.cursorDefault();
         });
 
         findInternTx.transact();

@@ -28,6 +28,7 @@ import com.jhmvin.Mono;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javafx.scene.AccessibleRole;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -100,6 +101,21 @@ public class SceneFX extends EventsFX {
      */
     protected Scene getScene() {
         return this.__APPLICATION_ROOT.getScene();
+    }
+
+    /**
+     * Cursors.
+     */
+    protected void cursorWait() {
+        this.getScene().setCursor(Cursor.WAIT);
+    }
+
+    protected void cursorDefault() {
+        this.getScene().setCursor(Cursor.DEFAULT);
+    }
+
+    protected void cursorHand() {
+        this.getScene().setCursor(Cursor.HAND);
     }
 
     protected void setSceneColor(String hexColor) {
