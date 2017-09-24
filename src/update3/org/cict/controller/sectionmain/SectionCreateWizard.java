@@ -404,6 +404,13 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_single_create, () -> {
             this.createRegularSingle();
         });
+
+        /**
+         * Create Multiple Sections.
+         */
+        super.addClickEvent(btn_multi_create, () -> {
+            createRegularMulti();
+        });
     }
 
     private void resetControls() {
@@ -706,6 +713,78 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
     public void createRegularMulti() {
         CreateRegularSectionsAuto multiTx = new CreateRegularSectionsAuto();
+        multiTx.curMap = this.curriculumMap;
+
+        HashMap<Integer, Boolean> createList = new HashMap<>();
+        createList.put(1, Boolean.TRUE);
+        createList.put(2, Boolean.TRUE);
+        createList.put(3, Boolean.TRUE);
+        createList.put(4, Boolean.TRUE);
+
+        SectionMeta sm1 = new SectionMeta();
+        ArrayList<String> sn1 = new ArrayList<>();
+        sn1.add("A");
+        sn1.add("B");
+        sn1.add("C");
+        sm1.normalSections = sn1;
+
+        SectionMeta sm2 = new SectionMeta();
+        ArrayList<String> sn2 = new ArrayList<>();
+        sn2.add("A");
+        sn2.add("B");
+        sn2.add("C");
+
+        sm2.normalSections = sn2;
+
+        SectionMeta sm3 = new SectionMeta();
+        ArrayList<String> sn3 = new ArrayList<>();
+        sn3.add("A");
+        sn3.add("B");
+        sn3.add("C");
+
+        sm3.normalSections = sn3;
+
+        SectionMeta sm4 = new SectionMeta();
+        ArrayList<String> sn4 = new ArrayList<>();
+        sn4.add("A");
+        sn4.add("B");
+        sn4.add("C");
+
+        sm4.normalSections = sn4;
+
+        ArrayList<String> sn4_ojt = new ArrayList<>();
+        sn4_ojt.add("D");
+        sn4_ojt.add("E");
+        sn4_ojt.add("F");
+        sm4.internSections = sn4_ojt;
+
+        HashMap<Integer, SectionMeta> sectionNames = new HashMap<>();
+        sectionNames.put(1, sm1);
+        sectionNames.put(2, sm2);
+        sectionNames.put(3, sm3);
+        sectionNames.put(4, sm4);
+
+        multiTx.yearsToCreate = createList;
+        multiTx.sectionNames = sectionNames;
+
+        multiTx.whenStarted(() -> {
+            sout("Scheduled >>>>>>");
+        });
+        multiTx.whenCancelled(() -> {
+            sout("CANCELED >>>>>>");
+        });
+        multiTx.whenFailed(() -> {
+            sout("FUCKiNG FAILED");
+        });
+        multiTx.whenSuccess(() -> {
+            sout("COMITTED SUCCESS");
+        });
+        multiTx.whenFinished(() -> {
+            sout("DONE");
+        });
+
+        multiTx.transact();
+
     }
 
     //--------------------------------------------------------------------------
@@ -832,7 +911,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
              */
             Session localSession = Mono.orm().openSession();
             org.hibernate.Transaction dataTx = localSession.beginTransaction();
-            
+
             sout("Session started");
             /**
              * Database partial transaction count;
@@ -844,7 +923,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                  */
                 sout(" - - - - - - - - - - - - - - - - - - - - -");
                 sout("Year Level: " + yearlevel);
-                if (!yearsToCreate.get(yearlevel)) {
+                if (!yearsToCreate.getOrDefault(yearlevel, false)) {
                     sout("Not Included Skipping . . .");
                     continue;
                 }
@@ -884,10 +963,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                         break;
                     }
                 }
-                
+
                 sout("Regular Sem: " + semester);
                 sout("OJT Sem: " + String.valueOf(ojtSem));
-                
 
                 /**
                  * Section Creation.
@@ -988,7 +1066,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     .eq((DB.load_section().year_level), yearlevel)
                     .eq((DB.load_section()._group), group)
                     .eq(DB.load_section().CURRICULUM_id, this.curMap.getId())
-                    .eq(DB.load_section().ACADTERM_id, this.curMap.getId())
+                    .eq(DB.load_section().ACADTERM_id, currentTerm.getId())
                     .eq(DB.load_section().type, SectionConstants.REGULAR)
                     .active()
                     .first();
@@ -1041,7 +1119,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             ArrayList<CurriculumSubjectMapping> subjects = Mono.orm().newSearch(Database.connect().curriculum_subject())
                     .eq(DB.curriculum_subject().CURRICULUM_id, curMap.getId())
                     .eq(DB.curriculum_subject().year, yearlevel)
-                    .eq(DB.curriculum_subject().semester, currentTerm.getSemester_regular())
+                    .eq(DB.curriculum_subject().semester, semester)
                     .active(Order.asc(DB.curriculum_subject().id))
                     .all();
 
