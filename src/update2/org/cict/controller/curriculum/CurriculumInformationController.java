@@ -459,6 +459,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             SearchSubjectController controller = new SearchSubjectController(curriculumId);
             controller.setYearAndSemester(yr, sem);
             controller.setModeSetting("CURRICULUM");
+            controller.title = getYearLevel(yr) + "-" + getSemester(sem);
             Mono.fx().create()
                     .setPackageName("update2.org.cict.layout.subjects")
                     .setFxmlDocument("search-subject")

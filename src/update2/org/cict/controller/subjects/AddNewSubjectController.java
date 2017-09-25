@@ -92,6 +92,12 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
         Mono.fx().key(KeyCode.ENTER).release(vbox_main, ()->{
             this.addNewSubject();
         });
+        cmbb_type.valueProperty().addListener((e) -> {
+            String selected = cmbb_type.getSelectionModel().getSelectedItem();
+            cmb_subtype.setDisable(!SubjectClassification.isMajor(selected));
+            if(cmb_subtype.isDisable())
+                cmb_subtype.getSelectionModel().select("NONE");
+        });
     }
     
     private String acadProgram, subjectCode, descriptiveTitle, type, subType;

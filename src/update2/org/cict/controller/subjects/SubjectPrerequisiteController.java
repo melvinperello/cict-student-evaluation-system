@@ -155,10 +155,13 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
             controller.setModeSetting("SUBJECT_" + mode);
             controller.setSubjectIdGet(SUBJECT.getId());
             String title = "";
-            if(mode.equals("pre-req"))
+            if(mode.equals("pre-req")) {
                 title = "New Pre-requisite";
-            else
+                controller.title = "Pre-requisite for " + SUBJECT.getCode();
+            } else {
                 title = "New Co-requisite";
+                controller.title = "Co-requisite for " + SUBJECT.getCode();
+            }
             Mono.fx().create()
                     .setPackageName("update2.org.cict.layout.subjects")
                     .setFxmlDocument("search-subject")

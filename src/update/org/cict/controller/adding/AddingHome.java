@@ -37,9 +37,11 @@ import java.util.Objects;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.GenericLoadingShow;
 import org.cict.SubjectClassification;
 import org.cict.evaluation.CurricularLevelController;
 import org.cict.evaluation.FirstAssistantController;
+import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.evaluation.student.info.InfoStudentController;
@@ -112,6 +114,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private JFXButton btn_already_print;
     @FXML
     private JFXButton btn_add_change_again;
+    @FXML
+    private JFXButton btn_checklist;
 
     private StudentMapping studentSearched;
 
@@ -185,7 +189,32 @@ public class AddingHome extends SceneFX implements ControllerFX {
         addClickEvent(btnCreditUnits, () -> {
             onShowGrades();
         });
+        
+        this.addClickEvent(btn_checklist, ()->{
+            printChecklist();
+        });
     }
+    
+    
+    private void printChecklist(){
+        PrintChecklist printCheckList = new PrintChecklist();
+        printCheckList.CICT_id = studentSearched.getCict_id();
+        printCheckList.setOnStart(onStart->{
+            GenericLoadingShow.instance().show();
+        });
+        printCheckList.setOnSuccess(onSuccess->{
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Please wait, we're nearly there.")
+                    .text("Printing the Checklist.").showInformation();
+        });
+        printCheckList.setOnCancel(onCancel->{
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Cannot Produce a Checklist")
+                    .text("Something went wrong, sorry for the inconvinience.").showWarning();
+        });
+        printCheckList.transact();
+    }
+
 
     private void onShowGrades() {
         CreditController controller = new CreditController(this.studentSearched.getCict_id(), CreditController.MODE_READ, "Grades [Read Only]");

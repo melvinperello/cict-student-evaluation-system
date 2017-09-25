@@ -30,6 +30,11 @@
                   </ImageView>
                </graphic>
             </Label>
+            <Label fx:id="lbl_title" layoutX="258.0" layoutY="34.0" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <HBox alignment="CENTER_LEFT" layoutY="110.0" prefHeight="67.0" prefWidth="980.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="67.0">
@@ -52,6 +57,18 @@
                   <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../org/cict/evaluation/sectionviewer/src/img/Search_64px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="btnAddnew" alignment="CENTER" graphicTextGap="10.0" layoutX="473.0" layoutY="37.0" prefHeight="19.0" prefWidth="128.0" style="-fx-background-color: #27AE60; -fx-text-fill: #FFFFFF;" text="Add New">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/add.png" />
                      </image>
                   </ImageView>
                </graphic>

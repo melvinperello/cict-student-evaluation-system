@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.DB;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
@@ -179,6 +180,8 @@ public class SearchStudent extends Transaction {
                     .eq("year_level", year)
                     .eq("_group", group)
                     .eq("type", "REGULAR")
+                    // revision: added curriculum_id
+                    .eq(DB.load_section().CURRICULUM_id, studentCurriculum.getId())
                     .active().first();
 
             if (!Objects.isNull(studentSection)) {
@@ -198,7 +201,7 @@ public class SearchStudent extends Transaction {
                     // retrieve each mapping of the subject
                     SubjectMapping subject_mapping = Mono.orm()
                             .newSearch(Database.connect().subject())
-                            .eq("id", subject_id)
+                            .eq(DB.subject().id, subject_id)
                             //@removed since primary key was used already
                             //@revision: 001
                             //.eq("ACADPROG_id", acadProg)

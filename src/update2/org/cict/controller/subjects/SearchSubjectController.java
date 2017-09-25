@@ -73,6 +73,9 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     private JFXButton btnSearch;
 
     @FXML
+    private JFXButton btnAddnew;
+            
+    @FXML
     private AnchorPane anchor_result;
 
     @FXML
@@ -95,6 +98,9 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
 
     @FXML
     private Button btn_cancel;
+        
+    @FXML
+    private Label lbl_title;
     
     private Integer CURRICULUM_id, YEAR, SEMESTER, SUBJECT_id_get;
     private ArrayList<SubjectMapping> lst_subject;
@@ -104,6 +110,8 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     private Integer CREATED_BY = CollegeFaculty.instance().getFACULTY_ID();
     private Date CREATED_DATE = Mono.orm().getServerTime().getDateWithFormat();
     private CurriculumSubjectMapping SUBJECT_csMap;
+    
+    public String title = "";
     
     private void logs(String str) {
         if(true)
@@ -130,7 +138,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     
     @Override
     public void onInitialization() {
-    
+        lbl_title.setText(title);
         bindScene(anchor_main);
         
         FetchSubjects fetch = new FetchSubjects();
@@ -201,6 +209,10 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         Mono.fx().key(KeyCode.ENTER).release(anchor_main, () -> {
             onSearch();
         });
+        
+        this.addClickEvent(btnAddnew, ()->{
+            showAddNewSubject();
+        });
     }
     
     private void onSearch() {
@@ -247,6 +259,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
                 anchor_view.setVisible(true);
                 temp_subject_list.clear();
                 temp_subject_list.add(newSubject);
+                this.lst_subject.add(newSubject);
                 createTable(temp_subject_list);
             }
     }
@@ -551,6 +564,8 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             } else {
                 if(Objects.equals(exist.getSemester(), SEMESTER) && Objects.equals(exist.getYear(), YEAR)) {
                     exist.setActive(1);
+                    exist.setAdded_by(CREATED_BY);
+                    exist.setAdded_date(CREATED_DATE);
                     this.showResultAlert(Database.connect().curriculum_subject().update(exist), SUBJECT, "ADD");
                     return;
                 } else {
@@ -568,6 +583,8 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
                         exist.setSemester(SEMESTER);
                         exist.setYear(YEAR);
                         exist.setActive(1);
+                        exist.setAdded_by(CREATED_BY);
+                        exist.setAdded_date(CREATED_DATE);
                         this.showResultAlert(Database.connect().curriculum_subject().update(exist), SUBJECT, "RESTORE");
                         return;
                     }
@@ -577,6 +594,8 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         
         CurriculumSubjectMapping newCsMap = new CurriculumSubjectMapping();
         newCsMap.setActive(1);
+        newCsMap.setAdded_by(CREATED_BY);
+        newCsMap.setAdded_date(CREATED_DATE);
         newCsMap.setCURRICULUM_id(CURRICULUM_id);
         newCsMap.setSUBJECT_id(SUBJECT.getId());
         newCsMap.setSemester(SEMESTER);

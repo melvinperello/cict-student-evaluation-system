@@ -48,6 +48,7 @@ import org.cict.accountmanager.Logout;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.encoder.GradeEncoderController;
 import org.cict.evaluation.evaluator.CheckGrade;
+import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.evaluator.SearchStudent;
 import org.cict.evaluation.sectionviewer.SectionsController;
 import org.cict.evaluation.student.credit.InputModeController;
@@ -182,7 +183,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_home;
-        
+    
+    @FXML
+    private JFXButton btn_checklist;
+            
     @FXML
     private VBox vbox_list;
 
@@ -350,6 +354,34 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             onBackToHome();
         });
 
+        this.addClickEvent(btn_checklist, ()->{
+            printChecklist();
+        });
+    }
+    
+    private void printChecklist(){
+        PrintChecklist printCheckList = new PrintChecklist();
+        printCheckList.CICT_id = currentStudent.getCict_id();
+        printCheckList.setOnStart(onStart->{
+            GenericLoadingShow.instance().show();
+        });
+        printCheckList.setOnSuccess(onSuccess->{
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Please wait, we're nearly there.")
+                    .text("Printing the Checklist.").showInformation();
+        });
+        printCheckList.setOnCancel(onCancel->{
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Cannot Produce a Checklist")
+                    .text("Something went wrong, sorry for the inconvinience.").showWarning();
+        });
+        printCheckList.setOnFailure(onFailed->{
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Cannot Produce a Checklist")
+                    .text("Something went wrong, sorry for the inconvinience.").showError();
+            System.out.println("FAILED");
+        });
+        printCheckList.transact();
     }
 
     private void onBackToHome() {

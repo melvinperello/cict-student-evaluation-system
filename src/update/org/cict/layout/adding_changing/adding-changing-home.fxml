@@ -150,7 +150,7 @@
                                     <Insets left="1.0" right="1.0" />
                                  </VBox.margin>
                               </JFXButton>
-                              <JFXButton graphicTextGap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@../../../../../org/cict/evaluation/button-hover.css" text="Checklist     ">
+                              <JFXButton fx:id="btn_checklist" graphicTextGap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@../../../../../org/cict/evaluation/button-hover.css" text="Checklist     ">
                                  <graphic>
                                     <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
