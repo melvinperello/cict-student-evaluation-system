@@ -124,4 +124,40 @@ public class MonoText {
         }
         return temp.trim();
     }
+
+    /**
+     * Adds a padding in front of string.
+     * @param lead
+     * @param pad
+     * @param str
+     * @return 
+     */
+    public static String lead(int lead, String pad, String str) {
+        int length = str.length();
+
+        if (length >= lead) {
+            // do nothing
+        } else {
+            int toPut = lead - length;
+            return repeat(pad, toPut) + str;
+        }
+
+        return str;
+    }
+
+    /**
+     * Repeats a string multiple times.
+     *
+     * @param str
+     * @param multiple
+     * @return
+     */
+    public static String repeat(String str, int multiple) {
+        String temp = "";
+        for (int x = 1; x <= multiple; x++) {
+            temp += str;
+        }
+        return temp;
+    }
+
 }

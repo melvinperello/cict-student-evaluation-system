@@ -43,7 +43,6 @@ import com.jhmvin.fx.controls.MonoText;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
-import com.jhmvin.fx.notify.snackbars.Snackbar;
 import com.jhmvin.propertymanager.FormFormat;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
@@ -54,7 +53,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -650,7 +648,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         /**
          * Setup list set.
          */
-        String charSet = "abcdefghijklmnopqrstuvxyz".toUpperCase(Locale.ENGLISH);
+        String charSet = "abcdefghijklmnopqrstuvwxyz".toUpperCase(Locale.ENGLISH);
         this.charList = new ArrayList<>();
         for (Character c : charSet.toCharArray()) {
             charList.add(c.toString());
