@@ -65,6 +65,7 @@ import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import update3.org.cict.ChoiceRange;
 import update3.org.cict.layout.default_loader.LoaderView;
 import update3.org.cict.window_prompts.fail_prompt.FailView;
 import update3.org.cict.window_prompts.success_prompt.SuccessView;
@@ -74,166 +75,166 @@ import update3.org.cict.window_prompts.success_prompt.SuccessView;
  * @author Jhon Melvin
  */
 public class SectionCreateWizard extends SceneFX implements ControllerFX {
-
+    
     public void sout(Object message) {
         System.out.println(this.getClass().getSimpleName() + ": " + message.toString());
     }
-
+    
     @FXML
     private VBox application_root;
-
+    
     @FXML
     private JFXButton btn_back;
-
+    
     @FXML
     private Label lbl_program_name;
-
+    
     @FXML
     private Label lbl_curriculum_name;
-
+    
     @FXML
     private Label lbl_curriculum_type;
-
+    
     @FXML
     private VBox vbox_single;
-
+    
     @FXML
     private Label lbl_single_term;
-
+    
     @FXML
     private TextField txt_single_year_level;
-
+    
     @FXML
     private TextField txt_single_section_name;
-
+    
     @FXML
     private TextField txt_single_group_name;
-
+    
     @FXML
     private TextField txt_single_adviser;
-
+    
     @FXML
     private JFXButton btn_single_create;
-
+    
     @FXML
     private JFXButton btn_single_back_main;
-
+    
     @FXML
     private VBox vbox_main;
-
+    
     @FXML
     private JFXButton btn_single_creation;
-
+    
     @FXML
     private JFXButton btn_multi_creation;
-
+    
     @FXML
     private StackPane stack_multi;
-
+    
     @FXML
     private VBox vbox_multi;
-
+    
     @FXML
     private Label lbl_auto_term;
-
+    
     @FXML
     private JFXCheckBox chk_first;
-
+    
     @FXML
     private HBox hbox_first;
-
+    
     @FXML
     private ComboBox<String> cmb_first_from;
-
+    
     @FXML
     private ComboBox<String> cmb_first_to;
-
+    
     @FXML
     private JFXCheckBox chk_second;
-
+    
     @FXML
     private HBox hbox_second;
-
+    
     @FXML
     private ComboBox<String> cmb_second_from;
-
+    
     @FXML
     private ComboBox<String> cmb_second_to;
-
+    
     @FXML
     private JFXCheckBox chk_third;
-
+    
     @FXML
     private HBox hbox_third;
-
+    
     @FXML
     private ComboBox<String> cmb_third_from;
-
+    
     @FXML
     private ComboBox<String> cmb_third_to;
-
+    
     @FXML
     private JFXCheckBox chk_fourth;
-
+    
     @FXML
     private HBox hbox_fourth;
-
+    
     @FXML
     private ComboBox<String> cmb_fourth_from;
-
+    
     @FXML
     private ComboBox<String> cmb_fourth_to;
-
+    
     @FXML
     private JFXCheckBox chk_ojt;
-
+    
     @FXML
     private HBox hbox_fourth1;
-
+    
     @FXML
     private ComboBox<String> cmb_ojt_from;
-
+    
     @FXML
     private ComboBox<String> cmb_ojt_to;
-
+    
     @FXML
     private JFXButton btn_multi_create;
-
+    
     @FXML
     private JFXButton btn_multi_back;
-
+    
     @FXML
     private HBox hbox_ojt;
-
+    
     public SectionCreateWizard() {
         //
     }
-
+    
     private LayoutDataFX winRegularSectionControllerFx;
     private AcademicProgramMapping programMap;
     private CurriculumMapping curriculumMap;
     private String curriculumType;
-
+    
     public void setWinRegularSectionControllerFx(LayoutDataFX winRegularSectionControllerFx) {
         this.winRegularSectionControllerFx = winRegularSectionControllerFx;
     }
-
+    
     public void setProgramMap(AcademicProgramMapping programMap) {
         this.programMap = programMap;
     }
-
+    
     public void setCurriculumMap(CurriculumMapping curriculumMap) {
         this.curriculumMap = curriculumMap;
     }
-
+    
     public void setCurriculumType(String curriculumType) {
         this.curriculumType = curriculumType;
     }
-
+    
     private LoaderView loaderMulti;
     private SuccessView successMulti;
     private FailView failMulti;
-
+    
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
@@ -257,7 +258,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         this.lbl_program_name.setText(programMap.getName());
         this.lbl_curriculum_name.setText(curriculumMap.getName());
         this.lbl_curriculum_type.setText(curriculumType);
-
+        
         this.lbl_single_term.setText(SystemProperties.instance().getCurrentTermString());
         this.lbl_auto_term.textProperty().bind(this.lbl_single_term.textProperty());
 
@@ -275,12 +276,12 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Single Creation Text Filter.
          */
         this.addTextFilters();
-
+        
         this.resetControls();
         this.addCheckBoxListeners();
         this.addComboBoxListeners();
     }
-
+    
     private void checkCurriculumType() {
         String type = curriculumMap.getLadderization_type();
         if (type.equalsIgnoreCase("NONE")) {
@@ -294,15 +295,15 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             this.chk_first.setDisable(true);
             this.chk_second.setDisable(true);
         }
-
+        
     }
-
+    
     private void addTextFilters() {
         /**
          * Filter Year Level.
          */
         FormFormat formFormatter = new FormFormat();
-
+        
         FormFormat.IntegerFormat yearFilter = formFormatter.new IntegerFormat();
         if (curriculumMap.getLadderization_type().equalsIgnoreCase("NONE")) {
             yearFilter.setMinLimit(1);
@@ -314,7 +315,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             yearFilter.setMinLimit(3);
             yearFilter.setMaxLimit(4);
         }
-
+        
         yearFilter.setFilterAction(filter -> {
             //System.out.println(filter.getFilterMessage());
             // do something when filter fails.
@@ -359,7 +360,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         });
         groupFilter.filter(this.txt_single_group_name.textProperty());
     }
-
+    
     @Override
     public void onEventHandling() {
         /**
@@ -405,7 +406,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             Animate.fade(vbox_main, SectionConstants.FADE_SPEED, () -> {
                 vbox_main.setVisible(true);
                 stack_multi.setVisible(false);
-
+                
             }, vbox_main);
         });
 
@@ -420,7 +421,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Create Multiple Sections.
          */
         super.addClickEvent(btn_multi_create, () -> {
-
+            
             if (!atleastOneIsCheck(chk_first, chk_second, chk_third, chk_fourth, chk_ojt)) {
                 Mono.fx().snackbar().showError(application_root, "Please check atleast one option to continue.");
                 return;
@@ -430,7 +431,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             this.checkForInternship();
         });
     }
-
+    
     private boolean atleastOneIsCheck(JFXCheckBox... checkboxes) {
         boolean oneIsCheck = false;
         for (JFXCheckBox checkboxe : checkboxes) {
@@ -441,22 +442,22 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         }
         return oneIsCheck;
     }
-
+    
     private void onBtnBack() {
         Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
             super.replaceRoot(winRegularSectionControllerFx.getApplicationRoot());
-
+            
         }, winRegularSectionControllerFx.getApplicationRoot());
         // refresh section list.
         winRegularSectionControllerFx.
                 <WinRegularSectionsController>getController()
                 .fetchSections();
-
+        
         loaderMulti.detach();
         failMulti.detach();
         successMulti.detach();
     }
-
+    
     private void resetControls() {
         /**
          * First Year Controls.
@@ -468,7 +469,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Second Years.
          */
         this.chk_second.setSelected(false);
-
+        
         this.hbox_second.setDisable(true);
 
         /**
@@ -480,12 +481,12 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Fourth
          */
         this.chk_fourth.setSelected(false);
-
+        
         this.hbox_fourth.setDisable(true);
-
+        
         this.chk_ojt.setSelected(false);
         hbox_ojt.setDisable(true);
-
+        
     }
 
     /**
@@ -499,7 +500,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 disableFirstYear();
             }
         });
-
+        
         this.chk_second.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue) {
                 enableSecondYear();
@@ -507,7 +508,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 disableSecondYear();
             }
         });
-
+        
         this.chk_third.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue) {
                 enableThirdYear();
@@ -515,7 +516,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 disableThirdYear();
             }
         });
-
+        
         this.chk_fourth.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue) {
                 enableFourthYear();
@@ -523,7 +524,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 disableFourthYear();
             }
         });
-
+        
         this.chk_ojt.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue) {
                 hbox_ojt.setDisable(false);
@@ -531,48 +532,48 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 hbox_ojt.setDisable(true);
             }
         });
-
+        
     }
 
     // enables
     private void enableFirstYear() {
         hbox_first.setDisable(false);
     }
-
+    
     private void enableSecondYear() {
         hbox_second.setDisable(false);
-
+        
     }
-
+    
     private void enableThirdYear() {
         hbox_third.setDisable(false);
     }
-
+    
     private void enableFourthYear() {
         hbox_fourth.setDisable(false);
-
+        
     }
 
     // disables
     private void disableFirstYear() {
         hbox_first.setDisable(true);
     }
-
+    
     private void disableSecondYear() {
         hbox_second.setDisable(true);
-
+        
     }
 
     //
     private void disableThirdYear() {
         hbox_third.setDisable(true);
     }
-
+    
     private void disableFourthYear() {
         hbox_fourth.setDisable(true);
-
+        
     }
-
+    
     private void addComboBoxListeners() {
         // first years
         setComboBoxLimit(this.cmb_first_from, cmb_first_to, 0);
@@ -599,41 +600,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
      * @param padding
      */
     private void setComboBoxLimit(ComboBox<String> source, ComboBox<String> self, int extra, ComboBox<String>... padding) {
-
-        addComboBoxContents(0, source);
-        source.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            int selfStart = (int) newValue;
-
-            for (ComboBox<String> comboBox : padding) {
-                selfStart += comboBox.getSelectionModel().getSelectedIndex();
-            }
-            selfStart += extra;
-            addComboBoxContents(selfStart, self);
-            self.getSelectionModel().select(0);
-
-        });
-        source.getSelectionModel().select(0);
-
-        if (padding.length != 0) {
-            ComboBox refBox = padding[0];
-            int storeIndex = refBox.getSelectionModel().getSelectedIndex();
-            try {
-                refBox.getSelectionModel().select(1);
-            } catch (Exception e) {
-                // list is only 1
-            }
-            refBox.getSelectionModel().select(storeIndex);
-        }
-
-        if (padding.length == 2) {
-
-            source.getItems().addListener((ListChangeListener.Change<? extends String> c) -> {
-                if (c.getList().isEmpty()) {
-                    self.getItems().clear();
-                }
-            });
-
-        }
+        ChoiceRange.setComboBoxLimit(charList, source, self, 0, padding);
     }
 
     /**
@@ -653,7 +620,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         for (Character c : charSet.toCharArray()) {
             charList.add(c.toString());
         }
-
+        
         return charList;
     }
 
@@ -664,20 +631,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
      * @param comboBox
      */
     private void addComboBoxContents(int index, ComboBox<String> comboBox) {
-
-        /**
-         * Add to observable.
-         */
-        ObservableList<String> listModel = FXCollections.observableArrayList();
-        for (int x = index; x < charList.size(); x++) {
-            try {
-                listModel.add(charList.get(x));
-            } catch (Exception e) {
-                //
-            }
-        }
-        comboBox.getItems().clear();
-        comboBox.getItems().addAll(listModel);
+        ChoiceRange.addComboBoxContents(index, charList, comboBox);
     }
 
     /**
@@ -696,20 +650,20 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showError(this.application_root, "Please Assign a Section Group.");
             return;
         }
-
+        
         int selected = Mono.fx().alert().createConfirmation()
                 .setTitle("Confirm")
                 .setHeader("Create New Section ?")
                 .setMessage("Are you sure you want to add this section ?")
                 .confirmYesNo();
-
+        
         if (selected == 1) {
             CreateRegularSection createSingleTx = new CreateRegularSection();
             createSingleTx.secionGroup = MonoText.getInt(txt_single_group_name); //Integer.valueOf(this.txt_single_group_name.getText().trim().toUpperCase(Locale.ENGLISH));
             createSingleTx.yearLevel = MonoText.getInt(txt_single_year_level); //Integer.valueOf(this.txt_single_year_level.getText().trim().toUpperCase(Locale.ENGLISH));
             createSingleTx.sectionName = MonoText.getFormatted(txt_single_section_name); //this.txt_single_section_name.getText().trim().toUpperCase(Locale.ENGLISH);
             createSingleTx.curriculumMapping = this.curriculumMap;
-
+            
             createSingleTx.whenStarted(() -> {
                 btn_single_create.setDisable(true);
             });
@@ -729,9 +683,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             createSingleTx.transact();
         }
     }
-
+    
     private Integer OJT_YEAR = null;
-
+    
     public void createRegularMulti() {
         CreateRegularSectionsAuto multiTx = new CreateRegularSectionsAuto();
         /**
@@ -788,7 +742,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     // if OJT was selected.
                     sectionMeta.internSections
                             = new ControlGroup(null, null, cmb_ojt_from, cmb_ojt_to).list();
-
+                    
                 }
             }
 
@@ -801,10 +755,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
          * Make null.
          */
         this.OJT_YEAR = null;
-
+        
         multiTx.yearsToCreate = createList;
         multiTx.sectionNames = sectionNames;
-
+        
         multiTx.whenStarted(() -> {
             multiNav(false);
             loaderMulti.setMessage("Just A Moment");
@@ -813,12 +767,12 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         });
         multiTx.whenCancelled(() -> {
             loaderMulti.detach();
-
+            
             sout("CANCELED >>>>>>");
         });
         multiTx.whenFailed(() -> {
             loaderMulti.detach();
-
+            
             failMulti.setMessage("Something Went Wrong !");
             failMulti.getButton().setText("Ok");
             super.addClickEvent(failMulti.getButton(), () -> {
@@ -829,7 +783,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         });
         multiTx.whenSuccess(() -> {
             loaderMulti.detach();
-
+            
             successMulti.setMessage("Operation Completed Successfully");
             successMulti.getButton().setText("View");
             super.addClickEvent(successMulti.getButton(), () -> {
@@ -837,17 +791,17 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 successMulti.detach();
             });
             successMulti.attach();
-
+            
             sout("COMITTED SUCCESS");
         });
         multiTx.whenFinished(() -> {
             sout("DONE");
             multiNav(true);
         });
-
+        
         multiTx.transact();
     }
-
+    
     private void multiNav(boolean enable) {
         this.btn_back.setDisable(!enable);
         this.btn_multi_create.setDisable(!enable);
@@ -885,27 +839,27 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             multiNav(true);
             super.cursorDefault();
         });
-
+        
         findInternTx.transact();
     }
-
+    
     private class ControlGroup {
-
+        
         private Integer year;
         private JFXCheckBox checkBox;
         private ComboBox<String> cmbFrom;
         private ComboBox<String> cmbTo;
-
+        
         public ControlGroup(Integer year, JFXCheckBox checkBox, ComboBox<String> cmbFrom, ComboBox<String> cmbTo) {
             this.year = year;
             this.checkBox = checkBox;
             this.cmbFrom = cmbFrom;
             this.cmbTo = cmbTo;
         }
-
+        
         public ArrayList<String> list() {
             ArrayList<String> listRange = new ArrayList<>();
-
+            
             ArrayList<String> charList = populateCharSet();
             /**
              * Loop through all the listed char set.
@@ -914,14 +868,14 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             String endString = this.cmbTo.getSelectionModel().getSelectedItem().toUpperCase().trim();
             boolean isFirstMatch = false;
             for (String string : charList) {
-
+                
                 if (!isFirstMatch) {
                     if (string.equalsIgnoreCase(initString)) {
                         // first match detected.
                         isFirstMatch = true;
                     }
                 }
-
+                
                 if (isFirstMatch) {
                     listRange.add(string.toUpperCase());
                 }
@@ -935,17 +889,17 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             }
             return listRange;
         }
-
+        
     }
 
     //--------------------------------------------------------------------------
     private class CreateRegularSection extends Transaction {
-
+        
         public String sectionName;
         public Integer yearLevel;
         public Integer secionGroup;
         public CurriculumMapping curriculumMapping;
-
+        
         @Override
         protected boolean transaction() {
             AcademicTermMapping currentTerm = SystemProperties.instance().getCurrentAcademicTerm();
@@ -961,7 +915,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     .eq(DB.load_section().type, SectionConstants.REGULAR)
                     .active()
                     .first();
-
+            
             if (exist != null) {
                 System.out.println(exist.getSection_name());
                 sout("Section Existing");
@@ -982,7 +936,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             newLoadSection.setCollege("CICT");
             newLoadSection.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
             newLoadSection.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
-
+            
             Session localSession = Mono.orm().openSession();
             org.hibernate.Transaction dataTx = localSession.beginTransaction();
 
@@ -992,7 +946,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             int temp_section_id = Database.connect()
                     .load_section()
                     .transactionalInsert(localSession, newLoadSection);
-
+            
             if (temp_section_id <= 0) {
                 /**
                  * Throw exception.
@@ -1000,14 +954,14 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 dataTx.rollback();
                 throw new TransactionException("load_section insertion error");
             }
-
+            
             ArrayList<CurriculumSubjectMapping> subjects = Mono.orm().newSearch(Database.connect().curriculum_subject())
                     .eq(DB.curriculum_subject().CURRICULUM_id, curriculumMapping.getId())
                     .eq(DB.curriculum_subject().year, yearLevel)
                     .eq(DB.curriculum_subject().semester, currentTerm.getSemester_regular())
                     .active(Order.asc(DB.curriculum_subject().id))
                     .all();
-
+            
             for (CurriculumSubjectMapping subject : subjects) {
                 LoadGroupMapping loadGroup = MapFactory.map().load_group();
                 loadGroup.setSUBJECT_id(subject.getSUBJECT_id());
@@ -1015,10 +969,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 loadGroup.setGroup_type("REGULAR");
                 loadGroup.setAdded_date(Mono.orm().getServerTime().getDateWithFormat());
                 loadGroup.setAdded_by(CollegeFaculty.instance().getFACULTY_ID());
-
+                
                 int temp_load_group = Database.connect().load_section()
                         .transactionalInsert(localSession, loadGroup);
-
+                
                 if (temp_load_group <= 0) {
                     /**
                      * Throw exception.
@@ -1034,10 +988,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             dataTx.commit();
             return true;
         }
-
+        
         @Override
         protected void after() {
-
+            
         }
     }
 
@@ -1045,10 +999,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
      * Finds the internship subject across the curriculum.
      */
     private class LocateInternship extends Transaction {
-
+        
         private CurriculumMapping curMap;
         private Integer OJT_YEAR = null;
-
+        
         @Override
         protected boolean transaction() {
             ArrayList<CurriculumSubjectMapping> curriculumSubjects = Mono.orm()
@@ -1063,11 +1017,11 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             if (curriculumSubjects == null) {
                 return true;
             }
-
+            
             for (CurriculumSubjectMapping curSub : curriculumSubjects) {
                 SubjectMapping subject = Database.connect().subject()
                         .getPrimary(curSub.getSUBJECT_id());
-
+                
                 if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                     this.OJT_YEAR = curSub.getYear();
                     // ojt found
@@ -1076,10 +1030,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             }
             return true;
         }
-
+        
         @Override
         protected void after() {
-
+            
         }
     }
 
@@ -1087,15 +1041,15 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
      * Creates multiple regular sections.
      */
     private class CreateRegularSectionsAuto extends Transaction {
-
+        
         private void sout(Object message) {
             System.out.println(this.getClass().getSimpleName() + ": " + message.toString());
         }
-
+        
         private HashMap<Integer, Boolean> yearsToCreate;
         private HashMap<Integer, SectionMeta> sectionNames;
         private CurriculumMapping curMap;
-
+        
         @Override
         protected boolean transaction() {
             sout("transaction started");
@@ -1107,7 +1061,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
              */
             Session localSession = Mono.orm().openSession();
             org.hibernate.Transaction dataTx = localSession.beginTransaction();
-
+            
             sout("Session started");
             /**
              * Database partial transaction count;
@@ -1129,7 +1083,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                  */
                 Integer semester = currentTerm.getSemester_regular();
                 Integer ojtSem = null;
-
+                
                 ArrayList<CurriculumSubjectMapping> curriculumSubjects = Mono.orm()
                         .newSearch(Database.connect().curriculum_subject())
                         .eq(DB.curriculum_subject().year, yearlevel)
@@ -1143,9 +1097,9 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 for (CurriculumSubjectMapping curSub : curriculumSubjects) {
                     SubjectMapping subject = Database.connect().subject()
                             .getPrimary(curSub.getSUBJECT_id());
-
+                    
                     if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-
+                        
                         if (curSub.getSemester().equals(1)) {
                             /**
                              * If OJT is in the first semester.
@@ -1159,7 +1113,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                         break;
                     }
                 }
-
+                
                 sout("Regular Sem: " + semester);
                 sout("OJT Sem: " + String.valueOf(ojtSem));
 
@@ -1167,7 +1121,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                  * Section Creation.
                  */
                 SectionMeta meta = sectionNames.get(yearlevel);
-
+                
                 ArrayList<String> normal = meta.normalSections;
                 ArrayList<String> ojt = meta.internSections;
 
@@ -1218,7 +1172,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                         }
                     }
                 }
-
+                
                 mutation_count += (ojt_mutation_count + normal_mutation_count);
             }
 
@@ -1266,7 +1220,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     .eq(DB.load_section().type, SectionConstants.REGULAR)
                     .active()
                     .first();
-
+            
             if (exist != null) {
                 System.out.println(exist.getSection_name());
                 sout("section is existing skipping . . .");
@@ -1297,7 +1251,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             int temp_section_id = Database.connect()
                     .load_section()
                     .transactionalInsert(localSession, newLoadSection);
-
+            
             sout("Temporarily Inserted " + regNames + "-" + group);
             if (temp_section_id <= 0) {
                 /**
@@ -1320,7 +1274,7 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                     .eq(DB.curriculum_subject().semester, semester)
                     .active(Order.asc(DB.curriculum_subject().id))
                     .all();
-
+            
             sout("Fetching subjects from curriculum");
             for (CurriculumSubjectMapping subject : subjects) {
                 LoadGroupMapping loadGroup = MapFactory.map().load_group();
@@ -1329,10 +1283,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 loadGroup.setGroup_type("REGULAR");
                 loadGroup.setAdded_date(Mono.orm().getServerTime().getDateWithFormat());
                 loadGroup.setAdded_by(CollegeFaculty.instance().getFACULTY_ID());
-
+                
                 int temp_load_group = Database.connect().load_section()
                         .transactionalInsert(localSession, loadGroup);
-
+                
                 sout("Temporarily Inserted LoadGroup");
                 if (temp_load_group <= 0) {
                     /**
@@ -1350,19 +1304,19 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             mutated = 1;
             return mutated;
         }
-
+        
         @Override
         protected void after() {
-
+            
         }
-
+        
     }
-
+    
     private class SectionMeta {
-
+        
         private ArrayList<String> normalSections;
         private ArrayList<String> internSections;
-
+        
     }
-
+    
 }

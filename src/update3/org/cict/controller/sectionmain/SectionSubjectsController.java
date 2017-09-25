@@ -45,13 +45,18 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import update3.org.cict.ChoiceRange;
+import update3.org.cict.ScheduleConstants;
 import update3.org.cict.SectionConstants;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 
@@ -140,7 +145,16 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private Label lbl_subject_code_top_addsched;
 
     @FXML
-    private TextField txt_adviser1;
+    private ComboBox<String> cmb_sched_day;
+
+    @FXML
+    private ComboBox<String> cmb_sched_start;
+
+    @FXML
+    private ComboBox<String> cmb_sched_end;
+
+    @FXML
+    private TextField txt_sched_room;
 
     @FXML
     private JFXButton btn_add_sched;
@@ -232,8 +246,20 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
         fetchSectionSubject();
         //loadSchedule();
+        this.initScheduler();
 
 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private ArrayList<String> timeTable12;
+
+    private void initScheduler() {
+        this.cmb_sched_day.getItems().addAll(ScheduleConstants.getDayList());
+        this.cmb_sched_day.getSelectionModel().selectFirst();
+        // call once.
+        this.timeTable12 = ScheduleConstants.getTimeLapsePretty();
+        // add limits to time combo box.
+        ChoiceRange.setComboBoxLimitTime(timeTable12, cmb_sched_start, cmb_sched_end);
     }
 
     private void fetchSectionSubject() {

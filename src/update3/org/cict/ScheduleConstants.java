@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.commons.lang3.text.WordUtils;
 
 /**
  *
@@ -49,16 +50,21 @@ public class ScheduleConstants {
 
     public static ObservableList<String> getDayList() {
         ObservableList<String> days = FXCollections.observableArrayList();
-        days.add(MONDAY);
-        days.add(TUESDAY);
-        days.add(WEDNESDAY);
-        days.add(THURSDAY);
-        days.add(FRIDAY);
-        days.add(SATURDAY);
-        days.add(SUNDAY);
+        days.add(WordUtils.capitalizeFully(MONDAY));
+        days.add(WordUtils.capitalizeFully(TUESDAY));
+        days.add(WordUtils.capitalizeFully(WEDNESDAY));
+        days.add(WordUtils.capitalizeFully(THURSDAY));
+        days.add(WordUtils.capitalizeFully(FRIDAY));
+        days.add(WordUtils.capitalizeFully(SATURDAY));
+        days.add(WordUtils.capitalizeFully(SUNDAY));
         return days;
     }
 
+    /**
+     * 24 HOUR FORMAT FOR SAVING IN THE DATABASE;
+     *
+     * @return
+     */
     public static ArrayList<String> getTimeLapse() {
         ArrayList<String> timeTable = new ArrayList<>();
         MonoLoop.range(7, 20, 1, hour -> {
@@ -73,6 +79,38 @@ public class ScheduleConstants {
             });
         });
         return timeTable;
+    }
+
+    /**
+     * Pretty Time Lapse for the combo box and user's view. 12 HOUR format.
+     *
+     * @return
+     */
+    public static ArrayList<String> getTimeLapsePretty() {
+        ArrayList<String> timeTablePretty = new ArrayList<>();
+        ArrayList<String> timetable = getTimeLapse();
+        for (String time : timetable) {
+            String[] timeFormat = time.split(":");
+            String hour = timeFormat[0];
+            String minute = timeFormat[1];
+            String newTimeString = "";
+            int hour_value = Integer.parseInt(hour);
+            if (hour_value < 12) {
+                // am
+                newTimeString = time + " AM";
+            } else if (hour_value == 12) {
+                // pm but no minus
+                newTimeString = time + " PM";
+            } else if (hour_value > 12) {
+                // pm - 12
+                int newTimeValue = hour_value - 12;
+                String newHour = MonoText.lead(2, "0", String.valueOf(newTimeValue));
+                newTimeString = newHour + ":" + minute + " PM";
+            }
+
+            timeTablePretty.add(newTimeString);
+        }
+        return timeTablePretty;
     }
 
 }
