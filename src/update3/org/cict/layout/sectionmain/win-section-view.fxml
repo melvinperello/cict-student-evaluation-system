@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -194,7 +195,7 @@
                               </HBox>
                               <HBox alignment="CENTER_RIGHT">
                                  <children>
-                                    <JFXButton fx:id="btn_save_changes" prefWidth="100.0" style="-fx-border-color: #FFFFFF;" text="Save" textFill="WHITE">
+                                    <JFXButton fx:id="btn_save_changes" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Save" textFill="WHITE">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
@@ -218,7 +219,7 @@
             </StackPane>
             <StackPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                <children>
-                  <VBox fx:id="vbox_view_subjects" maxHeight="1.7976931348623157E308" spacing="40.0">
+                  <VBox fx:id="vbox_view_subjects" maxHeight="1.7976931348623157E308" spacing="40.0" visible="false">
                      <children>
                         <VBox prefWidth="663.0" spacing="20.0" VBox.vgrow="ALWAYS">
                            <padding>
@@ -269,7 +270,7 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="vbox_view_schedule" maxHeight="1.7976931348623157E308" spacing="40.0" visible="false">
+                  <VBox fx:id="vbox_view_schedule" maxHeight="1.7976931348623157E308" spacing="40.0">
                      <children>
                         <VBox prefWidth="663.0" spacing="20.0" VBox.vgrow="ALWAYS">
                            <padding>
@@ -322,7 +323,7 @@
                               </StackPane>
                               <HBox alignment="CENTER_RIGHT">
                                  <children>
-                                    <JFXButton fx:id="lbl_add_schedule" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Add Schedule" textFill="WHITE">
+                                    <JFXButton fx:id="btn_view_add_schedule" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Add Schedule" textFill="WHITE">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
@@ -415,6 +416,133 @@
                               <HBox alignment="CENTER_RIGHT">
                                  <children>
                                     <JFXButton fx:id="btn_back_to_subject" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" text="Back To Subject List" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </JFXButton>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="vbox_add_schedule" maxHeight="1.7976931348623157E308" spacing="40.0" visible="false">
+                     <children>
+                        <VBox prefWidth="663.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../section_images/bullet_section.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label fx:id="lbl_subject_code_top_addsched" graphicTextGap="10.0" styleClass="metro-title-33" text="MATH 113" textFill="WHITE" wrapText="true">
+                                       <font>
+                                          <Font size="33.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <padding>
+                                    <Insets left="58.0" />
+                                 </padding>
+                                 <children>
+                                    <Label graphicTextGap="10.0" styleClass="metro-subtitle-1" text="New Class Schedule" textFill="WHITE">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../section_images/add_50.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="-20.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <VBox prefWidth="663.0" spacing="20.0">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <Label graphicTextGap="10.0" prefWidth="150.0" styleClass="metro-label-18" text="Day" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                          <ComboBox prefWidth="253.0" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <Label graphicTextGap="10.0" prefWidth="150.0" styleClass="metro-label-18" text="Time Start" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                          <ComboBox prefWidth="253.0" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <Label graphicTextGap="10.0" prefWidth="150.0" styleClass="metro-label-18" text="Time End" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                          <ComboBox prefWidth="253.0" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <Label graphicTextGap="10.0" prefWidth="150.0" styleClass="metro-label-18" text="Room" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="txt_adviser1" prefHeight="25.0" prefWidth="253.0" promptText="Room Name" styleClass="metro-textbox-18">
+                                             <font>
+                                                <Font />
+                                             </font>
+                                          </TextField>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <JFXButton fx:id="btn_add_sched" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Add Schedule" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="80.0" right="20.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="btn_cancel_sched" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Cancel" textFill="WHITE">
                                        <font>
                                           <Font size="16.0" />
                                        </font>

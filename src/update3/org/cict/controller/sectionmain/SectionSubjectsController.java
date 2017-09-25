@@ -116,7 +116,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private VBox vbox_schedule;
 
     @FXML
-    private JFXButton lbl_add_schedule;
+    private JFXButton btn_view_add_schedule;
 
     @FXML
     private JFXButton btn_export;
@@ -132,6 +132,21 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_back_to_subject;
+
+    @FXML
+    private VBox vbox_add_schedule;
+
+    @FXML
+    private Label lbl_subject_code_top_addsched;
+
+    @FXML
+    private TextField txt_adviser1;
+
+    @FXML
+    private JFXButton btn_add_sched;
+
+    @FXML
+    private JFXButton btn_cancel_sched;
 
     public SectionSubjectsController() {
         /**
@@ -185,9 +200,18 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
      */
     private EmptyView scheduleEmpty;
 
+    /**
+     * Initialize everything here.
+     *
+     *
+     *
+     */
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+        /**
+         * Attachments.
+         */
         this.scheduleEmpty = new EmptyView(stack_schedules);
 
         /**
@@ -196,6 +220,13 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.lbl_semester.setText(currentTermString);
         this.lbl_curriculum.setText(curriculumMap.getName());
         this.lbl_curriculum_type.setText(curriculumType);
+
+        /**
+         * Default view.
+         */
+        this.vbox_add_schedule.setVisible(false);
+        this.vbox_view_schedule.setVisible(false);
+        this.vbox_view_subjects.setVisible(true);
         //
         this.lbl_section_name.setText(sectionName);
 
@@ -235,12 +266,31 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             Animate.fade(vbox_view_schedule, SectionConstants.FADE_SPEED, () -> {
                 vbox_view_subjects.setVisible(true);
                 vbox_view_schedule.setVisible(false);
+                vbox_add_schedule.setVisible(false);
             }, vbox_view_subjects);
             /**
              * detach empty schedule if ever schedule was empty.
              */
             this.scheduleEmpty.detach();
         });
+
+        super.addClickEvent(btn_view_add_schedule, () -> {
+            Animate.fade(vbox_view_schedule, SectionConstants.FADE_SPEED, () -> {
+                this.vbox_add_schedule.setVisible(true);
+                this.vbox_view_schedule.setVisible(false);
+                this.vbox_view_subjects.setVisible(false);
+            }, vbox_add_schedule);
+
+        });
+
+        super.addClickEvent(btn_cancel_sched, () -> {
+            Animate.fade(vbox_add_schedule, SectionConstants.FADE_SPEED, () -> {
+                this.vbox_add_schedule.setVisible(false);
+                this.vbox_view_schedule.setVisible(true);
+                this.vbox_view_subjects.setVisible(false);
+            }, vbox_view_schedule);
+        });
+
     }
 
     private void loadSchedule() {
@@ -323,6 +373,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 this.lbl_student_count.setText(sectionSubject.studentCount);
                 this.lbl_instructor_big.setText(sectionSubject.instructorName);
                 this.lbl_subject_code_top.setText(sectionSubject.subject.getCode());
+                this.lbl_subject_code_top_addsched.textProperty().bind(this.lbl_subject_code_top.textProperty());
             });
 
             SimpleTableCell cellParent = new SimpleTableCell();
