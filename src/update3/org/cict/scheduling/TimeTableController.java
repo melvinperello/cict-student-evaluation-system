@@ -28,11 +28,11 @@ import com.jhmvin.flow.MonoLoop;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -49,6 +49,9 @@ public class TimeTableController extends SceneFX implements ControllerFX {
 
     @FXML
     private HBox hbox_table;
+
+    @FXML
+    private HBox hbox_over;
 
     public TimeTableController() {
     }
@@ -81,6 +84,25 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         });
 
         /**
+         *
+         */
+        hbox_over.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            Double height = (Double) newValue;
+            Double single_unit = height / this.UNIT;
+
+            hbox_over.getChildren().forEach(column -> {
+                if (column instanceof ColumnFiller) {
+                    ColumnFiller col = (ColumnFiller) column;
+                    col.getChildren().forEach(row -> {
+                        HBox r = (HBox) row;
+                        Integer multipler = (Integer) r.getUserData();
+                        r.setPrefHeight(single_unit * multipler);
+                    });
+                }
+            });
+        });
+
+        /**
          * Create columns from time to Sunday.
          */
         MonoLoop.range(1, 8, 1, loop -> {
@@ -92,6 +114,18 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             } else {
                 column.getStyleClass().add("column-template");
             }
+
+            ColumnFiller cf = new ColumnFiller(column);
+
+            if (!loop.getValue().equals(1)) {
+                TimeTableCell sss = new TimeTableCell();
+                sss.pane.setMaxWidth(Double.MAX_VALUE);
+                sss.pane.setUserData(Integer.valueOf("12"));
+                sss.pane.getStyleClass().add("row-filler");
+                cf.getChildren().add(sss.pane);
+            }
+
+            this.hbox_over.getChildren().add(cf);
 
             hbox_table.getChildren().add(column);
 
@@ -151,6 +185,23 @@ public class TimeTableController extends SceneFX implements ControllerFX {
                     .pullOutLayout();
 
             content = super.searchAccessibilityText(pane, "lbl_content");
+        }
+
+    }
+
+    private class ColumnFiller extends VBox {
+
+        public ColumnFiller(Pane parent) {
+            HBox.setHgrow(this, Priority.ALWAYS);
+            //this.getStyleClass().add("col-filler");
+            this.prefWidthProperty().bind(parent.widthProperty());
+
+            // add one above
+            TimeTableCell cellHeader = new TimeTableCell();
+            cellHeader.pane.setMaxWidth(Double.MAX_VALUE);
+            cellHeader.pane.setUserData(Integer.valueOf("4"));
+            cellHeader.content.setText("");
+            this.getChildren().add(cellHeader.pane);
         }
 
     }

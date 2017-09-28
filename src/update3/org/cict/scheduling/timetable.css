@@ -28,4 +28,13 @@
 }
 
 
+.col-filler{
+    -fx-border-color: blue;
+}
 
+
+.row-filler{
+    -fx-border-color: #FFFFFF;
+    -fx-border-style: dashed;
+    -fx-background-color: #03A9F5;
+}
