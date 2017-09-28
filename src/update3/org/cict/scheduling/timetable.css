@@ -1,7 +1,31 @@
-.column-day{
+.column-template{
     -fx-border-color: #15315C;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-style: dashed;
+}
+.column-template-lefter{
+    -fx-border-color: #15315C;
+    -fx-border-width: 0 1 0 1;
+    -fx-border-style: dashed;
+    -fx-font-weight: bold;
 }
 
-.row{
+.row-template-header{
     -fx-border-color: #15315C;
+    -fx-border-width: 1 0 1 0;
+    -fx-border-style: dashed;
+    -fx-font-weight: bold;
 }
+
+.row-template{
+    -fx-border-color: #15315C;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: dashed;
+}
+
+.row-template-text{
+    -fx-text-fill: #828282;
+}
+
+
+
