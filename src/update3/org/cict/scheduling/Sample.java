@@ -24,8 +24,10 @@
 package update3.org.cict.scheduling;
 
 import com.jhmvin.Mono;
+import java.util.HashMap;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import update3.org.cict.ScheduleConstants;
 
 /**
  *
@@ -35,7 +37,9 @@ public class Sample extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        TimeTableController controller = new TimeTableController();
+        HashMap<String,ScheduleData> data = new HashMap<>();
+        data.put(ScheduleConstants.MONDAY, value)
+        TimeTableController controller = new TimeTableController(data);
         Mono.fx().create()
                 .setPackageName("update3.org.cict.scheduling")
                 .setFxmlDocument("TimeTableController")

@@ -41,3 +41,7 @@
 .row-filler-text{
     -fx-text-fill: white;
 }
+
+.fuck{
+    -fx-border-color: blue;
+}

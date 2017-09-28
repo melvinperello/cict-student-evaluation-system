@@ -28,6 +28,7 @@ import com.jhmvin.flow.MonoLoop;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -53,21 +54,22 @@ public class TimeTableController extends SceneFX implements ControllerFX {
     @FXML
     private HBox hbox_over;
 
-    public TimeTableController() {
+    public TimeTableController(HashMap<String, ScheduleData> schedule) {
+        // pass schedule information in constructor
+
     }
 
-    private final Double LINE_DISTANCE = 14.00; // the distance from  start and ending
-    private final Double LINE_INTERVAL = 04.00; // multiplier 
+    private final Double LINE_DISTANCE = 14.00; // must be even // the distance from  start and ending 20 - 7 + 1 header
+    private final Double LINE_INTERVAL = 04.00; // multiplier 4 = 1hr 1 = 15mins
     private Double UNIT; // individual units sizes.
 
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
         this.UNIT = LINE_DISTANCE * LINE_INTERVAL;
+        // create listeners.
         this.tableBelowListener();
         this.tableOverListener();
-        
-        
 
         /**
          * Create columns from time to Sunday.
@@ -89,10 +91,9 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             cellHeader.pane.setMaxWidth(Double.MAX_VALUE);
             cellHeader.pane.setUserData(Integer.valueOf("4"));
             cellHeader.content.setText(getTableHeader().get(loop.getValue() - 1));
-
-            // add header to column
             column.getChildren().add(cellHeader.pane);
 
+            //------------------------------------------------------------------
             /**
              * Create time stamps faded.
              */
@@ -101,12 +102,17 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             /**
              * create Rows over.
              */
-            this.createOverRows(column, loop.getValue());
+            this.createOverRows(column, loop.getValue(), cellHeader.pane);
 
         });
 
     }
 
+    /**
+     * Table headers.
+     *
+     * @return
+     */
     private ArrayList<String> getTableHeader() {
         ArrayList<String> headerText = new ArrayList<>();
         headerText.add("Time");
@@ -114,6 +120,12 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         return headerText;
     }
 
+    /**
+     * Fill in time values of template.
+     *
+     * @param column
+     * @param loop_value
+     */
     private void timeTemplates(Pane column, Integer loop_value) {
         ArrayList<String> timeLapse = ScheduleConstants.getTimeLapsePretty();
         for (Integer start = 0; start < timeLapse.size(); start += 4) {
@@ -133,6 +145,9 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         }
     }
 
+    /**
+     * The template table.
+     */
     private void tableBelowListener() {
         /**
          * Add listener for vertical resizing.
@@ -144,16 +159,22 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             hbox_table.getChildren().forEach(column -> {
                 if (column instanceof VBox) {
                     VBox col = (VBox) column;
+
                     col.getChildren().forEach(row -> {
+
                         HBox r = (HBox) row;
                         Integer multipler = (Integer) r.getUserData();
                         r.setPrefHeight(single_unit * multipler);
+
                     });
                 }
             });
         });
     }
 
+    /**
+     * The real table..
+     */
     private void tableOverListener() {
         hbox_over.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             Double height = (Double) newValue;
@@ -162,10 +183,12 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             hbox_over.getChildren().forEach(column -> {
                 if (column instanceof ColumnFiller) {
                     ColumnFiller col = (ColumnFiller) column;
+
                     col.getChildren().forEach(row -> {
+
                         HBox r = (HBox) row;
                         Integer multipler = (Integer) r.getUserData();
-                        r.setPrefHeight(single_unit * multipler);
+                        r.setPrefHeight((single_unit * multipler));
                     });
                 }
             });
@@ -178,9 +201,9 @@ public class TimeTableController extends SceneFX implements ControllerFX {
      * @param column
      * @param loop_val
      */
-    private void createOverRows(Pane column, Integer loop_val) {
+    private void createOverRows(Pane column, Integer loop_val, Pane header) {
         // create column filler
-        ColumnFiller cf = new ColumnFiller(column);
+        ColumnFiller cf = new ColumnFiller(column, header);
 
         switch (loop_val) {
             case 1:
@@ -188,8 +211,39 @@ public class TimeTableController extends SceneFX implements ControllerFX {
                 break;
             case 2:
                 // monday schedule
-                createTimeSchedules(cf,"12","IT 113 - IT 08");
-                createTimeSchedules(cf,"10","IT 253 - IT 09");
+                createTimeSchedules(cf, "12", "IT 113 - IT 08");
+                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                break;
+            case 3:
+                // tuesday schedule
+                createTimeSchedules(cf, "12", "IT 113 - IT 08");
+                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                break;
+            case 4:
+                // wednesday schedule
+                createTimeSchedules(cf, "12", "IT 113 - IT 08");
+                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                break;
+            case 5:
+                // thursday schedule
+                createTimeSchedules(cf, "12", "IT 113 - IT 08");
+                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                break;
+            case 6:
+                // friday schedule
+                createTimeSchedules(cf, "12", "IT 113 - IT 08");
+                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                break;
+            case 7:
+                // saturday schedule
+                createTimeSchedules(cf, "12", "IT 113 - IT 08");
+                fillerTimeSchedules(cf, "32");
+                createTimeSchedules(cf, "8", "IT 253 - IT 09");
+                break;
+            case 8:
+                // sunday schedule
+                createTimeSchedules(cf, "48", "IT 113 - IT 08");
+
                 break;
 
             default:
@@ -201,6 +255,13 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         this.hbox_over.getChildren().add(cf);
     }
 
+    /**
+     * Create Time schedules.
+     *
+     * @param cf
+     * @param span
+     * @param text
+     */
     private void createTimeSchedules(ColumnFiller cf, String span, String text) {
         TimeTableCell sss = new TimeTableCell();
         sss.pane.setMaxWidth(Double.MAX_VALUE);
@@ -208,10 +269,24 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         sss.pane.getStyleClass().add("row-filler");
         sss.content.getStyleClass().add("row-filler-text");
         sss.content.setText(text);
-
         cf.getChildren().add(sss.pane);
     }
 
+    /**
+     * Create empty rows for filler and spaces in between of schedules.
+     *
+     * @param cf
+     * @param span
+     */
+    private void fillerTimeSchedules(ColumnFiller cf, String span) {
+        TimeTableCell sss = new TimeTableCell();
+        sss.pane.setMaxWidth(Double.MAX_VALUE);
+        sss.pane.setUserData(Integer.valueOf(span));
+        sss.content.setText("");
+        cf.getChildren().add(sss.pane);
+    }
+
+    //
     @Override
     public void onEventHandling() {
 
@@ -243,17 +318,23 @@ public class TimeTableController extends SceneFX implements ControllerFX {
      */
     private class ColumnFiller extends VBox {
 
-        public ColumnFiller(Pane parent) {
-            HBox.setHgrow(this, Priority.ALWAYS);
+        public ColumnFiller(Pane parent, Pane header) {
+            //HBox.setHgrow(super, Priority.ALWAYS);
             //this.getStyleClass().add("col-filler");
-            this.prefWidthProperty().bind(parent.widthProperty());
+            //-
+            super.prefWidthProperty().bind(parent.widthProperty());
 
             // add one above
             TimeTableCell cellHeader = new TimeTableCell();
             cellHeader.pane.setMaxWidth(Double.MAX_VALUE);
+
             cellHeader.pane.setUserData(Integer.valueOf("4"));
+
+            //cellHeader.pane.getStyleClass().add("fuck");
             cellHeader.content.setText("");
-            this.getChildren().add(cellHeader.pane);
+            super.getChildren().add(cellHeader.pane);
+            //-
+            //cellHeader.pane.prefHeightProperty().bind(header.heightProperty());
         }
 
     }
