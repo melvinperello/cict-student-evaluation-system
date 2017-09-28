@@ -34,7 +34,10 @@
 
 
 .row-filler{
-    -fx-border-color: #FFFFFF;
+    -fx-border-color: white;
     -fx-border-style: dashed;
-    -fx-background-color: #03A9F5;
+    -fx-background-color: #A9AFBB;
+}
+.row-filler-text{
+    -fx-text-fill: white;
 }

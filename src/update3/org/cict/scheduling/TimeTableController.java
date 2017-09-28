@@ -56,14 +56,84 @@ public class TimeTableController extends SceneFX implements ControllerFX {
     public TimeTableController() {
     }
 
-    private final Double LINE_DISTANCE = 14.00;
-    private final Double LINE_INTERVAL = 04.00;
-    private Double UNIT;
+    private final Double LINE_DISTANCE = 14.00; // the distance from  start and ending
+    private final Double LINE_INTERVAL = 04.00; // multiplier 
+    private Double UNIT; // individual units sizes.
 
     @Override
     public void onInitialization() {
+        super.bindScene(application_root);
         this.UNIT = LINE_DISTANCE * LINE_INTERVAL;
+        this.tableBelowListener();
+        this.tableOverListener();
+        
+        
 
+        /**
+         * Create columns from time to Sunday.
+         */
+        MonoLoop.range(1, 8, 1, loop -> {
+            // column
+            VBox column = new VBox();
+            HBox.setHgrow(column, Priority.ALWAYS);
+            if (loop.getValue().equals(1)) {
+                column.getStyleClass().add("column-template-lefter");
+            } else {
+                column.getStyleClass().add("column-template");
+            }
+            hbox_table.getChildren().add(column);
+
+            // column header
+            TimeTableCell cellHeader = new TimeTableCell();
+            cellHeader.pane.getStyleClass().add("row-template-header");
+            cellHeader.pane.setMaxWidth(Double.MAX_VALUE);
+            cellHeader.pane.setUserData(Integer.valueOf("4"));
+            cellHeader.content.setText(getTableHeader().get(loop.getValue() - 1));
+
+            // add header to column
+            column.getChildren().add(cellHeader.pane);
+
+            /**
+             * Create time stamps faded.
+             */
+            timeTemplates(column, loop.getValue());
+
+            /**
+             * create Rows over.
+             */
+            this.createOverRows(column, loop.getValue());
+
+        });
+
+    }
+
+    private ArrayList<String> getTableHeader() {
+        ArrayList<String> headerText = new ArrayList<>();
+        headerText.add("Time");
+        headerText.addAll(ScheduleConstants.getDayList());
+        return headerText;
+    }
+
+    private void timeTemplates(Pane column, Integer loop_value) {
+        ArrayList<String> timeLapse = ScheduleConstants.getTimeLapsePretty();
+        for (Integer start = 0; start < timeLapse.size(); start += 4) {
+            TimeTableCell cell = new TimeTableCell();
+            cell.pane.getStyleClass().add("row-template");
+            Integer multiplier = 4;
+            cell.pane.setUserData(multiplier);
+            try {
+                cell.content.setText(timeLapse.get(start) + " - " + timeLapse.get(start + 4));
+                if (!loop_value.equals(1)) {
+                    cell.content.getStyleClass().add("row-template-text");
+                }
+                column.getChildren().add(cell.pane);
+            } catch (Exception e) {
+            }
+
+        }
+    }
+
+    private void tableBelowListener() {
         /**
          * Add listener for vertical resizing.
          */
@@ -82,10 +152,9 @@ public class TimeTableController extends SceneFX implements ControllerFX {
                 }
             });
         });
+    }
 
-        /**
-         *
-         */
+    private void tableOverListener() {
         hbox_over.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             Double height = (Double) newValue;
             Double single_unit = height / this.UNIT;
@@ -101,70 +170,46 @@ public class TimeTableController extends SceneFX implements ControllerFX {
                 }
             });
         });
-
-        /**
-         * Create columns from time to Sunday.
-         */
-        MonoLoop.range(1, 8, 1, loop -> {
-            // column
-            VBox column = new VBox();
-            HBox.setHgrow(column, Priority.ALWAYS);
-            if (loop.getValue().equals(1)) {
-                column.getStyleClass().add("column-template-lefter");
-            } else {
-                column.getStyleClass().add("column-template");
-            }
-
-            ColumnFiller cf = new ColumnFiller(column);
-
-            if (!loop.getValue().equals(1)) {
-                TimeTableCell sss = new TimeTableCell();
-                sss.pane.setMaxWidth(Double.MAX_VALUE);
-                sss.pane.setUserData(Integer.valueOf("12"));
-                sss.pane.getStyleClass().add("row-filler");
-                cf.getChildren().add(sss.pane);
-            }
-
-            this.hbox_over.getChildren().add(cf);
-
-            hbox_table.getChildren().add(column);
-
-            // column header
-            TimeTableCell cellHeader = new TimeTableCell();
-            cellHeader.pane.getStyleClass().add("row-template-header");
-            cellHeader.pane.setMaxWidth(Double.MAX_VALUE);
-            cellHeader.pane.setUserData(Integer.valueOf("4"));
-            cellHeader.content.setText(getTableHeader().get(loop.getValue() - 1));
-
-            // add header to column
-            column.getChildren().add(cellHeader.pane);
-
-            ArrayList<String> timeLapse = ScheduleConstants.getTimeLapsePretty();
-            for (Integer start = 0; start < timeLapse.size(); start += 4) {
-                TimeTableCell cell = new TimeTableCell();
-                cell.pane.getStyleClass().add("row-template");
-                Integer multiplier = 4;
-                cell.pane.setUserData(multiplier);
-                try {
-                    cell.content.setText(timeLapse.get(start) + " - " + timeLapse.get(start + 4));
-                    if (!loop.getValue().equals(1)) {
-                        cell.content.getStyleClass().add("row-template-text");
-                    }
-                    column.getChildren().add(cell.pane);
-                } catch (Exception e) {
-                }
-
-            }
-
-        });
-
     }
 
-    private ArrayList<String> getTableHeader() {
-        ArrayList<String> headerText = new ArrayList<>();
-        headerText.add("Time");
-        headerText.addAll(ScheduleConstants.getDayList());
-        return headerText;
+    /**
+     * Create rows over the time template.
+     *
+     * @param column
+     * @param loop_val
+     */
+    private void createOverRows(Pane column, Integer loop_val) {
+        // create column filler
+        ColumnFiller cf = new ColumnFiller(column);
+
+        switch (loop_val) {
+            case 1:
+                // time frames
+                break;
+            case 2:
+                // monday schedule
+                createTimeSchedules(cf,"12","IT 113 - IT 08");
+                createTimeSchedules(cf,"10","IT 253 - IT 09");
+                break;
+
+            default:
+                // default
+                break;
+        }
+
+        // add column filler.
+        this.hbox_over.getChildren().add(cf);
+    }
+
+    private void createTimeSchedules(ColumnFiller cf, String span, String text) {
+        TimeTableCell sss = new TimeTableCell();
+        sss.pane.setMaxWidth(Double.MAX_VALUE);
+        sss.pane.setUserData(Integer.valueOf(span));
+        sss.pane.getStyleClass().add("row-filler");
+        sss.content.getStyleClass().add("row-filler-text");
+        sss.content.setText(text);
+
+        cf.getChildren().add(sss.pane);
     }
 
     @Override
@@ -172,6 +217,10 @@ public class TimeTableController extends SceneFX implements ControllerFX {
 
     }
 
+    //--------------------------------------------------------------------------
+    /**
+     * Class for individual time table cell.
+     */
     private class TimeTableCell extends SceneFX {
 
         private HBox pane;
@@ -189,6 +238,9 @@ public class TimeTableController extends SceneFX implements ControllerFX {
 
     }
 
+    /**
+     * class for a filler column between in the over HBOX.
+     */
     private class ColumnFiller extends VBox {
 
         public ColumnFiller(Pane parent) {

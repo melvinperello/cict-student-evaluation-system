@@ -42,7 +42,8 @@ public class Sample extends Application {
                 .makeFX()
                 .setController(controller)
                 .makeScene()
-                .makeStage()
+                .makeStageApplication()
+                .stageTitle("Schedule Viewer")
                 .stageShow();
     }
     
