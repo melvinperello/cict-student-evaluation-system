@@ -54,10 +54,12 @@ public class TimeTableController extends SceneFX implements ControllerFX {
     @FXML
     private HBox hbox_over;
 
-    public TimeTableController(HashMap<String, ScheduleData> schedule) {
+    public TimeTableController(HashMap<String, ArrayList<ScheduleData>> schedule) {
         // pass schedule information in constructor
-
+        this.schedule = schedule;
     }
+
+    private HashMap<String, ArrayList<ScheduleData>> schedule;
 
     private final Double LINE_DISTANCE = 14.00; // must be even // the distance from  start and ending 20 - 7 + 1 header
     private final Double LINE_INTERVAL = 04.00; // multiplier 4 = 1hr 1 = 15mins
@@ -211,38 +213,31 @@ public class TimeTableController extends SceneFX implements ControllerFX {
                 break;
             case 2:
                 // monday schedule
-                createTimeSchedules(cf, "12", "IT 113 - IT 08");
-                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                displaySchedules(cf, ScheduleConstants.MONDAY);
                 break;
             case 3:
                 // tuesday schedule
-                createTimeSchedules(cf, "12", "IT 113 - IT 08");
-                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                displaySchedules(cf, ScheduleConstants.TUESDAY);
                 break;
             case 4:
                 // wednesday schedule
-                createTimeSchedules(cf, "12", "IT 113 - IT 08");
-                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                displaySchedules(cf, ScheduleConstants.WEDNESDAY);
                 break;
             case 5:
                 // thursday schedule
-                createTimeSchedules(cf, "12", "IT 113 - IT 08");
-                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                displaySchedules(cf, ScheduleConstants.THURSDAY);
                 break;
             case 6:
                 // friday schedule
-                createTimeSchedules(cf, "12", "IT 113 - IT 08");
-                createTimeSchedules(cf, "10", "IT 253 - IT 09");
+                displaySchedules(cf, ScheduleConstants.FRIDAY);
                 break;
             case 7:
                 // saturday schedule
-                createTimeSchedules(cf, "12", "IT 113 - IT 08");
-                fillerTimeSchedules(cf, "32");
-                createTimeSchedules(cf, "8", "IT 253 - IT 09");
+                displaySchedules(cf, ScheduleConstants.SATURDAY);
                 break;
             case 8:
                 // sunday schedule
-                createTimeSchedules(cf, "48", "IT 113 - IT 08");
+                displaySchedules(cf, ScheduleConstants.SUNDAY);
 
                 break;
 
@@ -253,6 +248,19 @@ public class TimeTableController extends SceneFX implements ControllerFX {
 
         // add column filler.
         this.hbox_over.getChildren().add(cf);
+    }
+
+    private void displaySchedules(ColumnFiller cf, String day) {
+        ArrayList<ScheduleData> sched = this.schedule.getOrDefault(day, null);
+        if (sched != null) {
+            for (ScheduleData scheduleData : sched) {
+                if (scheduleData.isFillable()) {
+                    fillerTimeSchedules(cf, scheduleData.getSpace());
+                } else {
+                    createTimeSchedules(cf, scheduleData.getSpace(), scheduleData.getText());
+                }
+            }
+        }
     }
 
     /**

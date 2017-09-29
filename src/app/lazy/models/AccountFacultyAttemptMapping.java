@@ -2,7 +2,7 @@
 // SQL_table: account_faculty_attempt
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Sep 23, 2017 08:07:19 PM
+// Created: Sep 29, 2017 02:00:56 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello

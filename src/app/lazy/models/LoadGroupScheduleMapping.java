@@ -2,7 +2,7 @@
 // SQL_table: load_group_schedule
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Sep 23, 2017 08:07:20 PM
+// Created: Sep 29, 2017 02:00:58 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -34,7 +34,7 @@ private java.lang.String class_start;
 private java.lang.String class_end;
 private java.lang.String class_room;
 private java.util.Date created_date;
-private java.lang.String created_by;
+private java.lang.Integer created_by;
 private java.util.Date updated_date;
 private java.lang.String updated_by;
 private java.lang.Integer active;
@@ -105,12 +105,12 @@ public void setCreated_date(java.util.Date fieldCreatedDate) {
 	this.created_date = fieldCreatedDate;
 }
 
-@Column(name = "created_by", nullable = true, length = 50)
-public java.lang.String getCreated_by() {
+@Column(name = "created_by", nullable = true, length = 10)
+public java.lang.Integer getCreated_by() {
 	return this.created_by;
 }
 
-public void setCreated_by(java.lang.String fieldCreatedBy) {
+public void setCreated_by(java.lang.Integer fieldCreatedBy) {
 	this.created_by = fieldCreatedBy;
 }
 

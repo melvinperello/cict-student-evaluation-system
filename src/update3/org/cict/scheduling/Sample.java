@@ -24,6 +24,7 @@
 package update3.org.cict.scheduling;
 
 import com.jhmvin.Mono;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -37,8 +38,17 @@ public class Sample extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        HashMap<String,ScheduleData> data = new HashMap<>();
-        data.put(ScheduleConstants.MONDAY, value)
+        HashMap<String, ArrayList<ScheduleData>> data = new HashMap<>();
+        ArrayList<ScheduleData> perDay = new ArrayList<>();
+        perDay.add(new ScheduleData("4", "IT 113"));
+        data.put(ScheduleConstants.MONDAY, perDay);
+
+        perDay = new ArrayList<>();
+        perDay.add(new ScheduleData("8", "IT 113 - IT 08"));
+        perDay.add(new ScheduleData("4", true));
+        perDay.add(new ScheduleData("8", "IT 113 - IT 08"));
+        data.put(ScheduleConstants.TUESDAY, perDay);
+
         TimeTableController controller = new TimeTableController(data);
         Mono.fx().create()
                 .setPackageName("update3.org.cict.scheduling")
@@ -50,7 +60,7 @@ public class Sample extends Application {
                 .stageTitle("Schedule Viewer")
                 .stageShow();
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }

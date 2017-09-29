@@ -31,6 +31,15 @@ public class ScheduleData {
 
     private String space;
     private String text;
+    private boolean fillable;
+
+    public boolean isFillable() {
+        return fillable;
+    }
+
+    public void setFillable(boolean fillable) {
+        this.fillable = fillable;
+    }
 
     public String getSpace() {
         return space;
@@ -53,7 +62,13 @@ public class ScheduleData {
         this.space = space;
     }
 
+    public ScheduleData(String space, boolean fill) {
+        this.text = text;
+        this.space = space;
+        this.fillable = fill;
+    }
+
     public ScheduleData() {
-        
+
     }
 }

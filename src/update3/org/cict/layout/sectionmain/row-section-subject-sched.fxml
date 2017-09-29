@@ -19,7 +19,7 @@
             <Image url="@../section_images/day_sched.png" />
          </image>
       </ImageView>
-      <Label prefWidth="150.0" text="Saturday" textFill="WHITE">
+      <Label accessibleText="lbl_day" prefWidth="150.0" text="Saturday" textFill="WHITE">
          <font>
             <Font size="25.0" />
          </font>
@@ -34,7 +34,7 @@
                   <Image url="@../section_images/clock_64.png" />
                </image>
             </ImageView>
-            <Label prefWidth="220.0" text="11:00 AM - 01:00 PM" textFill="WHITE">
+            <Label accessibleText="lbl_time" prefWidth="220.0" text="11:00 AM - 01:00 PM" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
@@ -47,7 +47,7 @@
                   <Image url="@../section_images/room.png" />
                </image>
             </ImageView>
-            <Label maxWidth="1.7976931348623157E308" text="ACAD 01" textFill="WHITE" HBox.hgrow="ALWAYS">
+            <Label accessibleText="lbl_room" maxWidth="1.7976931348623157E308" text="ACAD 01" textFill="WHITE" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="20.0" />
                </font>

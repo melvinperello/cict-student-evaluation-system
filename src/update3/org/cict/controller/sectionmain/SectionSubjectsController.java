@@ -31,10 +31,12 @@ import app.lazy.models.FacultyMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
+import app.lazy.models.MapFactory;
 import app.lazy.models.SubjectMapping;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import com.jhmvin.fx.controls.MonoText;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
@@ -55,9 +57,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.text.WordUtils;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import update3.org.cict.ChoiceRange;
 import update3.org.cict.ScheduleConstants;
 import update3.org.cict.SectionConstants;
+import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 
 /**
@@ -173,7 +178,6 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
     public void setSectionMap(LoadSectionMapping sectionMap) {
         this.sectionMap = sectionMap;
-
     }
 
     public void setWinRegularSectionControllerFx(LayoutDataFX winRegularSectionControllerFx) {
@@ -254,6 +258,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private ArrayList<String> timeTable12;
 
     private void initScheduler() {
+        this.cmb_sched_day.getItems().clear();
         this.cmb_sched_day.getItems().addAll(ScheduleConstants.getDayList());
         this.cmb_sched_day.getSelectionModel().selectFirst();
         // call once.
@@ -289,15 +294,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
          * Back to subject list
          */
         super.addClickEvent(btn_back_to_subject, () -> {
-            Animate.fade(vbox_view_schedule, SectionConstants.FADE_SPEED, () -> {
-                vbox_view_subjects.setVisible(true);
-                vbox_view_schedule.setVisible(false);
-                vbox_add_schedule.setVisible(false);
-            }, vbox_view_subjects);
-            /**
-             * detach empty schedule if ever schedule was empty.
-             */
-            this.scheduleEmpty.detach();
+            onBackToSubjectListFromSchedule();
         });
 
         super.addClickEvent(btn_view_add_schedule, () -> {
@@ -317,29 +314,104 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             }, vbox_view_schedule);
         });
 
+        //--------------
+        super.addClickEvent(btn_add_sched, () -> {
+            onAddSchedule();
+        });
+
     }
 
-    private void loadSchedule() {
+    /**
+     * Adds a schedule in this load group ang checks for conflict
+     */
+    private void onAddSchedule() {
+        String schedDay = cmb_sched_day.getSelectionModel().getSelectedItem().toUpperCase();
+        int start_selected_index = cmb_sched_start.getSelectionModel().getSelectedIndex();
+        String schedStart = ScheduleConstants.getTimeLapse().get(start_selected_index);
+
+        String schedEnd = ScheduleConstants.getTimeLapse()
+                .get(cmb_sched_end.getSelectionModel().getSelectedIndex() + 4 + start_selected_index); // because starts from 8 am
+
+        boolean conflict = ScheduleChecker.checkIfConflict(this.sectionMap.getId(), schedDay, schedStart, schedEnd);
+        if (conflict) {
+            Mono.fx().snackbar().showError(application_root, "Selected schedule is in conflict with this section's other schedules.");
+        } else {
+            LoadGroupScheduleMapping lg_sched = MapFactory.map().load_group_schedule();
+            lg_sched.setClass_start(schedStart);
+            lg_sched.setClass_end(schedEnd);
+            lg_sched.setClass_day(schedDay);
+            lg_sched.setClass_room(MonoText.getFormatted(txt_sched_room));
+            lg_sched.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
+            lg_sched.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
+            lg_sched.setLoad_group_id(this.selected_load_group_in_sections.getId());
+            int res = Database.connect().load_group_schedule().insert(lg_sched);
+
+            if (res <= 0) {
+                // failed
+                Mono.fx().snackbar().showError(application_root, "Failed to Add Schedule.");
+            } else {
+                // success
+
+                Animate.fade(vbox_add_schedule, SectionConstants.FADE_SPEED, () -> {
+                    this.vbox_add_schedule.setVisible(false);
+                    this.vbox_view_schedule.setVisible(true);
+                    this.vbox_view_subjects.setVisible(false);
+                }, vbox_view_schedule);
+
+                fetchSchedules(selected_load_group_in_sections);
+
+                Mono.fx().snackbar().showSuccess(application_root, "Successfully Added.");
+            }
+        }
+    }
+
+    private void onBackToSubjectListFromSchedule() {
+        // set null
+        selected_load_group_in_sections = null;
+        //
+        Animate.fade(vbox_view_schedule, SectionConstants.FADE_SPEED, () -> {
+            vbox_view_subjects.setVisible(true);
+            vbox_view_schedule.setVisible(false);
+            vbox_add_schedule.setVisible(false);
+        }, vbox_view_subjects);
+        /**
+         * detach empty schedule if ever schedule was empty.
+         */
+        this.scheduleEmpty.detach();
+    }
+
+    private void loadSchedule(ArrayList<LoadGroupScheduleMapping> scheds) {
         // create table
         SimpleTable tblSectionType = new SimpleTable();
-        // create row
-        SimpleTableRow row = new SimpleTableRow();
-        row.setRowHeight(50.0);
 
-        // get contents
-        HBox rowSection = (HBox) Mono.fx().create()
-                .setPackageName("update3.org.cict.layout.sectionmain")
-                .setFxmlDocument("row-section-subject-sched")
-                .makeFX()
-                .pullOutLayout();
+        for (LoadGroupScheduleMapping sched : scheds) {
+            // create row
+            SimpleTableRow row = new SimpleTableRow();
+            row.setRowHeight(50.0);
 
-        SimpleTableCell cellParent = new SimpleTableCell();
-        cellParent.setResizePriority(Priority.ALWAYS);
-        cellParent.setContentAsPane(rowSection);
+            // get contents
+            HBox rowSection = (HBox) Mono.fx().create()
+                    .setPackageName("update3.org.cict.layout.sectionmain")
+                    .setFxmlDocument("row-section-subject-sched")
+                    .makeFX()
+                    .pullOutLayout();
 
-        row.addCell(cellParent);
+            Label lbl_day = super.searchAccessibilityText(rowSection, "lbl_day");
+            Label lbl_time = super.searchAccessibilityText(rowSection, "lbl_time");
+            Label lbl_room = super.searchAccessibilityText(rowSection, "lbl_room");
 
-        tblSectionType.addRow(row);
+            lbl_day.setText(WordUtils.capitalizeFully(sched.getClass_day()));
+            lbl_time.setText("asd");
+            lbl_room.setText(sched.getClass_room().toUpperCase());
+
+            SimpleTableCell cellParent = new SimpleTableCell();
+            cellParent.setResizePriority(Priority.ALWAYS);
+            cellParent.setContentAsPane(rowSection);
+
+            row.addCell(cellParent);
+
+            tblSectionType.addRow(row);
+        }
 
         /**
          * Load More Rows.
@@ -385,21 +457,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
             LoadGroupMapping selected_load_group = sectionSubject.loadGroup;
             super.addClickEvent(btn_information, () -> {
-                Animate.fade(vbox_view_subjects, SectionConstants.FADE_SPEED, () -> {
-                    vbox_view_subjects.setVisible(false);
-                    vbox_view_schedule.setVisible(true);
-                }, vbox_view_schedule);
-                /**
-                 * Start Fetching Schedule.
-                 */
-                this.fetchSchedules(selected_load_group);
-                /**
-                 * Display Count and instructor.
-                 */
-                this.lbl_student_count.setText(sectionSubject.studentCount);
-                this.lbl_instructor_big.setText(sectionSubject.instructorName);
-                this.lbl_subject_code_top.setText(sectionSubject.subject.getCode());
-                this.lbl_subject_code_top_addsched.textProperty().bind(this.lbl_subject_code_top.textProperty());
+                viewSchedule(selected_load_group, sectionSubject);
             });
 
             SimpleTableCell cellParent = new SimpleTableCell();
@@ -422,10 +480,46 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         simpleTableView.setParentOnScene(vbox_subjects);
     }
 
+    // selected load_group when viewSchedule function was triggered
+    private LoadGroupMapping selected_load_group_in_sections;
+
+    /**
+     * View Schedule an annexed function. when a subject information was
+     * clicked.
+     *
+     * @param selected_load_group
+     * @param sectionSubject
+     */
+    private void viewSchedule(LoadGroupMapping selected_load_group, SubjectData sectionSubject) {
+        // assign
+        selected_load_group_in_sections = selected_load_group;
+        Animate.fade(vbox_view_subjects, SectionConstants.FADE_SPEED, () -> {
+            vbox_view_subjects.setVisible(false);
+            vbox_view_schedule.setVisible(true);
+        }, vbox_view_schedule);
+        /**
+         * Start Fetching Schedule.
+         */
+        this.fetchSchedules(selected_load_group);
+        /**
+         * Display Count and instructor.
+         */
+        this.lbl_student_count.setText(sectionSubject.studentCount);
+        this.lbl_instructor_big.setText(sectionSubject.instructorName);
+        this.lbl_subject_code_top.setText(sectionSubject.subject.getCode());
+        this.lbl_subject_code_top_addsched.textProperty().bind(this.lbl_subject_code_top.textProperty());
+    }
+
+    /**
+     * Get schedules of a particular load group.
+     *
+     * @param load_group
+     */
     private void fetchSchedules(LoadGroupMapping load_group) {
+        this.scheduleEmpty.detach();
         FetchSchedule scheduleTx = new FetchSchedule();
         scheduleTx.loadGroup = load_group;
-
+        
         scheduleTx.whenFailed(() -> {
             System.out.println("Emtpy Schedule");
         });
@@ -435,7 +529,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         });
 
         scheduleTx.whenSuccess(() -> {
-            System.out.println("yey");
+            loadSchedule(scheduleTx.loadSchedules);
         });
         scheduleTx.whenFinished(() -> {
             System.out.println("done");
