@@ -47,6 +47,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -60,7 +61,7 @@ import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import update3.org.cict.ChoiceRange;
-import update3.org.cict.ScheduleConstants;
+import update3.org.cict.scheduling.ScheduleConstants;
 import update3.org.cict.SectionConstants;
 import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.scheduling.ScheduleChecker;
@@ -564,7 +565,25 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         });
 
         scheduleTx.whenSuccess(() -> {
-            loadSchedule(scheduleTx.loadSchedules);
+            ArrayList<LoadGroupScheduleMapping> schedule = scheduleTx.loadSchedules;
+
+            // arrange by time
+            // sorted schedule based on time start.
+            schedule.sort((LoadGroupScheduleMapping o1, LoadGroupScheduleMapping o2) -> {
+                Double o1_val = ScheduleChecker.doubleConverter(o1.getClass_start());
+                Double o2_val = ScheduleChecker.doubleConverter(o2.getClass_start());
+
+                return o1_val.compareTo(o2_val);
+            });
+
+            schedule.sort((LoadGroupScheduleMapping o1, LoadGroupScheduleMapping o2) -> {
+                Integer o1_val = ScheduleConstants.getDayInteger(o1.getClass_day());
+                Integer o2_val = ScheduleConstants.getDayInteger(o2.getClass_day());
+
+                return o1_val.compareTo(o2_val);
+            });
+
+            loadSchedule(schedule);
         });
         scheduleTx.whenFinished(() -> {
             System.out.println("done");

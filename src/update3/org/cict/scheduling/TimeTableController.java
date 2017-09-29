@@ -37,7 +37,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import update3.org.cict.ScheduleConstants;
 
 /**
  *

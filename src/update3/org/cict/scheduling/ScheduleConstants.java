@@ -21,12 +21,12 @@
  * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
  *
  */
-package update3.org.cict;
+package update3.org.cict.scheduling;
 
 import com.jhmvin.flow.MonoLoop;
 import com.jhmvin.fx.controls.MonoText;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.commons.lang3.text.WordUtils;
@@ -58,6 +58,16 @@ public class ScheduleConstants {
         days.add(WordUtils.capitalizeFully(SATURDAY));
         days.add(WordUtils.capitalizeFully(SUNDAY));
         return days;
+    }
+
+    public static Integer getDayInteger(String day) {
+        HashMap<String, Integer> hash = new HashMap<>();
+        int x = 0;
+        for (String string : getDayList()) {
+            hash.put(string.toUpperCase(), x);
+            x++;
+        }
+        return hash.get(day);
     }
 
     /**

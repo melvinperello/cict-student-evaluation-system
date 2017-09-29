@@ -28,15 +28,13 @@ import app.lazy.models.Database;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
+import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
-import update3.org.cict.ScheduleConstants;
 
 /**
  *
@@ -94,7 +92,7 @@ public class OpenScheduleViewer {
                     /**
                      * Get load schedules of that day.
                      */
-                    ArrayList<ScheduleData> perDay = new ArrayList<>();
+                    ArrayList<LoadGroupScheduleMapping> schedToProcess = new ArrayList<>();
                     for (LoadGroupScheduleMapping daySched : loadSchedules) {
                         /**
                          * Check this day.
@@ -103,10 +101,14 @@ public class OpenScheduleViewer {
                             /**
                              * Add Schedules of this day.
                              */
-                            perDay.add(new ScheduleData("4", "IT 113")); // add to each day
+                            schedToProcess.add(daySched);
                         }
                     }
-                    data.put(day.toUpperCase(), perDay);
+                    /**
+                     * Process per day to become proper format.
+                     */
+
+                    data.put(day.toUpperCase(), buildSchedule(schedToProcess));
                 });
 
                 return true;
@@ -123,9 +125,7 @@ public class OpenScheduleViewer {
          */
         ScheduleViewerStartUp schedViewTx = new ScheduleViewerStartUp();
         schedViewTx.whenSuccess(() -> {
-            schedViewTx.data.keySet().forEach(key -> {
-                System.out.println(key);
-            });
+
             TimeTableController controller = new TimeTableController(schedViewTx.data);
             Stage s = Mono.fx().create()
                     .setPackageName("update3.org.cict.scheduling")
@@ -150,6 +150,74 @@ public class OpenScheduleViewer {
 
         schedViewTx.transact();
 
+    }
+
+    private static ArrayList<ScheduleData> buildSchedule(ArrayList<LoadGroupScheduleMapping> schedules) {
+        schedules.sort((LoadGroupScheduleMapping o1, LoadGroupScheduleMapping o2) -> {
+            Double o1_start = ScheduleChecker.doubleConverter(o1.getClass_start());
+            Double o2_start = ScheduleChecker.doubleConverter(o2.getClass_start());
+            // ascending order depending on class start time.
+            return o1_start.compareTo(o2_start);
+        });
+        //
+        ArrayList<ScheduleData> perDay = new ArrayList<>();
+
+        for (int start = 0; start < schedules.size(); start++) {
+            LoadGroupScheduleMapping current = schedules.get(start);
+            if (start == 0) {
+                // first schedule is not 7:00 AM
+                if (ScheduleChecker.doubleConverter(current.getClass_start()) != 7.00) {
+                    Integer initpad = timeArithmetic("7:00", current.getClass_start());
+                    perDay.add(new ScheduleData(initpad.toString(), true));
+                    System.err.println(current.getClass_start());
+                }
+            }
+            Integer space = timeArithmetic(current.getClass_start(), current.getClass_end());
+            Integer subjectID = Database.connect()
+                    .load_group()
+                    .<LoadGroupMapping>getPrimary(current.getLoad_group_id())
+                    .getSUBJECT_id();
+
+            SubjectMapping sm = Database.connect().subject().getPrimary(subjectID);
+
+            perDay.add(new ScheduleData(space.toString(), sm.getCode() + " - " + current.getClass_room()));
+
+            try {
+                LoadGroupScheduleMapping next = schedules.get(start + 1);
+                Integer postPad = timeArithmetic(current.getClass_end(), next.getClass_start());
+                if (postPad != 0) {
+                    perDay.add(new ScheduleData(postPad.toString(), true));
+                }
+            } catch (IndexOutOfBoundsException e) {
+                //
+            }
+        }
+
+        return perDay;
+    }
+
+    /**
+     * expecting from to be divisible by 0.15
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    private static Integer timeArithmetic(String from, String to) {
+        int f = toSeconds(ScheduleChecker.doubleConverter(from));
+        int t = toSeconds(ScheduleChecker.doubleConverter(to));
+
+        int dif = t - f;
+
+        return (dif / 15);
+    }
+
+    private static int toSeconds(double val) {
+
+        int a = (int) val;
+        double remainder = (int) ((val - ((double) a)) * 100);
+        int inSeconds = (int) ((a * 60) + remainder);
+        return inSeconds;
     }
 
 }
