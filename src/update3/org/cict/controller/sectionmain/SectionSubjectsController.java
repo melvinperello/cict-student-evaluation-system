@@ -586,7 +586,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             loadSchedule(schedule);
         });
         scheduleTx.whenFinished(() -> {
-            System.out.println("done");
+            //System.out.println("done");
         });
 
         scheduleTx.transact();

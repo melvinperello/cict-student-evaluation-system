@@ -169,7 +169,7 @@ public class OpenScheduleViewer {
                 if (ScheduleChecker.doubleConverter(current.getClass_start()) != 7.00) {
                     Integer initpad = timeArithmetic("7:00", current.getClass_start());
                     perDay.add(new ScheduleData(initpad.toString(), true));
-                    System.err.println(current.getClass_start());
+                    //System.err.println(current.getClass_start());
                 }
             }
             Integer space = timeArithmetic(current.getClass_start(), current.getClass_end());
