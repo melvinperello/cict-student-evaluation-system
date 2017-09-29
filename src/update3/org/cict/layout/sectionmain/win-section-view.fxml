@@ -270,7 +270,7 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="vbox_view_schedule" maxHeight="1.7976931348623157E308" spacing="40.0" visible="false">
+                  <VBox fx:id="vbox_view_schedule" maxHeight="1.7976931348623157E308" spacing="40.0">
                      <children>
                         <VBox prefWidth="663.0" spacing="20.0" VBox.vgrow="ALWAYS">
                            <padding>
@@ -329,6 +329,14 @@
                                        </font>
                                        <HBox.margin>
                                           <Insets left="180.0" right="20.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="btn_view_class_sched" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Class Schedule" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="20.0" />
                                        </HBox.margin>
                                     </JFXButton>
                                     <JFXButton fx:id="btn_export" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Excel Master List" textFill="WHITE">
@@ -426,7 +434,7 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="vbox_add_schedule" maxHeight="1.7976931348623157E308" spacing="40.0">
+                  <VBox fx:id="vbox_add_schedule" maxHeight="1.7976931348623157E308" spacing="40.0" visible="false">
                      <children>
                         <VBox prefWidth="663.0" spacing="20.0" VBox.vgrow="ALWAYS">
                            <padding>

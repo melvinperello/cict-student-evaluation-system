@@ -77,11 +77,11 @@ public class ScheduleChecker {
 
                 double y_start = doubleConverter(start);
                 double y_end = doubleConverter(end);
-                
-                System.out.println(x_start);
-                System.out.println(x_end);
-                System.out.println(y_start);
-                System.out.println(y_end);
+
+//                System.out.println(x_start);
+//                System.out.println(x_end);
+//                System.out.println(y_start);
+//                System.out.println(y_end);
                 /**
                  * Check if overlapping.
                  */
@@ -146,10 +146,6 @@ public class ScheduleChecker {
         }
 
         return false;
-    }
-
-    public static void main(String[] args) {
-
     }
 
 }

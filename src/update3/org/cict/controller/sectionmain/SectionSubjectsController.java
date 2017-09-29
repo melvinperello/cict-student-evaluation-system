@@ -62,6 +62,7 @@ import org.cict.authentication.authenticator.CollegeFaculty;
 import update3.org.cict.ChoiceRange;
 import update3.org.cict.ScheduleConstants;
 import update3.org.cict.SectionConstants;
+import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 
@@ -166,6 +167,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_cancel_sched;
+
+    @FXML
+    private JFXButton btn_view_class_sched;
 
     public SectionSubjectsController() {
         /**
@@ -312,6 +316,10 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 this.vbox_view_schedule.setVisible(true);
                 this.vbox_view_subjects.setVisible(false);
             }, vbox_view_schedule);
+            /**
+             * Canceling the creation of schedule will refresh the schedules.
+             */
+            fetchSchedules(selected_load_group_in_sections);
         });
 
         //--------------
@@ -319,10 +327,17 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             onAddSchedule();
         });
 
+        super.addClickEvent(btn_view_class_sched, () -> {
+            /**
+             * Open Schedule Viewer.
+             */
+            OpenScheduleViewer.openScheduleViewer(sectionMap);
+        });
+
     }
 
     /**
-     * Adds a schedule in this load group ang checks for conflict
+     * Adds a schedule in this load group and checks for conflict
      */
     private void onAddSchedule() {
         String schedDay = cmb_sched_day.getSelectionModel().getSelectedItem().toUpperCase();
@@ -332,6 +347,11 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         String schedEnd = ScheduleConstants.getTimeLapse()
                 .get(cmb_sched_end.getSelectionModel().getSelectedIndex() + 4 + start_selected_index); // because starts from 8 am
 
+        /**
+         * conflict checker only checks schedule conflicts within the section
+         * subjects itself. it does not verify faculty schedule conflict and
+         * room conflict schedules.
+         */
         boolean conflict = ScheduleChecker.checkIfConflict(this.sectionMap.getId(), schedDay, schedStart, schedEnd);
         if (conflict) {
             Mono.fx().snackbar().showError(application_root, "Selected schedule is in conflict with this section's other schedules.");
@@ -365,6 +385,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         }
     }
 
+    /**
+     * From schedule viewing to subject view.
+     */
     private void onBackToSubjectListFromSchedule() {
         // set null
         selected_load_group_in_sections = null;
@@ -380,6 +403,11 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.scheduleEmpty.detach();
     }
 
+    /**
+     * Load Schedules of the selected subject.
+     *
+     * @param scheds
+     */
     private void loadSchedule(ArrayList<LoadGroupScheduleMapping> scheds) {
         // create table
         SimpleTable tblSectionType = new SimpleTable();
@@ -401,7 +429,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             Label lbl_room = super.searchAccessibilityText(rowSection, "lbl_room");
 
             lbl_day.setText(WordUtils.capitalizeFully(sched.getClass_day()));
-            lbl_time.setText("asd");
+            String startTime = ScheduleConstants.toPrettyFormat(sched.getClass_start());
+            String endTime = ScheduleConstants.toPrettyFormat(sched.getClass_end());
+            lbl_time.setText(startTime + " - " + endTime);
             lbl_room.setText(sched.getClass_room().toUpperCase());
 
             SimpleTableCell cellParent = new SimpleTableCell();
@@ -424,6 +454,11 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         simpleTableView.setParentOnScene(vbox_schedule);
     }
 
+    /**
+     * Load Section subjects.
+     *
+     * @param sectionSubjects
+     */
     private void loadSubjects(ArrayList<SubjectData> sectionSubjects) {
         // create table
         SimpleTable tblSectionType = new SimpleTable();
@@ -519,7 +554,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.scheduleEmpty.detach();
         FetchSchedule scheduleTx = new FetchSchedule();
         scheduleTx.loadGroup = load_group;
-        
+
         scheduleTx.whenFailed(() -> {
             System.out.println("Emtpy Schedule");
         });

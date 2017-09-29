@@ -90,27 +90,32 @@ public class ScheduleConstants {
         ArrayList<String> timeTablePretty = new ArrayList<>();
         ArrayList<String> timetable = getTimeLapse();
         for (String time : timetable) {
-            String[] timeFormat = time.split(":");
-            String hour = timeFormat[0];
-            String minute = timeFormat[1];
-            String newTimeString = "";
-            int hour_value = Integer.parseInt(hour);
-            if (hour_value < 12) {
-                // am
-                newTimeString = time + " AM";
-            } else if (hour_value == 12) {
-                // pm but no minus
-                newTimeString = time + " PM";
-            } else if (hour_value > 12) {
-                // pm - 12
-                int newTimeValue = hour_value - 12;
-                String newHour = MonoText.lead(2, "0", String.valueOf(newTimeValue));
-                newTimeString = newHour + ":" + minute + " PM";
-            }
-
+            String newTimeString = toPrettyFormat(time);
             timeTablePretty.add(newTimeString);
         }
         return timeTablePretty;
+    }
+
+    public static String toPrettyFormat(String time) {
+        String[] timeFormat = time.split(":");
+        String hour = timeFormat[0];
+        String minute = timeFormat[1];
+        String newTimeString = "";
+        int hour_value = Integer.parseInt(hour);
+        if (hour_value < 12) {
+            // am
+            newTimeString = time + " AM";
+        } else if (hour_value == 12) {
+            // pm but no minus
+            newTimeString = time + " PM";
+        } else if (hour_value > 12) {
+            // pm - 12
+            int newTimeValue = hour_value - 12;
+            String newHour = MonoText.lead(2, "0", String.valueOf(newTimeValue));
+            newTimeString = newHour + ":" + minute + " PM";
+        }
+
+        return newTimeString;
     }
 
 }
