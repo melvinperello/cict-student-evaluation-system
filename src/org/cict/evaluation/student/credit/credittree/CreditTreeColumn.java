@@ -28,8 +28,8 @@ public class CreditTreeColumn extends VBox {
     public CreditTreeColumn() {
         this.Header = new Label();
         this.SubHeader = new Label();
-        this.Header.setFont(new Font(35.0));
-        this.SubHeader.setFont(new Font(20.0));
+        this.Header.setFont(new Font(25.0));
+        this.SubHeader.setFont(new Font(15.0));
 
         this.ChildRows = FXCollections.observableArrayList();
         this.ChildRows.addListener((ListChangeListener.Change<? extends CreditTreeRow> c) -> {
@@ -47,9 +47,9 @@ public class CreditTreeColumn extends VBox {
         });
         //this.setBackground(new Background(new BackgroundFill(Color.web("#000000"), CornerRadii.EMPTY, Insets.EMPTY)));
         this.setAlignment(Pos.CENTER);
-        this.setSpacing(3);
+        this.setSpacing(0);
         this.getChildren().addAll(this.Header, this.SubHeader);
-        this.setPrefWidth(300.0);
+        this.setPrefWidth(200.0);
     }
 
     public void setHeader(String header) {

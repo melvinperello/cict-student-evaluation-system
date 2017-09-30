@@ -1,5 +1,15 @@
 .credit-row-label{
-    -fx-font-weight: bold;
-    -fx-font-size: 16px;
-    -fx-text-fill: white;
+    -fx-pref-width: 100px;
+    -fx-font-size: 15px;
 }
+
+.credit-row-text{
+    -fx-text-alignment: center;
+    -fx-pref-width: 80px;
+    -fx-font-size: 12px;
+}
+
+.credit-row{
+    -fx-border-color: #F591AB;
+}
+

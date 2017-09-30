@@ -346,13 +346,20 @@ public class CreditController implements ControllerFX {
             if (annualAsses == null) {
                 continue;
             }
-            String header = String.valueOf(yrctr);
+            String yearString = (yrctr == 1) ? "First" : (yrctr == 2) ? "Second"
+                    : (yrctr == 3) ? "Third" : "Fourth";
+            String header = String.valueOf(yearString + " Year");
             // semesters
             for (int semctr = 1; semctr <= 2; semctr++) {
                 // get assessment details of this year
                 CreditTreeColumn creditColumn = creditview.createNewColumn();
                 creditColumn.setHeader(header);
-                String subheader = String.valueOf(semctr);
+
+                /**
+                 * Semester String.
+                 */
+                String semString = (semctr == 1) ? "First " : "Second";
+                String subheader = String.valueOf(semString + " Semester");
                 creditColumn.setSubHeader(subheader);
                 //
                 annualAsses.getSemestralResults(semctr).forEach(sem_details -> {

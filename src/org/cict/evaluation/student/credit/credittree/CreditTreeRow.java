@@ -5,14 +5,18 @@
  */
 package org.cict.evaluation.student.credit.credittree;
 
+import com.jhmvin.Mono;
+import com.jhmvin.fx.display.SceneFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -23,6 +27,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Paint;
 
 /**
@@ -43,30 +48,81 @@ public class CreditTreeRow extends HBox {
     private Integer[] PRE_REQUISITES;
 
     //Controls
-    public final Label lblSubjectCode = new Label();
-    public final TextField txtGrade = new TextField();
+    public Label lblSubjectCode = new Label();
+    public TextField txtGrade = new TextField();
     private Pane linePanel;
 
     /**
      * Create Row.
      */
     private void initialize() {
+        this.PRE_REQUISITES = new Integer[0];
+        /**
+         * Row Size
+         */
+        // pref
+        this.setPrefHeight(Control.USE_COMPUTED_SIZE);
+        this.setPrefWidth(Control.USE_COMPUTED_SIZE);
+        // min
+        this.setMinWidth(Control.USE_COMPUTED_SIZE);
+        this.setMinHeight(Control.USE_PREF_SIZE);
+        // max
+        this.setMaxWidth(Double.MAX_VALUE);
+        this.setMaxHeight(Control.USE_PREF_SIZE);
+
+        /**
+         * Alignment
+         */
+        this.setAlignment(Pos.CENTER_LEFT);
+        // spacing
+        this.setSpacing(5); // default spacing
+        this.setPadding(new Insets(10.0, 10.0, 10.0, 10.0));
+
         /**
          * Any changes you want to this label must be applied to credit-tree.css
          */
         this.lblSubjectCode.getStyleClass().add("credit-row-label");
+        this.txtGrade.getStyleClass().add("credit-row-text");
+        this.getStyleClass().add("credit-row");
 
-        this.PRE_REQUISITES = new Integer[0];
-        this.setSpacing(5); // default spacing
-        this.setPrefHeight(50); // set default size
-        this.setAlignment(Pos.CENTER_RIGHT);
         //this.setBackground(new Background(new BackgroundFill(Paint.valueOf("#ffccb5"), new CornerRadii(10), new Insets(5, 5, 5, 5))));
-        HBox.setMargin(txtGrade, new Insets(20));
+        //HBox.setMargin(txtGrade, new Insets(20));
         //this.txtGrade.setStyle("-fx-faint-focus-color: transparent;-fx-focus-color:rgba(255,0,0,1.0);");
         this.events();
         this.getChildren().addAll(lblSubjectCode, txtGrade);
+
     }
 
+    private void initializeFx() {
+//        this.PRE_REQUISITES = new Integer[0];
+//
+//        TreeRowFx row = new TreeRowFx();
+//        this.lblSubjectCode = row.lbl_code;
+//        this.txtGrade = row.txt_grade;
+//        HBox.setHgrow(row.row, Priority.ALWAYS);
+//        this.events();
+//
+//        this.getChildren().add(row.row);
+
+    }
+
+//    private class TreeRowFx extends SceneFX {
+//
+//        private HBox row;
+//        private Label lbl_code;
+//        private TextField txt_grade;
+//
+//        public TreeRowFx() {
+//            row = Mono.fx().create()
+//                    .setPackageName("org.cict.evaluation.student.credit.credittree")
+//                    .setFxmlDocument("CreditTreeRow")
+//                    .makeFX()
+//                    .pullOutLayout();
+//
+//            lbl_code = super.searchAccessibilityText(row, "lbl_code");
+//            txt_grade = super.searchAccessibilityText(row, "txt_grade");
+//        }
+//    }
     /**
      * Sets the color of this row.
      *
@@ -137,11 +193,14 @@ public class CreditTreeRow extends HBox {
      */
     public boolean hasFocus() {
         boolean hasFocus = false;
+
         for (Node node : this.getChildren()) {
+
             if (node.isFocused()) {
                 hasFocus = true;
                 break;
             }
+
         }
         return hasFocus;
     }

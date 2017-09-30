@@ -28,15 +28,15 @@ import javafx.scene.shape.Line;
  * @author Jhon Melvin
  */
 public class CreditTree extends HBox {
-    
+
     private CreditTree() {
         //
         creditMode = false;
     }
-    
+
     private boolean creditMode;
     private boolean readOnly;
-    
+
     public CreditTree(Pane drawboard) {
         this.initialize();
         this.lineDrawBoard = drawboard;
@@ -44,11 +44,11 @@ public class CreditTree extends HBox {
         this.creditMode = false;
         this.readOnly = false;
     }
-    
+
     public void setCreditMode(boolean creditMode) {
         this.creditMode = creditMode;
     }
-    
+
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
     }
@@ -57,15 +57,15 @@ public class CreditTree extends HBox {
     private String lineStartColor = "#ff9151";
     private String lineEndColor = "#d13636";
     private String lineColor = "#b9ff99";
-    
+
     public void setLineStartColor(String lineStartColor) {
         this.lineStartColor = lineStartColor;
     }
-    
+
     public void setLineEndColor(String lineEndColor) {
         this.lineEndColor = lineEndColor;
     }
-    
+
     public void setLineColor(String lineColor) {
         this.lineColor = lineColor;
     }
@@ -76,11 +76,11 @@ public class CreditTree extends HBox {
      */
     private String rowDefaultColor = "";
     private String rowDisallowColor = "";
-    
+
     public void setRowDefaultColor(String rowDefaultColor) {
         this.rowDefaultColor = rowDefaultColor;
     }
-    
+
     public void setRowDisallowColor(String rowDisallowColor) {
         this.rowDisallowColor = rowDisallowColor;
     }
@@ -91,7 +91,7 @@ public class CreditTree extends HBox {
 
     //-----------------
     private ScrollPane scrollpane;
-    
+
     public void setScrollpane(ScrollPane scrollpane) {
         this.scrollpane = scrollpane;
     }
@@ -99,7 +99,7 @@ public class CreditTree extends HBox {
 
     private void initialize() {
         this.setAlignment(Pos.BASELINE_LEFT);
-        
+        this.setSpacing(0);
         this.ChildColumns = FXCollections.observableArrayList();
         this.ChildColumns.addListener((ListChangeListener.Change<? extends CreditTreeColumn> c) -> {
             if (c.next()) {
@@ -117,11 +117,11 @@ public class CreditTree extends HBox {
         this.setFocusTraversable(true);
         this.keyEvents();
     }
-    
+
     public void mouseEvent() {
         this.getChildColumns().forEach(cols -> {
             cols.getChildRows().forEach(rows -> {
-                
+
                 rows.getGradeField().addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
                     //rows.getGradeField().requestFocus();
                     this.focusedCol = this.getFocusedColumnIndex();
@@ -132,19 +132,23 @@ public class CreditTree extends HBox {
             });
         });
     }
-    
+
     public ObservableList<CreditTreeColumn> getChildColumns() {
         return this.ChildColumns;
     }
-    
+
     private Integer focusedCol = -1;
     private Integer focusedRow = -1;
-    
+
     public void keyEvents() {
         this.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
             if (this.focusedCol != -1 && this.focusedRow != -1) {
                 this.focusedCol = this.getFocusedColumnIndex();
-                this.focusedRow = this.getFocusedColumn().getFocusedRowIndex();
+                try {
+                    this.focusedRow = this.getFocusedColumn().getFocusedRowIndex();
+                } catch (Exception e) {
+                    System.err.println("No selected row.");
+                }
 
                 // left and right
                 if (event.getCode().equals(KeyCode.RIGHT)) {
@@ -173,7 +177,7 @@ public class CreditTree extends HBox {
                     }
                     this.commitFocus();
                 }
-                
+
             } else {
                 this.setFocusedCell(0, 0);
                 this.focusedCol = 0;
@@ -181,7 +185,7 @@ public class CreditTree extends HBox {
             }
         });
     }
-    
+
     public void commitFocus() {
         try {
             this.setFocusedCell(this.focusedCol, this.focusedRow);
@@ -209,9 +213,9 @@ public class CreditTree extends HBox {
                 + node.getBoundsInParent().getMinY()) / 2.0;
         double viewport_height = scrollPane.getViewportBounds().getHeight();
         scrollPane.setVvalue(scrollPane.getVmax() * ((node_height - 0.5 * viewport_height) / (content_height - viewport_height)));
-        
+
     }
-    
+
     public static void centerH(ScrollPane scrollPane, CreditTreeColumn node) {
         // x
         double content_width = scrollPane.getContent().getBoundsInLocal().getWidth();
@@ -219,7 +223,7 @@ public class CreditTree extends HBox {
                 + node.getBoundsInParent().getMinX()) / 2.0;
         double viewport_width = scrollPane.getViewportBounds().getWidth();
         double hval = scrollPane.getHmax() * ((node_width - 0.5 * viewport_width) / (content_width - viewport_width));
-        
+
         scrollPane.setHvalue(hval);
     }
 
@@ -227,11 +231,11 @@ public class CreditTree extends HBox {
     public CreditTreeRow getRowAt(int col, int row) {
         return ((CreditTreeColumn) this.getChildColumns().get(col)).getChildRows().get(row);
     }
-    
+
     public int getHorizontalLimit() {
         return (this.getChildColumns().size() - 1);
     }
-    
+
     public int getVerticalLimit() {
         return (this.getFocusedColumn().getChildren().size() - 1);
     }
@@ -245,7 +249,7 @@ public class CreditTree extends HBox {
     public void setFocusedCell(int column, int row) {
         this.getColumn(column).setFocusedRow(row);
     }
-    
+
     public CreditTreeColumn getColumn(int index) {
         Node node = this.getChildColumns().get(index);
         if (node instanceof CreditTreeColumn) {
@@ -254,7 +258,7 @@ public class CreditTree extends HBox {
         }
         return null;
     }
-    
+
     public int getFocusedColumnIndex() {
         for (int x = 0; x < this.getChildColumns().size(); x++) {
             Node node = this.getChildColumns().get(x);
@@ -266,7 +270,7 @@ public class CreditTree extends HBox {
         }
         return -1;
     }
-    
+
     public CreditTreeColumn getFocusedColumn() {
         int index = this.getFocusedColumnIndex();
         if (index != -1) {
@@ -292,14 +296,14 @@ public class CreditTree extends HBox {
         } catch (NullPointerException e) {
             System.err.println("@showLines: row == null");
         }
-        
+
         if (preqCount != 0) {
             // the end point is this row
             SuperPoint endPoint = row.getLeftPoint();
             int emptyPre = 0;
             for (int x = 0; x < preqCount; x++) {
                 CreditTreeRow preRequisite = this.getRowById(row.getPreRequisites()[x]);
-                
+
                 if (preRequisite.getGradeField().getText().trim().isEmpty()) {
                     emptyPre++;
                 }
@@ -320,7 +324,7 @@ public class CreditTree extends HBox {
                 start.centerXProperty().bind(startPoint.getX());
                 start.centerYProperty().bind(startPoint.getY());
                 start.setRadius(7.0f);
-                
+
                 Circle end = new Circle();
                 //end.setStroke(Color.BLACK);
                 end.setFill(Color.web(lineEndColor));
@@ -330,7 +334,7 @@ public class CreditTree extends HBox {
                 end.setRadius(7.0f);
                 this.lineDrawBoard.getChildren().addAll(line, start, end);
             }
-            
+
             if (emptyPre != 0) {
                 /**
                  * If Missing pre-requisite.
@@ -364,7 +368,7 @@ public class CreditTree extends HBox {
                     }
                 }
             });
-            
+
             /**
              * If read only
              */
@@ -372,9 +376,9 @@ public class CreditTree extends HBox {
                 row.getGradeField().setEditable(false);
             }
         }
-        
+
     }
-    
+
     public CreditTreeRow getRowById(Integer ID) {
         for (CreditTreeColumn childColumn : this.getChildColumns()) {
             for (CreditTreeRow childRow : childColumn.getChildRows()) {
@@ -388,7 +392,7 @@ public class CreditTree extends HBox {
 
     //--------------------------------------------------------------------------
     int _____count;
-    
+
     public int countAll() {
         _____count = 0;
         readAll((x, y) -> {
@@ -396,21 +400,21 @@ public class CreditTree extends HBox {
         });
         return _____count;
     }
-    
+
     public void disableAllText() {
         readAll((x, y) -> {
             CreditTreeRow cr = this.getRowAt(x, y);
             cr.txtGrade.setEditable(false);
         });
     }
-    
+
     public void enableAllText() {
         readAll((x, y) -> {
             CreditTreeRow cr = this.getRowAt(x, y);
             cr.txtGrade.setEditable(true);
         });
     }
-    
+
     private void readAll(LocationEvent le) {
         for (int x = 0; x < this.getChildColumns().size(); x++) {
             for (int y = 0; y < this.getChildColumns().get(x).getChildRows().size(); y++) {
@@ -418,10 +422,10 @@ public class CreditTree extends HBox {
             }
         }
     }
-    
+
     interface LocationEvent {
-        
+
         void location(int x, int y);
     }
-    
+
 }
