@@ -52,6 +52,24 @@ public class MonoString extends StringUtils {
     }
 
     /**
+     * ADDED: 9/27/2017 For username purposes, etc. Removes all the spaces on
+     * the string.
+     *
+     * @param str the string to be filtered
+     * @return space free string
+     */
+    public static String removeSpaces(String str) {
+        String[] words = str.split(" ");
+        String temp = "";
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                temp += word;
+            }
+        }
+        return temp.trim();
+    }
+
+    /**
      * Creates an array of words from a string separated by commas.
      *
      * @param str

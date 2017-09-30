@@ -313,7 +313,8 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
 //                tableSubject.addRow(row);
                 createRow(currentSubject, tableSubject);
             }
-
+            
+            vbox_subjectList.setVisible(true);
             SimpleTableView simpleTableView = new SimpleTableView();
             simpleTableView.setTable(tableSubject);
             simpleTableView.setFixedWidth(true);

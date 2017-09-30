@@ -1,13 +1,14 @@
 package update.org.cict.controller.home;
 
 import com.jhmvin.Mono;
-import static com.jhmvin.Mono.fx;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import org.cict.accountmanager.faculty.FacultyMainController;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
 
 public class Home extends SceneFX implements ControllerFX {
@@ -26,6 +27,9 @@ public class Home extends SceneFX implements ControllerFX {
 
     @FXML
     private Button btn_section;
+    
+    @FXML
+    private Button btn_faculty;
 
     @Override
     public void onInitialization() {
@@ -101,5 +105,22 @@ public class Home extends SceneFX implements ControllerFX {
                     .stageShow();
         });
 
+        /**
+         * added 9/27/17
+         */
+        this.addClickEvent(btn_faculty, () -> {
+            this.finish();
+            FacultyMainController controller = new FacultyMainController();
+            Mono.fx().create()
+                    .setPackageName("org.cict.accountmanager.faculty")
+                    .setFxmlDocument("faculty-main")
+                    .makeFX()
+                    .setController(controller)
+                    .makeScene()
+                    .makeStageApplication()
+                    .stageMinDimension(1024, 700)
+                    .stageMaximized(true)
+                    .stageShow();
+        });
     }
 }

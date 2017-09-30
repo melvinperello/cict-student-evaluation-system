@@ -63,10 +63,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
     @FXML
     private AnchorPane anchor_main;
     @FXML
-    private Label lbl_facultyName;
-    @FXML
-    private Label lbl_facultyDesignation;
-    @FXML
     private JFXButton btn_logout;
     @FXML
     private TextField txtStudentNumber;
@@ -694,12 +690,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         Label lbl_lec = searchAccessibilityText(subjectRow, "lec");
         Label lbl_lab = searchAccessibilityText(subjectRow, "lab");
         Label lbl_section = searchAccessibilityText(subjectRow, "section");
-        
-        
-//        imgExtension.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-//            onShowExtension(table, row, imgExtension);
-//        });
-        
+      
         addClickEvent(img_extension, () -> {
             
             if (row.isExtensionShown()) {
@@ -731,6 +722,13 @@ public class AddingHome extends SceneFX implements ControllerFX {
         lbl_lec.setText(subject.getLec_units().toString());
         lbl_lab.setText(subject.getLab_units().toString());
         lbl_section.setText(subInfo.getFullSectionName());
+        
+        VBox bg = searchAccessibilityText(subjectRow, "bg");
+        Label lbl_icon = searchAccessibilityText(subjectRow, "letter");
+        if(SubjectClassification.isMajor(subject.getType()))
+            bg.setStyle(lbl_icon.getStyle() + "-fx-background-color: #D84452;");
+            
+        lbl_icon.setText(subject.getCode().charAt(0)+"");
         
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
@@ -1385,7 +1383,17 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 try {
                     // if value was recieved
                     SubjectInformationHolder subinfo = AddingDataPipe.instance().isChangedValue;
+                    
                     boolean isRegistrar = false;
+                    if(subinfo.getSubjectMap().getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                        if(!ValidateOJT.isValidForOJT(studentSearched)) {
+                            showWarningNotification("Warning", "Student Number: " + studentSearched.getId() +
+                                    "\n Cannot take Internship based on the student's current status.");
+                            System.out.println("ValidateOJT");
+                            AddingDataPipe.instance().resetIsChanged();
+                            return;
+                        }
+                    }
                     validateSubject("ADD", null, subinfo, isRegistrar);
                 } catch (NullPointerException a) {
                     a.printStackTrace();
@@ -1399,7 +1407,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             + " before starting the add process.")
                     .showAndWait();
         }
-        AddingDataPipe.instance().resetIsChanged();
     }
     
     private void validateSubject(String mode, SimpleTableRow row, SubjectInformationHolder subinfo, boolean isRegistrar) {
@@ -1818,6 +1825,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                        .showAndWait();
             }
             logs("******************************************* END");
+            AddingDataPipe.instance().resetIsChanged();
    
         });
 
@@ -1843,6 +1851,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         + "Verified For S/N: " + studentSearched.getId() + ", " + studentSearched.getLast_name() + ".\n"
                         + "Requires: " + prereqs);
             }
+            AddingDataPipe.instance().resetIsChanged();
         });
 
         validate.transact();

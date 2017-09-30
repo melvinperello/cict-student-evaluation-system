@@ -10,11 +10,18 @@
 
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView accessibleText="img_row_extension" fitHeight="46.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../img/Bookmark_64px.png" />
-         </image>
-      </ImageView>
+      <VBox alignment="CENTER" style="-fx-background-color: #E55937;">
+         <children>
+            <ImageView accessibleText="img_row_extension" fitHeight="46.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/Bookmark_32px.png" />
+               </image>
+            </ImageView>
+         </children>
+         <HBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </HBox.margin>
+      </VBox>
       <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
          <children>
             <Label accessibleText="code" text="SOCSCI 113" textFill="#434a55">
@@ -29,7 +36,7 @@
          <children>
             <HBox alignment="CENTER_RIGHT" spacing="5.0">
                <children>
-                  <VBox alignment="CENTER">
+                  <VBox alignment="CENTER" style="-fx-background-color: #59C0ED;">
                      <children>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -48,7 +55,7 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <VBox alignment="CENTER">
+                  <VBox alignment="CENTER" style="-fx-background-color: #FDD030;">
                      <children>
                         <ImageView fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                            <image>

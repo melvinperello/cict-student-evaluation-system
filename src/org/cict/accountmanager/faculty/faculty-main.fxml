@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="1391.0" style="-fx-background-color: #F2F2F2;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" layoutX="14.0" prefHeight="47.0" prefWidth="600.0" style="-fx-background-color: #CDCDCD;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="ACCOUNT">
+               <graphic>
+                  <ImageView fitHeight="23.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../src/images/Customer_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </HBox>
+      <AnchorPane layoutX="429.0" layoutY="14.0" prefHeight="47.0" prefWidth="139.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="70.0" layoutY="15.0" text="Home" />
+            <ImageView fitHeight="21.0" fitWidth="19.0" layoutX="36.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../src/images/Long%20Arrow%20Left_32px.png" />
+               </image>
+            </ImageView>
+            <JFXButton fx:id="btn_home" layoutX="27.0" layoutY="9.0" prefHeight="31.0" prefWidth="89.0" text=" " AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="9.0" />
+         </children>
+      </AnchorPane>
+      <VBox fx:id="vbox_info" layoutX="341.0" layoutY="47.0" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="317.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0" />
+      <VBox fx:id="vbox_list" layoutY="85.0" prefHeight="469.0" prefWidth="322.0" stylesheets="@adding-table.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1050.0" AnchorPane.topAnchor="85.0" />
+      <JFXCheckBox fx:id="chkbx_show_disabled" layoutX="-4.0" layoutY="51.0" text="Show disabled" visible="false" />
+      <ComboBox fx:id="cmb_sort" layoutX="72.0" layoutY="54.0" prefHeight="25.0" prefWidth="236.0" />
+      <AnchorPane fx:id="anchor_new_faculty" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="317.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
+         <children>
+            <Label layoutX="50.0" layoutY="46.0" text="New Faculty">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Label>
+            <VBox layoutX="50.0" layoutY="85.0" prefHeight="274.0" prefWidth="461.0" spacing="5.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label text="BulSU ID:" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txt_bulsu_id" accessibleText="txt_bulsu_id" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="135.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" />
+                        <VBox>
+                           <children>
+                              <ImageView fitHeight="15.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../src/images/Asterisk_32px.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label text="Last name:" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txt_lastname" accessibleText="txt_lastname" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="135.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" HBox.hgrow="ALWAYS" />
+                        <VBox>
+                           <children>
+                              <ImageView fitHeight="15.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../src/images/Asterisk_32px.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="43.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label text="First name:" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txt_firstname" accessibleText="txt_firstname" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="135.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" HBox.hgrow="ALWAYS" />
+                        <VBox>
+                           <children>
+                              <ImageView fitHeight="15.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../src/images/Asterisk_32px.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="76.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label text="Middle name:" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txt_middlename" accessibleText="txt_middlename" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="135.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets right="22.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="142.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label text="Gender:" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <RadioButton fx:id="rbtn_male_new" accessibleText="rbtn_male_new" mnemonicParsing="false" text="Male">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </RadioButton>
+                        <RadioButton fx:id="rbtn_female_new" accessibleText="rbtn_female_new" mnemonicParsing="false" text="Female">
+                           <padding>
+                              <Insets left="30.0" />
+                           </padding>
+                        </RadioButton>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="109.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label text="Rank:" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txt_rank_new" accessibleText="txt_rank_new" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="221.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="175.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label text="Designation:" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txt_designation_new" accessibleText="txt_designation_new" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="221.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <JFXButton fx:id="btn_save_new" accessibleText="btn_save_new" layoutX="376.0" layoutY="356.0" prefHeight="27.0" prefWidth="118.0" style="-fx-border-color: #DEDEDE;" text="Save">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../src/images/Save%20as_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="btn_back_new" accessibleText="btn_back_new" layoutX="421.0" layoutY="45.0" text="Back">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../src/images/Long%20Arrow%20Left_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="40.0" prefWidth="118.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0">
+         <children>
+            <JFXButton fx:id="btn_new_faculty" layoutX="5.0" layoutY="4.0" prefWidth="109.0" style="-fx-border-color: #CCCCCC;" text="New Faculty" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+               <graphic>
+                  <ImageView fitHeight="22.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../src/images/Plus%20Math_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+      <Label layoutX="24.0" layoutY="58.0" text="Sort by:" />
+   </children>
+</AnchorPane>

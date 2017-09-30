@@ -79,8 +79,8 @@ public class RegisterController implements ControllerFX{
     }
     
     private void onRegister(){
-        String bulsuId = MonoString.removeExtraSpace(this.txt_bulsuId.getText().trim());
-        String username = MonoString.removeExtraSpace(this.txt_username.getText().trim());
+        String bulsuId = MonoString.removeExtraSpace(this.txt_bulsuId.getText().toUpperCase().trim());
+        String username = MonoString.removeSpaces(this.txt_username.getText().trim());
         String pass = this.txt_password.getText().trim();
         String confirmPass = this.txt_reenterPass.getText().trim();
         if(checkEmpty(bulsuId, username, pass, confirmPass)){

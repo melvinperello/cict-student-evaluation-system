@@ -15,54 +15,49 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="67.0" prefWidth="1024.0" style="-fx-background-color: #E6E6E6;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="41.0" prefWidth="1000.0" style="-fx-background-color: #66A6FE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" text="Adding Subject">
+            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" text="ADDING SUBJECT" textFill="WHITE" AnchorPane.topAnchor="5.0">
                <font>
-                  <Font size="23.0" />
+                  <Font size="15.0" />
                </font>
                <graphic>
-                  <ImageView fitHeight="39.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="29.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/Plus%20Math_64px.png" />
+                        <Image url="@../img/Plus%20Math_32px.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Label>
          </children>
       </AnchorPane>
-      <HBox alignment="CENTER_LEFT" layoutY="110.0" prefHeight="88.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="67.0">
+      <HBox alignment="CENTER_LEFT" layoutY="110.0" prefHeight="88.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="88.0" prefWidth="448.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="88.0" prefWidth="448.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
-                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/Course_64px.png" />
-                     </image>
-                  </ImageView>
-                  <TextField fx:id="txtSearch" prefHeight="37.0" prefWidth="393.0" promptText="Search . . . ( e.g.  IT 113)" style="-fx-border-color: #7A7A7A; -fx-border-width: 2;">
+                  <TextField fx:id="txtSearch" prefHeight="37.0" prefWidth="497.0" promptText="Search . . . ( e.g.  IT 113)" style="-fx-border-color: #7A7A7A; -fx-border-width: 2;">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="15.0" />
                      </font>
                   </TextField>
+                  <JFXButton fx:id="btnSearch" alignment="CENTER" graphicTextGap="10.0" prefHeight="35.0" prefWidth="39.0" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="26.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/Search_64px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
                </children>
             </HBox>
-            <JFXButton fx:id="btnSearch" alignment="CENTER" graphicTextGap="10.0" prefHeight="19.0" prefWidth="128.0" style="-fx-border-color: #7A7A7A; -fx-border-width: 2;" text="Search">
-               <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/Search_64px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </JFXButton>
-            <JFXButton fx:id="btnShowAll" alignment="CENTER" disable="true" graphicTextGap="10.0" layoutX="513.0" layoutY="33.0" prefHeight="37.0" prefWidth="153.0" style="-fx-border-color: #7A7A7A; -fx-border-width: 2;" text="Show all subject" />
+            <JFXButton fx:id="btnShowAll" alignment="CENTER" disable="true" graphicTextGap="10.0" layoutX="513.0" layoutY="33.0" prefHeight="37.0" prefWidth="116.0" style="-fx-border-color: #000;" text="Show all subject" />
          </children>
          <padding>
-            <Insets left="20.0" />
+            <Insets left="20.0" right="20.0" />
          </padding>
       </HBox>
-      <AnchorPane layoutX="185.0" layoutY="247.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="155.0">
+      <AnchorPane layoutX="185.0" layoutY="119.0" prefHeight="481.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="119.0">
          <children>
             <StackPane layoutX="110.0" layoutY="88.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
@@ -132,7 +127,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="anchor_view" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <VBox fx:id="vbox_subjectList" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@adding-table.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                        <VBox fx:id="vbox_subjectList" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@adding-table.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
                      </children>
                   </AnchorPane>
                </children>

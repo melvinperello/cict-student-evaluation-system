@@ -13,11 +13,11 @@
 
 <AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="511.0" prefWidth="1000.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="67.0" prefWidth="1024.0" style="-fx-background-color: #E6E6E6;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="49.0" prefWidth="1000.0" style="-fx-background-color: #66A6FE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" text="Changing Subject">
+            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" text="CHANGING SUBJECT" textFill="WHITE" AnchorPane.topAnchor="10.0">
                <font>
-                  <Font size="23.0" />
+                  <Font size="15.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="34.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
@@ -31,7 +31,7 @@
       </AnchorPane>
       <AnchorPane layoutX="185.0" layoutY="247.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="155.0">
          <children>
-            <StackPane layoutX="110.0" layoutY="-83.0" prefHeight="461.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-83.0">
+            <StackPane layoutX="110.0" layoutY="-94.0" prefHeight="450.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-94.0">
                <children>
                   <AnchorPane fx:id="anchor_result" prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -97,7 +97,7 @@
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="anchor_view" prefHeight="200.0" prefWidth="200.0">
+                  <AnchorPane fx:id="anchor_view" prefHeight="452.0" prefWidth="1000.0">
                      <children>
                         <VBox fx:id="vbox_subjectList" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../adding/adding-table.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
                      </children>

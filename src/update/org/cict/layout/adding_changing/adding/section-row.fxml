@@ -10,11 +10,18 @@
 
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView accessibleText="img_row_extension" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../img/Classroom_64px.png" />
-         </image>
-      </ImageView>
+      <VBox style="-fx-background-color: #46BC98;">
+         <children>
+            <ImageView accessibleText="img_row_extension" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/Classroom_32px.png" />
+               </image>
+            </ImageView>
+         </children>
+         <HBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </HBox.margin>
+      </VBox>
       <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
          <children>
             <Label accessibleText="section" maxWidth="1.7976931348623157E308" text="BSIT 1A-G1" textFill="#434a55">

@@ -8,59 +8,83 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="928.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView accessibleText="img_row_extension" fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../res/img/plus_sign.png" />
          </image>
       </ImageView>
+      <VBox accessibleText="bg" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #3498DB;">
+         <children>
+            <Label accessibleText="letter" text="S" textFill="WHITE">
+               <font>
+                  <Font size="32.0" />
+               </font>
+            </Label>
+         </children>
+         <HBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </HBox.margin>
+      </VBox>
       <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="code" maxWidth="1.7976931348623157E308" text="SOCSCI 113" textFill="#434a55">
+            <Label accessibleText="code" text="SOCSCI 113">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="descript" maxWidth="1.7976931348623157E308" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#434a55">
+            <Label accessibleText="descript" text="PHILIPPINE HISTORY AND GOVERNEMNT">
                <font>
                   <Font size="10.0" />
                </font>
             </Label>
          </children>
+         <HBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </HBox.margin>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
       </VBox>
-      <VBox alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #F39C12;">
          <children>
             <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../res/img/lec.png" />
+                  <Image url="@img/Literature_32px.png" />
                </image>
             </ImageView>
-            <Label text="LEC" textFill="#656d79">
+            <Label text="LEC" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
          </children>
+         <HBox.margin>
+            <Insets bottom="15.0" top="15.0" />
+         </HBox.margin>
       </VBox>
       <Label accessibleText="lec" prefHeight="32.0" prefWidth="40.0" text="3.0">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <VBox alignment="CENTER" layoutX="519.0" layoutY="10.0">
+      <VBox alignment="CENTER" layoutX="519.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #59C0ED;">
          <children>
             <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../res/img/lab.png" />
+                  <Image url="@img/Test%20Tube_32px.png" />
                </image>
             </ImageView>
-            <Label text="LAB" textFill="#656d79">
+            <Label text="LAB" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
          </children>
+         <HBox.margin>
+            <Insets bottom="15.0" top="15.0" />
+         </HBox.margin>
       </VBox>
       <Label accessibleText="lab" layoutX="552.0" layoutY="23.0" prefHeight="32.0" prefWidth="38.0" text="3.0">
          <font>
@@ -75,11 +99,15 @@
             <Insets right="10.0" />
          </HBox.margin>
          <graphic>
-            <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../res/img/room.png" />
-               </image>
-            </ImageView>
+            <VBox style="-fx-background-color: #AAB2BE;">
+               <children>
+                  <ImageView fitHeight="38.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../res/img/room.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </VBox>
          </graphic>
       </Label>
    </children>
