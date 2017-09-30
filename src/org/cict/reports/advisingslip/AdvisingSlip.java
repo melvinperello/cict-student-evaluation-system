@@ -33,18 +33,37 @@ public class AdvisingSlip {
     private String RESULT;
     public String document;
 
+    public final static String SAVE_DIRECTORY = "reports/advising";
+
     public AdvisingSlip(String filename) {
         document = filename;
-        RESULT = "reports/advising/" + document + ".pdf";
+        RESULT = SAVE_DIRECTORY + "/" + document + ".pdf";
     }
-    
+
     public int print() {
         try {
 
             init();
-
+            /**
+             * Before creating the PDF check if directories are existing.
+             */
+            try {
+                File directory = new File(SAVE_DIRECTORY);
+                if (!directory.exists()) {
+                    System.out.println("Directory Not Exist for Advising Slip");
+                    boolean dir_created = directory.mkdirs();
+                    if (dir_created) {
+                        System.out.println("Created Directory for Advising Slip");
+                    } else {
+                        System.err.println("Cannot Create Directory.");
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("ADVISING DIRECTORY CREATION FAILED.");
+            }
+            //------------------------------------------------------------------
             int val = createPdf(RESULT);
-            if (val == 1) { 
+            if (val == 1) {
                 System.out.println("Please close the previous report");
             }
             /* -------- run the created pdf */
@@ -52,6 +71,7 @@ public class AdvisingSlip {
                 try {
 
                     File myFile = new File(RESULT);
+
                     Desktop.getDesktop().open(myFile);
                 } catch (IOException ex) {
                     // no application registered for PDFs
@@ -73,7 +93,7 @@ public class AdvisingSlip {
     private static String university, campus, course, title, school_year, semester, date,
             stud_num, stud_name, adviser,
             major = "_____________________________________________",
-            remarks =          " _______________________________________________\n"
+            remarks = " _______________________________________________\n"
             + "                  _______________________________________________\n"
             + "                  _______________________________________________\n"
             + "                  _______________________________________________\n"
@@ -81,13 +101,13 @@ public class AdvisingSlip {
     private static int ttl_subjects;
     private static Double ttl_lec_units, ttl_lab_units;
     private static final Font FONT_HEADER = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
-    
+
     private static final Font FONT_PAGE_DETAILS = new Font(FontFamily.HELVETICA, 9);
     private static final Font FONT_CELL_HEADER = new Font(FontFamily.HELVETICA, 8, Font.BOLD);
     private static final Font FONT_CELL_HEADER_2 = new Font(FontFamily.HELVETICA, 6, Font.BOLD);
     private static final Font FONT_EXCESS_INFO = new Font(FontFamily.HELVETICA, 8);
     private final SimpleDateFormat formatter = new SimpleDateFormat("MMddyyyyhhmmss");
-    private static boolean old, new_, regular, irregular, 
+    private static boolean old, new_, regular, irregular,
             underline_remarks = false,
             underline_major = false;
 
@@ -117,7 +137,7 @@ public class AdvisingSlip {
         semester = this.INFO_TERM;
         campus = this.INFO_CAMPUS;
         course = this.INFO_COURSE;
-        if(!this.INFO_MAJOR.isEmpty()){
+        if (!this.INFO_MAJOR.isEmpty()) {
             major = this.INFO_MAJOR;
             underline_major = true;
         }
@@ -128,7 +148,7 @@ public class AdvisingSlip {
         new_ = this.INFO_NEW;
         regular = this.INFO_REGULAR;
         irregular = this.INFO_IRREGULAR;
-        if(!this.INFO_REMARKS.isEmpty()){
+        if (!this.INFO_REMARKS.isEmpty()) {
             remarks = this.INFO_REMARKS;
             underline_remarks = true;
         }
@@ -397,8 +417,9 @@ public class AdvisingSlip {
     private static void putTitleContent(Phrase phr, String title, Font font1, String info, Font font2, String space, boolean underlined) {
         phr.add(new Chunk(title, font1));
         Chunk chunks = new Chunk(info + space, font2);
-        if(underlined)
+        if (underlined) {
             chunks.setUnderline(0.1f, -2f);
+        }
         phr.add(chunks);
     }
 

@@ -47,6 +47,9 @@ public class CreditTreeRow extends HBox {
     public final TextField txtGrade = new TextField();
     private Pane linePanel;
 
+    /**
+     * Create Row.
+     */
     private void initialize() {
         /**
          * Any changes you want to this label must be applied to credit-tree.css

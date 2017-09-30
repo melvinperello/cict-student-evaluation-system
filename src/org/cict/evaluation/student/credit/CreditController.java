@@ -123,7 +123,7 @@ public class CreditController implements ControllerFX {
     /**
      * Colors of the row.
      */
-    private final String defaultColor = "#74B1F4";
+    private final String defaultColor = "#FFFFFF";
 
     //static values
     public final static String MODE_CREDIT = "CREDIT";

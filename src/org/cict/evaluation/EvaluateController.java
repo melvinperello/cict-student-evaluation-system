@@ -35,6 +35,7 @@ import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
@@ -50,6 +51,7 @@ import org.cict.evaluation.encoder.GradeEncoderController;
 import org.cict.evaluation.evaluator.CheckGrade;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.evaluator.SearchStudent;
+import org.cict.evaluation.evaluator.SubjectValidation;
 import org.cict.evaluation.sectionviewer.SectionsController;
 import org.cict.evaluation.student.credit.InputModeController;
 import org.cict.evaluation.student.info.InfoStudentController;
@@ -768,24 +770,52 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * sections are available.
      */
     private void showPreview() {
+        SimpleTask previewTk = new SimpleTask("show-preview");
+        previewTk.setTask(() -> {
+            loadPreview();
+        });
+        previewTk.whenStarted(() -> {
+            btnFind.setDisable(true);
+            btnEvaluate.setDisable(true);
+            // before displaying the subject.
+        });
+        previewTk.whenSuccess(() -> {
+            log("EvaluateController: Success Loading Preview.");
+        });
+        previewTk.whenFailed(() -> {
+            log("EvaluateController: Failed Loading Preview.");
+        });
+
+        previewTk.whenFinished(() -> {
+            // done
+            btnFind.setDisable(false);
+            btnEvaluate.setDisable(false);
+            log("EvaluateController: Finished Loading Preview.");
+        });
+        previewTk.start();
+    }
+
+    private void loadPreview() {
         //reset subject view
-        vbox_subjects.getChildren().clear();
+        Mono.fx().thread().wrap(() -> {
+            vbox_subjects.getChildren().clear();
 
-        // student's full name
-        String studentName = this.currentStudent.getLast_name()
-                + ", "
-                + this.currentStudent.getFirst_name()
-                + " "
-                + this.currentStudent.getMiddle_name();
-        this.lblName.setText(studentName);
+            // student's full name
+            String studentName = this.currentStudent.getLast_name()
+                    + ", "
+                    + this.currentStudent.getFirst_name()
+                    + " "
+                    + this.currentStudent.getMiddle_name();
+            this.lblName.setText(studentName);
 
-        // students section
-        String section = this.currentStudent.getYear_level()
-                + " "
-                + this.currentStudent.getSection()
-                + " - G"
-                + this.currentStudent.get_group();
-        this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
+            // students section
+            String section = this.currentStudent.getYear_level()
+                    + " "
+                    + this.currentStudent.getSection()
+                    + " - G"
+                    + this.currentStudent.get_group();
+            this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
+        });
 
         log(" $showPreview: started");
         /**
@@ -809,8 +839,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
 
         }
-        lbl_subjectTotal.setText(subjectCount.toString());
-        lbl_unitsTotal.setText(unitCount.toString());
+
+        Mono.fx().thread().wrap(() -> {
+            lbl_subjectTotal.setText(subjectCount.toString());
+            lbl_unitsTotal.setText(unitCount.toString());
+        });
+
     }
 
     /**
@@ -826,25 +860,40 @@ public class EvaluateController extends SceneFX implements ControllerFX {
          *
          */
         // validation object
-        ValidateAddedSubject verificationTask = Evaluator.instance().createValidateAddedSubject();
-        verificationTask.studentCictID = this.currentStudent.getCict_id();
-        verificationTask.loadGroupID = studentLoadGroup.get(x).getId();
-        verificationTask.loadSecID = studentLoadGroup.get(x).getLOADSEC_id();
-        verificationTask.subjectID = studentSubject.get(x).getId();
 
-        verificationTask.setOnSuccess((WorkerStateEvent event) -> {
-            log(" $isOkToAdd: verified");
-            if (verificationTask.isEligibleToTake()) {
-                log(" $isOkToAdd: student is eligible");
-                ifItsOkThenAdd(x, verificationTask.getSectionWithFormat());
-            }
-        });
+        SubjectValidation sv = new SubjectValidation();
+        sv.studentCictID = this.currentStudent.getCict_id();
+        sv.loadGroupID = studentLoadGroup.get(x).getId();
+        sv.loadSecID = studentLoadGroup.get(x).getLOADSEC_id();
+        sv.subjectID = studentSubject.get(x).getId();
 
-        verificationTask.setOnCancel(cancel -> {
+        sv.validate();
 
-        });
+        log(" $isOkToAdd: verified");
+        if (sv.isEligibleToTake()) {
+            log(" $isOkToAdd: student is eligible");
+            ifItsOkThenAdd(x, sv.getSectionWithFormat());
+        }
 
-        verificationTask.transact();
+//        ValidateAddedSubject verificationTask = Evaluator.instance().createValidateAddedSubject();
+//        verificationTask.studentCictID = this.currentStudent.getCict_id();
+//        verificationTask.loadGroupID = studentLoadGroup.get(x).getId();
+//        verificationTask.loadSecID = studentLoadGroup.get(x).getLOADSEC_id();
+//        verificationTask.subjectID = studentSubject.get(x).getId();
+//
+//        verificationTask.setOnSuccess((WorkerStateEvent event) -> {
+//            log(" $isOkToAdd: verified");
+//            if (verificationTask.isEligibleToTake()) {
+//                log(" $isOkToAdd: student is eligible");
+//                ifItsOkThenAdd(x, verificationTask.getSectionWithFormat());
+//            }
+//        });
+//
+//        verificationTask.setOnCancel(cancel -> {
+//
+//        });
+//
+//        verificationTask.transact();
     }
 
     /**
@@ -882,7 +931,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 }
             });
 
-            vbox_subjects.getChildren().add(subjects);
+            Mono.fx().thread().wrap(() -> {
+                vbox_subjects.getChildren().add(subjects);
+            });
+
         } catch (IndexOutOfBoundsException a) {
             log(" $isOkToAdd: IndexOutOfBoundsException");
         }
