@@ -130,8 +130,8 @@ public class SearchBySubject extends Transaction {
             ssv.labelCode.setText(code);
             String title = this.searchedSubject.getDescriptive_title();
             ssv.labelTitle.setText(title);
-            ssv.labelMax.setText("30");
-            ssv.labelExpected.setText("~ 20");
+//            ssv.labelMax.setText("30");
+//            ssv.labelExpected.setText("~ 20");
             String current = this.loadGroupPopulation.get(x).toString();
             ssv.labelCurrent.setText(current);
             //

@@ -24,6 +24,8 @@
 package org.cict.evaluation.views;
 
 import com.jfoenix.controls.JFXButton;
+import com.jhmvin.Mono;
+import com.jhmvin.fx.display.SceneFX;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -48,9 +50,43 @@ public class SubjectSuggestionView extends HBox {
     public JFXButton actionFind;
 
     public SubjectSuggestionView() {
-        this.construct();
+        this.constructFX();
     }
 
+    private void constructFX() {
+        ConstructFX fx = new ConstructFX();
+        this.code = fx.lbl_code;
+        this.title = fx.lbl_title;
+        this.section = fx.lbl_section;
+        
+        HBox.setHgrow(fx.row, Priority.ALWAYS);
+        this.getChildren().add(fx.row);
+    }
+
+    private class ConstructFX extends SceneFX {
+
+        public HBox row;
+        public Label lbl_code;
+        public Label lbl_title;
+        public Label lbl_section;
+
+        public ConstructFX() {
+
+            this.row = Mono.fx()
+                    .create()
+                    .setPackageName("org.cict.evaluation.views")
+                    .setFxmlDocument("SubjectSuggestionView")
+                    .makeFX()
+                    .pullOutLayout();
+
+            lbl_code = super.searchAccessibilityText(row, "lbl_code");
+            lbl_title = super.searchAccessibilityText(row, "lbl_title");
+            lbl_section = super.searchAccessibilityText(row, "lbl_section");
+        }
+
+    }
+
+    @Deprecated
     private void construct() {
         HBox hbox_subject = new HBox(30);
         hbox_subject.setPadding(new Insets(10.0, 0.0, 10.0, 10.0));

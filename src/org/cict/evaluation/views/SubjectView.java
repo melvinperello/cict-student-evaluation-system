@@ -6,6 +6,8 @@
 package org.cict.evaluation.views;
 
 import com.jfoenix.controls.JFXButton;
+import com.jhmvin.Mono;
+import com.jhmvin.fx.display.SceneFX;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -16,6 +18,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 
 /**
+ * Subject view for evaluated subjects.
  *
  * @author Jhon Melvin
  */
@@ -27,7 +30,7 @@ public class SubjectView extends HBox {
     public Label code;
     public Label title;
     public Label section;
-    public JFXButton actionFind;
+    public JFXButton actionRemove;
     /**
      * Verifications (not visible)
      */
@@ -39,9 +42,50 @@ public class SubjectView extends HBox {
     public Integer loadSecID;
 
     public SubjectView() {
-        this.construct();
+        this.constructFX();
     }
 
+    private void constructFX() {
+        ConstructFX fx = new ConstructFX();
+        this.code = fx.lbl_code;
+        this.title = fx.lbl_title;
+        this.section = fx.lbl_section;
+        this.actionRemove = fx.btn_remove;
+
+        HBox.setHgrow(fx.row, Priority.ALWAYS);
+        this.getChildren().add(fx.row);
+    }
+
+    private class ConstructFX extends SceneFX {
+
+        public HBox row;
+        public Label lbl_code;
+        public Label lbl_title;
+        public Label lbl_section;
+        public JFXButton btn_remove;
+
+        public ConstructFX() {
+
+            this.row = Mono.fx()
+                    .create()
+                    .setPackageName("org.cict.evaluation.views")
+                    .setFxmlDocument("SubjectView")
+                    .makeFX()
+                    .pullOutLayout();
+
+            lbl_code = super.searchAccessibilityText(row, "lbl_code");
+            lbl_title = super.searchAccessibilityText(row, "lbl_title");
+            lbl_section = super.searchAccessibilityText(row, "lbl_section");
+            btn_remove = super.searchAccessibilityText(row, "btn_remove");
+        }
+
+    }
+
+    //--------------------------------------------------------------------------
+    @Deprecated
+    /**
+     * This function was deprecated and will not be used in future releases.
+     */
     private void construct() {
         HBox hbox_subject = new HBox(30);
         hbox_subject.setPadding(new Insets(10.0, 0.0, 10.0, 10.0));
@@ -84,16 +128,17 @@ public class SubjectView extends HBox {
         section.setPadding(new Insets(0.0, 50.0, 0.0, 0.0));
         hbox_controls.getChildren().add(section);
         //
-        actionFind = new JFXButton();
-        actionFind.setStyle("-fx-text-fill: #FFFFFF; -fx-background-color: #D9534F;");
-        actionFind.setText("Remove");
-        actionFind.setFont(new Font(15.0));
-        hbox_controls.getChildren().add(actionFind);
+        actionRemove = new JFXButton();
+        actionRemove.setStyle("-fx-text-fill: #FFFFFF; -fx-background-color: #D9534F;");
+        actionRemove.setText("Remove");
+        actionRemove.setFont(new Font(15.0));
+        hbox_controls.getChildren().add(actionRemove);
 
         this.getChildren().add(hbox_subject);
         this.getChildren().add(hbox_controls);
 
         this.setStyle("-fx-border-color: #000000");
+
     }
 
 }

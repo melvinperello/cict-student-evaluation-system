@@ -65,6 +65,11 @@ public class SectionsController implements ControllerFX {
 
         vbox_subjects.prefWidthProperty().bind(scroll_view.widthProperty());
         scroll_view.setContent(vbox_subjects);
+
+        // fit width
+        scroll_view.setFitToWidth(true);
+        scroll_view.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
     }
     VBox vbox_subjects = new VBox(4);
 

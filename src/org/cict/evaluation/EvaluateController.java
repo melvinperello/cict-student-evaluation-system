@@ -183,10 +183,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_home;
-    
+
     @FXML
     private JFXButton btn_checklist;
-            
+
     @FXML
     private VBox vbox_list;
 
@@ -218,7 +218,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
          *
          */
         vbox_subjects.prefWidthProperty().bind(scroll_subjects.widthProperty());
+        //
         scroll_subjects.setContent(vbox_subjects);
+        scroll_subjects.setFitToWidth(true);
+        scroll_subjects.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         this.vbox_settings.setVisible(false);
         createTable();
@@ -354,28 +357,28 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             onBackToHome();
         });
 
-        this.addClickEvent(btn_checklist, ()->{
+        this.addClickEvent(btn_checklist, () -> {
             printChecklist();
         });
     }
-    
-    private void printChecklist(){
+
+    private void printChecklist() {
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.CICT_id = currentStudent.getCict_id();
-        printCheckList.setOnStart(onStart->{
+        printCheckList.setOnStart(onStart -> {
             GenericLoadingShow.instance().show();
         });
-        printCheckList.setOnSuccess(onSuccess->{
+        printCheckList.setOnSuccess(onSuccess -> {
             GenericLoadingShow.instance().hide();
             Notifications.create().title("Please wait, we're nearly there.")
                     .text("Printing the Checklist.").showInformation();
         });
-        printCheckList.setOnCancel(onCancel->{
+        printCheckList.setOnCancel(onCancel -> {
             GenericLoadingShow.instance().hide();
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
-        printCheckList.setOnFailure(onFailed->{
+        printCheckList.setOnFailure(onFailed -> {
             GenericLoadingShow.instance().hide();
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showError();
@@ -560,7 +563,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         evaluateTask.setRestTime(500);
         evaluateTask.transact();
     }
-    
+
     private void showChooseType(Integer acadTermID, boolean isNew) {
         ChooseTypeController controller = new ChooseTypeController(this.currentStudent.getId(), acadTermID);
         Mono.fx().create()
@@ -572,17 +575,18 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .makeStageApplication()
                 .stageResizeable(false)
                 .stageCenter()
-                .stageShowAndWait();   
-        if(controller.isPrinting()) {
+                .stageShowAndWait();
+        if (controller.isPrinting()) {
             String text = "Printing Evaluation Slip";
-            if(isNew)
+            if (isNew) {
                 text = "Evaluated Successfully, printing Evaluation Slip";
-            
+            }
+
             Notifications.create()
-                    .title("Success (" + controller.getSelected()+" Student)")
+                    .title("Success (" + controller.getSelected() + " Student)")
                     .text(text)
-                    .showInformation();  
-        }   
+                    .showInformation();
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -600,19 +604,22 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     private Integer countSearch = 0;
     private Boolean show;
+
     public void searchStudent() {
         show = true;
-        if(currentStudent != null) {
-            if(txtStudentNumber.getText().equalsIgnoreCase(currentStudent.getId())) {
+        if (currentStudent != null) {
+            if (txtStudentNumber.getText().equalsIgnoreCase(currentStudent.getId())) {
                 countSearch = 1;
-                if(countSearch == 1)
+                if (countSearch == 1) {
                     show = false;
-            } else
+                }
+            } else {
                 countSearch = 0;
-        } else
+            }
+        } else {
             countSearch = 0;
-        
-        
+        }
+
         setView("search");
 
         SearchStudent search = new SearchStudent();
@@ -641,9 +648,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                  * Added code here. check if the student has an enrollment type.
                  */
                 //this.onEnrollmentTypeUnset();
-                if(show) 
+                if (show) {
                     showFirstAssistant();
-                
+                }
+
                 onShowCurricularLevel();
                 showAssistant();
                 setView("preview");
@@ -659,14 +667,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             System.out.println("@EvaluateController: Search Failed");
             setView("no_results");
             StudentMapping student = search.getCurrentStudent();
-            if(student != null)
+            if (student != null) {
                 currentStudent = showMissingInfo(student);
+            }
         });
         search.setRestTime(500);
         search.transact();
     } // end of task
 
-    private StudentMapping showMissingInfo (StudentMapping student) {
+    private StudentMapping showMissingInfo(StudentMapping student) {
         MissingInfoController controller = new MissingInfoController(student);
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation")
@@ -680,8 +689,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         return controller.getStudent();
     }
-    
-    
+
     private void showFirstAssistant() {
         anchor_evaluate.setDisable(true);
         setView("home");
@@ -698,7 +706,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageCenter()
                 .stageShowAndWait();
     }
-    
+
     private void showAssistant() {
         AssistantController controller = new AssistantController(currentStudent);
         Mono.fx().create()
@@ -714,7 +722,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         currentStudent.setYear_level(controller.getNewYearLevel());
     }
-    
+
     private void onShowCurricularLevel() {
         CurricularLevelController controller = new CurricularLevelController(this.currentStudent);
         Mono.fx().create()
@@ -755,7 +763,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        }
 //        // end ***************************************************
 //    }
-
     /**
      * If the student is existing it will automatically add the subjects if
      * sections are available.
@@ -861,7 +868,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             subjects.loadGroupID = studentLoadGroup.get(x).getId();
             subjects.loadSecID = studentLoadGroup.get(x).getLOADSEC_id();
             //event
-            subjects.actionFind.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+            subjects.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
                 int choice = Mono.fx().alert()
                         .createConfirmation()
                         .setHeader("Remove Subject")
@@ -936,10 +943,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //                .stageResizeable(false)
 //                .stageShowAndWait();
 //    }
-
 //    private ArrayList<ArrayList<SubjectMapping>> checker;
 //    private ArrayList<String> yearAndSemWithMissingRecord;
-
 //    private void verifyStudentIf(String mode) {
 ////        if (mode.equalsIgnoreCase("regular")) {
 ////            this.updateYearLevelForRegular();
@@ -987,7 +992,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        });
 //        checkGrade.transact();
 //    }
-
     private void onError() {
         Mono.fx().alert()
                 .createWarning()
@@ -1012,7 +1016,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //                .stageResizeable(false)
 //                .stageShowAndWait();
 //    }
-
     private ArrayList<ArrayList<SubjectMapping>> subjectsWithNoGrade;
 
     private void onEncoding() {
@@ -1190,10 +1193,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.vbox_settings.setVisible(false);
         this.vbox_studentOptions.setVisible(false);
     }
-    
-    
-    private SimpleTable studentTable = new SimpleTable(); 
+
+    private SimpleTable studentTable = new SimpleTable();
     private ArrayList<StudentMapping> lst_student;
+
     private void createTable() {
 //        for(StudentMapping student: lst_student) {
 //            createRow(student);
@@ -1201,16 +1204,16 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         for (int i = 0; i < 5; i++) {
             createRow(i);
         }
-        
+
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(studentTable);
         simpleTableView.setFixedWidth(true);
-        
+
         simpleTableView.setParentOnScene(vbox_list);
     }
-    
+
     private void createRow(int num/*StudentMapping subject*/) {
-        
+
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
 
@@ -1222,9 +1225,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         Label lbl_number = searchAccessibilityText(programRow, "number");
         Label lbl_id = searchAccessibilityText(programRow, "id");
         Label lbl_name = searchAccessibilityText(programRow, "name");
-        
+
         lbl_number.setText(num + "");
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(programRow);

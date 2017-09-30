@@ -8,6 +8,8 @@
  */
 package org.cict.evaluation.views;
 
+import com.jhmvin.Mono;
+import com.jhmvin.fx.display.SceneFX;
 import org.cict.evaluation.evaluator.Evaluator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -29,8 +31,8 @@ public class SectionSearchView extends HBox {
 
     public Label labelCode;
     public Label labelTitle;
-    public Label labelMax;
-    public Label labelExpected;
+//    public Label labelMax;
+//    public Label labelExpected;
     public Label labelCurrent;
     public Label labelSection;
     //
@@ -39,9 +41,62 @@ public class SectionSearchView extends HBox {
     public Integer sectionID;
 
     public SectionSearchView() {
-        this.construct();
+        this.constructFX();
     }
 
+    private void constructFX() {
+        ConstructFX fx = new ConstructFX();
+        this.labelCode = fx.lbl_code;
+        this.labelTitle = fx.lbl_title;
+        this.labelCurrent = fx.lbl_current;
+        this.labelSection = fx.lbl_section;
+
+        HBox.setHgrow(fx.row, Priority.ALWAYS);
+        this.getChildren().add(fx.row);
+
+        // drage events.
+        this.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+            this.getScene().setCursor(Cursor.HAND);
+            System.out.println("@SectionSearchView: Mouse Pressed Recieved.");
+            Evaluator.instance().pressedLoadGroupID = this.loadGroupID;
+            Evaluator.instance().pressedSubjectID = this.subjectID;
+            Evaluator.instance().pressedSectionID = this.sectionID;
+
+        });
+
+        this.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+            this.getScene().setCursor(Cursor.DEFAULT);
+            System.out.println("@SectionSearchView: Mouse Realeased Recieved.");
+            Evaluator.instance().sectionViewReleased = true;
+        });
+    }
+
+    private class ConstructFX extends SceneFX {
+
+        public HBox row;
+        public Label lbl_code;
+        public Label lbl_title;
+        public Label lbl_section;
+        public Label lbl_current;
+
+        public ConstructFX() {
+
+            this.row = Mono.fx()
+                    .create()
+                    .setPackageName("org.cict.evaluation.views")
+                    .setFxmlDocument("SectionSearchView")
+                    .makeFX()
+                    .pullOutLayout();
+
+            lbl_code = super.searchAccessibilityText(row, "lbl_code");
+            lbl_title = super.searchAccessibilityText(row, "lbl_title");
+            lbl_section = super.searchAccessibilityText(row, "lbl_section");
+            lbl_current = super.searchAccessibilityText(row, "lbl_current");
+        }
+
+    }
+
+    @Deprecated
     private void construct() {
 
         HBox hbox_subject = new HBox(30);
@@ -78,26 +133,24 @@ public class SectionSearchView extends HBox {
         img_max.setFitHeight(30.0);
         img_max.setImage(new Image("res/img/High Priority_96px.png"));
 
-        labelMax = new Label("30");
-        labelMax.setFont(new Font(15.0));
-        labelMax.setGraphic(img_max);
-        labelMax.setGraphicTextGap(10.0);
-
-        hbox_stats.getChildren().add(labelMax);
-
+//        labelMax = new Label("30");
+//        labelMax.setFont(new Font(15.0));
+//        labelMax.setGraphic(img_max);
+//        labelMax.setGraphicTextGap(10.0);
+//
+//        hbox_stats.getChildren().add(labelMax);
         //
         ImageView img_expected = new ImageView();
         img_expected.setFitWidth(30.0);
         img_expected.setFitHeight(30.0);
         img_expected.setImage(new Image("res/img/Goal_96px.png"));
 
-        labelExpected = new Label("> 25");
-        labelExpected.setFont(new Font(15.0));
-        labelExpected.setGraphic(img_expected);
-        labelExpected.setGraphicTextGap(10.0);
-
-        hbox_stats.getChildren().add(labelExpected);
-
+//        labelExpected = new Label("> 25");
+//        labelExpected.setFont(new Font(15.0));
+//        labelExpected.setGraphic(img_expected);
+//        labelExpected.setGraphicTextGap(10.0);
+//
+//        hbox_stats.getChildren().add(labelExpected);
         //
         ImageView img_current = new ImageView();
         img_current.setFitWidth(30.0);

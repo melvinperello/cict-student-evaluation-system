@@ -182,9 +182,22 @@ public class Evaluator implements Process {
                     addedSubject.loadGroupID = Evaluator.instance().pressedLoadGroupID;
                     addedSubject.loadSecID = Evaluator.instance().pressedSectionID;
                     //
-                    addedSubject.actionFind.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
-                        vbox_subjects.getChildren().remove(addedSubject);
-                        Mono.fx().snackbar().showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
+                    addedSubject.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
+
+                        int choice = Mono.fx().alert()
+                                .createConfirmation()
+                                .setHeader("Remove Subject")
+                                .setMessage("Are you sure you want to remove the subject?")
+                                .confirmYesNo();
+                        if (choice == 1) {
+                            vbox_subjects.getChildren().remove(addedSubject);
+                            Mono.fx()
+                                    .snackbar()
+                                    .showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
+                        }
+
+//                        vbox_subjects.getChildren().remove(addedSubject);
+//                        Mono.fx().snackbar().showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
                     });
 
                     vbox_subjects.getChildren().add(addedSubject);

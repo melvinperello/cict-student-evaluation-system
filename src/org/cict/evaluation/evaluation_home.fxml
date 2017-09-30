@@ -73,7 +73,7 @@
                               </JFXButton>
                            </children>
                         </AnchorPane>
-                        <ScrollPane fx:id="scroll_subjects" layoutY="159.0" maxWidth="1.7976931348623157E308" prefHeight="380.0" prefWidth="692.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="104.0" />
+                        <ScrollPane fx:id="scroll_subjects" layoutY="159.0" maxWidth="1.7976931348623157E308" prefHeight="380.0" prefWidth="692.0" styleClass="table" stylesheets="@views/view.css" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="104.0" />
                         <JFXButton fx:id="btnEvaluate" layoutX="388.0" layoutY="488.0" prefHeight="19.0" prefWidth="128.0" style="-fx-background-color: #27AE60; -fx-text-fill: #FFFFFF;" text="Evaluate" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <font>
                               <Font size="16.0" />
@@ -416,7 +416,7 @@
       </AnchorPane>
       <AnchorPane layoutX="97.0" layoutY="24.0" prefHeight="67.0" prefWidth="1024.0" style="-fx-background-color: #2B89E0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" style="-fx-text-fill: #FFFFFF;" text="Evaluation System" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" style="-fx-text-fill: #FFFFFF;" text="Evaluation" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font name="System Bold" size="31.0" />
                </font>

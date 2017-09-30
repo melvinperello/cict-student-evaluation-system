@@ -124,12 +124,26 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1501 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1516 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~0 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~15 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
-	(1501, 1, '2017-09-30 00:43:37', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(1501, 1, '2017-09-30 00:43:37', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1502, 1, '2017-09-30 12:52:23', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1503, 1, '2017-09-30 12:55:35', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1504, 1, '2017-09-30 13:05:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1505, 1, '2017-09-30 13:30:50', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1506, 1, '2017-09-30 13:41:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1507, 1, '2017-09-30 13:44:03', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1508, 1, '2017-09-30 13:54:56', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1509, 1, '2017-09-30 13:56:43', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1510, 1, '2017-09-30 13:59:40', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1511, 1, '2017-09-30 14:01:45', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1512, 1, '2017-09-30 14:04:09', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1513, 1, '2017-09-30 14:12:02', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1514, 1, '2017-09-30 14:17:28', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1515, 1, '2017-09-30 14:20:59', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -148,12 +162,10 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1347 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1362 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Dumping data for table cictems.account_faculty_session: ~0 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
-INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
-	(1347, 1, '2017-09-30 00:43:37', '2017-09-30 00:45:07', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -919,10 +931,8 @@ CREATE TABLE IF NOT EXISTS `evaluation` (
   CONSTRAINT `evaluation_fk_self` FOREIGN KEY (`adding_reference_id`) REFERENCES `evaluation` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='has a duplication of student_id in the load_subjects';
 
--- Dumping data for table cictems.evaluation: ~1 rows (approximately)
+-- Dumping data for table cictems.evaluation: ~0 rows (approximately)
 /*!40000 ALTER TABLE `evaluation` DISABLE KEYS */;
-INSERT INTO `evaluation` (`id`, `STUDENT_id`, `ACADTERM_id`, `FACULTY_id`, `adding_reference_id`, `evaluation_date`, `year_level`, `type`, `remarks`, `cancelled_by`, `cancelled_date`, `active`) VALUES
-	(4, 57, 11, 1, NULL, '2017-09-25 21:04:56', 4, 'REGULAR', 'ACCEPTED', NULL, NULL, 1);
 /*!40000 ALTER TABLE `evaluation` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.faculty
@@ -936,6 +946,7 @@ CREATE TABLE IF NOT EXISTS `faculty` (
   `gender` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `rank` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `designation` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `department` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `transaction_pin` varchar(6) COLLATE utf8_unicode_ci DEFAULT '123456',
   `active` int(1) DEFAULT '1',
   PRIMARY KEY (`id`)
@@ -943,11 +954,11 @@ CREATE TABLE IF NOT EXISTS `faculty` (
 
 -- Dumping data for table cictems.faculty: ~4 rows (approximately)
 /*!40000 ALTER TABLE `faculty` DISABLE KEYS */;
-INSERT INTO `faculty` (`id`, `bulsu_id`, `last_name`, `first_name`, `middle_name`, `name_extension`, `gender`, `rank`, `designation`, `transaction_pin`, `active`) VALUES
-	(1, '2017-A', 'PERELLO', 'JHON MELVIN', 'NIETO', NULL, 'MALE', 'INSTRUCTOR', 'FACULTY', '123456', 1),
-	(2, '2017-e', 'SAMSON', 'EVELYN', NULL, NULL, 'FEMALE', 'ASSOCIATE PROFESSOR III', 'LOCAL REGISTRAR', '123456', 1),
-	(3, '2017-B', 'DE LA CRUZ', 'JOEMAR', 'NUCOM', NULL, 'MALE', 'INSTRUCTOR', 'FACULTY', '123456', 1),
-	(4, '2017-C', 'CALIZON', 'JOHN MICHAEL', 'EWAN', NULL, 'MALE', 'INSTRUCTOR', 'FACULTY', '123456', 1);
+INSERT INTO `faculty` (`id`, `bulsu_id`, `last_name`, `first_name`, `middle_name`, `name_extension`, `gender`, `rank`, `designation`, `department`, `transaction_pin`, `active`) VALUES
+	(1, '2017-A', 'PERELLO', 'JHON MELVIN', 'NIETO', NULL, 'MALE', 'INSTRUCTOR', 'FACULTY', NULL, '123456', 1),
+	(2, '2017-e', 'SAMSON', 'EVELYN', NULL, NULL, 'FEMALE', 'ASSOCIATE PROFESSOR III', 'LOCAL REGISTRAR', NULL, '123456', 1),
+	(3, '2017-B', 'DE LA CRUZ', 'JOEMAR', 'NUCOM', NULL, 'MALE', 'INSTRUCTOR', 'FACULTY', NULL, '123456', 1),
+	(4, '2017-C', 'CALIZON', 'JOHN MICHAEL', 'EWAN', NULL, 'MALE', 'INSTRUCTOR', 'FACULTY', NULL, '123456', 1);
 /*!40000 ALTER TABLE `faculty` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.faculty_profile
@@ -1044,15 +1055,8 @@ CREATE TABLE IF NOT EXISTS `grade` (
   CONSTRAINT `grade_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
 
--- Dumping data for table cictems.grade: ~6 rows (approximately)
+-- Dumping data for table cictems.grade: ~0 rows (approximately)
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
-INSERT INTO `grade` (`id`, `STUDENT_id`, `SUBJECT_id`, `ACADTERM_id`, `rating`, `remarks`, `credit`, `credit_method`, `created_by`, `created_date`, `posted`, `posted_by`, `posting_date`, `inc_expire`, `updated_by`, `updated_date`, `reason_for_update`, `active`) VALUES
-	(35, 57, 288, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-09-25 21:04:56', 0, NULL, NULL, NULL, NULL, NULL, '', 1),
-	(36, 57, 290, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-09-25 21:04:56', 0, NULL, NULL, NULL, NULL, NULL, '', 1),
-	(37, 57, 291, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-09-25 21:04:56', 0, NULL, NULL, NULL, NULL, NULL, '', 1),
-	(38, 57, 287, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-09-25 21:04:56', 0, NULL, NULL, NULL, NULL, NULL, '', 1),
-	(39, 57, 289, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-09-25 21:04:56', 0, NULL, NULL, NULL, NULL, NULL, '', 1),
-	(40, 57, 292, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-09-25 21:04:56', 0, NULL, NULL, NULL, NULL, NULL, '', 1);
 /*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_entrance
@@ -1090,7 +1094,7 @@ CREATE TABLE IF NOT EXISTS `linked_marshall_session` (
   CONSTRAINT `marshall_session_fk_from_student_cict_id` FOREIGN KEY (`cict_id`) REFERENCES `student` (`cict_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_marshall_session: ~1 rows (approximately)
+-- Dumping data for table cictems.linked_marshall_session: ~0 rows (approximately)
 /*!40000 ALTER TABLE `linked_marshall_session` DISABLE KEYS */;
 INSERT INTO `linked_marshall_session` (`ses_id`, `cict_id`, `account_id`, `name`, `org`, `imei`, `session_start`, `session_end`, `status`, `active`) VALUES
 	(21, 59, 24, 'MERCADO JELYN CARLOS', 'NONE', '867542024313101', '2017-09-13 23:11:29', NULL, 'ONLINE', 1);
@@ -1171,7 +1175,7 @@ CREATE TABLE IF NOT EXISTS `linked_settings` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_settings: ~1 rows (approximately)
+-- Dumping data for table cictems.linked_settings: ~0 rows (approximately)
 /*!40000 ALTER TABLE `linked_settings` DISABLE KEYS */;
 INSERT INTO `linked_settings` (`id`, `floor_3_max`, `floor_4_max`, `floor_3_name`, `floor_4_name`, `floor_3_last`, `floor_4_last`, `floor_3_cut`, `floor_4_cut`, `created_by`, `created_date`, `active`) VALUES
 	(1, 1000, 1000, '3FLR/IT8', '4FLR/CT6', 25, 0, 0, 1, 1, '2017-09-10 08:25:36', 1);
@@ -1222,31 +1226,10 @@ CREATE TABLE IF NOT EXISTS `load_group` (
   KEY `load_group_fk_from_load_section_id` (`LOADSEC_id`),
   CONSTRAINT `load_group_fk_from_load_section_id` FOREIGN KEY (`LOADSEC_id`) REFERENCES `load_section` (`id`),
   CONSTRAINT `load_group_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24098 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all the subjects in that section';
+) ENGINE=InnoDB AUTO_INCREMENT=27426 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all the subjects in that section';
 
 -- Dumping data for table cictems.load_group: ~0 rows (approximately)
 /*!40000 ALTER TABLE `load_group` DISABLE KEYS */;
-INSERT INTO `load_group` (`id`, `SUBJECT_id`, `LOADSEC_id`, `faculty`, `group_type`, `added_date`, `added_by`, `removed_date`, `removed_by`, `active`) VALUES
-	(24098, 110, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24099, 111, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24100, 112, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24101, 113, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24102, 114, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24103, 115, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24104, 116, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24105, 117, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24106, 118, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24107, 119, 3622, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24108, 110, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24109, 111, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24110, 112, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24111, 113, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24112, 114, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24113, 115, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24114, 116, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24115, 117, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24116, 118, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1),
-	(24117, 119, 3623, NULL, 'REGULAR', '2017-09-30 00:43:47', 1, NULL, NULL, 1);
 /*!40000 ALTER TABLE `load_group` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.load_group_schedule
@@ -1265,13 +1248,10 @@ CREATE TABLE IF NOT EXISTS `load_group_schedule` (
   PRIMARY KEY (`id`),
   KEY `schedule_group_fk` (`load_group_id`),
   CONSTRAINT `schedule_group_fk` FOREIGN KEY (`load_group_id`) REFERENCES `load_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Dumping data for table cictems.load_group_schedule: ~0 rows (approximately)
 /*!40000 ALTER TABLE `load_group_schedule` DISABLE KEYS */;
-INSERT INTO `load_group_schedule` (`id`, `load_group_id`, `class_day`, `class_start`, `class_end`, `class_room`, `created_date`, `created_by`, `updated_date`, `updated_by`, `active`) VALUES
-	(48, 24098, 'MONDAY', '07:00', '08:00', '', '2017-09-30 00:43:54', 1, NULL, NULL, 1),
-	(49, 24098, 'SUNDAY', '15:00', '16:00', '', '2017-09-30 00:44:05', 1, NULL, NULL, 1);
 /*!40000 ALTER TABLE `load_group_schedule` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.load_section
@@ -1305,13 +1285,10 @@ CREATE TABLE IF NOT EXISTS `load_section` (
   CONSTRAINT `section_fk_from_academic_program_id` FOREIGN KEY (`ACADPROG_id`) REFERENCES `academic_program` (`id`),
   CONSTRAINT `section_fk_from_academic_term_id` FOREIGN KEY (`ACADTERM_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `section_fk_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3622 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all the sections';
+) ENGINE=InnoDB AUTO_INCREMENT=4038 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all the sections';
 
 -- Dumping data for table cictems.load_section: ~0 rows (approximately)
 /*!40000 ALTER TABLE `load_section` DISABLE KEYS */;
-INSERT INTO `load_section` (`id`, `ACADTERM_id`, `ACADPROG_id`, `CURRICULUM_id`, `section_name`, `section_description`, `year_level`, `_group`, `type`, `college`, `created_date`, `created_by`, `updated_date`, `updated_by`, `adviser`, `active`) VALUES
-	(3622, 11, 5, 7, 'A', NULL, 1, 1, 'REGULAR', 'CICT', '2017-09-30 00:43:47', 1, NULL, NULL, NULL, 1),
-	(3623, 11, 5, 7, 'A', NULL, 1, 2, 'REGULAR', 'CICT', '2017-09-30 00:43:47', 1, NULL, NULL, NULL, 1);
 /*!40000 ALTER TABLE `load_section` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.load_subject
