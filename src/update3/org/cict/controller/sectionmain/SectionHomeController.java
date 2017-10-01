@@ -160,8 +160,7 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
      * Back To Main Menu
      */
     private void onBackToHome() {
-        super.finish();
-        Home.callHome();
+        Home.callHome(this);
     }
 
     /**

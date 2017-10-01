@@ -122,8 +122,8 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
     @Override
     public void onEventHandling() {
         this.addClickEvent(btn_home, () -> {
-            finish();
-            Home.callHome();
+//            finish();
+            Home.callHome(this);
         });
         this.addClickEvent(btnNewProgram, () -> {
             this.showAddNewProgram();

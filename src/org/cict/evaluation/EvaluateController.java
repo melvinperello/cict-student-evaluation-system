@@ -322,12 +322,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         /**
          * Home Redirect
          */
-        btn_home.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            Mono.fx().getParentStage(btn_home).close();
-            onBackToHome();
+        super.addClickEvent(btn_home, () -> {
+           Home.callHome(this);
         });
 
-        this.addClickEvent(btn_checklist, () -> {
+        super.addClickEvent(btn_checklist, () -> {
             printChecklist();
         });
     }
@@ -358,13 +357,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             System.out.println("FAILED");
         });
         printCheckList.transact();
-    }
-
-    /**
-     * Back to Main Menu.
-     */
-    private void onBackToHome() {
-        Home.callHome();
     }
 
     private void hideDropDownEvents() {

@@ -60,7 +60,16 @@ public class ThreadMill {
      * Add All thread entries here.
      */
     public void shutdown() {
+        /**
+         * Make this thread instance null.
+         */
+        THREAD_INSTANCE = null;
+
+        /**
+         * Destroy Keep Alive Thread.
+         */
         KEEP_ALIVE_THREAD.pause();
         KEEP_ALIVE_THREAD.stop();
+        KEEP_ALIVE_THREAD = null;
     }
 }

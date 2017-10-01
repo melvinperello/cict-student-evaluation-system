@@ -29,6 +29,7 @@ import javafx.application.Platform;
 import org.cict.GenericLoadingShow;
 
 /**
+ * Boots the hibernate framework.
  *
  * @author Jhon Melvin
  */

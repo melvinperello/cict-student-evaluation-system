@@ -115,11 +115,11 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 
     @FXML
     private AnchorPane anchor_new_faculty;
-    
+
     public FacultyMainController() {
-        
+
     }
-    
+
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
@@ -127,28 +127,28 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         this.cmb_sort.getItems().add("Active");
         this.cmb_sort.getItems().add("Inactive");
         this.cmb_sort.getSelectionModel().selectFirst();
-        
+
         ToggleGroup group2 = new ToggleGroup();
         rbtn_male_new.setToggleGroup(group2);
         rbtn_female_new.setToggleGroup(group2);
     }
-    
+
     @Override
     public void onEventHandling() {
         super.addClickEvent(btn_home, () -> {
             this.onBackToHome();
         });
-        
+
         this.cmb_sort.valueProperty().addListener((observable) -> {
             refreshInfo = true;
-            if(cmb_sort.getSelectionModel().getSelectedIndex() == 1) {
+            if (cmb_sort.getSelectionModel().getSelectedIndex() == 1) {
                 createFacultyTable(deactivatedFaculty);
             } else {
                 createFacultyTable(activeFaculty);
             }
         });
-        
-        this.addClickEvent(btn_new_faculty, ()->{
+
+        this.addClickEvent(btn_new_faculty, () -> {
             txt_bulsu_id.setText("");
             txt_designation_new.setText("");
             txt_firstname.setText("");
@@ -157,61 +157,63 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             txt_rank_new.setText("");
             anchor_new_faculty.setVisible(true);
         });
-        
-        this.addClickEvent(btn_save_new, ()->{
+
+        this.addClickEvent(btn_save_new, () -> {
             addNewFaculty();
         });
-        
-        this.addClickEvent(btn_back_new, ()->{
+
+        this.addClickEvent(btn_back_new, () -> {
             anchor_new_faculty.setVisible(false);
         });
     }
-    
+
     private void onBackToHome() {
-        super.finish();
-        Home.callHome();
+        Home.callHome(this);
     }
-     
+
     private ArrayList<FacultyInformation> activeFaculty = new ArrayList<>();
     private ArrayList<FacultyInformation> deactivatedFaculty = new ArrayList<>();
+
     public void fetchFaculty() {
         FetchFacultyInfo ffInfo = new FetchFacultyInfo();
-        ffInfo.setOnSuccess(onSuccess->{
+        ffInfo.setOnSuccess(onSuccess -> {
             activeFaculty = ffInfo.getAllFaculty();
             deactivatedFaculty = ffInfo.getDeactivatedFaculty();
             this.createFacultyTable(activeFaculty);
         });
-        ffInfo.setOnFailure(onFailure->{
+        ffInfo.setOnFailure(onFailure -> {
             System.out.println("FAILED");
         });
         ffInfo.transact();
     }
-    
+
     private final static String KEY_MORE_INFO = "MORE_INFO";
     private SimpleTable tableFaculty = new SimpleTable();
+
     private void createFacultyTable(ArrayList<FacultyInformation> facultyToDisplay) {
         try {
             tableFaculty.getChildren().clear();
-            if(facultyToDisplay.isEmpty()) {
+            if (facultyToDisplay.isEmpty()) {
                 System.out.println("EMPTY");
                 return;
             }
-            for (FacultyInformation currentFacultyInfo: facultyToDisplay) {
+            for (FacultyInformation currentFacultyInfo : facultyToDisplay) {
                 createRow(currentFacultyInfo, tableFaculty);
             }
-            
+
             SimpleTableView simpleTableView = new SimpleTableView();
             simpleTableView.setTable(tableFaculty);
             simpleTableView.setFixedWidth(true);
             simpleTableView.setParentOnScene(vbox_list);
         } catch (NullPointerException a) {
-            
+
         }
     }
-      
+
     private boolean refreshInfo = true;
+
     private void createRow(FacultyInformation currentFacultyInfo, SimpleTable table) {
-        
+
         FacultyMapping faculty = currentFacultyInfo.getFacultyMapping();
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(50.0);
@@ -226,51 +228,51 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         Label lbl_name = searchAccessibilityText(facultyRow, "name");
         lbl_id.setText(faculty.getBulsu_id().toUpperCase());
         lbl_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name() + " " + faculty.getLast_name()));
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(facultyRow);
 
         row.addCell(cellParent);
-         
-        if(refreshInfo) {
-            createInfo(currentFacultyInfo,lbl_id, lbl_name, row);
+
+        if (refreshInfo) {
+            createInfo(currentFacultyInfo, lbl_id, lbl_name, row);
             refreshInfo = false;
         }
-            
+
         row.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            createInfo(currentFacultyInfo,lbl_id, lbl_name, row);
+            createInfo(currentFacultyInfo, lbl_id, lbl_name, row);
             anchor_new_faculty.setVisible(false);
         });
         row.getRowMetaData().put(KEY_MORE_INFO, faculty);
         table.addRow(row);
     }
-    
+
     private Date DATE_TODAY = Mono.orm().getServerTime().getDateWithFormat();
-    private void createInfo(FacultyInformation currentFacultyInfo, Label lbl_bulsu_id
-            , Label lbl_full_name
-            , SimpleTableRow rowFaculty) {
-        
+
+    private void createInfo(FacultyInformation currentFacultyInfo, Label lbl_bulsu_id,
+             Label lbl_full_name,
+             SimpleTableRow rowFaculty) {
+
         AnchorPane infoRow = (AnchorPane) Mono.fx().create()
                 .setPackageName("org.cict.accountmanager.faculty")
                 .setFxmlDocument("info")
                 .makeFX()
                 .pullOutLayout();
-        
+
         FacultyMapping faculty = currentFacultyInfo.getFacultyMapping();
         SimpleTable tableInfo = new SimpleTable();
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(770.0);
 
         AccountFacultyMapping afMap = currentFacultyInfo.getAccountFacultyMapping();
-       
+
         /**
          * ANCHOR
          */
         AnchorPane anchor_basic = searchAccessibilityText(infoRow, "anchor_basic");
         AnchorPane anchor_account = searchAccessibilityText(infoRow, "anchor_account");
-        
-        
+
         /**
          * WINDOW 1 - INFORMATIONS
          */
@@ -281,49 +283,47 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         Label lbl_designation = searchAccessibilityText(infoRow, "designation");
         Label lbl_initial_letter = searchAccessibilityText(infoRow, "initial_letter");
         VBox bg = searchAccessibilityText(infoRow, "bg");
-        
+
         JFXButton btn_basic = searchAccessibilityText(infoRow, "btn_basic");
-        this.addClickEvent(btn_basic, ()->{
+        this.addClickEvent(btn_basic, () -> {
             anchor_basic.setVisible(true);
         });
-       
+
         this.setBasicInfo(lbl_id, lbl_name, lbl_gender, lbl_rank, lbl_designation, lbl_initial_letter, bg, faculty);
-        
+
         Label lbl_username = searchAccessibilityText(infoRow, "username");
         Label lbl_access_level = searchAccessibilityText(infoRow, "access_level");
-        
+
         //DISABLE
 //        Label lbl_since = searchAccessibilityText(infoRow, "since");
 //        JFXCheckBox chkbx_disable = searchAccessibilityText(infoRow, "chkbx_disable");
 //        VBox vbox_disable = searchAccessibilityText(infoRow, "vbox_disable");
-        
         //BLOCK
         Label lbl_until = searchAccessibilityText(infoRow, "until");
         JFXCheckBox chkbx_block = searchAccessibilityText(infoRow, "chkbx_block");
-        
-        
-        if(afMap != null) {
+
+        if (afMap != null) {
             lbl_username.setText(WordUtils.capitalizeFully(afMap.getUsername()));
             lbl_access_level.setText(WordUtils.capitalizeFully(afMap.getAccess_level()));
-            
-            if(afMap.getBlocked_until() != null) {
-                if(Mono.orm().getServerTime().isPastServerTime(afMap.getBlocked_until())) {
+
+            if (afMap.getBlocked_until() != null) {
+                if (Mono.orm().getServerTime().isPastServerTime(afMap.getBlocked_until())) {
                     lbl_until.setText("ACTIVE");
                     chkbx_block.setVisible(false);
                 } else {
-                    lbl_until.setText("BLOCKED until "+afMap.getBlocked_until()+"");
+                    lbl_until.setText("BLOCKED until " + afMap.getBlocked_until() + "");
                     chkbx_block.setVisible(true);
                 }
             } else {
                 lbl_until.setText("ACTIVE");
                 chkbx_block.setVisible(false);
             }
-            chkbx_block.selectedProperty().addListener((a)->{
-                if(chkbx_block.isSelected()) {
+            chkbx_block.selectedProperty().addListener((a) -> {
+                if (chkbx_block.isSelected()) {
                     System.out.println("HEY");
                     afMap.setBlocked_until(null);
                     System.out.println("PASSED");
-                    if(Database.connect().account_faculty().update(afMap)) {
+                    if (Database.connect().account_faculty().update(afMap)) {
                         Notifications.create().darkStyle()
                                 .title("Unblocked Successfully")
                                 .text("Account: " + afMap.getUsername().toUpperCase())
@@ -331,9 +331,9 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                         lbl_until.setText("ACTIVE");
                         chkbx_block.setVisible(false);
                     }
-                } 
+                }
             });
-        
+
 //            if(afMap.getDisabled_since() != null) {
 //                chkbx_disable.selectedProperty().set(true);
 //                lbl_since.setText(afMap.getDisabled_since()+"");
@@ -365,7 +365,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             chkbx_block.setDisable(true);
 //            chkbx_disable.setDisable(true);
         }
-        
+
         /**
          * WINDOW 2 - UPDATE BASIC INFORMATION
          */
@@ -381,24 +381,24 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         JFXButton btn_back = searchAccessibilityText(infoRow, "back");
         JFXButton btn_remove = searchAccessibilityText(infoRow, "btn_remove");
         JFXButton btn_restore = searchAccessibilityText(infoRow, "btn_restore");
-        
+
         ToggleGroup group = new ToggleGroup();
         rbtn_male.setToggleGroup(group);
         rbtn_female.setToggleGroup(group);
-        
+
         this.setValues(txt_id, txt_lastname_info, txt_firstname_info, txt_middlename_info, rbtn_male, rbtn_female, txt_rank, txt_designation, faculty);
-        
-        if(faculty.getActive() == 0) {
+
+        if (faculty.getActive() == 0) {
             btn_remove.setVisible(false);
             btn_restore.setVisible(true);
         } else {
             btn_remove.setVisible(true);
             btn_restore.setVisible(false);
         }
-        
-        this.addClickEvent(btn_remove, ()->{
+
+        this.addClickEvent(btn_remove, () -> {
             faculty.setActive(0);
-            if(Database.connect().faculty().update(faculty)) {
+            if (Database.connect().faculty().update(faculty)) {
                 Notifications.create().darkStyle()
                         .title("Removed Successfully")
                         .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
@@ -410,10 +410,10 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 deactivatedFaculty.add(currentFacultyInfo);
             }
         });
-        
-        this.addClickEvent(btn_restore, ()->{
+
+        this.addClickEvent(btn_restore, () -> {
             faculty.setActive(1);
-            if(Database.connect().faculty().update(faculty)) {
+            if (Database.connect().faculty().update(faculty)) {
                 Notifications.create().darkStyle()
                         .title("Restored Successfully")
                         .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
@@ -425,20 +425,16 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 deactivatedFaculty.remove(currentFacultyInfo);
             }
         });
-        
-        this.addClickEvent(btn_save_changes, ()->{
+
+        this.addClickEvent(btn_save_changes, () -> {
             String gender = "";
-            if(rbtn_male.isSelected())
+            if (rbtn_male.isSelected()) {
                 gender = "MALE";
-            else if(rbtn_female.isSelected())
+            } else if (rbtn_female.isSelected()) {
                 gender = "FEMALE";
-            String bulsu_id = ""
-                    , lastname = ""
-                    , firstname = ""
-                    , middlename = ""
-                    , rank = ""
-                    , designation = "";
-            
+            }
+            String bulsu_id = "", lastname = "", firstname = "", middlename = "", rank = "", designation = "";
+
             try {
                 bulsu_id = MonoString.removeExtraSpace(txt_id.getText().toUpperCase());
                 lastname = MonoString.removeExtraSpace(txt_lastname_info.getText().toUpperCase());
@@ -447,30 +443,33 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 showWarning("Incomplete Data", "Please fill the required fields*.");
                 return;
             }
-            
-            if(bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
+
+            if (bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
                 showWarning("Incomplete Data", "Please fill the required fields*.");
                 return;
             }
             ArrayList<FacultyMapping> exist = Mono.orm().newSearch(Database.connect().faculty())
                     .eq(DB.faculty().bulsu_id, bulsu_id)
                     .execute().all();
-            if(exist != null) {
-                for(FacultyMapping eachExist: exist) {
-                    if(!Objects.equals(eachExist.getId(), faculty.getId())) {
+            if (exist != null) {
+                for (FacultyMapping eachExist : exist) {
+                    if (!Objects.equals(eachExist.getId(), faculty.getId())) {
                         showWarning("BulSU ID Exist", "A faculty is already using\n"
-                                        + "this BulSU ID.");
+                                + "this BulSU ID.");
                         return;
                     }
                 }
             }
-            
-            if(MonoString.removeExtraSpace(txt_middlename_info.getText().toUpperCase()) != null)
+
+            if (MonoString.removeExtraSpace(txt_middlename_info.getText().toUpperCase()) != null) {
                 middlename = MonoString.removeExtraSpace(txt_middlename_info.getText().toUpperCase());
-            if(MonoString.removeExtraSpace(txt_rank.getText().toUpperCase()) != null)
+            }
+            if (MonoString.removeExtraSpace(txt_rank.getText().toUpperCase()) != null) {
                 rank = MonoString.removeExtraSpace(txt_rank.getText().toUpperCase());
-            if(MonoString.removeExtraSpace(txt_designation.getText().toUpperCase()) != null)
+            }
+            if (MonoString.removeExtraSpace(txt_designation.getText().toUpperCase()) != null) {
                 designation = MonoString.removeExtraSpace(txt_designation.getText().toUpperCase());
+            }
             faculty.setBulsu_id(bulsu_id);
             faculty.setLast_name(lastname);
             faculty.setFirst_name(firstname);
@@ -478,23 +477,23 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             faculty.setRank(rank);
             faculty.setDesignation(designation);
             faculty.setGender(gender);
-            if(Database.connect().faculty().update(faculty)) {
+            if (Database.connect().faculty().update(faculty)) {
                 Notifications.create().darkStyle()
                         .title("Updated Successfully")
                         .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
                         .showInformation();
             }
             lbl_bulsu_id.setText(faculty.getBulsu_id());
-            lbl_full_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name()+ " " + faculty.getLast_name()));
+            lbl_full_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name() + " " + faculty.getLast_name()));
             this.setValues(txt_id, txt_lastname_info, txt_firstname_info, txt_middlename_info, rbtn_male, rbtn_female, txt_rank, txt_designation, faculty);
-        
+
         });
-        
-        this.addClickEvent(btn_back, ()->{
+
+        this.addClickEvent(btn_back, () -> {
             this.setBasicInfo(lbl_id, lbl_name, lbl_gender, lbl_rank, lbl_designation, lbl_initial_letter, bg, faculty);
             anchor_basic.setVisible(false);
         });
-        
+
         /**
          * WINDOW 3 - UPDATE ACCOUNT
          */
@@ -512,11 +511,11 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         PasswordField txt_confirm_ans = searchAccessibilityText(infoRow, "txt_confirm_ans");
         this.setComboBoxQuestions(cmb_new_q);
         this.setAccessLevels(cmb_access_level);
-        
+
         JFXButton btn_account = searchAccessibilityText(infoRow, "btn_account");
         JFXButton btn_back2 = searchAccessibilityText(infoRow, "btn_back2");
-        this.addClickEvent(btn_account, ()->{
-            if(afMap == null) {
+        this.addClickEvent(btn_account, () -> {
+            if (afMap == null) {
                 Notifications.create().darkStyle()
                         .title("No Account Found")
                         .text("You can create one by only\n"
@@ -528,23 +527,22 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             txt_username.setText(afMap.getUsername().toUpperCase());
             cmb_access_level.getSelectionModel().select(afMap.getAccess_level());
             String ques = afMap.getRecovery_question();
-            if(ques != null)
+            if (ques != null) {
                 lbl_old_q.setText(ques);
-            
+            }
+
         });
-        this.addClickEvent(btn_back2, ()->{
+        this.addClickEvent(btn_back2, () -> {
             anchor_account.setVisible(false);
         });
-        
-        if(afMap != null){
-            this.addClickEvent(btn_submit, ()->{
-                String username = MonoString.removeSpaces(txt_username.getText().toUpperCase())
-                        , entered_new_pass = txt_new_pass.getText()
-                        , new_pass = null;
+
+        if (afMap != null) {
+            this.addClickEvent(btn_submit, () -> {
+                String username = MonoString.removeSpaces(txt_username.getText().toUpperCase()), entered_new_pass = txt_new_pass.getText(), new_pass = null;
                 boolean okToSave = false;
-                if(!username.isEmpty()) {
+                if (!username.isEmpty()) {
                     okToSave = checkExist(username, afMap);
-                    if(!okToSave) {
+                    if (!okToSave) {
                         return;
                     }
                 } else {
@@ -552,46 +550,45 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                     return;
                 }
 
-                if(!entered_new_pass.isEmpty()) {
+                if (!entered_new_pass.isEmpty()) {
                     okToSave = validateNewPass(afMap, txt_confirm_new, entered_new_pass, txt_old_pass);
-                    if(okToSave)
+                    if (okToSave) {
                         new_pass = Mono.security().hashFactory().hash_sha512(entered_new_pass);
-                    else
+                    } else {
                         return;
+                    }
                 }
 
-                String entered_old_ans = null
-                        , ques = null, ans =  null
-                        , entered_new_ans = MonoString.removeExtraSpace(txt_new_ans.getText().toUpperCase());
-                if(!entered_new_ans.isEmpty()) {
+                String entered_old_ans = null, ques = null, ans = null, entered_new_ans = MonoString.removeExtraSpace(txt_new_ans.getText().toUpperCase());
+                if (!entered_new_ans.isEmpty()) {
                     entered_old_ans = Mono.security().hashFactory().hash_sha512(entered_old_ans);
                     okToSave = validateNewRecovery(afMap, entered_old_ans, txt_new_ans, txt_confirm_ans);
-                    if(okToSave) {
+                    if (okToSave) {
                         ques = cmb_new_q.getSelectionModel().getSelectedItem().toString().toUpperCase();
                         ans = Mono.security().hashFactory().hash_sha512(MonoString.removeExtraSpace(txt_new_ans.getText()));
                     } else {
                         return;
                     }
                 }
-                
+
                 okToSave = confirmCurrentPassword(txt_update_pass, afMap);
-                if(!okToSave) {
+                if (!okToSave) {
                     Notifications.create().darkStyle()
                             .title("Updated Failed: Wrong Password")
                             .text("Please provide your password to save changes.")
                             .showError();
                     return;
                 }
-                
-                if(okToSave) {
-                    if(!username.isEmpty()) {
+
+                if (okToSave) {
+                    if (!username.isEmpty()) {
                         afMap.setUsername(username);
                     }
                     afMap.setAccess_level(MonoString.removeExtraSpace(cmb_access_level.getSelectionModel().getSelectedItem().toString().toUpperCase()));
-                    if(new_pass != null) {
+                    if (new_pass != null) {
                         afMap.setPassword(new_pass);
                     }
-                    if(ques != null) {
+                    if (ques != null) {
                         afMap.setRecovery_answer(ans);
                         afMap.setRecovery_question(ques);
                         lbl_old_q.setText(ques);
@@ -602,7 +599,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                     }
                 }
 
-                if(Database.connect().account_faculty().update(afMap)) {
+                if (Database.connect().account_faculty().update(afMap)) {
                     Notifications.create().darkStyle()
                             .title("Updated Successfully")
                             .text("Account: " + afMap.getUsername().toUpperCase())
@@ -619,51 +616,50 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 }
             });
         }
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(infoRow);
 
         row.addCell(cellParent);
         tableInfo.addRow(row);
-        
+
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(tableInfo);
         simpleTableView.setFixedWidth(true);
         simpleTableView.setParentOnScene(vbox_info);
     }
-    
+
     private void addNewFaculty() {
         String gender = "";
-        if(rbtn_male_new.isSelected())
+        if (rbtn_male_new.isSelected()) {
             gender = "MALE";
-        else if(rbtn_female_new.isSelected())
-                gender = "FEMALE";
-        
-        String bulsu_id = MonoString.removeExtraSpace(txt_bulsu_id.getText().toUpperCase())
-                , lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase())
-                , firstname = MonoString.removeExtraSpace(txt_firstname.getText().toUpperCase())
-                , middlename = MonoString.removeExtraSpace(txt_middlename.getText().toUpperCase())
-                , rank = MonoString.removeExtraSpace(txt_rank_new.getText().toUpperCase())
-                , designation = MonoString.removeExtraSpace(txt_designation_new.getText().toUpperCase());
+        } else if (rbtn_female_new.isSelected()) {
+            gender = "FEMALE";
+        }
 
-        if(bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
+        String bulsu_id = MonoString.removeExtraSpace(txt_bulsu_id.getText().toUpperCase()), lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase()), firstname = MonoString.removeExtraSpace(txt_firstname.getText().toUpperCase()), middlename = MonoString.removeExtraSpace(txt_middlename.getText().toUpperCase()), rank = MonoString.removeExtraSpace(txt_rank_new.getText().toUpperCase()), designation = MonoString.removeExtraSpace(txt_designation_new.getText().toUpperCase());
+
+        if (bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
             showWarning("Incomplete Data", "Please fill the required fields*.");
             return;
         }
-        if(middlename == null)
+        if (middlename == null) {
             middlename = "";
-        if(rank == null)
+        }
+        if (rank == null) {
             rank = "";
-        if(designation == null)
+        }
+        if (designation == null) {
             designation = "";
+        }
 
         ArrayList<FacultyMapping> exist = Mono.orm().newSearch(Database.connect().faculty())
                 .eq(DB.faculty().bulsu_id, bulsu_id)
                 .execute().all();
-        if(exist != null) {
+        if (exist != null) {
             showWarning("BulSU ID Exist", "A faculty is already using\n"
-                            + "this BulSU ID.");
+                    + "this BulSU ID.");
             return;
         }
         FacultyMapping new_faculty = new FacultyMapping();
@@ -675,7 +671,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         new_faculty.setDesignation(designation);
         new_faculty.setGender(gender);
         int id = Database.connect().faculty().insert(new_faculty);
-        if(id != -1) {
+        if (id != -1) {
             Notifications.create().darkStyle()
                     .title("Added Successfully")
                     .text("Faculty: " + new_faculty.getBulsu_id().toUpperCase())
@@ -688,27 +684,27 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             createRow(fInfo, tableFaculty);
         }
     }
-    
+
     private void showWarning(String title, String text) {
         Notifications.create().darkStyle()
                 .title(title)
                 .text(text)
                 .showWarning();
     }
-    
+
     private boolean confirmCurrentPassword(PasswordField txt_update_pass, AccountFacultyMapping afMap) {
         String entered_pass = Mono.security().hashFactory().hash_sha512(txt_update_pass.getText());
         return (afMap.getPassword() == null ? entered_pass == null : afMap.getPassword().equals(entered_pass));
     }
-    
+
     private boolean validateNewRecovery(AccountFacultyMapping afMap, String entered_old_ans, TextField txt_new_ans, TextField txt_confirm_ans) {
         boolean okToSave = false;
         String old_ans = afMap.getRecovery_answer();
-        
-        if(old_ans == null || old_ans.equals(entered_old_ans)) {
+
+        if (old_ans == null || old_ans.equals(entered_old_ans)) {
             String new_ans = MonoString.removeExtraSpace(txt_new_ans.getText().toUpperCase());
             String confirm_ans = MonoString.removeExtraSpace(txt_confirm_ans.getText().toUpperCase());
-            if(new_ans == null ? confirm_ans == null : new_ans.equals(confirm_ans)) {
+            if (new_ans == null ? confirm_ans == null : new_ans.equals(confirm_ans)) {
                 okToSave = true;
             } else {
                 showWarning("Change Recovery Information:", "New answer not matched to its confirmation.");
@@ -720,17 +716,17 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         }
         return okToSave;
     }
-    
+
     private boolean validateNewPass(AccountFacultyMapping afMap, TextField txt_confirm_new, String entered_new_pass, TextField txt_old_pass) {
         boolean okToSave = false;
         String old_pass = afMap.getPassword();
         String entered_old__pass = Mono.security().hashFactory().hash_sha512(txt_old_pass.getText());
-        if(entered_old__pass == null ? old_pass == null : entered_old__pass.equals(old_pass)) {
-            if(entered_new_pass.length() < 6) {
+        if (entered_old__pass == null ? old_pass == null : entered_old__pass.equals(old_pass)) {
+            if (entered_new_pass.length() < 6) {
                 showWarning("Change Password: Invalid Length", "Valid password length is at least six (6)\n"
-                                + "characters.");
+                        + "characters.");
                 System.out.println("LENGTH MUST BE AT LEAST 6");
-            } else if(txt_confirm_new.getText().equals(entered_new_pass)) {
+            } else if (txt_confirm_new.getText().equals(entered_new_pass)) {
                 okToSave = true;
             } else {
                 showWarning("Change Password: New Password Not Matched", "New password not matched to its confirmation.");
@@ -742,37 +738,37 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         }
         return okToSave;
     }
-    
+
     private boolean checkExist(String username, AccountFacultyMapping afMap) {
         boolean okToSave = false;
         ArrayList<AccountFacultyMapping> exist = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().username, username)
                 .execute().all();
-        if(exist != null) {
+        if (exist != null) {
             boolean reallyExist = false;
-            for(AccountFacultyMapping af: exist) {
-                if(!Objects.equals(af.getId(), afMap.getId())) {
+            for (AccountFacultyMapping af : exist) {
+                if (!Objects.equals(af.getId(), afMap.getId())) {
                     System.out.println("USERNAME EXIST");
                     showWarning("Username Exist", "Please provide a unique username or\n"
-                                    + " just use your old one.");
+                            + " just use your old one.");
                     reallyExist = true;
                     break;
                 }
             }
             okToSave = !reallyExist;
-        } else
+        } else {
             okToSave = true;
+        }
         return okToSave;
     }
-    
+
     private void setAccessLevels(ComboBox cmb_access_level) {
         cmb_access_level.getItems().add("NONE");
         cmb_access_level.getItems().add("EVALUATOR");
         cmb_access_level.getItems().add("ADMINISTRATOR");
     }
-    
-    
-    private void setComboBoxQuestions(ComboBox cmb_questions){
+
+    private void setComboBoxQuestions(ComboBox cmb_questions) {
         ArrayList<String> questions = new ArrayList<>();
         questions.add("What was your favorite place to visit as a child?");
         questions.add("Who is your favorite actor, musician, or artist?");
@@ -787,7 +783,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         cmb_questions.getItems().addAll(questions);
         cmb_questions.getSelectionModel().selectFirst();
     }
-    
+
     private void setBasicInfo(Label lbl_id,
             Label lbl_name,
             Label lbl_gender,
@@ -801,13 +797,14 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         lbl_gender.setText(WordUtils.capitalizeFully(faculty.getGender()));
         lbl_rank.setText(faculty.getRank().toUpperCase());
         lbl_designation.setText(WordUtils.capitalizeFully(faculty.getDesignation()));
-        lbl_initial_letter.setText(faculty.getFirst_name().toUpperCase().charAt(0)+"");
-        
-        if(faculty.getGender().equalsIgnoreCase("FEMALE"))
+        lbl_initial_letter.setText(faculty.getFirst_name().toUpperCase().charAt(0) + "");
+
+        if (faculty.getGender().equalsIgnoreCase("FEMALE")) {
             bg.setStyle(bg.getStyle() + " -fx-background-color: #D64651;");
-        
+        }
+
     }
-    
+
     private void setValues(TextField txt_id,
             TextField txt_lastname,
             TextField txt_firstname,
@@ -821,10 +818,11 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         txt_lastname.setText(faculty.getLast_name());
         txt_firstname.setText(faculty.getFirst_name());
         txt_middlename.setText(faculty.getMiddle_name());
-        if(faculty.getGender().equalsIgnoreCase("MALE"))
+        if (faculty.getGender().equalsIgnoreCase("MALE")) {
             rbtn_male.setSelected(true);
-        else if(faculty.getGender().equalsIgnoreCase("FEMALE"))
+        } else if (faculty.getGender().equalsIgnoreCase("FEMALE")) {
             rbtn_female.setSelected(true);
+        }
         txt_rank.setText(faculty.getRank());
         txt_designation.setText(faculty.getDesignation());
     }

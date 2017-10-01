@@ -119,12 +119,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private Integer newEvaluationID;
 
     private void logs(String str) {
-        if(true) 
+        if (true) {
             System.out.println("@AddingHome: " + str);
-    } 
-    
+        }
+    }
+
+    private AnchorPane application_root;
+
     @Override
     public void onInitialization() {
+        /**
+         * Just for the sake of uniformity every scene's root must be named
+         * application_root.
+         */
+        application_root = anchor_add_change;
+        super.bindScene(application_root);
+
         vbox_studentOptions.setVisible(false);
         anchor_preview.setVisible(false);
 
@@ -137,15 +147,13 @@ public class AddingHome extends SceneFX implements ControllerFX {
         });
 
         btn_home.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            Mono.fx().getParentStage(btn_home).close();
             onBackToHome();
         });
 
         btn_home1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            Mono.fx().getParentStage(btn_home).close();
             onBackToHome();
         });
-        
+
         btnSaveChanges.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
             onSaveChanges(); // -> save the adding to database.
         });
@@ -185,32 +193,30 @@ public class AddingHome extends SceneFX implements ControllerFX {
         addClickEvent(btnCreditUnits, () -> {
             onShowGrades();
         });
-        
-        this.addClickEvent(btn_checklist, ()->{
+
+        this.addClickEvent(btn_checklist, () -> {
             printChecklist();
         });
     }
-    
-    
-    private void printChecklist(){
+
+    private void printChecklist() {
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.CICT_id = studentSearched.getCict_id();
-        printCheckList.setOnStart(onStart->{
+        printCheckList.setOnStart(onStart -> {
             GenericLoadingShow.instance().show();
         });
-        printCheckList.setOnSuccess(onSuccess->{
+        printCheckList.setOnSuccess(onSuccess -> {
             GenericLoadingShow.instance().hide();
             Notifications.create().title("Please wait, we're nearly there.")
                     .text("Printing the Checklist.").showInformation();
         });
-        printCheckList.setOnCancel(onCancel->{
+        printCheckList.setOnCancel(onCancel -> {
             GenericLoadingShow.instance().hide();
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
         printCheckList.transact();
     }
-
 
     private void onShowGrades() {
         CreditController controller = new CreditController(this.studentSearched.getCict_id(), CreditController.MODE_READ, "Grades [Read Only]");
@@ -303,7 +309,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
             SubjectInformationHolder row_info = (SubjectInformationHolder) simplerow.getRowMetaData().get(KEY_SUB_INFO);
             String row_status = (String) simplerow.getRowMetaData().get(KEY_ROW_STATUS);
             SubjectInformationHolder old_lg = null;
-            switch(row_status) {
+            switch (row_status) {
                 case "CHANGED":
                     old_lg = (SubjectInformationHolder) simplerow.getRowMetaData().get(KEY_OLD_INFO);
                     isModified = true;
@@ -336,38 +342,44 @@ public class AddingHome extends SceneFX implements ControllerFX {
             logs("RUNTIME_ERROR");
         });
 
-        if(!isModified) {
+        if (!isModified) {
             int res = Mono.fx().alert()
                     .createConfirmation()
                     .setHeader("No Changes Made")
                     .setMessage("There are no subject modified or added. Do you still want to save?")
                     .confirmYesNo();
-            if(res == 1)
+            if (res == 1) {
                 save.transact();
-        } else
+            }
+        } else {
             save.transact();
+        }
     }
 
     private void onBackToHome() {
-        Home.callHome();
+        Home.callHome(this);
     }
 
     private EvaluationMapping currentStudentEvaluationDetails;
     private Integer countSearch = 0;
     private boolean show;
+
     private void onSearchStudent() {
-        
+
         show = true;
-        if(studentSearched != null) {
-            if(txtStudentNumber.getText().equalsIgnoreCase(studentSearched.getId())) {
+        if (studentSearched != null) {
+            if (txtStudentNumber.getText().equalsIgnoreCase(studentSearched.getId())) {
                 countSearch = 1;
-                if(countSearch == 1)
+                if (countSearch == 1) {
                     show = false;
-            } else
+                }
+            } else {
                 countSearch = 0;
-        } else
+            }
+        } else {
             countSearch = 0;
-        
+        }
+
         currentStudentEvaluationDetails = null;
 
         this.table.getChildren().clear();
@@ -402,13 +414,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 // added to get the evaluation history of the student.
                 this.currentStudentEvaluationDetails = checkStudentTx.getEvaluationMap();
                 this.studentSearched = checkStudentTx.getStudentMap();
-                
-                if(show) {
+
+                if (show) {
                     showFirstAssistant();
                 }
                 onShowCurricularLevel();
-                if(show)
+                if (show) {
                     showAssistant();
+                }
                 setView("preview");
                 onShowStudent(checkStudentTx.getStudentMap(), checkStudentTx.getStudentSection());
 
@@ -421,7 +434,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
         checkStudentTx.transact();
     }
-    
+
     private void onShowCurricularLevel() {
         CurricularLevelController controller = new CurricularLevelController(this.studentSearched);
         Mono.fx().create()
@@ -436,8 +449,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 .stageCenter()
                 .stageShowAndWait();
     }
-     
-    
+
     private void showFirstAssistant() {
         anchor_add_change.setDisable(true);
         FirstAssistantController controller = new FirstAssistantController();
@@ -453,7 +465,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 .stageCenter()
                 .stageShowAndWait();
     }
-    
+
     private void showAssistant() {
         AssistantController2 controller = new AssistantController2(this.currentStudentEvaluationDetails);
         Mono.fx().create()
@@ -647,7 +659,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //            cellSection.addContentCssClass("table-cell-content-section");
 //            // add cell to row
 //            row.addCell(cellSection);
-
             /**
              * Create the extended panel for row.
              */
@@ -671,9 +682,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
         // attach to parent variable name in scene builder
         simpleTableView.setParentOnScene(vbox_tableHandler);
     }
-   
+
     private void createRow(SubjectInformationHolder subInfo, boolean added) {
-        
+
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
 
@@ -684,19 +695,19 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 .pullOutLayout();
 
         ImageView img_extension = searchAccessibilityText(subjectRow, "img_row_extension");
-        
+
         Label lbl_code = searchAccessibilityText(subjectRow, "code");
         Label lbl_descriptive_title = searchAccessibilityText(subjectRow, "descript");
         Label lbl_lec = searchAccessibilityText(subjectRow, "lec");
         Label lbl_lab = searchAccessibilityText(subjectRow, "lab");
         Label lbl_section = searchAccessibilityText(subjectRow, "section");
-      
+
         addClickEvent(img_extension, () -> {
-            
+
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("res.img", "plus_sign.png"));
                 row.hideExtension();
-            } else if(!row.isExtensionShown()) {
+            } else if (!row.isExtensionShown()) {
                 // close all row extension
                 for (Node tableRows : table.getRows()) {
                     SimpleTableRow simplerow = (SimpleTableRow) tableRows;
@@ -704,7 +715,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     HBox simplerowcontent = simplecell.getContent();
                     ImageView simplerowimage = findByAccessibilityText(simplerowcontent, "img_row_extension");
 
-                    
                     simplerowimage.setImage(SimpleImage.make("res.img", "plus_sign.png"));
                     simplerow.hideExtension();
                 }
@@ -712,34 +722,36 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 // show row extension
                 img_extension.setImage(SimpleImage.make("res.img", "negative_sign.png"));
                 row.showExtension();
-            } else 
+            } else {
                 System.out.println("EXTENSION NOTHING HAPPENED");
+            }
         });
-        
+
         SubjectMapping subject = subInfo.getSubjectMap();
         lbl_code.setText(subject.getCode());
         lbl_descriptive_title.setText(subject.getDescriptive_title());
         lbl_lec.setText(subject.getLec_units().toString());
         lbl_lab.setText(subject.getLab_units().toString());
         lbl_section.setText(subInfo.getFullSectionName());
-        
+
         VBox bg = searchAccessibilityText(subjectRow, "bg");
         Label lbl_icon = searchAccessibilityText(subjectRow, "letter");
-        if(SubjectClassification.isMajor(subject.getType()))
+        if (SubjectClassification.isMajor(subject.getType())) {
             bg.setStyle(lbl_icon.getStyle() + "-fx-background-color: #D84452;");
-            
-        lbl_icon.setText(subject.getCode().charAt(0)+"");
-        
+        }
+
+        lbl_icon.setText(subject.getCode().charAt(0) + "");
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(subjectRow);
 
         row.addCell(cellParent);
-        
+
         /**
-        * Create the extended panel for row.
-        */
-        if(added) {
+         * Create the extended panel for row.
+         */
+        if (added) {
             createAddedRowExtension(table, row);
             row.getRowMetaData().put(KEY_SUB_INFO, subInfo);
             row.getRowMetaData().put(KEY_ROW_STATUS, "ADDED");
@@ -780,7 +792,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //            cellExtension.setImage(new Image("res/img/negative_sign.png"));
 //        }
 //    }
-
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     /**
@@ -871,7 +882,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                + "add this subject again in the list please click the revert button.";
 //
 //        JFXButton btn_revert = new JFXButton();
-
         HBox programRowExtension = (HBox) Mono.fx().create()
                 .setPackageName("update.org.cict.layout.adding_changing")
                 .setFxmlDocument("remove-extension")
@@ -910,7 +920,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
 //        removedExtension.getButton_container().getChildren().add(btn_revert);
 //        removedExtension.create(row);
-
         row.setRowExtension(programRowExtension);
         /**
          * Invoke the listener to update the number of units and subjects.
@@ -947,7 +956,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 .pullOutLayout();
         JFXButton btn_change = searchAccessibilityText(programRowExtension, "change");
         JFXButton btn_remove = searchAccessibilityText(programRowExtension, "remove");
-        
+
         btn_change.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             changeEvent(table, row);
         });
@@ -965,9 +974,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
 //        defaultExtension.getButton_container().getChildren().add(btn_change);
 //        defaultExtension.getButton_container().getChildren().add(btn_remove);
-
 //        defaultExtension.create(row);
-
         row.setRowExtension(programRowExtension);
     }
 
@@ -987,9 +994,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //        RowExtensionFactory changedExtension = new RowExtensionFactory();
 //        changedExtension.imagePath = "res/img/ext_info.png";
 //            changedExtension.message = "This subject was changed if you want to revert to its previous value please click the revert button";
-
 //        JFXButton btn_revert = new JFXButton();
-
         HBox programRowExtension = (HBox) Mono.fx().create()
                 .setPackageName("update.org.cict.layout.adding_changing")
                 .setFxmlDocument("changed-extension")
@@ -1016,8 +1021,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                }
 //            }
 //            if (addToList) {
-                boolean isRegistrar = false;
-                validateSubject("REVERT", row, oldValue, isRegistrar);
+            boolean isRegistrar = false;
+            validateSubject("REVERT", row, oldValue, isRegistrar);
 //                // when reverted back to normal state.
 //                row.getStyleClass().remove("table-mutate-as-changed");
 //                row.getRowMetaData().put(KEY_ROW_STATUS, "REVERT");
@@ -1045,7 +1050,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
 //        changedExtension.getButton_container().getChildren().add(btn_revert);
 //        changedExtension.create(row);
-
         row.setRowExtension(programRowExtension);
         /**
          * Invoke the listener to update the number of units and subjects.
@@ -1072,20 +1076,18 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                + "If you want to remove this, just click the remove button.";
 //
 //        JFXButton btn_remove = new JFXButton();
-
         HBox programRowExtension = (HBox) Mono.fx().create()
                 .setPackageName("update.org.cict.layout.adding_changing")
                 .setFxmlDocument("added-extension")
                 .makeFX()
                 .pullOutLayout();
         JFXButton btn_remove = searchAccessibilityText(programRowExtension, "remove");
-        
+
         /**
          * Button Revert to get original state.
          */
 //        btn_remove.setText("Remove");
 //        btn_remove.getStyleClass().add("btn-remove");
-
         /**
          * Remove event.
          */
@@ -1096,7 +1098,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
 //        addedExtension.getButton_container().getChildren().add(btn_remove);
 //        addedExtension.create(row);
-
         row.setRowExtension(programRowExtension);
         /**
          * Invoke the listener to update the number of units and subjects.
@@ -1264,8 +1265,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                    createChangedRowExtension(table, row, subinfo);
 //                    row.showExtension();
 
-                    //----------------------------------------------------------
-                    //----------------------------------------------------------
+                //----------------------------------------------------------
+                //----------------------------------------------------------
 //                } else {
 //                    Mono.fx().alert()
 //                            .createInfo()
@@ -1293,7 +1294,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                    }
 //                }
 //            }
-
             //reset data pipe
             AddingDataPipe.instance().resetIsChanged();
         }
@@ -1383,12 +1383,12 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 try {
                     // if value was recieved
                     SubjectInformationHolder subinfo = AddingDataPipe.instance().isChangedValue;
-                    
+
                     boolean isRegistrar = false;
-                    if(subinfo.getSubjectMap().getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                        if(!ValidateOJT.isValidForOJT(studentSearched)) {
-                            showWarningNotification("Warning", "Student Number: " + studentSearched.getId() +
-                                    "\n Cannot take Internship based on the student's current status.");
+                    if (subinfo.getSubjectMap().getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                        if (!ValidateOJT.isValidForOJT(studentSearched)) {
+                            showWarningNotification("Warning", "Student Number: " + studentSearched.getId()
+                                    + "\n Cannot take Internship based on the student's current status.");
                             System.out.println("ValidateOJT");
                             AddingDataPipe.instance().resetIsChanged();
                             return;
@@ -1408,9 +1408,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     .showAndWait();
         }
     }
-    
+
     private void validateSubject(String mode, SimpleTableRow row, SubjectInformationHolder subinfo, boolean isRegistrar) {
-        
+
         /**
          * validate the subject before anything else
          */
@@ -1419,7 +1419,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         validate.subjectID = subinfo.getSubjectMap().getId();
 
         validate.setOnSuccess(onSuccess -> {
-            
+
             SubjectMapping validatedSubject = subinfo.getSubjectMap();
             //check if subject exist
             boolean notExist = true,
@@ -1429,27 +1429,29 @@ public class AddingHome extends SceneFX implements ControllerFX {
             //count all the subjects in the list
             int count = 0;
             SubjectInformationHolder subinfo_CURRENT_SUBJECT = null;
-            if(mode.equalsIgnoreCase("REVERT"))
+            if (mode.equalsIgnoreCase("REVERT")) {
                 subinfo_CURRENT_SUBJECT = (SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO);
+            }
             for (int i = 0; i < table.getChildren().size(); i++) {
                 SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
                 SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
                 SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
                 String row_status = currentTableRow.getRowMetaData().get(KEY_ROW_STATUS).toString();
-                if(!row_status.equalsIgnoreCase("REMOVED")) {
-                    if(Objects.equals(validatedSubject.getId(), subjectInTheList.getId())) {
+                if (!row_status.equalsIgnoreCase("REMOVED")) {
+                    if (Objects.equals(validatedSubject.getId(), subjectInTheList.getId())) {
                         notExist = false;
                     }
                     count++;
-                    if(!subjectInTheList.getType().equalsIgnoreCase(SubjectClassification.TYPE_ELECTIVE)
+                    if (!subjectInTheList.getType().equalsIgnoreCase(SubjectClassification.TYPE_ELECTIVE)
                             && !subjectInTheList.getType().equalsIgnoreCase(SubjectClassification.TYPE_MINOR)) {
                         //if revert, do not count as invalid if the subject found is the subject to be reverted
-                        if(mode.equalsIgnoreCase("REVERT")) {
-                            if(!Objects.equals(subjectInTheList.getId(), subinfo_CURRENT_SUBJECT.getSubjectMap().getId())) {
+                        if (mode.equalsIgnoreCase("REVERT")) {
+                            if (!Objects.equals(subjectInTheList.getId(), subinfo_CURRENT_SUBJECT.getSubjectMap().getId())) {
                                 isAllSubjectsValid = false;
                             }
-                        } else
+                        } else {
                             isAllSubjectsValid = false;
+                        }
                     }
 //                    if(SubjectClassification.isMajor(subjectInTheList.getType())) {
 //                        if(mode.equalsIgnoreCase("REVERT")) {
@@ -1459,7 +1461,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                        } else
 //                            majorSubjectExist = true;
 //                    }
-                    if(subjectInTheList.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                    if (subjectInTheList.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                         isInternshipExist = true;
                     }
                 }
@@ -1470,21 +1472,21 @@ public class AddingHome extends SceneFX implements ControllerFX {
             logs("IS ALL SUBJECT VALID? " + isAllSubjectsValid);
             logs("COUNT: " + count);
             logs("MODE: " + mode);
-            if(notExist) {
+            if (notExist) {
                 logs("SUBJECT " + validatedSubject.getCode() + " IS NOT EXISTING");
-                if(mode.equalsIgnoreCase("ADD")) {
+                if (mode.equalsIgnoreCase("ADD")) {
                     SimpleTableView tableView = (SimpleTableView) this.vbox_tableHandler.getChildren().get(0);
-                    if(!isRegistrar) {
-                        if(validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                    if (!isRegistrar) {
+                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                             logs("VALIDATED SUBJECT IS A TYPE INTERNSHIP");
-                            if(count==1) {
+                            if (count == 1) {
                                 for (int i = 0; i < table.getChildren().size(); i++) {
                                     SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
                                     String row_status = (String) currentTableRow.getRowMetaData().get(KEY_ROW_STATUS);
-                                    if(!row_status.equalsIgnoreCase("REMOVED")) {
+                                    if (!row_status.equalsIgnoreCase("REMOVED")) {
                                         SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
                                         SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
-                                        if(SubjectClassification.isMajor(subjectInTheList.getType())) {
+                                        if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                             //invalid
                                             showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                             logs("1");
@@ -1492,7 +1494,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                         }
                                     }
                                 }
-                            } else if(count == 0) {
+                            } else if (count == 0) {
                                 //valid
                                 logs("3");
                             } else {
@@ -1502,15 +1504,15 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                 logs("4");
                                 return;
                             }
-                        } else if(isInternshipExist) {
-                            if(count > 1) {
+                        } else if (isInternshipExist) {
+                            if (count > 1) {
                                 //invalid
                                 showWarningNotification("Warning", "Internship can only be taken with"
                                         + "\n 1 Minor or Elective subject.");
                                 logs("5");
                                 return;
                             } else {
-                                if(SubjectClassification.isMajor(validatedSubject.getType())) {
+                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
                                     //invalid
                                     showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                     logs("6");
@@ -1521,7 +1523,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                 }
                             }
                         }
-                        
+
                         if (totalUnitsAll >= 27) {
                             int res = Mono.fx()
                                     .alert()
@@ -1543,31 +1545,31 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                        createNewRow(subinfo, tableView, table);
                         createRow(subinfo, true);
                     }
-                } else if(mode.equalsIgnoreCase("CHANGE")) {
+                } else if (mode.equalsIgnoreCase("CHANGE")) {
                     int res = 1;
                     SubjectInformationHolder subinfo_CHANGE_SUBJECT = null;
-                    if(!isRegistrar) {
+                    if (!isRegistrar) {
                         subinfo_CHANGE_SUBJECT = (SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO);
                         SubjectMapping OLD_subject = subinfo_CHANGE_SUBJECT.getSubjectMap();
-                        if(validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            if(count > 2) {
+                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                            if (count > 2) {
                                 //invalid
                                 showWarningNotification("Warning", "Internship can only be taken with"
                                         + "\n 1 Minor or Elective subject.");
                                 logs("1");
                                 return;
-                            } else if(count <= 2) {
+                            } else if (count <= 2) {
                                 for (int i = 0; i < table.getChildren().size(); i++) {
                                     SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
 
-                                    if(row.getId().equalsIgnoreCase(currentTableRow.getId())) {
+                                    if (row.getId().equalsIgnoreCase(currentTableRow.getId())) {
                                         logs("SKIP");
                                         continue;
                                     }
 
                                     SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
                                     SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
-                                    if(SubjectClassification.isMajor(subjectInTheList.getType())) {
+                                    if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                         //invalid
                                         showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                         logs("3");
@@ -1582,22 +1584,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             }
                         }
 
-                        if(OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP) 
+                        if (OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)
                                 && isInternshipExist) {
-                            isInternshipExist= false;
+                            isInternshipExist = false;
                             //valid
                             logs("8");
-                        } 
+                        }
 
-                        if(isInternshipExist) {
-                            if(count > 2) {
+                        if (isInternshipExist) {
+                            if (count > 2) {
                                 //invalid
                                 showWarningNotification("Warning", "Internship can only be taken with"
                                         + "\n 1 Minor or Elective subject.");
                                 logs("5");
                                 return;
                             } else {
-                                if(SubjectClassification.isMajor(validatedSubject.getType())) {
+                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
                                     //invalid
                                     showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                     logs("6");
@@ -1609,14 +1611,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             }
                         }
 
-                        if(totalUnitsAll >= 27) {
+                        if (totalUnitsAll >= 27) {
                             res = Mono.fx()
-                                        .alert()
-                                        .createConfirmation()
-                                        .setHeader("Maximum Units Reached")
-                                        .setMessage("Just to inform. The student reached the maximum number of units per semester."
-                                                + " Are you still want to add the subject?")
-                                        .confirmYesNo();
+                                    .alert()
+                                    .createConfirmation()
+                                    .setHeader("Maximum Units Reached")
+                                    .setMessage("Just to inform. The student reached the maximum number of units per semester."
+                                            + " Are you still want to add the subject?")
+                                    .confirmYesNo();
                         }
                     }
                     if (res == 1) {
@@ -1635,47 +1637,47 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         SubjectMapping subject = subinfo.getSubjectMap();
                         SimpleTableCell simplecell = row.getCell(0);
                         HBox simplerowcontent = simplecell.getContent();
-                        
+
                         ImageView simplerowimage = findByAccessibilityText(simplerowcontent, "img_row_extension");
                         Label lbl_code = searchAccessibilityText(simplerowcontent, "code");
                         Label lbl_descriptive_title = searchAccessibilityText(simplerowcontent, "descript");
                         Label lbl_lec = searchAccessibilityText(simplerowcontent, "lec");
                         Label lbl_lab = searchAccessibilityText(simplerowcontent, "lab");
                         Label lbl_section = searchAccessibilityText(simplerowcontent, "section");
-                        
+
                         lbl_code.setText(subject.getCode());
                         lbl_descriptive_title.setText(subject.getDescriptive_title());
-                        lbl_lec.setText(subject.getLec_units()+"");
-                        lbl_lab.setText(subject.getLab_units()+"");
+                        lbl_lec.setText(subject.getLec_units() + "");
+                        lbl_lab.setText(subject.getLab_units() + "");
                         lbl_section.setText(subinfo.getFullSectionName());
-                                
+
                         row.hideExtension();
                         createChangedRowExtension(table, row, subinfo, subinfo_CHANGE_SUBJECT);
                         row.showExtension();
                     }
                 } else if (mode.equalsIgnoreCase("REVERT")) {
-                    if(!isRegistrar) {
+                    if (!isRegistrar) {
                         SubjectInformationHolder subinfo_CHANGE_SUBJECT = (SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO);
                         SubjectMapping OLD_subject = subinfo_CHANGE_SUBJECT.getSubjectMap();
-                        if(validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            if(count > 2) {
+                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                            if (count > 2) {
                                 //invalid
                                 showWarningNotification("Warning", "Internship can only be taken with"
                                         + "\n 1 Minor or Elective subject.");
                                 logs("1");
                                 return;
-                            }  else if(count <= 2) {
+                            } else if (count <= 2) {
                                 for (int i = 0; i < table.getChildren().size(); i++) {
                                     SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
                                     SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
                                     SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
 
-                                    if(row == currentTableRow) {
+                                    if (row == currentTableRow) {
                                         logs("SKIP");
                                         continue;
                                     }
 
-                                    if(SubjectClassification.isMajor(subjectInTheList.getType())) {
+                                    if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                         //invalid
                                         showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                         logs("3");
@@ -1688,22 +1690,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             }
                         }
 
-                        if(OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP) 
+                        if (OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)
                                 && isInternshipExist) {
-                            isInternshipExist= false;
+                            isInternshipExist = false;
                             //valid
                             logs("8");
-                        } 
+                        }
 
-                        if(isInternshipExist) {
-                            if(count > 2) {
+                        if (isInternshipExist) {
+                            if (count > 2) {
                                 //invalid
                                 showWarningNotification("Warning", "Internship can only be taken with"
                                         + "\n 1 Minor or Elective subject.");
                                 logs("5");
                                 return;
                             } else {
-                                if(SubjectClassification.isMajor(validatedSubject.getType())) {
+                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
                                     //invalid
                                     showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                     logs("6");
@@ -1715,8 +1717,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             }
                         }
                     }
-                    
-                    
+
                     // when reverted back to normal state.
                     row.getStyleClass().remove("table-mutate-as-changed");
                     row.getRowMetaData().put(KEY_ROW_STATUS, "REVERT");
@@ -1733,39 +1734,40 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                    createDefaultRowExtension(table, row, row.getCell(0).<ImageView>getContent());
                     SimpleTableCell simplecell = row.getCell(0);
                     HBox simplerowcontent = simplecell.getContent();
-                    SubjectMapping subject = subinfo.getSubjectMap();Label lbl_code = searchAccessibilityText(simplerowcontent, "code");
+                    SubjectMapping subject = subinfo.getSubjectMap();
+                    Label lbl_code = searchAccessibilityText(simplerowcontent, "code");
                     Label lbl_descriptive_title = searchAccessibilityText(simplerowcontent, "descript");
                     Label lbl_lec = searchAccessibilityText(simplerowcontent, "lec");
                     Label lbl_lab = searchAccessibilityText(simplerowcontent, "lab");
                     Label lbl_section = searchAccessibilityText(simplerowcontent, "section");
                     ImageView simplerowimage = findByAccessibilityText(simplerowcontent, "img_row_extension");
-                    
+
                     lbl_code.setText(subject.getCode());
                     lbl_descriptive_title.setText(subject.getDescriptive_title());
-                    lbl_lec.setText(subject.getLec_units()+"");
-                    lbl_lab.setText(subject.getLab_units()+"");
-                    lbl_section.setText(subinfo.getFullSectionName());   
+                    lbl_lec.setText(subject.getLec_units() + "");
+                    lbl_lab.setText(subject.getLab_units() + "");
+                    lbl_section.setText(subinfo.getFullSectionName());
                     createDefaultRowExtension(table, row);
                     row.showExtension();
                     // refresh total values.
                     invokeListener(table);
-                } else if(mode.equalsIgnoreCase("ORIGINAL")) { 
-                    if(!isRegistrar) {
-                        if(validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            if(count > 1) {
+                } else if (mode.equalsIgnoreCase("ORIGINAL")) {
+                    if (!isRegistrar) {
+                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                            if (count > 1) {
                                 //invalid
                                 logs("1");
                                 showWarningNotification("Warning", "Internship can only be taken with"
                                         + "\n 1 Minor or Elective subject.");
                                 return;
-                            } else if(count == 1){
+                            } else if (count == 1) {
                                 for (int i = 0; i < table.getChildren().size(); i++) {
                                     SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
                                     String row_status = (String) currentTableRow.getRowMetaData().get(KEY_ROW_STATUS);
-                                    if(!row_status.equalsIgnoreCase("REMOVED")) {
+                                    if (!row_status.equalsIgnoreCase("REMOVED")) {
                                         SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
                                         SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
-                                        if(SubjectClassification.isMajor(subjectInTheList.getType())) {
+                                        if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                             //invalid
                                             showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                             logs("2");
@@ -1782,15 +1784,15 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             }
                         }
 
-                        if(isInternshipExist) {
-                            if(count > 1) {
+                        if (isInternshipExist) {
+                            if (count > 1) {
                                 //invalid
                                 logs("5");
                                 showWarningNotification("Warning", "Internship can only be taken with"
                                         + "\n 1 Minor or Elective subject.");
                                 return;
                             } else {
-                                if(SubjectClassification.isMajor(validatedSubject.getType())) {
+                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
                                     //invalid
                                     showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
                                     logs("6");
@@ -1802,7 +1804,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             }
                         }
                     }
-                
+
                     row.getRowMetaData().put(KEY_ROW_STATUS, "ORIGINAL");
                     row.getStyleClass().remove("table-mutate-as-removed");
                     row.hideExtension();
@@ -1814,7 +1816,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     row.showExtension();
                     // refresh total values.
                     invokeListener(table);
-                } 
+                }
 
             } else {
                 showWarningNotification("Subject Exist", "The subject you are trying to add is already in the list.");
@@ -1826,14 +1828,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
             }
             logs("******************************************* END");
             AddingDataPipe.instance().resetIsChanged();
-   
+
         });
 
         validate.setOnCancel(onCancel -> {
             if (validate.isAlreadyTaken()) {
                 logs("SUBJECT ALREADY TAKEN");
                 showWarningNotification("Subject Already Taken", subinfo.getSubjectMap().getCode() + " is already taken.\n"
-                                + "Verified For S/N: " + studentSearched.getId() + ", " + studentSearched.getLast_name() + ".");
+                        + "Verified For S/N: " + studentSearched.getId() + ", " + studentSearched.getLast_name() + ".");
             } else if (validate.isPreReqNotAllTaken()) {
                 logs("INCOMPLETE PRE-REQUISITE SUBJECT/S REQUIREMENT");
                 ArrayList<Integer> preReqIds = validate.getPreReqRequiredIds();
@@ -1857,7 +1859,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         validate.transact();
 
     }
-    
+
     private void showWarningNotification(String title, String message) {
         Notifications.create()
                 .title(title)
@@ -2020,7 +2022,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //
 //        simpleTableView.setParentOnScene(vbox_tableHandler);
 //    }
-
     private void printAddChangeForm(String onStartTitle, String onStartMessage) {
         PrintAddingChangingForm print = new PrintAddingChangingForm();
         print.evaluationID = newEvaluationID;

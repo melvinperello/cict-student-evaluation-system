@@ -5,13 +5,14 @@
  */
 package org.cict.authentication;
 
-import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.AccountFacultySessionMapping;
 import app.lazy.models.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.SceneFX;
 import java.util.Calendar;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -22,14 +23,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.cict.MainApplication;
 import org.cict.GenericLoadingShow;
 import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.Authenticator;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
-import org.cict.evaluation.evaluator.Evaluator;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.access.Access;
@@ -39,7 +41,10 @@ import update3.org.cict.access.Access;
  *
  * @author Jhon Melvin
  */
-public class LoginController implements ControllerFX {
+public class LoginController extends SceneFX implements ControllerFX {
+
+    @FXML
+    private StackPane application_root;
 
     @FXML
     private AnchorPane pnlLoading;
@@ -77,10 +82,29 @@ public class LoginController implements ControllerFX {
 
     @Override
     public void onInitialization() {
+        super.bindScene(application_root);
 
-        /**
-         * Start Hibernate.
-         */
+        if (Mono.orm().isStarted()) {
+            /**
+             * Hibernate was already started and this login screen was a recall.
+             */
+            this.pnlLoading.setVisible(false);
+            this.pnlLogin.setVisible(true);
+        } else {
+            /**
+             * Initial Login Screen.
+             */
+            this.bootHibernate();
+        }
+
+        imgInvUser.setVisible(false);
+        imgInvPassword.setVisible(false);
+    }
+
+    /**
+     * Start the hibernate system.
+     */
+    private void bootHibernate() {
         HibernateLauncher startHibernate = Authenticator
                 .instance()
                 .createHibernateLauncher();
@@ -94,11 +118,47 @@ public class LoginController implements ControllerFX {
             this.pnlLoading.setVisible(false);
             this.pnlLogin.setVisible(true);
         });
-
         startHibernate.transact();
+    }
 
-        imgInvUser.setVisible(false);
-        imgInvPassword.setVisible(false);
+    /**
+     * Since only the login and the main application have their own stages. we
+     * need to assign a closing event in this stage.
+     */
+    public void onStageClosing() {
+        super.getStage().setOnCloseRequest(close -> {
+            try {
+                this.onDestroyApplication();
+            } catch (Exception e) {
+                // if the loading and booting up of hibernate and the user wanted to exit.
+                // this will force the application to close.
+                MainApplication.die(0);
+            }
+            close.consume();
+        });
+    }
+
+    /**
+     * Kill this application.
+     */
+    public void onDestroyApplication() {
+        /**
+         * DOuble Kill.
+         */
+        ThreadMill.threads().shutdown();
+        /**
+         * Shutdown the ORM
+         */
+        Mono.orm().shutdown();
+        /**
+         * Close the stage.
+         */
+        super.finish();
+        /**
+         * When you try to kill someone make sure that they are dead before
+         * leaving.
+         */
+        MainApplication.die(0);
     }
 
     @Override
@@ -126,7 +186,7 @@ public class LoginController implements ControllerFX {
             this.onLogin();
         });
         this.btnExit.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.onClose();
+            this.onDestroyApplication();
         });
         this.btnRegister.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
             this.onShowRegister();
@@ -140,13 +200,11 @@ public class LoginController implements ControllerFX {
      * Login Success show main window close the old one.
      */
     private void showMainEvaluation() {
-        AcademicTermMapping currentAcadTerm = Evaluator.instance()
-                .getCurrentAcademicTerm();
-        Mono.fx().getParentStage(this.btnLogin).close();
+        super.finish();
         /**
          * Change redirect to home.
          */
-        Home.callHome();
+        Home.launchApp();
     }
 
     private void onLogin() {
@@ -226,7 +284,6 @@ public class LoginController implements ControllerFX {
          * Show window.
          */
         showMainEvaluation();
-
     }
 
     /**
@@ -296,10 +353,4 @@ public class LoginController implements ControllerFX {
         //MonoWindow.startWindow("cict/auth", "ForgotPassword", controller, "Forgot Password");
     }
 
-    public void onClose() {
-        //close session
-//        Mono.orm().closeSessionFactory();
-        //system exit
-        Runtime.getRuntime().halt(0);
-    }
 }

@@ -1,47 +1,63 @@
 package update.org.cict.controller.home;
 
+import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import org.cict.MainApplication;
 import org.cict.GenericLoadingShow;
+import org.cict.ThreadMill;
 import org.cict.accountmanager.AccountManager;
 import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyMainController;
+import org.cict.evaluation.EvaluateController;
+import update.org.cict.controller.adding.AddingHome;
+import update2.org.cict.controller.academicprogram.AcademicProgramHome;
 import update3.org.cict.access.Access;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
 
 public class Home extends SceneFX implements ControllerFX {
-    
+
     @FXML
     private AnchorPane application_root;
-    
+
     @FXML
     private Button btn_evaluation;
-    
+
     @FXML
     private Button btn_adding;
-    
+
     @FXML
     private Button btn_academic_programs;
-    
+
     @FXML
     private Button btn_section;
-    
+
     @FXML
     private Button btn_faculty;
-    
+
+    @FXML
+    private JFXButton btn_logout;
+
     @Override
     public void onInitialization() {
+        /**
+         * Never forget this it is the most important part of SceneFX.
+         */
         this.bindScene(application_root);
     }
 
     /**
-     * This is a static method to call home in other stages.
+     * Launches the main stage for the first time. this will be the stage of the
+     * entire application upon its whole life cycle. it will also use the same
+     * Scene across all windows.
      */
-    public static void callHome() {
+    public static void launchApp() {
         Home controller = new Home();
         Mono.fx().create()
                 .setPackageName("update.org.cict.layout.home")
@@ -53,41 +69,86 @@ public class Home extends SceneFX implements ControllerFX {
                 .stageMinDimension(1024, 700)
                 .stageMaximized(true)
                 .stageShow();
-        
+
+        /**
+         * Adds stage close request.
+         */
         controller.onStageClosing();
-        
     }
-    
-    @Override
-    public void onEventHandling() {
-        
-        super.addClickEvent(btn_evaluation, () -> {
-            this.onShowEvaluation();
-        });
-        
-        super.addClickEvent(btn_adding, () -> {
-            this.onShowAddingAndChanging();
-        });
-        
-        super.addClickEvent(btn_academic_programs, () -> {
-            this.onShowAcademicPrograms();
-        });
-        
-        super.addClickEvent(btn_section, () -> {
-            this.onShowSectionManagement();
-        });
-        
-        super.addClickEvent(btn_faculty, () -> {
-            this.onShowFacultyManagement();
-        });
-        
-    }
-    
-    public void onStageClosing() {
+
+    /**
+     * Closing event for this stage.
+     */
+    private void onStageClosing() {
         super.getStage().setOnCloseRequest(onClose -> {
             this.onLogout();
             onClose.consume();
         });
+    }
+
+    /**
+     * Allows all stages outside home to call this method and return to Home
+     * Root. this will re-create the home root.
+     *
+     * @param scene
+     */
+    public static void callHome(SceneFX scene) {
+        Home controller = new Home();
+        Pane home_root = Mono.fx().create()
+                .setPackageName("update.org.cict.layout.home")
+                .setFxmlDocument("home")
+                .makeFX()
+                .setController(controller)
+                .pullOutLayout();
+        // revert back this color will be the background of the scene
+        // when replacing a root this color will be visible upon transitions
+        scene.setSceneColor("#FFFFFF");
+        Animate.fade(scene.getApplicationRoot(), 150, () -> {
+            scene.replaceRoot(home_root);
+        }, home_root);
+    }
+
+    @Override
+    public void onEventHandling() {
+
+        super.addClickEvent(btn_evaluation, () -> {
+            this.onShowEvaluation();
+        });
+
+        super.addClickEvent(btn_adding, () -> {
+            this.onShowAddingAndChanging();
+        });
+
+        super.addClickEvent(btn_academic_programs, () -> {
+            this.onShowAcademicPrograms();
+        });
+
+        super.addClickEvent(btn_section, () -> {
+            this.onShowSectionManagement();
+        });
+
+        super.addClickEvent(btn_faculty, () -> {
+            this.onShowFacultyManagement();
+        });
+
+        super.addClickEvent(btn_logout, () -> {
+            onLogout();
+        });
+
+    }
+
+    private void changeRoot(ControllerFX controller, String packer, String fxml) {
+
+        Pane fxRoot = Mono.fx().create()
+                .setPackageName(packer)
+                .setFxmlDocument(fxml)
+                .makeFX()
+                .setController(controller)
+                .pullOutLayout();
+
+        Animate.fade(application_root, 150, () -> {
+            super.replaceRoot(fxRoot);
+        }, fxRoot);
     }
 
     /**
@@ -107,14 +168,22 @@ public class Home extends SceneFX implements ControllerFX {
             });
             logout.setOnSuccess(onSuccess -> {
                 GenericLoadingShow.instance().hide();
-                //close session
-                Mono.orm().shutdown();
-                //system exit
-                Runtime.getRuntime().halt(0);
+                /**
+                 * Only destroy the threads of this session.
+                 */
+                ThreadMill.threads().shutdown();
+                // close the stage.
+                super.finish();
+                // relaunch the login screen.
+                relaunchLogin();
             });
             logout.setRestTime(300);
             logout.transact();
         }
+    }
+
+    private void relaunchLogin() {
+        MainApplication.launchLogin();
     }
 
     /**
@@ -126,24 +195,33 @@ public class Home extends SceneFX implements ControllerFX {
      * programs upon verification.
      */
     private void onShowAcademicPrograms() {
-        
+
         if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN,
                 Access.ACCESS_ASST_ADMIN,
                 Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-        
-        super.finish();
-        Mono.fx().create()
-                .setPackageName("update2.org.cict.layout.academicprogram")
-                .setFxmlDocument("academic-program-home")
-                .makeFX()
-                .makeScene()
-                .makeStageApplication()
-                .stageMinDimension(1024, 700)
-                .stageMaximized(true)
-                .stageShow();
+
+        /**
+         * Since AcademicProgramHome implements ControllerFX it is said that it
+         * will inherit it as an interface and not as an direct child. therefore
+         * it will also be classified under the ControllerFX interface. also it
+         * is a Direct Child of SceneFX therefore you can also use:
+         * <pre>
+         *      SceneFX fx = new AcademicProgramHome();
+         *      or the most common you can declare iself as the instance of its own class:
+         *      AcademicProgramHome controller = new AcademicProgramHome();
+         *      In this case it both reflects and uses the traits of both
+         *      SceneFX and ControllerFX
+         * </pre>
+         *
+         */
+        ControllerFX controller = new AcademicProgramHome();
+        this.changeRoot(controller,
+                "update2.org.cict.layout.academicprogram",
+                "academic-program-home");
+
     }
 
     /**
@@ -153,38 +231,32 @@ public class Home extends SceneFX implements ControllerFX {
      * and verification we will still do so.
      */
     private void onShowEvaluation() {
-        
         if (Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-        
-        super.finish();
-        Mono.fx().create()
-                .setPackageName("org.cict.evaluation")
-                .setFxmlDocument("evaluation_home")
-                .makeFX()
-                .makeScene()
-                .makeStageApplication()
-                .stageMinDimension(1024, 700)
-                .stageMaximized(true)
-                .stageShow();
+
+        EvaluateController controller = new EvaluateController();
+        this.changeRoot(controller,
+                "org.cict.evaluation",
+                "evaluation_home");
+
     }
 
     /**
      * Same as adding and changing.
      */
     private void onShowAddingAndChanging() {
-        super.finish();
-        Mono.fx().create()
-                .setPackageName("update.org.cict.layout.adding_changing")
-                .setFxmlDocument("adding-changing-home")
-                .makeFX()
-                .makeScene()
-                .makeStageApplication()
-                .stageMinDimension(1024, 700)
-                .stageMaximized(true)
-                .stageShow();
+        if (Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true)) {
+            Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
+            return;
+        }
+
+        AddingHome controller = new AddingHome();
+        this.changeRoot(controller,
+                "update.org.cict.layout.adding_changing",
+                "adding-changing-home");
+
     }
 
     /**
@@ -199,21 +271,14 @@ public class Home extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-        
-        super.finish(); // close the stage
+
         SectionHomeController controller = new SectionHomeController();
-        Mono.fx().create()
-                .setPackageName("update3.org.cict.layout.sectionmain")
-                .setFxmlDocument("sectionHome")
-                .makeFX()
-                .setController(controller)
-                .makeScene()
-                .makeStageApplication()
-                .stageMinDimension(1024, 700)
-                .stageMaximized(true)
-                .stageShow();
+        this.changeRoot(controller,
+                "update3.org.cict.layout.sectionmain",
+                "sectionHome");
+
     }
-    
+
     private void onShowFacultyManagement() {
         /**
          * Only the administrator can access this section. including the
@@ -223,19 +288,12 @@ public class Home extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-        
-        super.finish();
+
         FacultyMainController controller = new FacultyMainController();
-        Mono.fx().create()
-                .setPackageName("org.cict.accountmanager.faculty")
-                .setFxmlDocument("faculty-main")
-                .makeFX()
-                .setController(controller)
-                .makeScene()
-                .makeStageApplication()
-                .stageMinDimension(1024, 700)
-                .stageMaximized(true)
-                .stageShow();
+        this.changeRoot(controller,
+                "org.cict.accountmanager.faculty",
+                "faculty-main");
+
     }
 
     /**
