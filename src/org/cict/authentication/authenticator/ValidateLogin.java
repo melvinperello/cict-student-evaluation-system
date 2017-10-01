@@ -81,6 +81,10 @@ public class ValidateLogin extends Transaction {
         return authenticatorMessage;
     }
 
+    public Integer getCreatedSessionID() {
+        return createdSessionID;
+    }
+
     @Override
     protected boolean transaction() {
         /**
@@ -247,23 +251,6 @@ public class ValidateLogin extends Transaction {
          */
 
         /**
-         * Create Keep Alive Thread.
-         */
-        ThreadMill.threads().KEEP_ALIVE_THREAD.setTask(() -> {
-            AccountFacultySessionMapping accountSessionAlive = Mono.orm()
-                    .newSearch(Database.connect().account_faculty_session())
-                    .eq("FACULTY_account_id", CollegeFaculty.instance().getACCOUNT_ID())
-                    .active(Order.desc("session_id"))
-                    .first();
-            Calendar now = Mono.orm().getServerTime().getCalendar();
-            now.add(Calendar.MINUTE, 1);
-            accountSessionAlive.setKeep_alive(now.getTime());
-            Database.connect().account_faculty_session().update(accountSessionAlive);
-        });
-
-        ThreadMill.threads().KEEP_ALIVE_THREAD.start();
-
-        /**
          * Check For current Academic Term 08-19-2017
          */
         AcademicTermMapping currentTerm = Mono.orm()
@@ -384,7 +371,10 @@ public class ValidateLogin extends Transaction {
         Calendar sessionTime = Mono.orm().getServerTime().getCalendar();
         loginSession.setSession_start(sessionTime.getTime());
         // add 1 min alive time
-        sessionTime.add(Calendar.MINUTE, 1);
+        /**
+         * Removed, the first increment will happen during first thread run.
+         */
+        //sessionTime.add(Calendar.MINUTE, 1);
         loginSession.setKeep_alive(sessionTime.getTime());
 
         /**

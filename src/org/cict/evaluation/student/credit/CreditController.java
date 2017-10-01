@@ -24,7 +24,6 @@
 package org.cict.evaluation.student.credit;
 
 import app.lazy.models.CurriculumMapping;
-import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import com.jfoenix.controls.JFXButton;
@@ -33,19 +32,12 @@ import com.jhmvin.fx.async.FXThread;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.display.ControllerFX;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.paint.Paint;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.student.credit.credittree.CreditTree;

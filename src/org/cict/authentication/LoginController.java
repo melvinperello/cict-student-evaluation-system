@@ -6,9 +6,12 @@
 package org.cict.authentication;
 
 import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.AccountFacultySessionMapping;
+import app.lazy.models.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import java.util.Calendar;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -21,10 +24,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.cict.GenericLoadingShow;
+import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.Authenticator;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
 import org.cict.evaluation.evaluator.Evaluator;
+import org.hibernate.criterion.Order;
+import update3.org.cict.access.Access;
 
 /**
  * FXML Controller class
@@ -167,8 +174,7 @@ public class LoginController implements ControllerFX {
             validateLogin.setOnSuccess(onSuccess -> {
                 GenericLoadingShow.instance().hide();
                 if (validateLogin.isAuthenticated()) {
-                    // next stage
-                    showMainEvaluation();
+                    checkAccess(validateLogin.getCreatedSessionID());
                 } else {
                     Mono.fx()
                             .alert()
@@ -191,6 +197,43 @@ public class LoginController implements ControllerFX {
             validateLogin.setRestTime(500);
             validateLogin.transact();
         }
+    }
+
+    private void checkAccess(Integer sessionID) {
+        /**
+         * Access is denied with true flag means that any access level above the
+         * required can still access the system.
+         */
+        if (Access.isDenied(Access.ACCESS_EVALUATOR, true)) {
+            Mono.fx()
+                    .alert()
+                    .createError()
+                    .setTitle("Authentication Gateway")
+                    .setHeader("Access Denied")
+                    .setMessage("You do not have enough access permission to continue. Thank You !")
+                    .showAndWait();
+            return;
+        }
+        /**
+         * Create Keep Alive Thread.
+         */
+        ThreadMill.threads().KEEP_ALIVE_THREAD.setTask(() -> {
+            AccountFacultySessionMapping accountSessionAlive = Mono.orm()
+                    .newSearch(Database.connect().account_faculty_session())
+                    .eq("FACULTY_account_id", CollegeFaculty.instance().getACCOUNT_ID())
+                    .active(Order.desc("session_id"))
+                    .first();
+            Calendar now = Mono.orm().getServerTime().getCalendar();
+            now.add(Calendar.MINUTE, 1);
+            accountSessionAlive.setKeep_alive(now.getTime());
+            Database.connect().account_faculty_session().update(accountSessionAlive);
+        });
+        ThreadMill.threads().KEEP_ALIVE_THREAD.start();
+        /**
+         * Show window.
+         */
+        showMainEvaluation();
+
     }
 
     /**
