@@ -14,25 +14,25 @@ import update3.org.cict.access.Access;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
 
 public class Home extends SceneFX implements ControllerFX {
-
+    
     @FXML
     private AnchorPane application_root;
-
+    
     @FXML
     private Button btn_evaluation;
-
+    
     @FXML
     private Button btn_adding;
-
+    
     @FXML
     private Button btn_academic_programs;
-
+    
     @FXML
     private Button btn_section;
-
+    
     @FXML
     private Button btn_faculty;
-
+    
     @Override
     public void onInitialization() {
         this.bindScene(application_root);
@@ -42,40 +42,57 @@ public class Home extends SceneFX implements ControllerFX {
      * This is a static method to call home in other stages.
      */
     public static void callHome() {
+        Home controller = new Home();
         Mono.fx().create()
                 .setPackageName("update.org.cict.layout.home")
                 .setFxmlDocument("home")
                 .makeFX()
+                .setController(controller)
                 .makeScene()
                 .makeStageApplication()
-                .stageMaximized(false)
+                .stageMinDimension(1024, 700)
+                .stageMaximized(true)
                 .stageShow();
+        
+        controller.onStageClosing();
+        
     }
-
+    
     @Override
     public void onEventHandling() {
-
+        
         super.addClickEvent(btn_evaluation, () -> {
             this.onShowEvaluation();
         });
-
+        
         super.addClickEvent(btn_adding, () -> {
             this.onShowAddingAndChanging();
         });
-
+        
         super.addClickEvent(btn_academic_programs, () -> {
             this.onShowAcademicPrograms();
         });
-
+        
         super.addClickEvent(btn_section, () -> {
             this.onShowSectionManagement();
         });
-
+        
         super.addClickEvent(btn_faculty, () -> {
             this.onShowFacultyManagement();
         });
+        
+    }
+    
+    public void onStageClosing() {
+        super.getStage().setOnCloseRequest(onClose -> {
+            this.onLogout();
+            onClose.consume();
+        });
     }
 
+    /**
+     * There is no user access for logout everyone can logout ofcourse.
+     */
     public void onLogout() {
         int res = Mono.fx().alert()
                 .createConfirmation()
@@ -109,14 +126,14 @@ public class Home extends SceneFX implements ControllerFX {
      * programs upon verification.
      */
     private void onShowAcademicPrograms() {
-
+        
         if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN,
                 Access.ACCESS_ASST_ADMIN,
                 Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         super.finish();
         Mono.fx().create()
                 .setPackageName("update2.org.cict.layout.academicprogram")
@@ -136,12 +153,12 @@ public class Home extends SceneFX implements ControllerFX {
      * and verification we will still do so.
      */
     private void onShowEvaluation() {
-
+        
         if (Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         super.finish();
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation")
@@ -182,7 +199,7 @@ public class Home extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         super.finish(); // close the stage
         SectionHomeController controller = new SectionHomeController();
         Mono.fx().create()
@@ -196,7 +213,7 @@ public class Home extends SceneFX implements ControllerFX {
                 .stageMaximized(true)
                 .stageShow();
     }
-
+    
     private void onShowFacultyManagement() {
         /**
          * Only the administrator can access this section. including the
@@ -206,7 +223,7 @@ public class Home extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         super.finish();
         FacultyMainController controller = new FacultyMainController();
         Mono.fx().create()

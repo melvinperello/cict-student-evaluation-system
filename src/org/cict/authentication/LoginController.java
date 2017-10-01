@@ -31,6 +31,7 @@ import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
 import org.cict.evaluation.evaluator.Evaluator;
 import org.hibernate.criterion.Order;
+import update.org.cict.controller.home.Home;
 import update3.org.cict.access.Access;
 
 /**
@@ -145,15 +146,7 @@ public class LoginController implements ControllerFX {
         /**
          * Change redirect to home.
          */
-        Mono.fx().create()
-                .setPackageName("update.org.cict.layout.home")
-                .setFxmlDocument("home")
-                .makeFX()
-                .makeScene()
-                .makeStageApplication()
-                .stageMaximized(true)
-                .stageShow();
-
+        Home.callHome();
     }
 
     private void onLogin() {
