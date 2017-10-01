@@ -124,9 +124,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1565 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1593 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~62 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~92 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1501, 1, '2017-09-30 00:43:37', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -192,7 +192,35 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(1561, 1, '2017-10-01 16:37:20', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(1562, 1, '2017-10-01 17:06:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(1563, 1, '2017-10-01 18:08:19', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(1564, 1, '2017-10-01 18:20:25', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(1564, 1, '2017-10-01 18:20:25', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1565, 1, '2017-10-01 18:38:44', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1566, 1, '2017-10-01 18:45:58', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1567, 1, '2017-10-01 18:46:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1568, 1, '2017-10-01 20:52:30', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1569, 1, '2017-10-01 20:53:11', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1570, 1, '2017-10-01 20:54:13', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1571, 1, '2017-10-01 20:55:53', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1572, 1, '2017-10-01 20:56:59', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1573, 1, '2017-10-01 21:07:05', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1574, 2, '2017-10-01 21:07:35', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1575, 1, '2017-10-01 21:36:19', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1576, 1, '2017-10-01 21:36:55', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1577, 2, '2017-10-01 21:37:20', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1578, 1, '2017-10-01 21:39:20', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1579, 2, '2017-10-01 21:40:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1580, 1, '2017-10-01 21:43:17', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1581, 1, '2017-10-01 21:49:30', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1582, 1, '2017-10-01 22:10:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1583, 1, '2017-10-01 22:11:28', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1584, 1, '2017-10-01 22:17:38', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1585, 1, '2017-10-01 22:28:01', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1586, 1, '2017-10-01 22:29:12', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1587, 2, '2017-10-01 22:29:54', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1588, 1, '2017-10-01 22:30:04', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1589, 2, '2017-10-01 22:30:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1590, 1, '2017-10-01 22:34:18', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1591, 1, '2017-10-01 22:41:08', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1592, 1, '2017-10-01 23:00:45', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -211,27 +239,37 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1411 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1439 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~14 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~26 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
-	(1395, 1, '2017-10-01 12:58:33', '2017-10-01 12:59:33', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:04:03', 'EVALUATION_SYSTEM', 1),
-	(1396, 1, '2017-10-01 13:04:05', '2017-10-01 13:04:05', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:04:07', 'EVALUATION_SYSTEM', 1),
-	(1397, 1, '2017-10-01 13:04:07', '2017-10-01 13:04:07', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:04:09', 'EVALUATION_SYSTEM', 1),
-	(1398, 1, '2017-10-01 13:04:09', '2017-10-01 13:04:09', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:04:12', 'EVALUATION_SYSTEM', 1),
-	(1399, 1, '2017-10-01 13:04:12', '2017-10-01 13:04:12', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:04:15', 'EVALUATION_SYSTEM', 1),
-	(1400, 1, '2017-10-01 13:04:15', '2017-10-01 13:04:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:05:02', 'EVALUATION_SYSTEM', 1),
-	(1401, 1, '2017-10-01 13:05:02', '2017-10-01 13:05:02', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:05:35', 'EVALUATION_SYSTEM', 1),
-	(1402, 1, '2017-10-01 13:05:35', '2017-10-01 13:05:35', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 13:06:18', 'EVALUATION_SYSTEM', 1),
-	(1403, 1, '2017-10-01 13:06:18', '2017-10-01 13:06:18', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 16:14:31', 'EVALUATION_SYSTEM', 1),
-	(1404, 2, '2017-10-01 13:06:47', '2017-10-01 13:07:47', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1),
-	(1405, 1, '2017-10-01 16:14:32', '2017-10-01 16:15:32', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 16:14:47', 'EVALUATION_SYSTEM', 1),
-	(1406, 1, '2017-10-01 16:15:29', '2017-10-01 16:16:29', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 16:37:19', 'EVALUATION_SYSTEM', 1),
-	(1407, 1, '2017-10-01 16:37:20', '2017-10-01 17:05:20', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 17:06:47', 'EVALUATION_SYSTEM', 1),
-	(1408, 1, '2017-10-01 17:06:48', '2017-10-01 17:12:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 18:08:18', 'EVALUATION_SYSTEM', 1),
-	(1409, 1, '2017-10-01 18:08:19', '2017-10-01 18:12:49', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 18:20:24', 'EVALUATION_SYSTEM', 1),
-	(1410, 1, '2017-10-01 18:20:25', '2017-10-01 18:22:55', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1);
+	(1413, 1, '2017-10-01 18:46:46', '2017-10-01 18:47:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 18:46:52', 'EVALUATION_SYSTEM', 1),
+	(1414, 1, '2017-10-01 20:52:30', '2017-10-01 20:53:31', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 20:52:44', 'EVALUATION_SYSTEM', 1),
+	(1415, 1, '2017-10-01 20:53:11', '2017-10-01 20:54:42', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 20:53:47', 'EVALUATION_SYSTEM', 1),
+	(1416, 1, '2017-10-01 20:54:13', '2017-10-01 20:55:13', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 20:54:43', 'EVALUATION_SYSTEM', 1),
+	(1417, 1, '2017-10-01 20:55:53', '2017-10-01 20:56:53', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 20:56:06', 'EVALUATION_SYSTEM', 1),
+	(1418, 1, '2017-10-01 20:56:59', '2017-10-01 20:58:00', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 20:57:11', 'EVALUATION_SYSTEM', 1),
+	(1419, 1, '2017-10-01 21:07:05', '2017-10-01 21:08:05', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:07:11', 'EVALUATION_SYSTEM', 1),
+	(1420, 2, '2017-10-01 21:07:35', '2017-10-01 21:08:35', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:37:19', 'EVALUATION_SYSTEM', 1),
+	(1421, 1, '2017-10-01 21:36:20', '2017-10-01 21:37:20', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:36:28', 'EVALUATION_SYSTEM', 1),
+	(1422, 1, '2017-10-01 21:36:55', '2017-10-01 21:37:55', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:36:57', 'EVALUATION_SYSTEM', 1),
+	(1423, 2, '2017-10-01 21:37:20', '2017-10-01 21:38:50', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:40:13', 'EVALUATION_SYSTEM', 1),
+	(1424, 1, '2017-10-01 21:39:20', '2017-10-01 21:40:50', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:39:51', 'EVALUATION_SYSTEM', 1),
+	(1425, 2, '2017-10-01 21:40:15', '2017-10-01 21:41:45', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:40:46', 'EVALUATION_SYSTEM', 1),
+	(1426, 1, '2017-10-01 21:43:17', '2017-10-01 21:44:17', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:43:25', 'EVALUATION_SYSTEM', 1),
+	(1427, 1, '2017-10-01 21:49:30', '2017-10-01 21:50:31', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 21:49:51', 'EVALUATION_SYSTEM', 1),
+	(1428, 1, '2017-10-01 22:10:39', '2017-10-01 22:11:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:10:44', 'EVALUATION_SYSTEM', 1),
+	(1429, 1, '2017-10-01 22:11:28', '2017-10-01 22:12:28', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:11:34', 'EVALUATION_SYSTEM', 1),
+	(1430, 1, '2017-10-01 22:17:38', '2017-10-01 22:18:38', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:17:41', 'EVALUATION_SYSTEM', 1),
+	(1431, 1, '2017-10-01 22:28:01', '2017-10-01 22:29:02', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:28:06', 'EVALUATION_SYSTEM', 1),
+	(1432, 1, '2017-10-01 22:29:13', '2017-10-01 22:30:13', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:29:41', 'EVALUATION_SYSTEM', 1),
+	(1433, 2, '2017-10-01 22:29:54', '2017-10-01 22:30:54', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:29:56', 'EVALUATION_SYSTEM', 1),
+	(1434, 1, '2017-10-01 22:30:04', '2017-10-01 22:31:04', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:30:11', 'EVALUATION_SYSTEM', 1),
+	(1435, 2, '2017-10-01 22:30:15', '2017-10-01 22:31:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:30:27', 'EVALUATION_SYSTEM', 1),
+	(1436, 1, '2017-10-01 22:34:18', '2017-10-01 22:35:19', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:34:20', 'EVALUATION_SYSTEM', 1),
+	(1437, 1, '2017-10-01 22:41:08', '2017-10-01 22:42:09', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 22:41:11', 'EVALUATION_SYSTEM', 1),
+	(1438, 1, '2017-10-01 23:00:45', '2017-10-01 23:02:45', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -998,7 +1036,7 @@ CREATE TABLE IF NOT EXISTS `evaluation` (
   CONSTRAINT `evaluation_fk_self` FOREIGN KEY (`adding_reference_id`) REFERENCES `evaluation` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='has a duplication of student_id in the load_subjects';
 
--- Dumping data for table cictems.evaluation: ~6 rows (approximately)
+-- Dumping data for table cictems.evaluation: ~7 rows (approximately)
 /*!40000 ALTER TABLE `evaluation` DISABLE KEYS */;
 INSERT INTO `evaluation` (`id`, `STUDENT_id`, `ACADTERM_id`, `FACULTY_id`, `adding_reference_id`, `evaluation_date`, `year_level`, `type`, `remarks`, `print_type`, `cancelled_by`, `cancelled_date`, `active`) VALUES
 	(5, 57, 11, 1, NULL, '2017-09-30 16:34:07', 4, 'REGULAR', 'REVOKED', 'NOT_SET', 1, '2017-09-30 16:37:23', 0),
@@ -1130,7 +1168,7 @@ CREATE TABLE IF NOT EXISTS `grade` (
   CONSTRAINT `grade_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
 
--- Dumping data for table cictems.grade: ~36 rows (approximately)
+-- Dumping data for table cictems.grade: ~42 rows (approximately)
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
 INSERT INTO `grade` (`id`, `STUDENT_id`, `SUBJECT_id`, `ACADTERM_id`, `rating`, `remarks`, `credit`, `credit_method`, `created_by`, `created_date`, `posted`, `posted_by`, `posting_date`, `inc_expire`, `updated_by`, `updated_date`, `reason_for_update`, `active`) VALUES
 	(41, 57, 292, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 1, '2017-09-30 16:34:07', 0, NULL, NULL, NULL, 1, '2017-09-30 16:37:23.000000', 'REVOKED_EVALUATION', 0),
@@ -3418,7 +3456,7 @@ CREATE TABLE IF NOT EXISTS `load_subject` (
   CONSTRAINT `load_subject_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all students enrolled in that subject in a particular section';
 
--- Dumping data for table cictems.load_subject: ~36 rows (approximately)
+-- Dumping data for table cictems.load_subject: ~42 rows (approximately)
 /*!40000 ALTER TABLE `load_subject` DISABLE KEYS */;
 INSERT INTO `load_subject` (`id`, `SUBJECT_id`, `LOADGRP_id`, `STUDENT_id`, `EVALUATION_id`, `added_date`, `added_by`, `remarks`, `removed_date`, `removed_by`, `changing_reference`, `active`) VALUES
 	(40, 292, 28785, 57, 5, '2017-09-30 16:34:07', 1, 'REVOKED_EVALUATION', '2017-09-30 16:37:23', 1, NULL, 0),
