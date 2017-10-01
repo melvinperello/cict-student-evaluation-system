@@ -112,10 +112,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private VBox vbox_studentOptions;
 
     @FXML
-    private JFXButton btnStudentInfo;
+    private JFXButton btnHistory;
 
     @FXML
-    private JFXButton btnHistory;
+    private JFXButton btn_checklist;
 
     @FXML
     private JFXButton btn_encoding;
@@ -148,49 +148,17 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private JFXButton btn_winSection;
 
     @FXML
-    private AnchorPane anchor_main;
-
-    @FXML
-    private Label lbl_facultyName;
-
-    @FXML
-    private Label lbl_facultyDesignation;
-
-    @FXML
-    private JFXButton btn_winEval;
-
-    @FXML
-    private JFXButton btn_logout;
-
-    @FXML
-    private JFXButton btnLogout;
-
-    @FXML
-    private VBox vbox_settings;
-
-    @FXML
-    private JFXButton btnSection;
-
-    @FXML
-    private JFXButton btnStudent;
-
-    @FXML
-    private JFXButton btnProgram;
-
-    @FXML
-    private JFXButton btnFaculty;
-
-    @FXML
-    private JFXButton btnSettings;
-
-    @FXML
     private JFXButton btn_home;
 
     @FXML
-    private JFXButton btn_checklist;
+    private AnchorPane anchor_main1;
 
     @FXML
     private VBox vbox_list;
+
+    public EvaluateController() {
+        //
+    }
 
     private void log(Object message) {
         boolean logging = true;
@@ -202,16 +170,18 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     /**
      * Contains all the subjects in the list for evaluation.
      */
-    private VBox vbox_subjects = new VBox(4);
+    private final VBox vbox_subjects = new VBox(4);
+    private AnchorPane application_root;
 
     @Override
     public void onInitialization() {
-
+        application_root = anchor_evaluate;
+        super.bindScene(application_root);
         /**
          * Faculty Details
          */
-        lbl_facultyName.setText(CollegeFaculty.instance().getFirstLastName());
-        lbl_facultyDesignation.setText(CollegeFaculty.instance().getDESIGNATION());
+//        lbl_facultyName.setText(CollegeFaculty.instance().getFirstLastName());
+//        lbl_facultyDesignation.setText(CollegeFaculty.instance().getDESIGNATION());
 
         this.anchor_preview.setVisible(false);
         this.anchor_results.setVisible(true);
@@ -225,7 +195,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         scroll_subjects.setFitToWidth(true);
         scroll_subjects.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        this.vbox_settings.setVisible(false);
+        //this.vbox_settings.setVisible(false);
         createTable();
     }
 
@@ -327,18 +297,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.onEncoding();
         });
 
-        btn_logout.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.onLogout();
-        });
-
-        btnLogout.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.onLogout();
-        });
-
-        btnStudentInfo.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.onShowStudentInfo();
-        });
-
+//        btn_logout.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
+//            this.onLogout();
+//        });
+//        btnLogout.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
+//            this.onLogout();
+//        });
+//        btnStudentInfo.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
+//            this.onShowStudentInfo();
+//        });
         btnHistory.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
             this.onShowHistory();
         });
@@ -347,10 +314,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.onShowInputMode();
         });
 
-        btnSettings.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            vbox_settings.setVisible(!vbox_settings.isVisible());
-        });
-
+//        btnSettings.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
+//            vbox_settings.setVisible(!vbox_settings.isVisible());
+//        });
         /**
          * Home Redirect
          */
@@ -364,6 +330,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
     }
 
+    /**
+     * Print the checklist.
+     */
     private void printChecklist() {
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.CICT_id = currentStudent.getCict_id();
@@ -389,6 +358,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         printCheckList.transact();
     }
 
+    /**
+     * Back to Main Menu.
+     */
     private void onBackToHome() {
         Home.callHome();
     }
@@ -400,9 +372,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         vbox_studentOptions.addEventHandler(MouseEvent.MOUSE_EXITED, (MouseEvent event) -> {
             this.hideDropDown();
         });
-        vbox_settings.addEventHandler(MouseEvent.MOUSE_EXITED, (MouseEvent event) -> {
-            this.hideDropDown();
-        });
+//        vbox_settings.addEventHandler(MouseEvent.MOUSE_EXITED, (MouseEvent event) -> {
+//            this.hideDropDown();
+//        });
         anchor_studentInfo.addEventHandler(MouseEvent.MOUSE_ENTERED, (MouseEvent event) -> {
             this.hideDropDown();
         });
@@ -410,6 +382,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
+    /**
+     * Revoke The current evaluation of the student. based on the context of the
+     * system requirements. only the Local Registrar and its constituents can
+     * use this feature freely. evaluators are not allowed to use this feature
+     * unless upon given proper permission.
+     */
     private void onRevokeEvaluation() {
         RevokeEvaluation revoked_evaluation = Registrar.instance().createRevokeEvaluation();
         revoked_evaluation.cict_id = currentStudent.getCict_id();
@@ -952,7 +930,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.hbox_already.setVisible(false);
 
         vbox_studentOptions.setVisible(false);
-        vbox_settings.setVisible(false);
+        //vbox_settings.setVisible(false);
 
         switch (view) {
             case "home":
@@ -1155,30 +1133,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         }
     }
 
-    public void onLogout() {
-        int res = Mono.fx().alert()
-                .createConfirmation()
-                .setHeader("Logout Account")
-                .setTitle("Confirmation")
-                .setMessage("Are you sure you want to logout this account?")
-                .confirmYesNo();
-        if (res == 1) {
-            Logout logout = AccountManager.instance().createLogout();
-            logout.setOnStart(onStart -> {
-                GenericLoadingShow.instance().show();
-            });
-            logout.setOnSuccess(onSuccess -> {
-                GenericLoadingShow.instance().hide();
-                //close session
-                Mono.orm().shutdown();
-                //system exit
-                Runtime.getRuntime().halt(0);
-            });
-            logout.setRestTime(300);
-            logout.transact();
-        }
-    }
-
+    /**
+     * Change student information.
+     */
     private void onShowStudentInfo() {
         this.vbox_studentOptions.setVisible(false);
         InfoStudentController controller = new InfoStudentController(this.currentStudent);
@@ -1242,10 +1199,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     }
 
     private void hideDropDown() {
-        this.vbox_settings.setVisible(false);
+        //this.vbox_settings.setVisible(false);
         this.vbox_studentOptions.setVisible(false);
     }
 
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    /**
+     * Queue of student.
+     */
     private SimpleTable studentTable = new SimpleTable();
     private ArrayList<StudentMapping> lst_student;
 

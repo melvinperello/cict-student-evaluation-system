@@ -36,10 +36,11 @@ public class Access {
      */
     private final static int LEVEL_SYSTEM = 1;
     private final static int LEVEL_ADMIN = 2;
-    private final static int LEVEL_LOCAL_REGISTRAR = 3;
-    private final static int LEVEL_CO_REGISTRAR = 4;
-    private final static int LEVEL_EVALUATOR = 5;
-    private final static int LEVEL_FACULTY = 6;
+    private final static int LEVEL_ASST_ADMIN = 3;
+    private final static int LEVEL_LOCAL_REGISTRAR = 4;
+    private final static int LEVEL_CO_REGISTRAR = 5;
+    private final static int LEVEL_EVALUATOR = 6;
+    private final static int LEVEL_FACULTY = 7;
     private final static int LEVEL_DENIED = Integer.MAX_VALUE;
 
     /**
@@ -47,6 +48,7 @@ public class Access {
      */
     public final static String ACCESS_SYSTEM = "SYSTEM";
     public final static String ACCESS_ADMIN = "ADMINISTRATOR";
+    public final static String ACCESS_ASST_ADMIN = "ASSISTANT_ADMINISTRATOR";
     public final static String ACCESS_LOCAL_REGISTRAR = "LOCAL_REGISTRAR";
     public final static String ACCESS_CO_REGISTRAR = "CO_REGISTRAR";
     public final static String ACCESS_EVALUATOR = "EVALUATOR";
@@ -61,6 +63,7 @@ public class Access {
     public static int getAccessLevel(String access) {
         return access.equals(ACCESS_SYSTEM) ? LEVEL_SYSTEM
                 : access.equals(ACCESS_ADMIN) ? LEVEL_ADMIN
+                : access.equals(ACCESS_ASST_ADMIN) ? LEVEL_ASST_ADMIN
                 : access.equals(ACCESS_LOCAL_REGISTRAR) ? LEVEL_LOCAL_REGISTRAR
                 : access.equals(ACCESS_CO_REGISTRAR) ? LEVEL_CO_REGISTRAR
                 : access.equals(ACCESS_EVALUATOR) ? LEVEL_EVALUATOR
@@ -114,14 +117,21 @@ public class Access {
     }
 
     //--------------------------------------------------------------------------
-    public static boolean isDenied(String required) {
+    public static boolean isDeniedIfNot(String required) {
         return !isGranted(required);
     }
 
-    public static boolean isDenied(String lowestRequired, boolean byLevel) {
+    public static boolean isDeniedIfNot(String lowestRequired, boolean byLevel) {
         return !isGranted(lowestRequired, byLevel);
     }
-    
-    
+
+    public static boolean isDeniedIfNotFrom(String... required) {
+        for (String string : required) {
+            if (isGranted(string)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

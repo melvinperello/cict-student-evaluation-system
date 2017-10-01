@@ -204,7 +204,7 @@ public class LoginController implements ControllerFX {
          * Access is denied with true flag means that any access level above the
          * required can still access the system.
          */
-        if (Access.isDenied(Access.ACCESS_EVALUATOR, true)) {
+        if (Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true)) {
             Mono.fx()
                     .alert()
                     .createError()
