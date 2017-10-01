@@ -2,7 +2,7 @@
 // SQL_table: evaluation
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Sep 29, 2017 02:00:57 PM
+// Created: Oct 01, 2017 05:36:38 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -36,6 +36,7 @@ private java.util.Date evaluation_date;
 private java.lang.Integer year_level;
 private java.lang.String type;
 private java.lang.String remarks;
+private java.lang.String print_type;
 private java.lang.Integer cancelled_by;
 private java.util.Date cancelled_date;
 private java.lang.Integer active;
@@ -122,6 +123,15 @@ public java.lang.String getRemarks() {
 
 public void setRemarks(java.lang.String fieldRemarks) {
 	this.remarks = fieldRemarks;
+}
+
+@Column(name = "print_type", nullable = true, length = 50)
+public java.lang.String getPrint_type() {
+	return this.print_type;
+}
+
+public void setPrint_type(java.lang.String fieldPrintType) {
+	this.print_type = fieldPrintType;
 }
 
 @Column(name = "cancelled_by", nullable = true, length = 10)

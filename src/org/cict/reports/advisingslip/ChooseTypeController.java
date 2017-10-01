@@ -23,12 +23,11 @@
  */
 package org.cict.reports.advisingslip;
 
-import static app.lazy.models.DB.student;
-import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import org.cict.evaluation.evaluator.Evaluator;
 import org.cict.evaluation.evaluator.PrintAdvising;
 
@@ -37,6 +36,9 @@ import org.cict.evaluation.evaluator.PrintAdvising;
  * @author Joemar
  */
 public class ChooseTypeController extends SceneFX implements ControllerFX {
+
+    @FXML
+    private VBox application_root;
 
     @FXML
     private Button btn_old;
@@ -49,59 +51,70 @@ public class ChooseTypeController extends SceneFX implements ControllerFX {
 
     @FXML
     private Button btn_irreg;
-    
     private Integer ACADTERM_id;
     private String STUDENT_id;
-    
+
     public ChooseTypeController(String studentID, Integer acadTermID) {
         this.STUDENT_id = studentID;
         this.ACADTERM_id = acadTermID;
     }
-    
+
     @Override
     public void onInitialization() {
-    
+        /**
+         * Always use bindScene in every controller that uses SceneFX.
+         */
+        super.bindScene(application_root);
     }
 
     @Override
     public void onEventHandling() {
         addClickEvent(btn_old, () -> {
-            print(btn_old);
+            print(btn_old.getText());
         });
         addClickEvent(btn_new, () -> {
-            print(btn_new);
+            print(btn_new.getText());
         });
         addClickEvent(btn_reg, () -> {
-            print(btn_reg);
+            print(btn_reg.getText());
         });
         addClickEvent(btn_irreg, () -> {
-            print(btn_irreg);
+            print(btn_irreg.getText());
         });
     }
-    
-    private void print(Button btn) {
+
+    public void print(String text) {
 //        int res = Mono.fx().alert().createConfirmation()
 //                    .setHeader("Print Evaluation Slip")
 //                    .setMessage("Are you sure the student is a " + btn.getText() + " type?")
 //                    .confirmYesNo();
 //        if(res != 1)
 //            return;
-        selected = btn.getText();
+        selected = text;
         PrintAdvising slip = Evaluator.instance().printAdvising();
         slip.studentNumber = this.STUDENT_id;
         slip.academicTerm = this.ACADTERM_id;
         slip.type = selected;
         slip.transact();
         isPrinting = true;
-        Mono.fx().getParentStage(btn).close();
+        /**
+         * If explicitly called without the viewer.
+         */
+        try {
+            super.finish();
+        } catch (Exception e) {
+        }
+
     }
-    
+
     private boolean isPrinting = false;
+
     public boolean isPrinting() {
         return isPrinting;
     }
-    
+
     private String selected;
+
     public String getSelected() {
         return selected;
     }

@@ -30,6 +30,7 @@ private MonoModels tbl_curriculum_requisite_line;
 private MonoModels tbl_curriculum_subject;
 private MonoModels tbl_evaluation;
 private MonoModels tbl_faculty;
+private MonoModels tbl_faculty_profile;
 private MonoModels tbl_grade;
 private MonoModels tbl_linked_entrance;
 private MonoModels tbl_linked_marshall_session;
@@ -93,6 +94,8 @@ Mono.orm().addMappings("EvaluationMapping");
 this.tbl_evaluation = Mono.orm().createModel(EvaluationMapping.class);
 Mono.orm().addMappings("FacultyMapping");
 this.tbl_faculty = Mono.orm().createModel(FacultyMapping.class);
+Mono.orm().addMappings("FacultyProfileMapping");
+this.tbl_faculty_profile = Mono.orm().createModel(FacultyProfileMapping.class);
 Mono.orm().addMappings("GradeMapping");
 this.tbl_grade = Mono.orm().createModel(GradeMapping.class);
 Mono.orm().addMappings("LinkedEntranceMapping");
@@ -169,6 +172,9 @@ return tbl_evaluation;
 }
 public MonoModels faculty() {
 return tbl_faculty;
+}
+public MonoModels faculty_profile() {
+return tbl_faculty_profile;
 }
 public MonoModels grade() {
 return tbl_grade;

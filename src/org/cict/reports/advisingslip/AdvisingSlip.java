@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.cict.reports.ReportsDirectory;
 
 public class AdvisingSlip {
 
@@ -44,23 +45,20 @@ public class AdvisingSlip {
         try {
 
             init();
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
             /**
-             * Before creating the PDF check if directories are existing.
+             * Check if the report save directory is already existing and
+             * created if not this will try to create the needed directories.
              */
-            try {
-                File directory = new File(SAVE_DIRECTORY);
-                if (!directory.exists()) {
-                    System.out.println("Directory Not Exist for Advising Slip");
-                    boolean dir_created = directory.mkdirs();
-                    if (dir_created) {
-                        System.out.println("Created Directory for Advising Slip");
-                    } else {
-                        System.err.println("Cannot Create Directory.");
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("ADVISING DIRECTORY CREATION FAILED.");
+            boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
+
+            if (!isCreated) {
+                // some error message that the directory is not created
+                System.err.println("Directory is not created.");
+                return 0;
             }
+            //------------------------------------------------------------------
             //------------------------------------------------------------------
             int val = createPdf(RESULT);
             if (val == 1) {

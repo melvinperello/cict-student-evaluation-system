@@ -48,6 +48,14 @@ import org.cict.reports.advisingslip.AdvisingSlipData;
  */
 public class PrintAdvising extends Transaction {
 
+    /**
+     * static values.
+     */
+    public final static String OLD = "Old";
+    public final static String NEW = "New";
+    public final static String REGULAR = "Regular";
+    public final static String IRREGULAR = "Irregular";
+
     public String studentNumber, type; // 2014113844
     public Integer academicTerm;
 
@@ -90,11 +98,13 @@ public class PrintAdvising extends Transaction {
                 .eq("id", student.getCURRICULUM_id())
                 .execute()
                 .first();
-        
-        if(curriculum.getMajor() != null) {
-            if(!curriculum.getMajor().isEmpty())
-                if(!curriculum.getMajor().equalsIgnoreCase("none"))
+
+        if (curriculum.getMajor() != null) {
+            if (!curriculum.getMajor().isEmpty()) {
+                if (!curriculum.getMajor().equalsIgnoreCase("none")) {
                     major = curriculum.getMajor();
+                }
+            }
         }
 
         course = Mono.orm().newSearch(Database.connect().academic_program())
@@ -170,10 +180,10 @@ public class PrintAdvising extends Transaction {
         slip.INFO_TERM = term.getSemester_regular().toString();
         slip.INFO_CAMPUS = "MALOLOS";
         slip.INFO_MAJOR = "";
-        
+
         /**
          * Code added 8/2/17 ********************
-         * 
+         *
          */
 //        Integer admission_yr = Integer.valueOf(student.getAdmission_year());
 //        Integer current_yr = Integer.valueOf(term.getSchool_year().split("-")[0]);
@@ -186,49 +196,47 @@ public class PrintAdvising extends Transaction {
 //            slip.INFO_REGULAR = true;
 //        else
 //            slip.INFO_IRREGULAR = true;
-
         // MODIFIED: 9/5/17
         // by: Joemar
-        if(type.equalsIgnoreCase("Old"))
+        if (type.equalsIgnoreCase(OLD)) {
             slip.INFO_OLD = true;
-        else if(type.equalsIgnoreCase("New"))
+        } else if (type.equalsIgnoreCase(NEW)) {
             slip.INFO_NEW = true;
-        else if(type.equalsIgnoreCase("Regular"))
+        } else if (type.equalsIgnoreCase(REGULAR)) {
             slip.INFO_REGULAR = true;
-        else if(type.equalsIgnoreCase("Irregular"))
+        } else if (type.equalsIgnoreCase(IRREGULAR)) {
             slip.INFO_IRREGULAR = true;
+        }
         /**
          * END************************************
          */
-        
-        
+
         // student
         slip.INFO_STUD_NUM = student.getId();
         slip.INFO_STUD_NAME = (student.getLast_name() + ", " + student.getFirst_name() + " " + student.getMiddle_name()).toUpperCase(Locale.ENGLISH);
         slip.INFO_COURSE = course.getName();
-        if(major != null)
+        if (major != null) {
             slip.INFO_MAJOR = major;
+        }
 
         ArrayList<AdvisingSlipData> table = new ArrayList<>();
         for (JoinTables join : subjectInformation) {
             SubjectMapping subject = join.info;
             LoadSectionMapping section = join.section;
-            
-            
+
             /**
-             * code added 8/28/17
-             * by: joemar
+             * code added 8/28/17 by: joemar
              */
             String sectionName = "";
             try {
-                if(section.getYear_level() != 0) {
-                    sectionName = section.getYear_level().toString() 
-                            + section.getSection_name() 
+                if (section.getYear_level() != 0) {
+                    sectionName = section.getYear_level().toString()
+                            + section.getSection_name()
                             + " - G" + section.get_group().toString();
                 } else {
                     sectionName = section.getSection_name();
                 }
-            } catch(NullPointerException a) {
+            } catch (NullPointerException a) {
                 sectionName = section.getSection_name();
             }
             AdvisingSlipData tableData = new AdvisingSlipData();

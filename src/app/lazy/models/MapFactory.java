@@ -62,6 +62,9 @@ return new EvaluationMapping();
 public FacultyMapping faculty() {
 return new FacultyMapping();
 }
+public FacultyProfileMapping faculty_profile() {
+return new FacultyProfileMapping();
+}
 public GradeMapping grade() {
 return new GradeMapping();
 }

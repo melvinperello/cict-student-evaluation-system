@@ -2,7 +2,7 @@
 // SQL_table: faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Sep 29, 2017 02:00:57 PM
+// Created: Oct 01, 2017 05:36:38 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -32,9 +32,11 @@ private java.lang.String bulsu_id;
 private java.lang.String last_name;
 private java.lang.String first_name;
 private java.lang.String middle_name;
+private java.lang.String name_extension;
 private java.lang.String gender;
 private java.lang.String rank;
 private java.lang.String designation;
+private java.lang.String department;
 private java.lang.String transaction_pin;
 private java.lang.Integer active;
 
@@ -85,6 +87,15 @@ public void setMiddle_name(java.lang.String fieldMiddleName) {
 	this.middle_name = fieldMiddleName;
 }
 
+@Column(name = "name_extension", nullable = true, length = 100)
+public java.lang.String getName_extension() {
+	return this.name_extension;
+}
+
+public void setName_extension(java.lang.String fieldNameExtension) {
+	this.name_extension = fieldNameExtension;
+}
+
 @Column(name = "gender", nullable = true, length = 100)
 public java.lang.String getGender() {
 	return this.gender;
@@ -110,6 +121,15 @@ public java.lang.String getDesignation() {
 
 public void setDesignation(java.lang.String fieldDesignation) {
 	this.designation = fieldDesignation;
+}
+
+@Column(name = "department", nullable = true, length = 50)
+public java.lang.String getDepartment() {
+	return this.department;
+}
+
+public void setDepartment(java.lang.String fieldDepartment) {
+	this.department = fieldDepartment;
 }
 
 @Column(name = "transaction_pin", nullable = true, length = 6)

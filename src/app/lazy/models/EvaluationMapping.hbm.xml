@@ -31,6 +31,9 @@
 <property name="remarks" type="java.lang.String">
 <column name="remarks" length="50"/>
 </property>
+<property name="print_type" type="java.lang.String">
+<column name="print_type" length="50"/>
+</property>
 <property name="cancelled_by" type="java.lang.Integer">
 <column name="cancelled_by" length="10"/>
 </property>

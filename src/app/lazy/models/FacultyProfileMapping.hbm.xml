@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.FacultyProfileMapping" table="faculty_profile" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="birthdate" type="java.lang.String">
+<column name="birthdate" length="50"/>
+</property>
+<property name="place_of_birth" type="java.lang.String">
+<column name="place_of_birth" length="50"/>
+</property>
+<property name="sex" type="java.lang.String">
+<column name="sex" length="50"/>
+</property>
+<property name="civil_status" type="java.lang.String">
+<column name="civil_status" length="50"/>
+</property>
+<property name="height" type="java.lang.String">
+<column name="height" length="50"/>
+</property>
+<property name="weight" type="java.lang.String">
+<column name="weight" length="50"/>
+</property>
+<property name="blood_type" type="java.lang.String">
+<column name="blood_type" length="50"/>
+</property>
+<property name="GSIS_id" type="java.lang.String">
+<column name="GSIS_id" length="50"/>
+</property>
+<property name="PAGIBIG_id" type="java.lang.String">
+<column name="PAGIBIG_id" length="50"/>
+</property>
+<property name="PHILHEALTH_id" type="java.lang.String">
+<column name="PHILHEALTH_id" length="50"/>
+</property>
+<property name="SSS_id" type="java.lang.String">
+<column name="SSS_id" length="50"/>
+</property>
+<property name="TIN_no" type="java.lang.String">
+<column name="TIN_no" length="50"/>
+</property>
+<property name="citizenship" type="java.lang.String">
+<column name="citizenship" length="50"/>
+</property>
+<property name="dual_citizenship" type="java.lang.String">
+<column name="dual_citizenship" length="50"/>
+</property>
+<property name="dual_type" type="java.lang.String">
+<column name="dual_type" length="50"/>
+</property>
+<property name="dual_country" type="java.lang.String">
+<column name="dual_country" length="50"/>
+</property>
+<property name="res_house" type="java.lang.String">
+<column name="res_house" length="50"/>
+</property>
+<property name="res_street" type="java.lang.String">
+<column name="res_street" length="50"/>
+</property>
+<property name="res_village" type="java.lang.String">
+<column name="res_village" length="50"/>
+</property>
+<property name="res_brgy" type="java.lang.String">
+<column name="res_brgy" length="50"/>
+</property>
+<property name="res_city" type="java.lang.String">
+<column name="res_city" length="50"/>
+</property>
+<property name="res_province" type="java.lang.String">
+<column name="res_province" length="50"/>
+</property>
+<property name="res_zip" type="java.lang.String">
+<column name="res_zip" length="50"/>
+</property>
+<property name="addr_house" type="java.lang.String">
+<column name="addr_house" length="50"/>
+</property>
+<property name="addr_street" type="java.lang.String">
+<column name="addr_street" length="50"/>
+</property>
+<property name="addr_village" type="java.lang.String">
+<column name="addr_village" length="50"/>
+</property>
+<property name="addr_brgy" type="java.lang.String">
+<column name="addr_brgy" length="50"/>
+</property>
+<property name="addr_city" type="java.lang.String">
+<column name="addr_city" length="50"/>
+</property>
+<property name="addr_province" type="java.lang.String">
+<column name="addr_province" length="50"/>
+</property>
+<property name="addr_zip" type="java.lang.String">
+<column name="addr_zip" length="50"/>
+</property>
+<property name="telephone" type="java.lang.String">
+<column name="telephone" length="50"/>
+</property>
+<property name="mobile" type="java.lang.String">
+<column name="mobile" length="50"/>
+</property>
+<property name="email" type="java.lang.String">
+<column name="email" length="50"/>
+</property>
+<property name="spouse_surname" type="java.lang.String">
+<column name="spouse_surname" length="50"/>
+</property>
+<property name="spouse_firstname" type="java.lang.String">
+<column name="spouse_firstname" length="50"/>
+</property>
+<property name="spouse_middlename" type="java.lang.String">
+<column name="spouse_middlename" length="50"/>
+</property>
+<property name="spouse_name_ext" type="java.lang.String">
+<column name="spouse_name_ext" length="50"/>
+</property>
+<property name="spouse_occupation" type="java.lang.String">
+<column name="spouse_occupation" length="50"/>
+</property>
+<property name="spouse_work_agency" type="java.lang.String">
+<column name="spouse_work_agency" length="50"/>
+</property>
+<property name="spouse_work_address" type="java.lang.String">
+<column name="spouse_work_address" length="50"/>
+</property>
+<property name="spouse_telephone" type="java.lang.String">
+<column name="spouse_telephone" length="50"/>
+</property>
+<property name="father_surname" type="java.lang.String">
+<column name="father_surname" length="50"/>
+</property>
+<property name="father_firstname" type="java.lang.String">
+<column name="father_firstname" length="50"/>
+</property>
+<property name="father_middlename" type="java.lang.String">
+<column name="father_middlename" length="50"/>
+</property>
+<property name="father_name_ext" type="java.lang.String">
+<column name="father_name_ext" length="50"/>
+</property>
+<property name="mother_maidenname" type="java.lang.String">
+<column name="mother_maidenname" length="50"/>
+</property>
+<property name="mother_surname" type="java.lang.String">
+<column name="mother_surname" length="50"/>
+</property>
+<property name="mother_firstname" type="java.lang.String">
+<column name="mother_firstname" length="50"/>
+</property>
+<property name="mother_middlename" type="java.lang.String">
+<column name="mother_middlename" length="50"/>
+</property>
+</class>
+</hibernate-mapping>

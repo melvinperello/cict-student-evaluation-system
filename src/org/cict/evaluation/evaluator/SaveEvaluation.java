@@ -52,6 +52,11 @@ public class SaveEvaluation extends Transaction {
      * Flag Values
      */
     private boolean isAlreadyEvaluated;
+    private int evaluationID;
+
+    public int getEvaluationID() {
+        return evaluationID;
+    }
 
     @Override
     protected boolean transaction() {
@@ -70,6 +75,7 @@ public class SaveEvaluation extends Transaction {
          */
         if (currentlyEvaluating != null) {
             isAlreadyEvaluated = true;
+            evaluationID = currentlyEvaluating.getId();
             log("Already Evaluated");
             return true;
         }
@@ -114,6 +120,11 @@ public class SaveEvaluation extends Transaction {
             // cannot insert transaction failed
             return false;
         }
+
+        /**
+         * For reference.
+         */
+        evaluationID = temp_eval_id;
 
         // if no error proceed to temporary insert load_subject table
         log("temporary evaluation id inserted");

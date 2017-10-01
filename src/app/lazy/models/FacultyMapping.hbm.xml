@@ -19,6 +19,9 @@
 <property name="middle_name" type="java.lang.String">
 <column name="middle_name" length="100"/>
 </property>
+<property name="name_extension" type="java.lang.String">
+<column name="name_extension" length="100"/>
+</property>
 <property name="gender" type="java.lang.String">
 <column name="gender" length="100"/>
 </property>
@@ -27,6 +30,9 @@
 </property>
 <property name="designation" type="java.lang.String">
 <column name="designation" length="50"/>
+</property>
+<property name="department" type="java.lang.String">
+<column name="department" length="50"/>
 </property>
 <property name="transaction_pin" type="java.lang.String">
 <column name="transaction_pin" length="6"/>

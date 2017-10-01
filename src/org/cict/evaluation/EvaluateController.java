@@ -31,6 +31,7 @@ import javafx.scene.layout.VBox;
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.Database;
+import app.lazy.models.EvaluationMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.StudentMapping;
@@ -47,6 +48,7 @@ import org.cict.PublicConstants;
 import org.cict.accountmanager.AccountManager;
 import org.cict.accountmanager.Logout;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.encoder.GradeEncoderController;
 import org.cict.evaluation.evaluator.CheckGrade;
 import org.cict.evaluation.evaluator.PrintChecklist;
@@ -529,14 +531,20 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         }
         evaluateTask.subjects = toInsert;
 
-        evaluateTask.setOnStart(onStart -> {
+        evaluateTask.whenStarted(() -> {
             GenericLoadingShow.instance().show();
         });
-
-        evaluateTask.setOnSuccess(onSuccess -> {
-            GenericLoadingShow.instance().hide();
-            //showChoose-type
+        evaluateTask.whenCancelled(() -> {
+            Mono.fx().snackbar().showError(application_root, "Evaluation Was Cancelled.");
+        });
+        evaluateTask.whenFailed(() -> {
+            Mono.fx().snackbar().showError(application_root, "Evaluation Failed.");
+        });
+        evaluateTask.whenSuccess(() -> {
             showChooseType(acad_term_id, true);
+        });
+        evaluateTask.whenFinished(() -> {
+            GenericLoadingShow.instance().hide();
             setView("home");
         });
 
@@ -544,18 +552,66 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         evaluateTask.transact();
     }
 
+    /**
+     *
+     * @param acadTermID
+     * @param isNew
+     * @param evaluationID evaluationID to check if there is already a set print
+     * Type.
+     */
     private void showChooseType(Integer acadTermID, boolean isNew) {
+        /**
+         * Applied Changes. so that when the advising slip will be reprinted
+         * there will be no need to select again the student type.
+         */
+        // check if the student is evaluated.
+        EvaluationMapping evaluationMap = Mono.orm()
+                .newSearch(Database.connect().evaluation())
+                .eq("STUDENT_id", this.currentStudent.getCict_id())
+                .eq("ACADTERM_id", SystemProperties.instance().getCurrentAcademicTerm().getId())
+                .active()
+                .first();
+
+        // create print Type.
         ChooseTypeController controller = new ChooseTypeController(this.currentStudent.getId(), acadTermID);
-        Mono.fx().create()
-                .setPackageName("org.cict.reports.advisingslip")
-                .setFxmlDocument("choose-type")
-                .makeFX()
-                .setController(controller)
-                .makeScene()
-                .makeStageApplication()
-                .stageResizeable(false)
-                .stageCenter()
-                .stageShowAndWait();
+
+        /**
+         * check if already selected.
+         */
+        boolean printerExecuted = false;
+        if (evaluationMap != null) {
+            if (!evaluationMap.getPrint_type().equalsIgnoreCase("NOT_SET")) {
+                /**
+                 * There is already a defined print type in the evaluation.
+                 */
+                controller.print(evaluationMap.getPrint_type());
+                printerExecuted = true;
+            }
+        } else {
+            // there is no evaluation.
+            // nothing to print.
+            return;
+        }
+
+        /**
+         * if the print was not called. show the chooser.
+         */
+        if (!printerExecuted) {
+            Mono.fx().create()
+                    .setPackageName("org.cict.reports.advisingslip")
+                    .setFxmlDocument("choose-type")
+                    .makeFX()
+                    .setController(controller)
+                    .makeScene()
+                    .makeStageApplication()
+                    .stageResizeable(false)
+                    .stageCenter()
+                    .stageShowAndWait();
+
+            evaluationMap.setPrint_type(controller.getSelected().toUpperCase());
+            Database.connect().evaluation().update(evaluationMap);
+        }
+
         if (controller.isPrinting()) {
             String text = "Printing Evaluation Slip";
             if (isNew) {

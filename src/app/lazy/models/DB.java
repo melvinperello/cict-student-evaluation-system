@@ -49,6 +49,9 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_faculty faculty = new Tbl_faculty();
     public static Tbl_faculty faculty() {
         return faculty;
+    }private final static Tbl_faculty_profile faculty_profile = new Tbl_faculty_profile();
+    public static Tbl_faculty_profile faculty_profile() {
+        return faculty_profile;
     }private final static Tbl_grade grade = new Tbl_grade();
     public static Tbl_grade grade() {
         return grade;

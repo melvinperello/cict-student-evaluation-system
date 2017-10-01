@@ -2,7 +2,7 @@
 // SQL_table: faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Sep 29, 2017 02:00:59 PM
+// Created: Oct 01, 2017 05:36:40 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -22,9 +22,11 @@ public final String bulsu_id = "bulsu_id";
 public final String last_name = "last_name";
 public final String first_name = "first_name";
 public final String middle_name = "middle_name";
+public final String name_extension = "name_extension";
 public final String gender = "gender";
 public final String rank = "rank";
 public final String designation = "designation";
+public final String department = "department";
 public final String transaction_pin = "transaction_pin";
 public final String active = "active";
 }
