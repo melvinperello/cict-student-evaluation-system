@@ -23,6 +23,7 @@
  */
 package update3.org.cict.access;
 
+import com.jhmvin.Mono;
 import org.cict.authentication.authenticator.CollegeFaculty;
 
 /**
@@ -134,4 +135,22 @@ public class Access {
         return true;
     }
 
+    //-------------------------------------------------------------------------
+    public static boolean isAllowedToRevoke() {
+        ReEvaluationAccess controller = new ReEvaluationAccess();
+        Mono.fx().create()
+                .setPackageName("update3.org.cict.access")
+                .setFxmlDocument("ReEvaluationAccess")
+                .makeFX()
+                .setController(controller)
+                .makeScene()
+                .makeStageApplication()
+                .stageResizeable(false)
+                .stageUndecorated(true)
+                .stageTitle("Revocation Access")
+                .stageCenter()
+                .stageShowAndWait();
+
+        return controller.isAllowedOperation();
+    }
 }

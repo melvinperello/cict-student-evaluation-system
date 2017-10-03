@@ -8,7 +8,6 @@ package org.cict.evaluation;
 import org.cict.evaluation.views.SubjectView;
 import org.cict.evaluation.evaluator.Evaluator;
 import org.cict.evaluation.evaluator.SaveEvaluation;
-import org.cict.evaluation.evaluator.ValidateAddedSubject;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import javafx.collections.ListChangeListener;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -45,8 +43,6 @@ import com.jhmvin.fx.display.SceneFX;
 import javafx.scene.layout.Priority;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
-import org.cict.accountmanager.AccountManager;
-import org.cict.accountmanager.Logout;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.encoder.GradeEncoderController;
@@ -63,6 +59,7 @@ import org.cict.management.registrar.RevokeEvaluation;
 import org.cict.reports.advisingslip.ChooseTypeController;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.home.Home;
+import update3.org.cict.access.Access;
 
 /**
  * FXML Controller class
@@ -323,7 +320,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
          * Home Redirect
          */
         super.addClickEvent(btn_home, () -> {
-           Home.callHome(this);
+            Home.callHome(this);
         });
 
         super.addClickEvent(btn_checklist, () -> {
@@ -383,22 +380,61 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * unless upon given proper permission.
      */
     private void onRevokeEvaluation() {
+
+        /**
+         * Confirmation
+         */
+        int res = Mono.fx().alert()
+                .createConfirmation()
+                .setHeader("Revoke Transaction")
+                .setTitle("Confirmation")
+                .setMessage("Are you sure you want to continue ?")
+                .confirmYesNo();
+
+        if(res != 1){
+            return;
+        }
+        /**
+         * Only Local Registrar and Co-Registrars are allowed to re-evaluate.
+         */
+        boolean isAllowed = false;
+        if (Access.isDeniedIfNotFrom(
+                Access.ACCESS_LOCAL_REGISTRAR,
+                Access.ACCESS_CO_REGISTRAR)) {
+            /**
+             * Check if the user was granted permission by the registrar.
+             */
+            Access.isAllowedToRevoke();
+        } else {
+            // allowed user
+            isAllowed = true;
+        }
+
+        if (!isAllowed) {
+            Mono.fx().snackbar().showError(application_root, "You Are Not Allowed To Re-evaluate Students.");
+            return;
+        }
+
         RevokeEvaluation revoked_evaluation = Registrar.instance().createRevokeEvaluation();
         revoked_evaluation.cict_id = currentStudent.getCict_id();
         revoked_evaluation.registrar_id = CollegeFaculty.instance().getFACULTY_ID();
         revoked_evaluation.academic_term = Evaluator.instance().getCurrentAcademicTerm().getId();
 
-        revoked_evaluation.setOnStart(onStart -> {
+        revoked_evaluation.whenStarted(() -> {
             GenericLoadingShow.instance().show();
         });
+        revoked_evaluation.whenCancelled(() -> {
+            // cancelled is called upon error.
+        });
+        revoked_evaluation.whenFailed(() -> {
 
-        revoked_evaluation.setOnSuccess(onSuccess -> {
+        });
+        revoked_evaluation.whenSuccess(() -> {
+
+        });
+        revoked_evaluation.whenFinished(() -> {
             GenericLoadingShow.instance().hide();
             setView("home");
-        });
-
-        revoked_evaluation.setOnCancel(onCancel -> {
-            GenericLoadingShow.instance().hide();
         });
 
         revoked_evaluation.setRestTime(500);

@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.cict.MainApplication;
 import org.cict.GenericLoadingShow;
 import org.cict.ThreadMill;
@@ -76,11 +77,13 @@ public class Home extends SceneFX implements ControllerFX {
         controller.onStageClosing();
     }
 
+    private static Stage APPLICATION_STAGE;
     /**
      * Closing event for this stage.
      */
     private void onStageClosing() {
-        super.getStage().setOnCloseRequest(onClose -> {
+        APPLICATION_STAGE = super.getStage();
+        APPLICATION_STAGE.setOnCloseRequest(onClose -> {
             this.onLogout();
             onClose.consume();
         });
@@ -163,19 +166,29 @@ public class Home extends SceneFX implements ControllerFX {
                 .confirmYesNo();
         if (res == 1) {
             Logout logout = AccountManager.instance().createLogout();
-            logout.setOnStart(onStart -> {
+            logout.whenStarted(() -> {
                 GenericLoadingShow.instance().show();
             });
-            logout.setOnSuccess(onSuccess -> {
+            logout.whenCancelled(() -> {
+
+            });
+            logout.whenFailed(() -> {
+                // sometimes it fails to logout
+            });
+            logout.whenSuccess(() -> {
+
+            });
+            logout.whenFinished(() -> {
                 GenericLoadingShow.instance().hide();
                 /**
                  * Only destroy the threads of this session.
                  */
                 ThreadMill.threads().shutdown();
                 // close the stage.
-                super.finish();
+                APPLICATION_STAGE.close();
                 // relaunch the login screen.
                 relaunchLogin();
+
             });
             logout.setRestTime(300);
             logout.transact();
