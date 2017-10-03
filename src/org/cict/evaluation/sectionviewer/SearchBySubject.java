@@ -38,10 +38,14 @@ public class SearchBySubject extends Transaction {
     /**
      * Search Cached Values
      */
-    private SubjectMapping searchedSubject;
+    private ArrayList<SubjectMapping> searchedSubject;
     private ArrayList<LoadGroupMapping> loadGroups;
     private ArrayList<LoadSectionMapping> loadSections;
     private ArrayList<Integer> loadGroupPopulation;
+
+    public void log(Object message) {
+        System.out.println(this.getClass().getSimpleName() + ": " + message);
+    }
 
     /**
      *
@@ -55,31 +59,49 @@ public class SearchBySubject extends Transaction {
 
     @Override
     protected boolean transaction() {
+        System.out.println("Search By Subject Started.");
 
         /**
-         * Get the subject mapping
+         * Get the subject mapping. since there will be many subjects with same
+         * code we should get all of them.
          */
         searchedSubject = Mono.orm()
                 .newSearch(Database.connect().subject())
                 .eq(DB.subject().code, subjectCode)
                 .active()
-                .first();
+                .all();
 
         if (Objects.isNull(searchedSubject)) {
+            System.out.println("Subject not found");
             return false;
         }
 
         /**
          * If subject is existing get all load_groups with this subject ID.
          */
-        int subject_id = searchedSubject.getId();
-        loadGroups = Mono.orm()
-                .newSearch(Database.connect().load_group())
-                .eq("SUBJECT_id", subject_id)
-                .active()
-                .all();
+        loadGroups = new ArrayList<>();
+        for (SubjectMapping subjectMap : searchedSubject) {
+            
+            int subject_id = subjectMap.getId();
+            ArrayList<LoadGroupMapping> lg = Mono.orm()
+                    .newSearch(Database.connect().load_group())
+                    .eq("SUBJECT_id", subject_id)
+                    .active()
+                    .all();
 
-        if (Objects.isNull(loadGroups)) {
+            if (lg == null) {
+                System.out.println("Subject ID: " + subject_id);
+                System.out.println("No section found");
+                continue;
+            }
+
+            // if not empty add to collection
+            loadGroups.addAll(lg);
+
+        }
+
+        if (loadGroups.isEmpty()) {
+            // no sections for that subject.
             return false;
         }
 
@@ -112,8 +134,17 @@ public class SearchBySubject extends Transaction {
 
             loadGroupPopulation.add(population);
         });
-
+        log("Success Search by Subject");
         return true;
+    }
+
+    private SubjectMapping getSubjectByID(Integer id) {
+        for (SubjectMapping subjectMapping : this.searchedSubject) {
+            if (subjectMapping.getId().equals(id)) {
+                return subjectMapping;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -124,11 +155,12 @@ public class SearchBySubject extends Transaction {
 
         for (int x = 0; x < this.loadGroups.size(); x++) {
             // join tables
-
+            SubjectMapping subject = getSubjectByID(loadGroups.get(x).getSUBJECT_id());
+            
             SectionSearchView ssv = new SectionSearchView();
-            String code = this.searchedSubject.getCode();
+            String code = subject.getCode();
             ssv.labelCode.setText(code);
-            String title = this.searchedSubject.getDescriptive_title();
+            String title = subject.getDescriptive_title();
             ssv.labelTitle.setText(title);
 //            ssv.labelMax.setText("30");
 //            ssv.labelExpected.setText("~ 20");
@@ -141,22 +173,21 @@ public class SearchBySubject extends Transaction {
                     .eq("id", loadSections.get(x).getACADPROG_id())
                     .execute()
                     .first();
-            
+
             /**
-             * code added 8/28/17
-             * by: joemar
+             * code added 8/28/17 by: joemar
              */
             String course_code = "";
             if (acadProg != null) {
                 course_code = acadProg.getCode();
             }
             String sectionName = "";
-            if(loadSections.get(x).getYear_level() != null
+            if (loadSections.get(x).getYear_level() != null
                     && loadSections.get(x).getYear_level() != 0) {
-                sectionName = loadSections.get(x).getYear_level()+ " "
-                    + loadSections.get(x).getSection_name()
-                    + " - G"
-                    + loadSections.get(x).get_group();
+                sectionName = loadSections.get(x).getYear_level() + " "
+                        + loadSections.get(x).getSection_name()
+                        + " - G"
+                        + loadSections.get(x).get_group();
             } else {
                 sectionName = loadSections.get(x).getSection_name();
             }
@@ -166,7 +197,7 @@ public class SearchBySubject extends Transaction {
             ssv.labelSection.setText(sectionWithFormat);
 
             ssv.loadGroupID = this.loadGroups.get(x).getId();
-            ssv.subjectID = this.searchedSubject.getId();
+            ssv.subjectID = subject.getId();
             ssv.sectionID = this.loadSections.get(x).getId();
 
             searchResults.add(ssv);

@@ -26,6 +26,7 @@ import org.cict.SubjectClassification;
 import org.cict.evaluation.sectionviewer.SearchSuggestions;
 import org.cict.evaluation.views.SubjectView;
 import org.controlsfx.control.Notifications;
+import update.org.cict.controller.adding.ValidateOJT;
 
 /**
  * @author Jhon Melvin
@@ -163,6 +164,11 @@ public class Evaluator implements Process {
                 // pre-transaction filter
                 if (!this.isOJTVerified()) {
                     // if ojt not verified
+                    return;
+                }
+
+                if (!this.isInternshipAllowed()) {
+                    Mono.fx().snackbar().showError(anchor_right, "There are missing grades.");
                     return;
                 }
                 // starts transaction.
@@ -362,6 +368,16 @@ public class Evaluator implements Process {
             }
 
             return isOnList;
+        }
+
+        /**
+         * Checks whether the student has completed all the subjects and only
+         * missing with 1 Elective or 1 Minor and not both.
+         *
+         * @return
+         */
+        private boolean isInternshipAllowed() {
+            return ValidateOJT.isValidForOJT(currentStudent);
         }
 
         /**
