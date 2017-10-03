@@ -432,6 +432,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         }
         revoked_evaluation.academic_term = Evaluator.instance().getCurrentAcademicTerm().getId();
 
+        /**
+         * Events.
+         */
         revoked_evaluation.whenStarted(() -> {
             GenericLoadingShow.instance().show();
         });
@@ -446,10 +449,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         revoked_evaluation.whenFinished(() -> {
             GenericLoadingShow.instance().hide();
-            setView("home");
+            if (revoked_evaluation.isAddedChange()) {
+                Mono.fx().snackbar().showError(application_root, "Cannot re-evaluate students that undergone Adding/Changing Transactions.");
+                return;
+            }
+
             /**
              * Search the student after revoking.
              */
+            setView("home");
             this.searchStudent();
         });
 

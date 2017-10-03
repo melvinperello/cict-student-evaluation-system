@@ -119,6 +119,19 @@ public class PrintAdvising extends Transaction {
                 .active()
                 .first();
 
+        /**
+         * If the student had undergone adding and changing. print the original
+         * evaluation.
+         */
+        if (evaluation.getAdding_reference_id() != null) {
+            EvaluationMapping original = Database
+                    .connect()
+                    .evaluation()
+                    .getPrimary(evaluation.getAdding_reference_id());
+
+            evaluation = original;
+        }
+
         evaluator = Mono.orm()
                 .newSearch(Database.connect().faculty())
                 .eq("id", evaluation.getFACULTY_id())
@@ -129,8 +142,8 @@ public class PrintAdvising extends Transaction {
                 .newSearch(Database.connect().load_subject())
                 .eq("EVALUATION_id", evaluation.getId())
                 .eq("STUDENT_id", student.getCict_id())
-                .eq("remarks", "ACCEPTED")
-                .active()
+                //                .eq("remarks", "ACCEPTED")
+                .execute()
                 .all();
 
         subjectInformation = new ArrayList<>();
@@ -169,7 +182,11 @@ public class PrintAdvising extends Transaction {
 
         //SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
         SimpleDateFormat date_format = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
-        String date_now = date_format.format(Mono.orm().getServerTime().getDateWithFormat());
+        /**
+         * Preserve the date of the evaluation.
+         */
+//        String date_now = date_format.format(Mono.orm().getServerTime().getDateWithFormat());
+        String date_now = date_format.format(this.evaluation.getEvaluation_date());
         AdvisingSlip slip = new AdvisingSlip(studentNumber + "_"
                 + Mono.orm()
                         .getServerTime()

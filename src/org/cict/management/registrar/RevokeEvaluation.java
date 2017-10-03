@@ -46,19 +46,38 @@ public class RevokeEvaluation extends Transaction {
      *
      */
     private EvaluationMapping revokingEvaluation;
+    private boolean addedChange;
+
+    /**
+     * Tells whether the student have undergone adding and changing.
+     *
+     * @return
+     */
+    public boolean isAddedChange() {
+        return addedChange;
+    }
 
     @Override
     protected boolean transaction() {
+        /**
+         * Identifies whether the student already taken adding and changing
+         * transactions.
+         */
+        this.addedChange = false;
 
         revokingEvaluation = Mono.orm()
                 .newSearch(Database.connect().evaluation())
                 .eq("STUDENT_id", cict_id)
                 .eq("ACADTERM_id", academic_term)
-                .eq(DB.evaluation().type,"REGULAR")
+                .eq(DB.evaluation().type, "REGULAR") // for evaluation
                 .active()
                 .first();
 
         if (revokingEvaluation == null) {
+            /**
+             * This will be null if the type is ADDING_CHANGING.
+             */
+            this.addedChange = true;
             System.out.println("RevokeEvaluation: Evaluation is null");
             return false;
         }
