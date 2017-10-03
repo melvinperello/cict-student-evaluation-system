@@ -116,359 +116,375 @@ public class Evaluator implements Process {
      * @param anchor_right
      */
     public static void mouseDropSubject(StudentMapping currentStudent, double max_units, double unit_count, VBox vbox_subjects, AnchorPane anchor_right) {
-        System.out.println("@EvaluateController: Mouse Entered Drop Zone.");
-        /**
-         * check if the event is from the class viewer
-         */
-        if (!Evaluator.instance().sectionViewReleased) {
-            // no events from the class viewer
-            System.out.println("@EvaluateController: No Object Found.");
-            return;
-        }
-        // events was from the section viewer
-        System.out.println("@EvaluateController: Object Recieved.");
-        Evaluator.instance().sectionViewReleased = false; //refresh when object was recieved.
-        /**
-         * Validation of subjects server side. this won't run unless transact is
-         * called
-         */
-        ValidateAddedSubject validationTask = Evaluator
-                .instance()
-                .createValidateAddedSubject();
-        validationTask.studentCictID = currentStudent.getCict_id();
-        validationTask.loadGroupID = Evaluator.instance().pressedLoadGroupID;
-        validationTask.loadSecID = Evaluator.instance().pressedSectionID;
-        validationTask.subjectID = Evaluator.instance().pressedSubjectID;
+        SubjectWatcher sw = Evaluator.instance().new SubjectWatcher();
+        // add values.
+        sw.currentStudent = currentStudent;
+        sw.max_units = max_units;
+        sw.unit_count = unit_count;
+        sw.vbox_subjects = vbox_subjects;
+        sw.anchor_right = anchor_right;
+        // run analysis.
+        sw.analyze();
 
-        validationTask.setOnSuccess(e -> {
-            /**
-             * Checks whether the subject is eligible for the student.
-             */
+    }
+
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    private class SubjectWatcher {
+
+        StudentMapping currentStudent;
+        double max_units;
+        double unit_count;
+        VBox vbox_subjects;
+        AnchorPane anchor_right;
+
+        //local
+        ValidateAddedSubject validationTask;
+
+        // main function
+        public void analyze() {
+            System.out.println("@EvaluateController: Mouse Entered Drop Zone.");
+            // check input
+            if (!Evaluator.instance().sectionViewReleased) {
+                // no events from the class viewer
+                System.out.println("@EvaluateController: No Object Found.");
+                return;
+            }
+            // events was from the section viewer
+            System.out.println("@EvaluateController: Object Recieved.");
+            Evaluator.instance().sectionViewReleased = false; //refresh when object was recieved.
+
+            createTask();
+
+            //------------------------------------------------------------------
+            if (this.isAlreadyOnTheList()) {
+                // checks if the subject is already on the list.
+            } else {
+                // pre-transaction filter
+                if (!this.isOJTVerified()) {
+                    // if ojt not verified
+                    return;
+                }
+                // starts transaction.
+                validationTask.transact();
+
+            }
+        }
+
+        /**
+         * Create Task.
+         */
+        private void createTask() {
+            // validator
+            validationTask = Evaluator
+                    .instance()
+                    .createValidateAddedSubject();
+            validationTask.studentCictID = currentStudent.getCict_id();
+            validationTask.loadGroupID = Evaluator.instance().pressedLoadGroupID;
+            validationTask.loadSecID = Evaluator.instance().pressedSectionID;
+            validationTask.subjectID = Evaluator.instance().pressedSubjectID;
+
+            validationTask.setOnSuccess(e -> {
+                onValidateSuccess();
+                e.consume();
+            });
+
+            validationTask.setOnCancel(e -> {
+                Notifications.create()
+                        .title("Verification Failed")
+                        .text("Please try again.")
+                        .position(Pos.BOTTOM_RIGHT).showError();
+            });
+        }
+
+        /**
+         * When the validation result is success.
+         */
+        private void onValidateSuccess() {
+            // check eligibility
             if (validationTask.isEligibleToTake()) {
-                if (isOverMaxUnits(validationTask, max_units, unit_count)) {
-                    String text = validationTask.getSubjectCode() + ", Requires special permission to continue.\nClick here for more information.";
+                if (this.isOverMaxUnits()) {
+                    String text = validationTask.getSubjectCode() + ", Cannot be added."
+                            + "\nThis will exceed the maximum units allowed."
+                            + "\nClick This notification for more details.";
                     Notifications.create()
                             .title("Max Units Reached")
                             .text(text)
                             .onAction(pop -> {
-                                onPopRequest();
 
                             })
                             .position(Pos.BOTTOM_RIGHT).showInformation();
-                    e.consume();
                     return;
                 }
-                // add student to the list.
-                addToList(validationTask, vbox_subjects, anchor_right, currentStudent);
+                // add subject to the list if eligible and not max units
+                this.addToList();
             } else {
+                // subject already taken
+                if (this.isAlreadyTaken()) {
 
-                if (isAlreadyTaken(validationTask, currentStudent)) {
-                    e.consume();
                     return;
                 }
-
-                hasIncompletePreRequisite(validationTask, currentStudent);
-
+                // has incomplete pre requisites
+                this.hasIncompletePreRequisite();
             }
+        }
 
-        });
-
-        validationTask.setOnCancel(e -> {
-            Notifications.create()
-                    .title("Verification Failed")
-                    .text("Please try again.")
-                    .position(Pos.BOTTOM_RIGHT).showError();
-        });
-
-        //------------------------------------------------------------------
-        if (isAlreadyOnTheList(vbox_subjects)) {
-            // checks if the subject is already on the list.
-        } else {
-            // pre-transaction filter
+        //----------------------------------------------------------------------
+        /**
+         * Add to list.
+         */
+        private void addToList() {
             /**
-             * Any filter that does not concern the transaction will be executed
-             * first
+             * Display notifications
              */
-            if (!isOJTVerified(validationTask, vbox_subjects)) {
-                // if ojt not verified
-                return;
-            }
-            /**
-             * Start Transaction.
-             */
-            validationTask.transact();
-
-        }
-
-    }
-
-    /**
-     * Tests whether adding of an Internship subject is allowed.
-     *
-     * @param validationTask
-     * @param vbox_subjects
-     * @return
-     */
-    private static boolean isOJTVerified(ValidateAddedSubject validationTask, VBox vbox_subjects) {
-        /**
-         * transaction and ojt verification
-         *
-         * @date 08/31/2017
-         */
-
-        String ojtVerification = verifyOJT(vbox_subjects, Evaluator.instance().pressedSubjectID).toLowerCase();
-        if (ojtVerification.equals("allow")) {
-            return true;
-        } else {
-            String warningtext = "";
-
-            if (ojtVerification.equals("limit_one")) {
-                warningtext = "Internship can only be taken with \n"
-                        + "1 Minor/Elective Subject.";
-            } else if (ojtVerification.equals("not_allowed_with_major")) {
-                warningtext = "Cannot take Internship with a Major Subject";
-            }
-
-            Notifications.create().title("Warning")
-                    .position(Pos.BOTTOM_RIGHT)
-                    .text(warningtext)
-                    .showWarning();
-
-            return false;
-        }
-
-        //--------------------------------------------------------------
-    }
-
-    private static void hasIncompletePreRequisite(ValidateAddedSubject validationTask, StudentMapping currentStudent) {
-        String text = validationTask.getSubjectCode()
-                + "\nVerified For S/N: "
-                + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".\n"
-                + "Requires: ";
-        for (String string : validationTask.getSubjectNeededCode()) {
-            text += (string + " | ");
-        }
-        Notifications.create()
-                .title("Pre-Requisites Required")
-                .text(text)
-                .position(Pos.BOTTOM_RIGHT).showWarning();
-    }
-
-    /**
-     * checks whether the subject that is trying to add is already on the list.
-     * same subject in different section will still return true.
-     *
-     * @param vbox_subjects
-     * @return
-     */
-    private static boolean isAlreadyOnTheList(VBox vbox_subjects) {
-        //--------------------------------------------------------------
-        /**
-         * Validate if it's already in the list.
-         */
-        boolean isOnList = false;
-        String existingCode = ""; // for pop ups
-        /**
-         * Loop that checks if the subject that being add is in the list.
-         */
-        //------------------------------------------------------------------
-        for (Node node : vbox_subjects.getChildren()) {
-            if (node instanceof SubjectView) {
-                SubjectView view = (SubjectView) node;
-                if (view.subjectID.equals(Evaluator.instance().pressedSubjectID)) {
-                    isOnList = true;
-                    existingCode = view.code.getText();
-                    break;
-                }
-            }
-        }
-
-        if (isOnList) {
-            // already on the list
-            Notifications.create()
-                    .title("Already Added")
-                    .text(existingCode + " is already in the list.")
-                    .position(Pos.BOTTOM_RIGHT)
-                    .showWarning();
-        }
-
-        return isOnList;
-    }
-
-    /**
-     * checks whether if the student is overloaded.
-     *
-     * @param validationTask the validation task
-     * @param max_units defined in public constant
-     * @param unit_count current number of units.
-     * @return
-     */
-    private static boolean isOverMaxUnits(ValidateAddedSubject validationTask, double max_units, double unit_count) {
-        return (unit_count + validationTask.getSubjectUnits()) > max_units;
-    }
-
-    private static boolean isAlreadyTaken(ValidateAddedSubject validationTask, StudentMapping currentStudent) {
-        if (validationTask.isAlreadyTaken()) {
-            String text = validationTask.getSubjectCode() + " is already taken."
+            String text = validationTask.getSubjectCode()
                     + "\nVerified For S/N: "
                     + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".";
             Notifications.create()
-                    .title("Already Taken")
+                    .title("Verified")
+                    .text(text)
+                    .position(Pos.BOTTOM_RIGHT).showInformation();
+
+            /**
+             * Add subject to List
+             */
+            SubjectView addedSubject = new SubjectView();
+            addedSubject.code.setText(validationTask.getSubjectCode());
+            addedSubject.title.setText(validationTask.getSubjectTitle());
+            addedSubject.section.setText(validationTask.getSectionWithFormat());
+            //
+            addedSubject.units = validationTask.getSubjectUnits();
+            addedSubject.lab_units = validationTask.getSubjectLabUnits();
+            addedSubject.lec_units = validationTask.getSubjectLecUnits();
+            addedSubject.subjectID = Evaluator.instance().pressedSubjectID;
+            addedSubject.loadGroupID = Evaluator.instance().pressedLoadGroupID;
+            addedSubject.loadSecID = Evaluator.instance().pressedSectionID;
+            //
+            addedSubject.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
+
+                int choice = Mono.fx().alert()
+                        .createConfirmation()
+                        .setHeader("Remove Subject")
+                        .setMessage("Are you sure you want to remove the subject?")
+                        .confirmYesNo();
+                if (choice == 1) {
+                    vbox_subjects.getChildren().remove(addedSubject);
+                    Mono.fx()
+                            .snackbar()
+                            .showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
+                }
+
+            });
+
+            vbox_subjects.getChildren().add(addedSubject);
+        }
+
+        /**
+         * IS OVERRIDABLE BY SYSTEM.
+         */
+        private void hasIncompletePreRequisite() {
+            String text = validationTask.getSubjectCode()
+                    + "\nVerified For S/N: "
+                    + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".\n"
+                    + "Requires: ";
+            for (String string : validationTask.getSubjectNeededCode()) {
+                text += (string + " | ");
+            }
+            Notifications.create()
+                    .title("Pre-Requisites Required")
                     .text(text)
                     .position(Pos.BOTTOM_RIGHT).showWarning();
-            return true;
         }
-        return false;
-    }
 
-    /**
-     * If verification was complete and the subject can be added.
-     *
-     * @param validationTask the validation object.
-     * @param vbox_subjects the table that contains the subject.
-     * @param anchor_right the pane where to display the snack bar
-     * @param currentStudent information about the current student.
-     */
-    private static void addToList(ValidateAddedSubject validationTask,
-            VBox vbox_subjects,
-            AnchorPane anchor_right,
-            StudentMapping currentStudent) {
-        /**
-         * Display notifications
-         */
-        String text = validationTask.getSubjectCode()
-                + "\nVerified For S/N: "
-                + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".";
-        Notifications.create()
-                .title("Verified")
-                .text(text)
-                .position(Pos.BOTTOM_RIGHT).showInformation();
+        private boolean isAlreadyTaken() {
+            if (validationTask.isAlreadyTaken()) {
+                String text = validationTask.getSubjectCode() + " is already taken."
+                        + "\nVerified For S/N: "
+                        + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".";
+                Notifications.create()
+                        .title("Already Taken")
+                        .text(text)
+                        .position(Pos.BOTTOM_RIGHT).showWarning();
+                return true;
+            }
+            return false;
+        }
 
         /**
-         * Add subject to List
+         * IS OVERRIDABLE BY SYSTEM. checks whether if the student is
+         * overloaded.
+         *
+         * @param validationTask the validation task
+         * @param max_units defined in public constant
+         * @param unit_count current number of units.
+         * @return
          */
-        SubjectView addedSubject = new SubjectView();
-        addedSubject.code.setText(validationTask.getSubjectCode());
-        addedSubject.title.setText(validationTask.getSubjectTitle());
-        addedSubject.section.setText(validationTask.getSectionWithFormat());
-        //
-        addedSubject.units = validationTask.getSubjectUnits();
-        addedSubject.lab_units = validationTask.getSubjectLabUnits();
-        addedSubject.lec_units = validationTask.getSubjectLecUnits();
-        addedSubject.subjectID = Evaluator.instance().pressedSubjectID;
-        addedSubject.loadGroupID = Evaluator.instance().pressedLoadGroupID;
-        addedSubject.loadSecID = Evaluator.instance().pressedSectionID;
-        //
-        addedSubject.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
+        private boolean isOverMaxUnits() {
+            return (unit_count + validationTask.getSubjectUnits()) > max_units;
+        }
 
-            int choice = Mono.fx().alert()
-                    .createConfirmation()
-                    .setHeader("Remove Subject")
-                    .setMessage("Are you sure you want to remove the subject?")
-                    .confirmYesNo();
-            if (choice == 1) {
-                vbox_subjects.getChildren().remove(addedSubject);
-                Mono.fx()
-                        .snackbar()
-                        .showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
-            }
-
-        });
-
-        vbox_subjects.getChildren().add(addedSubject);
-    }
-
-    private static void onPopRequest() {
-    }
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    /**
-     * verifies if there is an existing internship subject in the list. limits
-     * the adding of OJT subject with another subject.
-     * <pre> RULES </pre>
-     * <ul>
-     * <li>Only allowed with 1 minor or elective subject.</li>
-     * </ul>
-     *
-     * @date 08/31/2017
-     *
-     */
-    private static String verifyOJT(VBox subjectBox, Integer subjectID) {
-        // get info about the added subject.
-        SubjectMapping addedSubject = (SubjectMapping) Database.connect()
-                .subject()
-                .getPrimary(subjectID);
-
-        Integer subjectcnt = 0;
-        subjectcnt = subjectBox.getChildren().stream().filter((node) -> (node instanceof SubjectView)).map((_item) -> 1).reduce(subjectcnt, Integer::sum);
-
-        boolean listHasOjt = false;
-        // check if the added subject is an internship subject.
-        if (addedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-            //------------------------------------------------------------------
-            if (subjectcnt == 1) {
-                SubjectView inTheList = (SubjectView) subjectBox.getChildren().get(0);
-                SubjectMapping subInList = (SubjectMapping) Database.connect()
-                        .subject()
-                        .getPrimary(inTheList.subjectID);
-
-                if (SubjectClassification.isMajor(subInList.getType())) {
-                    // if the subject on the list is a major subject
-                    return "NOT_ALLOWED_WITH_MAJOR";
-                } else {
-                    return "ALLOW";
-                }
-                //--------------------------------------------------------------
-            } else if (subjectcnt == 0) {
-                // if list is empty
-                return "ALLOW";
-            } else {
-                // only one subject is allowed
-                return "LIMIT_ONE";
-            }
-        } else {
+        /**
+         * checks whether the subject that is trying to add is already on the
+         * list. same subject in different section will still return true.
+         *
+         * @param vbox_subjects
+         * @return
+         */
+        private boolean isAlreadyOnTheList() {
+            //--------------------------------------------------------------
             /**
-             * If the user is trying to add a minor subject or regular one. we
-             * will check if an internship subject is existing within the list.
+             * Validate if it's already in the list.
              */
-            for (Node node : subjectBox.getChildren()) {
+            boolean isOnList = false;
+            String existingCode = ""; // for pop ups
+            /**
+             * Loop that checks if the subject that being add is in the list.
+             */
+            //------------------------------------------------------------------
+            for (Node node : vbox_subjects.getChildren()) {
                 if (node instanceof SubjectView) {
                     SubjectView view = (SubjectView) node;
-                    SubjectMapping subjectMap = (SubjectMapping) Database.connect()
-                            .subject()
-                            .getPrimary(view.subjectID);
-
-                    if (subjectMap.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                        listHasOjt = true;
+                    if (view.subjectID.equals(Evaluator.instance().pressedSubjectID)) {
+                        isOnList = true;
+                        existingCode = view.code.getText();
                         break;
                     }
-
                 }
             }
-            //------------------------------------------------------------------
+
+            if (isOnList) {
+                // already on the list
+                Notifications.create()
+                        .title("Already Added")
+                        .text(existingCode + " is already in the list.")
+                        .position(Pos.BOTTOM_RIGHT)
+                        .showWarning();
+            }
+
+            return isOnList;
         }
+
         /**
-         * If the list has OJT.
+         * IS OVERRIDABLE BY SYSTEM. Tests whether adding of an Internship
+         * subject is allowed.
+         *
+         * @param validationTask
+         * @param vbox_subjects
+         * @return
          */
-        if (listHasOjt) {
-            if (subjectcnt > 1) {
-                // if this subject was the third subject if added
-                return "LIMIT_ONE";
+        private boolean isOJTVerified() {
+            /**
+             * transaction and ojt verification
+             *
+             * @date 08/31/2017
+             */
+
+            String ojtVerification = verifyOJT(vbox_subjects, Evaluator.instance().pressedSubjectID).toLowerCase();
+            if (ojtVerification.equals("allow")) {
+                return true;
             } else {
-                if (SubjectClassification.isMajor(addedSubject.getType())) {
-                    // if the subject on the list is a major subject
-                    return "NOT_ALLOWED_WITH_MAJOR";
-                } else {
-                    return "ALLOW";
+                String warningtext = "";
+
+                if (ojtVerification.equals("limit_one")) {
+                    warningtext = "Internship can only be taken with \n"
+                            + "1 Minor/Elective Subject.";
+                } else if (ojtVerification.equals("not_allowed_with_major")) {
+                    warningtext = "Cannot take Internship with a Major Subject";
                 }
+
+                Notifications.create().title("Warning")
+                        .position(Pos.BOTTOM_RIGHT)
+                        .text(warningtext)
+                        .showWarning();
+
+                return false;
             }
+
+            //--------------------------------------------------------------
         }
 
         /**
-         * If no ojt subject is on the list.
+         * Checks whether there is an intern subject on the list or trying to
+         * add intern subject.
          */
-        return "ALLOW";
-    }
+        private String verifyOJT(VBox subjectBox, Integer subjectID) {
+            // get info about the added subject.
+            SubjectMapping addedSubject = (SubjectMapping) Database.connect()
+                    .subject()
+                    .getPrimary(subjectID);
+
+            Integer subjectcnt = 0;
+            subjectcnt = subjectBox.getChildren().stream().filter((node) -> (node instanceof SubjectView)).map((_item) -> 1).reduce(subjectcnt, Integer::sum);
+
+            boolean listHasOjt = false;
+            // check if the added subject is an internship subject.
+            if (addedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                //------------------------------------------------------------------
+                if (subjectcnt == 1) {
+                    SubjectView inTheList = (SubjectView) subjectBox.getChildren().get(0);
+                    SubjectMapping subInList = (SubjectMapping) Database.connect()
+                            .subject()
+                            .getPrimary(inTheList.subjectID);
+
+                    if (SubjectClassification.isMajor(subInList.getType())) {
+                        // if the subject on the list is a major subject
+                        return "NOT_ALLOWED_WITH_MAJOR";
+                    } else {
+                        return "ALLOW";
+                    }
+                    //--------------------------------------------------------------
+                } else if (subjectcnt == 0) {
+                    // if list is empty
+                    return "ALLOW";
+                } else {
+                    // only one subject is allowed
+                    return "LIMIT_ONE";
+                }
+            } else {
+                /**
+                 * If the user is trying to add a minor subject or regular one.
+                 * we will check if an internship subject is existing within the
+                 * list.
+                 */
+                for (Node node : subjectBox.getChildren()) {
+                    if (node instanceof SubjectView) {
+                        SubjectView view = (SubjectView) node;
+                        SubjectMapping subjectMap = (SubjectMapping) Database.connect()
+                                .subject()
+                                .getPrimary(view.subjectID);
+
+                        if (subjectMap.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                            listHasOjt = true;
+                            break;
+                        }
+
+                    }
+                }
+                //------------------------------------------------------------------
+            }
+            /**
+             * If the list has OJT.
+             */
+            if (listHasOjt) {
+                if (subjectcnt > 1) {
+                    // if this subject was the third subject if added
+                    return "LIMIT_ONE";
+                } else {
+                    if (SubjectClassification.isMajor(addedSubject.getType())) {
+                        // if the subject on the list is a major subject
+                        return "NOT_ALLOWED_WITH_MAJOR";
+                    } else {
+                        return "ALLOW";
+                    }
+                }
+            }
+
+            /**
+             * If no ojt subject is on the list.
+             */
+            return "ALLOW";
+        }
+
+    } // inner clas end
 
 }
