@@ -46,6 +46,7 @@ private MonoModels tbl_load_subject;
 private MonoModels tbl_student;
 private MonoModels tbl_student_profile;
 private MonoModels tbl_subject;
+private MonoModels tbl_system_variables;
 private void setup() {
 Mono.orm().setConnectionDriverClass("org.mariadb.jdbc.Driver");
 Mono.orm().setConnectionProvider("jdbc:mariadb");
@@ -126,6 +127,8 @@ Mono.orm().addMappings("StudentProfileMapping");
 this.tbl_student_profile = Mono.orm().createModel(StudentProfileMapping.class);
 Mono.orm().addMappings("SubjectMapping");
 this.tbl_subject = Mono.orm().createModel(SubjectMapping.class);
+Mono.orm().addMappings("SystemVariablesMapping");
+this.tbl_system_variables = Mono.orm().createModel(SystemVariablesMapping.class);
 Mono.orm().connect();
 }
 public MonoModels academic_program() {
@@ -220,5 +223,8 @@ return tbl_student_profile;
 }
 public MonoModels subject() {
 return tbl_subject;
+}
+public MonoModels system_variables() {
+return tbl_system_variables;
 }
 }

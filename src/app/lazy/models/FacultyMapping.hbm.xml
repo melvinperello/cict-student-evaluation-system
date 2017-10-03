@@ -34,9 +34,6 @@
 <property name="department" type="java.lang.String">
 <column name="department" length="50"/>
 </property>
-<property name="transaction_pin" type="java.lang.String">
-<column name="transaction_pin" length="6"/>
-</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

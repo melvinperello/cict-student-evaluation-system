@@ -16,6 +16,9 @@
 <property name="password" type="java.lang.String">
 <column name="password" length="150"/>
 </property>
+<property name="transaction_pin" type="java.lang.String">
+<column name="transaction_pin" length="150"/>
+</property>
 <property name="recovery_question" type="java.lang.String">
 <column name="recovery_question" length="50"/>
 </property>

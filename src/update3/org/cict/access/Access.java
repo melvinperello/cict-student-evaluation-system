@@ -23,6 +23,7 @@
  */
 package update3.org.cict.access;
 
+import app.lazy.models.AccountFacultyMapping;
 import com.jhmvin.Mono;
 import org.cict.authentication.authenticator.CollegeFaculty;
 
@@ -99,6 +100,16 @@ public class Access {
             return getAccessLevel(lowestRequired) >= getAccessLevel(possessed);
         }
     }
+    //--------------------------------------------------------------------------
+
+    public static boolean isGrantedIfFrom(String possessed, String... allowed) {
+        for (String string : allowed) {
+            if (isGranted(string, possessed)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Shorthand method.
@@ -136,7 +147,7 @@ public class Access {
     }
 
     //-------------------------------------------------------------------------
-    public static boolean isAllowedToRevoke() {
+    public static AccountFacultyMapping isAllowedToRevoke() {
         ReEvaluationAccess controller = new ReEvaluationAccess();
         Mono.fx().create()
                 .setPackageName("update3.org.cict.access")
@@ -151,6 +162,6 @@ public class Access {
                 .stageCenter()
                 .stageShowAndWait();
 
-        return controller.isAllowedOperation();
+        return controller.getAllowedUser();
     }
 }

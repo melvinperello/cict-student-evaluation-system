@@ -2,7 +2,7 @@
 // SQL_table: account_faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 01, 2017 05:36:39 PM
+// Created: Oct 03, 2017 05:38:25 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -21,6 +21,7 @@ public final String id = "id";
 public final String FACULTY_id = "FACULTY_id";
 public final String username = "username";
 public final String password = "password";
+public final String transaction_pin = "transaction_pin";
 public final String recovery_question = "recovery_question";
 public final String recovery_answer = "recovery_answer";
 public final String access_level = "access_level";

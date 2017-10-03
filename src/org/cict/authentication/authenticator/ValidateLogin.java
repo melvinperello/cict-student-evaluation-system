@@ -350,7 +350,6 @@ public class ValidateLogin extends Transaction {
         CollegeFaculty.instance().setGENDER(collegeFaculty.getGender());
         CollegeFaculty.instance().setRANK(collegeFaculty.getRank());
         CollegeFaculty.instance().setDESIGNATION(collegeFaculty.getDesignation());
-        CollegeFaculty.instance().setTRANSACTION_PIN(collegeFaculty.getTransaction_pin());
 
         /**
          * Faculty Account Information stored in the JVM.
@@ -359,6 +358,7 @@ public class ValidateLogin extends Transaction {
         CollegeFaculty.instance().setACCOUNT_ID(facultyAccount.getId());
         CollegeFaculty.instance().setUSERNAME(facultyAccount.getUsername());
         CollegeFaculty.instance().setACCESS_LEVEL(facultyAccount.getAccess_level());
+        CollegeFaculty.instance().setTRANSACTION_PIN(facultyAccount.getTransaction_pin());
     }
 
     private void createSession() {

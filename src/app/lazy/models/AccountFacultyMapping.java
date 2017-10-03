@@ -2,7 +2,7 @@
 // SQL_table: account_faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 01, 2017 05:36:38 PM
+// Created: Oct 03, 2017 05:38:23 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -31,6 +31,7 @@ private java.lang.Integer id;
 private java.lang.Integer FACULTY_id;
 private java.lang.String username;
 private java.lang.String password;
+private java.lang.String transaction_pin;
 private java.lang.String recovery_question;
 private java.lang.String recovery_answer;
 private java.lang.String access_level;
@@ -76,6 +77,15 @@ public java.lang.String getPassword() {
 
 public void setPassword(java.lang.String fieldPassword) {
 	this.password = fieldPassword;
+}
+
+@Column(name = "transaction_pin", nullable = true, length = 150)
+public java.lang.String getTransaction_pin() {
+	return this.transaction_pin;
+}
+
+public void setTransaction_pin(java.lang.String fieldTransactionPin) {
+	this.transaction_pin = fieldTransactionPin;
 }
 
 @Column(name = "recovery_question", nullable = true, length = 50)

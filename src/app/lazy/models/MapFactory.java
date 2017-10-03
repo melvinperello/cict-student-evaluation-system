@@ -110,4 +110,7 @@ return new StudentProfileMapping();
 public SubjectMapping subject() {
 return new SubjectMapping();
 }
+public SystemVariablesMapping system_variables() {
+return new SystemVariablesMapping();
+}
 }

@@ -27,6 +27,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
@@ -391,20 +392,24 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .setMessage("Are you sure you want to continue ?")
                 .confirmYesNo();
 
-        if(res != 1){
+        if (res != 1) {
             return;
         }
         /**
          * Only Local Registrar and Co-Registrars are allowed to re-evaluate.
          */
         boolean isAllowed = false;
+        AccountFacultyMapping allowedUser = null;
         if (Access.isDeniedIfNotFrom(
                 Access.ACCESS_LOCAL_REGISTRAR,
                 Access.ACCESS_CO_REGISTRAR)) {
             /**
              * Check if the user was granted permission by the registrar.
              */
-            Access.isAllowedToRevoke();
+            allowedUser = Access.isAllowedToRevoke();
+            if (allowedUser != null) {
+                isAllowed = true;
+            }
         } else {
             // allowed user
             isAllowed = true;
@@ -417,7 +422,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         RevokeEvaluation revoked_evaluation = Registrar.instance().createRevokeEvaluation();
         revoked_evaluation.cict_id = currentStudent.getCict_id();
-        revoked_evaluation.registrar_id = CollegeFaculty.instance().getFACULTY_ID();
+        if (allowedUser == null) {
+            /**
+             * the user is the registrar
+             */
+            revoked_evaluation.registrar_id = CollegeFaculty.instance().getFACULTY_ID();
+        } else {
+            revoked_evaluation.registrar_id = allowedUser.getFACULTY_id();
+        }
         revoked_evaluation.academic_term = Evaluator.instance().getCurrentAcademicTerm().getId();
 
         revoked_evaluation.whenStarted(() -> {
@@ -435,6 +447,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         revoked_evaluation.whenFinished(() -> {
             GenericLoadingShow.instance().hide();
             setView("home");
+            /**
+             * Search the student after revoking.
+             */
+            this.searchStudent();
         });
 
         revoked_evaluation.setRestTime(500);

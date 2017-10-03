@@ -55,6 +55,9 @@
 <property name="reason_for_update" type="java.lang.String">
 <column name="reason_for_update" length="50"/>
 </property>
+<property name="referrence_curriculum" type="java.lang.Integer">
+<column name="referrence_curriculum" length="10"/>
+</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

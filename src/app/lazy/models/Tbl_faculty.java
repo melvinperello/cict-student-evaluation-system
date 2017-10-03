@@ -2,7 +2,7 @@
 // SQL_table: faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 01, 2017 05:36:40 PM
+// Created: Oct 03, 2017 05:38:25 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -27,6 +27,5 @@ public final String gender = "gender";
 public final String rank = "rank";
 public final String designation = "designation";
 public final String department = "department";
-public final String transaction_pin = "transaction_pin";
 public final String active = "active";
 }

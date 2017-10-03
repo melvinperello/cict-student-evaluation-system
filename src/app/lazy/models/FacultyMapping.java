@@ -2,7 +2,7 @@
 // SQL_table: faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 01, 2017 05:36:38 PM
+// Created: Oct 03, 2017 05:38:23 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -37,7 +37,6 @@ private java.lang.String gender;
 private java.lang.String rank;
 private java.lang.String designation;
 private java.lang.String department;
-private java.lang.String transaction_pin;
 private java.lang.Integer active;
 
 @Id
@@ -130,15 +129,6 @@ public java.lang.String getDepartment() {
 
 public void setDepartment(java.lang.String fieldDepartment) {
 	this.department = fieldDepartment;
-}
-
-@Column(name = "transaction_pin", nullable = true, length = 6)
-public java.lang.String getTransaction_pin() {
-	return this.transaction_pin;
-}
-
-public void setTransaction_pin(java.lang.String fieldTransactionPin) {
-	this.transaction_pin = fieldTransactionPin;
 }
 
 @Column(name = "active", nullable = true, length = 10)

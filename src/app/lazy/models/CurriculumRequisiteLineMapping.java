@@ -2,7 +2,7 @@
 // SQL_table: curriculum_requisite_line
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 01, 2017 05:36:38 PM
+// Created: Oct 03, 2017 05:38:23 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
