@@ -120,192 +120,262 @@ public class Evaluator implements Process {
         /**
          * check if the event is from the class viewer
          */
-        if (Evaluator.instance().sectionViewReleased) {
-
-            System.out.println("@EvaluateController: Object Recieved.");
-            Evaluator.instance().sectionViewReleased = false;
-
-            /**
-             * Validation of subjects server side. this won't run unless
-             * transact is called
-             */
-            ValidateAddedSubject validationTask = Evaluator
-                    .instance()
-                    .createValidateAddedSubject();
-            validationTask.studentCictID = currentStudent.getCict_id();
-            validationTask.loadGroupID = Evaluator.instance().pressedLoadGroupID;
-            validationTask.loadSecID = Evaluator.instance().pressedSectionID;
-            validationTask.subjectID = Evaluator.instance().pressedSubjectID;
-
-            validationTask.setOnSuccess(e -> {
-                if (validationTask.isEligibleToTake()) {
-
-                    /**
-                     * Check Max Units
-                     */
-                    if ((unit_count + validationTask.getSubjectUnits()) > max_units) {
-                        String text = validationTask.getSubjectCode() + ", Requires special permission to continue.\nClick here for more information.";
-                        Notifications.create()
-                                .title("Max Units Reached")
-                                .text(text)
-                                .onAction(pop -> {
-                                    onPopRequest();
-
-                                })
-                                .position(Pos.BOTTOM_RIGHT).showInformation();
-                        e.consume();
-                        return;
-                    }
-                    /**
-                     * Display notifications
-                     */
-                    String text = validationTask.getSubjectCode()
-                            + "\nVerified For S/N: "
-                            + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".";
-                    Notifications.create()
-                            .title("Verified")
-                            .text(text)
-                            .position(Pos.BOTTOM_RIGHT).showInformation();
-
-                    /**
-                     * Add subject to List
-                     */
-                    SubjectView addedSubject = new SubjectView();
-                    addedSubject.code.setText(validationTask.getSubjectCode());
-                    addedSubject.title.setText(validationTask.getSubjectTitle());
-                    addedSubject.section.setText(validationTask.getSectionWithFormat());
-                    //
-                    addedSubject.units = validationTask.getSubjectUnits();
-                    addedSubject.lab_units = validationTask.getSubjectLabUnits();
-                    addedSubject.lec_units = validationTask.getSubjectLecUnits();
-                    addedSubject.subjectID = Evaluator.instance().pressedSubjectID;
-                    addedSubject.loadGroupID = Evaluator.instance().pressedLoadGroupID;
-                    addedSubject.loadSecID = Evaluator.instance().pressedSectionID;
-                    //
-                    addedSubject.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
-
-                        int choice = Mono.fx().alert()
-                                .createConfirmation()
-                                .setHeader("Remove Subject")
-                                .setMessage("Are you sure you want to remove the subject?")
-                                .confirmYesNo();
-                        if (choice == 1) {
-                            vbox_subjects.getChildren().remove(addedSubject);
-                            Mono.fx()
-                                    .snackbar()
-                                    .showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
-                        }
-
-//                        vbox_subjects.getChildren().remove(addedSubject);
-//                        Mono.fx().snackbar().showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
-                    });
-
-                    vbox_subjects.getChildren().add(addedSubject);
-                } else {
-
-                    /**
-                     * If subject is already Taken
-                     */
-                    if (validationTask.isAlreadyTaken()) {
-                        String text = validationTask.getSubjectCode() + " is already taken."
-                                + "\nVerified For S/N: "
-                                + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".";
-                        Notifications.create()
-                                .title("Already Taken")
-                                .text(text)
-                                .position(Pos.BOTTOM_RIGHT).showWarning();
-                        e.consume();
-                        return;
-                    }
-
-                    String text = validationTask.getSubjectCode()
-                            + "\nVerified For S/N: "
-                            + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".\n"
-                            + "Requires: ";
-                    for (String string : validationTask.getSubjectNeededCode()) {
-                        text += (string + " | ");
-                    }
-                    Notifications.create()
-                            .title("Pre-Requisites Required")
-                            .text(text)
-                            .position(Pos.BOTTOM_RIGHT).showWarning();
-
-                }
-
-            });
-            validationTask.setOnCancel(e -> {
-                Notifications.create()
-                        .title("Verification Failed")
-                        .text("Please try again.")
-                        .position(Pos.BOTTOM_RIGHT).showError();
-            });
-
-            //--------------------------------------------------------------
-            /**
-             * Validate if it's already in the list.
-             */
-            boolean isOnList = false;
-            String existingCode = ""; // for pop ups
-            /**
-             * Loop that checks if the subject that being add is in the list.
-             */
-            //------------------------------------------------------------------
-            for (Node node : vbox_subjects.getChildren()) {
-                if (node instanceof SubjectView) {
-                    SubjectView view = (SubjectView) node;
-                    if (view.subjectID.equals(Evaluator.instance().pressedSubjectID)) {
-                        isOnList = true;
-                        existingCode = view.code.getText();
-                        break;
-                    }
-                }
-            }
-            //------------------------------------------------------------------
-
-            if (isOnList) {
-                // already on the list
-                Notifications.create()
-                        .title("Already Added")
-                        .text(existingCode + " is already in the list.")
-                        .position(Pos.BOTTOM_RIGHT)
-                        .showWarning();
-            } else {
-                /**
-                 * Check for unit count
-                 */
-                //--------------------------------------------------------------
-                //--------------------------------------------------------------
-                /**
-                 * transaction and ojt verification
-                 *
-                 * @date 08/31/2017
-                 */
-
-                String ojtVerification = ojtVerify(vbox_subjects, Evaluator.instance().pressedSubjectID).toLowerCase();
-                if (ojtVerification.equals("allow")) {
-                    // allow add
-                    validationTask.transact();
-                } else {
-                    String warningtext = "";
-
-                    if (ojtVerification.equals("limit_one")) {
-                        warningtext = "Internship can only be taken with \n"
-                                + "1 Minor/Elective Subject.";
-                    } else if (ojtVerification.equals("not_allowed_with_major")) {
-                        warningtext = "Cannot take Internship with a Major Subject";
-                    }
-
-                    Notifications.create().title("Warning")
-                            .position(Pos.BOTTOM_RIGHT)
-                            .text(warningtext)
-                            .showWarning();
-                }
-
-                //--------------------------------------------------------------
-            }
-        } else {
+        if (!Evaluator.instance().sectionViewReleased) {
+            // no events from the class viewer
             System.out.println("@EvaluateController: No Object Found.");
+            return;
         }
+        // events was from the section viewer
+        System.out.println("@EvaluateController: Object Recieved.");
+        Evaluator.instance().sectionViewReleased = false; //refresh when object was recieved.
+        /**
+         * Validation of subjects server side. this won't run unless transact is
+         * called
+         */
+        ValidateAddedSubject validationTask = Evaluator
+                .instance()
+                .createValidateAddedSubject();
+        validationTask.studentCictID = currentStudent.getCict_id();
+        validationTask.loadGroupID = Evaluator.instance().pressedLoadGroupID;
+        validationTask.loadSecID = Evaluator.instance().pressedSectionID;
+        validationTask.subjectID = Evaluator.instance().pressedSubjectID;
+
+        validationTask.setOnSuccess(e -> {
+            /**
+             * Checks whether the subject is eligible for the student.
+             */
+            if (validationTask.isEligibleToTake()) {
+                if (isOverMaxUnits(validationTask, max_units, unit_count)) {
+                    String text = validationTask.getSubjectCode() + ", Requires special permission to continue.\nClick here for more information.";
+                    Notifications.create()
+                            .title("Max Units Reached")
+                            .text(text)
+                            .onAction(pop -> {
+                                onPopRequest();
+
+                            })
+                            .position(Pos.BOTTOM_RIGHT).showInformation();
+                    e.consume();
+                    return;
+                }
+                // add student to the list.
+                addToList(validationTask, vbox_subjects, anchor_right, currentStudent);
+            } else {
+
+                if (isAlreadyTaken(validationTask, currentStudent)) {
+                    e.consume();
+                    return;
+                }
+
+                hasIncompletePreRequisite(validationTask, currentStudent);
+
+            }
+
+        });
+
+        validationTask.setOnCancel(e -> {
+            Notifications.create()
+                    .title("Verification Failed")
+                    .text("Please try again.")
+                    .position(Pos.BOTTOM_RIGHT).showError();
+        });
+
+        //------------------------------------------------------------------
+        if (isAlreadyOnTheList(vbox_subjects)) {
+            // checks if the subject is already on the list.
+        } else {
+            // pre-transaction filter
+            /**
+             * Any filter that does not concern the transaction will be executed
+             * first
+             */
+            if (!isOJTVerified(validationTask, vbox_subjects)) {
+                // if ojt not verified
+                return;
+            }
+            /**
+             * Start Transaction.
+             */
+            validationTask.transact();
+
+        }
+
+    }
+
+    /**
+     * Tests whether adding of an Internship subject is allowed.
+     *
+     * @param validationTask
+     * @param vbox_subjects
+     * @return
+     */
+    private static boolean isOJTVerified(ValidateAddedSubject validationTask, VBox vbox_subjects) {
+        /**
+         * transaction and ojt verification
+         *
+         * @date 08/31/2017
+         */
+
+        String ojtVerification = verifyOJT(vbox_subjects, Evaluator.instance().pressedSubjectID).toLowerCase();
+        if (ojtVerification.equals("allow")) {
+            return true;
+        } else {
+            String warningtext = "";
+
+            if (ojtVerification.equals("limit_one")) {
+                warningtext = "Internship can only be taken with \n"
+                        + "1 Minor/Elective Subject.";
+            } else if (ojtVerification.equals("not_allowed_with_major")) {
+                warningtext = "Cannot take Internship with a Major Subject";
+            }
+
+            Notifications.create().title("Warning")
+                    .position(Pos.BOTTOM_RIGHT)
+                    .text(warningtext)
+                    .showWarning();
+
+            return false;
+        }
+
+        //--------------------------------------------------------------
+    }
+
+    private static void hasIncompletePreRequisite(ValidateAddedSubject validationTask, StudentMapping currentStudent) {
+        String text = validationTask.getSubjectCode()
+                + "\nVerified For S/N: "
+                + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".\n"
+                + "Requires: ";
+        for (String string : validationTask.getSubjectNeededCode()) {
+            text += (string + " | ");
+        }
+        Notifications.create()
+                .title("Pre-Requisites Required")
+                .text(text)
+                .position(Pos.BOTTOM_RIGHT).showWarning();
+    }
+
+    /**
+     * checks whether the subject that is trying to add is already on the list.
+     * same subject in different section will still return true.
+     *
+     * @param vbox_subjects
+     * @return
+     */
+    private static boolean isAlreadyOnTheList(VBox vbox_subjects) {
+        //--------------------------------------------------------------
+        /**
+         * Validate if it's already in the list.
+         */
+        boolean isOnList = false;
+        String existingCode = ""; // for pop ups
+        /**
+         * Loop that checks if the subject that being add is in the list.
+         */
+        //------------------------------------------------------------------
+        for (Node node : vbox_subjects.getChildren()) {
+            if (node instanceof SubjectView) {
+                SubjectView view = (SubjectView) node;
+                if (view.subjectID.equals(Evaluator.instance().pressedSubjectID)) {
+                    isOnList = true;
+                    existingCode = view.code.getText();
+                    break;
+                }
+            }
+        }
+
+        if (isOnList) {
+            // already on the list
+            Notifications.create()
+                    .title("Already Added")
+                    .text(existingCode + " is already in the list.")
+                    .position(Pos.BOTTOM_RIGHT)
+                    .showWarning();
+        }
+
+        return isOnList;
+    }
+
+    /**
+     * checks whether if the student is overloaded.
+     *
+     * @param validationTask the validation task
+     * @param max_units defined in public constant
+     * @param unit_count current number of units.
+     * @return
+     */
+    private static boolean isOverMaxUnits(ValidateAddedSubject validationTask, double max_units, double unit_count) {
+        return (unit_count + validationTask.getSubjectUnits()) > max_units;
+    }
+
+    private static boolean isAlreadyTaken(ValidateAddedSubject validationTask, StudentMapping currentStudent) {
+        if (validationTask.isAlreadyTaken()) {
+            String text = validationTask.getSubjectCode() + " is already taken."
+                    + "\nVerified For S/N: "
+                    + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".";
+            Notifications.create()
+                    .title("Already Taken")
+                    .text(text)
+                    .position(Pos.BOTTOM_RIGHT).showWarning();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * If verification was complete and the subject can be added.
+     *
+     * @param validationTask the validation object.
+     * @param vbox_subjects the table that contains the subject.
+     * @param anchor_right the pane where to display the snack bar
+     * @param currentStudent information about the current student.
+     */
+    private static void addToList(ValidateAddedSubject validationTask,
+            VBox vbox_subjects,
+            AnchorPane anchor_right,
+            StudentMapping currentStudent) {
+        /**
+         * Display notifications
+         */
+        String text = validationTask.getSubjectCode()
+                + "\nVerified For S/N: "
+                + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".";
+        Notifications.create()
+                .title("Verified")
+                .text(text)
+                .position(Pos.BOTTOM_RIGHT).showInformation();
+
+        /**
+         * Add subject to List
+         */
+        SubjectView addedSubject = new SubjectView();
+        addedSubject.code.setText(validationTask.getSubjectCode());
+        addedSubject.title.setText(validationTask.getSubjectTitle());
+        addedSubject.section.setText(validationTask.getSectionWithFormat());
+        //
+        addedSubject.units = validationTask.getSubjectUnits();
+        addedSubject.lab_units = validationTask.getSubjectLabUnits();
+        addedSubject.lec_units = validationTask.getSubjectLecUnits();
+        addedSubject.subjectID = Evaluator.instance().pressedSubjectID;
+        addedSubject.loadGroupID = Evaluator.instance().pressedLoadGroupID;
+        addedSubject.loadSecID = Evaluator.instance().pressedSectionID;
+        //
+        addedSubject.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
+
+            int choice = Mono.fx().alert()
+                    .createConfirmation()
+                    .setHeader("Remove Subject")
+                    .setMessage("Are you sure you want to remove the subject?")
+                    .confirmYesNo();
+            if (choice == 1) {
+                vbox_subjects.getChildren().remove(addedSubject);
+                Mono.fx()
+                        .snackbar()
+                        .showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
+            }
+
+        });
+
+        vbox_subjects.getChildren().add(addedSubject);
     }
 
     private static void onPopRequest() {
@@ -314,12 +384,17 @@ public class Evaluator implements Process {
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     /**
-     * verifies if there is an existing internship subject in the list.
+     * verifies if there is an existing internship subject in the list. limits
+     * the adding of OJT subject with another subject.
+     * <pre> RULES </pre>
+     * <ul>
+     * <li>Only allowed with 1 minor or elective subject.</li>
+     * </ul>
      *
      * @date 08/31/2017
      *
      */
-    private static String ojtVerify(VBox subjectBox, Integer subjectID) {
+    private static String verifyOJT(VBox subjectBox, Integer subjectID) {
         // get info about the added subject.
         SubjectMapping addedSubject = (SubjectMapping) Database.connect()
                 .subject()
