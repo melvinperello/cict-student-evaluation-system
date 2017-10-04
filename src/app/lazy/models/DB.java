@@ -97,6 +97,9 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_subject subject = new Tbl_subject();
     public static Tbl_subject subject() {
         return subject;
+    }private final static Tbl_system_override_logs system_override_logs = new Tbl_system_override_logs();
+    public static Tbl_system_override_logs system_override_logs() {
+        return system_override_logs;
     }private final static Tbl_system_variables system_variables = new Tbl_system_variables();
     public static Tbl_system_variables system_variables() {
         return system_variables;

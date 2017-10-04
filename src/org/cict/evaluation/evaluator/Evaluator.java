@@ -8,10 +8,14 @@
  */
 package org.cict.evaluation.evaluator;
 
+import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.Database;
+import app.lazy.models.LoadSectionMapping;
+import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.SystemOverrideLogsMapping;
 import com.jhmvin.Mono;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.sectionviewer.SearchBySection;
@@ -29,6 +33,7 @@ import org.cict.evaluation.views.SubjectView;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.adding.ValidateOJT;
 import update3.org.cict.access.Access;
+import update3.org.cict.access.SystemOverriding;
 
 /**
  * @author Jhon Melvin
@@ -157,20 +162,80 @@ public class Evaluator implements Process {
         private boolean allowOverride = false;
 
         /**
+         * Override Operations
+         */
+        private final String EXCEED_MAX_UNITS = SystemOverriding.EVAL_EXCEED_MAX_UNITS;
+        private final String INTERNSHIP_WITH_OTHERS = SystemOverriding.EVAL_INTERNSHIP_WITH_OTHERS;
+        private final String BYPASSED_PRE_REQUISITES = SystemOverriding.EVAL_BYPASSED_PRE_REQUISITES;
+        private final String INTERN_GRADE_REQUIREMENT = SystemOverriding.EVAL_INTERN_GRADE_REQUIREMENT;
+
+        /**
+         * Retrieves section information of subjects that are forcibly added.
+         *
+         * @param sectionID
+         * @return
+         */
+        private String getSection(Integer sectionID) {
+            LoadSectionMapping sectionMap = Database.connect().load_section()
+                    .getPrimary(sectionID);
+
+            String sectionWithFormat = "";
+            AcademicProgramMapping acadProgram = Mono.orm()
+                    .newSearch(Database.connect().academic_program())
+                    .eq("id", sectionMap.getACADPROG_id())
+                    .active()
+                    .first();
+
+            if (acadProgram == null) {
+//                    return false;
+                sectionWithFormat = sectionMap.getSection_name();
+            } else {
+                sectionWithFormat = acadProgram.getCode() + " "
+                        + sectionMap.getYear_level()
+                        + ""
+                        + sectionMap.getSection_name()
+                        + " - G"
+                        + sectionMap.get_group();
+            }
+
+            return sectionWithFormat;
+        }
+
+        /**
          * Forcibly adds the subject without filters.
          */
         private void forceAdd() {
-            SubjectView addedSubject = new SubjectView();
-            addedSubject.code.setText(validationTask.getSubjectCode());
-            addedSubject.title.setText(validationTask.getSubjectTitle());
-            addedSubject.section.setText(validationTask.getSectionWithFormat());
+
+            Integer subjectID = Evaluator.instance().pressedSubjectID;
+            Integer sectionID = Evaluator.instance().pressedSectionID;
+
+            SubjectMapping subjectMap = Database.connect().subject()
+                    .getPrimary(subjectID);
+
+            /**
+             * Display notifications
+             */
+            String text = subjectMap.getCode()
+                    + "\nOverrided For S/N: "
+                    + currentStudent.getId() + " ," + currentStudent.getLast_name() + "."
+                    + "\nThis action was captured and logged.";
+            Notifications.create()
+                    .title("System Rules Override")
+                    .text(text)
+                    .position(Pos.BOTTOM_RIGHT).showWarning();
             //
-            addedSubject.units = validationTask.getSubjectUnits();
-            addedSubject.lab_units = validationTask.getSubjectLabUnits();
-            addedSubject.lec_units = validationTask.getSubjectLecUnits();
-            addedSubject.subjectID = Evaluator.instance().pressedSubjectID;
+
+            SubjectView addedSubject = new SubjectView();
+            addedSubject.code.setText(subjectMap.getCode());
+            addedSubject.title.setText(subjectMap.getDescriptive_title());
+            addedSubject.section.setText(getSection(sectionID));
+            //
+            addedSubject.units = subjectMap.getLab_units() + subjectMap.getLec_units();
+            addedSubject.lab_units = subjectMap.getLab_units();
+            addedSubject.lec_units = subjectMap.getLec_units();
+            addedSubject.subjectID = subjectID;
             addedSubject.loadGroupID = Evaluator.instance().pressedLoadGroupID;
-            addedSubject.loadSecID = Evaluator.instance().pressedSectionID;
+            addedSubject.loadSecID = sectionID;
             //
             addedSubject.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
 
@@ -191,8 +256,38 @@ public class Evaluator implements Process {
             vbox_subjects.getChildren().add(addedSubject);
         }
 
+        private void goLang(String type) {
+            boolean ok = Access.isEvaluationOverride(allowOverride);
+            if (ok) {
+                SystemOverrideLogsMapping map = MapFactory.map().system_override_logs();
+                map.setCategory(SystemOverriding.CATEGORY_EVALUATION);
+                map.setDescription(type);
+                map.setExecuted_by(CollegeFaculty.instance().getFACULTY_ID());
+                map.setExecuted_date(Mono.orm().getServerTime().getDateWithFormat());
+                map.setAcademic_term(SystemProperties.instance().getCurrentAcademicTerm().getId());
+                String conforme = currentStudent.getLast_name() + ", ";
+
+                conforme += currentStudent.getFirst_name();
+                if (currentStudent.getMiddle_name() != null) {
+                    conforme += " ";
+                    conforme += currentStudent.getMiddle_name();
+                }
+                map.setConforme(conforme);
+                map.setConforme_type("STUDENT");
+                map.setConforme_id(currentStudent.getCict_id());
+
+                int id = Database.connect().system_override_logs().insert(map);
+                if (id <= 0) {
+                    Mono.fx().snackbar().showError(anchor_right, "Something went wrong please try again.");
+                } else {
+                    forceAdd();
+                }
+
+            }
+        }
+
         /**
-         * IS OVERRIDABLE BY SYSTEM. checks whether if the student is
+         * (1)IS OVERRIDABLE BY SYSTEM. checks whether if the student is
          * overloaded.
          *
          * @param validationTask the validation task
@@ -209,16 +304,9 @@ public class Evaluator implements Process {
                         .title("Max Units Reached")
                         .text(text)
                         .onAction(pop -> {
-                            boolean ok = Access.isEvaluationOverride(allowOverride);
-                            if (ok) {
-                                System.out.println("MAX UNITS OVERRIDDEN");
-                                // since transaction have already started in this point
-                                // we can already use the add tolist method
-                                // where its values are dependent on the validation task
-                                this.addToList();
-                            }
+                            this.goLang(EXCEED_MAX_UNITS);
                         })
-                        .position(Pos.BOTTOM_RIGHT).showInformation();
+                        .position(Pos.BOTTOM_RIGHT).showWarning();
                 return true;
             } else {
                 return false;
@@ -226,7 +314,7 @@ public class Evaluator implements Process {
         }
 
         /**
-         * IS OVERRIDABLE BY SYSTEM. Tests whether adding of an Internship
+         * (2)IS OVERRIDABLE BY SYSTEM. Tests whether adding of an Internship
          * subject is allowed. taking it with other subjects on the same
          * semester.
          *
@@ -254,7 +342,7 @@ public class Evaluator implements Process {
                         .position(Pos.BOTTOM_RIGHT)
                         .text(warningtext)
                         .onAction(onAction -> {
-
+                            this.goLang(INTERNSHIP_WITH_OTHERS);
                         })
                         .showWarning();
 
@@ -263,7 +351,7 @@ public class Evaluator implements Process {
         }
 
         /**
-         * IS OVERRIDABLE BY SYSTEM. checks whether the subject to take has
+         * (3)IS OVERRIDABLE BY SYSTEM. checks whether the subject to take has
          * complete pre requisites.
          */
         private void hasIncompletePreRequisite() {
@@ -277,13 +365,16 @@ public class Evaluator implements Process {
             Notifications.create()
                     .title("Pre-Requisites Required")
                     .text(text)
+                    .onAction(a -> {
+                        this.goLang(this.BYPASSED_PRE_REQUISITES);
+                    })
                     .position(Pos.BOTTOM_RIGHT).showWarning();
         }
 
         /**
-         * IS OVERRIDABLE BY SYSTEM. Checks whether the student has completed
-         * all the subjects and only missing with 1 Elective or 1 Minor and not
-         * both.
+         * (4) IS OVERRIDABLE BY SYSTEM. Checks whether the student has
+         * completed all the subjects and only missing with 1 Elective or 1
+         * Minor and not both.
          *
          * @return
          */
@@ -344,7 +435,13 @@ public class Evaluator implements Process {
             if (sub.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                 // if internship
                 if (!this.isInternshipAllowed()) {
-                    Mono.fx().snackbar().showError(anchor_right, "Cannot take Internship. There are Missing Grades.");
+                    Notifications.create()
+                            .title("Missing Grades")
+                            .text("Grades Defficiency.")
+                            .onAction(a -> {
+                                this.goLang(INTERN_GRADE_REQUIREMENT);
+                            })
+                            .position(Pos.BOTTOM_RIGHT).showWarning();
                     return;
                 }
             }

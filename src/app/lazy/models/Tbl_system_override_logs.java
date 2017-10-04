@@ -1,5 +1,5 @@
 // SQL_db: cictems
-// SQL_table: curriculum_pre
+// SQL_table: system_override_logs
 // Mono Models
 // Monosync Framewrok v1.8.x
 // Created: Oct 04, 2017 08:09:17 PM
@@ -16,14 +16,15 @@ package app.lazy.models;
  *
  * @author Jhon Melvin
  */
-public class Tbl_curriculum_pre {
+public class Tbl_system_override_logs {
 public final String id = "id";
-public final String curriculum_id_get = "curriculum_id_get";
-public final String curriculum_id_req = "curriculum_id_req";
-public final String cur_type = "cur_type";
-public final String created_date = "created_date";
-public final String created_by = "created_by";
-public final String removed_date = "removed_date";
-public final String removed_by = "removed_by";
+public final String category = "category";
+public final String description = "description";
+public final String executed_by = "executed_by";
+public final String executed_date = "executed_date";
+public final String academic_term = "academic_term";
+public final String conforme = "conforme";
+public final String conforme_type = "conforme_type";
+public final String conforme_id = "conforme_id";
 public final String active = "active";
 }

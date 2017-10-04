@@ -110,6 +110,9 @@ return new StudentProfileMapping();
 public SubjectMapping subject() {
 return new SubjectMapping();
 }
+public SystemOverrideLogsMapping system_override_logs() {
+return new SystemOverrideLogsMapping();
+}
 public SystemVariablesMapping system_variables() {
 return new SystemVariablesMapping();
 }
