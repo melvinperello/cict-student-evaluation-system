@@ -95,16 +95,20 @@ public class SearchBySection extends Transaction {
         int program_id = academicProgram.getId();
         int acad_term_id = Evaluator.instance().getCurrentAcademicTerm().getId(); // first semester of 2017-2018
 
+        try {
+            loadSection = Mono.orm()
+                    .newSearch(Database.connect().load_section())
+                    .eq("ACADTERM_id", acad_term_id)
+                    .eq("ACADPROG_id", program_id)
+                    .eq("section_name", section)
+                    .eq("year_level", Integer.valueOf(year))
+                    .eq("_group", Integer.valueOf(group))
+                    .active()
+                    .first();
+        } catch (NumberFormatException e) {
+            return false;
+        }
         // search section
-        loadSection = Mono.orm()
-                .newSearch(Database.connect().load_section())
-                .eq("ACADTERM_id", acad_term_id)
-                .eq("ACADPROG_id", program_id)
-                .eq("section_name", section)
-                .eq("year_level", Integer.valueOf(year))
-                .eq("_group", Integer.valueOf(group))
-                .active()
-                .first();
 
         // set values for section search
         if (Objects.isNull(loadSection)) {
@@ -133,7 +137,8 @@ public class SearchBySection extends Transaction {
 
         loadGroups.forEach(rows -> {
             // prepare subject search
-            SubjectMapping subject = (SubjectMapping) Database.connect().subject().getPrimary(rows.getSUBJECT_id()); /*Mono.orm()
+            SubjectMapping subject = (SubjectMapping) Database.connect().subject().getPrimary(rows.getSUBJECT_id());
+            /*Mono.orm()
                     .newSearch(Database.connect().subject())
                     .eq("id", rows.getSUBJECT_id())
                     .eq("ACADPROG_id", program_id)

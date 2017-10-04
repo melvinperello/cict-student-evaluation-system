@@ -144,11 +144,159 @@ public class Evaluator implements Process {
         //local
         private ValidateAddedSubject validationTask;
         private final String accessLevel = CollegeFaculty.instance().getACCESS_LEVEL();
+
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        /**
+         * Override filters.
+         */
         private boolean allowOverride = false;
 
         /**
-         * Overridable options.
+         * Forcibly adds the subject without filters.
          */
+        private void forceAdd() {
+            SubjectView addedSubject = new SubjectView();
+            addedSubject.code.setText(validationTask.getSubjectCode());
+            addedSubject.title.setText(validationTask.getSubjectTitle());
+            addedSubject.section.setText(validationTask.getSectionWithFormat());
+            //
+            addedSubject.units = validationTask.getSubjectUnits();
+            addedSubject.lab_units = validationTask.getSubjectLabUnits();
+            addedSubject.lec_units = validationTask.getSubjectLecUnits();
+            addedSubject.subjectID = Evaluator.instance().pressedSubjectID;
+            addedSubject.loadGroupID = Evaluator.instance().pressedLoadGroupID;
+            addedSubject.loadSecID = Evaluator.instance().pressedSectionID;
+            //
+            addedSubject.actionRemove.addEventHandler(MouseEvent.MOUSE_RELEASED, onRemove -> {
+
+                int choice = Mono.fx().alert()
+                        .createConfirmation()
+                        .setHeader("Remove Subject")
+                        .setMessage("Are you sure you want to remove the subject?")
+                        .confirmYesNo();
+                if (choice == 1) {
+                    vbox_subjects.getChildren().remove(addedSubject);
+                    Mono.fx()
+                            .snackbar()
+                            .showInfo(anchor_right, addedSubject.code.getText() + " Has Been Removed.");
+                }
+
+            });
+
+            vbox_subjects.getChildren().add(addedSubject);
+        }
+
+        /**
+         * IS OVERRIDABLE BY SYSTEM. checks whether if the student is
+         * overloaded.
+         *
+         * @param validationTask the validation task
+         * @param max_units defined in public constant
+         * @param unit_count current number of units.
+         * @return
+         */
+        private boolean isOverMaxUnits() {
+            if ((unit_count + validationTask.getSubjectUnits()) > max_units) {
+                String text = validationTask.getSubjectCode() + ", Cannot be added."
+                        + "\nThis will exceed the maximum units allowed."
+                        + "\nClick This notification for more details.";
+                Notifications.create()
+                        .title("Max Units Reached")
+                        .text(text)
+                        .onAction(pop -> {
+                            boolean ok = Access.isEvaluationOverride(allowOverride);
+                            if (ok) {
+                                System.out.println("MAX UNITS OVERRIDDEN");
+                                // since transaction have already started in this point
+                                // we can already use the add tolist method
+                                // where its values are dependent on the validation task
+                                this.addToList();
+                            }
+                        })
+                        .position(Pos.BOTTOM_RIGHT).showInformation();
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * IS OVERRIDABLE BY SYSTEM. Tests whether adding of an Internship
+         * subject is allowed. taking it with other subjects on the same
+         * semester.
+         *
+         * @param validationTask
+         * @param vbox_subjects
+         * @return
+         */
+        private boolean isOJTVerified() {
+            String ojtVerification = verifyOJT(vbox_subjects, Evaluator.instance().pressedSubjectID).toLowerCase();
+            if (ojtVerification.equals("allow")) {
+                return true;
+            } else {
+                String warningtext = "";
+
+                if (ojtVerification.equals("limit_one")) {
+                    warningtext = "Internship can only be taken with \n"
+                            + "1 Minor/Elective Subject.";
+                } else if (ojtVerification.equals("not_allowed_with_major")) {
+                    warningtext = "Cannot take Internship with a Major Subject";
+                }
+
+                warningtext += "\nClick This notification for more details.";
+
+                Notifications.create().title("Warning")
+                        .position(Pos.BOTTOM_RIGHT)
+                        .text(warningtext)
+                        .onAction(onAction -> {
+
+                        })
+                        .showWarning();
+
+                return false;
+            }
+        }
+
+        /**
+         * IS OVERRIDABLE BY SYSTEM. checks whether the subject to take has
+         * complete pre requisites.
+         */
+        private void hasIncompletePreRequisite() {
+            String text = validationTask.getSubjectCode()
+                    + "\nVerified For S/N: "
+                    + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".\n"
+                    + "Requires: ";
+            for (String string : validationTask.getSubjectNeededCode()) {
+                text += (string + " | ");
+            }
+            Notifications.create()
+                    .title("Pre-Requisites Required")
+                    .text(text)
+                    .position(Pos.BOTTOM_RIGHT).showWarning();
+        }
+
+        /**
+         * IS OVERRIDABLE BY SYSTEM. Checks whether the student has completed
+         * all the subjects and only missing with 1 Elective or 1 Minor and not
+         * both.
+         *
+         * @return
+         */
+        private boolean isInternshipAllowed() {
+            return ValidateOJT.isValidForOJT(currentStudent);
+        }
+
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // main function
         public void analyze() {
             // if local registrar allow override.
@@ -165,35 +313,45 @@ public class Evaluator implements Process {
             System.out.println("@EvaluateController: Object Recieved.");
             Evaluator.instance().sectionViewReleased = false; //refresh when object was recieved.
 
+            // creates the task but noy yet started.
             createTask();
-
-            //------------------------------------------------------------------
+            // these are methods to test before executing the transaction.
             if (this.isAlreadyOnTheList()) {
-                // checks if the subject is already on the list.
-            } else {
-                // pre-transaction filter
-                if (!this.isOJTVerified()) {
-                    // if ojt not verified
+                // checks if already in the list.
+                return;
+            }
+            // check for ojt if can take with other subject on the same time
+            if (!this.isOJTVerified()) {
+                // if ojt not verified
+                return;
+            }
+
+            // get the subject information if no subject info return
+            Integer subjectID = Evaluator.instance().pressedSubjectID;
+            if (subjectID == null) {
+                Mono.fx().snackbar().showError(anchor_right, "Cannot Recieved Subject Information");
+                return;
+            }
+
+            // get details from database.
+            SubjectMapping sub = Database.connect().subject().getPrimary(subjectID);
+            if (sub == null) {
+                Mono.fx().snackbar().showError(anchor_right, "Cannot Connect to Database");
+                return;
+            }
+
+            // if the subject is an internship subject
+            if (sub.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                // if internship
+                if (!this.isInternshipAllowed()) {
+                    Mono.fx().snackbar().showError(anchor_right, "Cannot take Internship. There are Missing Grades.");
                     return;
                 }
-                Integer subjectID = Evaluator.instance().pressedSubjectID;
-                if (subjectID != null) {
-                    SubjectMapping sub = Database.connect().subject().getPrimary(subjectID);
-                    if (sub != null) {
-                        if (sub.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            // if internship
-                            if (!this.isInternshipAllowed()) {
-                                Mono.fx().snackbar().showError(anchor_right, "There are missing grades.");
-                                return;
-                            }
-                        }
-                    }
-                }
-
-                // starts transaction.
-                validationTask.transact();
-
             }
+
+            // if passed the filter continue
+            // starts transaction.
+            validationTask.transact();
         }
 
         /**
@@ -229,17 +387,6 @@ public class Evaluator implements Process {
             // check eligibility
             if (validationTask.isEligibleToTake()) {
                 if (this.isOverMaxUnits()) {
-                    String text = validationTask.getSubjectCode() + ", Cannot be added."
-                            + "\nThis will exceed the maximum units allowed."
-                            + "\nClick This notification for more details.";
-                    Notifications.create()
-                            .title("Max Units Reached")
-                            .text(text)
-                            .onAction(pop -> {
-                                boolean ok = Access.isEvaluationOverride(allowOverride);
-                                System.out.println("MAX UNITS: " + ok);
-                            })
-                            .position(Pos.BOTTOM_RIGHT).showInformation();
                     return;
                 }
                 // add subject to the list if eligible and not max units
@@ -256,7 +403,7 @@ public class Evaluator implements Process {
 
         //----------------------------------------------------------------------
         /**
-         * Add to list.
+         * Add to list this is dependent on the Validation Task.
          */
         private void addToList() {
             /**
@@ -304,23 +451,6 @@ public class Evaluator implements Process {
             vbox_subjects.getChildren().add(addedSubject);
         }
 
-        /**
-         * IS OVERRIDABLE BY SYSTEM.
-         */
-        private void hasIncompletePreRequisite() {
-            String text = validationTask.getSubjectCode()
-                    + "\nVerified For S/N: "
-                    + currentStudent.getId() + " ," + currentStudent.getLast_name() + ".\n"
-                    + "Requires: ";
-            for (String string : validationTask.getSubjectNeededCode()) {
-                text += (string + " | ");
-            }
-            Notifications.create()
-                    .title("Pre-Requisites Required")
-                    .text(text)
-                    .position(Pos.BOTTOM_RIGHT).showWarning();
-        }
-
         private boolean isAlreadyTaken() {
             if (validationTask.isAlreadyTaken()) {
                 String text = validationTask.getSubjectCode() + " is already taken."
@@ -333,19 +463,6 @@ public class Evaluator implements Process {
                 return true;
             }
             return false;
-        }
-
-        /**
-         * IS OVERRIDABLE BY SYSTEM. checks whether if the student is
-         * overloaded.
-         *
-         * @param validationTask the validation task
-         * @param max_units defined in public constant
-         * @param unit_count current number of units.
-         * @return
-         */
-        private boolean isOverMaxUnits() {
-            return (unit_count + validationTask.getSubjectUnits()) > max_units;
         }
 
         /**
@@ -390,57 +507,7 @@ public class Evaluator implements Process {
         }
 
         /**
-         * Checks whether the student has completed all the subjects and only
-         * missing with 1 Elective or 1 Minor and not both.
-         *
-         * @return
-         */
-        private boolean isInternshipAllowed() {
-            return ValidateOJT.isValidForOJT(currentStudent);
-        }
-
-        /**
-         * IS OVERRIDABLE BY SYSTEM. Tests whether adding of an Internship
-         * subject is allowed.
-         *
-         * @param validationTask
-         * @param vbox_subjects
-         * @return
-         */
-        private boolean isOJTVerified() {
-            /**
-             * transaction and ojt verification
-             *
-             * @date 08/31/2017
-             */
-
-            String ojtVerification = verifyOJT(vbox_subjects, Evaluator.instance().pressedSubjectID).toLowerCase();
-            if (ojtVerification.equals("allow")) {
-                return true;
-            } else {
-                String warningtext = "";
-
-                if (ojtVerification.equals("limit_one")) {
-                    warningtext = "Internship can only be taken with \n"
-                            + "1 Minor/Elective Subject.";
-                } else if (ojtVerification.equals("not_allowed_with_major")) {
-                    warningtext = "Cannot take Internship with a Major Subject";
-                }
-
-                Notifications.create().title("Warning")
-                        .position(Pos.BOTTOM_RIGHT)
-                        .text(warningtext)
-                        .showWarning();
-
-                return false;
-            }
-
-            //--------------------------------------------------------------
-        }
-
-        /**
-         * Checks whether there is an intern subject on the list or trying to
-         * add intern subject.
+         * Helper function for verification of ojt.
          */
         private String verifyOJT(VBox subjectBox, Integer subjectID) {
             // get info about the added subject.
