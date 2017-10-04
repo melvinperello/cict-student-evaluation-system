@@ -111,6 +111,10 @@ public class Access {
         return false;
     }
 
+    public static boolean isGrantedIf(String... allowed) {
+        return isGrantedIfFrom(CollegeFaculty.instance().getACCESS_LEVEL(), allowed);
+    }
+
     /**
      * Shorthand method.
      *
@@ -147,6 +151,12 @@ public class Access {
     }
 
     //-------------------------------------------------------------------------
+    /**
+     * Function to determine if a faculty is allowed to revoke evaluation
+     * including adding/changing permission given by the registrar.
+     *
+     * @return
+     */
     public static AccountFacultyMapping isAllowedToRevoke() {
         ReEvaluationAccess controller = new ReEvaluationAccess();
         Mono.fx().create()
@@ -163,5 +173,30 @@ public class Access {
                 .stageShowAndWait();
 
         return controller.getAllowedUser();
+    }
+
+    /**
+     * Allows the registrar to override existing system rules regarding
+     * evaluation and limited to evaluation only.
+     *
+     * @param giveAccess
+     * @return
+     */
+    public static boolean isEvaluationOverride(boolean giveAccess) {
+        EvaluationOverride controller = new EvaluationOverride(giveAccess);
+        Mono.fx().create()
+                .setPackageName("update3.org.cict.access")
+                .setFxmlDocument("EvaluationOverride")
+                .makeFX()
+                .setController(controller)
+                .makeScene()
+                .makeStageApplication()
+                .stageResizeable(false)
+                .stageUndecorated(true)
+                .stageTitle("System Override")
+                .stageCenter()
+                .stageShowAndWait();
+
+        return controller.isAuthorized();
     }
 }

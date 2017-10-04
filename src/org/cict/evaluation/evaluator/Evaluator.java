@@ -23,10 +23,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.cict.SubjectClassification;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.sectionviewer.SearchSuggestions;
 import org.cict.evaluation.views.SubjectView;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.adding.ValidateOJT;
+import update3.org.cict.access.Access;
 
 /**
  * @author Jhon Melvin
@@ -133,17 +135,25 @@ public class Evaluator implements Process {
     //--------------------------------------------------------------------------
     private class SubjectWatcher {
 
-        StudentMapping currentStudent;
-        double max_units;
-        double unit_count;
-        VBox vbox_subjects;
-        AnchorPane anchor_right;
+        private StudentMapping currentStudent;
+        private double max_units;
+        private double unit_count;
+        private VBox vbox_subjects;
+        private AnchorPane anchor_right;
 
         //local
-        ValidateAddedSubject validationTask;
+        private ValidateAddedSubject validationTask;
+        private final String accessLevel = CollegeFaculty.instance().getACCESS_LEVEL();
+        private boolean allowOverride = false;
 
+        /**
+         * Overridable options.
+         */
         // main function
         public void analyze() {
+            // if local registrar allow override.
+            allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
+
             System.out.println("@EvaluateController: Mouse Entered Drop Zone.");
             // check input
             if (!Evaluator.instance().sectionViewReleased) {
@@ -166,11 +176,20 @@ public class Evaluator implements Process {
                     // if ojt not verified
                     return;
                 }
-
-                if (!this.isInternshipAllowed()) {
-                    Mono.fx().snackbar().showError(anchor_right, "There are missing grades.");
-                    return;
+                Integer subjectID = Evaluator.instance().pressedSubjectID;
+                if (subjectID != null) {
+                    SubjectMapping sub = Database.connect().subject().getPrimary(subjectID);
+                    if (sub != null) {
+                        if (sub.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                            // if internship
+                            if (!this.isInternshipAllowed()) {
+                                Mono.fx().snackbar().showError(anchor_right, "There are missing grades.");
+                                return;
+                            }
+                        }
+                    }
                 }
+
                 // starts transaction.
                 validationTask.transact();
 
@@ -217,7 +236,8 @@ public class Evaluator implements Process {
                             .title("Max Units Reached")
                             .text(text)
                             .onAction(pop -> {
-
+                                boolean ok = Access.isEvaluationOverride(allowOverride);
+                                System.out.println("MAX UNITS: " + ok);
                             })
                             .position(Pos.BOTTOM_RIGHT).showInformation();
                     return;
@@ -227,7 +247,6 @@ public class Evaluator implements Process {
             } else {
                 // subject already taken
                 if (this.isAlreadyTaken()) {
-
                     return;
                 }
                 // has incomplete pre requisites
