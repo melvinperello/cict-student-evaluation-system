@@ -228,13 +228,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
         });
 
-        /**
-         * Full Screen.
-         */
-        Mono.fx().key(KeyCode.F11).release(anchor_evaluate, () -> {
-            Mono.fx().getParentStage(anchor_evaluate).setFullScreen(true);
-        });
-
         btn_already_evaluate.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
             this.hideDropDown();
             onRevokeEvaluation();

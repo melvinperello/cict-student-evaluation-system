@@ -2,7 +2,7 @@
 // SQL_table: load_group_schedule
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 04, 2017 08:09:16 PM
+// Created: Oct 05, 2017 01:52:45 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -36,7 +36,7 @@ private java.lang.String class_room;
 private java.util.Date created_date;
 private java.lang.Integer created_by;
 private java.util.Date updated_date;
-private java.lang.String updated_by;
+private java.lang.Integer updated_by;
 private java.lang.Integer active;
 
 @Id
@@ -124,12 +124,12 @@ public void setUpdated_date(java.util.Date fieldUpdatedDate) {
 	this.updated_date = fieldUpdatedDate;
 }
 
-@Column(name = "updated_by", nullable = true, length = 50)
-public java.lang.String getUpdated_by() {
+@Column(name = "updated_by", nullable = true, length = 10)
+public java.lang.Integer getUpdated_by() {
 	return this.updated_by;
 }
 
-public void setUpdated_by(java.lang.String fieldUpdatedBy) {
+public void setUpdated_by(java.lang.Integer fieldUpdatedBy) {
 	this.updated_by = fieldUpdatedBy;
 }
 

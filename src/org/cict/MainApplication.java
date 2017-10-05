@@ -5,11 +5,13 @@
  */
 package org.cict;
 
+import app.lazy.models.Database;
 import com.jhmvin.Mono;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.cict.authentication.LoginController;
+import update3.org.cict.controller.sectionmain.deltesection.DeleteSectionTransaction;
 
 /**
  *

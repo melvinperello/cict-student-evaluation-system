@@ -63,6 +63,7 @@ import org.cict.authentication.authenticator.CollegeFaculty;
 import update3.org.cict.ChoiceRange;
 import update3.org.cict.scheduling.ScheduleConstants;
 import update3.org.cict.SectionConstants;
+import update3.org.cict.controller.sectionmain.deltesection.DeleteSectionTransaction;
 import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
@@ -172,6 +173,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_view_class_sched;
 
+    @FXML
+    private JFXButton btn_delete_section;
+
     public SectionSubjectsController() {
         /**
          * Every code below this constructor was passed from another controller.
@@ -238,6 +242,19 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.scheduleEmpty = new EmptyView(stack_schedules);
 
         /**
+         * Initial values.
+         */
+        txt_year_level.setText(sectionMap.getYear_level().toString());
+        txt_section_name.setText(sectionMap.getSection_name());
+        txt_section_group.setText(sectionMap.get_group().toString());
+        /**
+         * Add Filters in text boxes.
+         */
+        SectionCreateWizard.addTextFilters(curriculumMap,
+                txt_year_level,
+                txt_section_name,
+                txt_section_group);
+        /**
          * Set Labels.
          */
         this.lbl_semester.setText(currentTermString);
@@ -285,13 +302,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     @Override
     public void onEventHandling() {
         super.addClickEvent(btn_back, () -> {
-            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
-                super.replaceRoot(winRegularSectionControllerFx.getApplicationRoot());
-            }, winRegularSectionControllerFx.getApplicationRoot());
-            /**
-             * Back To Section List. Detach empty if ever the section was empty
-             */
-            this.scheduleEmpty.detach();
+            onBackPressed();
         });
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
@@ -335,6 +346,66 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             OpenScheduleViewer.openScheduleViewer(sectionMap);
         });
 
+        super.addClickEvent(btn_save_changes, () -> {
+        });
+
+        super.addClickEvent(btn_delete_section, () -> {
+            onDeleteSection();
+        });
+
+    }
+
+    /**
+     * Back to Section List.
+     */
+    private void onBackPressed() {
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(winRegularSectionControllerFx.getApplicationRoot());
+        }, winRegularSectionControllerFx.getApplicationRoot());
+        /**
+         * Back To Section List. Detach empty if ever the section was empty
+         */
+        this.scheduleEmpty.detach();
+        winRegularSectionControllerFx.<WinRegularSectionsController>getController()
+                .fetchSections();
+    }
+
+    private void onDeleteSection() {
+        int confirm = Mono.fx()
+                .alert()
+                .createConfirmation()
+                .setTitle("Confirmation")
+                .setHeader("Delete This Section ?")
+                .setMessage("Are you sure to delete this section. it will also subject group and its schedules, do you want to continue ?")
+                .confirmYesNo();
+
+        if (confirm != 1) {
+            return;
+        }
+
+        DeleteSectionTransaction dst = new DeleteSectionTransaction();
+        dst.setLoadSectionID(this.sectionMap.getId());
+        dst.whenStarted(() -> {
+            btn_delete_section.setDisable(true);
+        });
+
+        dst.whenSuccess(() -> {
+            onBackPressed();
+            Mono.fx().snackbar().showSuccess(winRegularSectionControllerFx.getApplicationRoot(), "Section Successfully Deleted.");
+        });
+
+        dst.whenCancelled(() -> {
+            Mono.fx().snackbar().showError(application_root, "Cannot Delete Section.");
+        });
+
+        dst.whenFailed(() -> {
+            Mono.fx().snackbar().showError(application_root, "Cannot Delete Section.");
+        });
+
+        dst.whenFinished(() -> {
+            btn_delete_section.setDisable(false);
+        });
+        dst.transact();
     }
 
     /**
