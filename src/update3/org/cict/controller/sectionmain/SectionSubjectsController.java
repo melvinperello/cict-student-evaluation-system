@@ -54,6 +54,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -314,29 +315,21 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         });
 
         super.addClickEvent(btn_view_add_schedule, () -> {
-            Animate.fade(vbox_view_schedule, SectionConstants.FADE_SPEED, () -> {
-                this.vbox_add_schedule.setVisible(true);
-                this.vbox_view_schedule.setVisible(false);
-                this.vbox_view_subjects.setVisible(false);
-            }, vbox_add_schedule);
-
+            showScheduleAdding(false);
         });
 
+        // back grom schedule creation
         super.addClickEvent(btn_cancel_sched, () -> {
-            Animate.fade(vbox_add_schedule, SectionConstants.FADE_SPEED, () -> {
-                this.vbox_add_schedule.setVisible(false);
-                this.vbox_view_schedule.setVisible(true);
-                this.vbox_view_subjects.setVisible(false);
-            }, vbox_view_schedule);
-            /**
-             * Canceling the creation of schedule will refresh the schedules.
-             */
-            fetchSchedules(selected_load_group_in_sections);
+            onBackFromScheduleCreation();
         });
 
         //--------------
         super.addClickEvent(btn_add_sched, () -> {
-            onAddSchedule();
+            if (!btn_add_sched.getText().equalsIgnoreCase("SAVE")) {
+                onAddSchedule();
+            } else {
+                onEditSchedule();
+            }
         });
 
         super.addClickEvent(btn_view_class_sched, () -> {
@@ -353,6 +346,42 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             onDeleteSection();
         });
 
+    }
+
+    private void showScheduleAdding(boolean edit) {
+
+        Animate.fade(vbox_view_schedule, SectionConstants.FADE_SPEED, () -> {
+            this.vbox_add_schedule.setVisible(true);
+            this.vbox_view_schedule.setVisible(false);
+            this.vbox_view_subjects.setVisible(false);
+        }, vbox_add_schedule);
+
+        if (edit) {
+            btn_add_sched.setText("Save");
+
+            cmb_sched_day.getSelectionModel().select(WordUtils.capitalizeFully(this.selectedSchedForEditting.getClass_day()));
+            int start_index = ScheduleConstants.getTimeLapse().indexOf(this.selectedSchedForEditting.getClass_start());
+            int end_index = ScheduleConstants.getTimeLapse().indexOf(this.selectedSchedForEditting.getClass_end());
+            cmb_sched_start.getSelectionModel().select(start_index);
+            cmb_sched_end.getSelectionModel().select(end_index - 4);
+            txt_sched_room.setText(this.selectedSchedForEditting.getClass_room());
+        } else {
+            // not editting
+            btn_add_sched.setText("Add Schedule");
+        }
+
+    }
+
+    private void onBackFromScheduleCreation() {
+        Animate.fade(vbox_add_schedule, SectionConstants.FADE_SPEED, () -> {
+            this.vbox_add_schedule.setVisible(false);
+            this.vbox_view_schedule.setVisible(true);
+            this.vbox_view_subjects.setVisible(false);
+        }, vbox_view_schedule);
+        /**
+         * Canceling the creation of schedule will refresh the schedules.
+         */
+        fetchSchedules(selected_load_group_in_sections);
     }
 
     /**
@@ -406,6 +435,83 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             btn_delete_section.setDisable(false);
         });
         dst.transact();
+    }
+
+    private void onEditSchedule() {
+        String schedDay = cmb_sched_day.getSelectionModel().getSelectedItem().toUpperCase();
+        int start_selected_index = cmb_sched_start.getSelectionModel().getSelectedIndex();
+        String schedStart = ScheduleConstants.getTimeLapse().get(start_selected_index);
+
+        String schedEnd = ScheduleConstants.getTimeLapse()
+                .get(cmb_sched_end.getSelectionModel().getSelectedIndex() + 4 + start_selected_index); // because starts from 8 am
+
+        /**
+         * Before testing the conflicting schedule temporarily delete the
+         * schedule
+         */
+        if (this.selectedSchedForEditting == null) {
+            // if there was a glitch and there is no selected schedule selected
+            Mono.fx().snackbar().showError(application_root, "Please Try Again.");
+            onBackFromScheduleCreation();
+            return;
+        }
+
+        LoadGroupScheduleMapping currentSched = Database.
+                connect()
+                .load_group_schedule()
+                .getPrimary(this.selectedSchedForEditting.getId());
+
+        currentSched.setActive(0);
+        boolean schedDeactivated = Database.connect().load_group_schedule().update(currentSched);
+
+        if (!schedDeactivated) {
+            // error in negative values
+            System.out.println("Cannot deactivate schedule");
+            Mono.fx().snackbar().showError(application_root, "Conflict Verification Failed.");
+            return;
+        }
+
+        System.out.println("schedule deactivated checking conflict");
+
+        // now the schedule is deleted conflict checking will only  verify all sched except this one
+        /**
+         * conflict checker only checks schedule conflicts within the section
+         * subjects itself. it does not verify faculty schedule conflict and
+         * room conflict schedules.
+         */
+        boolean conflict = ScheduleChecker.checkIfConflict(this.sectionMap.getId(), schedDay, schedStart, schedEnd);
+        currentSched = Database.
+                connect()
+                .load_group_schedule()
+                .getPrimary(this.selectedSchedForEditting.getId());
+        // if conflict reactivate the schedule
+        if (conflict) {
+
+            currentSched.setActive(1);
+            boolean schedReactivated = Database.connect().load_group_schedule().update(currentSched);
+            if (schedReactivated) {
+                Mono.fx().snackbar().showError(application_root, "Update Failed, Schedule Conflict was found.");
+            } else {
+                Mono.fx().snackbar().showError(application_root, "Update Error, Please recreate the schedule.");
+            }
+
+        } else {
+            // if no conflict
+            currentSched.setClass_start(schedStart);
+            currentSched.setClass_end(schedEnd);
+            currentSched.setClass_day(schedDay);
+            currentSched.setClass_room(MonoText.getFormatted(txt_sched_room));
+            currentSched.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
+            currentSched.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+            currentSched.setActive(1);
+            boolean schedUpdated = Database.connect().load_group_schedule().update(currentSched);
+            if (schedUpdated) {
+                Mono.fx().snackbar().showSuccess(application_root, "Schedule successfully updated.");
+            } else {
+                Mono.fx().snackbar().showError(application_root, "Update Error, Please recreate the schedule.");
+            }
+        }
+        onBackFromScheduleCreation();
     }
 
     /**
@@ -475,6 +581,8 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.scheduleEmpty.detach();
     }
 
+    private LoadGroupScheduleMapping selectedSchedForEditting;
+
     /**
      * Load Schedules of the selected subject.
      *
@@ -505,6 +613,20 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             String endTime = ScheduleConstants.toPrettyFormat(sched.getClass_end());
             lbl_time.setText(startTime + " - " + endTime);
             lbl_room.setText(sched.getClass_room().toUpperCase());
+
+            /**
+             * Button Actions
+             */
+            ImageView img_edit = super.searchAccessibilityText(rowSection, "img_edit");
+            JFXButton btn_remove = super.searchAccessibilityText(rowSection, "btn_remove");
+
+            super.addClickEvent(img_edit, () -> {
+                this.selectedSchedForEditting = sched;
+                showScheduleAdding(true);
+            });
+            super.addClickEvent(btn_remove, () -> {
+
+            });
 
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);

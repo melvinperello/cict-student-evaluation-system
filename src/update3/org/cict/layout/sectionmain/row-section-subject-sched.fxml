@@ -57,7 +57,15 @@
             <Insets right="20.0" />
          </padding>
       </HBox>
-      <JFXButton prefWidth="90.0" style="-fx-border-color: #FFFFFF; -fx-border-style: dashed; -fx-background-color: #F76C83;" text="Remove" textFill="WHITE" />
+      <ImageView accessibleText="img_edit" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../section_images/edit.png" />
+         </image>
+         <HBox.margin>
+            <Insets right="10.0" />
+         </HBox.margin>
+      </ImageView>
+      <JFXButton accessibleText="btn_remove" prefWidth="90.0" style="-fx-border-color: #FFFFFF; -fx-border-style: dashed; -fx-background-color: #F76C83;" text="Remove" textFill="WHITE" />
    </children>
    <styleClass>
       <String fx:value="metro-row" />
