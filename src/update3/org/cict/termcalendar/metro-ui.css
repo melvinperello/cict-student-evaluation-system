@@ -1,0 +1,58 @@
+.label{
+    -fx-text-fill: #FFFFFF;
+}
+
+/*
+This CSS is for academic term settings
+Created 10-06-2017
+*/
+
+/* For Background */
+.metro-base-color{
+    -fx-background-color:  #414852;
+}
+
+.metro-title-1{
+    -fx-font-size: 40px;
+}
+
+.metro-subtitle-1{
+    -fx-font-size: 18px;
+    -fx-text-alignment: left;
+    -fx-wrap-text: false;
+}
+
+.metro-para-20{
+    -fx-font-size: 20px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: left;
+}
+
+.metro-title-33{
+    -fx-font-size:33px;
+    -fx-wrap-text: false;
+    -fx-text-alignment: left;
+}
+
+/* pair with text 18*/
+.metro-label-18{
+    -fx-font-size:18px;
+    -fx-wrap-text: false;
+    -fx-text-alignment: left;
+}
+.metro-textbox-18{
+    -fx-font-size:12px;
+}
+
+/* Buttons besides the title 1 for back or home */
+.metro-nav-button{
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 18px;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 40px;
+    -fx-border-color: #FFFFFF;
+}
+
+.metro-combo-box{
+    -fx-background-color: #FFFFFF;
+}
