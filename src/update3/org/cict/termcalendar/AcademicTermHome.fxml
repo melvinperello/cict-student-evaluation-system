@@ -30,7 +30,7 @@
       </HBox>
       <HBox prefWidth="200.0" spacing="30.0">
          <children>
-            <Label fx:id="lbl_current_term" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Manage Current Academic Term" textFill="WHITE">
+            <Label graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Manage Current Academic Term" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font>
@@ -53,7 +53,7 @@
                <children>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term1" graphicTextGap="20.0" text="Evaluation Transactions" textFill="WHITE">
+                        <Label graphicTextGap="20.0" text="Evaluation Transactions" textFill="WHITE">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -72,7 +72,7 @@
                   </HBox>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term11" graphicTextGap="10.0" text="Evaluation System Module is ONLINE" textFill="WHITE">
+                        <Label fx:id="lbl_evaluation_status" graphicTextGap="10.0" text="Evaluation System Module is ONLINE" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -91,7 +91,7 @@
                   </HBox>
                   <HBox alignment="CENTER" prefWidth="200.0" spacing="30.0">
                      <children>
-                        <JFXButton prefWidth="200.0" style="-fx-border-color: #FFFFFF; -fx-background-color: #F791A6;" text="Turn Off" textFill="WHITE">
+                        <JFXButton fx:id="btn_evaluation" prefWidth="200.0" style="-fx-border-color: #FFFFFF; -fx-background-color: #F791A6;" text="Turn Off" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -103,7 +103,7 @@
                   </HBox>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term12" graphicTextGap="20.0" text="Adding/Changing Transactions" textFill="WHITE">
+                        <Label graphicTextGap="20.0" text="Adding/Changing Transactions" textFill="WHITE">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -122,7 +122,7 @@
                   </HBox>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term111" graphicTextGap="10.0" text="Adding/Changing System Module is OFFLINE" textFill="WHITE">
+                        <Label fx:id="lbl_adding_status" graphicTextGap="10.0" text="Adding/Changing System Module is OFFLINE" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -139,7 +139,7 @@
                         <Insets left="45.0" />
                      </padding>
                   </HBox>
-                  <HBox alignment="CENTER" prefWidth="200.0" spacing="30.0">
+                  <HBox fx:id="btn_adding" alignment="CENTER" prefWidth="200.0" spacing="30.0">
                      <children>
                         <JFXButton prefWidth="200.0" style="-fx-border-color: #FFFFFF;" text="Turn On" textFill="WHITE">
                            <font>
@@ -153,7 +153,7 @@
                   </HBox>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term121" graphicTextGap="20.0" text="Grade Encoding" textFill="WHITE">
+                        <Label graphicTextGap="20.0" text="Grade Encoding" textFill="WHITE">
                            <font>
                               <Font size="30.0" />
                            </font>
@@ -172,7 +172,7 @@
                   </HBox>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term1111" graphicTextGap="10.0" text="Grade Encoding System is OFFLINE" textFill="WHITE">
+                        <Label fx:id="lbl_encoding_status" graphicTextGap="10.0" text="Grade Encoding System is OFFLINE" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -191,7 +191,7 @@
                   </HBox>
                   <HBox alignment="CENTER" prefWidth="200.0" spacing="30.0">
                      <children>
-                        <JFXButton prefWidth="200.0" style="-fx-border-color: #FFFFFF;" text="Turn On" textFill="WHITE">
+                        <JFXButton fx:id="btn_encoding" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" text="Turn On" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -207,14 +207,14 @@
                <children>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term13" graphicTextGap="20.0" text="Current Academic Term" textFill="WHITE">
+                        <Label graphicTextGap="20.0" text="Current Academic Term" textFill="WHITE">
                            <font>
                               <Font size="30.0" />
                            </font>
                            <graphic>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/evaluation.png" />
+                                    <Image url="@images/Ok_50px_1.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -226,7 +226,7 @@
                   </HBox>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term112" graphicTextGap="10.0" text="A.Y. 2016 - 2017 First Semester" textFill="WHITE">
+                        <Label fx:id="lbl_current_term" graphicTextGap="10.0" text="A.Y. 2016 - 2017 First Semester" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -245,7 +245,7 @@
                   </HBox>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
-                        <Label fx:id="lbl_current_term131" graphicTextGap="20.0" text="Changing Academic Term" textFill="WHITE">
+                        <Label graphicTextGap="20.0" text="Changing Academic Term" textFill="WHITE">
                            <font>
                               <Font size="25.0" />
                            </font>
@@ -272,7 +272,7 @@
                               <Insets top="5.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="lbl_current_term1121" graphicTextGap="10.0" text="Changing Academic Term requires Two Factor Authorization." textFill="WHITE" wrapText="true">
+                        <Label graphicTextGap="10.0" text="Changing Academic Term requires Two Factor Authorization." textFill="WHITE" wrapText="true">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -295,7 +295,7 @@
                               <Insets top="5.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="lbl_current_term11211" graphicTextGap="10.0" text="Only the System Administrator can initiate a change in the current academic calendar." textFill="WHITE" wrapText="true">
+                        <Label graphicTextGap="10.0" text="Only the System Administrator can initiate a change in the current academic calendar." textFill="WHITE" wrapText="true">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -318,7 +318,7 @@
                               <Insets top="5.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="lbl_current_term112111" graphicTextGap="10.0" text="The Local Registrar should confirm and agree in this calendar shifting, once accepted the system will shift into the new academic term leaving all the previous data in the archive." textFill="WHITE" wrapText="true">
+                        <Label graphicTextGap="10.0" text="The Local Registrar should confirm and agree in this calendar shifting, once accepted the system will shift into the new academic term leaving all the previous data in the archive." textFill="WHITE" wrapText="true">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -341,7 +341,7 @@
                               <Insets top="5.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="lbl_current_term1121111" graphicTextGap="10.0" text="Once the academic term has been changed you cannot revert the following changes." textFill="WHITE" wrapText="true">
+                        <Label graphicTextGap="10.0" text="Once the academic term has been changed you cannot revert the following changes." textFill="WHITE" wrapText="true">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -356,7 +356,7 @@
                   </HBox>
                   <HBox alignment="CENTER" prefWidth="200.0" spacing="15.0">
                      <children>
-                        <JFXButton style="-fx-border-color: #FFFFFF;" text="Change Academic Term" textFill="WHITE">
+                        <JFXButton fx:id="btn_change_term" style="-fx-border-color: #FFFFFF;" text="Change Academic Term" textFill="WHITE">
                            <font>
                               <Font size="16.0" />
                            </font>
