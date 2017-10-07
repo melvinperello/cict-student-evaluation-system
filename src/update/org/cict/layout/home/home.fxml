@@ -19,5 +19,6 @@
       <JFXButton fx:id="btn_academic_term" layoutX="234.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Semestral Calendar" wrapText="true" />
       <JFXButton fx:id="btn_logout" layoutX="335.0" layoutY="100.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Logout" wrapText="true" />
       <JFXButton fx:id="btn_linked" layoutX="335.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Linked Queue System" wrapText="true" />
+      <JFXButton fx:id="btn_my_account" layoutX="335.0" layoutY="269.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="My Account" wrapText="true" />
    </children>
 </AnchorPane>

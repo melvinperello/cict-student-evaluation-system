@@ -20,6 +20,7 @@ import org.cict.evaluation.EvaluateController;
 import update.org.cict.controller.adding.AddingHome;
 import update2.org.cict.controller.academicprogram.AcademicProgramHome;
 import update3.org.cict.access.Access;
+import update3.org.cict.access.management.AccessManagementHome;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
 import update3.org.cict.termcalendar.AcademicTermHome;
 
@@ -57,6 +58,9 @@ public class Home extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_linked;
+
+    @FXML
+    private JFXButton btn_my_account;
 
     @Override
     public void onInitialization() {
@@ -154,6 +158,10 @@ public class Home extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_academic_term, () -> {
             onShowAcademicTerm();
+        });
+
+        super.addClickEvent(btn_access_controls, () -> {
+            onShowAccessControls();
         });
 
     }
@@ -328,10 +336,6 @@ public class Home extends SceneFX implements ControllerFX {
     }
 
     private void onShowAcademicTerm() {
-        /**
-         * Only the administrator can access this section. including the
-         * assistant administrator.
-         */
         if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
@@ -341,6 +345,19 @@ public class Home extends SceneFX implements ControllerFX {
         this.changeRoot(controller,
                 "update3.org.cict.termcalendar",
                 "AcademicTermHome");
+
+    }
+
+    private void onShowAccessControls() {
+        if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR)) {
+            Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
+            return;
+        }
+
+        ControllerFX controller = new AccessManagementHome();
+        this.changeRoot(controller,
+                "update3.org.cict.access.management",
+                "AccessManagementHome");
 
     }
 
