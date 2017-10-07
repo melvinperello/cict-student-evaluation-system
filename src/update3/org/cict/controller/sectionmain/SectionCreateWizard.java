@@ -418,7 +418,6 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
             Animate.fade(vbox_main, SectionConstants.FADE_SPEED, () -> {
                 vbox_main.setVisible(true);
                 stack_multi.setVisible(false);
-
             }, vbox_main);
         });
 

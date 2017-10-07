@@ -22,6 +22,7 @@ import update2.org.cict.controller.academicprogram.AcademicProgramHome;
 import update3.org.cict.access.Access;
 import update3.org.cict.access.management.AccessManagementHome;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
+import update3.org.cict.my_account.MyAccountHome;
 import update3.org.cict.termcalendar.AcademicTermHome;
 
 public class Home extends SceneFX implements ControllerFX {
@@ -162,6 +163,10 @@ public class Home extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_access_controls, () -> {
             onShowAccessControls();
+        });
+
+        super.addClickEvent(btn_my_account, () -> {
+            onShowMyAccount();
         });
 
     }
@@ -358,6 +363,15 @@ public class Home extends SceneFX implements ControllerFX {
         this.changeRoot(controller,
                 "update3.org.cict.access.management",
                 "AccessManagementHome");
+
+    }
+
+    private void onShowMyAccount() {
+
+        ControllerFX controller = new MyAccountHome();
+        this.changeRoot(controller,
+                "update3.org.cict.my_account",
+                "MyAccountHome");
 
     }
 

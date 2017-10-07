@@ -3,7 +3,9 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -39,7 +41,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/system_access.png" />
+                        <Image url="@images/account_settings.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -53,32 +55,14 @@
          <children>
             <VBox prefHeight="565.0" prefWidth="266.0" spacing="10.0">
                <children>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Account Information" textFill="WHITE">
+                  <JFXButton fx:id="btn_voew_access_history" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Access History" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/system.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <padding>
-                        <Insets left="-50.0" />
-                     </padding>
-                  </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Access History" textFill="WHITE">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../termcalendar/images/system.png" />
+                              <Image url="@images/access_history.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -89,14 +73,14 @@
                         <Insets left="-90.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Password" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_change_password" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Password" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/Admin_48px.png" />
+                              <Image url="@images/change_password.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -110,14 +94,14 @@
                         <Insets left="-70.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Transaction Pin" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_change_pin" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Transaction Pin" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/assistant_admin.png" />
+                              <Image url="@images/change_pin.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -128,14 +112,14 @@
                         <Insets left="-30.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Security Question" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_change_question" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Security Question" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/registrar.png" />
+                              <Image url="@images/security_question.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -150,13 +134,13 @@
             </VBox>
             <StackPane HBox.hgrow="ALWAYS">
                <children>
-                  <VBox fx:id="vbox_local_registrar" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_access" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../termcalendar/images/registrar.png" />
+                                    <Image url="@images/access_history.png" />
                                  </image>
                               </ImageView>
                               <Label text="Access History">
@@ -172,73 +156,494 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/right_bullet.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label text="During evaluation you may not be present or get caught up in a meeting. evaluation even takes place in different rooms. you can assign assistant registrars which will be granted access to revoke evaluation of the students and also granted permission to assign new evaluators. They can help you address student concerns with ease." wrapText="true">
+                                    <Label text="Current Active Session" wrapText="true">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Assistant Registrars" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <graphic>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../termcalendar/images/User%20Account_64px.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </JFXButton>
+                                    <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/computer.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="49.0" spacing="10.0">
+                                       <children>
+                                          <HBox spacing="10.0">
+                                             <children>
+                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/ip_address.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <Label text="IP ADDRESS">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="192.168.254.254">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="MAC ADDRESS">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="FE:FE:FE:FE:FE">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox spacing="10.0">
+                                             <children>
+                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/os.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <Label text="OS">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Windows 10@amd64">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="COMPUTER">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Melvin">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="USER">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Jhon Melvin">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
                                  </children>
                                  <padding>
-                                    <Insets bottom="10.0" top="10.0" />
+                                    <Insets bottom="10.0" left="100.0" top="10.0" />
                                  </padding>
                               </HBox>
                               <HBox prefWidth="200.0" spacing="10.0">
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/right_bullet.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label text="Evaluators are still crucial part of the work flow. They can evaluate student during evaluation and adding/changing of subjects. Their access is only limitted to this transactions." wrapText="true">
+                                    <Label text="The system records everytime you try to login into your account. if you see suspicious login attempts and you think your account is compromised, change your password immediately" wrapText="true">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="65.0" top="20.0" />
+                           </VBox.margin>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_change_password" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/change_password.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Change Password">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="20.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Evaluators" textFill="WHITE">
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Current Password">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="Current Password">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
-                                       <graphic>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../termcalendar/images/evaluator.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="New Password">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Confirm Password">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change Password" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
                                     </JFXButton>
                                  </children>
-                                 <padding>
-                                    <Insets bottom="10.0" top="10.0" />
-                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_change_pin" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/change_password.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Change Transaction Pin">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="20.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/reminder.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefHeight="26.0" text="Changing transaction PIN requires your current password not your current PIN.">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="New PIN">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="New PIN">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Confirm PIN">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="Confirm PIN">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Current Password">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change PIN" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_change_question" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/security_question.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Change Security Question">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="20.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/reminder.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefHeight="26.0" text="Chaning your Security Question requires your current password. not your old security answer">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="New PIN">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox prefWidth="555.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="New PIN">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="New PIN">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Confirm PIN">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="Confirm PIN">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Current Password">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change PIN" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                 </children>
                               </HBox>
                            </children>
                            <padding>
@@ -251,6 +656,9 @@
                      </padding>
                   </VBox>
                </children>
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
             </StackPane>
          </children>
          <padding>

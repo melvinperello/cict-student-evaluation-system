@@ -39,7 +39,7 @@
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/system_access.png" />
+                        <Image url="@images/system_access.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -53,14 +53,14 @@
          <children>
             <VBox prefHeight="565.0" prefWidth="266.0" spacing="10.0">
                <children>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="System" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_system" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="System" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/system.png" />
+                              <Image url="@images/system.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -71,14 +71,14 @@
                         <Insets left="-130.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="System Administrator" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_admin" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="System Administrator" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/Admin_48px.png" />
+                              <Image url="@images/Admin_48px.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -92,14 +92,14 @@
                         <Insets left="-40.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Assistant Administrators" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_assistant_admin" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Assistant Administrators" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/assistant_admin.png" />
+                              <Image url="@images/assistant_admin.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -110,14 +110,14 @@
                         <Insets left="-25.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Local Registrar" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_local_registrar" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Local Registrar" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/registrar.png" />
+                              <Image url="@images/registrar.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -128,14 +128,14 @@
                         <Insets left="-90.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Assistant Registrars" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_co_registrar" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Assistant Registrars" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/User%20Account_64px.png" />
+                              <Image url="@images/User%20Account_64px.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -146,14 +146,14 @@
                         <Insets left="-60.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Evaluators" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_evaluator" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Evaluators" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../termcalendar/images/evaluator.png" />
+                              <Image url="@images/evaluator.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -174,7 +174,7 @@
                            <children>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../termcalendar/images/system.png" />
+                                    <Image url="@images/system.png" />
                                  </image>
                               </ImageView>
                               <Label text="System Account">
@@ -190,7 +190,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -207,7 +207,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -229,7 +229,7 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/create_sys_admin.png" />
+                                                <Image url="@images/Admin_48px.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -243,7 +243,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -265,7 +265,7 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/reset_admin_pass.png" />
+                                                <Image url="@images/reset_admin_pass.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -279,7 +279,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -301,7 +301,7 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/reclaim.png" />
+                                                <Image url="@images/reclaim.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -327,7 +327,7 @@
                            <children>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../termcalendar/images/Admin_48px.png" />
+                                    <Image url="@images/Admin_48px.png" />
                                  </image>
                               </ImageView>
                               <Label text="System Administrator">
@@ -343,7 +343,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -365,7 +365,7 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/create_sys_admin.png" />
+                                                <Image url="@images/Admin_48px.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -379,7 +379,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -401,7 +401,7 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/assistant_admin.png" />
+                                                <Image url="@images/assistant_admin.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -415,7 +415,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -437,7 +437,7 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/registrar.png" />
+                                                <Image url="@images/registrar.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -457,13 +457,77 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_local_registrar" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_assistant_admin" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../termcalendar/images/registrar.png" />
+                                    <Image url="@images/assistant_admin.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Assistant Administrator">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="Leaving your post as a system administrator will make your access level the same as a regular faculty. you need then to assign a new System administrator." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/Admin_48px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_local_registrar" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/registrar.png" />
                                  </image>
                               </ImageView>
                               <Label text="Local Registrar">
@@ -479,7 +543,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -501,7 +565,7 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/User%20Account_64px.png" />
+                                                <Image url="@images/User%20Account_64px.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -515,7 +579,7 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                          <Image url="@images/Next%20page_64px_1.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
@@ -537,7 +601,135 @@
                                        <graphic>
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@../../termcalendar/images/evaluator.png" />
+                                                <Image url="@images/evaluator.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_co_registrar" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/User%20Account_64px.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Assistant Registrars">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="Leaving your post as a system administrator will make your access level the same as a regular faculty. you need then to assign a new System administrator." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/Admin_48px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_evaluators" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/evaluator.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Evaluators">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="Leaving your post as a system administrator will make your access level the same as a regular faculty. you need then to assign a new System administrator." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/Admin_48px.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
