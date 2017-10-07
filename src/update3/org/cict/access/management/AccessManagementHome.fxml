@@ -7,6 +7,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -127,7 +128,7 @@
                         <Insets left="-90.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Co-Registrars" textFill="WHITE">
+                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Assistant Registrars" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -142,7 +143,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <padding>
-                        <Insets left="-100.0" />
+                        <Insets left="-60.0" />
                      </padding>
                   </JFXButton>
                   <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Evaluators" textFill="WHITE">
@@ -165,6 +166,399 @@
                   </JFXButton>
                </children>
             </VBox>
+            <StackPane HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox fx:id="vbox_system" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../termcalendar/images/system.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="System Account">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="The system account has no authority in manipulating in any form of the data of this system. The system account is only use to assign a system administrator. or reclaiming the administrative rights of the incumbent system administrator." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="If this was the first time that the system will be used and there is no current system administrator you can create the first employee information and make it as the system administrator." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Create System Administrator" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/create_sys_admin.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="If you are the system administrator and lost access to your account, and you have no other way in regaining access to it. you can reset your account by clicking the Reset System Administrator Password button." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Reset System Administrator Password" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/reset_admin_pass.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="If you are the next system administrator and you have no way to pass the administrative rights to your account, in any of the following cases that the previous system administrator might have been resigned without notice, or relieved from post you can make yourself the system administrator." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Re-Claim Administrative Rights" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/reclaim.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_admin" prefHeight="200.0" prefWidth="100.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../termcalendar/images/Admin_48px.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="System Administrator">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="Leaving your post as a system administrator will make your access level the same as a regular faculty. you need then to assign a new System administrator." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/create_sys_admin.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="Sometimes things get busy and you need a team to help you. Assistant Administrators have the same access as your account and will help you to manage the system more efficiently." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add New Assistant Administrator" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/assistant_admin.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="The Local Registrar is the one that is allowed to implement academic programs and its curriculums, it also addresses student concerns for evaluation and adding/changing in which the system administrator has no access." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign Local Registrar" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/registrar.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_local_registrar" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../termcalendar/images/registrar.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Local Registrar">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="During evaluation you may not be present or get caught up in a meeting. evaluation even takes place in different rooms. you can assign assistant registrars which will be granted access to revoke evaluation of the students and also granted permission to assign new evaluators. They can help you address student concerns with ease." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Assistant Registrars" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/User%20Account_64px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../termcalendar/images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="Evaluators are still crucial part of the work flow. They can evaluate student during evaluation and adding/changing of subjects. Their access is only limitted to this transactions." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Evaluators" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../termcalendar/images/evaluator.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </StackPane>
          </children>
          <padding>
             <Insets top="30.0" />
