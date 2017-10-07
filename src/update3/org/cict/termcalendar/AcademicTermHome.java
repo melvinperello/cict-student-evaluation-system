@@ -31,61 +31,64 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import update.org.cict.controller.home.Home;
 
 /**
  *
  * @author Jhon Melvin
  */
 public class AcademicTermHome extends SceneFX implements ControllerFX {
-
+    
     @FXML
     private VBox application_root;
-
+    
     @FXML
     private JFXButton btn_home;
-
+    
     @FXML
     private Label lbl_evaluation_status;
-
+    
     @FXML
     private JFXButton btn_evaluation;
-
+    
     @FXML
     private Label lbl_adding_status;
-
+    
     @FXML
     private HBox btn_adding;
-
+    
     @FXML
     private Label lbl_encoding_status;
-
+    
     @FXML
     private JFXButton btn_encoding;
-
+    
     @FXML
     private Label lbl_current_term;
-
+    
     @FXML
     private JFXButton btn_change_term;
-
+    
     public AcademicTermHome() {
         //
     }
-
+    
     private LayoutDataFX dataFx;
-
+    
     public void setDataFx(LayoutDataFX dataFx) {
         this.dataFx = dataFx;
     }
-
+    
     @Override
     public void onInitialization() {
-
+        super.bindScene(application_root);
     }
-
+    
     @Override
     public void onEventHandling() {
-
+        super.addClickEvent(btn_home, () -> {
+            Home.callHome(this);
+        });
     }
-
+    
 }

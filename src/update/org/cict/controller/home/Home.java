@@ -21,6 +21,7 @@ import update.org.cict.controller.adding.AddingHome;
 import update2.org.cict.controller.academicprogram.AcademicProgramHome;
 import update3.org.cict.access.Access;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
+import update3.org.cict.termcalendar.AcademicTermHome;
 
 public class Home extends SceneFX implements ControllerFX {
 
@@ -43,7 +44,19 @@ public class Home extends SceneFX implements ControllerFX {
     private Button btn_faculty;
 
     @FXML
+    private JFXButton btn_student;
+
+    @FXML
+    private JFXButton btn_access_controls;
+
+    @FXML
+    private JFXButton btn_academic_term;
+
+    @FXML
     private JFXButton btn_logout;
+
+    @FXML
+    private JFXButton btn_linked;
 
     @Override
     public void onInitialization() {
@@ -78,6 +91,7 @@ public class Home extends SceneFX implements ControllerFX {
     }
 
     private static Stage APPLICATION_STAGE;
+
     /**
      * Closing event for this stage.
      */
@@ -136,6 +150,10 @@ public class Home extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_logout, () -> {
             onLogout();
+        });
+
+        super.addClickEvent(btn_academic_term, () -> {
+            onShowAcademicTerm();
         });
 
     }
@@ -306,6 +324,23 @@ public class Home extends SceneFX implements ControllerFX {
         this.changeRoot(controller,
                 "org.cict.accountmanager.faculty",
                 "faculty-main");
+
+    }
+
+    private void onShowAcademicTerm() {
+        /**
+         * Only the administrator can access this section. including the
+         * assistant administrator.
+         */
+        if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR)) {
+            Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
+            return;
+        }
+
+        ControllerFX controller = new AcademicTermHome();
+        this.changeRoot(controller,
+                "update3.org.cict.termcalendar",
+                "AcademicTermHome");
 
     }
 

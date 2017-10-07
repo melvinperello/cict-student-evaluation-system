@@ -14,9 +14,10 @@
       <Button fx:id="btn_faculty" layoutX="234.0" layoutY="269.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="94.0" text="Faculty" />
       <Label layoutX="34.0" layoutY="32.0" text="Main Features" />
       <Label layoutX="34.0" layoutY="220.0" text="Administration" />
-      <JFXButton layoutX="25.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Student" />
-      <JFXButton layoutX="132.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Access Controls" wrapText="true" />
-      <JFXButton layoutX="234.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Semestral Calendar" wrapText="true" />
+      <JFXButton fx:id="btn_student" layoutX="25.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Student" />
+      <JFXButton fx:id="btn_access_controls" layoutX="132.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Access Controls" wrapText="true" />
+      <JFXButton fx:id="btn_academic_term" layoutX="234.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Semestral Calendar" wrapText="true" />
       <JFXButton fx:id="btn_logout" layoutX="335.0" layoutY="100.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Logout" wrapText="true" />
+      <JFXButton fx:id="btn_linked" layoutX="335.0" layoutY="355.0" prefHeight="78.0" prefWidth="94.0" style="-fx-border-color: #F491A6;" text="Linked Queue System" wrapText="true" />
    </children>
 </AnchorPane>

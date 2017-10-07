@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Label maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="Access Controls" textFill="WHITE" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="btn_home" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-nav-button" text="Home" textFill="WHITE">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </JFXButton>
+         </children>
+         <padding>
+            <Insets left="10.0" right="20.0" />
+         </padding>
+      </HBox>
+      <HBox prefWidth="200.0" spacing="30.0">
+         <children>
+            <Label graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Manage System Access Permissions" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/system_access.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox prefHeight="565.0" prefWidth="266.0" spacing="10.0">
+               <children>
+                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="System" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../termcalendar/images/system.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-130.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="System Administrator" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../termcalendar/images/Admin_48px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="-40.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Assistant Administrators" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../termcalendar/images/assistant_admin.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-25.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Local Registrar" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../termcalendar/images/registrar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-90.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Co-Registrars" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../termcalendar/images/User%20Account_64px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-100.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Evaluators" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../termcalendar/images/evaluator.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-120.0" />
+                     </padding>
+                  </JFXButton>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets top="30.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
