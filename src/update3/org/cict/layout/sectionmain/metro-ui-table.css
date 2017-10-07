@@ -61,18 +61,19 @@
     -fx-background-color: #74B1F4;
 }
 
-
+/* Normal row in section */
 .metro-row-color-blue-jeans-2{
-    -fx-background-color: #5E9CE9;
+    -fx-background-color: #414852;
 }
 
 
-
+/* Header Row in section */
 .metro-row-color-blue-jeans-3{
-    -fx-background-color: #4A89D9;
+    -fx-background-color: #383d47;
 }
 
 
+/* unused colors
 .metro-row-color-aqua-2{
     -fx-background-color: #4FC0E8;
 }
@@ -83,3 +84,4 @@
 .metro-row-color-blue-4296f0{
     -fx-background-color: #4296f0;
 }
+*/

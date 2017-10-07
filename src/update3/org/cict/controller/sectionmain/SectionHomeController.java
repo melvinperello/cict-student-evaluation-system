@@ -95,7 +95,7 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
     public SectionHomeController() {
         // constructor
     }
-    private final String SECTION_BASE_COLOR = "#5E9CE9";
+    private final String SECTION_BASE_COLOR = "#414852";
 
     private LoaderView statisticsLoader;
     private LoaderView sectionLoader;

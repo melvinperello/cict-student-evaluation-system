@@ -82,6 +82,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
     private void changeView(Node whatView) {
         Animate.fade(whatView, 150, () -> {
+            // what to do after the fade animation
             vbox_access.setVisible(false);
             vbox_change_password.setVisible(false);
             vbox_change_pin.setVisible(false);

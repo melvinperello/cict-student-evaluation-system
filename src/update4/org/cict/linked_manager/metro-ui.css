@@ -2,6 +2,11 @@
     -fx-text-fill: #FFFFFF;
 }
 
+/*
+This CSS is for academic term settings
+Created 10-06-2017
+*/
+
 /* For Background */
 .metro-base-color{
     -fx-background-color:  #414852;
