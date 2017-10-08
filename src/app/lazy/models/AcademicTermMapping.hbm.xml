@@ -19,20 +19,20 @@
 <property name="current" type="java.lang.Integer">
 <column name="current" length="10"/>
 </property>
-<property name="evaluation_start" type="java.util.Date">
-<column name="evaluation_start" length="19"/>
+<property name="evaluation_service" type="java.lang.Integer">
+<column name="evaluation_service" length="10"/>
 </property>
-<property name="evaluation_end" type="java.util.Date">
-<column name="evaluation_end" length="19"/>
+<property name="adding_service" type="java.lang.Integer">
+<column name="adding_service" length="10"/>
 </property>
-<property name="adding_start" type="java.util.Date">
-<column name="adding_start" length="19"/>
-</property>
-<property name="adding_end" type="java.util.Date">
-<column name="adding_end" length="19"/>
+<property name="encoding_service" type="java.lang.Integer">
+<column name="encoding_service" length="10"/>
 </property>
 <property name="type" type="java.lang.String">
 <column name="type" length="50"/>
+</property>
+<property name="approval_state" type="java.lang.String">
+<column name="approval_state" length="50"/>
 </property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>

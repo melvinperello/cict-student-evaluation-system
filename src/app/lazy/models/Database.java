@@ -60,8 +60,8 @@ Mono.orm().setShowSQL(false);
 Mono.orm().setShowLogs(false);
 // c3p0 settings
 Mono.orm().setC3p0_max(5);
-Mono.orm().setC3p0_min(0);
-Mono.orm().setC3p0_timeout(10);
+Mono.orm().setC3p0_min(3);
+Mono.orm().setC3p0_timeout(300);
 Mono.orm().setC3p0_max_statements(0);
 Mono.orm().setC3p0_idle_period(0);
 // mapping information

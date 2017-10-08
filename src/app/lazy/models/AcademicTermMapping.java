@@ -2,7 +2,7 @@
 // SQL_table: academic_term
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 05, 2017 01:52:44 PM
+// Created: Oct 08, 2017 10:22:12 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -32,11 +32,11 @@ private java.lang.String school_year;
 private java.lang.String semester;
 private java.lang.Integer semester_regular;
 private java.lang.Integer current;
-private java.util.Date evaluation_start;
-private java.util.Date evaluation_end;
-private java.util.Date adding_start;
-private java.util.Date adding_end;
+private java.lang.Integer evaluation_service;
+private java.lang.Integer adding_service;
+private java.lang.Integer encoding_service;
 private java.lang.String type;
+private java.lang.String approval_state;
 private java.lang.Integer active;
 
 @Id
@@ -86,44 +86,31 @@ public void setCurrent(java.lang.Integer fieldCurrent) {
 	this.current = fieldCurrent;
 }
 
-@Column(name = "evaluation_start", nullable = true, length = 19)
-@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-public java.util.Date getEvaluation_start() {
-	return this.evaluation_start;
+@Column(name = "evaluation_service", nullable = true, length = 10)
+public java.lang.Integer getEvaluation_service() {
+	return this.evaluation_service;
 }
 
-public void setEvaluation_start(java.util.Date fieldEvaluationStart) {
-	this.evaluation_start = fieldEvaluationStart;
+public void setEvaluation_service(java.lang.Integer fieldEvaluationService) {
+	this.evaluation_service = fieldEvaluationService;
 }
 
-@Column(name = "evaluation_end", nullable = true, length = 19)
-@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-public java.util.Date getEvaluation_end() {
-	return this.evaluation_end;
+@Column(name = "adding_service", nullable = true, length = 10)
+public java.lang.Integer getAdding_service() {
+	return this.adding_service;
 }
 
-public void setEvaluation_end(java.util.Date fieldEvaluationEnd) {
-	this.evaluation_end = fieldEvaluationEnd;
+public void setAdding_service(java.lang.Integer fieldAddingService) {
+	this.adding_service = fieldAddingService;
 }
 
-@Column(name = "adding_start", nullable = true, length = 19)
-@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-public java.util.Date getAdding_start() {
-	return this.adding_start;
+@Column(name = "encoding_service", nullable = true, length = 10)
+public java.lang.Integer getEncoding_service() {
+	return this.encoding_service;
 }
 
-public void setAdding_start(java.util.Date fieldAddingStart) {
-	this.adding_start = fieldAddingStart;
-}
-
-@Column(name = "adding_end", nullable = true, length = 19)
-@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-public java.util.Date getAdding_end() {
-	return this.adding_end;
-}
-
-public void setAdding_end(java.util.Date fieldAddingEnd) {
-	this.adding_end = fieldAddingEnd;
+public void setEncoding_service(java.lang.Integer fieldEncodingService) {
+	this.encoding_service = fieldEncodingService;
 }
 
 @Column(name = "type", nullable = true, length = 50)
@@ -133,6 +120,15 @@ public java.lang.String getType() {
 
 public void setType(java.lang.String fieldType) {
 	this.type = fieldType;
+}
+
+@Column(name = "approval_state", nullable = true, length = 50)
+public java.lang.String getApproval_state() {
+	return this.approval_state;
+}
+
+public void setApproval_state(java.lang.String fieldApprovalState) {
+	this.approval_state = fieldApprovalState;
 }
 
 @Column(name = "active", nullable = true, length = 10)
