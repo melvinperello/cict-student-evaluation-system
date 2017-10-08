@@ -27,13 +27,12 @@ import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.fx.async.Transaction;
+import com.jhmvin.fx.async.TransactionException;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.cict.authentication.authenticator.SystemProperties;
@@ -178,8 +177,70 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
      */
     private class ServiceStateChanger extends Transaction {
 
+        private AcademicTermMapping currentTerm = SystemProperties.instance().getCurrentAcademicTerm();
+
+        // mutated values
+        private Boolean evaluationService;
+        private Boolean addingService;
+        private Boolean encodingService;
+
         @Override
         protected boolean transaction() {
+            evaluationService = null;
+            addingService = null;
+            encodingService = null;
+
+            // reload values
+            this.currentTerm = Database.connect()
+                    .academic_term()
+                    .getPrimary(currentTerm.getId());
+
+            // for evaluation
+            if (evaluationService != null) {
+                // get proposed value to change
+                Integer proposedValue = evaluationService ? 1 : 0;
+                // if already equal cancel the transaction.
+                if (this.currentTerm.getEvaluation_service().equals(proposedValue)) {
+                    return false;
+                } else {
+                    // if not equal change the value to the proposed state
+                    this.currentTerm.setEvaluation_service(proposedValue);
+                }
+            }
+            // for adding and changing
+            if (addingService != null) {
+                // get proposed value to change
+                Integer proposedValue = addingService ? 1 : 0;
+                // if already equal cancel the transaction.
+                if (this.currentTerm.getAdding_service().equals(proposedValue)) {
+                    return false;
+                } else {
+                    this.currentTerm.setAdding_service(proposedValue);
+                }
+            }
+
+            // for encoding
+            if (encodingService != null) {
+                // get proposed value to change
+                Integer proposedValue = encodingService ? 1 : 0;
+                // if already equal cancel the transaction.
+                if (this.currentTerm.getEncoding_service().equals(proposedValue)) {
+                    return false;
+                } else {
+                    this.currentTerm.setEncoding_service(proposedValue);
+                }
+            }
+
+            // once all the values have set and not aborted
+            // execute the update
+            boolean stateUpdated = Database.connect()
+                    .academic_term().update(currentTerm);
+
+            if (!stateUpdated) {
+                // failed to update
+                // invoke whenFailed callback
+                throw new TransactionException("Error in update");
+            }
 
             return true;
         }
