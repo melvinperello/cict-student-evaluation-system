@@ -97,10 +97,17 @@
                   </HBox>
                   <HBox alignment="CENTER" prefWidth="200.0" spacing="30.0">
                      <children>
-                        <JFXButton fx:id="btn_evaluation_service" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" text="Turn Off" textFill="WHITE">
+                        <JFXButton fx:id="btn_evaluation_service" graphicTextGap="10.0" prefHeight="40.0" prefWidth="200.0" style="-fx-border-color: white;" text="Turn Off" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/switch.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </JFXButton>
                      </children>
                      <padding>
@@ -150,12 +157,19 @@
                         <Insets left="45.0" />
                      </padding>
                   </HBox>
-                  <HBox fx:id="btn_adding" alignment="CENTER" prefWidth="200.0" spacing="30.0">
+                  <HBox alignment="CENTER" prefWidth="200.0" spacing="30.0">
                      <children>
-                        <JFXButton fx:id="btn_adding_service" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" text="Turn On" textFill="WHITE">
+                        <JFXButton fx:id="btn_adding_service" graphicTextGap="10.0" prefHeight="40.0" prefWidth="200.0" style="-fx-border-color: white;" text="Turn On" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/switch.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </JFXButton>
                      </children>
                      <padding>
@@ -207,10 +221,17 @@
                   </HBox>
                   <HBox alignment="CENTER" prefWidth="200.0" spacing="30.0">
                      <children>
-                        <JFXButton fx:id="btn_encoding_service" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" text="Turn On" textFill="WHITE">
+                        <JFXButton fx:id="btn_encoding_service" graphicTextGap="10.0" prefHeight="40.0" prefWidth="200.0" style="-fx-border-color: white;" text="Turn On" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/switch.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </JFXButton>
                      </children>
                      <padding>

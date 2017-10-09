@@ -26,15 +26,20 @@ package update3.org.cict.termcalendar;
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.Database;
 import com.jfoenix.controls.JFXButton;
+import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.async.TransactionException;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.cict.authentication.authenticator.SystemProperties;
 import update.org.cict.controller.home.Home;
 
@@ -58,9 +63,6 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
     @FXML
     private Label lbl_adding_status;
-
-    @FXML
-    private HBox btn_adding;
 
     @FXML
     private JFXButton btn_adding_service;
@@ -101,6 +103,80 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             Home.callHome(this);
         });
 
+        super.addClickEvent(btn_evaluation_service, () -> {
+            if (lbl_evaluation_status.getText().equalsIgnoreCase("OFFLINE")) {
+                changeStatus(Boolean.TRUE, null, null);
+            } else {
+                changeStatus(Boolean.FALSE, null, null);
+            }
+        });
+
+        super.addClickEvent(btn_adding_service, () -> {
+            if (lbl_adding_status.getText().equalsIgnoreCase("OFFLINE")) {
+                changeStatus(null, Boolean.TRUE, null);
+            } else {
+                changeStatus(null, Boolean.FALSE, null);
+            }
+        });
+
+        super.addClickEvent(btn_encoding_service, () -> {
+            if (lbl_encoding_status.getText().equalsIgnoreCase("OFFLINE")) {
+                changeStatus(null, null, Boolean.TRUE);
+            } else {
+                changeStatus(null, null, Boolean.FALSE);
+            }
+        });
+
+    }
+
+    private void setDisableSwitchButtons(boolean disabled) {
+        try {
+            if (disabled) {
+                super.cursorWait();
+            } else {
+                super.cursorDefault();
+            }
+        } catch (NullPointerException e) {
+            // never mind
+        }
+
+        btn_adding_service.setDisable(disabled);
+        btn_evaluation_service.setDisable(disabled);
+        btn_encoding_service.setDisable(disabled);
+    }
+
+    private void changeStatus(
+            Boolean evaluationService,
+            Boolean addingService,
+            Boolean encodingService) {
+
+        ServiceStateChanger changeState = new ServiceStateChanger();
+        changeState.setEvaluationService(evaluationService);
+        changeState.setAddingService(addingService);
+        changeState.setEncodingService(encodingService);
+
+        changeState.whenStarted(() -> {
+            this.setDisableSwitchButtons(true);
+        });
+
+        changeState.whenCancelled(() -> {
+            Mono.fx().snackbar().showInfo(application_root, "State was Already Updated.");
+        });
+
+        changeState.whenFailed(() -> {
+            Mono.fx().snackbar().showInfo(application_root, "State Update has Failed.");
+        });
+
+        changeState.whenSuccess(() -> {
+            Mono.fx().snackbar().showSuccess(application_root, "State Successfully Changed.");
+        });
+
+        changeState.whenFinished(() -> {
+            this.checkStatus();
+        });
+
+        changeState.transact();
+
     }
 
     /**
@@ -109,7 +185,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     private void checkStatus() {
         ServiceStatusChecker ssc = new ServiceStatusChecker();
         ssc.whenStarted(() -> {
-
+            this.setDisableSwitchButtons(true);
         });
 
         ssc.whenCancelled(() -> {
@@ -125,10 +201,15 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         });
 
         ssc.whenFinished(() -> {
-
+            // make buttons enabled
+            this.setDisableSwitchButtons(false);
         });
 
         ssc.transact();
+    }
+
+    private void changeButtonColor(JFXButton button, String color) {
+        button.setBackground(new Background(new BackgroundFill(Color.web(color), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     private void postStatusCheck(ServiceStatusChecker ssc) {
@@ -137,37 +218,31 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         if (ssc.isEvaluationActive()) {
             lbl_evaluation_status.setText("ONLINE");
             btn_evaluation_service.setText("TURN OFF");
-            btn_evaluation_service.getStyleClass().remove("state-to-on");
-            btn_evaluation_service.getStyleClass().add("state-to-off");
+            this.changeButtonColor(btn_evaluation_service, "#F791A6");
         } else {
             lbl_evaluation_status.setText("OFFLINE");
             btn_evaluation_service.setText("TURN ON");
-            btn_evaluation_service.getStyleClass().remove("state-to-off");
-            btn_evaluation_service.getStyleClass().add("state-to-on");
+            this.changeButtonColor(btn_evaluation_service, "#35BA9B");
         }
 
         if (ssc.isAddingActive()) {
             lbl_adding_status.setText("ONLINE");
             btn_adding_service.setText("TURN OFF");
-            btn_adding_service.getStyleClass().remove("state-to-on");
-            btn_adding_service.getStyleClass().add("state-to-off");
+            this.changeButtonColor(btn_adding_service, "#F791A6");
         } else {
             lbl_adding_status.setText("OFFLINE");
             btn_adding_service.setText("TURN ON");
-            btn_adding_service.getStyleClass().remove("state-to-off");
-            btn_adding_service.getStyleClass().add("state-to-on");
+            this.changeButtonColor(btn_adding_service, "#35BA9B");
         }
 
         if (ssc.isEncodingActive()) {
             lbl_encoding_status.setText("ONLINE");
             btn_encoding_service.setText("TURN OFF");
-            btn_encoding_service.getStyleClass().remove("state-to-on");
-            btn_encoding_service.getStyleClass().add("state-to-off");
+            this.changeButtonColor(btn_encoding_service, "#F791A6");
         } else {
             lbl_encoding_status.setText("OFFLINE");
             btn_encoding_service.setText("TURN ON");
-            btn_encoding_service.getStyleClass().remove("state-to-off");
-            btn_encoding_service.getStyleClass().add("state-to-on");
+            this.changeButtonColor(btn_encoding_service, "#35BA9B");
         }
 
     }
@@ -184,12 +259,20 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         private Boolean addingService;
         private Boolean encodingService;
 
+        public void setEvaluationService(Boolean evaluationService) {
+            this.evaluationService = evaluationService;
+        }
+
+        public void setAddingService(Boolean addingService) {
+            this.addingService = addingService;
+        }
+
+        public void setEncodingService(Boolean encodingService) {
+            this.encodingService = encodingService;
+        }
+
         @Override
         protected boolean transaction() {
-            evaluationService = null;
-            addingService = null;
-            encodingService = null;
-
             // reload values
             this.currentTerm = Database.connect()
                     .academic_term()
@@ -227,6 +310,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 if (this.currentTerm.getEncoding_service().equals(proposedValue)) {
                     return false;
                 } else {
+
                     this.currentTerm.setEncoding_service(proposedValue);
                 }
             }
