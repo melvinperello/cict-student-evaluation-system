@@ -181,6 +181,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         lbl_history_terminal.setText(cc.getPC_NAME());
         lbl_history_user.setText(cc.getPC_USERNAME());
 
+        //--
+        displayAccessTable();
+
     }
 
     private void displayAccessTable() {
@@ -188,18 +191,23 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
          * Create Table
          */
         SimpleTable tblSections = new SimpleTable();
-        SimpleTableRow row = new SimpleTableRow();
-        row.setRowHeight(50.0);
 
-        /**
-         * Create FXML ROW.
-         */
-        RowAccessHistory accessRow = new RowAccessHistory();
+        for (int x = 0; x < 10; x++) {
+            SimpleTableRow row = new SimpleTableRow();
+            row.setRowHeight(50.0);
+            /**
+             * Create FXML ROW.
+             */
+            RowAccessHistory accessRow = new RowAccessHistory();
 
-        //
-        SimpleTableCell cellParent = new SimpleTableCell();
-        cellParent.setResizePriority(Priority.ALWAYS);
-        cellParent.setContentAsPane(accessRow.rowHistory);
+            //
+            SimpleTableCell cellParent = new SimpleTableCell();
+            cellParent.setResizePriority(Priority.ALWAYS);
+            cellParent.setContentAsPane(accessRow.rowHistory);
+
+            row.addCell(cellParent);
+            tblSections.addRow(row);
+        }
 
         //
         SimpleTableView simpleTableView = new SimpleTableView();
@@ -211,15 +219,17 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     private class RowAccessHistory extends SceneFX {
 
         public HBox rowHistory;
-        public Label lbl_time, lbl_ip, lbl_os, lbl_terminal;
+        public Label lbl_time, lbl_ip, lbl_os, lbl_terminal, lbl_state;
 
         public RowAccessHistory() {
+
             rowHistory = (HBox) Mono.fx().create()
-                    .setPackageName("update3.org.cict.layout.sectionmain")
-                    .setFxmlDocument("row-irreg-section")
+                    .setPackageName("update3.org.cict.my_account")
+                    .setFxmlDocument("row-access")
                     .makeFX()
                     .pullOutLayout();
 
+            lbl_state = super.searchAccessibilityText(rowHistory, "lbl_state");
             this.lbl_time = super.searchAccessibilityText(rowHistory, "lbl_time");
             this.lbl_ip = super.searchAccessibilityText(rowHistory, "lbl_ip");
             this.lbl_os = super.searchAccessibilityText(rowHistory, "lbl_os");

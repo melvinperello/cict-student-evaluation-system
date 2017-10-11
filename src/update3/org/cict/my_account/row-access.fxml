@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="800.0" spacing="20.0" style="-fx-background-color: #414852;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="50.0" prefWidth="900.0" spacing="20.0" styleClass="metro-row" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -19,6 +18,11 @@
       <Label accessibleText="lbl_time" text="10/11/2017 06:45 PM" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label accessibleText="lbl_state" prefWidth="170.0" text="WRONG_PASSWORD" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
          </font>
       </Label>
       <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
