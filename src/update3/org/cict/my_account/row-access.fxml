@@ -20,7 +20,7 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
-      <Label accessibleText="lbl_state" prefWidth="170.0" text="WRONG_PASSWORD" textFill="WHITE">
+      <Label accessibleText="lbl_state" alignment="CENTER" prefWidth="170.0" text="WRONG_PASSWORD" textFill="WHITE">
          <font>
             <Font size="15.0" />
          </font>
@@ -30,7 +30,7 @@
             <Image url="@images/ip_address.png" />
          </image>
       </ImageView>
-      <Label accessibleText="lbl_ip" prefWidth="200.0" text="192.168.254.254  FE:FE:FE:FE" textFill="WHITE">
+      <Label accessibleText="lbl_ip" maxWidth="1.7976931348623157E308" text="192.168.254.254  FE:FE:FE:FE" textFill="WHITE" HBox.hgrow="ALWAYS">
          <font>
             <Font size="13.0" />
          </font>
@@ -40,10 +40,10 @@
             <Image url="@images/os.png" />
          </image>
       </ImageView>
-      <VBox alignment="CENTER" spacing="5.0">
+      <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="lbl_os" text="Windows 10@amd64" textFill="WHITE" />
-            <Label accessibleText="lbl_terminal" text="Jhon Melvin@Melvin" textFill="WHITE" />
+            <Label accessibleText="lbl_os" maxWidth="1.7976931348623157E308" text="Windows 10@amd64" textFill="WHITE" />
+            <Label accessibleText="lbl_terminal" maxWidth="1.7976931348623157E308" text="Jhon Melvin@Melvin" textFill="WHITE" />
          </children>
       </VBox>
    </children>

@@ -275,17 +275,20 @@
                               <Insets left="30.0" top="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="vbox_access_history" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" VBox.vgrow="ALWAYS">
+                        <StackPane fx:id="stack_history" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="65.0" top="20.0" />
                            </VBox.margin>
-                        </VBox>
+                           <children>
+                              <VBox fx:id="vbox_access_history" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
+                           </children>
+                        </StackPane>
                      </children>
                      <padding>
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_change_password" prefHeight="200.0" prefWidth="100.0" visible="false">
+                  <VBox fx:id="vbox_change_password" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -318,7 +321,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                    <PasswordField fx:id="txt_cp_current" prefWidth="200.0" promptText="Current Password">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -340,7 +343,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                    <PasswordField fx:id="txt_cp_new" prefWidth="200.0" promptText="New Password">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -357,12 +360,12 @@
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label prefWidth="150.0" text="Confirm Password">
+                                    <Label fx:id="txt_cp_confirm" prefWidth="150.0" text="Confirm Password">
                                        <font>
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                    <PasswordField prefWidth="200.0" promptText="Confirm Password">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -371,7 +374,7 @@
                               </HBox>
                               <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
                                  <children>
-                                    <JFXButton prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change Password" textFill="WHITE">
+                                    <JFXButton fx:id="btn_cp_change" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change Password" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -514,7 +517,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_change_question" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_change_question" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>

@@ -23,8 +23,13 @@
  */
 package update3.org.cict.my_account;
 
+import app.lazy.models.AccountFacultyAttemptMapping;
+import app.lazy.models.DB;
+import app.lazy.models.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.SimpleTask;
+import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
@@ -32,14 +37,22 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.cict.authentication.authenticator.CollegeComputer;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import update.org.cict.controller.home.Home;
+import update3.org.cict.layout.default_loader.LoaderView;
+import update3.org.cict.window_prompts.empty_prompt.EmptyView;
+import update3.org.cict.window_prompts.fail_prompt.FailView;
 
 /**
  *
@@ -84,10 +97,25 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     private Label lbl_history_user;
 
     @FXML
+    private StackPane stack_history;
+
+    @FXML
     private VBox vbox_access_history;
 
     @FXML
     private VBox vbox_change_password;
+
+    @FXML
+    private PasswordField txt_cp_current;
+
+    @FXML
+    private PasswordField txt_cp_new;
+
+    @FXML
+    private Label txt_cp_confirm;
+
+    @FXML
+    private JFXButton btn_cp_change;
 
     @FXML
     private VBox vbox_change_pin;
@@ -98,17 +126,41 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     public MyAccountHome() {
         //
     }
+    /**
+     * View Attachments.
+     */
+    private LoaderView loaderView;
+    private FailView failView;
+    private EmptyView emptyView;
+
+    public final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+
+        //
+        this.loaderView = new LoaderView(stack_history);
+        this.failView = new FailView(stack_history);
+        this.emptyView = new EmptyView(stack_history);
+
         //
         this.changeView(this.vbox_access);
         this.showAccessHistory();
 
     }
 
+    /**
+     * Detaches all prompt views.
+     */
+    private void detachAll() {
+        this.loaderView.detach();
+        this.failView.detach();
+        this.emptyView.detach();
+    }
+
     private void changeView(Node whatView) {
+        this.detachAll();
         Animate.fade(whatView, 150, () -> {
             // what to do after the fade animation
             vbox_access.setVisible(false);
@@ -123,6 +175,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     public void onEventHandling() {
         super.addClickEvent(btn_home, () -> {
             Home.callHome(this);
+            this.detachAll();
         });
 
         super.addClickEvent(btn_voew_access_history, () -> {
@@ -181,18 +234,79 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         lbl_history_terminal.setText(cc.getPC_NAME());
         lbl_history_user.setText(cc.getPC_USERNAME());
 
-        //--
-        displayAccessTable();
+        FetchAccessHistory accessTx = new FetchAccessHistory();
+        accessTx.whenStarted(() -> {
+            this.vbox_access.setVisible(true);
+            this.detachAll();
+            this.loaderView.setMessage("Loading History");
+            this.loaderView.attach();
+        });
+        accessTx.whenFailed(() -> {
+            this.vbox_access_history.getChildren().clear();
+            this.failView.setMessage("Failed to Load History");
+            this.failView.attach();
 
+        });
+        accessTx.whenCancelled(() -> {
+            this.vbox_access_history.getChildren().clear();
+            System.out.println(this.vbox_access_history.isVisible());
+            this.emptyView.setMessage("No History");
+            this.emptyView.getButton().setVisible(false);
+            this.emptyView.attach();
+
+        });
+        accessTx.whenSuccess(() -> {
+            renderHistory(accessTx);
+        });
+        accessTx.whenFinished(() -> {
+            this.loaderView.detach();
+        });
+
+        accessTx.transact();
+
+        //--
     }
 
-    private void displayAccessTable() {
+    /**
+     * Reduces Lag Renders the FXML outside the main thread.
+     *
+     * @param accessTx
+     */
+    private void renderHistory(FetchAccessHistory accessTx) {
+        SimpleTask renderTask = new SimpleTask("render-history");
+        renderTask.setTask(() -> {
+            displayAccessTable(accessTx.getAttempts());
+        });
+        renderTask.whenStarted(() -> {
+            this.loaderView.setMessage("Preparing History");
+            this.loaderView.attach();
+        });
+        renderTask.whenFailed(() -> {
+        });
+        renderTask.whenCancelled(() -> {
+        });
+        renderTask.whenSuccess(() -> {
+            displayAccessTable(accessTx.getAttempts());
+        });
+        renderTask.whenFinished(() -> {
+            this.loaderView.detach();
+        });
+
+        renderTask.start();
+    }
+
+    /**
+     * Display access history row.
+     *
+     * @param attempts
+     */
+    private void displayAccessTable(ArrayList<AccountFacultyAttemptMapping> attempts) {
         /**
          * Create Table
          */
         SimpleTable tblSections = new SimpleTable();
 
-        for (int x = 0; x < 10; x++) {
+        for (AccountFacultyAttemptMapping attempt : attempts) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(50.0);
             /**
@@ -200,6 +314,42 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
              */
             RowAccessHistory accessRow = new RowAccessHistory();
 
+            accessRow.lbl_time.setText(dateFormat.format(attempt.getTime()));
+            accessRow.lbl_state.setText(attempt.getResult());
+
+            //
+            String displayIP = "";
+            String displayMAC = "";
+            try {
+                boolean firstOnly = true;
+                String[] ipSet = attempt.getIp_address().split("%");
+                for (String ipString : ipSet) {
+                    if (ipString.isEmpty()) {
+                        continue;
+                    }
+
+                    if (!firstOnly) {
+                        break;
+                    }
+                    String[] ipInfo = ipString.split("@");
+
+                    String ipAddr = ipInfo[0];
+                    String macAddr = ipInfo[1];
+
+                    displayIP += (ipAddr + "");
+                    displayMAC += (macAddr + "");
+
+                    firstOnly = false; // only the first set of ip
+                }
+            } catch (Exception e) {
+                displayIP = "Unknown Host";
+                displayMAC = "Unknown Host";
+            }
+
+            //
+            accessRow.lbl_ip.setText(displayIP + "@" + displayMAC);
+            accessRow.lbl_os.setText(attempt.getOs_version());
+            accessRow.lbl_terminal.setText(attempt.getPc_username() + "@" + attempt.getPc_name());
             //
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
@@ -213,9 +363,15 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(tblSections);
         simpleTableView.setFixedWidth(true);
-        simpleTableView.setParentOnScene(vbox_access_history);
+        Mono.fx().thread().wrap(() -> {
+            simpleTableView.setParentOnScene(vbox_access_history);
+        });
+
     }
 
+    /**
+     * Class that controls the access row.
+     */
     private class RowAccessHistory extends SceneFX {
 
         public HBox rowHistory;
@@ -234,6 +390,68 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             this.lbl_ip = super.searchAccessibilityText(rowHistory, "lbl_ip");
             this.lbl_os = super.searchAccessibilityText(rowHistory, "lbl_os");
             this.lbl_terminal = super.searchAccessibilityText(rowHistory, "lbl_terminal");
+        }
+    }
+
+    /**
+     * Class that fetch the access history.
+     */
+    private class FetchAccessHistory extends Transaction {
+
+        private ArrayList<AccountFacultyAttemptMapping> attempts;
+
+        public ArrayList<AccountFacultyAttemptMapping> getAttempts() {
+            return attempts;
+        }
+
+        @Override
+        protected boolean transaction() {
+            Integer logged_account = CollegeFaculty.instance().getACCOUNT_ID();
+
+            attempts = Mono.orm()
+                    .newSearch(Database.connect().account_faculty_attempt())
+                    .eq(DB.account_faculty_attempt().account_id, logged_account)
+                    .active()
+                    .take(50);
+
+            if (attempts == null) {
+                return false; // no history
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
+        }
+
+    }
+
+    private class ChangePassword extends Transaction {
+
+        private String oldPassword;
+        private String newPassword;
+
+        public void setOldPassword(String oldPassword) {
+            this.oldPassword = oldPassword;
+        }
+
+        public void setNewPassword(String newPassword) {
+            this.newPassword = newPassword;
+        }
+
+        @Override
+        protected boolean transaction() {
+            
+            
+
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
         }
     }
 
