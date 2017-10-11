@@ -360,12 +360,12 @@
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label fx:id="txt_cp_confirm" prefWidth="150.0" text="Confirm Password">
+                                    <Label prefWidth="150.0" text="Confirm Password">
                                        <font>
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Confirm Password">
+                                    <PasswordField fx:id="txt_cp_confirm" prefWidth="200.0" promptText="Confirm Password">
                                        <font>
                                           <Font size="15.0" />
                                        </font>

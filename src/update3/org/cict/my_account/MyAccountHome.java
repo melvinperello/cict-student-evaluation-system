@@ -24,12 +24,16 @@
 package update3.org.cict.my_account;
 
 import app.lazy.models.AccountFacultyAttemptMapping;
+import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import com.izumi.textinputfilters.StringFilter;
+import com.izumi.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
+import com.jhmvin.fx.async.TransactionException;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
@@ -112,7 +116,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     private PasswordField txt_cp_new;
 
     @FXML
-    private Label txt_cp_confirm;
+    private PasswordField txt_cp_confirm;
 
     @FXML
     private JFXButton btn_cp_change;
@@ -138,6 +142,30 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+
+        StringFilter filterPattern
+                = TextInputFilters // caller class
+                        .string() // string filter
+                        .setFilterMode(StringFilter.LETTER) // mode
+                        .setMaxCharacters(6) // max characters allowed
+                        .setFilterManager(filterManager -> {
+                            if (!filterManager.isValid()) {
+                                // if not valid
+                                System.out.println(filterManager.getMessage());
+                            }
+                        });
+
+        StringFilter currentFilter = filterPattern.clone();
+        currentFilter.setTextSource(txt_cp_current);
+        currentFilter.applyFilter();
+
+        StringFilter newFilter = filterPattern.clone();
+        newFilter.setTextSource(txt_cp_new);
+        newFilter.applyFilter();
+
+        StringFilter confirmFilter = filterPattern.clone();
+        confirmFilter.setTextSource(txt_cp_confirm);
+        confirmFilter.applyFilter();
 
         //
         this.loaderView = new LoaderView(stack_history);
@@ -191,6 +219,16 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_view_change_question, () -> {
             this.changeView(this.vbox_change_question);
         });
+    }
+
+    private void changePassword() {
+        String old = txt_cp_current.getText();
+        String update = txt_cp_new.getText();
+        String confirm = txt_cp_confirm.getText();
+
+        if (old.isEmpty() || update.isEmpty() || confirm.isEmpty()) {
+
+        }
     }
 
     private void showAccessHistory() {
@@ -428,6 +466,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
     }
 
+    /**
+     * This transaction changes the password of the user.
+     */
     private class ChangePassword extends Transaction {
 
         private String oldPassword;
@@ -443,8 +484,26 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
         @Override
         protected boolean transaction() {
-            
-            
+            Integer account_id = CollegeFaculty.instance().getACCOUNT_ID();
+
+            AccountFacultyMapping account = Database
+                    .connect()
+                    .account_faculty()
+                    .getPrimary(account_id);
+
+            // if not equal
+            if (!Mono.security().hashFactory().hash_sha512(oldPassword).equals(account.getPassword())) {
+                return false;
+            }
+
+            // update password
+            account.setPassword(Mono.security().hashFactory().hash_sha512(newPassword));
+
+            boolean passwordUpdated = Database.connect().account_faculty().update(account);
+            // if failed to update
+            if (!passwordUpdated) {
+                throw new TransactionException("update-failed");
+            }
 
             return true;
         }
