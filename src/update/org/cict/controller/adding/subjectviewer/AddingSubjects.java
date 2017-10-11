@@ -89,9 +89,11 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
     private ArrayList<SubjectInformationHolder> suggestedSubject;
     private ArrayList<ArrayList<Object>> sectionSearched;
     private final static String KEY_MORE_INFO = "MORE_INFO";
+    private Integer CURRICULUM_id;
     
-    public void setStudentNumber(String studNum) {
+    public void setStudentNumber(String studNum, Integer curriculum_id) {
         this.studentNumber = studNum;
+        CURRICULUM_id = curriculum_id;
     }
     
     @Override
@@ -153,7 +155,11 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
         
         search.setOnSuccess(onSuccess -> {
             this.suggestedSubject = search.getSubjectSuggestion();
-            this.createSubjectTable(this.suggestedSubject);
+            if(suggestedSubject.isEmpty()) {
+                this.hbox_search.setVisible(false);
+                this.hbox_no_result.setVisible(true);
+            } else 
+                this.createSubjectTable(this.suggestedSubject);
         });
 
         search.setOnFailure(onFailure -> {
@@ -374,13 +380,18 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
     private void searchSection(SubjectMapping subject) {
         SearchSection search = new SearchSection();
         search.subjectCode = subject.getCode();
-
+        search.CURRICULUM_id = CURRICULUM_id;
+        
         search.setOnSuccess(onSuccess -> {
             this.sectionSearched = search.getSearchResults();
             /**
              * Call create section table.
              */
-            this.createSectionTable(this.sectionSearched, subject, search.getSubInfo());
+            if(sectionSearched.isEmpty()) {
+                this.vbox_subjectList.setVisible(false);
+                this.hbox_no_result.setVisible(true);
+            } else
+                this.createSectionTable(this.sectionSearched, subject, search.getSubInfo());
         });
 
         search.setOnFailure(onFailure -> {

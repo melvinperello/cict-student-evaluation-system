@@ -31,6 +31,7 @@ import app.lazy.models.Database;
 import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.controls.SimpleImage;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -38,6 +39,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.transitions.Animate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +52,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
@@ -59,6 +62,7 @@ import update.org.cict.controller.home.Home;
 import update2.org.cict.controller.curriculum.AddNewCurriculumController;
 import update2.org.cict.controller.curriculum.CurriculumInformationController;
 import update2.org.cict.controller.subjects.SubjectRepositoryController;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -124,27 +128,30 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         cmb_sort_.getSelectionModel().selectFirst();
     }
     
+    private final String SECTION_BASE_COLOR = "#E85764";
     @Override
     public void onEventHandling() {
         this.addClickEvent(btn_home, () -> {
-//            finish();
             Home.callHome(this);
         });
         this.addClickEvent(btnNewProgram, () -> {
-            
             this.showAddNewProgram();
         });
         
         this.addClickEvent(btn_view_subjects, () -> {
             SubjectRepositoryController controller = new SubjectRepositoryController();
-            Mono.fx().create()
+            Pane pane = Mono.fx().create()
                     .setPackageName("update2.org.cict.layout.subjects")
                     .setFxmlDocument("subject-bank")
                     .makeFX()
                     .setController(controller)
-                    .makeScene()
-                    .makeStageApplication()
-                    .stageShow();
+                    .pullOutLayout();
+
+            super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(pane);
+            }, pane);
         });
         cmb_sort_.valueProperty().addListener((e) -> {
             ArrayList<AcademicProgramInfo> implementedAcadPrograms = new ArrayList<>();
@@ -212,7 +219,9 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         simpleTableView.setTable(programsTable);
         simpleTableView.setFixedWidth(true);
         // attach to parent variable name in scene builder
-        simpleTableView.setParentOnScene(vbox_table_holder);
+        Mono.fx().thread().wrap(()->{
+            simpleTableView.setParentOnScene(vbox_table_holder);
+        });
         this.vbox_search.setVisible(false);
         this.vbox_table_holder.setVisible(true);
         
@@ -367,9 +376,16 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                     apMap.setRemoved_by(IMPLEMENTED_BY);
                     apMap.setRemoved_date(IMPLEMENTED_DATE);
                     if (Database.connect().academic_program().update(apMap)) {
+                        for(CurriculumMapping c: curriculums){
+                            c.setActive(0);
+                            c.setRemoved_by(IMPLEMENTED_BY);
+                            c.setRemoved_date(IMPLEMENTED_DATE);
+                            if(!Database.connect().curriculum().update(c))
+                                System.out.println("CURRICULUM " + c.getName() +" IS NOT REMOVED");
+                        }
                         Notifications.create()
                                 .title("Deleted Successfully")
-                                .text("The academic program is successfully removed from the list.")
+                                .text("The academic program and its curriculums is/are successfully removed from the list.")
                                 .showInformation();
                         row.getChildren().clear();
                     }
@@ -550,18 +566,18 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
     
     private void showCurriculumInfo(CurriculumMapping curriculum) {
         CurriculumInformationController controller = new CurriculumInformationController(curriculum);
-        Mono.fx().create()
+        Pane pane = Mono.fx().create()
                 .setPackageName("update2.org.cict.layout.curriculum")
                 .setFxmlDocument("curriculum-info")
                 .makeFX()
                 .setController(controller)
-                .makeScene()
-                .makeStageWithOwner(Mono.fx().getParentStage(btn_home))
-                .stageMaximized(true)
-                .stageShowAndWait();
-        if (controller.isUpdated()) {
-            refreshAcademicProgramTable(0);
-        }
+                .pullOutLayout();
+
+        super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
     
     private ArrayList<AcademicProgramInfo> acadProgramInfo;
@@ -573,12 +589,21 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         }
         
         FetchAcademicPrograms fetchProgramsTx = new FetchAcademicPrograms();
-        
-        fetchProgramsTx.setOnSuccess(onSuccess -> {
+        fetchProgramsTx.setOnStart(onStart->{
             programsTable.getChildren().clear();
-            acadProgramInfo = fetchProgramsTx.getAcademicProgramsCollection();
             cmb_sort_.getSelectionModel().selectFirst();
-            createProgramsView(null);
+            cmb_sort_.setDisable(true);
+        });
+        fetchProgramsTx.setOnSuccess(onSuccess -> {
+            acadProgramInfo = fetchProgramsTx.getAcademicProgramsCollection();
+            SimpleTask create_programs_table = new SimpleTask("create_programs_table");
+            create_programs_table.setTask(()->{
+                createProgramsView(null);
+            });
+            create_programs_table.setOnSuccess((a)->{
+                cmb_sort_.setDisable(false);
+            });
+            create_programs_table.start();
         });
         
         fetchProgramsTx.setRestTime(restTime);

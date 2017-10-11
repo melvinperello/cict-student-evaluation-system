@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="600.0" prefWidth="1178.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #2B89E0;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="600.0" prefWidth="1178.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox spacing="20.0">
          <children>
-            <Label text="Program Information">
+            <Label text="Program Information" textFill="WHITE">
                <font>
                   <Font size="27.0" />
                </font>
@@ -29,7 +29,7 @@
             </Label>
             <VBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="659.0" HBox.hgrow="ALWAYS">
                <children>
-                  <JFXButton accessibleText="btn_delete" maxHeight="1.7976931348623157E308" prefHeight="43.0" prefWidth="192.0" style="-fx-background-color: #DB4437;" text="Delete Program" textFill="WHITE">
+                  <JFXButton accessibleText="btn_delete" maxHeight="1.7976931348623157E308" prefHeight="43.0" prefWidth="192.0" style="-fx-border-color: #fff;" text="Delete Program" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -47,7 +47,7 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <Label prefHeight="30.0" prefWidth="140.0" text="Program Code">
+            <Label prefHeight="30.0" prefWidth="140.0" text="Program Code" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
@@ -67,22 +67,22 @@
                   <Font size="16.0" />
                </font>
             </TextField>
-            <Label text="Created Date:">
+            <Label text="Created Date:" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_created_date" text="06/25/2014 07:42 PM">
+            <Label accessibleText="lbl_created_date" text="06/25/2014 07:42 PM" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label text="Creator:">
+            <Label text="Creator:" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_created_by" text="EVELYN S. SAMSON">
+            <Label accessibleText="lbl_created_by" text="EVELYN S. SAMSON" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -94,7 +94,7 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <Label prefHeight="30.0" prefWidth="140.0" text="Program Name">
+            <Label prefHeight="30.0" prefWidth="140.0" text="Program Name" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
@@ -106,7 +106,7 @@
             </TextField>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <JFXButton accessibleText="btn_save_changes" style="-fx-background-color: #1784BF;" text="Save Changes" textFill="WHITE">
+                  <JFXButton accessibleText="btn_save_changes" style="-fx-border-color: #fff;" text="Save Changes" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -127,32 +127,32 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0">
          <children>
-            <Label prefHeight="30.0" text="Status:">
+            <Label prefHeight="30.0" text="Status:" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_status" prefHeight="30.0" text="UNIMPLEMENTED">
+            <Label accessibleText="lbl_status" prefHeight="30.0" text="UNIMPLEMENTED" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label prefHeight="30.0" text="Saved Date:">
+            <Label prefHeight="30.0" text="Saved Date:" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_implementation_date" prefHeight="30.0" text="N/A">
+            <Label accessibleText="lbl_implementation_date" prefHeight="30.0" text="N/A" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label prefHeight="30.0" text="Saved By:">
+            <Label prefHeight="30.0" text="Saved By:" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_implemented_by" prefHeight="30.0" text="N/A">
+            <Label accessibleText="lbl_implemented_by" prefHeight="30.0" text="N/A" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -162,7 +162,7 @@
             <Insets left="20.0" />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0" style="-fx-background-color: #DB4437;">
+      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="20.0" style="-fx-border-color: #fff;">
          <children>
             <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -198,7 +198,7 @@
          <children>
             <VBox prefHeight="60.0" prefWidth="736.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label text="Curriculums">
+                  <Label text="Curriculums" textFill="WHITE">
                      <font>
                         <Font size="27.0" />
                      </font>
@@ -216,9 +216,9 @@
                </children>
             </VBox>
             <ComboBox accessibleText="cmb_sort" opacity="0.86" prefHeight="35.0" prefWidth="180.0" style="-fx-border-color: #95A5A6; -fx-border-radius: 5; -fx-text-fill: #2980B9;" />
-            <VBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="180.0">
+            <VBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="229.0">
                <children>
-                  <JFXButton accessibleText="btn_newCurriculum" maxHeight="1.7976931348623157E308" style="-fx-background-color: #02D17F;" text="New Curriculum" textFill="WHITE">
+                  <JFXButton accessibleText="btn_newCurriculum" maxHeight="1.7976931348623157E308" style="-fx-border-color: #fff;" text="New Curriculum" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -240,7 +240,7 @@
             </VBox>
          </children>
       </HBox>
-      <VBox accessibleText="vbox_curriculum_table_holder" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #2B89E0;" VBox.vgrow="ALWAYS">
+      <VBox accessibleText="vbox_curriculum_table_holder" minWidth="70.0" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="10.0" />
          </VBox.margin>

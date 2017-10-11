@@ -41,7 +41,9 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -57,6 +59,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cict.SubjectClassification;
@@ -65,8 +68,10 @@ import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update2.org.cict.controller.academicprogram.AcademicProgramAccessManager;
+import update2.org.cict.controller.academicprogram.AcademicProgramHome;
 import update2.org.cict.controller.subjects.SearchSubjectController;
 import update2.org.cict.controller.subjects.SubjectPrerequisiteController;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -134,6 +139,9 @@ public class CurriculumInformationController extends SceneFX implements Controll
     @FXML
     private VBox application_root;
 
+    @FXML
+    private Button btn_back;
+    
     private CurriculumMapping CURRICULUM;
     private final ToggleGroup group = new ToggleGroup();
     private ObservableList<String> ladderTypes = FXCollections.observableArrayList();
@@ -190,6 +198,17 @@ public class CurriculumInformationController extends SceneFX implements Controll
         setViewCheckCmbBoxPreReq("NO");
         setDetails();
 
+         
+        if (AcademicProgramAccessManager.denyIfNotRegistrar()) {
+            btn_implement.setDisable(true);
+        }
+        
+        if (AcademicProgramAccessManager.denyIfNotAdmin()) {
+            btn_edit.setDisable(true);
+            txt_description.setDisable(true);
+            txt_major.setDisable(true);
+            txt_name.setDisable(true);
+        }
     }
 
     @Override
@@ -208,7 +227,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
         });
 
         addClickEvent(btn_implement, () -> {
-
+            btn_implement.setDisable(isImplemented);
             boolean isComplete = true;
             for (int yrCtr = 1; yrCtr <= CURRICULUM.getStudy_years(); yrCtr++) {
                 for (int semCtr = 1; semCtr <= 2; semCtr++) {
@@ -269,7 +288,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
                                 .setHeader("Implemented Successfully")
                                 .setMessage("This curriculum is successfully implemented.")
                                 .showAndWait();
-                        Mono.fx().getParentStage(txt_name).close();
+                        onBack();
                     }
                 }
             }
@@ -278,21 +297,55 @@ public class CurriculumInformationController extends SceneFX implements Controll
         this.addClickEvent(btn_history, () -> {
             showHistory();
         });
+        
+        this.addClickEvent(btn_back, ()->{
+            onBack();
+        });
 
+    }
+    
+    private final String SECTION_BASE_COLOR = "#E85764";
+    private void onBack() {
+        AcademicProgramHome controller = new AcademicProgramHome();
+        Pane pane = Mono.fx().create()
+                .setPackageName("update2.org.cict.layout.academicprogram")
+                .setFxmlDocument("academic-program-home")
+                .makeFX()
+                .setController(controller)
+                .pullOutLayout();
+
+        super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
 
     private void showHistory() {
+//        HistoryController controller = new HistoryController(CURRICULUM);
+//        Mono.fx().create()
+//                .setPackageName("update2.org.cict.layout.curriculum")
+//                .setFxmlDocument("history")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStageWithOwner(Mono.fx().getParentStage(btn_edit))
+//                .stageResizeable(false)
+//                .stageMaximized(true)
+//                .stageShowAndWait();
         HistoryController controller = new HistoryController(CURRICULUM);
-        Mono.fx().create()
+        Pane pane = Mono.fx().create()
                 .setPackageName("update2.org.cict.layout.curriculum")
                 .setFxmlDocument("history")
                 .makeFX()
                 .setController(controller)
-                .makeScene()
-                .makeStageWithOwner(Mono.fx().getParentStage(btn_edit))
-                .stageResizeable(false)
-                .stageMaximized(true)
-                .stageShowAndWait();
+                .pullOutLayout();
+
+        super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
 
     private void setViewCheckCmbBoxPreReq(String mode) {
@@ -366,8 +419,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
             txt_description.setDisable(isImplemented);
             txt_major.setDisable(isImplemented);
             txt_name.setDisable(isImplemented);
-            btn_edit.setDisable(isImplemented);
-            btn_implement.setDisable(isImplemented);
+//            btn_edit.setDisable(isImplemented);
+//            btn_implement.setDisable(isImplemented);
         });
         fetch.transact();
         setYearAndSemesterView();
@@ -455,6 +508,12 @@ public class CurriculumInformationController extends SceneFX implements Controll
         lbl_subjects.setText(subjects.toString());
         lbl_units.setText(units.toString());
         btn_add_subject.setDisable(isImplemented);
+        
+         
+        if (AcademicProgramAccessManager.denyIfNotAdmin()) {
+            btn_add_subject.setDisable(true);
+        }
+        
         addClickEvent(btn_add_subject, () -> {
             if (!isImplemented) {
                 this.showSubjectSearch(curriculumID, year, sem);
@@ -481,22 +540,30 @@ public class CurriculumInformationController extends SceneFX implements Controll
         if (curriculumId == -1) {
             System.out.println("No curriculum found");
         } else {
-            SearchSubjectController controller = new SearchSubjectController(curriculumId);
+            SearchSubjectController controller = new SearchSubjectController(CURRICULUM);
             controller.setYearAndSemester(yr, sem);
             controller.setModeSetting("CURRICULUM");
             controller.title = getYearLevel(yr) + "-" + getSemester(sem);
-            Mono.fx().create()
+            
+            LayoutDataFX layoutFx = new LayoutDataFX(application_root, this);
+            controller.setHomeFx(layoutFx);
+            Pane pane = Mono.fx().create()
                     .setPackageName("update2.org.cict.layout.subjects")
                     .setFxmlDocument("search-subject")
                     .makeFX()
                     .setController(controller)
-                    .makeScene()
-                    .makeStageWithOwner(Mono.fx().getParentStage(btn_edit))
-                    .stageResizeable(false)
-                    .stageShowAndWait();
+                    .pullOutLayout();
+
+            super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(pane);
+            }, pane);
+            
             if (controller.isAdded()) {
                 setYearAndSemesterView();
             }
+            System.out.println("DONE");
         }
     }
 
@@ -570,21 +637,39 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 Button btn_more_info = searchAccessibilityText(curriculumRow, "btn_more_info");
 
                 addClickEvent(btn_more_info, () -> {
-                    SubjectPrerequisiteController controller = new SubjectPrerequisiteController(this.CURRICULUM.getId(), subject, isImplemented);
-                    Mono.fx().create()
+//                    SubjectPrerequisiteController controller = new SubjectPrerequisiteController(this.CURRICULUM.getId(), subject, isImplemented);
+//                    Mono.fx().create()
+//                            .setPackageName("update2.org.cict.layout.subjects")
+//                            .setFxmlDocument("subject-prereq")
+//                            .makeFX()
+//                            .setController(controller)
+//                            .makeScene()
+//                            .makeStageWithOwner(Mono.fx().getParentStage(btn_edit))
+//                            .stageResizeable(false)
+//                            .stageShowAndWait();
+                    
+                    SubjectPrerequisiteController controller = new SubjectPrerequisiteController(this.CURRICULUM, subject, isImplemented);
+                    Pane pane = Mono.fx().create()
                             .setPackageName("update2.org.cict.layout.subjects")
                             .setFxmlDocument("subject-prereq")
                             .makeFX()
                             .setController(controller)
-                            .makeScene()
-                            .makeStageWithOwner(Mono.fx().getParentStage(btn_edit))
-                            .stageResizeable(false)
-                            .stageShowAndWait();
+                            .pullOutLayout();
+
+                    super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+                    Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+                        super.replaceRoot(pane);
+                    }, pane);
                 });
                 addClickEvent(btn_remove, () -> {
                     onRemove(csMap, subjectTable, subjects, units, subject, row);
                 });
 
+                if (AcademicProgramAccessManager.denyIfNotAdmin()) {
+                    btn_remove.setDisable(true);
+                }
+                
                 lbl_subject_code.setText(subject.getCode());
                 lbl_descriptive_title.setText(subject.getDescriptive_title());
                 lbl_lec.setText(subject.getLec_units().toString());

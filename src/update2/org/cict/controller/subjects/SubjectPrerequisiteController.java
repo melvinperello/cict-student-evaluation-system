@@ -24,12 +24,14 @@
 package update2.org.cict.controller.subjects;
 
 import app.lazy.models.CurriculumHistorySummaryMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.CurriculumRequisiteExtMapping;
 import app.lazy.models.CurriculumRequisiteLineMapping;
 import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
+import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.SimpleImage;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -37,7 +39,9 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.fxml.FXML;
@@ -45,12 +49,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
+import update2.org.cict.controller.academicprogram.AcademicProgramAccessManager;
+import update2.org.cict.controller.curriculum.CurriculumInformationController;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -97,17 +105,20 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
     @FXML
     private Label lbl_title;
     
+    @FXML
+    private JFXButton btn_back;
+    
     private SubjectMapping SUBJECT;
-    private Integer CURRICULUM_id;
+    private CurriculumMapping CURRICULUM;
     private ArrayList<SubjectMapping> prereqs;
     private ArrayList<SubjectMapping> coreqs;
     private Integer REMOVED_BY = CollegeFaculty.instance().getFACULTY_ID();
     private Date REMOVED_DATE = Mono.orm().getServerTime().getDateWithFormat();
     private boolean isImplemented = false;
     
-    public SubjectPrerequisiteController(Integer curriculumID, SubjectMapping subject, boolean isImplemented) {
+    public SubjectPrerequisiteController(CurriculumMapping curriculum, SubjectMapping subject, boolean isImplemented) {
         SUBJECT = subject;
-        CURRICULUM_id = curriculumID;
+        CURRICULUM = curriculum;
         this.isImplemented = isImplemented;
     }
     
@@ -115,8 +126,14 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
     public void onInitialization() {
         bindScene(vbox_main);
         this.setSubjectDetails();
+        
+        if (AcademicProgramAccessManager.denyIfNotAdmin()) {
+            btn_new_prereq.setDisable(true);
+            btn_new_coreq.setDisable(true);
+        }
     }
 
+    private final String SECTION_BASE_COLOR = "#E85764";
     @Override
     public void onEventHandling() {
         addClickEvent(btn_new_prereq, ()-> {
@@ -140,6 +157,22 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
                         .showAndWait();
             }
         });
+        
+        this.addClickEvent(btn_back, ()->{
+            CurriculumInformationController controller = new CurriculumInformationController(CURRICULUM);
+            Pane pane = Mono.fx().create()
+                    .setPackageName("update2.org.cict.layout.curriculum")
+                    .setFxmlDocument("curriculum-info")
+                    .makeFX()
+                    .setController(controller)
+                    .pullOutLayout();
+
+            super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+            Animate.fade(this.vbox_main, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(pane);
+            }, pane);
+        });
     }
     
     private boolean isUpdated = false;
@@ -148,12 +181,16 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
     }
      
     private void showSubjectSearch(String mode) {
-        if(CURRICULUM_id == -1) {
+        if(CURRICULUM.getId() == -1) {
             System.out.println("NO CURRICULUM ID RECEIVED");
         } else {
-            SearchSubjectController controller = new SearchSubjectController(CURRICULUM_id);
+            SearchSubjectController controller = new SearchSubjectController(CURRICULUM);
             controller.setModeSetting("SUBJECT_" + mode);
             controller.setSubjectIdGet(SUBJECT.getId());
+            
+            LayoutDataFX layoutFx = new LayoutDataFX(vbox_main, this);
+            controller.setHomeFx(layoutFx);
+            
             String title = "";
             if(mode.equals("pre-req")) {
                 title = "New Pre-requisite";
@@ -162,20 +199,24 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
                 title = "New Co-requisite";
                 controller.title = "Co-requisite for " + SUBJECT.getCode();
             }
-            Mono.fx().create()
+            Pane pane = Mono.fx().create()
                     .setPackageName("update2.org.cict.layout.subjects")
                     .setFxmlDocument("search-subject")
                     .makeFX()
                     .setController(controller)
-                    .makeScene()
-                    .makeStageWithOwner(Mono.fx().getParentStage(btn_new_prereq))
-                    .stageResizeable(false)
-                    .stageTitle(title)
-                    .stageShowAndWait();
+                    .pullOutLayout();
+
+            super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+            Animate.fade(this.vbox_main, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(pane);
+            }, pane);
+            
             if(controller.isAdded()) {
                 this.showRequisites();
                 isUpdated = true;
             }
+            
         }
     }
      
@@ -194,7 +235,7 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
     private void showRequisites() {
         FetchSubjectInformation fetch = new FetchSubjectInformation();
         fetch.subjectID = this.SUBJECT.getId();
-        fetch.setCurriculumID(this.CURRICULUM_id);
+        fetch.setCurriculumID(this.CURRICULUM.getId());
         
         fetch.setOnSuccess(onSuccess -> {
             prereqs = fetch.getSubjectPrerequisite();
@@ -253,6 +294,11 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
         lbl_units.setText(totalUnits + "");
         lbl_typee.setText(subject.getType());
         lbl_subtypee.setText(subject.getSubtype());
+        
+        if (AcademicProgramAccessManager.denyIfNotAdmin()) {
+            btn_remove.setDisable(true);
+        }
+        
         addClickEvent(btn_remove, ()-> {
             if(!isImplemented) {
                 if(mode.equalsIgnoreCase("P"))
@@ -350,7 +396,7 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
      
     private boolean insertSubjectHistory(SubjectMapping subject, SubjectMapping subjectReq, String mode) {
         CurriculumSubjectMapping csubjectMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                 .eq(DB.curriculum_subject().SUBJECT_id, subject.getId())
                 .active()
                 .first();
@@ -362,7 +408,7 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
         chsMap.setActive(1);
         chsMap.setCreated_by(REMOVED_BY);
         chsMap.setCreated_date(REMOVED_DATE);
-        chsMap.setCurriculum_id(this.CURRICULUM_id);
+        chsMap.setCurriculum_id(this.CURRICULUM.getId());
         chsMap.setDescription(description);
         if(Database.connect().curriculum_history_summary().insert(chsMap) == -1) {
             System.out.println("HISTORY NOT SAVED");

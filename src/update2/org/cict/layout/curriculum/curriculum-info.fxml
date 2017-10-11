@@ -16,9 +16,9 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<VBox fx:id="application_root" prefHeight="656.0" prefWidth="1322.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" prefHeight="656.0" prefWidth="1322.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="456.0" style="-fx-background-color: #619AF3;">
+      <VBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="456.0">
          <children>
             <HBox spacing="10.0">
                <children>
@@ -34,7 +34,7 @@
                         </ImageView>
                      </graphic>
                   </Label>
-                  <Button fx:id="btn_implement" mnemonicParsing="false" prefHeight="38.0" prefWidth="160.0" style="-fx-background-color: #059E4B;" text="Implement" textFill="WHITE">
+                  <Button fx:id="btn_implement" mnemonicParsing="false" prefHeight="38.0" prefWidth="160.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Implement" textFill="WHITE">
                      <font>
                         <Font size="17.0" />
                      </font>
@@ -46,7 +46,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btn_history" layoutX="709.0" layoutY="10.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="160.0" style="-fx-background-color: #059E4B;" text="History" textFill="WHITE">
+                  <Button fx:id="btn_history" layoutX="709.0" layoutY="10.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="160.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="History" textFill="WHITE">
                      <font>
                         <Font size="17.0" />
                      </font>
@@ -54,6 +54,18 @@
                         <ImageView fitHeight="29.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../academicprogram/images/reminder.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btn_back" layoutX="1142.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="116.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Back" textFill="WHITE">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="29.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../subjects/img/Back%20Arrow_32px.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -97,7 +109,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Name" textFill="#20529e" GridPane.rowIndex="1">
+                              <Label text="Name" textFill="WHITE" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
@@ -110,17 +122,17 @@
                                     <Font size="15.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="10.0" layoutY="15.0" text="Description" textFill="#20529e" GridPane.rowIndex="2">
+                              <Label layoutX="10.0" layoutY="15.0" text="Description" textFill="WHITE" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="15.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Label layoutX="10.0" layoutY="15.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="128.0" layoutY="15.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <Label layoutX="128.0" layoutY="15.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -130,12 +142,12 @@
                                     <Font size="15.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="10.0" layoutY="62.0" text="Major" textFill="#20529e" GridPane.rowIndex="3">
+                              <Label layoutX="10.0" layoutY="62.0" text="Major" textFill="WHITE" GridPane.rowIndex="3">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="128.0" layoutY="62.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <Label layoutX="128.0" layoutY="62.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -145,68 +157,68 @@
                                     <Font size="15.0" />
                                  </font>
                               </TextField>
-                              <Label layoutX="10.0" layoutY="178.0" text="Ladderized" textFill="#20529e" GridPane.rowIndex="4">
+                              <Label layoutX="10.0" layoutY="178.0" text="Ladderized" textFill="WHITE" GridPane.rowIndex="4">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                               <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                                  <children>
-                                    <RadioButton fx:id="rbtn_yes" disable="true" mnemonicParsing="false" text="Yes">
+                                    <RadioButton fx:id="rbtn_yes" disable="true" mnemonicParsing="false" text="Yes" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton fx:id="rbtn_no" disable="true" mnemonicParsing="false" selected="true" text="No">
+                                    <RadioButton fx:id="rbtn_no" disable="true" mnemonicParsing="false" selected="true" text="No" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </RadioButton>
                                  </children>
                               </HBox>
-                              <Label layoutX="10.0" layoutY="213.0" text="Ladder Type" textFill="#20529e" GridPane.rowIndex="5">
+                              <Label layoutX="10.0" layoutY="213.0" text="Ladder Type" textFill="WHITE" GridPane.rowIndex="5">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="233.0" text="Equivalent" textFill="#20529e" GridPane.rowIndex="7">
+                              <Label layoutX="10.0" layoutY="233.0" text="Equivalent" textFill="WHITE" GridPane.rowIndex="7">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                               <ComboBox fx:id="cmb_type" disable="true" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                              <Label layoutX="132.0" layoutY="68.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                              <Label layoutX="132.0" layoutY="68.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="132.0" layoutY="178.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                              <Label layoutX="132.0" layoutY="178.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="132.0" layoutY="233.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                              <Label layoutX="132.0" layoutY="233.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
                               <CheckComboBox fx:id="cmb_prereq" disable="true" prefHeight="33.0" prefWidth="269.0" style="-fx-border-color: #D5D5D5;" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                              <Label layoutX="10.0" layoutY="62.0" text="Curriculum ID" textFill="#20529e">
+                              <Label layoutX="10.0" layoutY="62.0" text="Curriculum ID" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="132.0" layoutY="62.0" text=":" textFill="#154383" GridPane.columnIndex="1">
+                              <Label layoutX="132.0" layoutY="62.0" text=":" textFill="WHITE" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbl_id" layoutX="10.0" layoutY="19.0" text="20" textFill="#0042a4" GridPane.columnIndex="2">
+                              <Label fx:id="lbl_id" layoutX="10.0" layoutY="19.0" text="20" textFill="WHITE" GridPane.columnIndex="2">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="200.0" text="Preparatory" textFill="#20529e" GridPane.rowIndex="6">
+                              <Label layoutX="10.0" layoutY="200.0" text="Preparatory" textFill="WHITE" GridPane.rowIndex="6">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -218,7 +230,7 @@
                   </HBox>
                   <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" prefHeight="0.0" prefWidth="387.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Button fx:id="btn_edit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="38.0" prefWidth="393.0" style="-fx-background-color: #059E4B;" text="Save Changes" textFill="WHITE" HBox.hgrow="ALWAYS">
+                        <Button fx:id="btn_edit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="38.0" prefWidth="393.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Save Changes" textFill="WHITE" HBox.hgrow="ALWAYS">
                            <font>
                               <Font size="17.0" />
                            </font>
@@ -255,7 +267,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <Label text="Created Date" textFill="#20529e" GridPane.rowIndex="1">
+                              <Label text="Created Date" textFill="WHITE" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin>
@@ -263,72 +275,72 @@
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="15.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Label layoutX="10.0" layoutY="15.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="62.0" text="Status" textFill="#20529e" GridPane.rowIndex="3">
+                              <Label layoutX="10.0" layoutY="62.0" text="Status" textFill="WHITE" GridPane.rowIndex="3">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="128.0" layoutY="62.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <Label layoutX="128.0" layoutY="62.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="178.0" text="Implemented By" textFill="#20529e" GridPane.rowIndex="4">
+                              <Label layoutX="10.0" layoutY="178.0" text="Implemented By" textFill="WHITE" GridPane.rowIndex="4">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="213.0" text="Implemented Date" textFill="#20529e" GridPane.rowIndex="5">
+                              <Label layoutX="10.0" layoutY="213.0" text="Implemented Date" textFill="WHITE" GridPane.rowIndex="5">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="132.0" layoutY="68.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                              <Label layoutX="132.0" layoutY="68.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="132.0" layoutY="178.0" text=":" textFill="#154383" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                              <Label layoutX="132.0" layoutY="178.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="62.0" text="Created By" textFill="#20529e">
+                              <Label layoutX="10.0" layoutY="62.0" text="Created By" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="132.0" layoutY="62.0" text=":" textFill="#154383" GridPane.columnIndex="1">
+                              <Label layoutX="132.0" layoutY="62.0" text=":" textFill="WHITE" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbl_created_by" layoutX="10.0" layoutY="19.0" text="JOEMAR DE LA CRUZ" textFill="#0042a4" GridPane.columnIndex="2">
+                              <Label fx:id="lbl_created_by" layoutX="10.0" layoutY="19.0" text="JOEMAR DE LA CRUZ" textFill="WHITE" GridPane.columnIndex="2">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbl_created_date" layoutX="10.0" layoutY="50.0" text="DATE" textFill="#0042a4" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                              <Label fx:id="lbl_created_date" layoutX="10.0" layoutY="50.0" text="DATE" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbl_status" layoutX="184.0" layoutY="50.0" text="UNIMPLEMENTED" textFill="#0042a4" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                              <Label fx:id="lbl_status" layoutX="184.0" layoutY="50.0" text="UNIMPLEMENTED" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbl_implemented_by" layoutX="184.0" layoutY="108.0" text="N / A" textFill="#0042a4" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                              <Label fx:id="lbl_implemented_by" layoutX="184.0" layoutY="108.0" text="N / A" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="4">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lbl_implemented_date" layoutX="184.0" layoutY="157.0" text="N / A" textFill="#0042a4" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                              <Label fx:id="lbl_implemented_date" layoutX="184.0" layoutY="157.0" text="N / A" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="5">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -345,13 +357,13 @@
                   <Insets top="10.0" />
                </HBox.margin>
             </VBox>
-            <VBox prefHeight="585.0" prefWidth="775.0" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="585.0" prefWidth="775.0" style="-fx-border-color: #fff; -fx-border-width: 3;" HBox.hgrow="ALWAYS">
                <children>
-                  <Label prefHeight="62.0" prefWidth="298.0" text="Year and Semester" textFill="#1a5d97">
+                  <Label prefHeight="62.0" prefWidth="298.0" text="Year and Semester" textFill="WHITE">
                      <graphic>
                         <ImageView fitHeight="52.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/Graduation%20Cap_64px.png" />
+                              <Image url="@../subjects/img/Graduation%20Cap_96px.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -362,18 +374,18 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <VBox fx:id="vbox_semesters" alignment="CENTER" prefHeight="504.0" prefWidth="653.0" VBox.vgrow="ALWAYS">
+                  <VBox fx:id="vbox_semesters" alignment="CENTER" minHeight="-Infinity" minWidth="100.0" prefHeight="504.0" prefWidth="653.0" styleClass="metro-table" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" VBox.vgrow="ALWAYS">
                      <children>
                         <VBox fx:id="vbox_no_result" alignment="CENTER">
                            <children>
-                              <Label text="No Year and Semester Found" textFill="#03a1e9">
+                              <Label text="No Year and Semester Found" textFill="WHITE">
                                  <font>
                                     <Font size="27.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="58.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@img/subject.png" />
+                                          <Image url="@../subjects/img/subject.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -386,6 +398,9 @@
                <HBox.margin>
                   <Insets bottom="15.0" right="20.0" />
                </HBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </padding>
             </VBox>
          </children>
       </HBox>

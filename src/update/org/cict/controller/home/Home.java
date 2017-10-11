@@ -134,11 +134,15 @@ public class Home extends SceneFX implements ControllerFX {
     public void onEventHandling() {
 
         super.addClickEvent(btn_evaluation, () -> {
-            this.onShowEvaluation();
+            checkStatus("evaluation", () -> {
+                onShowEvaluation();
+            });
         });
 
         super.addClickEvent(btn_adding, () -> {
-            this.onShowAddingAndChanging();
+            checkStatus("adding", () -> {
+                onShowAddingAndChanging();
+            });
         });
 
         super.addClickEvent(btn_academic_programs, () -> {
@@ -407,4 +411,55 @@ public class Home extends SceneFX implements ControllerFX {
          */
         Access.isGranted(Access.ACCESS_EVALUATOR);
     }
+
+    /**
+     * Checks the status whether if the evaluation and adding services are
+     * online.
+     *
+     * @param operation
+     * @param next
+     */
+    private void checkStatus(String operation, Runnable next) {
+        AcademicTermHome.ServiceStatusChecker ssc = new AcademicTermHome().new ServiceStatusChecker();
+        ssc.whenStarted(() -> {
+            btn_evaluation.setDisable(true);
+            btn_adding.setDisable(true);
+        });
+
+        ssc.whenCancelled(() -> {
+        });
+
+        ssc.whenFailed(() -> {
+            Mono.fx().snackbar().showInfo(application_root, "Service is Currently Not Available");
+        });
+
+        ssc.whenSuccess(() -> {
+            if (operation.equalsIgnoreCase("evaluation")) {
+                if (ssc.isEvaluationActive()) {
+                    onShowEvaluation();
+                } else {
+                    // offline
+                    Mono.fx().snackbar().showInfo(application_root, "Evaluation Service is Offline");
+                }
+            } else if (operation.equalsIgnoreCase("adding")) {
+                if (ssc.isAddingActive()) {
+                    onShowAddingAndChanging();
+                } else {
+                    // offline
+                    Mono.fx().snackbar().showInfo(application_root, "Adding Service is Offline");
+                }
+
+            } else if (operation.equalsIgnoreCase("encoding")) {
+                // 
+            }
+        });
+
+        ssc.whenFinished(() -> {
+            btn_evaluation.setDisable(false);
+            btn_adding.setDisable(false);
+        });
+
+        ssc.transact();
+    }
+
 }

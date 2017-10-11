@@ -339,7 +339,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     /**
      * This class checks the status of this academic term services.
      */
-    private class ServiceStatusChecker extends Transaction {
+    public class ServiceStatusChecker extends Transaction {
 
         private AcademicTermMapping currentTerm = SystemProperties.instance().getCurrentAcademicTerm();
 

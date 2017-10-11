@@ -8,30 +8,30 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="61.0" minWidth="61.0" prefHeight="61.0" prefWidth="796.0" style="-fx-border-color: #27AE60; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="61.0" minWidth="61.0" prefHeight="61.0" prefWidth="796.0" style="-fx-border-color: #fff; -fx-background-color: #E85764;" styleClass="metro-row" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="631.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="name" alignment="BOTTOM_LEFT" prefHeight="37.0" prefWidth="500.0" text="BSIT REVISED MAJOR IN GRAPHICS">
+            <Label accessibleText="name" alignment="BOTTOM_LEFT" prefHeight="37.0" prefWidth="500.0" text="BSIT REVISED MAJOR IN GRAPHICS" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../academicprogram/images/Graduation%20Cap_64px.png" />
+                        <Image url="@img/Graduation%20Cap_96px.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Label>
-            <Label accessibleText="major" prefHeight="21.0" prefWidth="490.0" text="GRAPHICS DESIGN">
+            <Label accessibleText="major" prefHeight="21.0" prefWidth="490.0" text="GRAPHICS DESIGN" textFill="WHITE">
                <font>
                   <Font size="10.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="14.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../academicprogram/images/major.png" />
+                        <Image url="@img/Star%20Filled_32px.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -46,11 +46,11 @@
       </VBox>
       <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="274.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label text="Status:">
+            <Label text="Status:" textFill="WHITE">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@img/units.png" />
+                        <Image url="@img/Medal_32px.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -58,7 +58,7 @@
                   <Font size="13.0" />
                </font>
             </Label>
-            <Label accessibleText="status" text="UNIMPLEMENTED">
+            <Label accessibleText="status" text="UNIMPLEMENTED" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

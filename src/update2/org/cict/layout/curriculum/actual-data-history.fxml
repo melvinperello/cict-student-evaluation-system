@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -8,9 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="927.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="927.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox minHeight="-Infinity" prefHeight="105.0" prefWidth="927.0" style="-fx-border-color: #1E89F3; -fx-border-width: 3;" VBox.vgrow="ALWAYS">
+      <HBox minHeight="-Infinity" prefHeight="105.0" prefWidth="927.0" VBox.vgrow="ALWAYS">
          <children>
             <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="150.0">
                <children>
@@ -26,17 +27,17 @@
             </VBox>
             <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="527.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label fx:id="lbl_title" alignment="CENTER" text="ACTUAL DATA HISTORY" textFill="#255580">
+                  <Label fx:id="lbl_title" alignment="CENTER" text="ACTUAL DATA HISTORY" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="35.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lbl_name" alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="396.0" text="ACT (15-16)" textAlignment="CENTER" textFill="#208ceb" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                  <Label fx:id="lbl_name" alignment="CENTER" contentDisplay="CENTER" prefHeight="36.0" prefWidth="396.0" text="ACT (15-16)" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lbl_description" alignment="CENTER" text="BS INFORMATION TECHNOLOGY MAJOR IN GRAPHICS" textAlignment="CENTER" textFill="#078bff" VBox.vgrow="ALWAYS">
+                  <Label fx:id="lbl_description" alignment="CENTER" text="BS INFORMATION TECHNOLOGY MAJOR IN GRAPHICS" textAlignment="CENTER" textFill="WHITE" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font></Label>
@@ -62,12 +63,12 @@
             <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
          </padding>
       </HBox>
-      <VBox fx:id="vbox_list" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="515.0" prefWidth="927.0" VBox.vgrow="ALWAYS">
+      <VBox fx:id="vbox_list" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="515.0" prefWidth="927.0" styleClass="metro-table" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" VBox.vgrow="ALWAYS">
          <padding>
             <Insets bottom="5.0" left="20.0" right="20.0" />
          </padding>
          <children>
-            <Label style="-fx-border-color: #1E89F3; -fx-border-radius: 10;" text="NO ACTUAL DATA FOUND" textFill="#434a55">
+            <Label text="NO ACTUAL DATA FOUND" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="35.0" />
                </font>
@@ -82,6 +83,28 @@
                   <Insets left="10.0" right="10.0" />
                </padding>
             </Label>
-         </children></VBox>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="20.0" right="20.0" />
+         </VBox.margin></VBox>
+      <VBox alignment="CENTER_RIGHT">
+         <children>
+            <JFXButton fx:id="btn_back" style="-fx-border-color: #fff;" text="Back" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="53.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../subjects/img/Back%20Arrow_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXButton>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" right="20.0" />
+         </VBox.margin>
+      </VBox>
    </children>
 </VBox>

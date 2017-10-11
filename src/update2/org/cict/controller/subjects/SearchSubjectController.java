@@ -24,6 +24,7 @@
 package update2.org.cict.controller.subjects;
 
 import app.lazy.models.CurriculumHistorySummaryMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.CurriculumRequisiteExtMapping;
 import app.lazy.models.CurriculumRequisiteLineMapping;
 import app.lazy.models.CurriculumSubjectMapping;
@@ -33,12 +34,15 @@ import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -49,6 +53,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
@@ -56,6 +61,8 @@ import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
+import update2.org.cict.controller.curriculum.CurriculumInformationController;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -75,6 +82,9 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btnAddnew;
             
+    @FXML
+    private JFXButton btn_done;
+    
     @FXML
     private AnchorPane anchor_result;
 
@@ -102,7 +112,8 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     @FXML
     private Label lbl_title;
     
-    private Integer CURRICULUM_id, YEAR, SEMESTER, SUBJECT_id_get;
+    private CurriculumMapping CURRICULUM;
+    private Integer YEAR, SEMESTER, SUBJECT_id_get;
     private ArrayList<SubjectMapping> lst_subject;
     private ArrayList<SubjectMapping> temp_subject_list = new ArrayList<>();
     private SimpleTable subjectTable = new SimpleTable();
@@ -132,8 +143,8 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     }
     
     
-    public SearchSubjectController(Integer curriculumID) {
-        this.CURRICULUM_id = curriculumID;
+    public SearchSubjectController(CurriculumMapping curriculum) {
+        this.CURRICULUM = curriculum;
     }
     
     @Override
@@ -144,11 +155,21 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         FetchSubjects fetch = new FetchSubjects();
         fetch.setOnStart(onStart -> {
             this.hbox_search.setVisible(true);
+            btnAddnew.setDisable(true);
+            btnSearch.setDisable(true);
         });
         fetch.setOnSuccess(onSuccess -> {
             lst_subject = fetch.getSubjectResult();
-            createTable(lst_subject);
-            this.hbox_search.setVisible(false);
+            SimpleTask create_search_subject_table = new SimpleTask("create_search_subject_table");
+            create_search_subject_table.setTask(()->{
+                createTable(lst_subject);
+            });
+            create_search_subject_table.setOnSuccess((d)->{
+                this.hbox_search.setVisible(false);
+                btnAddnew.setDisable(false);
+                btnSearch.setDisable(false);
+            });
+            create_search_subject_table.start();
         });
         fetch.setOnCancel(onCancel -> {
             this.hbox_no_result.setVisible(true);
@@ -163,7 +184,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
              * this will be used in validation
              */
             SUBJECT_csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                    .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                    .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                     .eq(DB.curriculum_subject().SUBJECT_id, SUBJECT_id_get)
                     .active(Order.desc(DB.curriculum_subject().id))
                     .first();
@@ -173,6 +194,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         }
     }
 
+    private final String SECTION_BASE_COLOR = "#E85764";
     @Override
     public void onEventHandling() {
         txtSearch.textProperty().addListener(listener -> {
@@ -213,6 +235,13 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         this.addClickEvent(btnAddnew, ()->{
             showAddNewSubject();
         });
+        
+        this.addClickEvent(btn_done, ()->{
+            homeFx.getController().onInitialization();
+            Animate.fade(this.anchor_main, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(homeFx.getApplicationRoot());
+            }, homeFx.getApplicationRoot());
+        });
     }
     
     private void onSearch() {
@@ -249,8 +278,9 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
                     .makeFX()
                     .setController(controller)
                     .makeScene()
-                    .makeStageApplication()
+                    .makeStageWithOwner(Mono.fx().getParentStage(anchor_main))
                     .stageResizeable(false)
+//                    .stageUndecorated(true)
                     .stageShowAndWait();
             SubjectMapping newSubject = controller.getNewSubject();
             if(newSubject != null) {
@@ -272,8 +302,9 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(subjectTable);
         simpleTableView.setFixedWidth(true);
-        
-        simpleTableView.setParentOnScene(vbox_subjects);
+        Mono.fx().thread().wrap(()->{
+            simpleTableView.setParentOnScene(vbox_subjects);
+        });
     }
     
     private void createRow(SubjectMapping subject) {
@@ -329,7 +360,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             message = "A subject cannot be referenced as a pre-requisite of itself.";
         } else {
             CurriculumSubjectMapping csMap_prereq = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                    .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                    .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                     .eq(DB.curriculum_subject().SUBJECT_id, subjectPreReq.getId())
                     .active(Order.desc(DB.curriculum_subject().id))
                     .first();
@@ -372,7 +403,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         CurriculumRequisiteLineMapping crlMap = Mono.orm().newSearch(Database.connect().curriculum_requisite_line())
                 .eq(DB.curriculum_requisite_line().SUBJECT_id_get, this.SUBJECT_id_get)
                 .eq(DB.curriculum_requisite_line().SUBJECT_id_req, subjectPreReq.getId())
-                .eq(DB.curriculum_requisite_line().CURRICULUM_id, this.CURRICULUM_id)
+                .eq(DB.curriculum_requisite_line().CURRICULUM_id, this.CURRICULUM.getId())
                 .execute(Order.desc(DB.curriculum_requisite_line().id))
                 .first();
         boolean isSuccessfull = false;
@@ -384,7 +415,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             new_crl_Map.setCreated_date(CREATED_DATE);
             new_crl_Map.setSUBJECT_id_get(SUBJECT_id_get);
             new_crl_Map.setSUBJECT_id_req(subjectPreReq.getId());
-            new_crl_Map.setCURRICULUM_id(CURRICULUM_id);
+            new_crl_Map.setCURRICULUM_id(CURRICULUM.getId());
             int res = Database.connect().curriculum_requisite_line().insert(new_crl_Map);
             if(res != -1) {
                 isAdded = true;
@@ -401,7 +432,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             }
             //set active
             crlMap.setActive(1);
-            crlMap.setCURRICULUM_id(CURRICULUM_id);
+            crlMap.setCURRICULUM_id(CURRICULUM.getId());
             crlMap.setCreated_by(CREATED_BY);
             crlMap.setCreated_date(CREATED_DATE);
             crlMap.setRemoved_by(null);
@@ -440,7 +471,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             message = "A subject cannot be referenced as a co-requisite of itself.";
         } else {
             CurriculumSubjectMapping csMap_coreq = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                    .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                    .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                     .eq(DB.curriculum_subject().SUBJECT_id, subjectCoReq.getId())
                     .active(Order.desc(DB.curriculum_subject().id))
                     .first();
@@ -485,7 +516,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         CurriculumRequisiteExtMapping creMap = Mono.orm().newSearch(Database.connect().curriculum_requisite_ext())
                 .eq(DB.curriculum_requisite_ext().SUBJECT_id_get, this.SUBJECT_id_get)
                 .eq(DB.curriculum_requisite_ext().SUBJECT_id_req, subjectCoReq.getId())
-                .eq(DB.curriculum_requisite_ext().CURRICULUM_id, this.CURRICULUM_id)
+                .eq(DB.curriculum_requisite_ext().CURRICULUM_id, this.CURRICULUM.getId())
                 .execute(Order.desc(DB.curriculum_requisite_ext().id))
                 .first();
         boolean isSuccessfull = false;
@@ -497,7 +528,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             new_cre_Map.setAdded_date(CREATED_DATE);
             new_cre_Map.setSUBJECT_id_get(SUBJECT_id_get);
             new_cre_Map.setSUBJECT_id_req(subjectCoReq.getId());
-            new_cre_Map.setCURRICULUM_id(CURRICULUM_id);
+            new_cre_Map.setCURRICULUM_id(CURRICULUM.getId());
             new_cre_Map.setType(SubjectClassification.REQUITE_TYPE_CO);
             int res = Database.connect().curriculum_requisite_ext().insert(new_cre_Map);
             if(res != -1) {
@@ -515,7 +546,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             }
             //set active
             creMap.setActive(1);
-            creMap.setCURRICULUM_id(CURRICULUM_id);
+            creMap.setCURRICULUM_id(CURRICULUM.getId());
             creMap.setAdded_by(CREATED_BY);
             creMap.setAdded_date(CREATED_DATE);
             creMap.setRemoved_by(null);
@@ -548,7 +579,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     private void addToCurriculum(SubjectMapping SUBJECT) {
         CurriculumSubjectMapping exist = Mono.orm().newSearch(Database.connect().curriculum_subject())
                 .eq(DB.curriculum_subject().SUBJECT_id, SUBJECT.getId())
-                .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                 .execute(Order.desc(DB.curriculum_subject().id))
                 .first();
         
@@ -596,7 +627,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         newCsMap.setActive(1);
         newCsMap.setAdded_by(CREATED_BY);
         newCsMap.setAdded_date(CREATED_DATE);
-        newCsMap.setCURRICULUM_id(CURRICULUM_id);
+        newCsMap.setCURRICULUM_id(CURRICULUM.getId());
         newCsMap.setSUBJECT_id(SUBJECT.getId());
         newCsMap.setSemester(SEMESTER);
         newCsMap.setYear(YEAR);
@@ -616,7 +647,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
      
     private boolean insertSubjectHistory(SubjectMapping subject, String mode, SubjectMapping subjectReq) {
         CurriculumSubjectMapping csubjectMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                 .eq(DB.curriculum_subject().SUBJECT_id, subject.getId())
                 .active()
                 .first();
@@ -636,7 +667,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         chsMap.setActive(1);
         chsMap.setCreated_by(CREATED_BY);
         chsMap.setCreated_date(CREATED_DATE);
-        chsMap.setCurriculum_id(this.CURRICULUM_id);
+        chsMap.setCurriculum_id(this.CURRICULUM.getId());
         chsMap.setDescription(description);
         if(Database.connect().curriculum_history_summary().insert(chsMap) == -1) {
             logs("HISTORY NOT SAVED");
@@ -697,4 +728,10 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         }
         return semester;
     }
+    
+    private LayoutDataFX homeFx;
+    public void setHomeFx(LayoutDataFX homeFx) {
+        this.homeFx = homeFx;
+    }
+
 }

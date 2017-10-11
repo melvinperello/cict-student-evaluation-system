@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="594.0" prefWidth="853.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="594.0" prefWidth="853.0" style="-fx-background-color: #E85764;" styleClass="metro-row" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="773.0" style="-fx-border-color: #46AEDE; -fx-border-radius: 10; -fx-border-width: 3;" HBox.hgrow="ALWAYS">
+      <HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="563.0" prefWidth="773.0" HBox.hgrow="ALWAYS">
          <children>
             <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
@@ -18,7 +18,7 @@
                      <children>
                         <HBox maxWidth="1.7976931348623157E308">
                            <children>
-                              <Label accessibleText="created_by" maxWidth="1.7976931348623157E308" text="NONE" textFill="#434a55" HBox.hgrow="ALWAYS">
+                              <Label accessibleText="created_by" maxWidth="1.7976931348623157E308" text="NONE" textFill="WHITE" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <ImageView fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -30,7 +30,7 @@
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label accessibleText="created_date" text="N / A" textFill="#434a55">
+                              <Label accessibleText="created_date" text="N / A" textFill="WHITE">
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -46,7 +46,7 @@
                         </HBox>
                         <HBox maxWidth="1.7976931348623157E308">
                            <children>
-                              <Label maxWidth="1.7976931348623157E308" text="Created By" textFill="#656d79" HBox.hgrow="ALWAYS">
+                              <Label maxWidth="1.7976931348623157E308" text="Created By" textFill="WHITE" HBox.hgrow="ALWAYS">
                                  <font>
                                     <Font name="System Bold" size="10.0" />
                                  </font>
@@ -54,7 +54,7 @@
                                     <Insets left="25.0" />
                                  </HBox.margin>
                               </Label>
-                              <Label text="Created Date" textFill="#656d79">
+                              <Label text="Created Date" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="10.0" />
                                  </font>
@@ -68,7 +68,7 @@
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Label accessibleText="name" text="NONE" textFill="#434a55">
+                        <Label accessibleText="name" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -80,12 +80,12 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label text="Curriculum Name" textFill="#656d79">
+                        <Label text="Curriculum Name" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
-                        <Label accessibleText="description" text="NONE" textFill="#434a55">
+                        <Label accessibleText="description" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -100,12 +100,12 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label layoutX="256.0" layoutY="31.0" text="Description" textFill="#656d79">
+                        <Label layoutX="256.0" layoutY="31.0" text="Description" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
-                        <Label accessibleText="major" layoutX="235.0" layoutY="27.0" text="NONE" textFill="#434a55">
+                        <Label accessibleText="major" layoutX="235.0" layoutY="27.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -120,12 +120,12 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label layoutX="270.0" layoutY="67.0" text="Major" textFill="#656d79">
+                        <Label layoutX="270.0" layoutY="67.0" text="Major" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
-                        <Label accessibleText="ladder" layoutX="250.0" layoutY="44.0" text="NO" textFill="#434a55">
+                        <Label accessibleText="ladder" layoutX="250.0" layoutY="44.0" text="NO" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -140,12 +140,12 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label layoutX="283.0" layoutY="113.0" text="Ladderized" textFill="#656d79">
+                        <Label layoutX="283.0" layoutY="113.0" text="Ladderized" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
                         </Label>
-                        <Label accessibleText="type" layoutX="274.0" layoutY="139.0" text="NONE" textFill="#434a55">
+                        <Label accessibleText="type" layoutX="274.0" layoutY="139.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -160,7 +160,7 @@
                               <Insets top="5.0" />
                            </VBox.margin>
                         </Label>
-                        <Label layoutX="271.0" layoutY="160.0" text="Ladderization Type" textFill="#656d79">
+                        <Label layoutX="271.0" layoutY="160.0" text="Ladderization Type" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="10.0" />
                            </font>
@@ -169,8 +169,8 @@
                   </VBox>
                   <VBox maxWidth="1.7976931348623157E308" prefHeight="66.0" prefWidth="511.0">
                      <children>
-                        <Label text="Primary" textFill="#656d79" />
-                        <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #4E87E3; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
+                        <Label text="Primary" textFill="WHITE" />
+                        <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #fff;" VBox.vgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="ALWAYS">
                                  <children>
@@ -179,7 +179,7 @@
                                           <Image url="@img/primary.png" />
                                        </image>
                                     </ImageView>
-                                    <Label accessibleText="p_id" text="-" textFill="#434a55">
+                                    <Label accessibleText="p_id" text="-" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -191,7 +191,7 @@
                                           </ImageView>
                                        </graphic>
                                     </Label>
-                                    <Label accessibleText="p_name" layoutX="49.0" layoutY="25.0" text="-" textFill="#434a55">
+                                    <Label accessibleText="p_name" layoutX="49.0" layoutY="25.0" text="-" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -203,7 +203,7 @@
                                           </ImageView>
                                        </graphic>
                                     </Label>
-                                    <Label accessibleText="p_description" layoutX="76.0" layoutY="25.0" text="-" textFill="#434a55">
+                                    <Label accessibleText="p_description" layoutX="76.0" layoutY="25.0" text="-" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -215,7 +215,7 @@
                                           </ImageView>
                                        </graphic>
                                     </Label>
-                                    <Label accessibleText="p_major" layoutX="118.0" layoutY="25.0" text="-" textFill="#434a55">
+                                    <Label accessibleText="p_major" layoutX="118.0" layoutY="25.0" text="-" textFill="WHITE">
                                        <font>
                                           <Font name="System Bold" size="15.0" />
                                        </font>
@@ -235,10 +235,10 @@
                   </VBox>
                   <VBox layoutX="10.0" layoutY="112.0" maxWidth="1.7976931348623157E308" prefHeight="66.0" prefWidth="511.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label accessibleText="eq" text="Equivalent (10)" textFill="#656d79" />
-                        <VBox accessibleText="vbox_eq" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="94.0" prefWidth="511.0" VBox.vgrow="ALWAYS">
+                        <Label accessibleText="eq" text="Equivalent (0)" textFill="WHITE" />
+                        <VBox accessibleText="vbox_eq" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="94.0" prefWidth="511.0" styleClass="metro-table" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" VBox.vgrow="ALWAYS">
                            <children>
-                              <Label text="NO EQUIVALENT FOUND" textFill="#434a55">
+                              <Label text="NO EQUIVALENT FOUND" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -258,7 +258,7 @@
                      <children>
                         <HBox maxWidth="1.7976931348623157E308">
                            <children>
-                              <Label accessibleText="updated_by" maxWidth="1.7976931348623157E308" text="NONE" textFill="#434a55" HBox.hgrow="ALWAYS">
+                              <Label accessibleText="updated_by" maxWidth="1.7976931348623157E308" text="NONE" textFill="WHITE" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <ImageView fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -270,7 +270,7 @@
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label accessibleText="updated_date" text="N / A" textFill="#434a55">
+                              <Label accessibleText="updated_date" text="N / A" textFill="WHITE">
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -286,7 +286,7 @@
                         </HBox>
                         <HBox maxWidth="1.7976931348623157E308">
                            <children>
-                              <Label maxWidth="1.7976931348623157E308" text="Updated By" textFill="#656d79" HBox.hgrow="ALWAYS">
+                              <Label maxWidth="1.7976931348623157E308" text="Updated By" textFill="WHITE" HBox.hgrow="ALWAYS">
                                  <font>
                                     <Font name="System Bold" size="10.0" />
                                  </font>
@@ -294,7 +294,7 @@
                                     <Insets left="25.0" />
                                  </HBox.margin>
                               </Label>
-                              <Label text="Updated Date" textFill="#656d79">
+                              <Label text="Updated Date" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="10.0" />
                                  </font>
@@ -310,7 +310,7 @@
                      <children>
                         <HBox maxWidth="1.7976931348623157E308">
                            <children>
-                              <Label accessibleText="removed_by" maxWidth="1.7976931348623157E308" text="NONE" textFill="#434a55" HBox.hgrow="ALWAYS">
+                              <Label accessibleText="removed_by" maxWidth="1.7976931348623157E308" text="NONE" textFill="WHITE" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <ImageView fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -322,7 +322,7 @@
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label accessibleText="removed_date" text="N / A" textFill="#434a55">
+                              <Label accessibleText="removed_date" text="N / A" textFill="WHITE">
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -338,7 +338,7 @@
                         </HBox>
                         <HBox maxWidth="1.7976931348623157E308">
                            <children>
-                              <Label maxWidth="1.7976931348623157E308" text="Removed By" textFill="#656d79" HBox.hgrow="ALWAYS">
+                              <Label maxWidth="1.7976931348623157E308" text="Removed By" textFill="WHITE" HBox.hgrow="ALWAYS">
                                  <font>
                                     <Font name="System Bold" size="10.0" />
                                  </font>
@@ -346,7 +346,7 @@
                                     <Insets left="25.0" />
                                  </HBox.margin>
                               </Label>
-                              <Label text="Removed Date" textFill="#656d79">
+                              <Label text="Removed Date" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="10.0" />
                                  </font>

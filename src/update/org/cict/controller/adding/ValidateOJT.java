@@ -23,10 +23,16 @@
  */
 package update.org.cict.controller.adding;
 
+import app.lazy.models.CurriculumMapping;
+import app.lazy.models.CurriculumSubjectMapping;
+import app.lazy.models.DB;
+import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import com.jhmvin.Mono;
 import java.util.ArrayList;
 import org.cict.SubjectClassification;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
@@ -81,6 +87,9 @@ public class ValidateOJT {
     private class InternshipValidation {
 
         public StudentMapping currentStudent;
+        
+        private Integer yearOfOJT, semesterOfOJT;
+        
 
         /**
          * This method can be dismantle to different pieces on future updates.
@@ -88,16 +97,25 @@ public class ValidateOJT {
          * @return
          */
         public boolean check() {
+            run();
+            
             // check if null
             if (currentStudent == null) {
                 System.out.println("STUDENT IS NULL");
                 return false;
             }
+            
+            if(yearOfOJT > currentStudent.getYear_level()) {
+                System.out.println("YEAR LEVEL IS NOT VALID FOR OJT");
+                return false;
+            }
+            
             // run assessor.
             CurricularLevelAssesor assessor = new CurricularLevelAssesor(currentStudent);
             assessor.assess();
 
-            for (int yrCtr = 1; yrCtr <= currentStudent.getYear_level(); yrCtr++) {
+            Integer studentYearLevel = currentStudent.getYear_level();
+            for (int yrCtr = 1; yrCtr <= studentYearLevel; yrCtr++) {
                 AssessmentResults annualAsses = assessor.getAnnualAssessment(yrCtr);
                 ArrayList<SubjectAssessmentDetials> temp_array = annualAsses.getUnacquiredSubjects();
                 if (temp_array == null) {
@@ -105,24 +123,42 @@ public class ValidateOJT {
                 }
 
                 int count = 0;
+                Integer currentSemester = SystemProperties.instance().getCurrentAcademicTerm().getSemester_regular();
                 for (SubjectAssessmentDetials temp_value : temp_array) {
                     SubjectMapping subject = temp_value.getSubjectDetails();
-                    if (SubjectClassification.isMajor(subject.getType())) {
-                        if (!subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            System.out.println("A MAJOR SUBJECT HAS NO GRADE");
-                            return false;
+                    boolean valid = false;
+                    
+                    if(temp_value.getYearLevel() > studentYearLevel) {
+                        System.out.println("Subject " + subject.getCode() + " is not checked with as year of " + temp_value.getYearLevel()
+                        + " with a semester of " + temp_value.getSemester());
+                    } else if(studentYearLevel > temp_value.getYearLevel()) {
+                        valid = true;
+                    } else /* studentYearLevel == temp_value.getYearLevel() */{
+                        if(currentSemester == 2) {
+                            if(temp_value.getSemester() < currentSemester) {
+                                valid = true;
+                            }
                         }
-                    } else {
-                        if (count > 1) {
-                            System.out.println("MISSING GRADE EXCEED TO 1");
-                            return false;
-                        } else {
-                            if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_ELECTIVE)
-                                    || subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_MINOR)) {
-                                count++;
-                            } else {
-                                System.out.println("MISSING GRADE OF A NONE ELECTIVE OR MINOR TYPE");
+                    }
+                    
+                    if(valid) {
+                        if (SubjectClassification.isMajor(subject.getType())) {
+                            if (!subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                                System.out.println("A MAJOR SUBJECT HAS NO GRADE");
                                 return false;
+                            }
+                        } else {
+                            if (count > 1) {
+                                System.out.println("MISSING GRADE EXCEED TO 1");
+                                return false;
+                            } else {
+                                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_ELECTIVE)
+                                        || subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_MINOR)) {
+                                    count++;
+                                } else {
+                                    System.out.println("MISSING GRADE OF A NONE ELECTIVE OR MINOR TYPE");
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -131,6 +167,29 @@ public class ValidateOJT {
             }
 
             return true; // default return.
+        }
+        
+        private void run() {
+            ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                    .eq(DB.curriculum_subject().CURRICULUM_id, currentStudent.getCURRICULUM_id())
+                    .active().all();
+            for(CurriculumSubjectMapping csMap: csMaps) {
+                SubjectMapping subject = Mono.orm().newSearch(Database.connect().subject())
+                        .eq(DB.subject().id, csMap.getSUBJECT_id())
+                        .active().first();
+                
+                if(subject == null) {
+                    System.out.println("@ValidateOJT: SUBJECT ID" + csMap.getSUBJECT_id() + " NOT FOUND");
+                    return;
+                }
+                
+                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                    yearOfOJT = csMap.getYear();
+                    semesterOfOJT = csMap.getSemester();
+                    break;
+                }
+            }
+            System.out.println("YEAR: " + yearOfOJT + " SEMESTER: " + semesterOfOJT);
         }
     }
 

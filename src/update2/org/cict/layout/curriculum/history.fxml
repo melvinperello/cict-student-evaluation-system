@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="927.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="927.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox minHeight="-Infinity" prefHeight="105.0" prefWidth="927.0" style="-fx-background-color: #2983D5;" VBox.vgrow="ALWAYS">
+      <HBox minHeight="-Infinity" prefHeight="105.0" prefWidth="927.0" VBox.vgrow="ALWAYS">
          <children>
             <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="150.0">
                <children>
@@ -60,9 +60,9 @@
             <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
          </padding>
       </HBox>
-      <VBox fx:id="vbox_list" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="515.0" prefWidth="927.0" VBox.vgrow="ALWAYS">
+      <VBox fx:id="vbox_list" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="515.0" prefWidth="927.0" styleClass="metro-table" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" VBox.vgrow="ALWAYS">
          <children>
-            <Label style="-fx-border-color: #1E89F3; -fx-border-radius: 10;" text="NO CURRICULUM HISTORY FOUND" textFill="#434a55">
+            <Label text="NO CURRICULUM HISTORY FOUND" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="35.0" />
                </font>
@@ -77,24 +77,40 @@
                   <Insets left="10.0" right="10.0" />
                </padding>
             </Label>
-         </children></VBox>
-      <VBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="42.0" prefWidth="927.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Button fx:id="btn_view" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="34.0" prefWidth="141.0" style="-fx-background-color: #4a89d9;" text="View Actual Data" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
-            </Button>
          </children>
          <VBox.margin>
-            <Insets />
-         </VBox.margin>
+            <Insets bottom="5.0" left="20.0" right="20.0" top="10.0" />
+         </VBox.margin></VBox>
+      <HBox alignment="CENTER_RIGHT" spacing="20.0">
+         <children>
+            <Button fx:id="btn_view" mnemonicParsing="false" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="View Actual Data" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="31.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/View_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+            <Button fx:id="btn_back" layoutX="841.0" layoutY="10.0" mnemonicParsing="false" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Back" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="31.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../subjects/img/Back%20Arrow_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+         </children>
          <padding>
-            <Insets bottom="5.0" right="10.0" top="5.0" />
+            <Insets bottom="10.0" right="10.0" />
          </padding>
-      </VBox>
+      </HBox>
    </children>
 </VBox>

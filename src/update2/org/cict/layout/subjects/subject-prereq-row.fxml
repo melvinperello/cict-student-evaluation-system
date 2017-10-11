@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="70.0" prefHeight="70.0" prefWidth="814.0" spacing="10.0" style="-fx-border-color: #2B89E0;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="70.0" prefHeight="70.0" prefWidth="814.0" spacing="10.0" style="-fx-background-color: #E85764;" styleClass="metro-row" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView accessibleText="img" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -18,17 +18,17 @@
       </ImageView>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="subject_code" text="SOCSCI 223">
+            <Label accessibleText="subject_code" text="SOCSCI 223" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="descriptive_title" text="POLITCAL SCIENCE WITH PHILIPPINE CONSTITUTION" />
+            <Label accessibleText="descriptive_title" text="POLITCAL SCIENCE WITH PHILIPPINE CONSTITUTION" textFill="WHITE" />
          </children>
       </VBox>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Label contentDisplay="TOP" graphicTextGap="0.0" text="Units">
+            <Label contentDisplay="TOP" graphicTextGap="0.0" text="Units" textFill="WHITE">
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -37,7 +37,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label accessibleText="units" text="1.0">
+            <Label accessibleText="units" text="1.0" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -46,7 +46,7 @@
       </HBox>
       <VBox alignment="CENTER_LEFT">
          <children>
-            <Label accessibleText="type" prefWidth="180.0" text="INTERNSHIP">
+            <Label accessibleText="type" prefWidth="180.0" text="INTERNSHIP" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -58,7 +58,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label accessibleText="subtype" prefHeight="21.0" prefWidth="149.0" text="Programming">
+            <Label accessibleText="subtype" prefHeight="21.0" prefWidth="149.0" text="Programming" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
@@ -77,7 +77,7 @@
       </VBox>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Button accessibleText="btn_remove" mnemonicParsing="false" style="-fx-background-color: #DB4437;" textFill="WHITE">
+            <Button accessibleText="btn_remove" mnemonicParsing="false" style="-fx-background-color: #E85764; -fx-border-color: #fff;" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>

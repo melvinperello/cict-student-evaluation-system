@@ -46,7 +46,7 @@ public class FetchSubjects extends Transaction{
     protected boolean transaction() {
     
         lst_subject = Mono.orm().newSearch(Database.connect().subject())
-                .active(Order.asc(DB.subject().id))
+                .active(Order.asc(DB.subject().code))
                 .all(); 
         
         if(lst_subject == null) {

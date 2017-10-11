@@ -28,6 +28,7 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -35,19 +36,24 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Objects;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cict.GenericLoadingShow;
 import org.cict.SubjectClassification;
 import org.controlsfx.control.Notifications;
+import update2.org.cict.controller.academicprogram.AcademicProgramAccessManager;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -56,10 +62,10 @@ import org.controlsfx.control.Notifications;
 public class SubjectInformationController extends SceneFX implements ControllerFX {
 
     @FXML
-    private VBox vbox_main;
+    private VBox application_root;
     
     @FXML
-    private Button btn_edit;
+    private JFXButton btn_edit;
 
     @FXML
     private TextField txt_subjectCode;
@@ -74,10 +80,10 @@ public class SubjectInformationController extends SceneFX implements ControllerF
     private TextField txt_labUnits;
 
     @FXML
-    private JFXComboBox<String> cmb_type;
+    private ComboBox<String> cmb_type;
 
     @FXML
-    private JFXComboBox<String> cmb_subtype;
+    private ComboBox<String> cmb_subtype;
 
     @FXML
     private Label lbl_subject_id;
@@ -88,6 +94,9 @@ public class SubjectInformationController extends SceneFX implements ControllerF
     @FXML
     private VBox vbox_curriculums;
     
+    @FXML
+    private JFXButton btn_back;
+
     private SubjectMapping SUBJECT;
     private ArrayList<CurriculumMapping> curriculums;
     
@@ -97,29 +106,71 @@ public class SubjectInformationController extends SceneFX implements ControllerF
     
     @Override
     public void onInitialization() {
-        bindScene(vbox_main);
+        bindScene(application_root);
         this.loadComboBox();
         this.setPreview(true);
         this.setSubjectDetails();
+        
+        if (AcademicProgramAccessManager.denyIfNotAdmin()) {
+            btn_edit.setDisable(true);
+        }
     }
 
+    private final String SECTION_BASE_COLOR = "#E85764";
     @Override
     public void onEventHandling() {
         addClickEvent(btn_edit, () -> {
-            if(canEdit) {
-                if(btn_edit.getText().equalsIgnoreCase("Save Changes")) {
-                    // update here
-                    validateInputs();
-                } else
-                    setPreview(false);
-            } else {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Subject Cannot Be Modified")
-                        .setMessage("It seems like the subject has an implemented curriculum, therefore modifying is prohibited. Add new subject if needed.")
-                        .showAndWait();
-            }
+            onEdit();
         });
+        
+        this.addClickEvent(btn_back, ()->{
+            onBack();
+        });
+        
+        cmb_type.valueProperty().addListener((e) -> {
+            String selected = cmb_type.getSelectionModel().getSelectedItem();
+            cmb_subtype.setDisable(!SubjectClassification.isMajor(selected));
+            if(cmb_subtype.isDisable())
+                cmb_subtype.getSelectionModel().select("NONE");
+        });
+    }
+    
+    private void onEdit() {
+        if(canEdit) {
+            if(btn_edit.getText().equalsIgnoreCase("Save Changes")) {
+                // update here
+                validateInputs();
+            } else
+                setPreview(false);
+        } else {
+            Mono.fx().alert()
+                    .createWarning()
+                    .setHeader("Subject Cannot Be Modified")
+                    .setMessage("It seems like the subject has an implemented curriculum, therefore modifying is prohibited. Add new subject if needed.")
+                    .showAndWait();
+        }
+    }
+    
+    private void onBack() {
+        if(!isEdited) {
+            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(homeFx.getApplicationRoot());
+            }, homeFx.getApplicationRoot());
+            return;
+        }
+        SubjectRepositoryController controller = new SubjectRepositoryController();
+        Pane pane = Mono.fx().create()
+                .setPackageName("update2.org.cict.layout.subjects")
+                .setFxmlDocument("subject-bank")
+                .makeFX()
+                .setController(controller)
+                .pullOutLayout();
+
+        super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
     
     private void setPreview(boolean view) {
@@ -135,6 +186,11 @@ public class SubjectInformationController extends SceneFX implements ControllerF
         
         cmb_subtype.setDisable(view);
         cmb_type.setDisable(view);
+        if(!view) {
+            if(!SubjectClassification.isMajor(cmb_type.getSelectionModel().getSelectedItem()))
+                cmb_subtype.setDisable(true);
+        }
+            
     }
     
     private void setSubjectDetails() {
@@ -153,14 +209,12 @@ public class SubjectInformationController extends SceneFX implements ControllerF
         fetch.setOnSuccess(onSuccess -> {
             curriculums = fetch.getCurriculums();
             createCurriculumTable();
-            GenericLoadingShow.instance().hide();
         });
         
         fetch.setOnCancel(onCancel -> {
             vbox_no_result.setVisible(true);
         });
         
-//        fetch.setRestTime(1000);
         fetch.transact();
         
     }
@@ -193,14 +247,22 @@ public class SubjectInformationController extends SceneFX implements ControllerF
         Label lbl_major = searchAccessibilityText(curriculumRow, "major");
         Label lbl_status = searchAccessibilityText(curriculumRow, "status");
         
-        lbl_name.setText(curriculum.getName());
-        lbl_major.setText(curriculum.getMajor());
-        String status;
-        if(curriculum.getImplemented() == 1) {
-            status = "IMPLEMENTED";
-            canEdit = false;
-        } else 
-            status = "UNIMPLEMENTED";
+        try {
+            lbl_name.setText(curriculum.getName());
+        } catch (Exception e) {
+        }
+        try {
+            lbl_major.setText(curriculum.getMajor());
+        } catch (Exception e) {
+        }
+        String status = "UNIMPLEMENTED";
+        try {
+            if(curriculum.getImplemented() == 1) {
+                status = "IMPLEMENTED";
+                canEdit = false;
+            }
+        } catch (Exception e) {
+        }
         lbl_status.setText(status);
          
         SimpleTableCell cellParent = new SimpleTableCell();
@@ -375,4 +437,10 @@ public class SubjectInformationController extends SceneFX implements ControllerF
                     .showInformation();
         }
     }
+      
+    private LayoutDataFX homeFx;
+    public void setHomeFx(LayoutDataFX homeFx) {
+        this.homeFx = homeFx;
+    }
+
 }

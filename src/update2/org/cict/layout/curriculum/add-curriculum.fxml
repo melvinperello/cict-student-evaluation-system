@@ -6,6 +6,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,182 +17,203 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<VBox fx:id="vbox_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="456.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+
+<AnchorPane fx:id="application_root" prefHeight="567.0" prefWidth="574.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="456.0" style="-fx-background-color: #1A82BF;">
+      <VBox layoutX="59.0" layoutY="67.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="456.0" style="-fx-background-color: #E85764;">
          <children>
-            <Label text="Enter the following curriculum information:" textFill="WHITE">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets left="10.0" />
-         </padding>
-      </VBox>
-      <HBox alignment="CENTER" prefHeight="359.0" prefWidth="416.0">
-         <VBox.margin>
-            <Insets left="20.0" right="20.0" top="10.0" />
-         </VBox.margin>
-         <children>
-            <GridPane prefHeight="203.0" prefWidth="416.0" vgap="5.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="10.0" prefWidth="118.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="7.0" prefWidth="22.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="266.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="72.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="14.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+            <VBox prefHeight="486.0" prefWidth="456.0">
                <children>
-                  <Label text="Name" textFill="#3266ab">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txt_name" prefHeight="38.0" prefWidth="247.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </TextField>
-                  <Label layoutX="10.0" layoutY="15.0" text="Description" textFill="#3266ab" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="10.0" layoutY="15.0" text=":" GridPane.columnIndex="1">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="128.0" layoutY="15.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txt_description" layoutX="136.0" layoutY="10.0" prefHeight="38.0" prefWidth="247.0" promptText="Optional" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </TextField>
-                  <Label layoutX="10.0" layoutY="62.0" text="Major" textFill="#3266ab" GridPane.rowIndex="2">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="128.0" layoutY="62.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txt_major" layoutX="153.0" layoutY="53.0" prefHeight="38.0" prefWidth="247.0" promptText="Optional" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </TextField>
-                  <Label layoutX="10.0" layoutY="178.0" text="Ladderized" textFill="#3266ab" GridPane.rowIndex="3">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-                  <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <VBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="456.0">
                      <children>
-                        <RadioButton fx:id="rbtn_yes" mnemonicParsing="false" text="Yes" textFill="#3266ab">
+                        <Label text="Enter the following curriculum information:" textFill="WHITE">
                            <font>
-                              <Font size="15.0" />
-                           </font>
-                        </RadioButton>
-                        <RadioButton fx:id="rbtn_no" mnemonicParsing="false" selected="true" text="No" textFill="#3266ab">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </RadioButton>
-                     </children>
-                  </HBox>
-                  <Label layoutX="10.0" layoutY="213.0" text="Ladder Type" textFill="#3266ab" GridPane.rowIndex="4">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="10.0" layoutY="233.0" text="Equivalent" textFill="#3266ab" GridPane.rowIndex="6">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="cmb_type" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <Label layoutX="132.0" layoutY="68.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="132.0" layoutY="178.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="132.0" layoutY="233.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <CheckComboBox fx:id="cmb_prereq" prefHeight="33.0" prefWidth="269.0" style="-fx-border-color: #D5D5D5;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                  <Label layoutX="10.0" layoutY="228.0" text="Preparatory" textFill="#3266ab" GridPane.rowIndex="5">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="132.0" layoutY="228.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="cmb_preparatory" layoutX="157.0" layoutY="221.0" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                  <VBox alignment="TOP_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="7">
-                     <children>
-                        <Label text="If NONE is checked, no values for equivalent will be saved." textFill="#e12727">
-                           <font>
-                              <Font size="10.0" />
+                              <Font size="17.0" />
                            </font>
                         </Label>
                      </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
                   </VBox>
+                  <HBox prefHeight="359.0" prefWidth="416.0">
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" top="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <GridPane prefHeight="203.0" prefWidth="416.0" vgap="5.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="10.0" prefWidth="118.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="7.0" prefWidth="22.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="266.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="58.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="72.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="42.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="14.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Name" textFill="WHITE">
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txt_name" prefHeight="38.0" prefWidth="247.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="10.0" layoutY="15.0" text="Description" textFill="WHITE" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="10.0" layoutY="15.0" text=":" textFill="WHITE" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="128.0" layoutY="15.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txt_description" layoutX="136.0" layoutY="10.0" prefHeight="38.0" prefWidth="247.0" promptText="Optional" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="10.0" layoutY="62.0" text="Major" textFill="WHITE" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="128.0" layoutY="62.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txt_major" layoutX="153.0" layoutY="53.0" prefHeight="38.0" prefWidth="247.0" promptText="Optional" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="10.0" layoutY="178.0" text="Ladderized" textFill="WHITE" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <children>
+                                    <RadioButton fx:id="rbtn_yes" mnemonicParsing="false" text="Yes" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </RadioButton>
+                                    <RadioButton fx:id="rbtn_no" mnemonicParsing="false" selected="true" text="No" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </RadioButton>
+                                 </children>
+                              </HBox>
+                              <Label layoutX="10.0" layoutY="213.0" text="Ladder Type" textFill="WHITE" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="10.0" layoutY="233.0" text="Equivalent" textFill="WHITE" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cmb_type" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                              <Label layoutX="132.0" layoutY="68.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="132.0" layoutY="178.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="132.0" layoutY="233.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <CheckComboBox fx:id="cmb_prereq" prefHeight="33.0" prefWidth="269.0" style="-fx-border-color: #D5D5D5;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                              <Label layoutX="10.0" layoutY="228.0" text="Preparatory" textFill="WHITE" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="132.0" layoutY="228.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cmb_preparatory" layoutX="157.0" layoutY="221.0" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                              <VBox alignment="TOP_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                 <children>
+                                    <Label text="If NONE is checked, no values for equivalent will be saved." textFill="WHITE">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="59.0" prefWidth="417.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="btn_add" mnemonicParsing="false" prefHeight="38.0" prefWidth="139.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Add" textFill="WHITE">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btn_cancel" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Cancel" textFill="WHITE">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
-            </GridPane>
+            </VBox>
          </children>
-      </HBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="372.0" spacing="10.0">
-         <children>
-            <Button fx:id="btn_add" mnemonicParsing="false" prefHeight="38.0" prefWidth="139.0" style="-fx-background-color: #58AF58;" text="Add" textFill="WHITE">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="btn_cancel" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" style="-fx-background-color: #DD5145;" text="Cancel" textFill="WHITE">
-               <font>
-                  <Font size="17.0" />
-               </font>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Button>
-         </children>
-         <VBox.margin>
-            <Insets left="20.0" right="20.0" />
-         </VBox.margin>
-      </HBox>
+      </VBox>
+      <Label layoutX="24.0" layoutY="17.0" prefHeight="50.0" prefWidth="467.0" text="Create Curriculum" textFill="WHITE" wrapText="true">
+         <font>
+            <Font size="25.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../academicprogram/images/Chevron%20Right_50px.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
    </children>
-</VBox>
+</AnchorPane>

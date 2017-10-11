@@ -28,6 +28,7 @@ import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
+import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
@@ -35,16 +36,19 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.hibernate.criterion.Order;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -52,6 +56,9 @@ import org.hibernate.criterion.Order;
  */
 public class HistoryController extends SceneFX implements ControllerFX {
 
+    @FXML
+    private VBox application_root;
+    
     @FXML
     private Label lbl_name;
 
@@ -64,6 +71,9 @@ public class HistoryController extends SceneFX implements ControllerFX {
     @FXML
     private Button btn_view;
 
+    @FXML
+    private Button btn_back;
+    
     private CurriculumMapping CURRICULUM;
     public HistoryController(CurriculumMapping CURRICULUM) {
         this.CURRICULUM = CURRICULUM;
@@ -71,6 +81,9 @@ public class HistoryController extends SceneFX implements ControllerFX {
     
     @Override
     public void onInitialization() {
+        
+        super.bindScene(application_root);
+        
         lbl_name.setText(CURRICULUM.getName());
         String major = "";
         if(CURRICULUM.getMajor() != null) {
@@ -90,10 +103,27 @@ public class HistoryController extends SceneFX implements ControllerFX {
         }
     }
 
+    private final String SECTION_BASE_COLOR = "#E85764";
     @Override
     public void onEventHandling() {
         this.addClickEvent(btn_view, ()->{
             showActualData();
+        });
+        
+        this.addClickEvent(btn_back ,()->{
+            CurriculumInformationController controller = new CurriculumInformationController(CURRICULUM);
+            Pane pane = Mono.fx().create()
+                    .setPackageName("update2.org.cict.layout.curriculum")
+                    .setFxmlDocument("curriculum-info")
+                    .makeFX()
+                    .setController(controller)
+                    .pullOutLayout();
+
+            super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(pane);
+            }, pane);
         });
     }
     
@@ -144,16 +174,29 @@ public class HistoryController extends SceneFX implements ControllerFX {
     }
     
     private void showActualData() {
+//        ActualDataHistory controller = new ActualDataHistory(CURRICULUM);
+//        Mono.fx().create()
+//                .setPackageName("update2.org.cict.layout.curriculum")
+//                .setFxmlDocument("actual-data-history")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStageWithOwner(Mono.fx().getParentStage(btn_view))
+//                .stageResizeable(false)
+//                .stageMaximized(true)
+//                .stageShow();
         ActualDataHistory controller = new ActualDataHistory(CURRICULUM);
-        Mono.fx().create()
+        Pane pane = Mono.fx().create()
                 .setPackageName("update2.org.cict.layout.curriculum")
                 .setFxmlDocument("actual-data-history")
                 .makeFX()
                 .setController(controller)
-                .makeScene()
-                .makeStageWithOwner(Mono.fx().getParentStage(btn_view))
-                .stageResizeable(false)
-                .stageMaximized(true)
-                .stageShow();
+                .pullOutLayout();
+
+        super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
 }

@@ -44,6 +44,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.CheckComboBox;
@@ -56,7 +57,7 @@ import org.hibernate.criterion.Order;
 public class AddNewCurriculumController extends SceneFX implements ControllerFX{
 
     @FXML
-    private VBox vbox_main;
+    private AnchorPane application_root;
     @FXML
     private TextField txt_name;
     @FXML
@@ -170,7 +171,7 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX{
             setViewCheckCmbBoxPreReq(selected);
         });
         
-        Mono.fx().key(KeyCode.ENTER).release(vbox_main, ()->{
+        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
             addNew();
         });
     }

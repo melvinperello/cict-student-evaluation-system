@@ -8,15 +8,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="97.0" prefWidth="1048.0" style="-fx-border-color: #2983d5; -fx-border-width: 1;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="97.0" prefWidth="1048.0" style="-fx-background-color: #E85764;" styleClass="metro-row" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox>
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin>
          <children>
-            <Label style="-fx-background-color: #3AADD9;">
+            <Label>
                <graphic>
                   <ImageView fitHeight="72.0" fitWidth="74.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -34,17 +33,17 @@
          <children>
             <HBox>
                <children>
-                  <Label accessibleText="by" maxWidth="1.7976931348623157E308" text="JOEMAR DE LA CRUZ" textFill="#2983d5" HBox.hgrow="ALWAYS">
+                  <Label accessibleText="by" maxWidth="1.7976931348623157E308" text="JOEMAR DE LA CRUZ" textFill="WHITE" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
-                  <Label accessibleText="date" text="SEPTEMBER 9, 2017" textFill="#3aadd9">
+                  <Label accessibleText="date" text="SEPTEMBER 9, 2017" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="20.0" opacity="0.56" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="25.0" fitWidth="26.0" opacity="0.56" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@img/datetime.png" />
                            </image>
@@ -56,7 +55,7 @@
                   <Insets right="10.0" />
                </padding>
             </HBox>
-            <Label accessibleText="description" text="ADDED SUBJECT MATH 113[ID-25]  SECOND SEMESTER CURRICULUM" textFill="#35ba9b">
+            <Label accessibleText="description" text="ADDED SUBJECT MATH 113[ID-25]  SECOND SEMESTER CURRICULUM" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

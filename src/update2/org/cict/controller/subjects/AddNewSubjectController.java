@@ -28,13 +28,14 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
-import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -62,13 +63,16 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
     private TextField txt_labUnits;
 
     @FXML
-    private JFXComboBox<String> cmbb_type;
+    private ComboBox<String> cmbb_type;
     
     @FXML
-    private JFXComboBox<String> cmb_subtype;
+    private ComboBox<String> cmb_subtype;
 
     @FXML
     private Button btn_add;
+    
+    @FXML
+    private JFXButton btn_close;
     
     private ArrayList<CurriculumMapping> curriculums;
     
@@ -98,6 +102,9 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
             if(cmb_subtype.isDisable())
                 cmb_subtype.getSelectionModel().select("NONE");
         });
+       this.addClickEvent(btn_close, ()->{
+           Mono.fx().getParentStage(btn_add).close();
+       });
     }
     
     private String acadProgram, subjectCode, descriptiveTitle, type, subType;

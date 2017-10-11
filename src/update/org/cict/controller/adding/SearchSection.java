@@ -24,6 +24,7 @@
 package update.org.cict.controller.adding;
 
 import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.LoadGroupMapping;
@@ -44,6 +45,7 @@ import org.cict.evaluation.views.SectionSearchView;
 public class SearchSection extends Transaction {
 
     public String subjectCode;
+    public Integer CURRICULUM_id;
 
     private SubjectMapping searchedSubject;
     private ArrayList<LoadGroupMapping> loadGroups;
@@ -82,12 +84,28 @@ public class SearchSection extends Transaction {
         /**
          * Get the subject mapping
          */
-        searchedSubject = Mono.orm()
+//        searchedSubject = Mono.orm()
+//                .newSearch(Database.connect().subject())
+//                .eq(DB.subject().code, subjectCode)
+//                .active()
+//                .first();
+        ArrayList<SubjectMapping> subjects = Mono.orm()
                 .newSearch(Database.connect().subject())
                 .eq(DB.subject().code, subjectCode)
                 .active()
-                .first();
-
+                .all();
+        for(SubjectMapping subject: subjects) {
+            CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                    .eq(DB.curriculum_subject().SUBJECT_id, subject.getId())
+                    .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
+                    .active()
+                    .first();
+            if(csMap != null) {
+                searchedSubject = subject;
+                break;
+            }
+        }
+        
         if (Objects.isNull(searchedSubject)) {
             return false;
         }

@@ -48,6 +48,7 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
     private SubjectInformationHolder subjectInfo;
     private String studentNumber;
     private ArrayList<SubjectInformationHolder> suggestedSubject;
+    private Integer CURRICULUM_id;
     /**
      * Changed to type Object to give way for the load section mapping as third
      * index.
@@ -65,6 +66,10 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
 
     public void setStudentNumber(String studNum) {
         this.studentNumber = studNum;
+    }
+    
+    public ChangingSubjects(Integer CURRICULUM_id) {
+        this.CURRICULUM_id = CURRICULUM_id;
     }
     
     @Override
@@ -305,7 +310,8 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
     private void searchSection(SubjectMapping subject) {
         SearchSection search = new SearchSection();
         search.subjectCode = subject.getCode();
-
+        search.CURRICULUM_id = CURRICULUM_id;
+        
         search.setOnSuccess(onSuccess -> {
             this.sectionSearched = search.getSearchResults();
             /**

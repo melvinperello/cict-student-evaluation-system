@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -14,190 +15,267 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbox_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="496.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbox_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="1034.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="600.0" style="-fx-background-color: #2980B9;">
+      <HBox VBox.vgrow="ALWAYS">
          <children>
-            <HBox>
+            <VBox prefHeight="476.0" prefWidth="561.0">
                <children>
-                  <ImageView fitHeight="22.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets bottom="2.0" left="5.0" right="3.0" top="2.0" />
-                     </HBox.margin>
-                     <image>
-                        <Image url="@../academicprogram/images/add.png" />
-                     </image>
-                  </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="New Subject" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="22.0" />
-                     </font>
-                  </Label>
+                  <VBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="600.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label prefHeight="50.0" prefWidth="467.0" text="Create Subject" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../academicprogram/images/Chevron%20Right_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="15.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets left="15.0" top="20.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="373.0" prefWidth="496.0">
+                     <children>
+                        <GridPane prefHeight="309.0" prefWidth="496.0" vgap="7.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="206.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="419.0" minWidth="10.0" prefWidth="18.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="419.0" minWidth="10.0" prefWidth="376.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label layoutX="20.0" layoutY="12.0" text="Subject Code" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label layoutX="20.0" layoutY="42.0" text="Descriptive Title" textFill="WHITE" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label layoutX="20.0" layoutY="72.0" text="Lecture Units" textFill="WHITE" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label layoutX="20.0" layoutY="102.0" text="Laboratory Units" textFill="WHITE" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label layoutX="185.0" layoutY="12.0" text=":" textFill="WHITE" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="185.0" layoutY="49.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="185.0" layoutY="86.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="185.0" layoutY="123.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="text_subjectCode" prefHeight="39.0" prefWidth="472.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="txt_descriptiveTitle" layoutX="202.0" layoutY="43.0" prefHeight="39.0" prefWidth="472.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="txt_lecUnits" layoutX="202.0" layoutY="80.0" prefHeight="32.0" prefWidth="187.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </TextField>
+                              <TextField fx:id="txt_labUnits" layoutX="202.0" layoutY="117.0" prefHeight="39.0" prefWidth="310.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </TextField>
+                              <Label layoutX="40.0" layoutY="179.0" text="Type" textFill="WHITE" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label layoutX="40.0" layoutY="179.0" text="Subtype" textFill="WHITE" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label layoutX="173.0" layoutY="176.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="173.0" layoutY="214.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cmbb_type" prefHeight="36.0" prefWidth="341.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                              <ComboBox fx:id="cmb_subtype" layoutX="180.0" layoutY="228.0" prefHeight="36.0" prefWidth="385.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" top="10.0" />
+                           </padding>
+                        </GridPane>
+                        <VBox alignment="CENTER" prefHeight="28.0" prefWidth="496.0">
+                           <children>
+                              <JFXButton fx:id="btn_add" prefHeight="36.0" prefWidth="277.0" style="-fx-border-color: #fff;" text="Add" textFill="WHITE">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="2.0" top="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="40.0" right="20.0" />
+                     </padding>
+                  </VBox>
                </children>
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="373.0" prefWidth="496.0">
-         <children>
-            <GridPane prefHeight="309.0" prefWidth="496.0" vgap="7.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="206.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="419.0" minWidth="10.0" prefWidth="18.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="419.0" minWidth="10.0" prefWidth="376.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label layoutX="20.0" layoutY="12.0" text="Subject Code">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Label layoutX="20.0" layoutY="42.0" text="Descriptive Title" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Label layoutX="20.0" layoutY="72.0" text="Lecture Units" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Label layoutX="20.0" layoutY="102.0" text="Laboratory Units" GridPane.rowIndex="3">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Label layoutX="185.0" layoutY="12.0" text=":" GridPane.columnIndex="1">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="185.0" layoutY="49.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="185.0" layoutY="86.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="185.0" layoutY="123.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="text_subjectCode" prefHeight="39.0" prefWidth="472.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <TextField fx:id="txt_descriptiveTitle" layoutX="202.0" layoutY="43.0" prefHeight="39.0" prefWidth="472.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <TextField fx:id="txt_lecUnits" layoutX="202.0" layoutY="80.0" prefHeight="32.0" prefWidth="187.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <TextField fx:id="txt_labUnits" layoutX="202.0" layoutY="117.0" prefHeight="39.0" prefWidth="472.0" style="-fx-background-color: #E2E2E2; -fx-border-color: #EEEEEE; -fx-text-fill: #3E4D5B;" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <Label layoutX="40.0" layoutY="179.0" text="Type" GridPane.rowIndex="4">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Label layoutX="40.0" layoutY="179.0" text="Subtype" GridPane.rowIndex="5">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <Label layoutX="173.0" layoutY="176.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="173.0" layoutY="214.0" text=":" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <JFXComboBox fx:id="cmbb_type" prefHeight="33.0" prefWidth="316.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="4">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </JFXComboBox>
-                  <JFXComboBox fx:id="cmb_subtype" layoutX="183.0" layoutY="215.0" prefHeight="33.0" prefWidth="316.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="5">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </JFXComboBox>
-               </children>
-               <padding>
-                  <Insets left="5.0" top="10.0" />
-               </padding>
-            </GridPane>
-            <VBox alignment="CENTER" prefHeight="28.0" prefWidth="496.0">
-               <children>
-                  <Button fx:id="btn_add" mnemonicParsing="false" prefHeight="44.0" prefWidth="184.0" style="-fx-background-color: #2ECC71;" text="Add" textFill="WHITE">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="2.0" top="10.0" />
-               </VBox.margin>
             </VBox>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <AnchorPane layoutX="12.0" layoutY="51.0" prefHeight="318.0" prefWidth="445.0" style="-fx-border-color: #fff; -fx-border-width: 2;">
+                     <children>
+                        <Label layoutX="14.0" layoutY="22.0" text="Subject Creation" textFill="WHITE">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@img/Light%20On_64px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="33.0" layoutY="72.0" text="This requires all the given fields to be filled up." textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@img/Next%20page_32px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="33.0" layoutY="104.0" prefHeight="53.0" prefWidth="393.0" text="A subject will be considered as existing if all the given details are equal with another subject." textFill="WHITE" wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@img/Next%20page_32px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="34.0" layoutY="157.0" prefHeight="53.0" prefWidth="393.0" text="Only subject with a type of Major, Internship and Capstone will gain a subtype." textFill="WHITE" wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@img/Next%20page_32px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label layoutX="64.0" layoutY="215.0" prefHeight="67.0" prefWidth="366.0" text="A subject with an implemented curriculum will no longer be altered or edited. If a detail needs to be updated, adding a new subject is a must." textFill="WHITE" wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="25.0" fitWidth="26.0" layoutX="35.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/Next%20page_32px.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                  <JFXButton fx:id="btn_close" alignment="CENTER" contentDisplay="CENTER" layoutX="420.0" layoutY="1.0" text=" " textAlignment="CENTER" visible="false">
+                     <graphic>
+                        <ImageView fitHeight="36.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/Close%20Window_32px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </AnchorPane>
          </children>
-      </VBox>
+      </HBox>
    </children>
 </VBox>
