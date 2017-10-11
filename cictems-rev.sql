@@ -77,7 +77,7 @@ INSERT INTO `academic_term` (`id`, `school_year`, `semester`, `semester_regular`
 	(8, '2016-2017', 'FIRST SEMESTER', 1, 0, 0, 0, 0, 'REGULAR', 'ACCEPTED', 1),
 	(9, '2016-2017', 'SECOND SEMESTER', 2, 0, 0, 0, 0, 'REGULAR', 'ACCEPTED', 1),
 	(10, '2016-2017', 'MIDYEAR', 0, 0, 0, 0, 0, 'MIDYEAR', 'ACCEPTED', 1),
-	(11, '2017-2018', 'FIRST SEMESTER', 1, 1, 0, 1, 1, 'REGULAR', 'ACCEPTED', 1),
+	(11, '2017-2018', 'FIRST SEMESTER', 1, 1, 0, 0, 1, 'REGULAR', 'ACCEPTED', 1),
 	(12, '2017-2018', 'SECOND SEMESTER', 2, 0, 0, 0, 0, 'REGULAR', 'PENDING', 1);
 /*!40000 ALTER TABLE `academic_term` ENABLE KEYS */;
 
@@ -125,9 +125,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1735 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1743 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~234 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~242 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1501, 1, '2017-09-30 00:43:37', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -363,7 +363,15 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(1731, 1, '2017-10-10 01:12:18', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(1732, 1, '2017-10-10 01:15:43', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(1733, 1, '2017-10-10 01:22:32', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(1734, 1, '2017-10-10 01:26:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(1734, 1, '2017-10-10 01:26:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1735, 1, '2017-10-11 16:06:05', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1736, 1, '2017-10-11 16:07:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1737, 1, '2017-10-11 16:13:08', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1738, 1, '2017-10-11 16:15:18', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1739, 1, '2017-10-11 16:21:57', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1740, 1, '2017-10-11 16:22:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1741, 1, '2017-10-11 16:24:56', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(1742, 1, '2017-10-11 16:27:13', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -382,9 +390,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1577 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1585 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~164 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~172 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
 	(1413, 1, '2017-10-01 18:46:46', '2017-10-01 18:47:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-01 18:46:52', 'EVALUATION_SYSTEM', 1),
@@ -550,7 +558,15 @@ INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `sess
 	(1573, 1, '2017-10-10 01:12:18', '2017-10-10 01:16:18', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-10 01:15:19', 'EVALUATION_SYSTEM', 1),
 	(1574, 1, '2017-10-10 01:15:43', '2017-10-10 01:18:43', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-10 01:18:10', 'EVALUATION_SYSTEM', 1),
 	(1575, 1, '2017-10-10 01:22:32', '2017-10-10 01:24:02', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-10 01:23:06', 'EVALUATION_SYSTEM', 1),
-	(1576, 1, '2017-10-10 01:26:48', '2017-10-10 01:29:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-10 01:29:01', 'EVALUATION_SYSTEM', 1);
+	(1576, 1, '2017-10-10 01:26:48', '2017-10-10 01:29:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-10 01:29:01', 'EVALUATION_SYSTEM', 1),
+	(1577, 1, '2017-10-11 16:06:05', '2017-10-11 16:07:05', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:06:27', 'EVALUATION_SYSTEM', 1),
+	(1578, 1, '2017-10-11 16:07:48', '2017-10-11 16:08:49', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:08:05', 'EVALUATION_SYSTEM', 1),
+	(1579, 1, '2017-10-11 16:13:08', '2017-10-11 16:14:08', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:13:19', 'EVALUATION_SYSTEM', 1),
+	(1580, 1, '2017-10-11 16:15:19', '2017-10-11 16:16:49', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:16:02', 'EVALUATION_SYSTEM', 1),
+	(1581, 1, '2017-10-11 16:21:57', '2017-10-11 16:22:57', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:22:22', 'EVALUATION_SYSTEM', 1),
+	(1582, 1, '2017-10-11 16:22:48', '2017-10-11 16:23:48', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:23:15', 'EVALUATION_SYSTEM', 1),
+	(1583, 1, '2017-10-11 16:24:56', '2017-10-11 16:25:56', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:25:24', 'EVALUATION_SYSTEM', 1),
+	(1584, 1, '2017-10-11 16:27:13', '2017-10-11 16:28:14', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 16:27:33', 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student

@@ -96,6 +96,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_home, () -> {
             Home.callHome(this);
         });
+        
         super.addClickEvent(btn_voew_access_history, () -> {
             this.changeView(this.vbox_access);
         });

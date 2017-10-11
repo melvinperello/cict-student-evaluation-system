@@ -24,6 +24,7 @@ import update3.org.cict.access.management.AccessManagementHome;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
 import update3.org.cict.my_account.MyAccountHome;
 import update3.org.cict.termcalendar.AcademicTermHome;
+import update4.org.cict.linked_manager.LinkedHome;
 
 public class Home extends SceneFX implements ControllerFX {
 
@@ -63,6 +64,12 @@ public class Home extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_my_account;
 
+    public Home() {
+        //
+    }
+    
+    public final static String SCENE_TRANSITION_COLOR = "#414852";
+ 
     @Override
     public void onInitialization() {
         /**
@@ -124,7 +131,7 @@ public class Home extends SceneFX implements ControllerFX {
                 .pullOutLayout();
         // revert back this color will be the background of the scene
         // when replacing a root this color will be visible upon transitions
-        scene.setSceneColor("#FFFFFF");
+        scene.setSceneColor(SCENE_TRANSITION_COLOR);
         Animate.fade(scene.getApplicationRoot(), 150, () -> {
             scene.replaceRoot(home_root);
         }, home_root);
@@ -173,6 +180,10 @@ public class Home extends SceneFX implements ControllerFX {
             onShowMyAccount();
         });
 
+        super.addClickEvent(btn_linked, () -> {
+            onShowLinkedManagement();
+        });
+
     }
 
     private void changeRoot(ControllerFX controller, String packer, String fxml) {
@@ -184,6 +195,7 @@ public class Home extends SceneFX implements ControllerFX {
                 .setController(controller)
                 .pullOutLayout();
 
+        super.setSceneColor(SCENE_TRANSITION_COLOR);
         Animate.fade(application_root, 150, () -> {
             super.replaceRoot(fxRoot);
         }, fxRoot);
@@ -377,6 +389,13 @@ public class Home extends SceneFX implements ControllerFX {
                 "update3.org.cict.my_account",
                 "MyAccountHome");
 
+    }
+
+    private void onShowLinkedManagement() {
+        ControllerFX controller = new LinkedHome();
+        this.changeRoot(controller,
+                "update4.org.cict.linked_manager",
+                "LinkedHome");
     }
 
     /**
