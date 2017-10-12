@@ -27,8 +27,9 @@ import app.lazy.models.AccountFacultyAttemptMapping;
 import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
-import com.izumi.textinputfilters.StringFilter;
-import com.izumi.textinputfilters.TextInputFilters;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextGroup;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -45,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.HBox;
@@ -125,7 +127,34 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     private VBox vbox_change_pin;
 
     @FXML
+    private PasswordField txt_ct_new;
+
+    @FXML
+    private PasswordField txt_ct_confirm;
+
+    @FXML
+    private PasswordField txt_ct_password;
+
+    @FXML
+    private JFXButton btn_ct_change_pin;
+
+    @FXML
     private VBox vbox_change_question;
+
+    @FXML
+    private ComboBox<String> cmb_cs_security_question;
+
+    @FXML
+    private PasswordField txt_cs_answer;
+
+    @FXML
+    private PasswordField txt_cs_confirm_answer;
+
+    @FXML
+    private PasswordField txt_cs_currnet_password;
+
+    @FXML
+    private JFXButton btn_cs_change;
 
     public MyAccountHome() {
         //
@@ -142,31 +171,8 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
-
-        StringFilter filterPattern
-                = TextInputFilters // caller class
-                        .string() // string filter
-                        .setFilterMode(StringFilter.LETTER) // mode
-                        .setMaxCharacters(6) // max characters allowed
-                        .setFilterManager(filterManager -> {
-                            if (!filterManager.isValid()) {
-                                // if not valid
-                                System.out.println(filterManager.getMessage());
-                            }
-                        });
-
-        StringFilter currentFilter = filterPattern.clone();
-        currentFilter.setTextSource(txt_cp_current);
-        currentFilter.applyFilter();
-
-        StringFilter newFilter = filterPattern.clone();
-        newFilter.setTextSource(txt_cp_new);
-        newFilter.applyFilter();
-
-        StringFilter confirmFilter = filterPattern.clone();
-        confirmFilter.setTextSource(txt_cp_confirm);
-        confirmFilter.applyFilter();
-
+        this.addFilters();
+        this.createTextGroups();
         //
         this.loaderView = new LoaderView(stack_history);
         this.failView = new FailView(stack_history);
@@ -176,6 +182,50 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         this.changeView(this.vbox_access);
         this.showAccessHistory();
 
+    }
+    // create text group
+    private TextGroup tgrp_change_pass;
+    private TextGroup tgrp_change_pin;
+    private TextGroup tgrp_change_question;
+
+    private void createTextGroups() {
+        tgrp_change_pass = new TextGroup(txt_cp_current, txt_cp_new, txt_cp_confirm);
+        tgrp_change_pin = new TextGroup(txt_ct_new, txt_ct_confirm, txt_ct_password);
+        tgrp_change_question = new TextGroup(txt_cs_answer, txt_cs_confirm_answer,
+                txt_cs_currnet_password);
+    }
+
+    /**
+     * Apply Text Input Filters.
+     */
+    private void addFilters() {
+        // Filter for Change Password
+        StringFilter passwordPattern
+                = TextInputFilters // caller class
+                        .string() // string filter
+                        .setFilterMode(StringFilter.LETTER_DIGIT) // mode
+                        .setNoLeadingTrailingSpaces(true) // no leading or trailing spaces
+                        .setMaxCharacters(20) // max characters allowed
+                        .setFilterManager(filterManager -> {
+                            if (!filterManager.isValid()) {
+                                // if not valid
+                                Mono.fx().snackbar().showError(application_root, filterManager.getMessage());
+                            }
+                        });
+
+        passwordPattern.clone().setTextSource(txt_cp_current).applyFilter();
+        passwordPattern.clone().setTextSource(txt_cp_new).applyFilter();
+        passwordPattern.clone().setTextSource(txt_cp_confirm).applyFilter();
+
+        // filter for Change Transaction Pin
+        // copy the pattern and apply custom changes - Recyclability of settings.
+        StringFilter pinPattern = passwordPattern.clone()
+                .setMaxCharacters(6)
+                .setFilterMode(StringFilter.DIGIT);
+
+        pinPattern.clone().setTextSource(txt_ct_new).applyFilter();
+        pinPattern.clone().setTextSource(txt_ct_confirm).applyFilter();
+        passwordPattern.clone().setTextSource(txt_ct_password).applyFilter();
     }
 
     /**
@@ -219,6 +269,10 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_view_change_question, () -> {
             this.changeView(this.vbox_change_question);
         });
+
+        super.addClickEvent(btn_cp_change, () -> {
+            changePassword();
+        });
     }
 
     private void changePassword() {
@@ -226,9 +280,11 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         String update = txt_cp_new.getText();
         String confirm = txt_cp_confirm.getText();
 
-        if (old.isEmpty() || update.isEmpty() || confirm.isEmpty()) {
-
+        if (tgrp_change_pass.hasEmptyFieldsTrimmed()) {
+            Mono.fx().snackbar().showError(application_root, "Some Fields Are Empty");
+            return;
         }
+
     }
 
     private void showAccessHistory() {

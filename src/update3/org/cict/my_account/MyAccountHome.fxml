@@ -288,7 +288,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_change_password" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_change_password" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -444,7 +444,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="New PIN">
+                                    <PasswordField fx:id="txt_ct_new" prefWidth="200.0" promptText="New PIN">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -466,7 +466,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Confirm PIN">
+                                    <PasswordField fx:id="txt_ct_confirm" prefWidth="200.0" promptText="Confirm PIN">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -488,7 +488,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                    <PasswordField fx:id="txt_ct_password" prefWidth="200.0" promptText="Current Password">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -497,7 +497,7 @@
                               </HBox>
                               <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
                                  <children>
-                                    <JFXButton prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change PIN" textFill="WHITE">
+                                    <JFXButton fx:id="btn_ct_change_pin" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change PIN" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -517,7 +517,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_change_question" prefHeight="200.0" prefWidth="100.0" visible="false">
+                  <VBox fx:id="vbox_change_question" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -567,7 +567,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox prefWidth="555.0" />
+                                    <ComboBox fx:id="cmb_cs_security_question" prefWidth="555.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
@@ -585,7 +585,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Security Answer">
+                                    <PasswordField fx:id="txt_cs_answer" prefWidth="200.0" promptText="Security Answer">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -607,7 +607,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Confirm Answer">
+                                    <PasswordField fx:id="txt_cs_confirm_answer" prefWidth="200.0" promptText="Confirm Answer">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -629,7 +629,7 @@
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField prefWidth="200.0" promptText="Current Password">
+                                    <PasswordField fx:id="txt_cs_currnet_password" prefWidth="200.0" promptText="Current Password">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -638,7 +638,7 @@
                               </HBox>
                               <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
                                  <children>
-                                    <JFXButton prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change PIN" textFill="WHITE">
+                                    <JFXButton fx:id="btn_cs_change" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Save Changes" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
