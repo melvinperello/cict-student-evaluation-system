@@ -285,6 +285,34 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             return;
         }
 
+        if (!update.equals(confirm)) {
+            Mono.fx().snackbar().showError(application_root, "Password Mismatch");
+            return;
+        }
+
+        ChangePassword changePassTx = new ChangePassword();
+        changePassTx.setOldPassword(old);
+        changePassTx.setNewPassword(update);
+
+        changePassTx.whenStarted(() -> {
+
+        });
+        changePassTx.whenFailed(() -> {
+            // cannot update
+        });
+        changePassTx.whenCancelled(() -> {
+            // wrong old password
+        });
+        changePassTx.whenSuccess(() -> {
+            // successfully updated
+            tgrp_change_pass.clearGroup();
+        });
+        changePassTx.whenFinished(() -> {
+
+        });
+
+        changePassTx.transact();
+
     }
 
     private void showAccessHistory() {
