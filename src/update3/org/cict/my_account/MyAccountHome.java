@@ -159,6 +159,30 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     public MyAccountHome() {
         //
     }
+
+    /**
+     * Password Minimum Required.
+     */
+    private final int MIN_PASSWORD_LENGTH = 6;
+
+    /**
+     * Final List of Security Questions.
+     */
+    public final static String[] LIST_SECURITY_QUESTIONS = new String[]{
+        "What Is your favorite book?",
+        "What is the name of the road you grew up on?",
+        "What is your mother’s maiden name?",
+        "What was the name of your first/current/favorite pet?",
+        "What was the first company that you worked for?",
+        "Where did you meet your spouse?",
+        "Where did you go to high school/college?",
+        "What is your favorite food?",
+        "What city were you born in?",
+        "Where is your favorite place to vacation?",
+        "What was your favorite place to visit as a child?",
+        "Who is your favorite actor, musician, or artist?",
+        "What is your favorite movie?",};
+
     /**
      * View Attachments.
      */
@@ -181,6 +205,12 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         //
         this.changeView(this.vbox_access);
         this.showAccessHistory();
+
+        /**
+         * Load Security Questions.
+         */
+        this.cmb_cs_security_question.getItems().addAll(LIST_SECURITY_QUESTIONS);
+        this.cmb_cs_security_question.setPromptText("Select Security Question For Account Recovery Purposes");
 
     }
     // create text group
@@ -226,6 +256,12 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         pinPattern.clone().setTextSource(txt_ct_new).applyFilter();
         pinPattern.clone().setTextSource(txt_ct_confirm).applyFilter();
         passwordPattern.clone().setTextSource(txt_ct_password).applyFilter();
+
+        // security question
+        StringFilter answerPattern = passwordPattern.clone();
+        answerPattern.clone().setTextSource(txt_cs_answer).applyFilter();
+        answerPattern.clone().setTextSource(txt_cs_confirm_answer).applyFilter();
+        passwordPattern.clone().setTextSource(txt_cs_currnet_password).applyFilter();
     }
 
     /**
@@ -270,11 +306,83 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             this.changeView(this.vbox_change_question);
         });
 
+        //----------------------------------------------------------------------
         super.addClickEvent(btn_cp_change, () -> {
             changePassword();
         });
+
+        super.addClickEvent(btn_ct_change_pin, () -> {
+            changePin();
+        });
+
+        super.addClickEvent(btn_cs_change, () -> {
+            changeSecurity();
+        });
     }
 
+    /**
+     * Change Security Question and answer.
+     */
+    private void changeSecurity() {
+        String selectedQuestion = cmb_cs_security_question.getSelectionModel().getSelectedItem();
+        if (selectedQuestion == null) {
+            Mono.fx().snackbar().showError(application_root, "Select Security Question");
+            return;
+        }
+
+        String answer = txt_cs_answer.getText();
+        String confirmAnswer = txt_cs_confirm_answer.getText();
+        String password = txt_cs_currnet_password.getText();
+
+        if (tgrp_change_question.hasEmptyFieldsTrimmed()) {
+            Mono.fx().snackbar().showError(application_root, "Some Fields Are Empty");
+            return;
+        }
+
+        if (!answer.equals(confirmAnswer)) {
+            Mono.fx().snackbar().showError(application_root, "Security Answer does not match");
+            return;
+        }
+
+        if (answer.equals(password)) {
+            Mono.fx().snackbar().showError(application_root, "Security Answer and password must not be the same.");
+            return;
+        }
+
+        ChangeSecurityQuestion changeQuestionTx = new ChangeSecurityQuestion();
+        changeQuestionTx.setCurrentPassword(password);
+        changeQuestionTx.setSecurityQuestion(selectedQuestion);
+        changeQuestionTx.setSecurityAnswer(confirmAnswer);
+
+        changeQuestionTx.whenStarted(() -> {
+            super.cursorWait();
+            btn_cs_change.setDisable(true);
+        });
+        changeQuestionTx.whenFailed(() -> {
+            // cannot update
+            Mono.fx().snackbar().showError(application_root, "Connection problem encountered.");
+        });
+        changeQuestionTx.whenCancelled(() -> {
+            // wrong old password
+            Mono.fx().snackbar().showError(application_root, "Authentication Failed! Invalid current password.");
+        });
+        changeQuestionTx.whenSuccess(() -> {
+            // successfully updated
+            Mono.fx().snackbar().showSuccess(application_root, "Successfully Updated");
+            tgrp_change_question.clearGroup();
+        });
+        changeQuestionTx.whenFinished(() -> {
+            super.cursorDefault();
+            btn_cs_change.setDisable(false);
+        });
+
+        changeQuestionTx.transact();
+
+    }
+
+    /**
+     * Change User Password.
+     */
     private void changePassword() {
         String old = txt_cp_current.getText();
         String update = txt_cp_new.getText();
@@ -291,10 +399,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         }
 
         // check for min characters
-        final int minAllowed = 6;
         try {
             tgrp_change_pass.getMembers().forEach(member -> {
-                if (member.getText().trim().length() < minAllowed) {
+                if (member.getText().trim().length() < MIN_PASSWORD_LENGTH) {
                     Mono.fx().snackbar().showError(application_root, member.getAccessibleHelp() + " is below minimum characters.");
                     throw new RuntimeException();
                 }
@@ -338,6 +445,61 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
     }
 
+    private void changePin() {
+        String newPin = txt_ct_new.getText();
+        String confirmPin = txt_ct_confirm.getText();
+        String password = txt_ct_password.getText();
+
+        if (tgrp_change_pin.hasEmptyFieldsTrimmed()) {
+            Mono.fx().snackbar().showError(application_root, "Some Fields Are Empty");
+            return;
+        }
+
+        if (newPin.length() != 6) {
+            Mono.fx().snackbar().showError(application_root, "PIN must be exactly six (6) digits.");
+            return;
+        }
+
+        if (!newPin.equals(confirmPin)) {
+            Mono.fx().snackbar().showError(application_root, "PIN Mismatch");
+            return;
+        }
+
+        if (newPin.equals(password)) {
+            Mono.fx().snackbar().showError(application_root, "PIN must not be the same as password.");
+            return;
+        }
+
+        ChangeTransactionPin changePinTx = new ChangeTransactionPin();
+        changePinTx.setNewPin(newPin);
+        changePinTx.setOldPassword(password);
+
+        changePinTx.whenStarted(() -> {
+            super.cursorWait();
+            btn_ct_change_pin.setDisable(true);
+        });
+        changePinTx.whenFailed(() -> {
+            // cannot update
+            Mono.fx().snackbar().showError(application_root, "Connection problem encountered.");
+        });
+        changePinTx.whenCancelled(() -> {
+            // wrong old password
+            Mono.fx().snackbar().showError(application_root, "Authentication Failed! Invalid current password.");
+        });
+        changePinTx.whenSuccess(() -> {
+            // successfully updated
+            Mono.fx().snackbar().showSuccess(application_root, "Successfully Updated");
+            tgrp_change_pin.clearGroup();
+        });
+        changePinTx.whenFinished(() -> {
+            super.cursorDefault();
+            btn_ct_change_pin.setDisable(false);
+        });
+
+        changePinTx.transact();
+    }
+
+    //--------------------------------------------------------------------------
     private void showAccessHistory() {
         displayCurrentSession();
     }
@@ -609,6 +771,108 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             boolean passwordUpdated = Database.connect().account_faculty().update(account);
             // if failed to update
             if (!passwordUpdated) {
+                throw new TransactionException("update-failed");
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
+        }
+    }
+
+    /**
+     * Change Pin.
+     */
+    private class ChangeTransactionPin extends Transaction {
+
+        private String oldPassword;
+        private String newPin;
+
+        public void setOldPassword(String oldPassword) {
+            this.oldPassword = oldPassword;
+        }
+
+        public void setNewPin(String newPin) {
+            this.newPin = newPin;
+        }
+
+        @Override
+        protected boolean transaction() {
+            Integer account_id = CollegeFaculty.instance().getACCOUNT_ID();
+
+            AccountFacultyMapping account = Database
+                    .connect()
+                    .account_faculty()
+                    .getPrimary(account_id);
+
+            // if not equal
+            if (!Mono.security().hashFactory().hash_sha512(oldPassword).equals(account.getPassword())) {
+                return false;
+            }
+
+            // update pin
+            account.setTransaction_pin(Mono.security().hashFactory().hash_sha512(newPin));
+
+            boolean pinUpdated = Database.connect().account_faculty().update(account);
+            // if failed to update
+            if (!pinUpdated) {
+                throw new TransactionException("update-failed");
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
+        }
+    }
+
+    /**
+     * Update Security Question.
+     */
+    private class ChangeSecurityQuestion extends Transaction {
+
+        private String currentPassword;
+        private String securityQuestion;
+        private String securityAnswer;
+
+        public void setCurrentPassword(String currentPassword) {
+            this.currentPassword = currentPassword;
+        }
+
+        public void setSecurityQuestion(String securityQuestion) {
+            this.securityQuestion = securityQuestion;
+        }
+
+        public void setSecurityAnswer(String securityAnswer) {
+            this.securityAnswer = securityAnswer;
+        }
+
+        @Override
+        protected boolean transaction() {
+            Integer account_id = CollegeFaculty.instance().getACCOUNT_ID();
+
+            AccountFacultyMapping account = Database
+                    .connect()
+                    .account_faculty()
+                    .getPrimary(account_id);
+
+            // if not equal
+            if (!Mono.security().hashFactory().hash_sha512(currentPassword).equals(account.getPassword())) {
+                return false;
+            }
+
+            // update password
+            account.setRecovery_question(securityQuestion);
+            account.setRecovery_answer(Mono.security().hashFactory().hash_sha512(securityAnswer));
+
+            boolean questionUpdated = Database.connect().account_faculty().update(account);
+            // if failed to update
+            if (!questionUpdated) {
                 throw new TransactionException("update-failed");
             }
 
