@@ -290,25 +290,48 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             return;
         }
 
+        // check for min characters
+        final int minAllowed = 6;
+        try {
+            tgrp_change_pass.getMembers().forEach(member -> {
+                if (member.getText().trim().length() < minAllowed) {
+                    Mono.fx().snackbar().showError(application_root, member.getAccessibleHelp() + " is below minimum characters.");
+                    throw new RuntimeException();
+                }
+            });
+        } catch (RuntimeException e) {
+            return;
+        }
+
+        if (old.equals(confirm)) {
+            Mono.fx().snackbar().showError(application_root, "Current password and new password are the same.");
+            return;
+        }
+
         ChangePassword changePassTx = new ChangePassword();
         changePassTx.setOldPassword(old);
         changePassTx.setNewPassword(update);
 
         changePassTx.whenStarted(() -> {
-
+            super.cursorWait();
+            btn_cp_change.setDisable(true);
         });
         changePassTx.whenFailed(() -> {
             // cannot update
+            Mono.fx().snackbar().showError(application_root, "Connection problem encountered.");
         });
         changePassTx.whenCancelled(() -> {
             // wrong old password
+            Mono.fx().snackbar().showError(application_root, "Authentication Failed! Invalid current password.");
         });
         changePassTx.whenSuccess(() -> {
             // successfully updated
+            Mono.fx().snackbar().showSuccess(application_root, "Successfully Updated");
             tgrp_change_pass.clearGroup();
         });
         changePassTx.whenFinished(() -> {
-
+            super.cursorDefault();
+            btn_cp_change.setDisable(false);
         });
 
         changePassTx.transact();
