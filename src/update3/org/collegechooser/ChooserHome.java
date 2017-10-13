@@ -46,6 +46,21 @@ import update3.org.cict.controller.sectionmain.SectionHomeController;
  */
 public class ChooserHome extends SceneFX implements ControllerFX {
 
+    public static String open() {
+        ChooserHome ch = new ChooserHome();
+        Mono.fx().create()
+                .setPackageName("update3.org.collegechooser")
+                .setFxmlDocument("ChooserHome")
+                .makeFX()
+                .setController(ch)
+                .makeScene()
+                .makeStageApplication()
+                .stageResizeable(false)
+                .stageUndecorated(true)
+                .stageShowAndWait();
+        return ch.getSelected();
+    }
+
     @FXML
     private VBox application_root;
 
@@ -69,7 +84,7 @@ public class ChooserHome extends SceneFX implements ControllerFX {
     public void onInitialization() {
         super.bindScene(application_root);
         application_root.requestFocus();
-        
+
         SimpleTable tblColleges = new SimpleTable();
         for (String[] strings : SectionHomeController.COLLEGE_LIST) {
             SimpleTableRow row = new SimpleTableRow();

@@ -140,7 +140,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private TextField txt_irregular_section_name;
 
     @FXML
-    private TextField txt_irregular_instructor;
+    private Label lbl_irregular_instructor;
 
     @FXML
     private JFXButton btn_irregular_delete;
@@ -370,10 +370,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     /**
      * Initialization for
      */
-    private void irregularSectionInit() {
-        // set labels
-        this.lbl_irregular_semester.setText(currentTermString);
-        lbl_irregular_section_name.setText(sectionName);
+    private void displayCollege() {
         try {
             String college = "";
             for (Character c : this.sectionMap.getCollege().toCharArray()) {
@@ -384,7 +381,13 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             System.err.println("CANNOT DISPLAY COLLEGE OWNER");
             lbl_college_owner.setVisible(false);
         }
+    }
 
+    private void irregularSectionInit() {
+        // set labels
+        this.lbl_irregular_semester.setText(currentTermString);
+        lbl_irregular_section_name.setText(sectionName);
+        this.displayCollege();
         // default values
         txt_irregular_section_name.setText(sectionName);
         TextInputFilters.string()
@@ -466,6 +469,30 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_irregular_delete, () -> {
             onDeleteSection();
+        });
+
+        super.addClickEvent(btn_i_change_college, () -> {
+            String selected = update3.org.collegechooser.ChooserHome.open();
+            if (selected.equalsIgnoreCase("CANCEL")) {
+                return;
+            }
+
+            try {
+                LoadSectionMapping loadSection = Database.connect().load_section()
+                        .getPrimary(this.sectionMap.getId());
+                loadSection.setCollege(selected);
+                boolean college_updated = Database.connect().load_section().update(loadSection);
+                if (college_updated) {
+                    Mono.fx().snackbar().showSuccess(application_root, "Successfully Updated");
+                    this.sectionMap = loadSection;
+                    this.displayCollege();
+                } else {
+                    Mono.fx().snackbar().showError(application_root, "Failed to Update");
+                }
+            } catch (Exception e) {
+                Mono.fx().snackbar().showError(application_root, "Failed to Update");
+            }
+
         });
 
     }

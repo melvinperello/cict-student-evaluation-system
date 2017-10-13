@@ -381,11 +381,14 @@
                                     <Insets left="10.0" />
                                  </padding>
                               </Label>
-                              <TextField fx:id="txt_irregular_instructor" editable="false" prefHeight="25.0" prefWidth="253.0" promptText="Search Instructor Here" styleClass="metro-textbox-18">
+                              <Label fx:id="lbl_irregular_instructor" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" styleClass="metro-label-18" text="JOSE P. RIZAL" textFill="WHITE" wrapText="true" HBox.hgrow="ALWAYS">
                                  <font>
-                                    <Font />
+                                    <Font size="18.0" />
                                  </font>
-                              </TextField>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="20.0">
@@ -410,7 +413,7 @@
                         </HBox>
                         <StackPane>
                            <children>
-                              <VBox fx:id="vbox_conjunction_tip" spacing="20.0" visible="false">
+                              <VBox fx:id="vbox_conjunction_tip" spacing="20.0">
                                  <children>
                                     <HBox>
                                        <children>
@@ -477,7 +480,7 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <VBox fx:id="vbox_special_tip" spacing="20.0">
+                              <VBox fx:id="vbox_special_tip" spacing="20.0" visible="false">
                                  <children>
                                     <HBox>
                                        <children>

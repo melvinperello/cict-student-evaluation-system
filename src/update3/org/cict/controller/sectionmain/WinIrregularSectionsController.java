@@ -340,7 +340,7 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
                     .isNull(DB.load_section().ACADPROG_id)
                     .isNull(DB.load_section().CURRICULUM_id)
                     .isNull(DB.load_section().adviser)
-                    .eq(DB.load_section().college, "CICT")
+                    //.eq(DB.load_section().college, "CICT")
                     .eq(DB.load_section().type, sectionType)
                     .active()
                     .all();
