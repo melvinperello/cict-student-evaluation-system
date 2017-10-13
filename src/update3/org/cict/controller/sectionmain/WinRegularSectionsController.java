@@ -437,11 +437,11 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                 SectionSubjectsController controller = new SectionSubjectsController();
                 controller.setWinRegularSectionControllerFx(fxData);
                 controller.setSectionMap(sectionMap);
-                controller.setAcademicProgramMap(academicProgramMap);
-                controller.setCurriculumMap(curriculumMap);
+                controller.setAcademicProgramMap(academicProgramMap);/*?*/
+                controller.setCurriculumMap(curriculumMap); /*?*/
                 controller.setCurrentTermString(currentTermString);
-                controller.setCurriculumType(lbl_curriculum_type.getText());
-                controller.setSectionName(sectionName);
+                controller.setCurriculumType(lbl_curriculum_type.getText());/*?*/
+                controller.setSectionName(sectionName); 
                 
                 Pane pane = Mono.fx()
                         .create()

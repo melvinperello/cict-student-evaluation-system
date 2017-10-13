@@ -243,12 +243,6 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.scheduleEmpty = new EmptyView(stack_schedules);
 
         /**
-         * Initial values.
-         */
-        txt_year_level.setText(sectionMap.getYear_level().toString());
-        txt_section_name.setText(sectionMap.getSection_name());
-        txt_section_group.setText(sectionMap.get_group().toString());
-        /**
          * Add Filters in text boxes.
          */
         SectionCreateWizard.addTextFilters(curriculumMap,
@@ -261,6 +255,13 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.lbl_semester.setText(currentTermString);
         this.lbl_curriculum.setText(curriculumMap.getName());
         this.lbl_curriculum_type.setText(curriculumType);
+
+        /**
+         * Initial values.
+         */
+        txt_year_level.setText(sectionMap.getYear_level().toString());
+        txt_section_name.setText(sectionMap.getSection_name());
+        txt_section_group.setText(sectionMap.get_group().toString());
 
         /**
          * Default view.

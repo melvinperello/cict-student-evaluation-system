@@ -55,6 +55,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.cict.authentication.authenticator.CollegeComputer;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.layout.default_loader.LoaderView;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
@@ -250,8 +251,8 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         // filter for Change Transaction Pin
         // copy the pattern and apply custom changes - Recyclability of settings.
         StringFilter pinPattern = passwordPattern.clone()
-                .setMaxCharacters(6)
-                .setFilterMode(StringFilter.DIGIT);
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(6);
 
         pinPattern.clone().setTextSource(txt_ct_new).applyFilter();
         pinPattern.clone().setTextSource(txt_ct_confirm).applyFilter();
@@ -718,7 +719,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             attempts = Mono.orm()
                     .newSearch(Database.connect().account_faculty_attempt())
                     .eq(DB.account_faculty_attempt().account_id, logged_account)
-                    .active()
+                    .active(Order.desc(DB.account_faculty_attempt().try_id))
                     .take(50);
 
             if (attempts == null) {

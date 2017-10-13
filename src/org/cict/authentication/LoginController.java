@@ -7,6 +7,8 @@ package org.cict.authentication;
 
 import app.lazy.models.AccountFacultySessionMapping;
 import app.lazy.models.Database;
+import com.izum.fx.textinputfilters.DoubleFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
@@ -99,6 +101,7 @@ public class LoginController extends SceneFX implements ControllerFX {
 
         imgInvUser.setVisible(false);
         imgInvPassword.setVisible(false);
+
     }
 
     /**
