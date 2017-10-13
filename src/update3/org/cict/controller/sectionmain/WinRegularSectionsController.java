@@ -435,7 +435,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                 // current layout data
                 LayoutDataFX fxData = new LayoutDataFX(application_root, this);
                 SectionSubjectsController controller = new SectionSubjectsController();
-                controller.setWinRegularSectionControllerFx(fxData);
+                controller.setDataFx(fxData);
                 controller.setSectionMap(sectionMap);
                 controller.setAcademicProgramMap(academicProgramMap);/*?*/
                 controller.setCurriculumMap(curriculumMap); /*?*/

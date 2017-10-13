@@ -17,3 +17,8 @@ for row of subjects
  - row-section-subject.fxml
 for row of subject schedule
  - row-section-subject-sched.fxml
+
+Irregular Section Detials
+Class: SectionSubjectControllerIrregular
+FXML: win-irreg-section-view.fxml
+note: decided to use the same view as the regular subjects

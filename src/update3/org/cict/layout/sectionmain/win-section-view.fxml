@@ -17,7 +17,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" prefWidth="200.0">
          <children>
-            <Label maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="Regular Sections" textFill="WHITE" HBox.hgrow="ALWAYS">
+            <Label fx:id="lbl_window_header" maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="Regular Sections" textFill="WHITE" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="26.0" />
                </font>
@@ -32,49 +32,84 @@
             <Insets left="10.0" right="20.0" />
          </padding>
       </HBox>
-      <HBox prefWidth="200.0" spacing="30.0">
+      <StackPane>
          <children>
-            <Label fx:id="lbl_semester" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="AY 2016 - 2017 First Semester" textFill="WHITE">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <graphic>
-                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../section_images/calendar_white.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-            <Label fx:id="lbl_curriculum" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="BSIT (16-17)" textFill="WHITE">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <graphic>
-                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../section_images/curriculum_white.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-            <Label fx:id="lbl_curriculum_type" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Consequent Curriculum" textFill="WHITE">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <graphic>
-                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../section_images/cur_type.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
+            <HBox fx:id="hbox_reg_sub" prefWidth="200.0" spacing="30.0" visible="false">
+               <children>
+                  <Label fx:id="lbl_semester" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Semester" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/calendar_white.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label fx:id="lbl_curriculum" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Curriculum Code" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/curriculum_white.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label fx:id="lbl_curriculum_type" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Curriculum Type" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/cur_type.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <HBox fx:id="hbox_irregu_sub" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label fx:id="lbl_irregular_semester" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="My Sample Semester" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/calendar_white.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label fx:id="lbl_college_owner" graphicTextGap="10.0" styleClass="metro-subtitle-1" text="College of Information and Communications Technology" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../section_images/college_50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
          </children>
-         <padding>
-            <Insets left="10.0" />
-         </padding>
-      </HBox>
+      </StackPane>
       <HBox VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets top="30.0" />
@@ -82,7 +117,7 @@
          <children>
             <StackPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="450.0">
                <children>
-                  <VBox fx:id="vbox_single" maxHeight="1.7976931348623157E308" spacing="10.0">
+                  <VBox fx:id="vbox_regular_menu" maxHeight="1.7976931348623157E308" spacing="10.0" visible="false">
                      <children>
                         <VBox prefWidth="663.0" spacing="20.0">
                            <children>
@@ -277,6 +312,232 @@
                            </children>
                         </VBox>
                      </children>
+                  </VBox>
+                  <VBox fx:id="vbox_irregular_menu" prefWidth="663.0" spacing="20.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../section_images/bullet_section.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="lbl_irregular_section_name" graphicTextGap="10.0" styleClass="metro-title-33" text="BSGE-A-MATH 113" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="33.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Section Information" textFill="WHITE">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../section_images/info_circle.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="-20.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="58.0" />
+                           </padding>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label graphicTextGap="10.0" prefWidth="150.0" styleClass="metro-label-18" text="Section Name" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="txt_irregular_section_name" prefHeight="25.0" prefWidth="253.0" promptText="Section Name" styleClass="metro-textbox-18" HBox.hgrow="NEVER">
+                                 <font>
+                                    <Font />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label graphicTextGap="10.0" prefWidth="150.0" styleClass="metro-label-18" text="Instructor" textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                              </Label>
+                              <TextField fx:id="txt_irregular_instructor" editable="false" prefHeight="25.0" prefWidth="253.0" promptText="Search Instructor Here" styleClass="metro-textbox-18">
+                                 <font>
+                                    <Font />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                           <children>
+                              <JFXButton fx:id="btn_irregular_delete" prefWidth="150.0" style="-fx-background-color: #F76C83; -fx-border-color: white;" text="Delete" textFill="WHITE">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_irregular_save" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Save" textFill="WHITE">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="30.0" />
+                                 </HBox.margin>
+                              </JFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <StackPane>
+                           <children>
+                              <VBox fx:id="vbox_conjunction_tip" spacing="20.0" visible="false">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../section_images/tip_50.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label graphicTextGap="10.0" text="Students of CICT can take subjects, particularly minor subjects from other colleges." textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../section_images/tip_50.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label graphicTextGap="10.0" text="Conjunction classes are made so that these students will be monitored, that they have added or enrolled subjects from other colleges." textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../section_images/tip_50.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label graphicTextGap="10.0" text="You can change this section's college owner by clicking the Change College button." textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <JFXButton fx:id="btn_i_change_college" prefHeight="39.0" prefWidth="159.0" style="-fx-border-color: #FFFFFF;" text="Change College" textFill="WHITE">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                       <padding>
+                                          <Insets left="40.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox fx:id="vbox_special_tip" spacing="20.0">
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../section_images/tip_50.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label graphicTextGap="10.0" text="Special Sections are allowed to open subjects that are not prescribe by the curriculum in the current academic term." textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../section_images/tip_50.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label graphicTextGap="10.0" text="Special Sections are only allowed to have one subject." textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../section_images/tip_50.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label graphicTextGap="10.0" text="Midyear Classes are also classified as a Special Section" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
                   </VBox>
                </children>
             </StackPane>

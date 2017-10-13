@@ -148,10 +148,15 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
              * Detach empty view on back.
              */
             this.emptySections.detach();
+
+            /**
+             * Reload Home.
+             */
+            homeFx.<SectionHomeController>getController().reloadInformation();
         });
     }
 
-    private void fetchSections() {
+    public void fetchSections() {
         FetchSections getSectionsTx = new FetchSections();
         getSectionsTx.sectionType = this.sectionType;
 
@@ -217,24 +222,57 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
             ris.lbl_count.setText(isd.studentCount);
 
             super.addClickEvent(ris.btn_section_information, () -> {
-                LayoutDataFX layoutFx = new LayoutDataFX(application_root, this);
-                SectionSubjectControllerIrregular controller = new SectionSubjectControllerIrregular();
-                controller.setWinIrregularSectionFx(layoutFx);
-                controller.setLoadGroup(isd.loadGroup);
-                controller.setLoadSection(isd.loadSection);
-                controller.setInstructorName(isd.getFacultyName());
-                controller.setStudentCount(isd.studentCount);
+//                LayoutDataFX layoutFx = new LayoutDataFX(application_root, this);
+//                SectionSubjectControllerIrregular controller = new SectionSubjectControllerIrregular();
+//                controller.setWinIrregularSectionFx(layoutFx);
+//                controller.setLoadGroup(isd.loadGroup);
+//                controller.setLoadSection(isd.loadSection);
+//                controller.setInstructorName(isd.getFacultyName());
+//                controller.setStudentCount(isd.studentCount);
+//
+//                Pane irregularSectionRoot = Mono.fx()
+//                        .create()
+//                        .setPackageName("update3.org.cict.layout.sectionmain")
+//                        .setFxmlDocument("win-irreg-section-view")
+//                        .makeFX()
+//                        .setController(controller)
+//                        .pullOutLayout();
+//                Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+//                    super.replaceRoot(irregularSectionRoot);
+//                }, irregularSectionRoot);
 
-                Pane irregularSectionRoot = Mono.fx()
+                /**
+                 * Shared With Regular Section View.
+                 */
+                // current layout data
+                LayoutDataFX fxData = new LayoutDataFX(application_root, this);
+                SectionSubjectsController controller = new SectionSubjectsController();
+                controller.setDataFx(fxData);
+                // not included data in irregular sections
+                controller.setAcademicProgramMap(null);/*?*/
+                controller.setCurriculumMap(null);/*?*/
+                // data for irregular sections
+                controller.setSectionMap(isd.loadSection);
+                controller.setCurrentTermString(SystemProperties.instance().getCurrentTermString());
+                controller.setCurriculumType(lbl_curriculum_type.getText());/*?*/
+                controller.setSectionName(isd.loadSection.getSection_name());
+
+                Pane pane = Mono.fx()
                         .create()
                         .setPackageName("update3.org.cict.layout.sectionmain")
-                        .setFxmlDocument("win-irreg-section-view")
+                        .setFxmlDocument("win-section-view")
                         .makeFX()
                         .setController(controller)
                         .pullOutLayout();
+
                 Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
-                    super.replaceRoot(irregularSectionRoot);
-                }, irregularSectionRoot);
+                    super.replaceRoot(pane);
+                }, pane);
+
+                // post initialization when the fxml is loaded change the header
+                controller.setWindowHeader(WordUtils.capitalizeFully(this.sectionType));
+
+                // end interface
             });
 
             //

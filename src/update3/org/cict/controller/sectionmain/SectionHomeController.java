@@ -95,6 +95,26 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
     public SectionHomeController() {
         // constructor
     }
+
+    /**
+     * List of colleges including their icons.
+     */
+    public final static String[][] COLLEGE_LIST = new String[][]{
+        {"CAFA", "COLLEGE OF ARCHITECTURE AND FINE ARTS", "CAFA.png"},
+        {"CAL", "COLLEGE OF ARTS AND LETTERS", "CAL.png"},
+        {"CBA", "COLLEGE OF BUSINESS ADMINISTRATION", "CBA.png"},
+        {"CCJE", "COLLEGE OF CRIMINAL JUSTICE EDUCATION", "CCJE.png"},
+        {"CHE", "COLLEGE OF HOME ECONOMICS", "CHE.png"},
+        {"CICT", "COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY", "CICT.png"},
+        {"CIT", "COLLEGE OF INDUSTRIAL TECHNOLOGY", "CIT.png"},
+        {"CLAW", "COLLEGE OF LAW", "CLAW.png"},
+        {"CON", "COLLEGE OF NURSING", "CN.png"},
+        {"COE", "COLLEGE OF ENGINEERING", "COE.png"},
+        {"COED", "COLLEGE OF EDUCATION", "COED.png"},
+        {"COPERS", "COLLEGE OF PHYSICAL EDUCATION, RECREATION AND SPORTS", "COPERS.png"},
+        {"CS", "COLLEGE OF SCIENCE", "CS.png"},
+        {"CSSP", "COLLEGE OF SOCIAL SCIENCE AND PHILOSOPHY", "CSSP.png"},};
+
     private final String SECTION_BASE_COLOR = "#414852";
 
     private LoaderView statisticsLoader;
@@ -116,6 +136,18 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
         this.currentTermString = SystemProperties.instance().getCurrentTermString();
         lbl_current_term.setText(this.currentTermString);
 
+        /**
+         * Load Section
+         */
+        this.reloadInformation();
+    }
+
+    public void reloadInformation() {
+        loadSections();
+        loadStatistics();
+    }
+
+    private void loadStatistics() {
         /**
          * Get Section Statistics
          */
@@ -141,12 +173,6 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
         });
 
         sectionStatData.transact();
-
-        /**
-         * Load Section
-         */
-        loadSections();
-
     }
 
     @Override

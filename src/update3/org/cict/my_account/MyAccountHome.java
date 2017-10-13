@@ -236,7 +236,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                         .string() // string filter
                         .setFilterMode(StringFilter.LETTER_DIGIT) // mode
                         .setNoLeadingTrailingSpaces(true) // no leading or trailing spaces
-                        .setMaxCharacters(20) // max characters allowed
+                        .setMaxCharacters(50) // max characters allowed
                         .setFilterManager(filterManager -> {
                             if (!filterManager.isValid()) {
                                 // if not valid

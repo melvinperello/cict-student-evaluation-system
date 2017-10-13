@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="443.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: #763435; -fx-border-width: 2;" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefWidth="200.0">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="443.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@college_icons/BULSU.PNG" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <VBox fx:id="vbox_college_table" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="443.0" VBox.vgrow="ALWAYS" />
+      <HBox prefWidth="200.0">
+         <children>
+            <JFXButton fx:id="btn_cancel" maxWidth="1.7976931348623157E308" style="-fx-background-color: #763435;" text="Cancel" textFill="WHITE" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </HBox>
+   </children>
+</VBox>

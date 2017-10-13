@@ -33,6 +33,8 @@ import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
 import app.lazy.models.SubjectMapping;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
@@ -47,9 +49,6 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
-import java.util.Comparator;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -71,6 +70,8 @@ import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 
 /**
  *
+ * This class is used in both regular and irregular sections.
+ *
  * @author Jhon Melvin
  */
 public class SectionSubjectsController extends SceneFX implements ControllerFX {
@@ -79,7 +80,13 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private VBox application_root;
 
     @FXML
+    private Label lbl_window_header;
+
+    @FXML
     private JFXButton btn_back;
+
+    @FXML
+    private HBox hbox_reg_sub;
 
     @FXML
     private Label lbl_semester;
@@ -91,7 +98,16 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private Label lbl_curriculum_type;
 
     @FXML
-    private VBox vbox_single;
+    private HBox hbox_irregu_sub;
+
+    @FXML
+    private Label lbl_irregular_semester;
+
+    @FXML
+    private Label lbl_college_owner;
+
+    @FXML
+    private VBox vbox_regular_menu;
 
     @FXML
     private Label lbl_section_name;
@@ -109,7 +125,37 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private TextField txt_adviser;
 
     @FXML
+    private JFXButton btn_delete_section;
+
+    @FXML
     private JFXButton btn_save_changes;
+
+    @FXML
+    private VBox vbox_irregular_menu;
+
+    @FXML
+    private Label lbl_irregular_section_name;
+
+    @FXML
+    private TextField txt_irregular_section_name;
+
+    @FXML
+    private TextField txt_irregular_instructor;
+
+    @FXML
+    private JFXButton btn_irregular_delete;
+
+    @FXML
+    private JFXButton btn_irregular_save;
+
+    @FXML
+    private VBox vbox_conjunction_tip;
+
+    @FXML
+    private JFXButton btn_i_change_college;
+
+    @FXML
+    private VBox vbox_special_tip;
 
     @FXML
     private VBox vbox_view_subjects;
@@ -131,6 +177,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_view_add_schedule;
+
+    @FXML
+    private JFXButton btn_view_class_sched;
 
     @FXML
     private JFXButton btn_export;
@@ -171,27 +220,44 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_cancel_sched;
 
-    @FXML
-    private JFXButton btn_view_class_sched;
-
-    @FXML
-    private JFXButton btn_delete_section;
-
     public SectionSubjectsController() {
         /**
          * Every code below this constructor was passed from another controller.
          */
     }
 
-    private LayoutDataFX winRegularSectionControllerFx;
+    private LayoutDataFX dataFx;
     private LoadSectionMapping sectionMap;
 
     public void setSectionMap(LoadSectionMapping sectionMap) {
         this.sectionMap = sectionMap;
     }
 
-    public void setWinRegularSectionControllerFx(LayoutDataFX winRegularSectionControllerFx) {
-        this.winRegularSectionControllerFx = winRegularSectionControllerFx;
+    public void setDataFx(LayoutDataFX winRegularSectionControllerFx) {
+        this.dataFx = winRegularSectionControllerFx;
+    }
+
+    /**
+     * Use the modify the window header, since this will be use in every type of
+     * sections.
+     *
+     * @param header
+     */
+    public void setWindowHeader(String header) {
+        lbl_window_header.setText(header + " Class");
+        // display college
+
+        if (header.equalsIgnoreCase(SectionConstants.CONJUNCTION)) {
+            lbl_college_owner.setVisible(true);
+            vbox_conjunction_tip.setVisible(true);
+        } else {
+            // if not conjunction and not regular
+            // display special tip
+            if (!header.equalsIgnoreCase(SectionConstants.REGULAR)) {
+                vbox_special_tip.setVisible(true);
+            }
+        }
+
     }
 
     /**
@@ -242,26 +308,28 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
          */
         this.scheduleEmpty = new EmptyView(stack_schedules);
 
-        /**
-         * Add Filters in text boxes.
-         */
-        SectionCreateWizard.addTextFilters(curriculumMap,
-                txt_year_level,
-                txt_section_name,
-                txt_section_group);
-        /**
-         * Set Labels.
-         */
-        this.lbl_semester.setText(currentTermString);
-        this.lbl_curriculum.setText(curriculumMap.getName());
-        this.lbl_curriculum_type.setText(curriculumType);
+        //
+        lbl_college_owner.setVisible(false);
+        vbox_conjunction_tip.setVisible(false);
+        vbox_special_tip.setVisible(false);
+        // hide dependent components
+        vbox_irregular_menu.setVisible(false);
+        vbox_conjunction_tip.setVisible(false);
+        vbox_regular_menu.setVisible(false);
+        hbox_irregu_sub.setVisible(false);
+        hbox_reg_sub.setVisible(false);
 
-        /**
-         * Initial values.
-         */
-        txt_year_level.setText(sectionMap.getYear_level().toString());
-        txt_section_name.setText(sectionMap.getSection_name());
-        txt_section_group.setText(sectionMap.get_group().toString());
+        // if there are assigned academic program and curriculum
+        // this is a regular section
+        if (this.academicProgramMap != null && this.curriculumMap != null) {
+            vbox_regular_menu.setVisible(true);
+            hbox_reg_sub.setVisible(true);
+            regularSectionInit();
+        } else {
+            vbox_irregular_menu.setVisible(true);
+            hbox_irregu_sub.setVisible(true);
+            irregularSectionInit();
+        }
 
         /**
          * Default view.
@@ -269,14 +337,63 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.vbox_add_schedule.setVisible(false);
         this.vbox_view_schedule.setVisible(false);
         this.vbox_view_subjects.setVisible(true);
-        //
-        this.lbl_section_name.setText(sectionName);
 
         fetchSectionSubject();
         //loadSchedule();
         this.initScheduler();
 
-//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * initialization routine if there are academic program and curriculum.
+     */
+    private void regularSectionInit() {
+
+        // add filters in text fields
+        SectionCreateWizard.addTextFilters(curriculumMap,
+                txt_year_level,
+                txt_section_name,
+                txt_section_group);
+        // set values in displays
+        this.lbl_semester.setText(currentTermString);
+        this.lbl_curriculum.setText(curriculumMap.getName());
+        this.lbl_curriculum_type.setText(curriculumType);
+        //
+        this.lbl_section_name.setText(sectionName);
+
+        // initial text field values
+        txt_year_level.setText(sectionMap.getYear_level().toString());
+        txt_section_name.setText(sectionMap.getSection_name());
+        txt_section_group.setText(sectionMap.get_group().toString());
+    }
+
+    /**
+     * Initialization for
+     */
+    private void irregularSectionInit() {
+        // set labels
+        this.lbl_irregular_semester.setText(currentTermString);
+        lbl_irregular_section_name.setText(sectionName);
+        try {
+            String college = "";
+            for (Character c : this.sectionMap.getCollege().toCharArray()) {
+                college += c.toString() + "  ";
+            }
+            lbl_college_owner.setText(college);
+        } catch (Exception e) {
+            System.err.println("CANNOT DISPLAY COLLEGE OWNER");
+            lbl_college_owner.setVisible(false);
+        }
+
+        // default values
+        txt_irregular_section_name.setText(sectionName);
+        TextInputFilters.string()
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setTextSource(txt_irregular_section_name)
+                .applyFilter();
+
     }
 
     private ArrayList<String> timeTable12;
@@ -347,6 +464,10 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             onDeleteSection();
         });
 
+        super.addClickEvent(btn_irregular_delete, () -> {
+            onDeleteSection();
+        });
+
     }
 
     private void showScheduleAdding(boolean edit) {
@@ -390,14 +511,22 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
      */
     private void onBackPressed() {
         Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
-            super.replaceRoot(winRegularSectionControllerFx.getApplicationRoot());
-        }, winRegularSectionControllerFx.getApplicationRoot());
+            super.replaceRoot(dataFx.getApplicationRoot());
+        }, dataFx.getApplicationRoot());
         /**
          * Back To Section List. Detach empty if ever the section was empty
          */
         this.scheduleEmpty.detach();
-        winRegularSectionControllerFx.<WinRegularSectionsController>getController()
-                .fetchSections();
+
+        // on back pressed callbacks
+        if (this.academicProgramMap != null && this.curriculumMap != null) {
+            dataFx.<WinRegularSectionsController>getController()
+                    .fetchSections();
+        } else {
+            dataFx.<WinIrregularSectionsController>getController()
+                    .fetchSections();
+        }
+
     }
 
     private void onDeleteSection() {
@@ -421,7 +550,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
         dst.whenSuccess(() -> {
             onBackPressed();
-            Mono.fx().snackbar().showSuccess(winRegularSectionControllerFx.getApplicationRoot(), "Section Successfully Deleted.");
+            Mono.fx().snackbar().showSuccess(dataFx.getApplicationRoot(), "Section Successfully Deleted.");
         });
 
         dst.whenCancelled(() -> {
