@@ -31,6 +31,7 @@ import app.lazy.models.FacultyMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
+import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.MapFactory;
 import app.lazy.models.SubjectMapping;
 import com.izum.fx.textinputfilters.StringFilter;
@@ -227,11 +228,6 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     }
 
     private LayoutDataFX dataFx;
-    private LoadSectionMapping sectionMap;
-
-    public void setSectionMap(LoadSectionMapping sectionMap) {
-        this.sectionMap = sectionMap;
-    }
 
     public void setDataFx(LayoutDataFX winRegularSectionControllerFx) {
         this.dataFx = winRegularSectionControllerFx;
@@ -268,6 +264,11 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     private String currentTermString;
     private String curriculumType;
     private String sectionName;
+    private LoadSectionMapping sectionMap;
+
+    public void setSectionMap(LoadSectionMapping sectionMap) {
+        this.sectionMap = sectionMap;
+    }
 
     public void setAcademicProgramMap(AcademicProgramMapping academicProgramMap) {
         this.academicProgramMap = academicProgramMap;
@@ -368,7 +369,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     }
 
     /**
-     * Initialization for
+     * Only the conjunction classes will display college owner.
      */
     private void displayCollege() {
         try {
@@ -383,6 +384,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         }
     }
 
+    /**
+     * Initialize irregular sections.
+     */
     private void irregularSectionInit() {
         // set labels
         this.lbl_irregular_semester.setText(currentTermString);
@@ -423,28 +427,23 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
     @Override
     public void onEventHandling() {
+        // back to sections
         super.addClickEvent(btn_back, () -> {
             onBackPressed();
         });
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-        /**
-         * Back to subject list
-         */
+        // back to subjects
         super.addClickEvent(btn_back_to_subject, () -> {
             onBackToSubjectListFromSchedule();
         });
-
+        // switch to schedule view.
         super.addClickEvent(btn_view_add_schedule, () -> {
             showScheduleAdding(false);
         });
-
-        // back grom schedule creation
+        // back grom schedule view
         super.addClickEvent(btn_cancel_sched, () -> {
             onBackFromScheduleCreation();
         });
-
-        //--------------
+        // switch to add schedule view.
         super.addClickEvent(btn_add_sched, () -> {
             if (!btn_add_sched.getText().equalsIgnoreCase("SAVE")) {
                 onAddSchedule();
@@ -452,7 +451,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 onEditSchedule();
             }
         });
-
+        // open schedule viewer
         super.addClickEvent(btn_view_class_sched, () -> {
             /**
              * Open Schedule Viewer.
@@ -460,41 +459,81 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             OpenScheduleViewer.openScheduleViewer(sectionMap);
         });
 
+        // save changes from section information
         super.addClickEvent(btn_save_changes, () -> {
         });
 
+        // delete section
         super.addClickEvent(btn_delete_section, () -> {
             onDeleteSection();
         });
-
+        // delete irregular section
         super.addClickEvent(btn_irregular_delete, () -> {
             onDeleteSection();
         });
 
+        // change college
         super.addClickEvent(btn_i_change_college, () -> {
-            String selected = update3.org.collegechooser.ChooserHome.open();
-            if (selected.equalsIgnoreCase("CANCEL")) {
-                return;
-            }
-
-            try {
-                LoadSectionMapping loadSection = Database.connect().load_section()
-                        .getPrimary(this.sectionMap.getId());
-                loadSection.setCollege(selected);
-                boolean college_updated = Database.connect().load_section().update(loadSection);
-                if (college_updated) {
-                    Mono.fx().snackbar().showSuccess(application_root, "Successfully Updated");
-                    this.sectionMap = loadSection;
-                    this.displayCollege();
-                } else {
-                    Mono.fx().snackbar().showError(application_root, "Failed to Update");
-                }
-            } catch (Exception e) {
-                Mono.fx().snackbar().showError(application_root, "Failed to Update");
-            }
+            this.onChangeCollege();
+        });
+        // export student master list
+        super.addClickEvent(btn_export, () -> {
 
         });
 
+    }
+
+    private void exportToExcel() {
+
+        class FethStudents extends Transaction {
+
+            @Override
+            protected boolean transaction() {
+                ArrayList<LoadSubjectMapping> accepted = Mono.orm()
+                        .newSearch(Database.connect().load_subject())
+                        .eq(DB.load_subject().LOADGRP_id, selected_load_group_in_sections.getId())
+                        .active()
+                        .all();
+
+                if (accepted == null) {
+                    // no student
+                    return false;
+                }
+
+                return true;
+            }
+
+            @Override
+            protected void after() {
+
+            }
+        }
+    }
+
+    /**
+     * Change College.
+     */
+    private void onChangeCollege() {
+        String selected = update3.org.collegechooser.ChooserHome.open();
+        if (selected.equalsIgnoreCase("CANCEL")) {
+            return;
+        }
+
+        try {
+            LoadSectionMapping loadSection = Database.connect().load_section()
+                    .getPrimary(this.sectionMap.getId());
+            loadSection.setCollege(selected);
+            boolean college_updated = Database.connect().load_section().update(loadSection);
+            if (college_updated) {
+                Mono.fx().snackbar().showSuccess(application_root, "Successfully Updated");
+                this.sectionMap = loadSection;
+                this.displayCollege();
+            } else {
+                Mono.fx().snackbar().showError(application_root, "Failed to Update");
+            }
+        } catch (Exception e) {
+            Mono.fx().snackbar().showError(application_root, "Failed to Update");
+        }
     }
 
     private void showScheduleAdding(boolean edit) {
@@ -516,6 +555,10 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             txt_sched_room.setText(this.selectedSchedForEditting.getClass_room());
         } else {
             // not editting
+            cmb_sched_day.getSelectionModel().selectFirst();
+            cmb_sched_start.getSelectionModel().selectFirst();
+            cmb_sched_end.getSelectionModel().selectFirst();
+            txt_sched_room.setText("");
             btn_add_sched.setText("Add Schedule");
         }
 
@@ -783,6 +826,32 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             });
             super.addClickEvent(btn_remove, () -> {
 
+                /**
+                 * Remove Schedule.
+                 */
+                int c = Mono.fx().alert().createConfirmation().setTitle("Remove")
+                        .setHeader("Remove Schedule")
+                        .setMessage("Are you sure to remove this schedule ?")
+                        .confirmYesNo();
+                if (c != 1) {
+                    return;
+                }
+
+                try {
+                    LoadGroupScheduleMapping lgsm = Database.connect().load_group_schedule().getPrimary(sched.getId());
+                    lgsm.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
+                    lgsm.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+                    lgsm.setActive(0);
+                    boolean updated = Database.connect().load_group_schedule().update(lgsm);
+                    if (updated) {
+                        Mono.fx().snackbar().showSuccess(application_root, "Schedule was removed");
+                        fetchSchedules(selected_load_group_in_sections);
+                    } else {
+                        Mono.fx().snackbar().showError(application_root, "Remove Failed, Please Try Again.");
+                    }
+                } catch (Exception e) {
+                    Mono.fx().snackbar().showError(application_root, "Remove Failed, Please Try Again.");
+                }
             });
 
             SimpleTableCell cellParent = new SimpleTableCell();
