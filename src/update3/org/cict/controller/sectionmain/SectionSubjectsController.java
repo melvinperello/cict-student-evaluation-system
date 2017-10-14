@@ -461,13 +461,16 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             /**
              * Open Schedule Viewer.
              */
-            
-            
-            OpenScheduleViewer.openScheduleViewer(sectionMap, lbl_semester.getText(),);
+            openScheduleViewer();
         });
 
         // save changes from section information
         super.addClickEvent(btn_save_changes, () -> {
+
+        });
+
+        super.addClickEvent(btn_irregular_save, () -> {
+            
         });
 
         // delete section
@@ -488,6 +491,31 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             exportToExcel();
         });
 
+    }
+
+    private void openScheduleViewer() {
+
+        String sectionString = "";
+        AcademicProgramMapping coursecode = null;
+        try {
+            coursecode = Database.connect().academic_program()
+                    .getPrimary(sectionMap.getACADPROG_id());
+        } catch (Exception e) {
+            coursecode = null;
+        }
+
+        if (coursecode != null) {
+            try {
+                sectionString = coursecode.getCode() + " " + sectionMap.getYear_level()
+                        + sectionMap.getSection_name() + "-G" + sectionMap.get_group();
+            } catch (Exception e) {
+                sectionString = sectionMap.getSection_name();
+            }
+        } else {
+            sectionString = sectionMap.getSection_name();
+        }
+
+        OpenScheduleViewer.openScheduleViewer(sectionMap, lbl_semester.getText(), sectionString);
     }
 
     private void exportToExcel() {

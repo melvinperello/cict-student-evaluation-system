@@ -30,6 +30,7 @@ import com.jhmvin.fx.display.SceneFX;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -356,19 +357,39 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         });
     }
 
+    /**
+     * SnapShot Event.
+     *
+     * @param scene
+     */
     private void takeSnapShot(Scene scene) {
         System.out.println("SNAPSHOT");
         WritableImage writableImage
                 = new WritableImage((int) scene.getWidth(), (int) scene.getHeight());
         scene.snapshot(writableImage);
 
-        File file = new File("C:\\Users\\Jhon Melvin\\Documents\\NetBeansProjects\\linked-evaluation\\reports\\excel\\snapshot.png");
+        String time_stamp_name = this.lbl_semester.getText()
+                + " "
+                + this.lbl_section.getText()
+                + " " + String.valueOf(Calendar.getInstance().getTimeInMillis());
+        // get user directory
+        String homePath = System.getProperty("user.home");
+        // get desktop directory
+        String desktop = "\\Desktop";
+        String fullDesktopPath = homePath + desktop;
+        File file = new File(fullDesktopPath + "\\" + time_stamp_name + ".png");
+
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
+            Mono.fx().snackbar().showInfo(application_root, "Schedule was saved to your Desktop");
             System.out.println("snapshot saved: " + file.getAbsolutePath());
         } catch (IOException ex) {
-            System.err.println("Cannot save snapshot");
+            Mono.fx().snackbar().showError(application_root, "Cannot Generate Schedule.");
         }
+    }
+
+    public static void main(String[] args) {
+
     }
 
     //--------------------------------------------------------------------------
