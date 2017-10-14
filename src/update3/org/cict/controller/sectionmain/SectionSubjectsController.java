@@ -470,7 +470,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         });
 
         super.addClickEvent(btn_irregular_save, () -> {
-            
+
         });
 
         // delete section
@@ -498,8 +498,10 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         String sectionString = "";
         AcademicProgramMapping coursecode = null;
         try {
-            coursecode = Database.connect().academic_program()
-                    .getPrimary(sectionMap.getACADPROG_id());
+            if (sectionMap.getACADPROG_id() != null) {
+                coursecode = Database.connect().academic_program()
+                        .getPrimary(sectionMap.getACADPROG_id());
+            }
         } catch (Exception e) {
             coursecode = null;
         }
