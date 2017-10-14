@@ -27,16 +27,26 @@ import com.jhmvin.Mono;
 import com.jhmvin.flow.MonoLoop;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -293,10 +303,72 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         cf.getChildren().add(sss.pane);
     }
 
+    private final KeyCombination printKey = new KeyCodeCombination(KeyCode.P,
+            KeyCombination.CONTROL_DOWN);
+
     //
     @Override
     public void onEventHandling() {
 
+    }
+
+    @FXML
+    private Label lbl_semester;
+
+    @FXML
+    private Label lbl_section;
+
+    public void setTerm(String term) {
+        this.lbl_semester.setText(term);
+    }
+
+    public void setSection(String section) {
+        this.lbl_section.setText(section);
+    }
+
+    public void addPrintEvents() {
+        super.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (printKey.match(event)) {
+                System.out.println("CTRL P");
+                this.takeSnapShot(super.getScene());
+            }
+        });
+
+        super.getScene().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if (event.isControlDown() && event.getCode().equals(KeyCode.S)) {
+                System.out.println("CTRL S");
+                this.takeSnapShot(super.getScene());
+            }
+        });
+
+        super.getScene().addEventHandler(KeyEvent.KEY_RELEASED, key -> {
+            if (key.getCode().equals(KeyCode.PRINTSCREEN)) {
+                System.out.println("PRINT SCREEN");
+                this.takeSnapShot(super.getScene());
+            }
+        });
+
+        super.getScene().addEventHandler(KeyEvent.KEY_RELEASED, key -> {
+            if (key.getCode().equals(KeyCode.F12)) {
+                System.out.println("F12");
+                this.takeSnapShot(super.getScene());
+            }
+        });
+    }
+
+    private void takeSnapShot(Scene scene) {
+        System.out.println("SNAPSHOT");
+        WritableImage writableImage
+                = new WritableImage((int) scene.getWidth(), (int) scene.getHeight());
+        scene.snapshot(writableImage);
+
+        File file = new File("C:\\Users\\Jhon Melvin\\Documents\\NetBeansProjects\\linked-evaluation\\reports\\excel\\snapshot.png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
+            System.out.println("snapshot saved: " + file.getAbsolutePath());
+        } catch (IOException ex) {
+            System.err.println("Cannot save snapshot");
+        }
     }
 
     //--------------------------------------------------------------------------

@@ -38,6 +38,7 @@ import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.MonoText;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -68,6 +69,7 @@ import update3.org.cict.controller.sectionmain.deltesection.DeleteSectionTransac
 import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
+import update3.org.excelprinter.StudentMasterListPrinter;
 
 /**
  *
@@ -320,6 +322,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         hbox_irregu_sub.setVisible(false);
         hbox_reg_sub.setVisible(false);
 
+        // semester display
+        this.lbl_semester.setText(currentTermString);
+        this.lbl_irregular_semester.setText(currentTermString);
         // if there are assigned academic program and curriculum
         // this is a regular section
         if (this.academicProgramMap != null && this.curriculumMap != null) {
@@ -356,7 +361,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 txt_section_name,
                 txt_section_group);
         // set values in displays
-        this.lbl_semester.setText(currentTermString);
+
         this.lbl_curriculum.setText(curriculumMap.getName());
         this.lbl_curriculum_type.setText(curriculumType);
         //
@@ -389,7 +394,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
      */
     private void irregularSectionInit() {
         // set labels
-        this.lbl_irregular_semester.setText(currentTermString);
+
         lbl_irregular_section_name.setText(sectionName);
         this.displayCollege();
         // default values
@@ -456,7 +461,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             /**
              * Open Schedule Viewer.
              */
-            OpenScheduleViewer.openScheduleViewer(sectionMap);
+            
+            
+            OpenScheduleViewer.openScheduleViewer(sectionMap, lbl_semester.getText(),);
         });
 
         // save changes from section information
@@ -478,36 +485,50 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         });
         // export student master list
         super.addClickEvent(btn_export, () -> {
-
+            exportToExcel();
         });
 
     }
 
     private void exportToExcel() {
+        SubjectMasterListTransaction exportTx = new SubjectMasterListTransaction();
+        exportTx.setId(this.selected_load_group_in_sections.getId());
 
-        class FethStudents extends Transaction {
+        exportTx.whenStarted(() -> {
+            super.cursorWait();
+            this.btn_export.setDisable(true);
+        });
 
-            @Override
-            protected boolean transaction() {
-                ArrayList<LoadSubjectMapping> accepted = Mono.orm()
-                        .newSearch(Database.connect().load_subject())
-                        .eq(DB.load_subject().LOADGRP_id, selected_load_group_in_sections.getId())
-                        .active()
-                        .all();
-
-                if (accepted == null) {
-                    // no student
-                    return false;
+        exportTx.whenSuccess(() -> {
+            SimpleTask openTask = new SimpleTask("open-excel");
+            openTask.setTask(() -> {
+                String fileName = this.currentTermString + " "
+                        + this.sectionName
+                        + " "
+                        + this.lbl_subject_code_top.getText();
+                boolean printed = StudentMasterListPrinter.export(fileName, exportTx.getStudentData());
+                if (!printed) {
+                    Mono.fx().snackbar().showError(application_root, "Unable to open Excel File");
                 }
+            });
+            openTask.start();
 
-                return true;
-            }
+        });
 
-            @Override
-            protected void after() {
+        exportTx.whenCancelled(() -> {
+            // no results
+            Mono.fx().snackbar().showError(application_root, "No Data to Export");
+        });
 
-            }
-        }
+        exportTx.whenFailed(() -> {
+            // no callback
+        });
+
+        exportTx.whenFinished(() -> {
+            super.cursorDefault();
+            this.btn_export.setDisable(false);
+        });
+        exportTx.transact();
     }
 
     /**

@@ -31,10 +31,19 @@ import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Scene;
+import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
+import org.cict.authentication.authenticator.SystemProperties;
 
 /**
  *
@@ -42,88 +51,94 @@ import javafx.stage.Stage;
  */
 public class OpenScheduleViewer {
 
-    public static void openScheduleViewer(LoadSectionMapping load_sec) {
+    class ScheduleViewerStartUp extends Transaction {
 
-        class ScheduleViewerStartUp extends Transaction {
+        HashMap<String, ArrayList<ScheduleData>> data = new HashMap<>();
+        private LoadSectionMapping load_sec;
 
-            HashMap<String, ArrayList<ScheduleData>> data = new HashMap<>();
+        public void setLoad_sec(LoadSectionMapping load_sec) {
+            this.load_sec = load_sec;
+        }
 
-            @Override
-            protected boolean transaction() {
-                /**
-                 * Get all load groups from that section.
-                 */
-                ArrayList<LoadGroupMapping> loadGroups = Mono.orm()
-                        .newSearch(Database.connect().load_group())
-                        .eq(DB.load_group().LOADSEC_id, load_sec.getId())
-                        .active()
-                        .all();
+        @Override
+        protected boolean transaction() {
+            /**
+             * Get all load groups from that section.
+             */
+            ArrayList<LoadGroupMapping> loadGroups = Mono.orm()
+                    .newSearch(Database.connect().load_group())
+                    .eq(DB.load_group().LOADSEC_id, load_sec.getId())
+                    .active()
+                    .all();
 
-                if (loadGroups == null) {
-                    return true;
-                }
-
-                /**
-                 * Iterate to all load groups of that section.
-                 */
-                // main container of all schedules.
-                ArrayList<LoadGroupScheduleMapping> loadSchedules = new ArrayList<>();
-                for (LoadGroupMapping loadGroup : loadGroups) {
-                    /**
-                     * Schedules of that load group.
-                     */
-                    ArrayList<LoadGroupScheduleMapping> scheds = Mono.orm().
-                            newSearch(Database.connect().load_group_schedule())
-                            .eq(DB.load_group_schedule().load_group_id, loadGroup.getId())
-                            .active()
-                            .all();
-
-                    if (scheds == null) {
-                        continue;
-                    }
-
-                    loadSchedules.addAll(scheds);
-                }
-
-                /**
-                 * Iterate all over the days of the week.
-                 */
-                ScheduleConstants.getDayList().forEach(day -> {
-                    /**
-                     * Get load schedules of that day.
-                     */
-                    ArrayList<LoadGroupScheduleMapping> schedToProcess = new ArrayList<>();
-                    for (LoadGroupScheduleMapping daySched : loadSchedules) {
-                        /**
-                         * Check this day.
-                         */
-                        if (daySched.getClass_day().equalsIgnoreCase(day)) {
-                            /**
-                             * Add Schedules of this day.
-                             */
-                            schedToProcess.add(daySched);
-                        }
-                    }
-                    /**
-                     * Process per day to become proper format.
-                     */
-
-                    data.put(day.toUpperCase(), buildSchedule(schedToProcess));
-                });
-
+            if (loadGroups == null) {
                 return true;
             }
 
-            @Override
-            protected void after() {
+            /**
+             * Iterate to all load groups of that section.
+             */
+            // main container of all schedules.
+            ArrayList<LoadGroupScheduleMapping> loadSchedules = new ArrayList<>();
+            for (LoadGroupMapping loadGroup : loadGroups) {
+                /**
+                 * Schedules of that load group.
+                 */
+                ArrayList<LoadGroupScheduleMapping> scheds = Mono.orm().
+                        newSearch(Database.connect().load_group_schedule())
+                        .eq(DB.load_group_schedule().load_group_id, loadGroup.getId())
+                        .active()
+                        .all();
 
+                if (scheds == null) {
+                    continue;
+                }
+
+                loadSchedules.addAll(scheds);
             }
+
+            /**
+             * Iterate all over the days of the week.
+             */
+            ScheduleConstants.getDayList().forEach(day -> {
+                /**
+                 * Get load schedules of that day.
+                 */
+                ArrayList<LoadGroupScheduleMapping> schedToProcess = new ArrayList<>();
+                for (LoadGroupScheduleMapping daySched : loadSchedules) {
+                    /**
+                     * Check this day.
+                     */
+                    if (daySched.getClass_day().equalsIgnoreCase(day)) {
+                        /**
+                         * Add Schedules of this day.
+                         */
+                        schedToProcess.add(daySched);
+                    }
+                }
+                /**
+                 * Process per day to become proper format.
+                 */
+
+                data.put(day.toUpperCase(), buildSchedule(schedToProcess));
+            });
+
+            return true;
         }
+
+        @Override
+        protected void after() {
+
+        }
+    }
+
+    public static void openScheduleViewer(LoadSectionMapping load_sec, String term, String sectionName) {
 
         /**
          * Transaction.
          */
-        ScheduleViewerStartUp schedViewTx = new ScheduleViewerStartUp();
+        OpenScheduleViewer.ScheduleViewerStartUp schedViewTx = new OpenScheduleViewer().new ScheduleViewerStartUp();
+        schedViewTx.setLoad_sec(load_sec);
         schedViewTx.whenSuccess(() -> {
 
             TimeTableController controller = new TimeTableController(schedViewTx.data);
@@ -137,7 +152,13 @@ public class OpenScheduleViewer {
                     .stageTitle("Schedule Viewer")
                     .pullOutStage();
 
-            s.setWidth(1200.0);
+            controller.setTerm(term);
+            controller.setSection(sectionName);
+            controller.addPrintEvents();
+
+            s.setWidth(1300.0);
+            double resizablePadding = 0.0; // if resizable is false
+            s.setHeight(714.0 + resizablePadding);
 
             /**
              * Fixed Height.
@@ -145,7 +166,7 @@ public class OpenScheduleViewer {
             s.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
                 s.setHeight(714.0);
             });
-            s.show();
+            s.showAndWait();
         });
 
         schedViewTx.transact();

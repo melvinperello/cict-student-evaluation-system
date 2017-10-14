@@ -26,9 +26,11 @@ package update3.org.cict.controller.sectionmain;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.LoadSubjectMapping;
+import app.lazy.models.StudentMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
+import update3.org.excelprinter.StudentMasterListData;
 
 /**
  *
@@ -43,9 +45,12 @@ public class SubjectMasterListTransaction extends Transaction {
     }
 
     // result values
-    
-    
-    
+    private ArrayList<StudentMasterListData> studentData;
+
+    public ArrayList<StudentMasterListData> getStudentData() {
+        return studentData;
+    }
+
     @Override
     protected boolean transaction() {
         ArrayList<LoadSubjectMapping> accepted_cluster
@@ -57,6 +62,32 @@ public class SubjectMasterListTransaction extends Transaction {
 
         if (accepted_cluster == null) {
             return false; // no data
+        }
+
+        studentData = new ArrayList<>();
+
+        for (LoadSubjectMapping load : accepted_cluster) {
+            StudentMapping studentInfo = Database.connect()
+                    .student()
+                    .getPrimary(load.getSTUDENT_id());
+
+            if (studentInfo == null) {
+                continue;
+            }
+
+            String studentNumber = studentInfo.getId(); // student number
+            String studentFullName = studentInfo.getLast_name().toUpperCase()
+                    + ", "
+                    + studentInfo.getFirst_name().toUpperCase();
+
+            if (studentInfo.getMiddle_name() != null) {
+                studentFullName += (" " + studentInfo.getMiddle_name());
+            }
+            studentData.add(new StudentMasterListData(studentNumber, studentFullName));
+        }
+
+        if (studentData.isEmpty()) {
+            return false;
         }
 
         return true;
