@@ -3,5 +3,3 @@
 ## Authors:
 ### Jhon Melvin Nieto Perello
 ### Joemar Nucom De La Cruz
-
-Changes are placed in the dev branch
