@@ -156,7 +156,7 @@ public class OpenScheduleViewer {
             controller.setSection(sectionName);
             controller.addPrintEvents();
 
-            s.setWidth(1300.0);
+            s.setWidth(1214.0);
             double resizablePadding = 0.0; // if resizable is false
             s.setHeight(714.0 + resizablePadding);
 
