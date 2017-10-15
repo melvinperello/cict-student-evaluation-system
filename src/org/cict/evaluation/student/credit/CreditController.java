@@ -280,53 +280,20 @@ public class CreditController implements ControllerFX {
                 // object array
                 Object[] holder = {subject_id, grade};
                 studentGrades.add(holder);
+            } else {
+                // if grade is empty
+                // marked this grade to be removed if there is a grade.
+                Object[] holder = {subject_id, ""};
+                studentGrades.add(holder);
             }
 
         });
     }
 
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    /**
-     * Get the Student's Curriculum.
-     *
-     * @author melvin
-     * @return
-     */
-//    private Integer getStudentCurriculum() {
-//        List lst = Mono.orm()
-//                .newSearch(Database.connect().student())
-//                .eq("cict_id", this.CICT_ID)
-//                .active();
-//        if (!lst.isEmpty()) {
-//            this.STUDENT_MAP = (StudentMapping) lst.get(0);
-//            return STUDENT_MAP.getCURRICULUM_id();
-//        }
-//        return null;
-//    }
     /**
      * Creates the credit view
      */
     private void createView() {
-        /**
-         * @melvin
-         */
-//        this.CURRICULUM_ID = getStudentCurriculum();
-//        // if null return
-//        if (Objects.isNull(this.CURRICULUM_ID)) {
-//            return;
-//        }
-//        // continue
-//        ArrayList<CurriculumSubjectMapping> subList = Mono.orm()
-//                .newSearch(Database.connect().curriculum_subject())
-//                .eq("CURRICULUM_id", this.CURRICULUM_ID)
-//                .active()
-//                .all();
-//        // if empty return
-//        if (subList == null) {
-//            return;
-//        }
 
         STUDENT_MAP = (StudentMapping) Database.connect().student().getPrimary(this.CICT_ID);
 
@@ -389,99 +356,6 @@ public class CreditController implements ControllerFX {
         }
 
         /**
-         * @melvin
-         */
-//        CreditTreeColumn c_11 = creditview.createNewColumn();
-//        c_11.setHeader("FIRST YEAR");
-//        c_11.setSubHeader("First Semester");
-//        CreditTreeColumn c_12 = creditview.createNewColumn();
-//        c_12.setHeader("FIRST YEAR");
-//        c_12.setSubHeader("Second Semester");
-//        CreditTreeColumn c_21 = creditview.createNewColumn();
-//        c_21.setHeader("SECOND YEAR");
-//        c_21.setSubHeader("First Semester");
-//        CreditTreeColumn c_22 = creditview.createNewColumn();
-//        c_22.setHeader("SECOND YEAR");
-//        c_22.setSubHeader("Second Semester");
-//        CreditTreeColumn c_31 = creditview.createNewColumn();
-//        c_31.setHeader("THIRD YEAR");
-//        c_31.setSubHeader("First Semester");
-//        CreditTreeColumn c_32 = creditview.createNewColumn();
-//        c_32.setHeader("THIRD YEAR");
-//        c_32.setSubHeader("Second Semester");
-//        CreditTreeColumn c_41 = creditview.createNewColumn();
-//        c_41.setHeader("FOURTH YEAR");
-//        c_41.setSubHeader("First Semester");
-//        CreditTreeColumn c_42 = creditview.createNewColumn();
-//        c_42.setHeader("FOURTH YEAR");
-//        c_42.setSubHeader("Second Semester");
-//
-//        subList.forEach(subjects -> {
-//            CurriculumSubjectMapping sub = subjects;
-//            //create row
-//            CreditTreeRow row = creditview.createNewRow();
-//            row.setBackground(new Background(new BackgroundFill(Paint.valueOf("#2B89E0"), new CornerRadii(10), new Insets(5, 5, 5, 5))));
-//            // assign id
-//            row.setID(sub.getSUBJECT_id());
-//            // set code
-//            List subnames = Mono.orm()
-//                    .newSearch(Database.connect().subject())
-//                    .eq("id", sub.getSUBJECT_id())
-//                    .active();
-//            row.setSubjectCode(((SubjectMapping) subnames.get(0)).getCode());
-//            // add preq
-//            List reqlist = Mono.orm()
-//                    .newSearch(Database.connect().curriculum_requisite_line())
-//                    .eq("SUBJECT_id_get", sub.getSUBJECT_id())
-//                    .active();
-//            // get pre requisite ids
-//            Integer[] preqid = new Integer[0];
-//            if (!reqlist.isEmpty()) {
-//                ArrayList<Integer> ids = new ArrayList<>();
-//                for (Object object : reqlist) {
-//                    ids.add(((CurriculumRequisiteLineMapping) object).getSUBJECT_id_req());
-//                }
-//                preqid = ids.toArray(new Integer[ids.size()]);
-//            }
-//            row.setPreRequisites(preqid);
-//
-//            switch (sub.getYear()) {
-//                case 1:
-//                    if (sub.getSemester().equals(1)) {
-//                        c_11.getChildRows().add(row);
-//                    } else if (sub.getSemester().equals(2)) {
-//                        c_12.getChildRows().add(row);
-//                    }
-//                    break;
-//                case 2:
-//                    if (sub.getSemester().equals(1)) {
-//                        c_21.getChildRows().add(row);
-//                    } else if (sub.getSemester().equals(2)) {
-//                        c_22.getChildRows().add(row);
-//                    }
-//                    break;
-//                case 3:
-//                    if (sub.getSemester().equals(1)) {
-//                        c_31.getChildRows().add(row);
-//                    } else if (sub.getSemester().equals(2)) {
-//                        c_32.getChildRows().add(row);
-//                    }
-//                    break;
-//                case 4:
-//                    if (sub.getSemester().equals(1)) {
-//                        c_41.getChildRows().add(row);
-//                    } else if (sub.getSemester().equals(2)) {
-//                        c_42.getChildRows().add(row);
-//                    }
-//                    break;
-//                default:
-//                    //none
-//                    break;
-//            }
-//        });
-//
-//        creditview.getTree().getChildColumns().addAll(c_11, c_12, c_21, c_22, c_31, c_32, c_41, c_42);
-        /**
          * Add mouse event upon creation
          */
         creditview.getTree().mouseEvent();
@@ -513,97 +387,4 @@ public class CreditController implements ControllerFX {
         this.lbl_CURRICULUM_name.setText(curriculum.getName());
     }
 
-    /**
-     * @joemar
-     */
-//    private void setRetrievedGrades() {
-//        CreditRetrieve retrieve = new CreditRetrieve();
-//        retrieve.cict_id = this.STUDENT_MAP.getCict_id();
-//        retrieve.setOnStart(onStart -> {
-//            this.status_bar.setText("Checking the posted grades...");
-//        });
-//        retrieve.setOnSuccess(onSuccess -> {
-//            this.status_bar.setText("Status: Done");
-//            this.retrievedGrades = retrieve.getRetrievedGrades();
-//            if (!this.retrievedGrades.isEmpty()) {
-//                this.checkContents();
-//            }
-//        });
-//        retrieve.transact();
-//    }
-//    private void checkContents() {
-//        // check all fields
-//        SimpleTask checkFields = new SimpleTask("retrieve-posted-credit-fields");
-//        
-//        checkFields.setTask(() -> {
-//            /**
-//             * check
-//             */
-//            retrieveRows();
-//        });
-//        checkFields.setOnStart(start -> {
-//            btn_save.setDisable(true);
-////            creditTree.disableAllText();
-//            status_bar.setText("Starting the retrieve process...");
-//        });
-//        checkFields.setOnSuccess(success -> {
-//            status_bar.setText("Status: Completed.");
-//            btn_save.setDisable(false);
-////            creditTree.enableAllText();
-//        });
-//        checkFields.setOnCancelled(event -> {
-//            status_bar.setText("Verification has been cancelled by system.");
-//            btn_save.setDisable(false);
-//            creditTree.enableAllText();
-//        });
-//        checkFields.setOnFailed(event -> {
-//            status_bar.setText("Verification Failed.");
-//            btn_save.setDisable(false);
-//            creditTree.enableAllText();
-//        });
-//        checkFields.start();
-//        
-//    }
-//    
-//    private void retrieveRows() {
-//        for (int x = 0; x < creditTree.getChildColumns().size(); x++) {
-//            for (int y = 0; y < creditTree.getChildColumns().get(x).getChildRows().size(); y++) {
-//                retrieveRows(x, y);
-////                FXThread.pause(200);
-//            }
-//        }
-//    }
-//    
-//    private void retrieveRows(int x, int y) {
-//        Platform.runLater(() -> {
-//            creditTree.setFocusedCell(x, y);
-//            CreditTreeRow cr = creditTree.getRowAt(x, y);
-//
-//            /**
-//             * Center Scroll pane.
-//             */
-//            CreditTree.centerNodeInScrollPane(creditview, cr);
-//            CreditTree.centerH(creditview, creditTree.getColumn(x));
-//            Integer id = cr.getID();
-//            creditTree.showLines(id);
-//            
-//            status_bar.setText("Verifying " + cr.lblSubjectCode.getText() + "...");
-//
-//            // subject id;
-//            Integer subject_id = cr.getID();
-//            
-//            for (int i = 0; i < this.retrievedGrades.size(); i++) {
-//                if (Objects.equals(subject_id, this.retrievedGrades.get(i)[0])) {
-//                    String grade = this.retrievedGrades.get(i)[1].toString();
-//                    cr.txtGrade.setText(grade);
-//                    cr.txtGrade.setDisable(true);
-//                    break;
-//                }
-//            }
-//            if (cr.txtGrade.getText().isEmpty()) {
-//                cr.txtGrade.setDisable(false);
-//                cr.txtGrade.setEditable(true);
-//            }
-//        });
-//    }
 }

@@ -5,20 +5,22 @@
  */
 package org.cict.evaluation.student.credit.credittree;
 
-import com.jhmvin.Mono;
-import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.fx.controls.SimpleImage;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -27,7 +29,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.paint.Paint;
 
 /**
@@ -50,6 +51,7 @@ public class CreditTreeRow extends HBox {
     //Controls
     public Label lblSubjectCode = new Label();
     public TextField txtGrade = new TextField();
+    public Button btnDelete = new Button();
     private Pane linePanel;
 
     /**
@@ -83,13 +85,33 @@ public class CreditTreeRow extends HBox {
          */
         this.lblSubjectCode.getStyleClass().add("credit-row-label");
         this.txtGrade.getStyleClass().add("credit-row-text");
+        this.btnDelete.getStyleClass().add("credit-row-delete");
         this.getStyleClass().add("credit-row");
 
         //this.setBackground(new Background(new BackgroundFill(Paint.valueOf("#ffccb5"), new CornerRadii(10), new Insets(5, 5, 5, 5))));
         //HBox.setMargin(txtGrade, new Insets(20));
         //this.txtGrade.setStyle("-fx-faint-focus-color: transparent;-fx-focus-color:rgba(255,0,0,1.0);");
         this.events();
-        this.getChildren().addAll(lblSubjectCode, txtGrade);
+
+        /**
+         * Button setup
+         */
+        Image deleteIcon
+                = SimpleImage.make("org.cict.evaluation.student.credit.credittree",
+                        "Trash_64px.png");
+        ImageView deleteImage = new ImageView(deleteIcon);
+        deleteImage.setFitHeight(20.0);
+        deleteImage.setFitWidth(20.0);
+        this.btnDelete.setText("");
+        this.btnDelete.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        this.btnDelete.setGraphic(deleteImage);
+        this.btnDelete.setGraphicTextGap(0.0);
+        this.btnDelete.setMaxHeight(20.0);
+        this.btnDelete.setMaxWidth(20.0);
+        this.btnDelete.setPrefHeight(20.0);
+        this.btnDelete.setPrefHeight(20.0);
+
+        this.getChildren().addAll(lblSubjectCode, txtGrade/*, this.btnDelete*/);
 
     }
 

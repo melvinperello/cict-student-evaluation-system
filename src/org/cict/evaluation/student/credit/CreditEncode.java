@@ -99,6 +99,11 @@ public class CreditEncode extends Transaction {
              * if no grade insert new
              */
             if (studentGrade == null) {
+                if (rating.equalsIgnoreCase("")) {
+                    // if grade was empty continue
+                    continue;
+                }
+                
                 logs("Student GRADE is null");
                 studentGrade = MapFactory.map().grade();
                 studentGrade.setSTUDENT_id(cict_id);
@@ -135,9 +140,9 @@ public class CreditEncode extends Transaction {
                      * Everything below will be skipped.
                      */
                 }
+
                 logs("Updating grades.");
-                
-                
+
                 /**
                  * When there is already a grade, make that record inactive.
                  */
@@ -149,6 +154,14 @@ public class CreditEncode extends Transaction {
                     dataTx.rollback();
                     logs("Failed to update old");
                     return false;
+                }
+
+                /**
+                 * IF THE GRADE WAS CHANGED and empty. now the old grade was set
+                 * to inactive and no new grade will be inserted.
+                 */
+                if (rating.equalsIgnoreCase("")) {
+                    continue;
                 }
 
                 /**

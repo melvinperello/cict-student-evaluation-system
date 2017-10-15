@@ -13,3 +13,8 @@
     -fx-border-color: #F591AB;
 }
 
+.credit-row-delete{
+    -fx-border-color: white;
+    -fx-background-color: #EB5463;
+}
+
