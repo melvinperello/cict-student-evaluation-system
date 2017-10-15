@@ -26,6 +26,7 @@ package update2.org.cict.controller.academicprogram;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import update.org.cict.controller.home.Home;
 import update2.org.cict.controller.subjects.AddNewSubjectController;
+import update2.org.cict.controller.subjects.SubjectRepositoryController;
 
 /**
  *
@@ -60,7 +62,12 @@ public class AcademicHome extends SceneFX implements ControllerFX {
     
     @Override
     public void onInitialization() {
-    
+        bindScene(application_root);
+        // all destructive operations should be disabled if not admin
+        if (AcademicProgramAccessManager.denyIfNotAdmin()) {
+            btn_new_acad.setDisable(true);
+            btn_new_subject.setDisable(true);
+        }
     }
 
     @Override
@@ -69,22 +76,36 @@ public class AcademicHome extends SceneFX implements ControllerFX {
             Home.callHome(this);
         });
         this.addClickEvent(btn_new_acad, ()->{
-            ControllerFX controller = new AddNewProgramController();
+            AddNewProgramController controller = new AddNewProgramController();
+            LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+            controller.setHomeFX(homeFX);
             this.changeRoot(controller,
                     "update2.org.cict.layout.academicprogram",
                     "add-acad-program");
         });
         this.addClickEvent(btn_new_subject, ()->{
-            ControllerFX controller = new AddNewSubjectController();
+            AddNewSubjectController controller = new AddNewSubjectController();
+            LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+            controller.setHomeFX(homeFX);
             this.changeRoot(controller,
                     "update2.org.cict.layout.subjects",
                     "add-new-subject");
         });
         this.addClickEvent(btn_view_all_acad, ()->{
-            ControllerFX controller = new AcademicProgramHome();
+            AcademicProgramHome controller = new AcademicProgramHome();
+            LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+            controller.setHomeFX(homeFX);
             this.changeRoot(controller,
                     "update2.org.cict.layout.academicprogram",
                     "academic-program-home");
+        });
+        this.addClickEvent(btn_view_all_subj, ()->{
+            SubjectRepositoryController controller = new SubjectRepositoryController();
+            LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+            controller.setHomeFX(homeFX);
+            this.changeRoot(controller,
+                    "update2.org.cict.layout.subjects",
+                    "subject-bank");
         });
     }
     

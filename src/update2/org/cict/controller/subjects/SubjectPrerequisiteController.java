@@ -133,7 +133,7 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
         }
     }
 
-    private final String SECTION_BASE_COLOR = "#E85764";
+    private final String SECTION_BASE_COLOR = "#414852";
     @Override
     public void onEventHandling() {
         addClickEvent(btn_new_prereq, ()-> {

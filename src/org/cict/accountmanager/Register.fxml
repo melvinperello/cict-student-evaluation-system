@@ -14,18 +14,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="524.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cict.accountmanager.RegisterController">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="524.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cict.accountmanager.RegisterController">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="545.0" style="-fx-background-color: #FCFFFA;" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="545.0" style="-fx-background-color: #2983D5;" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label prefHeight="34.0" prefWidth="137.0" style="-fx-text-fill: #B2DEEE;" text="EMS v1.0a | ">
+                  <Label prefHeight="34.0" text="CICT Evaluation System| " textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="23.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-text-fill: #B2DEEE;" text="Register Account">
+                  <Label text="Register Account" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -37,7 +37,7 @@
             <Insets left="20.0" right="20.0" />
          </padding>
       </VBox>
-      <VBox prefHeight="346.0" prefWidth="545.0" style="-fx-background-color: #15315C;" VBox.vgrow="ALWAYS">
+      <VBox prefHeight="346.0" prefWidth="545.0" style="-fx-background-color: #F4F4F4;" VBox.vgrow="ALWAYS">
          <children>
             <GridPane prefHeight="219.0" prefWidth="445.0" vgap="15.0">
               <columnConstraints>
@@ -51,66 +51,66 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label style="-fx-text-fill: #2BAAFF;" text="BulSU ID" textFill="#404e5d">
+                  <Label style="-fx-text-fill: #4E4E4E;" text="BulSU ID" textFill="#404e5d">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-text-fill: #2BAAFF;" text="Username" textFill="#404e5d" GridPane.rowIndex="1">
+                  <Label style="-fx-text-fill: #4E4E4E;" text="Username" textFill="#404e5d" GridPane.rowIndex="1">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-text-fill: #2BAAFF;" text="Password" textFill="#404e5d" GridPane.rowIndex="2">
+                  <Label style="-fx-text-fill: #4E4E4E;" text="Password" textFill="#404e5d" GridPane.rowIndex="2">
                      <font>
-                        <Font size="20.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-text-fill: #2BAAFF;" text="Confirm Password" textFill="#404e5d" GridPane.rowIndex="3">
+                  <Label style="-fx-text-fill: #4E4E4E;" text="Confirm Password" textFill="#404e5d" GridPane.rowIndex="3">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
                   <VBox alignment="CENTER" prefHeight="43.0" prefWidth="225.0" GridPane.columnIndex="1">
                      <children>
-                        <TextField fx:id="txt_bulsuId" prefHeight="6.0" prefWidth="149.0" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
+                        <TextField fx:id="txt_bulsuId" prefHeight="40.0" prefWidth="149.0" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="43.0" prefWidth="222.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <TextField fx:id="txt_username" prefHeight="25.0" prefWidth="516.0" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
+                        <TextField fx:id="txt_username" prefHeight="40.0" prefWidth="516.0" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="43.0" prefWidth="222.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <PasswordField fx:id="txt_password" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
+                        <PasswordField fx:id="txt_password" prefHeight="40.0" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="43.0" prefWidth="222.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <children>
-                        <PasswordField fx:id="txt_reenterPass" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
+                        <PasswordField fx:id="txt_reenterPass" prefHeight="40.0" style="-fx-font-size: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4,0, 0, 0);" />
                      </children>
                   </VBox>
                </children>
                <VBox.margin>
-                  <Insets left="50.0" right="50.0" top="20.0" />
+                  <Insets left="30.0" right="20.0" top="20.0" />
                </VBox.margin>
             </GridPane>
-            <HBox alignment="CENTER" spacing="10.0">
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
-                  <Button fx:id="btn_Register" mnemonicParsing="false" prefHeight="40.0" prefWidth="236.0" stylesheets="@src/css/button.css" text="Register" textFill="WHITE">
+                  <Button fx:id="btn_Register" mnemonicParsing="false" prefHeight="42.0" prefWidth="154.0" stylesheets="@src/css/button.css" text="Register" textFill="WHITE">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="19.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btn_Cancel" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="224.0" stylesheets="@src/css/button.css" text="Cancel" textFill="WHITE">
+                  <Button fx:id="btn_Cancel" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="155.0" stylesheets="@src/css/button.css" text="Back" textFill="WHITE">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="19.0" />
                      </font>
                   </Button>
                </children>
                <VBox.margin>
-                  <Insets left="50.0" right="50.0" top="30.0" />
+                  <Insets left="50.0" right="20.0" top="30.0" />
                </VBox.margin>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="3.0">
@@ -120,7 +120,7 @@
                         <Image url="@../../../res/img/logocircle.png" />
                      </image>
                   </ImageView>
-                  <Label text="Monosync Studio" textFill="#f5efef" />
+                  <Label text="Monosync Studio" textFill="#4d4d4d" />
                </children>
                <VBox.margin>
                   <Insets bottom="20.0" left="20.0" top="25.0" />

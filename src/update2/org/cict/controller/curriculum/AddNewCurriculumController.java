@@ -30,6 +30,8 @@ import app.lazy.models.CurriculumPreMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
@@ -139,8 +141,28 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX{
         cmb_type.getSelectionModel().select(NONE);
         cmb_type.setDisable(true);
         setViewCheckCmbBoxPreReq("NO");
+        
+        addTextFieldFilters();
     }
 
+    private void addTextFieldFilters() {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(txt_name).applyFilter();
+        textField.clone().setTextSource(txt_major).applyFilter();
+        textField.clone().setTextSource(txt_description).applyFilter();
+       
+    }
+    
     @Override
     public void onEventHandling() {
         addClickEvent(btn_add, () -> {

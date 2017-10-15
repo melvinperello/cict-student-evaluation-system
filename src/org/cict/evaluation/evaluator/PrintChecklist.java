@@ -34,11 +34,15 @@ import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import org.cict.SubjectClassification;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
+import org.cict.reports.ReportsDirectory;
 import org.cict.reports.checklist.ACT;
 import org.cict.reports.checklist.BITCT;
 import org.cict.reports.checklist.BSIT1112;
@@ -48,32 +52,34 @@ import org.cict.reports.checklist.BSIT1516;
  *
  * @author Joemar
  */
-public class PrintChecklist extends Transaction  {
+public class PrintChecklist extends Transaction {
 
     public Integer CICT_id;
-    
+
     private StudentMapping student;
     private String address = "", sectionName = "", highSchool = "";
+    private AcademicProgramMapping acadProg;
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
     private Integer CURRICULUM_ACT_id = 6,
-            CURRICULUM_BSIT_new_id = 7, 
-            CURRICULUM_BSIT_old_id = 9, 
+            CURRICULUM_BSIT_new_id = 7,
+            CURRICULUM_BSIT_old_id = 9,
             CURRICULUM_BITCT_id = 10;
-    
+
     @Override
     protected boolean transaction() {
         student = Database.connect().student().getPrimary(CICT_id);
-        if(student == null) {
+        if (student == null) {
             System.out.println("NO STUDENT");
             return false;
         }
-        curriculum = Database.connect().curriculum().getPrimary( student.getCURRICULUM_id());
-        if(curriculum == null) {
+        curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
+        if (curriculum == null) {
             System.out.println("NO CURRICULUM");
             return false;
         }
-        if(student.getHas_profile() == 1) {
+        acadProg = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
+        if (student.getHas_profile() == 1) {
             StudentProfileMapping spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
                     .active().first();
@@ -81,38 +87,42 @@ public class PrintChecklist extends Transaction  {
                     brgy = spMap.getBrgy(),
                     city = spMap.getCity(),
                     province = spMap.getProvince();
-            if(hNum != null)
+            if (hNum != null) {
                 address = hNum;
-            if(brgy != null) {
-                if(!address.isEmpty()) {
+            }
+            if (brgy != null) {
+                if (!address.isEmpty()) {
                     address += " " + spMap.getBrgy();
-                } else
+                } else {
                     address = brgy;
+                }
             }
-            if(city != null) {
-                if(!address.isEmpty()) {
+            if (city != null) {
+                if (!address.isEmpty()) {
                     address += " " + city;
-                } else
+                } else {
                     address = city;
+                }
             }
-            if(province != null) {
-                if(!address.isEmpty()) {
+            if (province != null) {
+                if (!address.isEmpty()) {
                     address += ", " + province;
-                } else
+                } else {
                     address = province;
+                }
             }
             highSchool = "";
         }
-        AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary( curriculum.getACADPROG_id());
+        AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
         sectionName = apMap.getCode() + " " + student.getYear_level() + student.getSection()
-                    + "-G"+ student.get_group();
-        
+                + "-G" + student.get_group();
+
         CurricularLevelAssesor cla = new CurricularLevelAssesor(student);
         cla.assess();
         boolean prepData = cla.hasPrepData();
         CurriculumMapping primary = cla.getConsCurriculum();
         CurriculumMapping secondary = cla.getPrepCurriculum();
-        
+
         if (cla.hasPrepData()) {
             String text = cla.getPrepCurriculum().getName() + " -> " + cla.getConsCurriculum().getName();
             System.out.println(text);
@@ -125,16 +135,17 @@ public class PrintChecklist extends Transaction  {
         getResult(cla, 4, cla.hasPrepData());
         return true;
     }
-    
+
     private void getResult(CurricularLevelAssesor cla, int year, boolean hasPrepData) {
         AssessmentResults result = cla.getAnnualAssessment(year);
-        if(hasPrepData) {
-            if(year<=2)
+        if (hasPrepData) {
+            if (year <= 2) {
                 curriculum = cla.getPrepCurriculum();
-            else
+            } else {
                 curriculum = cla.getConsCurriculum();
-        } 
-        
+            }
+        }
+
         for (int semester = 1; semester <= 2; semester++) {
             ArrayList<SubjectAssessmentDetials> sadetails;
             try {
@@ -142,35 +153,38 @@ public class PrintChecklist extends Transaction  {
             } catch (Exception e) {
                 continue;
             }
-            for(SubjectAssessmentDetials sadetail: sadetails) {
+            for (SubjectAssessmentDetials sadetail : sadetails) {
                 SubjectMapping subject = sadetail.getSubjectDetails();
                 Object[] detail = new Object[5];
-                if(subject != null) {
+                if (subject != null) {
                     detail[0] = subject; //code
                     String hrs = "";
-                    if(subject.getLab_units() != 0.0) {
+                    if (subject.getLab_units() != 0.0) {
                         hrs = "5"; //hrs per wk;
-                    } else if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_PE)) {
+                    } else if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_PE)) {
                         hrs = "2"; //hrs per wk;
-                    } else if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_NSTP)) {
+                    } else if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_NSTP)) {
                         hrs = "";
-                    } else
+                    } else {
                         hrs = "3"; //hrs per wk;
+                    }
                     detail[1] = hrs;
-                    
+
                     String prereq = "";
                     ArrayList<CurriculumRequisiteLineMapping> crlMaps = sadetail.getSubjectRequisites();
-                    if(crlMaps != null) {
-                        for(CurriculumRequisiteLineMapping crlMap: crlMaps) {
+                    if (crlMaps != null) {
+                        for (CurriculumRequisiteLineMapping crlMap : crlMaps) {
                             SubjectMapping subjectPrereq = Database.connect().subject().getPrimary(crlMap.getSUBJECT_id_req());
-                            if(prereq.isEmpty())
+                            if (prereq.isEmpty()) {
                                 prereq = subjectPrereq.getCode();
-                            else
+                            } else {
                                 prereq += ", " + subjectPrereq.getCode();
+                            }
                         }
-                    } else
+                    } else {
                         prereq = "NONE";
-                    detail[2] = prereq; 
+                    }
+                    detail[2] = prereq;
 
                     String coreq = "";//coreq
                     ArrayList<CurriculumRequisiteExtMapping> creMaps = Mono.orm().newSearch(Database.connect().curriculum_requisite_ext())
@@ -179,16 +193,18 @@ public class PrintChecklist extends Transaction  {
                             .eq(DB.curriculum_requisite_ext().type, "COREQUISITE")
                             .active()
                             .all();
-                    if(creMaps != null) {
-                        for(CurriculumRequisiteExtMapping creMap: creMaps) {
+                    if (creMaps != null) {
+                        for (CurriculumRequisiteExtMapping creMap : creMaps) {
                             SubjectMapping subjectCoreq = Database.connect().subject().getPrimary(creMap.getSUBJECT_id_req());
-                            if(coreq.isEmpty())
+                            if (coreq.isEmpty()) {
                                 coreq = subjectCoreq.getCode();
-                            else
+                            } else {
                                 coreq += ", " + subjectCoreq.getCode();
+                            }
                         }
-                    } else
+                    } else {
                         coreq = "NONE";
+                    }
                     detail[3] = coreq;
                     detail[4] = year + "" + semester;
                     details.add(detail);
@@ -197,6 +213,7 @@ public class PrintChecklist extends Transaction  {
         }
     }
 
+    public final static String SAVE_DIRECTORY = "reports/checklist";
     private ArrayList<Object[]> fyrfsem = new ArrayList<>();
     private ArrayList<Object[]> fyrssem = new ArrayList<>();
     private ArrayList<Object[]> syrfsem = new ArrayList<>();
@@ -205,33 +222,52 @@ public class PrintChecklist extends Transaction  {
     private ArrayList<Object[]> tyrssem = new ArrayList<>();
     private ArrayList<Object[]> fryrfsem = new ArrayList<>();
     private ArrayList<Object[]> fryrssem = new ArrayList<>();
+
     @Override
     protected void after() {
-        if(curriculum.getId() == CURRICULUM_BSIT_new_id) { //temp
-            BSIT1516 bsit1516 = new BSIT1516(student.getId() + "_"
-                + Mono.orm()
-                        .getServerTime()
-                        .getCalendar()
-                        .getTimeInMillis());
+        String doc = student.getId() + "_"
+                + Mono.orm().getServerTime().getCalendar().getTimeInMillis();
+
+        String RESULT = SAVE_DIRECTORY + "/" + doc + ".pdf";
+
+        //------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------
+        /**
+         * Check if the report save directory is already existing and created if
+         * not this will try to create the needed directories.
+         */
+        boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
+
+        if (!isCreated) {
+            // some error message that the directory is not created
+            System.err.println("Directory is not created.");
+            return;
+        }
+        //------------------------------------------------------------------
+        //------------------------------------------------------------------
+
+        if (curriculum.getId() == CURRICULUM_BSIT_new_id) { //temp
+            BSIT1516 bsit1516 = new BSIT1516(RESULT);
             bsit1516.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
             String midName = student.getMiddle_name();
-            if(midName != null)
+            if (midName != null) {
                 fullName += " " + midName;
+            }
             bsit1516.STUDENT_NAME = fullName;
             bsit1516.STUDENT_ADDRESS = address;
-            for (Object[] detail: details) {
+            for (Object[] detail : details) {
                 String key = (String) detail[4];
                 SubjectMapping subject = (SubjectMapping) detail[0];
-                if(subject.getCode().equalsIgnoreCase("CAPS 01")) {
+                if (subject.getCode().equalsIgnoreCase("CAPS 01")) {
                     detail[2] = "Regular 3rd year \nStanding";
                     detail[3] = "Regular 3rd year \nStanding";
                 }
-                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                     detail[1] = "486 hours";
                     detail[2] = "4th Year Standing";
                 }
-                switch(key) {
+                switch (key) {
                     case "11":
                         store(fyrfsem, detail);
                         break;
@@ -257,7 +293,7 @@ public class PrintChecklist extends Transaction  {
                         store(fryrssem, detail);
                         break;
                 }
-                
+
             }
             bsit1516.SUBJECTS_PER_SEM.put("11", fyrfsem);
             bsit1516.SUBJECTS_PER_SEM.put("12", fyrssem);
@@ -268,23 +304,20 @@ public class PrintChecklist extends Transaction  {
             bsit1516.SUBJECTS_PER_SEM.put("41", fryrfsem);
             bsit1516.SUBJECTS_PER_SEM.put("42", fryrssem);
             int val = bsit1516.print();
-        } else if(curriculum.getId() == CURRICULUM_ACT_id) {
-            ACT act = new ACT(student.getId() + "_"
-                + Mono.orm()
-                        .getServerTime()
-                        .getCalendar()
-                        .getTimeInMillis());
+        } else if (curriculum.getId() == CURRICULUM_ACT_id) {
+            ACT act = new ACT(RESULT);
             act.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
             String midName = student.getMiddle_name();
-            if(midName != null)
+            if (midName != null) {
                 fullName += " " + midName;
+            }
             act.STUDENT_NAME = fullName;
             act.STUDENT_COURSE_YR_SEC_GRP = sectionName;
-            for (Object[] detail: details) {
+            for (Object[] detail : details) {
                 String key = (String) detail[4];
                 SubjectMapping subject = (SubjectMapping) detail[0];
-                switch(key) {
+                switch (key) {
                     case "11":
                         store(fyrfsem, detail);
                         break;
@@ -304,26 +337,23 @@ public class PrintChecklist extends Transaction  {
             act.SUBJECTS_PER_SEM.put("21", syrfsem);
             act.SUBJECTS_PER_SEM.put("22", syrssem);
             int val = act.print();
-        } else if(curriculum.getId() == CURRICULUM_BSIT_old_id) {
-            BSIT1112 bsit1112 = new BSIT1112(student.getId() + "_"
-                + Mono.orm()
-                        .getServerTime()
-                        .getCalendar()
-                        .getTimeInMillis());
+        } else if (curriculum.getId() == CURRICULUM_BSIT_old_id) {
+            BSIT1112 bsit1112 = new BSIT1112(RESULT);
             bsit1112.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
             String midName = student.getMiddle_name();
-            if(midName != null)
+            if (midName != null) {
                 fullName += " " + midName;
+            }
             bsit1112.STUDENT_NAME = fullName;
             bsit1112.STUDENT_ADDRESS = address;
             bsit1112.STUDENT_HS = highSchool;
             bsit1112.IMAGE_LOCATION = "src/org/cict/reports/checklist/images/me.png";
 
-            for (Object[] detail: details) {
+            for (Object[] detail : details) {
                 String key = (String) detail[4];
                 SubjectMapping subject = (SubjectMapping) detail[0];
-                switch(key) {
+                switch (key) {
                     case "11":
                         store(fyrfsem, detail);
                         break;
@@ -349,7 +379,7 @@ public class PrintChecklist extends Transaction  {
                         store(fryrssem, detail);
                         break;
                 }
-                
+
             }
             bsit1112.SUBJECTS_PER_SEM.put("11", fyrfsem);
             bsit1112.SUBJECTS_PER_SEM.put("12", fyrssem);
@@ -360,26 +390,23 @@ public class PrintChecklist extends Transaction  {
             bsit1112.SUBJECTS_PER_SEM.put("41", fryrfsem);
             bsit1112.SUBJECTS_PER_SEM.put("42", fryrssem);
             bsit1112.print();
-        } else if(curriculum.getId() == CURRICULUM_BITCT_id) {
-            BITCT bsit1112 = new BITCT(student.getId() + "_"
-                + Mono.orm()
-                        .getServerTime()
-                        .getCalendar()
-                        .getTimeInMillis());
+        } else if (curriculum.getId() == CURRICULUM_BITCT_id) {
+            BITCT bsit1112 = new BITCT(RESULT);
             bsit1112.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
             String midName = student.getMiddle_name();
-            if(midName != null)
+            if (midName != null) {
                 fullName += " " + midName;
+            }
             bsit1112.STUDENT_NAME = fullName;
             bsit1112.STUDENT_ADDRESS = address;
             bsit1112.STUDENT_HS = highSchool;
             bsit1112.IMAGE_LOCATION = "src/org/cict/reports/checklist/images/me.png";
 
-            for (Object[] detail: details) {
+            for (Object[] detail : details) {
                 String key = (String) detail[4];
                 SubjectMapping subject = (SubjectMapping) detail[0];
-                switch(key) {
+                switch (key) {
                     case "11":
                         store(fyrfsem, detail);
                         break;
@@ -405,7 +432,7 @@ public class PrintChecklist extends Transaction  {
                         store(fryrssem, detail);
                         break;
                 }
-                
+
             }
             bsit1112.SUBJECTS_PER_SEM.put("11", fyrfsem);
             bsit1112.SUBJECTS_PER_SEM.put("12", fyrssem);
@@ -416,10 +443,85 @@ public class PrintChecklist extends Transaction  {
             bsit1112.SUBJECTS_PER_SEM.put("41", fryrfsem);
             bsit1112.SUBJECTS_PER_SEM.put("42", fryrssem);
             bsit1112.print();
+        } else {
+            BSIT1516 bsit1516 = new BSIT1516(RESULT);
+            bsit1516.STUDENT_NUMBER = student.getId();
+            String fullName = student.getLast_name() + ", " + student.getFirst_name();
+            String midName = student.getMiddle_name();
+            if (midName != null) {
+                fullName += " " + midName;
+            }
+            bsit1516.STUDENT_NAME = fullName;
+            bsit1516.STUDENT_ADDRESS = address;
+            if (acadProg != null) {
+                bsit1516.COURSE = acadProg.getName();
+            }
+
+            Boolean isLadderized = curriculum.getLadderization().equalsIgnoreCase("yes");
+            bsit1516.IS_LADDERIZED = isLadderized;
+            String year = SystemProperties.instance().getCurrentAcademicTerm().getSchool_year();
+            bsit1516.SCHOOL_YEAR = year;
+            String major = curriculum.getMajor();
+            try {
+                if (!major.equalsIgnoreCase("none")) {
+                    bsit1516.MAJOR = major;
+                }
+            } catch (Exception e) {
+            }
+            for (Object[] detail : details) {
+                String key = (String) detail[4];
+                SubjectMapping subject = (SubjectMapping) detail[0];
+//                if(subject.getCode().equalsIgnoreCase("CAPS 01")) {
+//                    detail[2] = "Regular 3rd year \nStanding";
+//                    detail[3] = "Regular 3rd year \nStanding";
+//                }
+//                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+//                    detail[1] = "486 hours";
+//                    detail[2] = "4th Year Standing";
+//                }
+                switch (key) {
+                    case "11":
+                        store(fyrfsem, detail);
+                        break;
+                    case "12":
+                        store(fyrssem, detail);
+                        break;
+                    case "21":
+                        store(syrfsem, detail);
+                        break;
+                    case "22":
+                        store(syrssem, detail);
+                        break;
+                    case "31":
+                        store(tyrfsem, detail);
+                        break;
+                    case "32":
+                        store(tyrssem, detail);
+                        break;
+                    case "41":
+                        store(fryrfsem, detail);
+                        break;
+                    case "42":
+                        store(fryrssem, detail);
+                        break;
+                }
+
+            }
+            bsit1516.SUBJECTS_PER_SEM.put("11", fyrfsem);
+            bsit1516.SUBJECTS_PER_SEM.put("12", fyrssem);
+            bsit1516.SUBJECTS_PER_SEM.put("21", syrfsem);
+            bsit1516.SUBJECTS_PER_SEM.put("22", syrssem);
+            if (!isLadderized) {
+                bsit1516.SUBJECTS_PER_SEM.put("31", tyrfsem);
+                bsit1516.SUBJECTS_PER_SEM.put("32", tyrssem);
+                bsit1516.SUBJECTS_PER_SEM.put("41", fryrfsem);
+                bsit1516.SUBJECTS_PER_SEM.put("42", fryrssem);
+            }
+            int val = bsit1516.print();
         }
     }
-    
+
     private void store(ArrayList<Object[]> subjectDetails, Object[] detail) {
-        subjectDetails.add(detail); 
+        subjectDetails.add(detail);
     }
 }

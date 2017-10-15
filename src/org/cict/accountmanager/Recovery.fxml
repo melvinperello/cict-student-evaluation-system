@@ -14,18 +14,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="524.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="524.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="545.0" style="-fx-background-color: #FCFFFA;" VBox.vgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="545.0" style="-fx-background-color: #2983D5;" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label prefHeight="34.0" prefWidth="137.0" style="-fx-text-fill: #B2DEEE;" text="EMS v1.0a | ">
+                  <Label prefHeight="34.0" prefWidth="137.0" style="-fx-text-fill: #fff;" text="EMS v1.0a | ">
                      <font>
                         <Font name="System Bold" size="23.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-text-fill: #B2DEEE;" text="Register Account | Forgot Password">
+                  <Label style="-fx-text-fill: #fff;" text="Register Account | Recovery Information">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -37,11 +37,11 @@
             <Insets left="20.0" right="20.0" />
          </padding>
       </VBox>
-      <VBox prefHeight="346.0" prefWidth="545.0" style="-fx-background-color: #15315C;" VBox.vgrow="ALWAYS">
+      <VBox prefHeight="346.0" prefWidth="545.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox alignment="CENTER">
+            <VBox alignment="CENTER_LEFT">
                <children>
-                  <Label style="-fx-text-fill: #2BAAFF;" text="For recovery purposes, please fill up the remaining fields. ">
+                  <Label style="-fx-text-fill: #4E4E4E;" text="For recovery purposes, please fill up the remaining fields. ">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -62,19 +62,19 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label style="-fx-text-fill: #2BAAFF;" text="Question" textFill="#404e5d">
+                  <Label style="-fx-text-fill: #4E4E4E;" text="Question" textFill="#404e5d">
                      <font>
-                        <Font size="17.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-text-fill: #2BAAFF;" text="Answer" textFill="#404e5d" GridPane.rowIndex="1">
+                  <Label style="-fx-text-fill: #4E4E4E;" text="Answer" textFill="#404e5d" GridPane.rowIndex="1">
                      <font>
-                        <Font size="17.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
-                  <VBox alignment="CENTER" prefHeight="43.0" prefWidth="225.0" GridPane.columnIndex="1">
+                  <VBox alignment="CENTER" prefHeight="64.0" prefWidth="312.0" GridPane.columnIndex="1">
                      <children>
-                        <ComboBox fx:id="cmb_questions" prefHeight="25.0" prefWidth="711.0" />
+                        <ComboBox fx:id="cmb_questions" prefHeight="41.0" prefWidth="312.0" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="43.0" prefWidth="222.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -86,9 +86,9 @@
                         </PasswordField>
                      </children>
                   </VBox>
-                  <Label layoutX="10.0" layoutY="44.0" style="-fx-text-fill: #2BAAFF;" text="Confirm Answer" textFill="#404e5d" GridPane.rowIndex="2">
+                  <Label layoutX="10.0" layoutY="44.0" style="-fx-text-fill: #4E4E4E;" text="Confirm Answer" textFill="#404e5d" GridPane.rowIndex="2">
                      <font>
-                        <Font size="17.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
                   <PasswordField fx:id="txt_reenter" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -98,19 +98,19 @@
                   </PasswordField>
                </children>
                <VBox.margin>
-                  <Insets left="50.0" right="50.0" top="40.0" />
+                  <Insets left="30.0" right="30.0" top="20.0" />
                </VBox.margin>
             </GridPane>
-            <HBox alignment="CENTER" prefHeight="44.0" prefWidth="424.0" spacing="10.0">
+            <HBox alignment="CENTER_RIGHT" prefHeight="44.0" prefWidth="424.0" spacing="10.0">
                <children>
-                  <Button fx:id="btn_Register" mnemonicParsing="false" prefHeight="40.0" prefWidth="424.0" stylesheets="@src/css/button.css" text="Save">
+                  <Button fx:id="btn_Register" mnemonicParsing="false" prefHeight="39.0" prefWidth="309.0" stylesheets="@src/css/button.css" text="Save">
                      <font>
-                        <Font size="14.0" />
+                        <Font size="18.0" />
                      </font>
                   </Button>
                </children>
                <VBox.margin>
-                  <Insets left="50.0" right="50.0" top="40.0" />
+                  <Insets left="30.0" right="30.0" top="40.0" />
                </VBox.margin>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="3.0">

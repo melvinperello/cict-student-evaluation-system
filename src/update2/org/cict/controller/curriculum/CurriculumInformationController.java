@@ -34,6 +34,8 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.SimpleImage;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -209,6 +211,26 @@ public class CurriculumInformationController extends SceneFX implements Controll
             txt_major.setDisable(true);
             txt_name.setDisable(true);
         }
+        
+        addTextFieldFilters();
+    }
+    
+    private void addTextFieldFilters() {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(txt_name).applyFilter();
+        textField.clone().setTextSource(txt_major).applyFilter();
+        textField.clone().setTextSource(txt_description).applyFilter();
+       
     }
 
     @Override
@@ -249,6 +271,9 @@ public class CurriculumInformationController extends SceneFX implements Controll
                         .setMessage("Please provide the complete subject of this curriculum before the implementation process.")
                         .show();
                 return;
+            }
+            if(CURRICULUM.getImplemented() == 1) {
+                btn_implement.setDisable(true);
             }
             int res = Mono.fx().alert().createConfirmation()
                     .setHeader("Implement Curriculum")
@@ -304,7 +329,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
 
     }
     
-    private final String SECTION_BASE_COLOR = "#E85764";
+    private final String SECTION_BASE_COLOR = "#414852";
     private void onBack() {
         AcademicProgramHome controller = new AcademicProgramHome();
         Pane pane = Mono.fx().create()

@@ -27,17 +27,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import static org.cict.reports.checklist.BSIT1516.RESULT;
-import static org.cict.reports.checklist.BSIT1516.document;
 
 public class BITCT {
 
-    public static String document = "";
+//    public static String document = "";
     public static String RESULT = "";
 
     public BITCT(String filename) {
-        BSIT1516.document = filename;
-        RESULT = "reports/checklist/" + BSIT1516.document + ".pdf";
+        RESULT = filename;//"reports/checklist/" + BSIT1516.document + ".pdf";
     }
 
     public int print() {

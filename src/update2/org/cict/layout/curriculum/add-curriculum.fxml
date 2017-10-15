@@ -17,10 +17,9 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-
-<AnchorPane fx:id="application_root" prefHeight="567.0" prefWidth="574.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="application_root" prefHeight="567.0" prefWidth="574.0" styleClass="metro-base-color" stylesheets="@../metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox layoutX="59.0" layoutY="67.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="456.0" style="-fx-background-color: #E85764;">
+      <VBox layoutX="59.0" layoutY="67.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="456.0">
          <children>
             <VBox prefHeight="486.0" prefWidth="456.0">
                <children>
@@ -181,12 +180,12 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="59.0" prefWidth="417.0" spacing="10.0">
                      <children>
-                        <Button fx:id="btn_add" mnemonicParsing="false" prefHeight="38.0" prefWidth="139.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Add" textFill="WHITE">
+                        <Button fx:id="btn_add" mnemonicParsing="false" prefHeight="38.0" prefWidth="139.0" style="-fx-background-color: #414852; -fx-border-color: #fff;" text="Add" textFill="WHITE">
                            <font>
                               <Font size="17.0" />
                            </font>
                         </Button>
-                        <Button fx:id="btn_cancel" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Cancel" textFill="WHITE">
+                        <Button fx:id="btn_cancel" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" style="-fx-background-color: #414852; -fx-border-color: #fff;" text="Cancel" textFill="WHITE">
                            <font>
                               <Font size="17.0" />
                            </font>
@@ -203,7 +202,7 @@
             </VBox>
          </children>
       </VBox>
-      <Label layoutX="24.0" layoutY="17.0" prefHeight="50.0" prefWidth="467.0" text="Create Curriculum" textFill="WHITE" wrapText="true">
+      <Label layoutX="24.0" layoutY="17.0" prefHeight="50.0" prefWidth="467.0" styleClass="metro-title-1" text="Create Curriculum" textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>
             <Font size="25.0" />
          </font>
@@ -214,6 +213,9 @@
                </image>
             </ImageView>
          </graphic>
+         <padding>
+            <Insets left="30.0" right="20.0" top="10.0" />
+         </padding>
       </Label>
    </children>
 </AnchorPane>

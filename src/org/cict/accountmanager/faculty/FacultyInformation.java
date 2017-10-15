@@ -63,4 +63,11 @@ public class FacultyInformation {
     public AccountFacultyMapping getAccountFacultyMapping() {
         return this.afMap;
     }
+    
+    public String getFullName() {
+        return faculty.getLast_name() + ", " + faculty.getFirst_name() + " " + faculty.getMiddle_name();
+    }
+    public String getBulsuID() {
+        return faculty.getBulsu_id();
+    }
 }

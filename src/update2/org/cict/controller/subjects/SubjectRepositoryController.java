@@ -28,6 +28,9 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.DoubleFilter;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -55,8 +58,8 @@ import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.SubjectClassification;
 import org.controlsfx.control.Notifications;
+import update2.org.cict.controller.academicprogram.AcademicHome;
 import update2.org.cict.controller.academicprogram.AcademicProgramAccessManager;
-import update2.org.cict.controller.academicprogram.AcademicProgramHome;
 import update3.org.cict.SectionConstants;
 
 /**
@@ -145,6 +148,38 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
         fetch.transact();
         
         this.loadComboBox();
+        
+        addTextFieldFilters();
+    }
+    
+    private void addTextFieldFilters() {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(100)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(text_subjectCode).applyFilter();
+        textField.clone().setTextSource(txt_descriptiveTitle).applyFilter();
+     
+        DoubleFilter textNumber = TextInputFilters.doubleFloating()
+//                .setFilterMode(StringFilter.DIGIT)
+//                .setMaxCharacters(100)
+//                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textNumber.clone().setTextSource(txt_labUnits).applyFilter();
+        textNumber.clone().setTextSource(txt_lecUnits).applyFilter();
     }
 
     private void renderTable() {
@@ -159,6 +194,11 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
         
     }
     
+    private LayoutDataFX homeFX;
+    public void setHomeFX(LayoutDataFX homeFX) {
+        this.homeFX = homeFX;
+    }
+    
     @Override
     public void onEventHandling() {
         
@@ -168,10 +208,10 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
         });
         
         addClickEvent(btn_home, () -> {
-            AcademicProgramHome controller = new AcademicProgramHome();
+            AcademicHome controller = new AcademicHome();
             Pane pane = Mono.fx().create()
                     .setPackageName("update2.org.cict.layout.academicprogram")
-                    .setFxmlDocument("academic-program-home")
+                    .setFxmlDocument("academic-home")
                     .makeFX()
                     .setController(controller)
                     .pullOutLayout();
@@ -538,7 +578,7 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
      * SUBJECT INFORMATION
      */
 
-    private final String SECTION_BASE_COLOR = "#E85764";
+    private final String SECTION_BASE_COLOR = "#414852";
     private void onOpenSubjectInfoWindow(SubjectMapping subject) {
         SubjectInformationController controller = new SubjectInformationController(subject);
         

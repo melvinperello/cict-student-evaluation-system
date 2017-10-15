@@ -28,6 +28,9 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.DoubleFilter;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jhmvin.Mono;
@@ -114,9 +117,41 @@ public class SubjectInformationController extends SceneFX implements ControllerF
         if (AcademicProgramAccessManager.denyIfNotAdmin()) {
             btn_edit.setDisable(true);
         }
+        
+        addTextFieldFilters();
+    }
+    
+    private void addTextFieldFilters() {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(100)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(txt_subjectCode).applyFilter();
+        textField.clone().setTextSource(txt_descriptiveTitle).applyFilter();
+       
+        DoubleFilter textNumber = TextInputFilters.doubleFloating()
+//                .setFilterMode(StringFilter.DIGIT)
+//                .setMaxCharacters(100)
+//                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textNumber.clone().setTextSource(txt_labUnits).applyFilter();
+        textNumber.clone().setTextSource(txt_lecUnits).applyFilter();
     }
 
-    private final String SECTION_BASE_COLOR = "#E85764";
+    private final String SECTION_BASE_COLOR = "#414852";
     @Override
     public void onEventHandling() {
         addClickEvent(btn_edit, () -> {

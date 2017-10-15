@@ -28,15 +28,20 @@ import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.hibernate.criterion.Order;
@@ -71,8 +76,44 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
     
     @Override
     public void onInitialization() {
+        this.bindScene(vbox_main);
         validFloorAssignment.add("3");
         validFloorAssignment.add("4");
+        addTextFieldFilters();
+    }
+    
+    private void addTextFieldFilters() {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(txt_progcode).applyFilter();
+        textField.clone().setTextSource(txt_progname).applyFilter();
+        
+        StringFilter textFloor = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(11)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textFloor.clone().setTextSource(txt_floor).applyFilter();
+    }
+    
+    private LayoutDataFX homeFX;
+    public void setHomeFX(LayoutDataFX homeFX) {
+        this.homeFX = homeFX;
     }
 
     @Override
@@ -81,12 +122,27 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
             validateValues();
         });
         addClickEvent(btn_cancel, () -> {
-            Mono.fx().getParentStage(btn_add).close();
+//            Mono.fx().getParentStage(btn_add).close();
+//            ControllerFX controller = new AcademicHome();
+//            Pane fxRoot = Mono.fx().create()
+//                    .setPackageName("update2.org.cict.layout.academicprogram")
+//                    .setFxmlDocument("academic-home")
+//                    .makeFX()
+//                    .setController(controller)
+//                    .pullOutLayout();
+            back();
         });
         
         Mono.fx().key(KeyCode.ENTER).release(vbox_main, ()->{
             validateValues();
         });
+    }
+    
+    private void back() {
+        super.setSceneColor("#414852");
+        Animate.fade(vbox_main, 150, () -> {
+            super.replaceRoot(homeFX.getApplicationRoot());
+        }, homeFX.getApplicationRoot());
     }
     
     public void validateValues(){
@@ -161,7 +217,7 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
                     .confirmCustom("Yes, Please", "No");
             if(res == 1) {
                 this.restore(code);
-                Mono.fx().getParentStage(btn_add).close();
+//                Mono.fx().getParentStage(btn_add).close();
             }
             return;
         }
@@ -231,9 +287,10 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
                     acadProgInfo.setCurriculums(getCurriculums(academicProgram.getId()));
                 } catch(NullPointerException a) {}
                 acadProgInfo.setApCreatedBy(CollegeFaculty.instance().getFirstLastName());
+                back();
                 break;
         }
-        Mono.fx().getParentStage(btn_add).close();
+//        Mono.fx().getParentStage(btn_add).close();
     }
     
     private ArrayList<CurriculumMapping> getCurriculums(Integer id) {
@@ -258,6 +315,7 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
             acadProgInfo = new AcademicProgramInfo();
             acadProgInfo.setAcademicProgram(academicProgram);
             acadProgInfo.setCurriculums(getCurriculums(academicProgram.getId()));
+            back();
         } else {
             Mono.fx().alert()
                     .createError()
@@ -266,6 +324,6 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
                             + "Try again later.")
                     .showAndWait();
         }
-        Mono.fx().getParentStage(btn_add).close();
+//        Mono.fx().getParentStage(btn_add).close();
     }
 }

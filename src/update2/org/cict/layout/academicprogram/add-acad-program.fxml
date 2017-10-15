@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -14,10 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="application_root" prefHeight="366.0" prefWidth="614.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="application_root" prefHeight="366.0" prefWidth="852.0" styleClass="metro-base-color" stylesheets="@../metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox fx:id="vbox_main" layoutX="63.0" layoutY="97.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="206.0" prefWidth="456.0" style="-fx-background-color: #E85764;">
+      <VBox fx:id="vbox_main" layoutX="74.0" layoutY="88.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="206.0" prefWidth="456.0">
          <children>
             <HBox alignment="CENTER" prefHeight="121.0" prefWidth="421.0">
                <VBox.margin>
@@ -91,11 +90,16 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" prefHeight="59.0" prefWidth="372.0" spacing="10.0">
                <children>
-                  <Button fx:id="btn_add" mnemonicParsing="false" prefHeight="40.0" prefWidth="276.0" style="-fx-border-color: #fff; -fx-background-color: #E85764;" text="Add" textFill="WHITE">
+                  <JFXButton fx:id="btn_add" layoutX="257.0" layoutY="18.0" prefHeight="41.0" prefWidth="211.0" style="-fx-border-color: #fff;" text="Add" textFill="WHITE">
                      <font>
-                        <Font size="17.0" />
+                        <Font size="18.0" />
                      </font>
-                  </Button>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_cancel" prefHeight="41.0" prefWidth="200.0" style="-fx-border-color: #fff;" text="Cancel" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </JFXButton>
                </children>
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="10.0" />
@@ -103,19 +107,7 @@
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="btn_cancel" layoutX="485.0" layoutY="14.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="126.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Back" textFill="WHITE" visible="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
-         <font>
-            <Font size="17.0" />
-         </font>
-         <graphic>
-            <ImageView fitHeight="33.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../subjects/img/Back%20Arrow_32px.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
-      <Label layoutX="32.0" layoutY="37.0" prefHeight="50.0" prefWidth="467.0" text="Create Academic Program" textFill="WHITE" wrapText="true">
+      <Label layoutX="28.0" layoutY="23.0" prefHeight="58.0" prefWidth="578.0" styleClass="metro-title-1" text="Create Academic Program" textFill="WHITE" wrapText="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>
             <Font size="25.0" />
          </font>
@@ -126,6 +118,9 @@
                </image>
             </ImageView>
          </graphic>
+         <padding>
+            <Insets left="20.0" right="30.0" top="10.0" />
+         </padding>
       </Label>
    </children>
 </AnchorPane>

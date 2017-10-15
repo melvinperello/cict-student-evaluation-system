@@ -30,12 +30,12 @@ import org.cict.SubjectClassification;
 
 public class ACT {
 
-    public static String doc;
+//    public static String doc;
     public static String RESULT;
 
     public ACT(String filename) {
-        doc = filename;
-        RESULT = "reports/checklist/" + doc + ".pdf";
+//        doc = filename;
+        RESULT = filename;//"reports/checklist/" + doc + ".pdf";
     }
 
     public int print() {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="70.0" prefWidth="1148.0" spacing="10.0" style="-fx-background-color: #E85764;" styleClass="metro-row" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="70.0" prefWidth="1148.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -95,7 +96,7 @@
       </Label>
       <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>
-            <JFXButton accessibleText="btn_more_info" contentDisplay="CENTER" prefHeight="38.0" prefWidth="38.0" style="-fx-border-color: #fff;" textAlignment="CENTER">
+            <JFXButton accessibleText="btn_more_info" contentDisplay="CENTER" prefHeight="38.0" prefWidth="38.0" style="-fx-border-color: #fff; -fx-background-color: #656D79;" textAlignment="CENTER">
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -107,7 +108,7 @@
                   <Font size="1.0" />
                </font>
             </JFXButton>
-            <JFXButton accessibleText="btn_remove" contentDisplay="CENTER" prefHeight="38.0" prefWidth="38.0" style="-fx-border-color: #fff;" text=" " textAlignment="CENTER">
+            <JFXButton accessibleText="btn_remove" contentDisplay="CENTER" prefHeight="38.0" prefWidth="38.0" style="-fx-border-color: #fff; -fx-background-color: #656D79;" text=" " textAlignment="CENTER">
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -126,7 +127,11 @@
       <Insets left="20.0" right="20.0" />
    </padding>
    <stylesheets>
-      <URL value="@../../../../../update3/org/cict/layout/sectionmain/metro-ui.css" />
-      <URL value="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" />
+      <URL value="@../metro-ui-table.css" />
+      <URL value="@../metro-ui.css" />
    </stylesheets>
+   <styleClass>
+      <String fx:value="metro-row" />
+      <String fx:value="metro-base-color" />
+   </styleClass>
 </HBox>

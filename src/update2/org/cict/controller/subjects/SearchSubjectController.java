@@ -60,6 +60,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import update2.org.cict.controller.curriculum.CurriculumInformationController;
 import update3.org.cict.SectionConstants;
@@ -194,7 +195,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         }
     }
 
-    private final String SECTION_BASE_COLOR = "#E85764";
+    private final String SECTION_BASE_COLOR = "#414852";
     @Override
     public void onEventHandling() {
         txtSearch.textProperty().addListener(listener -> {
@@ -270,19 +271,48 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     }
     
     private void showAddNewSubject() {
+        String key = txtSearch.getText();
             AddNewSubjectController controller = new AddNewSubjectController();
-            controller.setTextFieldSubjectCode(txtSearch.getText());
-            Mono.fx().create()
-                    .setPackageName("update2.org.cict.layout.subjects")
-                    .setFxmlDocument("add-new-subject")
-                    .makeFX()
-                    .setController(controller)
-                    .makeScene()
-                    .makeStageWithOwner(Mono.fx().getParentStage(anchor_main))
-                    .stageResizeable(false)
-//                    .stageUndecorated(true)
-                    .stageShowAndWait();
-            SubjectMapping newSubject = controller.getNewSubject();
+            controller.setTextFieldSubjectCode(key);
+//            controller.setTextFieldSubjectCode(txtSearch.getText());
+//            Mono.fx().create()
+//                    .setPackageName("update2.org.cict.layout.subjects")
+//                    .setFxmlDocument("add-new-subject")
+//                    .makeFX()
+//                    .setController(controller)
+//                    .makeScene()
+//                    .makeStageWithOwner(Mono.fx().getParentStage(anchor_main))
+//                    .stageResizeable(false)
+////                    .stageUndecorated(true)
+//                    .stageShowAndWait();
+//            SubjectMapping newSubject = controller.getNewSubject();
+//            if(newSubject != null) {
+//                subjectTable.getChildren().clear();
+//                hbox_no_result.setVisible(false);
+//                anchor_view.setVisible(true);
+//                temp_subject_list.clear();
+//                temp_subject_list.add(newSubject);
+//                this.lst_subject.add(newSubject);
+//                createTable(temp_subject_list);
+//            }
+        LayoutDataFX homeFX = new LayoutDataFX(anchor_main, this);
+        controller.setHomeFX(homeFX);
+        Pane pane = Mono.fx().create()
+                .setPackageName("update2.org.cict.layout.subjects")
+                .setFxmlDocument("add-new-subject")
+                .makeFX()
+                .setController(controller)
+                .pullOutLayout();
+
+        super.setSceneColor("#414852"); // call once on entire scene lifecycle
+
+        Animate.fade(this.anchor_main, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
+    }
+    
+    public void showAddedSubject(SubjectMapping newSubject) {
+//            SubjectMapping newSubject = controller.getNewSubject();
             if(newSubject != null) {
                 subjectTable.getChildren().clear();
                 hbox_no_result.setVisible(false);
@@ -623,6 +653,17 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             }
         }
         
+        CheckOJTExist check = new CheckOJTExist(CURRICULUM.getId());
+        if(check.isExisting()) {
+            if(SUBJECT.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                Notifications.create().title("Internship Exist")
+                        .text("A type Internship of subject is already\n"
+                                + "in the curriculum.")
+                        .showWarning();
+                return;
+            }
+        }
+        
         CurriculumSubjectMapping newCsMap = new CurriculumSubjectMapping();
         newCsMap.setActive(1);
         newCsMap.setAdded_by(CREATED_BY);
@@ -733,5 +774,32 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     public void setHomeFx(LayoutDataFX homeFx) {
         this.homeFx = homeFx;
     }
+    
+    private class CheckOJTExist {
+        
+        private Integer CURRICULUM_id;
+        
+        public CheckOJTExist(Integer Curriculum_id) {
+            CURRICULUM_id = Curriculum_id;
+        }
 
+        public boolean isExisting() {
+            ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                    .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                    .active().all();
+            if(csMaps == null)
+                return false;
+            for(CurriculumSubjectMapping csMap: csMaps) {
+                SubjectMapping subject = Database.connect().subject().getPrimary(csMap.getSUBJECT_id());
+                if(subject == null) {
+                    System.out.println("NO SUBJECT FOUND WITH AN ID OF " + csMap.getSUBJECT_id());
+                    continue;
+                }
+                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

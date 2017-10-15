@@ -18,7 +18,7 @@ import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyMainController;
 import org.cict.evaluation.EvaluateController;
 import update.org.cict.controller.adding.AddingHome;
-import update2.org.cict.controller.academicprogram.AcademicProgramHome;
+import update2.org.cict.controller.academicprogram.AcademicHome;
 import update3.org.cict.access.Access;
 import update3.org.cict.access.management.AccessManagementHome;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
@@ -277,10 +277,14 @@ public class Home extends SceneFX implements ControllerFX {
          * </pre>
          *
          */
-        ControllerFX controller = new AcademicProgramHome();
+//        ControllerFX controller = new AcademicProgramHome();
+//        this.changeRoot(controller,
+//                "update2.org.cict.layout.academicprogram",
+//                "academic-program-home");
+        ControllerFX controller = new AcademicHome();
         this.changeRoot(controller,
                 "update2.org.cict.layout.academicprogram",
-                "academic-program-home");
+                "academic-home");
 
     }
 
@@ -351,8 +355,8 @@ public class Home extends SceneFX implements ControllerFX {
 
         FacultyMainController controller = new FacultyMainController();
         this.changeRoot(controller,
-                "org.cict.accountmanager.faculty",
-                "faculty-main");
+                "org.cict.accountmanager.faculty.layout",
+                "faculty-home");
 
     }
 

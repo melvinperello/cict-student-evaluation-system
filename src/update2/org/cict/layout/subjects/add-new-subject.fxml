@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbox_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="1034.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbox_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="1034.0" styleClass="metro-base-color" stylesheets="@../metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox VBox.vgrow="ALWAYS">
          <children>
@@ -25,7 +25,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label prefHeight="50.0" prefWidth="467.0" text="Create Subject" textFill="WHITE" wrapText="true">
+                              <Label prefHeight="50.0" prefWidth="467.0" styleClass="metro-title-1" text="Create Subject" textFill="WHITE" wrapText="true">
                                  <font>
                                     <Font size="25.0" />
                                  </font>
@@ -38,11 +38,8 @@
                                  </graphic>
                               </Label>
                            </children>
-                           <padding>
-                              <Insets left="15.0" />
-                           </padding>
                            <VBox.margin>
-                              <Insets left="15.0" top="20.0" />
+                              <Insets left="20.0" top="10.0" />
                            </VBox.margin>
                         </HBox>
                      </children>
@@ -181,16 +178,16 @@
                               <Insets left="5.0" top="10.0" />
                            </padding>
                         </GridPane>
-                        <VBox alignment="CENTER" prefHeight="28.0" prefWidth="496.0">
+                        <VBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="496.0">
                            <children>
-                              <JFXButton fx:id="btn_add" prefHeight="36.0" prefWidth="277.0" style="-fx-border-color: #fff;" text="Add" textFill="WHITE">
+                              <JFXButton fx:id="btn_add" prefHeight="41.0" prefWidth="325.0" style="-fx-border-color: #fff;" text="Add" textFill="WHITE">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </JFXButton>
                            </children>
                            <VBox.margin>
-                              <Insets bottom="2.0" top="10.0" />
+                              <Insets bottom="2.0" top="20.0" />
                            </VBox.margin>
                         </VBox>
                      </children>
@@ -202,7 +199,7 @@
             </VBox>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <AnchorPane layoutX="12.0" layoutY="51.0" prefHeight="318.0" prefWidth="445.0" style="-fx-border-color: #fff; -fx-border-width: 2;">
+                  <AnchorPane layoutX="14.0" layoutY="76.0" prefHeight="318.0" prefWidth="445.0" style="-fx-border-color: #fff; -fx-border-width: 2;">
                      <children>
                         <Label layoutX="14.0" layoutY="22.0" text="Subject Creation" textFill="WHITE">
                            <font>
@@ -269,6 +266,18 @@
                         <ImageView fitHeight="36.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@img/Close%20Window_32px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_back" layoutX="290.0" layoutY="21.0" prefHeight="41.0" prefWidth="169.0" style="-fx-border-color: #fff;" text="Back" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="17.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="29.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/Back%20Arrow_32px.png" />
                            </image>
                         </ImageView>
                      </graphic>

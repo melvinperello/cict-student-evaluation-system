@@ -25,22 +25,33 @@ package org.cict.accountmanager;
 
 import app.lazy.models.AccountFacultyMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.cict.authentication.LoginController;
+import update3.org.cict.SectionConstants;
 
 /**
  *
  * @author Joemar
  */
-public class RegisterController implements ControllerFX{
+public class RegisterController extends SceneFX implements ControllerFX{
 
+    @FXML
+    private VBox application_root;
+    
     @FXML
     private TextField txt_bulsuId;
 
@@ -61,7 +72,37 @@ public class RegisterController implements ControllerFX{
 
     @Override
     public void onInitialization() {
-        
+        bindScene(application_root);
+        addTextFieldFilters();
+    }
+    
+    private void addTextFieldFilters() {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(txt_username).applyFilter();
+       
+        StringFilter textPass = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textPass.clone().setTextSource(txt_password).applyFilter();
+        textPass.clone().setTextSource(txt_reenterPass).applyFilter();
     }
 
     @Override
@@ -194,31 +235,56 @@ public class RegisterController implements ControllerFX{
     }
     
     public void onShowRecovery(AccountFacultyMapping accntFclty, String id) {
-        Mono.fx().getParentStage(this.btn_Cancel).close();
+//        Mono.fx().getParentStage(this.btn_Cancel).close();
         RecoveryController controller = new RecoveryController(accntFclty,id);
-        Mono.fx().create()
+//        Mono.fx().create()
+//                .setPackageName("org.cict.accountmanager")
+//                .setFxmlDocument("Recovery")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStage()
+//                .stageResizeable(false)
+//                .stageShow();
+        
+        Pane pane = Mono.fx().create()
                 .setPackageName("org.cict.accountmanager")
                 .setFxmlDocument("Recovery")
                 .makeFX()
                 .setController(controller)
-                .makeScene()
-                .makeStage()
-                .stageResizeable(false)
-                .stageShow();
+                .pullOutLayout();
+
+        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
     
     public void onShowLogin() {
-        Mono.fx().getParentStage(this.btn_Cancel).close();
-        //RecoveryController controller = new RecoveryController(accntFclty,id);
-        Mono.fx().create()
+//        Mono.fx().getParentStage(this.btn_Cancel).close();
+        LoginController controller = new LoginController();
+//        Mono.fx().create()
+//                .setPackageName("org.cict.authentication")
+//                .setFxmlDocument("Login")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStage()
+//                .stageResizeable(false)
+//                .stageShow();
+        Pane pane = Mono.fx().create()
                 .setPackageName("org.cict.authentication")
                 .setFxmlDocument("Login")
                 .makeFX()
-                //.setController(controller)
-                .makeScene()
-                .makeStage()
-                .stageResizeable(false)
-                .stageShow();
+                .setController(controller)
+                .pullOutLayout();
+
+        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
     
     private void onRegisterError() {

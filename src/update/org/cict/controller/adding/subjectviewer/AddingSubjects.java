@@ -25,6 +25,8 @@ package update.org.cict.controller.adding.subjectviewer;
 
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;

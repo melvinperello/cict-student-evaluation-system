@@ -110,7 +110,7 @@ public class ActualDataHistory extends SceneFX implements ControllerFX {
         });
     }
        
-    private final String SECTION_BASE_COLOR = "#E85764";
+    private final String SECTION_BASE_COLOR = "#414852";
     private void onBack() {
         HistoryController controller = new HistoryController(CURRICULUM);
         Pane pane = Mono.fx().create()

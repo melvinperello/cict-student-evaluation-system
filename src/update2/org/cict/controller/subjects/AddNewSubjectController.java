@@ -28,18 +28,25 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.DoubleFilter;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.cict.SubjectClassification;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -72,6 +79,9 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
     private Button btn_add;
     
     @FXML
+    private Button btn_back;
+    
+    @FXML
     private JFXButton btn_close;
     
     private ArrayList<CurriculumMapping> curriculums;
@@ -83,11 +93,48 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
     
     @Override
     public void onInitialization() {
+        bindScene(vbox_main);
         if(searchKeyword != null)
             text_subjectCode.setText(searchKeyword);
         this.loadComboBox();
+        addTextFieldFilters();
     }
-
+ 
+    private void addTextFieldFilters() {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(100)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(text_subjectCode).applyFilter();
+        textField.clone().setTextSource(txt_descriptiveTitle).applyFilter();
+       
+        DoubleFilter textNumber = TextInputFilters.doubleFloating()
+//                .setFilterMode(StringFilter.DIGIT)
+//                .setMaxCharacters(100)
+//                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textNumber.clone().setTextSource(txt_labUnits).applyFilter();
+        textNumber.clone().setTextSource(txt_lecUnits).applyFilter();
+    }
+    
+    private LayoutDataFX homeFX;
+    public void setHomeFX(LayoutDataFX homeFX) {
+        this.homeFX = homeFX;
+    }
+    
     @Override
     public void onEventHandling() {
         addClickEvent(btn_add, () -> {
@@ -102,9 +149,44 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
             if(cmb_subtype.isDisable())
                 cmb_subtype.getSelectionModel().select("NONE");
         });
-       this.addClickEvent(btn_close, ()->{
-           Mono.fx().getParentStage(btn_add).close();
-       });
+//       this.addClickEvent(btn_close, ()->{
+//           Mono.fx().getParentStage(btn_add).close();
+//       });
+        this.addClickEvent(btn_back, ()->{
+            back();
+        });
+    }
+    
+    private void back() {
+        try {
+            SearchSubjectController controller = homeFX.getController();
+            if(newSubject != null) {
+                controller.showAddedSubject(newSubject);
+                super.setSceneColor("#414852"); // call once on entire scene lifecycle
+
+                Animate.fade(this.vbox_main, SectionConstants.FADE_SPEED, () -> {
+                    super.replaceRoot(homeFX.getApplicationRoot());
+                }, homeFX.getApplicationRoot());
+            } else {
+                Pane pane = Mono.fx().create()
+                        .setPackageName("update2.org.cict.layout.subjects")
+                        .setFxmlDocument("search-subject")
+                        .makeFX()
+                        .setController(controller)
+                        .pullOutLayout();
+                super.setSceneColor("#414852"); // call once on entire scene lifecycle
+
+                Animate.fade(this.vbox_main, SectionConstants.FADE_SPEED, () -> {
+                    super.replaceRoot(pane);
+                }, pane);
+            }
+            return;
+        } catch (Exception e) { }
+        super.setSceneColor("#414852"); // call once on entire scene lifecycle
+
+        Animate.fade(this.vbox_main, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(homeFX.getApplicationRoot());
+        }, homeFX.getApplicationRoot());
     }
     
     private String acadProgram, subjectCode, descriptiveTitle, type, subType;
@@ -262,7 +344,8 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
                     .setHeader("Successfully Added")
                     .setMessage("Subject successfully added to the list.")
                     .showAndWait();
-            Mono.fx().getParentStage(btn_add).close();
+//            Mono.fx().getParentStage(btn_add).close();
+            back();
         } else {
             Mono.fx().alert()
                     .createError()

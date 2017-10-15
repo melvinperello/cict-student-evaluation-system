@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -13,13 +14,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbox_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="848.0" style="-fx-background-color: #E85764;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbox_main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="848.0" styleClass="metro-base-color" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="848.0" VBox.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="305.0" text="Subject Pre-requisites &amp; Co-Requisites" textFill="WHITE" HBox.hgrow="ALWAYS">
+                  <Label maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="305.0" styleClass="metro-title-1" text="Subject Pre-requisites &amp; Co-Requisites" textFill="WHITE" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="28.0" />
                      </font>
@@ -27,7 +28,7 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <JFXButton fx:id="btn_back" style="-fx-border-color: #fff;" text="Back" textFill="WHITE">
+                  <JFXButton fx:id="btn_back" prefHeight="41.0" prefWidth="140.0" style="-fx-border-color: #fff;" text="Back" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -40,11 +41,8 @@
                      </graphic>
                   </JFXButton>
                </children>
-               <padding>
-                  <Insets left="20.0" />
-               </padding>
                <VBox.margin>
-                  <Insets bottom="10.0" left="5.0" right="20.0" top="10.0" />
+                  <Insets bottom="10.0" left="20.0" right="30.0" top="10.0" />
                </VBox.margin>
             </HBox>
          </children>
@@ -219,7 +217,7 @@
                   </Label>
                   <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="btn_new_prereq" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="175.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="New Pre-requisite" textFill="WHITE">
+                        <Button fx:id="btn_new_prereq" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="175.0" style="-fx-background-color: #656D79; -fx-border-color: #fff;" text="New Pre-requisite" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -231,7 +229,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="btn_new_coreq" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="173.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="New Co-requisite" textFill="WHITE">
+                        <Button fx:id="btn_new_coreq" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="173.0" style="-fx-background-color: #656D79; -fx-border-color: #fff;" text="New Co-requisite" textFill="WHITE">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -260,7 +258,7 @@
             <Insets bottom="10.0" left="20.0" right="20.0" />
          </VBox.margin>
          <children>
-            <VBox fx:id="vbox_no_result" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+            <VBox fx:id="vbox_no_result" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" VBox.vgrow="ALWAYS">
                <children>
                   <Label text="No Pre-requisite &amp; Co-requisite Found" textFill="WHITE">
                      <font>
@@ -279,4 +277,8 @@
          </children>
       </VBox>
    </children>
+   <stylesheets>
+      <URL value="@../metro-ui.css" />
+      <URL value="@../metro-ui-table.css" />
+   </stylesheets>
 </VBox>

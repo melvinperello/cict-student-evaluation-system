@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -8,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="61.0" minWidth="61.0" prefHeight="61.0" prefWidth="796.0" style="-fx-border-color: #fff; -fx-background-color: #E85764;" styleClass="metro-row" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="61.0" minWidth="61.0" prefHeight="61.0" prefWidth="796.0" style="-fx-border-color: #fff;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="631.0" HBox.hgrow="ALWAYS">
          <children>
@@ -69,4 +71,12 @@
    <padding>
       <Insets left="10.0" />
    </padding>
+   <stylesheets>
+      <URL value="@../metro-ui.css" />
+      <URL value="@../metro-ui-table.css" />
+   </stylesheets>
+   <styleClass>
+      <String fx:value="metro-row" />
+      <String fx:value="metro-base-color" />
+   </styleClass>
 </HBox>

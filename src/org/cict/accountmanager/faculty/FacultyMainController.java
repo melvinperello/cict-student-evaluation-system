@@ -28,6 +28,8 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
@@ -36,7 +38,9 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -47,14 +51,17 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.home.Home;
+import update3.org.cict.SectionConstants;
 
 /**
  *
@@ -108,6 +115,9 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
     private TextField txt_designation_new;
 
     @FXML
+    private TextField txt_dept;
+    
+    @FXML
     private JFXButton btn_save_new;
 
     @FXML
@@ -116,6 +126,13 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
     @FXML
     private AnchorPane anchor_new_faculty;
 
+    @FXML
+    private JFXButton btn_search;
+
+    @FXML
+    private TextField txt_search;
+
+    
     public FacultyMainController() {
 
     }
@@ -124,6 +141,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
     public void onInitialization() {
         super.bindScene(application_root);
         this.fetchFaculty();
+        this.cmb_sort.getItems().clear();
         this.cmb_sort.getItems().add("Active");
         this.cmb_sort.getItems().add("Inactive");
         this.cmb_sort.getSelectionModel().selectFirst();
@@ -131,7 +149,54 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         ToggleGroup group2 = new ToggleGroup();
         rbtn_male_new.setToggleGroup(group2);
         rbtn_female_new.setToggleGroup(group2);
+        addTextFieldFilters();
     }
+    
+    private void addTextFieldFilters() {
+        StringFilter textId = TextInputFilters.string()
+//                .setFilterMode(StringFilter.LETTER_DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textId.clone().setTextSource(txt_bulsu_id).applyFilter();
+        
+        StringFilter text50Max = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        text50Max.clone().setTextSource(txt_dept).applyFilter();
+        text50Max.clone().setTextSource(txt_designation_new).applyFilter();
+        text50Max.clone().setTextSource(txt_rank_new).applyFilter();
+        
+        StringFilter textName = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_SPACE)
+                .setMaxCharacters(100)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textName.clone().setTextSource(txt_lastname).applyFilter();
+        textName.clone().setTextSource(txt_firstname).applyFilter();
+        textName.clone().setTextSource(txt_middlename).applyFilter();
+    }
+
 
     @Override
     public void onEventHandling() {
@@ -155,6 +220,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             txt_lastname.setText("");
             txt_middlename.setText("");
             txt_rank_new.setText("");
+            txt_dept.setText("");
             anchor_new_faculty.setVisible(true);
         });
 
@@ -165,6 +231,44 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_back_new, () -> {
             anchor_new_faculty.setVisible(false);
         });
+        
+        this.addClickEvent(btn_search, ()->{
+            onSearch();
+        });
+        
+        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
+            onSearch();
+        });
+    }
+    
+    private void onSearch() {
+        String key = MonoString.removeExtraSpace(txt_search.getText().toUpperCase());
+        if(key == null)
+            key = "";
+        if(key.isEmpty()) {
+            if(cmb_sort.getSelectionModel().getSelectedIndex() == 0)
+                createFacultyTable(activeFaculty);
+            else
+                createFacultyTable(deactivatedFaculty);
+            return;
+        }
+        ArrayList<FacultyInformation> temp_search = new ArrayList<>();
+        if(cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
+            for(FacultyInformation active: activeFaculty) {
+                if(active.getFullName().contains(key))
+                    temp_search.add(active);
+                else if(active.getBulsuID().contains(key))
+                    temp_search.add(active);
+            }
+        } else {
+            for(FacultyInformation inactive: deactivatedFaculty) {
+                if(inactive.getFullName().contains(key))
+                    temp_search.add(inactive);
+                else if(inactive.getBulsuID().contains(key))
+                    temp_search.add(inactive);
+            }
+        }
+        createFacultyTable(temp_search);
     }
 
     private void onBackToHome() {
@@ -216,29 +320,31 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 
         FacultyMapping faculty = currentFacultyInfo.getFacultyMapping();
         SimpleTableRow row = new SimpleTableRow();
-        row.setRowHeight(50.0);
+        row.setRowHeight(70.0);
 
         HBox facultyRow = (HBox) Mono.fx().create()
-                .setPackageName("org.cict.accountmanager.faculty")
-                .setFxmlDocument("main-row")
+                .setPackageName("org.cict.accountmanager.faculty.layout")
+                .setFxmlDocument("faculty-row")
                 .makeFX()
                 .pullOutLayout();
         VBox bg = searchAccessibilityText(facultyRow, "bg");
         Label lbl_id = searchAccessibilityText(facultyRow, "id");
         Label lbl_name = searchAccessibilityText(facultyRow, "name");
+        Label lbl_access = searchAccessibilityText(facultyRow, "access");
         lbl_id.setText(faculty.getBulsu_id().toUpperCase());
         lbl_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name() + " " + faculty.getLast_name()));
-
+        lbl_access.setText(faculty.getDesignation());
+        
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(facultyRow);
 
         row.addCell(cellParent);
 
-        if (refreshInfo) {
-            createInfo(currentFacultyInfo, lbl_id, lbl_name, row);
-            refreshInfo = false;
-        }
+//        if (refreshInfo) {
+//            createInfo(currentFacultyInfo, lbl_id, lbl_name, row);
+//            refreshInfo = false;
+//        }
 
         row.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             createInfo(currentFacultyInfo, lbl_id, lbl_name, row);
@@ -249,11 +355,32 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
     }
 
     private Date DATE_TODAY = Mono.orm().getServerTime().getDateWithFormat();
-
+    private final String SECTION_BASE_COLOR = "#414852";
     private void createInfo(FacultyInformation currentFacultyInfo, Label lbl_bulsu_id,
              Label lbl_full_name,
              SimpleTableRow rowFaculty) {
 
+        FacultyInfoController controller = new FacultyInfoController(currentFacultyInfo);
+        
+        LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+        controller.setHomeFx(homeFX);
+        
+        Pane pane = Mono.fx().create()
+                .setPackageName("org.cict.accountmanager.faculty.layout")
+                .setFxmlDocument("faculty-info")
+                .makeFX()
+                .setController(controller)
+                .pullOutLayout();
+
+        super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
+            
+        if(true)
+            return;
+        //-------------------------------------------------------------------------
         AnchorPane infoRow = (AnchorPane) Mono.fx().create()
                 .setPackageName("org.cict.accountmanager.faculty")
                 .setFxmlDocument("info")
@@ -638,7 +765,13 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             gender = "FEMALE";
         }
 
-        String bulsu_id = MonoString.removeExtraSpace(txt_bulsu_id.getText().toUpperCase()), lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase()), firstname = MonoString.removeExtraSpace(txt_firstname.getText().toUpperCase()), middlename = MonoString.removeExtraSpace(txt_middlename.getText().toUpperCase()), rank = MonoString.removeExtraSpace(txt_rank_new.getText().toUpperCase()), designation = MonoString.removeExtraSpace(txt_designation_new.getText().toUpperCase());
+        String bulsu_id = MonoString.removeExtraSpace(txt_bulsu_id.getText().toUpperCase())
+                , lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase())
+                , firstname = MonoString.removeExtraSpace(txt_firstname.getText().toUpperCase())
+                , middlename = MonoString.removeExtraSpace(txt_middlename.getText().toUpperCase())
+                , rank = MonoString.removeExtraSpace(txt_rank_new.getText().toUpperCase())
+                , designation = MonoString.removeExtraSpace(txt_designation_new.getText().toUpperCase())
+                , dept = MonoString.removeExtraSpace(txt_dept.getText().toUpperCase());
 
         if (bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
             showWarning("Incomplete Data", "Please fill the required fields*.");
@@ -652,6 +785,9 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         }
         if (designation == null) {
             designation = "";
+        }
+        if (dept == null) {
+            dept = "";
         }
 
         ArrayList<FacultyMapping> exist = Mono.orm().newSearch(Database.connect().faculty())
@@ -670,6 +806,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         new_faculty.setRank(rank);
         new_faculty.setDesignation(designation);
         new_faculty.setGender(gender);
+        new_faculty.setDepartment(dept);
         int id = Database.connect().faculty().insert(new_faculty);
         if (id != -1) {
             Notifications.create().darkStyle()

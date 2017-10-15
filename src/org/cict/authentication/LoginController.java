@@ -7,12 +7,11 @@ package org.cict.authentication;
 
 import app.lazy.models.AccountFacultySessionMapping;
 import app.lazy.models.Database;
-import com.izum.fx.textinputfilters.DoubleFilter;
-import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.Calendar;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.cict.MainApplication;
@@ -36,6 +36,7 @@ import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
+import update3.org.cict.SectionConstants;
 import update3.org.cict.access.Access;
 
 /**
@@ -101,7 +102,6 @@ public class LoginController extends SceneFX implements ControllerFX {
 
         imgInvUser.setVisible(false);
         imgInvPassword.setVisible(false);
-
     }
 
     /**
@@ -339,16 +339,29 @@ public class LoginController extends SceneFX implements ControllerFX {
     }
 
     public void onShowRegister() {
-        Mono.fx().getParentStage(this.btnLogin).close();
+//        Mono.fx().getParentStage(this.btnLogin).close();
+//
+//        Mono.fx().create()
+//                .setPackageName("org.cict.accountmanager")
+//                .setFxmlDocument("Register")
+//                .makeFX()
+//                .makeScene()
+//                .makeStageApplication()
+//                .stageMinDimension(524, 480)
+//                .stageShowAndWait();
 
-        Mono.fx().create()
+        Pane pane = Mono.fx().create()
                 .setPackageName("org.cict.accountmanager")
                 .setFxmlDocument("Register")
                 .makeFX()
-                .makeScene()
-                .makeStageApplication()
-                .stageMinDimension(524, 480)
-                .stageShowAndWait();
+//                .setController(controller)
+                .pullOutLayout();
+
+        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
 
     public void onShowForgotPassword() {

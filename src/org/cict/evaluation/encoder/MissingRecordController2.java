@@ -51,7 +51,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
@@ -62,7 +61,7 @@ import org.hibernate.criterion.Order;
  *
  * @author Joemar
  */
-public class MissingRecordController extends SceneFX implements ControllerFX{
+public class MissingRecordController2 extends SceneFX implements ControllerFX{
 
     @FXML
     private VBox vbox_main;
@@ -86,7 +85,7 @@ public class MissingRecordController extends SceneFX implements ControllerFX{
     private Integer year_level;
     private Integer current_SEMESTER;
     private Integer current_YEAR;
-    public MissingRecordController(StudentMapping currentStudent, 
+    public MissingRecordController2(StudentMapping currentStudent, 
             ArrayList<ArrayList<SubjectMapping>> subjectsPerSem, 
             ArrayList<String> yearAndSem, Integer yearLevel) {
         this.FILTERED_SUBJECTS = subjectsPerSem;
@@ -121,7 +120,7 @@ public class MissingRecordController extends SceneFX implements ControllerFX{
     }
     private SimpleTable recordTable = new SimpleTable();
     private void init() {
-        AcademicTermMapping acadTermMap = SystemProperties.instance().getCurrentAcademicTerm();
+        AcademicTermMapping acadTermMap = Evaluator.instance().getCurrentAcademicTerm();
         current_SEMESTER = acadTermMap.getSemester_regular();
         String[] sy = acadTermMap.getSchool_year().split("-");
         try {
@@ -274,24 +273,13 @@ public class MissingRecordController extends SceneFX implements ControllerFX{
     
     private boolean isOkayToView(Integer semester) {
         if(Objects.equals(CURRENT_STUDENT.getYear_level(), year_level)) {
-            if(current_SEMESTER == 1) {
+            if(!Objects.equals(semester, current_SEMESTER)) {
                 Mono.fx().alert()
                         .createWarning()
                         .setHeader("Ops, Not Yet")
                         .setMessage("The student is not yet in this semester.")
                         .showAndWait();
                 return false;
-            } else if(current_SEMESTER > 1) {
-                if(semester == 1) {
-                    return true;
-                } else {
-                    Mono.fx().alert()
-                            .createWarning()
-                            .setHeader("Ops, Not Yet")
-                            .setMessage("The student is not yet in this semester.")
-                            .showAndWait();
-                    return false;
-                }
             } else
                 System.out.println("SEMESTER NOT EQUAL TO CURRENT SEM");
         } else

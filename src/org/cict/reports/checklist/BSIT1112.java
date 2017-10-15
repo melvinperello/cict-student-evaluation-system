@@ -31,15 +31,14 @@ import org.cict.SubjectClassification;
 
 public class BSIT1112 {
 
-    public static String document = "";
+//    public static String document = "";
 /**
      * Path to the resulting PDF file.
      */
-        public static String RESULT = "src/reports/" + document +".pdf";
+        public static String RESULT;// = "src/reports/" + document +".pdf";
 
     public BSIT1112(String filename) {
-        BSIT1516.document = filename;
-        RESULT = "reports/checklist/" + BSIT1516.document + ".pdf";
+        RESULT = filename;//"reports/checklist/" + BSIT1516.document + ".pdf";
     }
 
     public int print() {

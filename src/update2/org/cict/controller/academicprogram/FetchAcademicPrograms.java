@@ -32,6 +32,7 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.orm.Searcher;
 import java.util.ArrayList;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -51,7 +52,7 @@ public class FetchAcademicPrograms extends Transaction {
 
         ArrayList<AcademicProgramMapping> academicPrograms = Mono.orm()
                 .newSearch(Database.connect().academic_program())
-                .active()
+                .active(Order.asc(DB.academic_program().code))
                 .all();
 
         for (AcademicProgramMapping academicProgram : academicPrograms) {

@@ -31,12 +31,12 @@ import org.cict.SubjectClassification;
 
 public class BSIT1516 {
 
-    public static String document;
+//    public static String document;
     public static String RESULT;
 
-    public BSIT1516(String filename) {
-        document = filename;
-        RESULT = "reports/checklist/" + document + ".pdf";
+    public BSIT1516( String res) {
+//        document = filename;
+        RESULT = res;//"reports/checklist/" + document + ".pdf";
     }
 
     public int print() {
@@ -68,7 +68,11 @@ public class BSIT1516 {
      */
     public String STUDENT_NAME = "DE LA CRUZ, JOEMAR NUCOM",
             STUDENT_ADDRESS = "8-152 SUCAD APALIT, PAMPANGA",
-            STUDENT_NUMBER = "09123456789"; 
+            STUDENT_NUMBER = "09123456789",
+            COURSE = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
+            SCHOOL_YEAR = "2015-2016",
+            MAJOR = ""; 
+    public Boolean IS_LADDERIZED = true;
     public HashMap<String,ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
     
     /**
@@ -85,12 +89,15 @@ public class BSIT1516 {
     private static final Font font5Plain = new Font(FontFamily.HELVETICA, 5);
     private static final Font font5Bold = new Font(FontFamily.HELVETICA, 5, Font.BOLD);
     private static final Font font5BoldItalic = new Font(FontFamily.HELVETICA, 5, Font.BOLDITALIC);
+    
     /**
      * PRIVATE VARIABLES
      */
     private String name,
             address,
             studentNo;
+    private static String course, sy, major;
+    private static Boolean isLadderized;
     private HashMap<String,ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
     
     public void init() {
@@ -98,6 +105,10 @@ public class BSIT1516 {
         this.name = this.STUDENT_NAME;
         this.address = this.STUDENT_ADDRESS;
         this.subjectsPerSem = this.SUBJECTS_PER_SEM;
+        course = COURSE;
+        isLadderized = IS_LADDERIZED;
+        sy = SCHOOL_YEAR;
+        major = MAJOR;
     }
     
     private static PdfWriter writer;
@@ -153,10 +164,12 @@ public class BSIT1516 {
     private static Paragraph createTitle() {
         Paragraph p = new Paragraph(10);
         p.setAlignment(Element.ALIGN_CENTER);
-        p.add(new Chunk("A ladderized curriculum leading to the degree of\n",font6Plain));
-        p.add(getTextUnderlined("BACHELOR OF SCIENCE IN INFORMATION"
-                + " TECHNOLOGY\n",font7Bold));
-        p.add(new Chunk("AY 2015-2016\n\n",font6Plain));
+        if(isLadderized)
+            p.add(new Chunk("A ladderized curriculum leading to the degree of\n",font6Plain));
+        p.add(getTextUnderlined(course + "\n",font7Bold));
+        if(!major.isEmpty())
+            p.add(getTextUnderlined("MAJOR IN " + major + "\n",font7Bold));
+        p.add(new Chunk("AY " + sy + "\n\n",font6Plain));
         return p;
     }
     
@@ -183,7 +196,8 @@ public class BSIT1516 {
         tbl_stud.setTotalWidth(575);
         tbl_stud.setLockedWidth(true);
         tbl_stud.addCell(createCellWithObject(createCurriculumTable(0,2),false,true));
-        tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
+        if(!isLadderized)
+            tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
         return tbl_stud;
     }
      
@@ -274,11 +288,12 @@ public class BSIT1516 {
                 tbl_stud.addCell(createSimpleCell(totalHrsWkStr, font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell("", font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell("", font5Bold, 0, true, false));
-
-                if(year == 2 && sem == 2) {
-                    value = 10;
-                    tbl_stud.addCell(createSimpleCell("At the end of Second Year (All comprising subjects are taken and passed), "
-                            + "the student earns a 2 - year Certificate if Associate in\nComputer Technology (ACT)", font7Bold, 8, true, false));
+                if(isLadderized) {
+                    if(year == 2 && sem == 2) {
+                        value = 10;
+                        tbl_stud.addCell(createSimpleCell("At the end of Second Year (All comprising subjects are taken and passed), "
+                                + "the student earns a 2 - year Certificate if Associate in\nComputer Technology (ACT)", font7Bold, 8, true, false));
+                    }
                 }
                 //change sem
                 if(sem == 1)

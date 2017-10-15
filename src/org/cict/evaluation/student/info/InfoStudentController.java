@@ -26,6 +26,8 @@ package org.cict.evaluation.student.info;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import java.util.ArrayList;
@@ -100,6 +102,64 @@ public class InfoStudentController implements ControllerFX{
         infoStudent.setCmbCurriculum(cmb_curriculum);
         this.setValues();
         this.setAllEditable(Boolean.FALSE);
+        addTextFieldFilters();
+    }
+    
+    private void addTextFieldFilters() {
+        StringFilter textId = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textId.clone().setTextSource(txt_studnum).applyFilter();
+        
+        StringFilter textName = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_SPACE)
+                .setMaxCharacters(100)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textName.clone().setTextSource(txt_firstname).applyFilter();
+        textName.clone().setTextSource(txt_lastname).applyFilter();
+        textName.clone().setTextSource(txt_middlename).applyFilter();
+        textName.clone().setTextSource(txt_section).applyFilter();
+        
+        StringFilter textGroup = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(11)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textGroup.clone().setTextSource(txt_group).applyFilter();
+        
+        StringFilter textAdYear = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textAdYear.clone().setTextSource(txt_admissionYear).applyFilter();
     }
 
     @Override

@@ -36,10 +36,10 @@ public class ReportsDirectory {
         try {
             File directory = new File(reportPath);
             if (!directory.exists()) {
-                System.out.println("Directory Not Exist for Advising Slip");
+                System.out.println("Directory Not Exist for " + reportPath);
                 boolean dir_created = directory.mkdirs();
                 if (dir_created) {
-                    System.out.println("Created Directory for Advising Slip");
+                    System.out.println("Created Directory " + reportPath);
                     return true; // directory was created.
                 } else {
                     System.err.println("Cannot Create Directory.");
@@ -50,7 +50,7 @@ public class ReportsDirectory {
                 return true; // the directory is already created.
             }
         } catch (Exception e) {
-            System.out.println("ADVISING DIRECTORY CREATION FAILED.");
+            System.out.println(reportPath + " DIRECTORY CREATION FAILED.");
             return false; // error in creating directory
         }
     }

@@ -25,8 +25,12 @@ package org.cict.accountmanager;
 
 import app.lazy.models.AccountFacultyMapping;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -34,14 +38,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.cict.authentication.LoginController;
+import update3.org.cict.SectionConstants;
 
 /**
  *
  * @author Joemar
  */
-public class RecoveryController implements ControllerFX{
+public class RecoveryController extends SceneFX implements ControllerFX{
 
+    @FXML
+    private VBox application_root;
+    
     @FXML
     private ComboBox cmb_questions;
 
@@ -63,7 +74,25 @@ public class RecoveryController implements ControllerFX{
     
     @Override
     public void onInitialization() {
+        bindScene(application_root);
         this.init();
+        addTextFieldFilters();
+    }
+
+    private void addTextFieldFilters() {
+        StringFilter textAns = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textAns.clone().setTextSource(txt_answer).applyFilter();
+        textAns.clone().setTextSource(txt_reenter).applyFilter();
     }
 
     @Override
@@ -116,6 +145,7 @@ public class RecoveryController implements ControllerFX{
                             .setHeader("Verification Failed")
                             .setMessage(validateRegister.getAuthenticatorMessage())
                             .showAndWait();
+                    this.onShowLogin();
                 }
             });
             validateRegister.setOnFailure(onFailure -> {
@@ -203,14 +233,28 @@ public class RecoveryController implements ControllerFX{
     }
     
     public void onShowLogin() {
-        Mono.fx().getParentStage(this.btn_Register).close();
-        Mono.fx().create()
+//        Mono.fx().getParentStage(this.btn_Cancel).close();
+        LoginController controller = new LoginController();
+//        Mono.fx().create()
+//                .setPackageName("org.cict.authentication")
+//                .setFxmlDocument("Login")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStage()
+//                .stageResizeable(false)
+//                .stageShow();
+        Pane pane = Mono.fx().create()
                 .setPackageName("org.cict.authentication")
                 .setFxmlDocument("Login")
                 .makeFX()
-                .makeScene()
-                .makeStage()
-                .stageResizeable(false)
-                .stageShow();
+                .setController(controller)
+                .pullOutLayout();
+
+        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
+
+        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+            super.replaceRoot(pane);
+        }, pane);
     }
 }

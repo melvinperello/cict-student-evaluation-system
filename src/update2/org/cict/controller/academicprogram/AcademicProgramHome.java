@@ -29,6 +29,8 @@ import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import artifacts.MonoString;
+import com.izum.fx.textinputfilters.StringFilter;
+import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -39,6 +41,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.transitions.Animate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,6 +83,9 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
     private JFXButton btn_home;
     
     @FXML
+    private JFXButton btn_home1;
+    
+    @FXML
     private JFXButton btnNewProgram;
     
     @FXML
@@ -88,8 +94,8 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_view_subjects;
     
-    @FXML
-    private ComboBox<String> cmb_sort_;
+//    @FXML
+//    private ComboBox<String> cmb_sort_;
     
     @FXML
     private VBox vbox_no_found;
@@ -122,17 +128,33 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         validFloorAssignment.add(3);
         validFloorAssignment.add(4);
         
-        cmb_sort_.getItems().clear();
-        cmb_sort_.getItems().add("SAVED");
-        cmb_sort_.getItems().add("NOT SAVED");
-        cmb_sort_.getSelectionModel().selectFirst();
+//        cmb_sort_.getItems().clear();
+//        cmb_sort_.getItems().add("SAVED");
+//        cmb_sort_.getItems().add("NOT SAVED");
+//        cmb_sort_.getSelectionModel().selectFirst();
     }
     
-    private final String SECTION_BASE_COLOR = "#E85764";
+    private LayoutDataFX homeFX;
+    public void setHomeFX(LayoutDataFX homeFX) {
+        this.homeFX = homeFX;
+    }
+    
+    private final String SECTION_BASE_COLOR = "#414852";
     @Override
     public void onEventHandling() {
         this.addClickEvent(btn_home, () -> {
-            Home.callHome(this);
+//            Home.callHome(this);
+            AcademicHome controller = new AcademicHome();
+            Pane pane = Mono.fx().create()
+                    .setPackageName("update2.org.cict.layout.academicprogram")
+                    .setFxmlDocument("academic-home")
+                    .makeFX()
+                    .setController(controller)
+                    .pullOutLayout();
+            super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecycle
+            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(pane);
+            }, pane);
         });
         this.addClickEvent(btnNewProgram, () -> {
             this.showAddNewProgram();
@@ -153,38 +175,47 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                 super.replaceRoot(pane);
             }, pane);
         });
-        cmb_sort_.valueProperty().addListener((e) -> {
-            ArrayList<AcademicProgramInfo> implementedAcadPrograms = new ArrayList<>();
-            ArrayList<AcademicProgramInfo> unImplementedAcadPrograms = new ArrayList<>();
-            if (acadProgramInfo != null) {
-                for (AcademicProgramInfo apInfo : acadProgramInfo) {
-                    if (apInfo.getAcademicProgram().getImplemented() == 1) {
-                        implementedAcadPrograms.add(apInfo);
-                    } else {
-                        unImplementedAcadPrograms.add(apInfo);
-                    }
+//        cmb_sort_.valueProperty().addListener((e) -> {
+//            changeView();
+//        });
+    this.addClickEvent(btn_home1, ()->{
+        changeView();
+    });
+    }
+    
+    private void changeView() {
+        ArrayList<AcademicProgramInfo> implementedAcadPrograms = new ArrayList<>();
+        ArrayList<AcademicProgramInfo> unImplementedAcadPrograms = new ArrayList<>();
+        if (acadProgramInfo != null) {
+            for (AcademicProgramInfo apInfo : acadProgramInfo) {
+                if (apInfo.getAcademicProgram().getImplemented() == 1) {
+                    implementedAcadPrograms.add(apInfo);
+                } else {
+                    unImplementedAcadPrograms.add(apInfo);
                 }
             }
-            int selected = cmb_sort_.getSelectionModel().getSelectedIndex();
-            vbox_table_holder.getChildren().clear();
-            if (selected == 0) {
-                if (implementedAcadPrograms.isEmpty()) {
-                    vbox_no_found.setVisible(true);
-                    vbox_search.setVisible(false);
-                } else {
-                    vbox_no_found.setVisible(false);
-                    createProgramsTable(implementedAcadPrograms);
-                }
+        }
+        String selected = btn_home1.getText();//cmb_sort_.getSelectionModel().getSelectedIndex();
+        vbox_table_holder.getChildren().clear();
+        if (selected.equalsIgnoreCase("Show Saved")) {
+            btn_home1.setText("Show Not Saved");
+            if (implementedAcadPrograms.isEmpty()) {
+                vbox_no_found.setVisible(true);
+                vbox_search.setVisible(false);
             } else {
-                if (unImplementedAcadPrograms.isEmpty()) {
-                    vbox_no_found.setVisible(true);
-                    vbox_search.setVisible(false);
-                } else {
-                    vbox_no_found.setVisible(false);
-                    createProgramsTable(unImplementedAcadPrograms);
-                }
+                vbox_no_found.setVisible(false);
+                createProgramsTable(implementedAcadPrograms);
             }
-        });
+        } else {
+            btn_home1.setText("Show Saved");
+            if (unImplementedAcadPrograms.isEmpty()) {
+                vbox_no_found.setVisible(true);
+                vbox_search.setVisible(false);
+            } else {
+                vbox_no_found.setVisible(false);
+                createProgramsTable(unImplementedAcadPrograms);
+            }
+        }
     }
     
     private void showAddNewProgram() {
@@ -314,12 +345,16 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         JFXButton btn_newCurriculum = searchAccessibilityText(programRowExtension, "btn_newCurriculum");
         JFXButton btn_delete = searchAccessibilityText(programRowExtension, "btn_delete");
         VBox vbox_curriculum_table_holder = searchAccessibilityText(programRowExtension, "vbox_curriculum_table_holder");
-        ComboBox cmb_sort = searchAccessibilityText(programRowExtension, "cmb_sort");
-        cmb_sort.getItems().clear();
-        cmb_sort.getItems().add("IMPLEMENTED");
-        cmb_sort.getItems().add("UNIMPLEMENTED");
-        cmb_sort.getSelectionModel().selectFirst();
-
+//        ComboBox cmb_sort = searchAccessibilityText(programRowExtension, "cmb_sort");
+//        cmb_sort.getItems().clear();
+//        cmb_sort.getItems().add("IMPLEMENTED");
+//        cmb_sort.getItems().add("UNIMPLEMENTED");
+//        cmb_sort.getSelectionModel().selectFirst();
+        JFXButton btn_show = searchAccessibilityText(programRowExtension, "btn_show");
+        
+        // filter
+        addTextFieldFilters(txt_code, txt_program_name, txt_floor_assignment);
+        
         /**
          * Disable if not administrator.
          */
@@ -361,7 +396,11 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
             lbl_implementation_date.setText("N / A");
             lbl_implemented_by.setText("N / A");
             addClickEvent(btn_delete, () -> {
-                int count = curriculums.size();
+                int count = 0;
+                try {
+                    curriculums.size();
+                } catch (Exception e) {
+                }
                 String message = "Are you sure you want to remove this academic program?";
                 if (count != 0) {
                     message = count + " curriculum exist. Do you still want to remove this academic program?";
@@ -376,12 +415,15 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                     apMap.setRemoved_by(IMPLEMENTED_BY);
                     apMap.setRemoved_date(IMPLEMENTED_DATE);
                     if (Database.connect().academic_program().update(apMap)) {
-                        for(CurriculumMapping c: curriculums){
-                            c.setActive(0);
-                            c.setRemoved_by(IMPLEMENTED_BY);
-                            c.setRemoved_date(IMPLEMENTED_DATE);
-                            if(!Database.connect().curriculum().update(c))
-                                System.out.println("CURRICULUM " + c.getName() +" IS NOT REMOVED");
+                        try {
+                            for(CurriculumMapping c: curriculums){
+                                c.setActive(0);
+                                c.setRemoved_by(IMPLEMENTED_BY);
+                                c.setRemoved_date(IMPLEMENTED_DATE);
+                                if(!Database.connect().curriculum().update(c))
+                                    System.out.println("CURRICULUM " + c.getName() +" IS NOT REMOVED");
+                            }
+                        } catch (Exception e) {
                         }
                         Notifications.create()
                                 .title("Deleted Successfully")
@@ -441,15 +483,27 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
          */
         createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
         
-        cmb_sort.valueProperty().addListener((e) -> {
-            int selected = cmb_sort.getSelectionModel().getSelectedIndex();
+//        cmb_sort.valueProperty().addListener((e) -> {
+//            int selected = cmb_sort.getSelectionModel().getSelectedIndex();
+//            vbox_curriculum_table_holder.getChildren().clear();
+//            if (selected == 0) {
+//                /**
+//                 * Curriculum Rows.
+//                 */
+//                createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
+//            } else {
+//                createCurriculumRows(vbox_curriculum_table_holder, unImplementedCurriculums, lbl_count);
+//            }
+//        });
+
+        this.addClickEvent(btn_show, ()->{
+            String selected = btn_show.getText(); //cmb_sort.getSelectionModel().getSelectedIndex();
             vbox_curriculum_table_holder.getChildren().clear();
-            if (selected == 0) {
-                /**
-                 * Curriculum Rows.
-                 */
+            if (selected.equalsIgnoreCase("Show Implemented")) {
+                btn_show.setText("Show Unimplemented");
                 createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
             } else {
+                btn_show.setText("Show Implemented");
                 createCurriculumRows(vbox_curriculum_table_holder, unImplementedCurriculums, lbl_count);
             }
         });
@@ -591,8 +645,8 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         FetchAcademicPrograms fetchProgramsTx = new FetchAcademicPrograms();
         fetchProgramsTx.setOnStart(onStart->{
             programsTable.getChildren().clear();
-            cmb_sort_.getSelectionModel().selectFirst();
-            cmb_sort_.setDisable(true);
+//            cmb_sort_.getSelectionModel().selectFirst();
+            btn_home1.setDisable(true);
         });
         fetchProgramsTx.setOnSuccess(onSuccess -> {
             acadProgramInfo = fetchProgramsTx.getAcademicProgramsCollection();
@@ -601,7 +655,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                 createProgramsView(null);
             });
             create_programs_table.setOnSuccess((a)->{
-                cmb_sort_.setDisable(false);
+                btn_home1.setDisable(false);
             });
             create_programs_table.start();
         });
@@ -612,7 +666,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
     
     private void createProgramsView(AcademicProgramInfo newapInfo) {
         boolean isSaved = false;
-        if (cmb_sort_.getSelectionModel().getSelectedIndex() == 0) {
+        if (btn_home1.getText().equalsIgnoreCase("Show Not Saved")) {
             isSaved = true;
         }
         ArrayList<AcademicProgramInfo> viewedAcadPrograms = new ArrayList<>();
@@ -818,5 +872,34 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         ArrayList<CurriculumMapping> curriculums = controller.getCurriculums();
         createCurriculumRows(currentProgram, curriculums, labelCount);
+    }
+    
+    private void addTextFieldFilters(TextField txt_progcode, TextField txt_progname, TextField txt_floor) {
+        StringFilter textField = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField.clone().setTextSource(txt_progcode).applyFilter();
+        textField.clone().setTextSource(txt_progname).applyFilter();
+        
+        StringFilter textFloor = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(11)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textFloor.clone().setTextSource(txt_floor).applyFilter();
     }
 }

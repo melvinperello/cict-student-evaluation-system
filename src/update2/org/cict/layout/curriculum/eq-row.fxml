@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -66,4 +68,12 @@
    <padding>
       <Insets left="10.0" />
    </padding>
+   <stylesheets>
+      <URL value="@../metro-ui.css" />
+      <URL value="@../metro-ui-table.css" />
+   </stylesheets>
+   <styleClass>
+      <String fx:value="metro-base-color" />
+      <String fx:value="metro-row" />
+   </styleClass>
 </HBox>
