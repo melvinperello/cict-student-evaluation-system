@@ -16,10 +16,33 @@
 
 <AnchorPane fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="1391.0" styleClass="metro-base-color" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="1074.0" layoutY="71.0" text="Sort by:" AnchorPane.rightAnchor="266.0" AnchorPane.topAnchor="71.0">
-         <font>
-            <Font size="15.0" />
-         </font></Label>
+      <HBox fx:id="hbox_tools" alignment="CENTER_LEFT" layoutX="21.0" layoutY="62.0" spacing="20.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="72.0">
+         <children>
+            <TextField fx:id="txt_search" prefHeight="34.0" prefWidth="380.0" promptText="Search full name or using BulSU ID" styleClass="metro-textbox-18" />
+            <JFXButton fx:id="btn_search" alignment="CENTER" contentDisplay="CENTER" text=" " textAlignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../src/images/Search_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Sort by">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="cmb_sort" prefHeight="34.0" prefWidth="228.0" styleClass="metro-combo-box" />
+               </children>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="14.0" prefHeight="34.0" prefWidth="1391.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label maxWidth="1.7976931348623157E308" prefHeight="19.0" prefWidth="1191.0" styleClass="metro-title-1" text="Faculty Manager" HBox.hgrow="ALWAYS" />
@@ -37,20 +60,19 @@
          </padding>
       </HBox>
       <VBox fx:id="vbox_info" layoutX="1378.0" layoutY="47.0" prefHeight="557.0" prefWidth="13.0" style="-fx-background-color: #fff;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1378.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0" />
-      <VBox fx:id="vbox_list" layoutX="21.0" layoutY="115.0" prefHeight="476.0" prefWidth="1352.0" styleClass="metro-table" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="108.0" />
-      <ComboBox fx:id="cmb_sort" layoutX="1136.0" layoutY="67.0" prefHeight="34.0" prefWidth="228.0" styleClass="metro-combo-box" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="67.0" />
-      <AnchorPane fx:id="anchor_new_faculty" layoutX="-1.0" layoutY="108.0" prefHeight="496.0" prefWidth="1385.0" styleClass="metro-base-color" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="108.0">
+      <VBox fx:id="vbox_list" layoutX="21.0" layoutY="115.0" prefHeight="476.0" prefWidth="1352.0" styleClass="metro-table" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="120.0" />
+      <AnchorPane fx:id="anchor_new_faculty" layoutX="-1.0" layoutY="108.0" prefHeight="496.0" prefWidth="1385.0" styleClass="metro-base-color" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="120.0">
          <children>
             <Label layoutX="49.0" layoutY="16.0" text="New Faculty">
                <font>
-                  <Font size="23.0" />
+                  <Font name="System Bold" size="23.0" />
                </font>
             </Label>
-            <VBox layoutX="49.0" layoutY="55.0" prefHeight="274.0" prefWidth="461.0" spacing="5.0">
+            <VBox layoutX="49.0" layoutY="55.0" prefHeight="274.0" prefWidth="461.0" spacing="10.0">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="BulSU ID:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="BulSU ID" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -69,7 +91,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="Last name:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="Last name" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -88,7 +110,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="43.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="First name:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="First name" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -107,7 +129,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="76.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="Middle name:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="Middle name" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -120,7 +142,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="142.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="Gender:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="Gender" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -139,7 +161,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="109.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="Rank:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="Rank" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -149,7 +171,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="175.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="Designation:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="Designation" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -159,7 +181,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="238.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
-                        <Label text="Department:" textFill="#656d79">
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="Department" textFill="#656d79">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -167,32 +189,39 @@
                         <TextField fx:id="txt_dept" accessibleText="txt_designation_new" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="221.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" />
                      </children>
                   </HBox>
+                  <HBox alignment="CENTER_RIGHT" spacing="20.0">
+                     <children>
+                        <JFXButton fx:id="btn_save_new" accessibleText="btn_save_new" prefHeight="40.0" prefWidth="150.0" style="-fx-border-color: #DEDEDE;" text="Submit" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../src/images/Save%20as_32px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton fx:id="btn_back_new" accessibleText="btn_back_new" prefHeight="40.0" prefWidth="150.0" style="-fx-border-color: white;" text="Back" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="28.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../src/images/Long%20Arrow%20Left_64px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
+                  </HBox>
                </children>
             </VBox>
-            <JFXButton fx:id="btn_save_new" accessibleText="btn_save_new" layoutX="340.0" layoutY="341.0" prefHeight="40.0" prefWidth="150.0" style="-fx-border-color: #DEDEDE;" text="Submit" textFill="WHITE">
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../src/images/Save%20as_32px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </JFXButton>
-            <JFXButton fx:id="btn_back_new" accessibleText="btn_back_new" layoutX="420.0" layoutY="15.0" text="Back" textFill="WHITE">
-               <graphic>
-                  <ImageView fitHeight="28.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../src/images/Long%20Arrow%20Left_64px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </JFXButton>
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="40.0" prefWidth="118.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0">
@@ -208,16 +237,6 @@
             </JFXButton>
          </children>
       </AnchorPane>
-      <JFXButton fx:id="btn_search" alignment="CENTER" contentDisplay="CENTER" layoutX="419.0" layoutY="63.0" text=" " textAlignment="CENTER">
-         <graphic>
-            <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../src/images/Search_96px.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </JFXButton>
-      <TextField fx:id="txt_search" layoutX="21.0" layoutY="69.0" prefHeight="34.0" prefWidth="380.0" promptText="Search full name or using BulSU ID" styleClass="metro-textbox-18" />
    </children>
    <stylesheets>
       <URL value="@metro-ui.css" />

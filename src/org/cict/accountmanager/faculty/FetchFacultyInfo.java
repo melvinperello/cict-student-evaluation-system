@@ -37,28 +37,29 @@ import org.hibernate.criterion.Order;
  * @author Joemar
  */
 public class FetchFacultyInfo extends Transaction {
+
     private ArrayList<FacultyInformation> activeFaculty = new ArrayList<>();
     private ArrayList<FacultyInformation> deactivatedFaculty = new ArrayList<>();
-    
-     
+
     public ArrayList<FacultyInformation> getAllFaculty() {
         return activeFaculty;
     }
-     
+
     public ArrayList<FacultyInformation> getDeactivatedFaculty() {
         return deactivatedFaculty;
     }
-    
+
     @Override
     protected boolean transaction() {
         ArrayList<FacultyMapping> facultyMaps = Mono.orm().newSearch(Database.connect().faculty())
                 .execute(Order.asc(DB.faculty().first_name))
                 .all();
-        for(FacultyMapping facultyMap: facultyMaps){
+        for (FacultyMapping facultyMap : facultyMaps) {
             FacultyInformation fInfo = new FacultyInformation(facultyMap);
-            if(fInfo.getAccountFacultyMapping() == null)
+            if (fInfo.getAccountFacultyMapping() == null) {
                 continue;
-            if(fInfo.getAccountFacultyMapping().getActive() == 0) {
+            }
+            if (fInfo.getAccountFacultyMapping().getActive() == 0) {
                 deactivatedFaculty.add(fInfo);
             } else {
                 activeFaculty.add(fInfo);
@@ -69,7 +70,7 @@ public class FetchFacultyInfo extends Transaction {
 
     @Override
     protected void after() {
-    
+
     }
-    
+
 }

@@ -43,20 +43,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.controlsfx.control.Notifications;
 import update3.org.cict.SectionConstants;
 
 /**
+ * Faculty Information Controller Class.
+ * <fxml>faculty-info.fxml</fxml>
  *
  * @author Joemar
  */
 public class FacultyInfoController extends SceneFX implements ControllerFX {
 
     @FXML
-    private AnchorPane application_root;
+    private VBox application_root;
+
+    @FXML
+    private JFXButton btn_back;
 
     @FXML
     private Label lbl_name;
@@ -71,7 +75,10 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
     private Label lbl_rank;
 
     @FXML
-    private JFXButton btn_basic;
+    private Label lbl_designation;
+
+    @FXML
+    private Label lbl_department;
 
     @FXML
     private Label lbl_username;
@@ -84,12 +91,6 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_nav;
-    
-    @FXML
-    private JFXButton btn_reset_enable;
-    
-    @FXML
-    private JFXButton btn_enable;
 
     @FXML
     private TextField txt_id;
@@ -117,56 +118,67 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
     @FXML
     private TextField txt_dept;
-            
+
     @FXML
     private JFXButton btn_save;
 
     @FXML
-    private JFXButton btn_back;
-    
-    @FXML
-    private AnchorPane anchor_basic;
-            
-    @FXML
-    private AnchorPane anchor_disabled;
+    private VBox vbox_disabled;
 
-    private FacultyInformation currentFacultyInfo;
+    @FXML
+    private JFXButton btn_enable;
+
+    @FXML
+    private JFXButton btn_reset_enable;
+
+    @FXML
+    private VBox vbox_faculty_tip;
+
     public FacultyInfoController(FacultyInformation currentFacultyInfo) {
         this.currentFacultyInfo = currentFacultyInfo;
     }
-    
+
+    private FacultyInformation currentFacultyInfo;
     private LayoutDataFX homeFx;
+
     public void setHomeFx(LayoutDataFX homeFx) {
         this.homeFx = homeFx;
     }
-    
+
     @Override
     public void onInitialization() {
         bindScene(application_root);
+        // disabled box
+        this.vbox_faculty_tip.setVisible(true); // display tip
+        this.vbox_disabled.setVisible(false); // hid disable box
+
         setData();
         addTextFieldFilters();
     }
-     
+
+    /**
+     * Add Text Filters for input.
+     */
     private void addTextFieldFilters() {
         StringFilter textId = TextInputFilters.string()
-//                .setFilterMode(StringFilter.LETTER_DIGIT)
+                //                .setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
                     }
                 });
         textId.clone().setTextSource(txt_id).applyFilter();
-        
+
         StringFilter text50Max = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
@@ -175,18 +187,19 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         text50Max.clone().setTextSource(txt_dept).applyFilter();
         text50Max.clone().setTextSource(txt_des).applyFilter();
         text50Max.clone().setTextSource(txt_rank).applyFilter();
-        
+
         StringFilter textName = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_SPACE)
                 .setMaxCharacters(100)
                 .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
                     }
                 });
+
         textName.clone().setTextSource(txt_lastname).applyFilter();
         textName.clone().setTextSource(txt_fname).applyFilter();
         textName.clone().setTextSource(txtmname).applyFilter();
@@ -194,81 +207,96 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
     @Override
     public void onEventHandling() {
-        
-        this.addClickEvent(btn_back, ()->{
-            homeFx.getController().onInitialization();
+
+        this.addClickEvent(btn_back, () -> {
+
             Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                 super.replaceRoot(homeFx.getApplicationRoot());
             }, homeFx.getApplicationRoot());
-        });
-        
-        this.addClickEvent(btn_basic, () -> {
-            anchor_basic.setVisible(true);
-            btn_basic.setDisable(true);
+
+            homeFx.getController().onInitialization();
         });
 
         this.addClickEvent(btn_save, () -> {
             onSave();
         });
-        
+
         this.addClickEvent(btn_nav, () -> {
             String nav = btn_nav.getText();
-            if(nav.equalsIgnoreCase("activate account")) {
+            if (nav.equalsIgnoreCase("activate account")) {
                 setAcc(true);
             } else {
                 setAcc(false);
             }
         });
-        
+
         this.addClickEvent(btn_reset_enable, () -> {
-            int res = Mono.fx().alert().createConfirmation()
-                    .setHeader("Reset And Enable Account")
-                    .setMessage("This will result into an update to the user's password into default."
-                            + " Do you really want to reset this account?")
-                    .confirmYesNo();
-            if(res == -1)
-                return;
-            
-            String defaultPass = "123456";
-            String hash = Mono.security().hashFactory().hash_sha512(defaultPass);
-            afMap.setPassword(hash);
-            afMap.setBlocked_count(0);
-            afMap.setDisabled_since(null);
-            
-            if(Database.connect().account_faculty().update(afMap)) {
-                Notifications.create().darkStyle()
-                        .title("Reset And Enabled Successfully")
-                        .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
-                        .showInformation();
-                anchor_disabled.setVisible(false);
-            }
+            this.resetAndEnable();
         });
-        
+
         this.addClickEvent(btn_enable, () -> {
-            int res = Mono.fx().alert().createConfirmation()
-                    .setHeader("Enable Account")
-                    .setMessage("This will only enable the disabled account."
-                            + " Continue?")
-                    .confirmYesNo();
-            if(res == -1)
-                return;
-            
-            afMap.setDisabled_since(null);
-            afMap.setBlocked_count(0);
-            
-            if(Database.connect().account_faculty().update(afMap)) {
-                Notifications.create().darkStyle()
-                        .title("Enabled Successfully")
-                        .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
-                        .showInformation();
-                anchor_disabled.setVisible(false);
-            }
+            this.reenableOnly();
         });
     }
-    
+
+    /**
+     * Re-enables a disabled account.
+     */
+    private void reenableOnly() {
+        int res = Mono.fx().alert().createConfirmation()
+                .setHeader("Enable Account")
+                .setMessage("This will only enable the disabled account."
+                        + " Continue?")
+                .confirmYesNo();
+        if (res == -1) {
+            return;
+        }
+
+        afMap.setDisabled_since(null);
+        afMap.setBlocked_count(0);
+
+        if (Database.connect().account_faculty().update(afMap)) {
+            Notifications.create().darkStyle()
+                    .title("Enabled Successfully")
+                    .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
+                    .showInformation();
+            this.vbox_disabled.setVisible(false);
+            this.vbox_faculty_tip.setVisible(true); //show tip
+        }
+    }
+
+    /**
+     * Resets and re-enable an account.
+     */
+    private void resetAndEnable() {
+        int res = Mono.fx().alert().createConfirmation()
+                .setHeader("Reset And Enable Account")
+                .setMessage("This will result into an update to the user's password into default."
+                        + " Do you really want to reset this account?")
+                .confirmYesNo();
+        if (res == -1) {
+            return;
+        }
+
+        String defaultPass = "123456";
+        String hash = Mono.security().hashFactory().hash_sha512(defaultPass);
+        afMap.setPassword(hash);
+        afMap.setBlocked_count(0);
+        afMap.setDisabled_since(null);
+
+        if (Database.connect().account_faculty().update(afMap)) {
+            Notifications.create().darkStyle()
+                    .title("Reset And Enabled Successfully")
+                    .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
+                    .showInformation();
+            this.vbox_disabled.setVisible(false);
+            this.vbox_faculty_tip.setVisible(true); //show tip
+        }
+    }
+
     private void setAcc(boolean active) {
         String title = "", btn = "", status = "";
-        if(active) {
+        if (active) {
             afMap.setActive(1);
             title = "Activated Successfully";
             btn = "Deactivate Account";
@@ -279,7 +307,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
             btn = "Activate Account";
             status = "Inactive";
         }
-        if(Database.connect().account_faculty().update(afMap)) {
+        if (Database.connect().account_faculty().update(afMap)) {
             Notifications.create().darkStyle()
                     .title(title)
                     .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
@@ -288,74 +316,78 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
             lbl_status.setText(status);
         }
     }
-    
+
+    /**
+     * Save new Values.
+     */
     private void onSave() {
-            String gender = "";
-            if (rbtn_male.isSelected()) {
-                gender = "MALE";
-            } else if (rbtn_female.isSelected()) {
-                gender = "FEMALE";
-            }
-            String bulsu_id = "", lastname = "", firstname = "", middlename = "", rank = "", designation = "", dept = "";
+        String gender = "";
+        if (rbtn_male.isSelected()) {
+            gender = "MALE";
+        } else if (rbtn_female.isSelected()) {
+            gender = "FEMALE";
+        }
+        String bulsu_id = "", lastname = "", firstname = "", middlename = "", rank = "", designation = "", dept = "";
 
-            try {
-                bulsu_id = MonoString.removeExtraSpace(txt_id.getText().toUpperCase());
-                lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase());
-                firstname = MonoString.removeExtraSpace(txt_fname.getText().toUpperCase());
-            } catch (Exception e) {
-                showWarning("Incomplete Data", "Please fill the required fields*.");
-                return;
-            }
+        try {
+            bulsu_id = MonoString.removeExtraSpace(txt_id.getText().toUpperCase());
+            lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase());
+            firstname = MonoString.removeExtraSpace(txt_fname.getText().toUpperCase());
+        } catch (Exception e) {
+            showWarning("Incomplete Data", "Please fill the required fields*.");
+            return;
+        }
 
-            if (bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
-                showWarning("Incomplete Data", "Please fill the required fields*.");
-                return;
-            }
-            ArrayList<FacultyMapping> exist = Mono.orm().newSearch(Database.connect().faculty())
-                    .eq(DB.faculty().bulsu_id, bulsu_id)
-                    .execute().all();
-            if (exist != null) {
-                for (FacultyMapping eachExist : exist) {
-                    if (!Objects.equals(eachExist.getId(), faculty.getId())) {
-                        showWarning("BulSU ID Exist", "A faculty is already using\n"
-                                + "this BulSU ID.");
-                        return;
-                    }
+        if (bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
+            showWarning("Incomplete Data", "Please fill the required fields*.");
+            return;
+        }
+        ArrayList<FacultyMapping> exist = Mono.orm().newSearch(Database.connect().faculty())
+                .eq(DB.faculty().bulsu_id, bulsu_id)
+                .execute().all();
+        if (exist != null) {
+            for (FacultyMapping eachExist : exist) {
+                if (!Objects.equals(eachExist.getId(), faculty.getId())) {
+                    showWarning("BulSU ID Exist", "A faculty is already using\n"
+                            + "this BulSU ID.");
+                    return;
                 }
             }
+        }
 
-            if (MonoString.removeExtraSpace(txtmname.getText().toUpperCase()) != null) {
-                middlename = MonoString.removeExtraSpace(txtmname.getText().toUpperCase());
+        if (MonoString.removeExtraSpace(txtmname.getText().toUpperCase()) != null) {
+            middlename = MonoString.removeExtraSpace(txtmname.getText().toUpperCase());
+        }
+        if (MonoString.removeExtraSpace(txt_rank.getText().toUpperCase()) != null) {
+            rank = MonoString.removeExtraSpace(txt_rank.getText().toUpperCase());
+        }
+        if (MonoString.removeExtraSpace(txt_des.getText().toUpperCase()) != null) {
+            designation = MonoString.removeExtraSpace(txt_des.getText().toUpperCase());
+        }
+        try {
+            if (MonoString.removeExtraSpace(txt_dept.getText().toUpperCase()) != null) {
+                dept = MonoString.removeExtraSpace(txt_dept.getText().toUpperCase());
             }
-            if (MonoString.removeExtraSpace(txt_rank.getText().toUpperCase()) != null) {
-                rank = MonoString.removeExtraSpace(txt_rank.getText().toUpperCase());
-            }
-            if (MonoString.removeExtraSpace(txt_des.getText().toUpperCase()) != null) {
-                designation = MonoString.removeExtraSpace(txt_des.getText().toUpperCase());
-            }
-            try {
-                if (MonoString.removeExtraSpace(txt_dept.getText().toUpperCase()) != null) {
-                    dept = MonoString.removeExtraSpace(txt_dept.getText().toUpperCase());
-                }
-            } catch (Exception e) {
-            }
-            faculty.setBulsu_id(bulsu_id);
-            faculty.setLast_name(lastname);
-            faculty.setFirst_name(firstname);
-            faculty.setMiddle_name(middlename);
-            faculty.setRank(rank);
-            faculty.setDesignation(designation);
-            faculty.setGender(gender);
-            faculty.setDepartment(dept);
-            if (Database.connect().faculty().update(faculty)) {
-                Notifications.create().darkStyle()
-                        .title("Updated Successfully")
-                        .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
-                        .showInformation();
-            }
-            lbl_bulsu_id.setText(faculty.getBulsu_id());
-            this.setValues();
-            this.setBasicInfo();
+        } catch (Exception e) {
+        }
+        faculty.setBulsu_id(bulsu_id);
+        faculty.setLast_name(lastname);
+        faculty.setFirst_name(firstname);
+        faculty.setMiddle_name(middlename);
+        faculty.setRank(rank);
+        faculty.setDesignation(designation);
+        faculty.setGender(gender);
+        faculty.setDepartment(dept);
+        if (Database.connect().faculty().update(faculty)) {
+            Notifications.create().darkStyle()
+                    .title("Updated Successfully")
+                    .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
+                    .showInformation();
+        }
+        // update values after update
+        lbl_bulsu_id.setText(faculty.getBulsu_id());
+        this.setBasicInfo();
+        this.setValues();
     }
 
     private void showWarning(String title, String text) {
@@ -364,66 +396,82 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
                 .text(text)
                 .showWarning();
     }
-    
+
     private FacultyMapping faculty;
     private AccountFacultyMapping afMap;
+
+    /**
+     * Set Values in labels.
+     */
     private void setData() {
+        // group toggle
         ToggleGroup group2 = new ToggleGroup();
         rbtn_male.setToggleGroup(group2);
         rbtn_female.setToggleGroup(group2);
-        
+
+        // get values if selected faculty
         faculty = currentFacultyInfo.getFacultyMapping();
+        // account mapping
         afMap = currentFacultyInfo.getAccountFacultyMapping();
-        this.setBasicInfo();
-        if(afMap == null) {
+
+        this.setBasicInfo(); // set values in the label for basic  info
+        this.setValues(); // set values in the editting fields
+        // if no account
+        if (afMap == null) {
             System.out.println("NO ACCOUNT");
             return;
         }
+        // set username
         lbl_username.setText(afMap.getUsername());
+        // set account access level
         String access = afMap.getAccess_level().replace("_", " ");
         lbl_access.setText(access);
-        if(afMap.getActive() == 0)
-            lbl_status.setText("Inactive");
-        else
-            lbl_status.setText("Active");
-            
-        if(afMap.getActive() == 0) {
-            btn_nav.setText("Activate Account");
-        } else {
-            btn_nav.setText("Deactivate Account");
-        }
+
+        // set status and button text
+        lbl_status.setText(afMap.getActive().equals(0) ? "Inactive" : "Active");
+        btn_nav.setText(afMap.getActive().equals(0) ? "Activate Account" : "Deactivate Account");
+
+        // check if the account is blocked
         try {
-            if(afMap.getDisabled_since() != null) {
-                if(!Mono.orm().getServerTime().isPastServerTime(afMap.getDisabled_since()))
-                    anchor_disabled.setVisible(true);
+            if (afMap.getBlocked_count() >= 3 && afMap.getDisabled_since() != null) {
+                vbox_disabled.setVisible(true);
+                this.vbox_faculty_tip.setVisible(false); // hide tip
             }
         } catch (Exception e) {
         }
     }
-    
+
+    /**
+     * Load Values on Label.
+     */
     private void setBasicInfo() {
         lbl_bulsu_id.setText(faculty.getBulsu_id().toUpperCase());
         lbl_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name() + " " + faculty.getLast_name()));
         lbl_gender.setText(WordUtils.capitalizeFully(faculty.getGender()));
         lbl_rank.setText(faculty.getRank().toUpperCase());
-        setValues();
-        anchor_basic.setVisible(false);
-        btn_basic.setDisable(false);
     }
 
+    /**
+     * Set Current Values on text fields.
+     */
     private void setValues() {
         txt_id.setText(faculty.getBulsu_id());
         txt_lastname.setText(faculty.getLast_name());
         txt_fname.setText(faculty.getFirst_name());
-        txtmname.setText(faculty.getMiddle_name());
+        txtmname.setText(faculty.getMiddle_name() == null ? "" : faculty.getMiddle_name());
+
         if (faculty.getGender().equalsIgnoreCase("MALE")) {
             rbtn_male.setSelected(true);
         } else if (faculty.getGender().equalsIgnoreCase("FEMALE")) {
             rbtn_female.setSelected(true);
+        } else {
+            // if none was set in the database
+            rbtn_male.setSelected(true);
         }
-        txt_rank.setText(faculty.getRank());
-        txt_des.setText(faculty.getDesignation());
-        txt_dept.setText(faculty.getDepartment());
+        txt_rank.setText(faculty.getRank() == null ? "" : faculty.getRank());
+        txt_des.setText(faculty.getDesignation() == null ? "" : faculty.getDesignation());
+        // before assigning make sure the value is not null
+        txt_dept.setText(faculty.getDepartment() == null ? "" : faculty.getDepartment());
     }
 
 }

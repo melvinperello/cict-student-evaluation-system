@@ -116,7 +116,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 
     @FXML
     private TextField txt_dept;
-    
+
     @FXML
     private JFXButton btn_save_new;
 
@@ -132,7 +132,9 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
     @FXML
     private TextField txt_search;
 
-    
+    @FXML
+    private HBox hbox_tools;
+
     public FacultyMainController() {
 
     }
@@ -151,27 +153,27 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         rbtn_female_new.setToggleGroup(group2);
         addTextFieldFilters();
     }
-    
+
     private void addTextFieldFilters() {
         StringFilter textId = TextInputFilters.string()
-//                .setFilterMode(StringFilter.LETTER_DIGIT)
+                //                .setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
                     }
                 });
         textId.clone().setTextSource(txt_bulsu_id).applyFilter();
-        
+
         StringFilter text50Max = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
@@ -180,13 +182,13 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         text50Max.clone().setTextSource(txt_dept).applyFilter();
         text50Max.clone().setTextSource(txt_designation_new).applyFilter();
         text50Max.clone().setTextSource(txt_rank_new).applyFilter();
-        
+
         StringFilter textName = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_SPACE)
                 .setMaxCharacters(100)
                 .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
@@ -197,9 +199,9 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         textName.clone().setTextSource(txt_middlename).applyFilter();
     }
 
-
     @Override
     public void onEventHandling() {
+        // back to home
         super.addClickEvent(btn_home, () -> {
             this.onBackToHome();
         });
@@ -213,6 +215,9 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             }
         });
 
+        /**
+         * New Faculty
+         */
         this.addClickEvent(btn_new_faculty, () -> {
             txt_bulsu_id.setText("");
             txt_designation_new.setText("");
@@ -222,50 +227,63 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             txt_rank_new.setText("");
             txt_dept.setText("");
             anchor_new_faculty.setVisible(true);
+            this.hbox_tools.setDisable(true);
         });
 
+        /**
+         * Add
+         */
         this.addClickEvent(btn_save_new, () -> {
             addNewFaculty();
         });
 
+        /**
+         * Cancel creation.
+         */
         this.addClickEvent(btn_back_new, () -> {
             anchor_new_faculty.setVisible(false);
+            //
+            this.hbox_tools.setDisable(false);
         });
-        
-        this.addClickEvent(btn_search, ()->{
+
+        this.addClickEvent(btn_search, () -> {
             onSearch();
         });
-        
-        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
+
+        Mono.fx().key(KeyCode.ENTER).release(application_root, () -> {
             onSearch();
         });
     }
-    
+
     private void onSearch() {
         String key = MonoString.removeExtraSpace(txt_search.getText().toUpperCase());
-        if(key == null)
+        if (key == null) {
             key = "";
-        if(key.isEmpty()) {
-            if(cmb_sort.getSelectionModel().getSelectedIndex() == 0)
+        }
+        if (key.isEmpty()) {
+            if (cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
                 createFacultyTable(activeFaculty);
-            else
+            } else {
                 createFacultyTable(deactivatedFaculty);
+            }
             return;
         }
         ArrayList<FacultyInformation> temp_search = new ArrayList<>();
-        if(cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
-            for(FacultyInformation active: activeFaculty) {
-                if(active.getFullName().contains(key))
+        if (cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
+            for (FacultyInformation active : activeFaculty) {
+                if (active.getFullName().contains(key)) {
                     temp_search.add(active);
-                else if(active.getBulsuID().contains(key))
+                } else if (active.getBulsuID().contains(key)) {
                     temp_search.add(active);
+                }
             }
         } else {
-            for(FacultyInformation inactive: deactivatedFaculty) {
-                if(inactive.getFullName().contains(key))
+            for (FacultyInformation inactive : deactivatedFaculty) {
+                if (inactive.getFullName().contains(key)) {
                     temp_search.add(inactive);
-                else if(inactive.getBulsuID().contains(key))
+                } else if (inactive.getBulsuID().contains(key)) {
                     temp_search.add(inactive);
+                }
             }
         }
         createFacultyTable(temp_search);
@@ -327,6 +345,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 .setFxmlDocument("faculty-row")
                 .makeFX()
                 .pullOutLayout();
+
         VBox bg = searchAccessibilityText(facultyRow, "bg");
         Label lbl_id = searchAccessibilityText(facultyRow, "id");
         Label lbl_name = searchAccessibilityText(facultyRow, "name");
@@ -334,7 +353,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         lbl_id.setText(faculty.getBulsu_id().toUpperCase());
         lbl_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name() + " " + faculty.getLast_name()));
         lbl_access.setText(faculty.getDesignation());
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(facultyRow);
@@ -345,7 +364,6 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 //            createInfo(currentFacultyInfo, lbl_id, lbl_name, row);
 //            refreshInfo = false;
 //        }
-
         row.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             createInfo(currentFacultyInfo, lbl_id, lbl_name, row);
             anchor_new_faculty.setVisible(false);
@@ -356,15 +374,16 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 
     private Date DATE_TODAY = Mono.orm().getServerTime().getDateWithFormat();
     private final String SECTION_BASE_COLOR = "#414852";
+
     private void createInfo(FacultyInformation currentFacultyInfo, Label lbl_bulsu_id,
-             Label lbl_full_name,
-             SimpleTableRow rowFaculty) {
+            Label lbl_full_name,
+            SimpleTableRow rowFaculty) {
 
         FacultyInfoController controller = new FacultyInfoController(currentFacultyInfo);
-        
+
         LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
         controller.setHomeFx(homeFX);
-        
+
         Pane pane = Mono.fx().create()
                 .setPackageName("org.cict.accountmanager.faculty.layout")
                 .setFxmlDocument("faculty-info")
@@ -377,9 +396,10 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
             super.replaceRoot(pane);
         }, pane);
-            
-        if(true)
+
+        if (true) {
             return;
+        }
         //-------------------------------------------------------------------------
         AnchorPane infoRow = (AnchorPane) Mono.fx().create()
                 .setPackageName("org.cict.accountmanager.faculty")
@@ -765,13 +785,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             gender = "FEMALE";
         }
 
-        String bulsu_id = MonoString.removeExtraSpace(txt_bulsu_id.getText().toUpperCase())
-                , lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase())
-                , firstname = MonoString.removeExtraSpace(txt_firstname.getText().toUpperCase())
-                , middlename = MonoString.removeExtraSpace(txt_middlename.getText().toUpperCase())
-                , rank = MonoString.removeExtraSpace(txt_rank_new.getText().toUpperCase())
-                , designation = MonoString.removeExtraSpace(txt_designation_new.getText().toUpperCase())
-                , dept = MonoString.removeExtraSpace(txt_dept.getText().toUpperCase());
+        String bulsu_id = MonoString.removeExtraSpace(txt_bulsu_id.getText().toUpperCase()), lastname = MonoString.removeExtraSpace(txt_lastname.getText().toUpperCase()), firstname = MonoString.removeExtraSpace(txt_firstname.getText().toUpperCase()), middlename = MonoString.removeExtraSpace(txt_middlename.getText().toUpperCase()), rank = MonoString.removeExtraSpace(txt_rank_new.getText().toUpperCase()), designation = MonoString.removeExtraSpace(txt_designation_new.getText().toUpperCase()), dept = MonoString.removeExtraSpace(txt_dept.getText().toUpperCase());
 
         if (bulsu_id.isEmpty() || lastname.isEmpty() || firstname.isEmpty()) {
             showWarning("Incomplete Data", "Please fill the required fields*.");
