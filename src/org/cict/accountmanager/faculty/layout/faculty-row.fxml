@@ -10,31 +10,93 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="53.0" prefWidth="666.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="70.0" prefWidth="1200.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <padding>
-      <Insets left="10.0" right="10.0" />
+      <Insets left="20.0" right="20.0" />
    </padding>
    <children>
-      <ImageView fitHeight="41.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../src/images/Name_32px.png" />
-         </image>
-      </ImageView>
-      <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT">
          <children>
-            <Label accessibleText="name" maxWidth="1.7976931348623157E308" text="Joemar De la Cruz">
+            <ImageView fitHeight="41.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../src/images/Name_32px.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_LEFT" spacing="20.0" HBox.hgrow="ALWAYS">
+         <children>
+            <VBox alignment="CENTER_LEFT">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label layoutX="10.0" layoutY="10.0" prefWidth="80.0" text="ID">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <Label accessibleText="id" prefWidth="100.0" text="BULSU ID" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" prefWidth="80.0" text="Access Level">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <Label accessibleText="access" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Local Registrar" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label text="Rank" visible="false">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label accessibleText="rank" maxHeight="1.7976931348623157E308" prefWidth="230.0" text="ASSOCIATE PROFESSOR III">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Label accessibleText="name" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Joemar De la Cruz">
                <font>
-                  <Font size="17.0" />
+                  <Font size="26.0" />
                </font>
             </Label>
          </children>
+      </HBox>
+      <VBox alignment="CENTER_RIGHT" prefHeight="69.0" prefWidth="197.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="134.0" spacing="10.0">
+               <children>
+                  <Label accessibleText="dept" alignment="CENTER_RIGHT" layoutX="100.0" layoutY="10.0" maxWidth="1.7976931348623157E308" text="BSIT" textAlignment="RIGHT" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label text="Department" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" spacing="5.0">
+               <children>
+                  <Label text="Designation" visible="false">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Label>
+                  <Label accessibleText="designation" maxWidth="1.7976931348623157E308" text="DEAN" />
+               </children>
+            </HBox>
+         </children>
       </VBox>
-      <Label accessibleText="access" maxWidth="1.7976931348623157E308" text="Admin" />
-      <Label accessibleText="id" text="2017-B">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
+      <VBox alignment="CENTER" />
    </children>
    <stylesheets>
       <URL value="@metro-ui.css" />

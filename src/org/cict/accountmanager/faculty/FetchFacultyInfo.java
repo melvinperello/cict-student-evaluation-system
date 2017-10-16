@@ -41,7 +41,7 @@ public class FetchFacultyInfo extends Transaction {
     private ArrayList<FacultyInformation> activeFaculty = new ArrayList<>();
     private ArrayList<FacultyInformation> deactivatedFaculty = new ArrayList<>();
 
-    public ArrayList<FacultyInformation> getAllFaculty() {
+    public ArrayList<FacultyInformation> getActiveFaculty() {
         return activeFaculty;
     }
 
@@ -59,7 +59,7 @@ public class FetchFacultyInfo extends Transaction {
             if (fInfo.getAccountFacultyMapping() == null) {
                 continue;
             }
-            if (fInfo.getAccountFacultyMapping().getActive() == 0) {
+            if (fInfo.getAccountFacultyMapping().getActive().equals(0)) {
                 deactivatedFaculty.add(fInfo);
             } else {
                 activeFaculty.add(fInfo);

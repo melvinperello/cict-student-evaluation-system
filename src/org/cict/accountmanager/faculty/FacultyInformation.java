@@ -27,6 +27,7 @@ import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
+import artifacts.MonoString;
 import com.jhmvin.Mono;
 
 /**
@@ -63,10 +64,36 @@ public class FacultyInformation {
     }
 
     public String getFullName() {
-        return faculty.getLast_name() + ", " + faculty.getFirst_name() + " " + faculty.getMiddle_name();
+        String middleName = " ";
+        String temp = MonoString.removeExtraSpace(faculty.getMiddle_name()).trim();
+        if(temp != null && !temp.isEmpty())
+            middleName = " " + temp + " ";
+            
+        return  faculty.getFirst_name() 
+                + middleName + faculty.getLast_name();
     }
 
+    public String getFirtsName() {
+        return  faculty.getFirst_name();
+    }
+
+    public String getMiddleName() {
+        return faculty.getMiddle_name();
+    }
+
+    public String getLastName() {
+        return faculty.getLast_name();
+    }
+
+    public String getDepartment() {
+        return faculty.getDepartment();
+    }
+    
     public String getBulsuID() {
         return faculty.getBulsu_id();
+    }
+    
+    public String getAccessLevel() {
+        return afMap.getAccess_level();
     }
 }
