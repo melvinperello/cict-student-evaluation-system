@@ -85,7 +85,7 @@ public class SearchStudent extends Transaction {
     public boolean isAlreadyEvaluated() {
         return isAlreadyEvaluated;
     }
-    
+
     @Override
     protected boolean transaction() {
         currentStudent = (StudentMapping) Mono.orm()
@@ -93,38 +93,38 @@ public class SearchStudent extends Transaction {
                 .eq("id", studentNumber)
                 .active()
                 .first();
-        
+
         boolean thereIsNull = false;
-        
-        if(currentStudent == null) {
+
+        if (currentStudent == null) {
             // student not exist;
             return false;
         }
-        
-        if(currentStudent.getCURRICULUM_id() == null) {
+
+        if (currentStudent.getCURRICULUM_id() == null) {
             thereIsNull = true;
         }
-        
-        if(currentStudent.getYear_level() == null) {
-            thereIsNull = true;
-        } 
-        
-        if(currentStudent.getSection() == null) {
+
+        if (currentStudent.getYear_level() == null) {
             thereIsNull = true;
         }
-        
-        if(currentStudent.get_group()== null) {
+
+        if (currentStudent.getSection() == null) {
             thereIsNull = true;
         }
-        
-        if(currentStudent.getAdmission_year().isEmpty() || currentStudent.getAdmission_year().equalsIgnoreCase("NOT_SET")) {
+
+        if (currentStudent.get_group() == null) {
             thereIsNull = true;
         }
-        
-        if(thereIsNull)
+
+        if (currentStudent.getAdmission_year().isEmpty() || currentStudent.getAdmission_year().equalsIgnoreCase("NOT_SET")) {
+            thereIsNull = true;
+        }
+
+        if (thereIsNull) {
             return false;
-        
-        
+        }
+
         // if there is a result
         if (!Objects.isNull(currentStudent)) {
 
@@ -149,8 +149,6 @@ public class SearchStudent extends Transaction {
                     .eq("id", currentStudent.getCURRICULUM_id())
                     .execute()
                     .first();
-            
-           
 
             // prepare the section details
             int year = currentStudent.getYear_level();

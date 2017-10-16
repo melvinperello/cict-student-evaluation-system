@@ -335,6 +335,15 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         yearFilter.filter(year_level.textProperty());
 
         /**
+         * Filter Section and Group.
+         */
+        sectionGroupFilter(sectionName, group);
+    }
+
+    public static void sectionGroupFilter(TextField sectionName,
+            TextField group) {
+        FormFormat formFormatter = new FormFormat();
+        /**
          * Filter Section Name.
          */
         FormFormat.CustomFormat sectionNameFilter = formFormatter.new CustomFormat();

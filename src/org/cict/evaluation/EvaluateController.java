@@ -756,6 +756,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         search.transact();
     } // end of task
 
+    /**
+     * Initial evaluation of the student, when the student is added for the
+     * first time in the system.
+     */
     private StudentMapping showMissingInfo(StudentMapping student) {
         MissingInfoController controller = new MissingInfoController(student);
         Mono.fx().create()
