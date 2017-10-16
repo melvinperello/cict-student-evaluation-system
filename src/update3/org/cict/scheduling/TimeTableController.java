@@ -368,7 +368,6 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         WritableImage writableImage
                 = new WritableImage((int) scene.getWidth(), (int) scene.getHeight());
         scene.snapshot(writableImage);
-
         String time_stamp_name = this.lbl_semester.getText()
                 + " "
                 + this.lbl_section.getText()
@@ -379,7 +378,6 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         String desktop = "\\Desktop";
         String fullDesktopPath = homePath + desktop;
         File file = new File(fullDesktopPath + "\\" + time_stamp_name + ".png");
-
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
             Mono.fx().snackbar().showInfo(application_root, "Schedule was saved to your Desktop");
@@ -390,7 +388,6 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showError(application_root, "Cannot Generate Schedule.");
         }
     }
-
     /**
      * Print Schedule.
      *
