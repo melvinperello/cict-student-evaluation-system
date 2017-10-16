@@ -745,6 +745,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
 
         search.setOnCancel(event -> {
+            // cancelled was called for new students that has null values,
             System.out.println("@EvaluateController: Search Failed");
             setView("no_results");
             StudentMapping student = search.getCurrentStudent();

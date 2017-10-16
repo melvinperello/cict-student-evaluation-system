@@ -388,6 +388,7 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showError(application_root, "Cannot Generate Schedule.");
         }
     }
+
     /**
      * Print Schedule.
      *

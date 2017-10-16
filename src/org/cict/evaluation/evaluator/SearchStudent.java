@@ -86,6 +86,20 @@ public class SearchStudent extends Transaction {
         return isAlreadyEvaluated;
     }
 
+    /**
+     *
+     * @param values
+     * @return
+     */
+    private boolean nullChecker(Object... values) {
+        for (Object value : values) {
+            if (value == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected boolean transaction() {
         currentStudent = (StudentMapping) Mono.orm()
@@ -94,132 +108,120 @@ public class SearchStudent extends Transaction {
                 .active()
                 .first();
 
-        boolean thereIsNull = false;
-
         if (currentStudent == null) {
             // student not exist;
             return false;
         }
 
-        if (currentStudent.getCURRICULUM_id() == null) {
-            thereIsNull = true;
-        }
+        //----------------------------------------------------------------------
+        /**
+         * If the student is not a cross-enrollee run this validation.
+         */
+        if (!currentStudent.getResidency().equalsIgnoreCase("CROSS_ENROLLEE")) {
 
-        if (currentStudent.getYear_level() == null) {
-            thereIsNull = true;
-        }
+            boolean thereIsNull = nullChecker(currentStudent.getCURRICULUM_id(),
+                    currentStudent.getYear_level(),
+                    currentStudent.getSection(),
+                    currentStudent.get_group());
+            System.out.println("FIRST STEP " + thereIsNull);
 
-        if (currentStudent.getSection() == null) {
-            thereIsNull = true;
-        }
-
-        if (currentStudent.get_group() == null) {
-            thereIsNull = true;
-        }
-
-        if (currentStudent.getAdmission_year().isEmpty() || currentStudent.getAdmission_year().equalsIgnoreCase("NOT_SET")) {
-            thereIsNull = true;
-        }
-
-        if (thereIsNull) {
-            return false;
-        }
-
-        // if there is a result
-        if (!Objects.isNull(currentStudent)) {
-
-            // check if the student is already evaluated
-            EvaluationMapping studentEvaluation = Mono.orm()
-                    .newSearch(Database.connect().evaluation())
-                    .eq("STUDENT_id", currentStudent.getCict_id())
-                    .eq("ACADTERM_id", academicTerm)
-                    .active()
-                    .first();
-
-            if (studentEvaluation != null) {
-                // proceed to onCancel
-
-                isAlreadyEvaluated = true;
-                return true;
+            if (thereIsNull) {
+                return false;
             }
-
-            // get curriculum id
-            studentCurriculum = (CurriculumMapping) Mono.orm()
-                    .newSearch(Database.connect().curriculum())
-                    .eq("id", currentStudent.getCURRICULUM_id())
-                    .execute()
-                    .first();
-
-            // prepare the section details
-            int year = currentStudent.getYear_level();
-            int group = currentStudent.get_group();
-            String section = currentStudent.getSection();
-
-            // get academic program
-            studentProgram = (AcademicProgramMapping) Mono.orm()
-                    .newSearch(Database.connect().academic_program())
-                    .eq("id", studentCurriculum.getACADPROG_id())
-                    .execute()
-                    .first();
-
-            if (Objects.isNull(studentProgram)) {
-                // the student has no assigned curriculum
-                studentProgram = MapFactory.map().academic_program();
-            }
-
-            int acadProg = studentProgram.getId();
-            // get section
-
-            studentSection = Mono.orm()
-                    .newSearch(Database.connect().load_section())
-                    .eq("ACADTERM_id", academicTerm)
-                    .eq("ACADPROG_id", acadProg)
-                    .eq("section_name", section)
-                    .eq("year_level", year)
-                    .eq("_group", group)
-                    .eq("type", "REGULAR")
-                    // revision: added curriculum_id
-                    .eq(DB.load_section().CURRICULUM_id, studentCurriculum.getId())
-                    .active().first();
-
-            if (!Objects.isNull(studentSection)) {
-                // prepare section details
-                int section_id = studentSection.getId();
-                // get load group // subjects
-                studentLoadGroup = Mono.orm().
-                        newSearch(Database.connect().load_group())
-                        .eq("LOADSEC_id", section_id)
-                        .active().<LoadGroupMapping>all();
-
-                // reset subject
-                studentSubject = new ArrayList<>();
-                // iterate all groups from section
-                studentLoadGroup.forEach(load_groups -> {
-                    int subject_id = load_groups.getSUBJECT_id();
-                    // retrieve each mapping of the subject
-                    SubjectMapping subject_mapping = Mono.orm()
-                            .newSearch(Database.connect().subject())
-                            .eq(DB.subject().id, subject_id)
-                            //@removed since primary key was used already
-                            //@revision: 001
-                            //.eq("ACADPROG_id", acadProg)
-                            .active().<SubjectMapping>first();
-                    // add every resutl
-                    studentSubject.add(subject_mapping);
-                });
-                // end of worker thread proceed to @preview
-
-            } else {
-                // no section found
-                // no subject will be added
-                return true;
-
-            } // end of if else
-
-        } else {
-            // student not exist;
-            return false;
         }
+
+        //----------------------------------------------------------------------
+        // check if the student is already evaluated
+        EvaluationMapping studentEvaluation = Mono.orm()
+                .newSearch(Database.connect().evaluation())
+                .eq("STUDENT_id", currentStudent.getCict_id())
+                .eq("ACADTERM_id", academicTerm)
+                .active()
+                .first();
+
+        if (studentEvaluation != null) {
+            // proceed to success and mark as already evaluated
+            isAlreadyEvaluated = true;
+            return true;
+        }
+
+        // Not evaluated part
+        // check if the student is a cross enrollee
+        if (currentStudent.getResidency().equalsIgnoreCase("CROSS_ENROLLEE")) {
+            // if the student is a cross-enrollee.
+            return true;
+        }
+
+        // get curriculum id
+        studentCurriculum = (CurriculumMapping) Mono.orm()
+                .newSearch(Database.connect().curriculum())
+                .eq("id", currentStudent.getCURRICULUM_id())
+                .execute()
+                .first();
+
+        // prepare the section details
+        int year = currentStudent.getYear_level();
+        int group = currentStudent.get_group();
+        String section = currentStudent.getSection();
+
+        // get academic program
+        studentProgram = (AcademicProgramMapping) Mono.orm()
+                .newSearch(Database.connect().academic_program())
+                .eq("id", studentCurriculum.getACADPROG_id())
+                .execute()
+                .first();
+
+        if (Objects.isNull(studentProgram)) {
+            // the student has no assigned curriculum
+            studentProgram = MapFactory.map().academic_program();
+        }
+
+        int acadProg = studentProgram.getId();
+        // get section
+
+        studentSection = Mono.orm()
+                .newSearch(Database.connect().load_section())
+                .eq("ACADTERM_id", academicTerm)
+                .eq("ACADPROG_id", acadProg)
+                .eq("section_name", section)
+                .eq("year_level", year)
+                .eq("_group", group)
+                .eq("type", "REGULAR")
+                // revision: added curriculum_id
+                .eq(DB.load_section().CURRICULUM_id, studentCurriculum.getId())
+                .active().first();
+
+        if (studentSection == null) {
+            // no section found no subject will be added
+            return true;
+        }
+
+        // prepare section details
+        int section_id = studentSection.getId();
+        // get load group // subjects
+        studentLoadGroup = Mono.orm().
+                newSearch(Database.connect().load_group())
+                .eq("LOADSEC_id", section_id)
+                .active().<LoadGroupMapping>all();
+
+        // reset subject
+        studentSubject = new ArrayList<>();
+        // iterate all groups from section
+        studentLoadGroup.forEach(load_groups -> {
+            int subject_id = load_groups.getSUBJECT_id();
+            // retrieve each mapping of the subject
+            SubjectMapping subject_mapping = Mono.orm()
+                    .newSearch(Database.connect().subject())
+                    .eq(DB.subject().id, subject_id)
+                    //@removed since primary key was used already
+                    //@revision: 001
+                    //.eq("ACADPROG_id", acadProg)
+                    .active().<SubjectMapping>first();
+            // add every resutl
+            studentSubject.add(subject_mapping);
+        });
+        // end of worker thread proceed to @preview
+
         return true;
     }
 
