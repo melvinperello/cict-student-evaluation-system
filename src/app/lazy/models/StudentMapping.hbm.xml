@@ -70,6 +70,9 @@
 <property name="verification_date" type="java.util.Date">
 <column name="verification_date" length="19"/>
 </property>
+<property name="verfied_by" type="java.lang.Integer">
+<column name="verfied_by" length="10"/>
+</property>
 <property name="last_evaluation_term" type="java.lang.Integer">
 <column name="last_evaluation_term" length="10"/>
 </property>

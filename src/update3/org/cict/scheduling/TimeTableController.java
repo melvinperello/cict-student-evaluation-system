@@ -48,6 +48,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javax.imageio.ImageIO;
+import update3.org.cict.scheduling.printing.ImageToPdf;
 
 /**
  *
@@ -383,13 +384,23 @@ public class TimeTableController extends SceneFX implements ControllerFX {
             ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
             Mono.fx().snackbar().showInfo(application_root, "Schedule was saved to your Desktop");
             System.out.println("snapshot saved: " + file.getAbsolutePath());
+
+            printSchedule(file.getAbsolutePath(), time_stamp_name);
         } catch (IOException ex) {
             Mono.fx().snackbar().showError(application_root, "Cannot Generate Schedule.");
         }
     }
 
-    public static void main(String[] args) {
-
+    /**
+     * Print Schedule.
+     *
+     * @param imageLocation
+     * @param pdfName
+     */
+    private void printSchedule(String imageLocation, String pdfName) {
+        ImageToPdf imageViewer = new ImageToPdf(pdfName);
+        imageViewer.imageLocation = imageLocation;
+        imageViewer.print();
     }
 
     //--------------------------------------------------------------------------

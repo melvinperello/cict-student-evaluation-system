@@ -2,7 +2,7 @@
 // SQL_table: system_override_logs
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 08, 2017 11:47:58 PM
+// Created: Oct 16, 2017 07:52:08 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello

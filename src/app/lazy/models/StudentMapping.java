@@ -2,7 +2,7 @@
 // SQL_table: student
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 08, 2017 11:47:58 PM
+// Created: Oct 16, 2017 07:52:08 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -49,6 +49,7 @@ private java.lang.String created_by;
 private java.util.Date created_date;
 private java.lang.Integer verified;
 private java.util.Date verification_date;
+private java.lang.Integer verfied_by;
 private java.lang.Integer last_evaluation_term;
 private java.lang.Integer active;
 
@@ -252,6 +253,15 @@ public java.util.Date getVerification_date() {
 
 public void setVerification_date(java.util.Date fieldVerificationDate) {
 	this.verification_date = fieldVerificationDate;
+}
+
+@Column(name = "verfied_by", nullable = true, length = 10)
+public java.lang.Integer getVerfied_by() {
+	return this.verfied_by;
+}
+
+public void setVerfied_by(java.lang.Integer fieldVerfiedBy) {
+	this.verfied_by = fieldVerfiedBy;
 }
 
 @Column(name = "last_evaluation_term", nullable = true, length = 10)
