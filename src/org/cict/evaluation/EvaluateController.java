@@ -41,6 +41,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.SceneFX;
+import javafx.application.Platform;
 import javafx.scene.layout.Priority;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
@@ -52,6 +53,7 @@ import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.evaluator.SearchStudent;
 import org.cict.evaluation.evaluator.SubjectValidation;
 import org.cict.evaluation.sectionviewer.SectionsController;
+import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.credit.InputModeController;
 import org.cict.evaluation.student.info.InfoStudentController;
 import org.cict.evaluation.student.history.StudentHistoryController;
@@ -68,98 +70,101 @@ import update3.org.cict.access.Access;
  * @author Jhon Melvin
  */
 public class EvaluateController extends SceneFX implements ControllerFX {
-
+    
     @FXML
     private AnchorPane anchor_evaluate;
-
+    
     @FXML
     private AnchorPane anchor_right;
-
+    
     @FXML
     private JFXButton btnFind;
-
+    
     @FXML
     private TextField txtStudentNumber;
-
+    
     @FXML
     private AnchorPane anchor_preview;
-
+    
     @FXML
     private AnchorPane anchor_studentInfo;
-
+    
     @FXML
     private Label lblName;
-
+    
     @FXML
     private Label lblCourseSection;
-
+    
     @FXML
     private JFXButton btn_studentOptions;
-
+    
     @FXML
     private ScrollPane scroll_subjects;
-
+    
     @FXML
     private JFXButton btnEvaluate;
-
+    
     @FXML
     private Label lbl_subjectTotal;
-
+    
     @FXML
     private Label lbl_unitsTotal;
-
+    
     @FXML
     private VBox vbox_studentOptions;
-
+    
     @FXML
     private JFXButton btnHistory;
-
+    
     @FXML
     private JFXButton btn_checklist;
-
+    
     @FXML
     private JFXButton btn_encoding;
-
+    
     @FXML
     private JFXButton btnCreditUnits;
-
+    
     @FXML
     private AnchorPane anchor_results;
-
+    
     @FXML
     private HBox hbox_search;
-
+    
     @FXML
     private HBox hbox_loading;
-
+    
     @FXML
     private HBox hbox_none;
-
+    
     @FXML
     private HBox hbox_already;
-
+    
     @FXML
     private JFXButton btn_already_print;
-
+    
     @FXML
     private JFXButton btn_already_evaluate;
-
+    
     @FXML
     private JFXButton btn_winSection;
-
+    
     @FXML
     private JFXButton btn_home;
-
+    
     @FXML
     private AnchorPane anchor_main1;
-
+    
     @FXML
     private VBox vbox_list;
-
+    
     public EvaluateController() {
         //
     }
 
+    // Maximum allowed units
+    private final static Double MAX_UNITS = PublicConstants.MAX_UNITS;
+    
     private void log(Object message) {
         boolean logging = true;
         if (logging) {
@@ -167,312 +172,47 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         }
     }
 
-    /**
-     * Contains all the subjects in the list for evaluation.
-     */
+    //--------------------------------------------------------------------------
+    // table
     private final VBox vbox_subjects = new VBox(4);
+    // table holder
     private AnchorPane application_root;
+    //--------------------------------------------------------------------------
 
+    /**
+     * Controller Initialization.
+     */
     @Override
     public void onInitialization() {
+        //----------------------------------------------------------------------
         application_root = anchor_evaluate;
         super.bindScene(application_root);
-        /**
-         * Faculty Details
-         */
-//        lbl_facultyName.setText(CollegeFaculty.instance().getFirstLastName());
-//        lbl_facultyDesignation.setText(CollegeFaculty.instance().getDESIGNATION());
-
-        this.anchor_preview.setVisible(false);
-        this.anchor_results.setVisible(true);
-
-        /**
-         *
-         */
+        //----------------------------------------------------------------------
+        // Attach table to layout.
         vbox_subjects.prefWidthProperty().bind(scroll_subjects.widthProperty());
-        //
         scroll_subjects.setContent(vbox_subjects);
         scroll_subjects.setFitToWidth(true);
         scroll_subjects.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-
-        //this.vbox_settings.setVisible(false);
-        createTable();
-    }
-
-    // since this process only caters one student at a time
-    // is is more efficient to store current searches
-    private StudentMapping currentStudent;
-    private CurriculumMapping studentCurriculum;
-    private AcademicProgramMapping studentProgram;
-    private LoadSectionMapping studentSection;
-    private ArrayList<LoadGroupMapping> studentLoadGroup;
-    private ArrayList<SubjectMapping> studentSubject;
-
-    /**
-     * Max units for adding subject.
-     */
-    private final static Double MAX_UNITS = PublicConstants.MAX_UNITS;
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    //##########################################################################
-    @Override
-    public void onEventHandling() {
-        this.hideDropDownEvents();
-        btn_already_print.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler -> {
-            this.hideDropDown();
-//            PrintAdvising slip = Evaluator.instance().printAdvising();
-//            slip.studentNumber = currentStudent.getId();
-//            slip.academicTerm = Evaluator.instance().getCurrentAcademicTerm().getId();
-//            slip.transact();
-            this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
-        });
-
-        btn_already_evaluate.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
-            this.hideDropDown();
-            onRevokeEvaluation();
-        });
-
-        btn_studentOptions.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
-            vbox_studentOptions.setVisible(!vbox_studentOptions.isVisible());
-        });
-
-        /**
-         * Subject drag event
-         */
-        scroll_subjects.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            Evaluator.mouseDropSubject(currentStudent, MAX_UNITS, unitCount, vbox_subjects, anchor_right);
-            //mouseDropSubject();
-        });
-
         //----------------------------------------------------------------------
-        /**
-         * Adds listener to the list to check every changes
-         */
+        // initial values.
+        this.anchor_preview.setVisible(false);
+        this.anchor_results.setVisible(true);
+        //----------------------------------------------------------------------
+        // counts the total units and subject
         vbox_subjects.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
             onListChange(c);
         });
-
-        /**
-         * Search student
-         */
-        this.btnFind.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.hideDropDown();
-            this.searchStudent();
+        // drage recieved when adding subjects using drag and drop
+        scroll_subjects.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            Evaluator.mouseDropSubject(currentStudent, MAX_UNITS, unitCount, vbox_subjects, anchor_right);
         });
-
-        /**
-         * Enter to evaluate
-         */
-        Mono.fx().key(KeyCode.ENTER).release(anchor_evaluate, () -> {
-            this.hideDropDown();
-            if (!this.btnFind.isDisabled()) {
-                this.searchStudent();
-            }
-        });
-
-        /**
-         * Open class viewer
-         */
-        btn_winSection.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            onShowSections();
-        });
-
-        /**
-         * Save student evaluation
-         */
-        btnEvaluate.addEventHandler(MouseEvent.MOUSE_RELEASED, evaluate -> {
-            this.hideDropDown();
-            saveEvaluation();
-        });
-
-        btn_encoding.addEventHandler(MouseEvent.MOUSE_RELEASED, evaluate -> {
-            this.onEncoding();
-        });
-
-//        btn_logout.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-//            this.onLogout();
-//        });
-//        btnLogout.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-//            this.onLogout();
-//        });
-//        btnStudentInfo.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-//            this.onShowStudentInfo();
-//        });
-        btnHistory.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.onShowHistory();
-        });
-
-        btnCreditUnits.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.onShowInputMode();
-        });
-
-//        btnSettings.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-//            vbox_settings.setVisible(!vbox_settings.isVisible());
-//        });
-        /**
-         * Home Redirect
-         */
-        super.addClickEvent(btn_home, () -> {
-            Home.callHome(this);
-        });
-
-        super.addClickEvent(btn_checklist, () -> {
-            printChecklist();
-        });
+        
+        createQueueTable();
     }
 
     /**
-     * Print the checklist.
-     */
-    private void printChecklist() {
-        PrintChecklist printCheckList = new PrintChecklist();
-        printCheckList.CICT_id = currentStudent.getCict_id();
-        printCheckList.setOnStart(onStart -> {
-            GenericLoadingShow.instance().show();
-        });
-        printCheckList.setOnSuccess(onSuccess -> {
-            GenericLoadingShow.instance().hide();
-            Notifications.create().title("Please wait, we're nearly there.")
-                    .text("Printing the Checklist.").showInformation();
-        });
-        printCheckList.setOnCancel(onCancel -> {
-            GenericLoadingShow.instance().hide();
-            Notifications.create().title("Cannot Produce a Checklist")
-                    .text("Something went wrong, sorry for the inconvinience.").showWarning();
-        });
-        printCheckList.setOnFailure(onFailed -> {
-            GenericLoadingShow.instance().hide();
-            Notifications.create().title("Cannot Produce a Checklist")
-                    .text("Something went wrong, sorry for the inconvinience.").showError();
-            System.out.println("FAILED");
-        });
-        printCheckList.transact();
-    }
-
-    private void hideDropDownEvents() {
-        txtStudentNumber.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
-            this.hideDropDown();
-        });
-        vbox_studentOptions.addEventHandler(MouseEvent.MOUSE_EXITED, (MouseEvent event) -> {
-            this.hideDropDown();
-        });
-//        vbox_settings.addEventHandler(MouseEvent.MOUSE_EXITED, (MouseEvent event) -> {
-//            this.hideDropDown();
-//        });
-        anchor_studentInfo.addEventHandler(MouseEvent.MOUSE_ENTERED, (MouseEvent event) -> {
-            this.hideDropDown();
-        });
-    }
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    /**
-     * Revoke The current evaluation of the student. based on the context of the
-     * system requirements. only the Local Registrar and its constituents can
-     * use this feature freely. evaluators are not allowed to use this feature
-     * unless upon given proper permission.
-     */
-    private void onRevokeEvaluation() {
-
-        /**
-         * Confirmation
-         */
-        int res = Mono.fx().alert()
-                .createConfirmation()
-                .setHeader("Revoke Transaction")
-                .setTitle("Confirmation")
-                .setMessage("Are you sure you want to continue ?")
-                .confirmYesNo();
-
-        if (res != 1) {
-            return;
-        }
-        /**
-         * Only Local Registrar and Co-Registrars are allowed to re-evaluate.
-         */
-        boolean isAllowed = false;
-        AccountFacultyMapping allowedUser = null;
-        if (Access.isDeniedIfNotFrom(
-                Access.ACCESS_LOCAL_REGISTRAR,
-                Access.ACCESS_CO_REGISTRAR)) {
-            /**
-             * Check if the user was granted permission by the registrar.
-             */
-            allowedUser = Access.isAllowedToRevoke();
-            if (allowedUser != null) {
-                isAllowed = true;
-            }
-        } else {
-            // allowed user
-            isAllowed = true;
-        }
-
-        if (!isAllowed) {
-            Mono.fx().snackbar().showError(application_root, "You Are Not Allowed To Re-evaluate Students.");
-            return;
-        }
-
-        RevokeEvaluation revoked_evaluation = Registrar.instance().createRevokeEvaluation();
-        revoked_evaluation.cict_id = currentStudent.getCict_id();
-        if (allowedUser == null) {
-            /**
-             * the user is the registrar
-             */
-            revoked_evaluation.registrar_id = CollegeFaculty.instance().getFACULTY_ID();
-        } else {
-            revoked_evaluation.registrar_id = allowedUser.getFACULTY_id();
-        }
-        revoked_evaluation.academic_term = Evaluator.instance().getCurrentAcademicTerm().getId();
-
-        /**
-         * Events.
-         */
-        revoked_evaluation.whenStarted(() -> {
-            GenericLoadingShow.instance().show();
-        });
-        revoked_evaluation.whenCancelled(() -> {
-            // cancelled is called upon error.
-        });
-        revoked_evaluation.whenFailed(() -> {
-
-        });
-        revoked_evaluation.whenSuccess(() -> {
-
-        });
-        revoked_evaluation.whenFinished(() -> {
-            GenericLoadingShow.instance().hide();
-            if (revoked_evaluation.isAddedChange()) {
-                Mono.fx().snackbar().showError(application_root, "Cannot re-evaluate students that undergone Adding/Changing Transactions.");
-                return;
-            }
-
-            /**
-             * Search the student after revoking.
-             */
-            setView("home");
-            this.searchStudent();
-        });
-
-        revoked_evaluation.setRestTime(500);
-        revoked_evaluation.transact();
-    }
-
-    private void onShowSections() {
-        SectionsController sectionController = new SectionsController();
-        Mono.fx().create()
-                .setPackageName("org.cict.evaluation.sectionviewer")
-                .setFxmlDocument("section_viewer")
-                .makeFX()
-                .setController(sectionController)
-                .makeScene()
-                .makeStage()
-                .stageResizeable(false)
-                .stageShow();
-    }
-
-    /**
-     * When the list of the evaluated subjects changes.
+     * Table Listener. Checks the contents of the evaluating subjects. updates
+     * the total units and total subjects.
      *
      * @param c
      */
@@ -502,8 +242,425 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         lbl_unitsTotal.setText(unitCount.toString());
     }
 
-//-----------------------------------------------------------------------------
+    /**
+     * Registered Events in the evaluation window.
+     */
+    @Override
+    public void onEventHandling() {
+        this.hideDropDownEvents();
+        
+        super.addClickEvent(btn_home, () -> {
+            Home.callHome(this);
+        });
+
+        // show section viewer
+        super.addClickEvent(this.btn_winSection, () -> {
+            onShowSections();
+        });
+
+        // search student, this dependes on the value of the text field
+        super.addClickEvent(btnFind, () -> {
+            this.hideDropDown();
+            this.searchStudent();
+        });
+
+        // enter key as click in btn_find will execute if button is enabled.
+        Mono.fx().key(KeyCode.ENTER).release(anchor_evaluate, () -> {
+            this.hideDropDown();
+            if (!this.btnFind.isDisabled()) {
+                this.searchStudent();
+            }
+        });
+
+        //----------------------------------------------------------------------
+        // vbox options pop up menu
+        // show vbox pop up menu.
+        super.addClickEvent(btn_studentOptions, () -> {
+            vbox_studentOptions.setVisible(!vbox_studentOptions.isVisible());
+        });
+        super.addClickEvent(btn_encoding, () -> {
+            this.onEncoding();
+        });
+        super.addClickEvent(btnHistory, () -> {
+            this.onShowHistory();
+        });
+        super.addClickEvent(btnCreditUnits, () -> {
+            this.onShowInputMode();
+        });
+        super.addClickEvent(btn_checklist, () -> {
+            printChecklist();
+        });
+
+        //----------------------------------------------------------------------
+        // save student evaluation
+        super.addClickEvent(btnEvaluate, () -> {
+            this.hideDropDown();
+            saveEvaluation();
+        });
+
+        //----------------------------------------------------------------------
+        // Options when the student is already evaluated.
+        super.addClickEvent(btn_already_print, () -> {
+            // REPRINT ADVISING SLIP.
+            this.hideDropDown();
+            this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
+        });
+        
+        super.addClickEvent(btn_already_evaluate, () -> {
+            // RE-EVALUATE Student.
+            this.hideDropDown();
+            onRevokeEvaluation();
+        });
+        //----------------------------------------------------------------------
+    }
+
+    /**
+     * Changes the view of the evaluation window.
+     *
+     * @param view
+     */
+    private void setView(String view) {
+        this.btnFind.setDisable(false);
+        this.anchor_preview.setVisible(false);
+        this.anchor_results.setVisible(false);
+        this.hbox_loading.setVisible(false); // loading
+        this.hbox_search.setVisible(false); // search
+        this.hbox_none.setVisible(false); // no results
+        this.hbox_already.setVisible(false);
+        
+        vbox_studentOptions.setVisible(false);
+        //vbox_settings.setVisible(false);
+
+        switch (view) {
+            case "home":
+                this.anchor_results.setVisible(true);
+                this.hbox_search.setVisible(true); // search
+                this.btnFind.setDisable(false);
+                break;
+            
+            case "search":
+                this.anchor_results.setVisible(true);
+                this.hbox_loading.setVisible(true); // search
+                this.btnFind.setDisable(true);
+                break;
+            
+            case "no_results":
+                this.anchor_results.setVisible(true);
+                this.hbox_none.setVisible(true); // search
+                break;
+            
+            case "preview":
+                anchor_evaluate.setDisable(false);
+                this.anchor_preview.setVisible(true);
+                break;
+            case "already":
+                this.anchor_results.setVisible(true);
+                this.hbox_already.setVisible(true); // search
+                break;
+        }
+    }
     //--------------------------------------------------------------------------
+    // since this process only caters one student at a time
+    // is is more efficient to store current searches
+    // student information cache
+    private StudentMapping currentStudent;
+    private AcademicProgramMapping studentProgram;
+    private ArrayList<LoadGroupMapping> studentLoadGroup;
+    private ArrayList<SubjectMapping> studentSubject;
+    private LoadSectionMapping studentSection;
+    // unused variables for student information
+    //private CurriculumMapping studentCurriculum;
+    //--------------------------------------------------------------------------
+    /**
+     * This block is the process of searching the student and automatically
+     * assigns subject that have a match with the sections available.
+     */
+    //--------------------------------------------------------------------------
+    // required variables for search student function
+    private Integer subjectCount = 0;
+    private Double unitCount = 0.0;
+    private boolean FLAG_ALREADY_EVALUATED;
+    private boolean FLAG_CROSS_ENROLLEE;
+    //--------------------------------------------------------------------------
+    // show assistant values
+    private Integer countSearch = 0;
+    private Boolean FLAG_ASSISTANT_SHOW;
+    //--------------------------------------------------------------------------
+
+    /**
+     * Assures that all values are re-initialized every search.
+     */
+    private void resetCache() {
+        currentStudent = null;
+        studentProgram = null;
+        studentLoadGroup = null;
+        studentSubject = null;
+        studentSection = null;
+        //
+        subjectCount = 0;
+        unitCount = 0.0;
+        FLAG_ALREADY_EVALUATED = false;
+        FLAG_CROSS_ENROLLEE = false;
+    }
+
+    /**
+     * Finds the student indicated in the search box.
+     */
+    public void searchStudent() {
+        this.resetCache();
+        FLAG_ASSISTANT_SHOW = true;
+        if (currentStudent != null) {
+            if (txtStudentNumber.getText().equalsIgnoreCase(currentStudent.getId())) {
+                countSearch = 1;
+                if (countSearch == 1) {
+                    FLAG_ASSISTANT_SHOW = false;
+                }
+            } else {
+                countSearch = 0;
+            }
+        } else {
+            countSearch = 0;
+        }
+        
+        setView("search");
+        
+        SearchStudent search = new SearchStudent();
+        search.studentNumber = txtStudentNumber.getText().trim();
+        
+        search.setOnSuccess(event -> {
+            this.onSearchSuccess(search);
+        });
+        
+        search.setOnFailure(event -> {
+            setView("no_results");
+        });
+        
+        search.setOnCancel(event -> {
+            this.onSearchCancelled(search);
+        });
+        search.setRestTime(500);
+        search.transact();
+    }
+
+    /**
+     * Success Callback of search student. The following code will be executed
+     * if the student was found without errors.
+     *
+     * @param search Task
+     */
+    private void onSearchSuccess(SearchStudent search) {
+        //----------------------------------------------------------------------
+        // Retrieve search results.
+        this.FLAG_ALREADY_EVALUATED = search.isAlreadyEvaluated();
+        this.currentStudent = search.getCurrentStudent();
+        this.studentLoadGroup = search.getStudentLoadGroup();
+        this.studentProgram = search.getStudentProgram();
+        this.studentSection = search.getStudentSection();
+        this.studentSubject = search.getStudentSubject();
+        //----------------------------------------------------------------------
+        // Test Results
+
+        if (Objects.isNull(this.currentStudent)) {
+            System.out.println("@EvaluateController: Search is Empty");
+            setView("no_results");
+            return;
+        }
+        
+        if (FLAG_ALREADY_EVALUATED) {
+            setView("already");
+            return;
+        }
+        
+        System.out.println("@EvaluateController: Search Success");
+
+        //----------------------------------------------------------------------
+        this.FLAG_CROSS_ENROLLEE = search.isCrossEnrollee();
+
+        // run this if not a cross enrollee student
+        if (!FLAG_CROSS_ENROLLEE) {
+            if (FLAG_ASSISTANT_SHOW) {
+                showFirstAssistant();
+            }
+            onShowCurricularLevel();
+            showAssistant();
+        }
+
+        //----------------------------------------------------------------------
+        // display the results.
+        this.showPreview();
+        setView("preview");
+    }
+
+    /**
+     * Canceled. callback of the search student transaction.
+     *
+     * @param search
+     */
+    private void onSearchCancelled(SearchStudent search) {
+        // cancelled was called for new students that has null values,
+        System.out.println("@EvaluateController: Search Failed");
+        setView("no_results");
+        StudentMapping student = search.getCurrentStudent();
+        if (student != null) {
+            currentStudent = showMissingInfo(student);
+        }
+    }
+
+    /**
+     * Print the checklist.
+     */
+    private void printChecklist() {
+        // disallows cross enrollees to print a check list.
+        if (this.FLAG_CROSS_ENROLLEE) {
+            Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
+            return;
+        }
+        
+        PrintChecklist printCheckList = new PrintChecklist();
+        printCheckList.CICT_id = currentStudent.getCict_id();
+        printCheckList.setOnStart(onStart -> {
+            GenericLoadingShow.instance().show();
+        });
+        printCheckList.setOnSuccess(onSuccess -> {
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Please wait, we're nearly there.")
+                    .text("Printing the Checklist.").showInformation();
+        });
+        printCheckList.setOnCancel(onCancel -> {
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Cannot Produce a Checklist")
+                    .text("Something went wrong, sorry for the inconvinience.").showWarning();
+        });
+        printCheckList.setOnFailure(onFailed -> {
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Cannot Produce a Checklist")
+                    .text("Something went wrong, sorry for the inconvinience.").showError();
+            System.out.println("FAILED");
+        });
+        printCheckList.transact();
+    }
+    
+    private void hideDropDownEvents() {
+        txtStudentNumber.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
+            this.hideDropDown();
+        });
+        vbox_studentOptions.addEventHandler(MouseEvent.MOUSE_EXITED, (MouseEvent event) -> {
+            this.hideDropDown();
+        });
+        anchor_studentInfo.addEventHandler(MouseEvent.MOUSE_ENTERED, (MouseEvent event) -> {
+            this.hideDropDown();
+        });
+    }
+
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    /**
+     * Revoke The current evaluation of the student. based on the context of the
+     * system requirements. only the Local Registrar and its constituents can
+     * use this feature freely. evaluators are not allowed to use this feature
+     * unless upon given proper permission.
+     */
+    private void onRevokeEvaluation() {
+
+        /**
+         * Confirmation
+         */
+        int res = Mono.fx().alert()
+                .createConfirmation()
+                .setHeader("Revoke Transaction")
+                .setTitle("Confirmation")
+                .setMessage("Are you sure you want to continue ?")
+                .confirmYesNo();
+        
+        if (res != 1) {
+            return;
+        }
+        /**
+         * Only Local Registrar and Co-Registrars are allowed to re-evaluate.
+         */
+        boolean isAllowed = false;
+        AccountFacultyMapping allowedUser = null;
+        if (Access.isDeniedIfNotFrom(
+                Access.ACCESS_LOCAL_REGISTRAR,
+                Access.ACCESS_CO_REGISTRAR)) {
+            /**
+             * Check if the user was granted permission by the registrar.
+             */
+            allowedUser = Access.isAllowedToRevoke();
+            if (allowedUser != null) {
+                isAllowed = true;
+            }
+        } else {
+            // allowed user
+            isAllowed = true;
+        }
+        
+        if (!isAllowed) {
+            Mono.fx().snackbar().showError(application_root, "You Are Not Allowed To Re-evaluate Students.");
+            return;
+        }
+        
+        RevokeEvaluation revoked_evaluation = Registrar.instance().createRevokeEvaluation();
+        revoked_evaluation.cict_id = currentStudent.getCict_id();
+        if (allowedUser == null) {
+            /**
+             * the user is the registrar
+             */
+            revoked_evaluation.registrar_id = CollegeFaculty.instance().getFACULTY_ID();
+        } else {
+            revoked_evaluation.registrar_id = allowedUser.getFACULTY_id();
+        }
+        revoked_evaluation.academic_term = Evaluator.instance().getCurrentAcademicTerm().getId();
+
+        /**
+         * Events.
+         */
+        revoked_evaluation.whenStarted(() -> {
+            GenericLoadingShow.instance().show();
+        });
+        revoked_evaluation.whenCancelled(() -> {
+            // cancelled is called upon error.
+        });
+        revoked_evaluation.whenFailed(() -> {
+            
+        });
+        revoked_evaluation.whenSuccess(() -> {
+            
+        });
+        revoked_evaluation.whenFinished(() -> {
+            GenericLoadingShow.instance().hide();
+            if (revoked_evaluation.isAddedChange()) {
+                Mono.fx().snackbar().showError(application_root, "Cannot re-evaluate students that undergone Adding/Changing Transactions.");
+                return;
+            }
+
+            /**
+             * Search the student after revoking.
+             */
+            setView("home");
+            this.searchStudent();
+        });
+        
+        revoked_evaluation.setRestTime(500);
+        revoked_evaluation.transact();
+    }
+
+    /**
+     * Call the section viewer.
+     */
+    private void onShowSections() {
+        SectionsController sectionController = new SectionsController();
+        Mono.fx().create()
+                .setPackageName("org.cict.evaluation.sectionviewer")
+                .setFxmlDocument("section_viewer")
+                .makeFX()
+                .setController(sectionController)
+                .makeScene()
+                .makeStage()
+                .stageResizeable(false)
+                .stageShow();
+    }
+
     /**
      * Saves the evaluation.
      */
@@ -523,7 +680,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // make chouces
             if (choice == 1) {
                 SectionsController sectionController = new SectionsController();
-
+                
                 Mono.fx().create()
                         .setPackageName("org.cict.evaluation.sectionviewer")
                         .setFxmlDocument("section_viewer")
@@ -533,9 +690,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                         .makeStage()
                         .stageResizeable(false)
                         .stageShow();
-
+                
                 sectionController.searchCallBack("Suggestions For " + txtStudentNumber.getText().trim());
-
+                
                 return;
             }
         }
@@ -575,7 +732,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
         }
         evaluateTask.subjects = toInsert;
-
+        
         evaluateTask.whenStarted(() -> {
             GenericLoadingShow.instance().show();
         });
@@ -592,12 +749,13 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             GenericLoadingShow.instance().hide();
             setView("home");
         });
-
+        
         evaluateTask.setRestTime(500);
         evaluateTask.transact();
     }
 
     /**
+     * Defines what type of student before printing the advising slip.
      *
      * @param acadTermID
      * @param isNew
@@ -652,110 +810,23 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .stageResizeable(false)
                     .stageCenter()
                     .stageShowAndWait();
-
+            
             evaluationMap.setPrint_type(controller.getSelected().toUpperCase());
             Database.connect().evaluation().update(evaluationMap);
         }
-
+        
         if (controller.isPrinting()) {
             String text = "Printing Evaluation Slip";
             if (isNew) {
                 text = "Evaluated Successfully, printing Evaluation Slip";
             }
-
+            
             Notifications.create()
                     .title("Success (" + controller.getSelected() + " Student)")
                     .text(text)
                     .showInformation();
         }
     }
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    /**
-     * This block is the process of searching the student and automatically
-     * assigns subject that have a match with the sections available.
-     */
-    private Integer subjectCount = 0;
-    private Double unitCount = 0.0;
-    private boolean isAlreadyEvaluated;
-
-    /**
-     * Search student for evaluation.
-     */
-    private Integer countSearch = 0;
-    private Boolean show;
-
-    public void searchStudent() {
-        show = true;
-        if (currentStudent != null) {
-            if (txtStudentNumber.getText().equalsIgnoreCase(currentStudent.getId())) {
-                countSearch = 1;
-                if (countSearch == 1) {
-                    show = false;
-                }
-            } else {
-                countSearch = 0;
-            }
-        } else {
-            countSearch = 0;
-        }
-
-        setView("search");
-
-        SearchStudent search = new SearchStudent();
-        search.studentNumber = txtStudentNumber.getText().trim();
-
-        search.setOnSuccess(event -> {
-
-            isAlreadyEvaluated = search.isAlreadyEvaluated();
-            //
-            currentStudent = search.getCurrentStudent();
-            studentLoadGroup = search.getStudentLoadGroup();
-            studentProgram = search.getStudentProgram();
-            studentSection = search.getStudentSection();
-            studentSubject = search.getStudentSubject();
-
-            if (isAlreadyEvaluated) {
-                setView("already");
-                return;
-            }
-            if (Objects.isNull(this.currentStudent)) {
-                System.out.println("@EvaluateController: Search is Empty");
-                setView("no_results");
-            } else {
-                System.out.println("@EvaluateController: Search Success");
-                /**
-                 * Added code here. check if the student has an enrollment type.
-                 */
-                //this.onEnrollmentTypeUnset();
-                if (show) {
-                    showFirstAssistant();
-                }
-
-                onShowCurricularLevel();
-                showAssistant();
-                setView("preview");
-                this.showPreview();
-            }
-        });
-
-        search.setOnFailure(event -> {
-            setView("no_results");
-        });
-
-        search.setOnCancel(event -> {
-            // cancelled was called for new students that has null values,
-            System.out.println("@EvaluateController: Search Failed");
-            setView("no_results");
-            StudentMapping student = search.getCurrentStudent();
-            if (student != null) {
-                currentStudent = showMissingInfo(student);
-            }
-        });
-        search.setRestTime(500);
-        search.transact();
-    } // end of task
 
     /**
      * Initial evaluation of the student, when the student is added for the
@@ -775,7 +846,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         return controller.getStudent();
     }
-
+    
     private void showFirstAssistant() {
         anchor_evaluate.setDisable(true);
         setView("home");
@@ -792,7 +863,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageCenter()
                 .stageShowAndWait();
     }
-
+    
     private void showAssistant() {
         AssistantController controller = new AssistantController(currentStudent);
         Mono.fx().create()
@@ -808,7 +879,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         currentStudent.setYear_level(controller.getNewYearLevel());
     }
-
+    
     private void onShowCurricularLevel() {
         CurricularLevelController controller = new CurricularLevelController(this.currentStudent);
         Mono.fx().create()
@@ -843,7 +914,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        } else {
 //            System.out.println("@EvaluateController: ADDED: ELSE");
 //            setView("preview");
-//            // show results
+//            // FLAG_ASSISTANT_SHOW results
 //            this.showPreview();
 //            //System.out.println("@search: Section found - " + studentSection.getSection_name());
 //        }
@@ -869,7 +940,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         previewTk.whenFailed(() -> {
             log("EvaluateController: Failed Loading Preview.");
         });
-
+        
         previewTk.whenFinished(() -> {
             // done
             btnFind.setDisable(false);
@@ -879,28 +950,50 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         previewTk.start();
     }
 
-    private void loadPreview() {
+    /**
+     * Load the student details including name and section.
+     */
+    private void loadStudentDetails() {
         //reset subject view
         Mono.fx().thread().wrap(() -> {
-            vbox_subjects.getChildren().clear();
-
+            //------------------------------------------------------------------
             // student's full name
             String studentName = this.currentStudent.getLast_name()
                     + ", "
                     + this.currentStudent.getFirst_name()
                     + " "
-                    + this.currentStudent.getMiddle_name();
+                    + (this.currentStudent.getMiddle_name() == null ? "" : this.currentStudent.getMiddle_name());
             this.lblName.setText(studentName);
-
-            // students section
-            String section = this.currentStudent.getYear_level()
-                    + " "
-                    + this.currentStudent.getSection()
-                    + " - G"
-                    + this.currentStudent.get_group();
-            this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
+            //------------------------------------------------------------------
+            if (this.FLAG_CROSS_ENROLLEE) {
+                this.lblCourseSection.setText("CROSS - ENROLLEE");
+                // IF CROSS ENROLLEE DO NOT PROCEED BELOW CODE
+                return;
+            }
+            
+            try {
+                // students section
+                String section = this.currentStudent.getYear_level()
+                        + " "
+                        + this.currentStudent.getSection()
+                        + " - G"
+                        + this.currentStudent.get_group();
+                this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
+            } catch (Exception e) {
+                this.lblCourseSection.setText("No Data");
+            }
+            
         });
-
+    }
+    
+    private void loadPreview() {
+        // load details
+        this.loadStudentDetails();
+        // clear table
+        Platform.runLater(() -> {
+            this.vbox_subjects.getChildren().clear();
+        });
+        
         log(" $showPreview: started");
         /**
          * If the student has no assigned sections or no matches have found.
@@ -921,14 +1014,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     isOkToAdd(x);
                 }
             }
-
+            
         }
-
+        
         Mono.fx().thread().wrap(() -> {
             lbl_subjectTotal.setText(subjectCount.toString());
             lbl_unitsTotal.setText(unitCount.toString());
         });
-
+        
     }
 
     /**
@@ -944,21 +1037,24 @@ public class EvaluateController extends SceneFX implements ControllerFX {
          *
          */
         // validation object
-
         SubjectValidation sv = new SubjectValidation();
         sv.studentCictID = this.currentStudent.getCict_id();
         sv.loadGroupID = studentLoadGroup.get(x).getId();
         sv.loadSecID = studentLoadGroup.get(x).getLOADSEC_id();
         sv.subjectID = studentSubject.get(x).getId();
-
+        
         sv.validate();
-
+        
         log(" $isOkToAdd: verified");
         if (sv.isEligibleToTake()) {
             log(" $isOkToAdd: student is eligible");
             ifItsOkThenAdd(x, sv.getSectionWithFormat());
         }
-
+//------------------------------------------------------------------------------
+        /**
+         * This segment of the code is used for multi threading validation but
+         * the arrangement of subjects are jumbled.
+         */
 //        ValidateAddedSubject verificationTask = Evaluator.instance().createValidateAddedSubject();
 //        verificationTask.studentCictID = this.currentStudent.getCict_id();
 //        verificationTask.loadGroupID = studentLoadGroup.get(x).getId();
@@ -978,13 +1074,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        });
 //
 //        verificationTask.transact();
+//------------------------------------------------------------------------------
     }
 
     /**
-     * prepares the subject for display.
-     *
-     * @param x from $isOkToAdd
-     * @param section $isOkToAdd
+     * If validated add the subject to the table.
      */
     private void ifItsOkThenAdd(int x, String section) {
         log(" $isOkToAdd: adding subject");
@@ -1014,57 +1108,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                             .showInfo(anchor_right, subjects.code.getText() + " Has Been Removed.");
                 }
             });
-
+            
             Mono.fx().thread().wrap(() -> {
                 vbox_subjects.getChildren().add(subjects);
             });
-
+            
         } catch (IndexOutOfBoundsException a) {
             log(" $isOkToAdd: IndexOutOfBoundsException");
         }
         log(" $isOkToAdd: added ------------------------------END");
-    }
-
-    //--------------------------------------------------------------------------
-    private void setView(String view) {
-        this.btnFind.setDisable(false);
-        this.anchor_preview.setVisible(false);
-        this.anchor_results.setVisible(false);
-        this.hbox_loading.setVisible(false); // loading
-        this.hbox_search.setVisible(false); // search
-        this.hbox_none.setVisible(false); // no results
-        this.hbox_already.setVisible(false);
-
-        vbox_studentOptions.setVisible(false);
-        //vbox_settings.setVisible(false);
-
-        switch (view) {
-            case "home":
-                this.anchor_results.setVisible(true);
-                this.hbox_search.setVisible(true); // search
-                this.btnFind.setDisable(false);
-                break;
-
-            case "search":
-                this.anchor_results.setVisible(true);
-                this.hbox_loading.setVisible(true); // search
-                this.btnFind.setDisable(true);
-                break;
-
-            case "no_results":
-                this.anchor_results.setVisible(true);
-                this.hbox_none.setVisible(true); // search
-                break;
-
-            case "preview":
-                anchor_evaluate.setDisable(false);
-                this.anchor_preview.setVisible(true);
-                break;
-            case "already":
-                this.anchor_results.setVisible(true);
-                this.hbox_already.setVisible(true); // search
-                break;
-        }
     }
 
 //    public void onShowEnrollmentTypePicker() {
@@ -1095,8 +1147,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //                checker = checkGrade.getSubjectsWithNoGrade();
 //                this.yearAndSemWithMissingRecord = checkGrade.getTitles();
 //                if (!this.checker.isEmpty()) {
-//                    // if mode is not_set, show enrollment type picker
-//                    // if mode is regular, show missing records
+//                    // if mode is not_set, FLAG_ASSISTANT_SHOW enrollment type picker
+//                    // if mode is regular, FLAG_ASSISTANT_SHOW missing records
 //                    if (mode.equalsIgnoreCase("not_set")) {
 //                        this.onShowEnrollmentTypePicker();
 //                    } else if (mode.equalsIgnoreCase("regular")) {
@@ -1136,31 +1188,16 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                         + "Sorry for the inconvinience.")
                 .showAndWait();
     }
-
-//    private void onShowMissingRecord() {
-//        System.out.println("@EvaluateController: Show Missing Records Controller");
-//        MissingRecordController controller = new MissingRecordController(this.currentStudent,
-//                this.checker,
-//                this.yearAndSemWithMissingRecord);
-//        Mono.fx().create()
-//                .setPackageName("org.cict.evaluation.encoder")
-//                .setFxmlDocument("missing_record")
-//                .makeFX()
-//                .setController(controller)
-//                .makeScene()
-//                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
-//                .stageResizeable(false)
-//                .stageShowAndWait();
-//    }
+    
     private ArrayList<ArrayList<SubjectMapping>> subjectsWithNoGrade;
-
+    
     private void onEncoding() {
         CheckGrade checkGrade = Evaluator.instance().createGradeChecker();
         checkGrade.curriculumId = this.currentStudent.getCURRICULUM_id();
         checkGrade.studentId = this.currentStudent.getCict_id();
         checkGrade.studentYearLevel = this.currentStudent.getYear_level();
         checkGrade.RATING_TO_CHECK = "UNPOSTED";
-
+        
         checkGrade.setOnStart(onStart -> {
             this.btnFind.setDisable(true);
         });
@@ -1183,14 +1220,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.btnFind.setDisable(false);
             setView("home");
         });
-
+        
         checkGrade.setOnStart(onStart -> {
             GenericLoadingShow.instance().show();
             this.vbox_studentOptions.setVisible(false);
             this.btnEvaluate.setDisable(true);
             this.btnFind.setDisable(true);
         });
-
+        
         checkGrade.setOnCancel(onCancel -> {
             this.onError();
         });
@@ -1200,7 +1237,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         checkGrade.setRestTime(300);
         checkGrade.transact();
     }
-
+    
     private void onShowGradeEncoderForRegular(String mode) {
         GradeEncoderController controller = new GradeEncoderController(mode, this.currentStudent,
                 this.subjectsWithNoGrade.get(0),
@@ -1216,7 +1253,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShow();
         setView("home");
     }
-
+    
     private void updateYearLevelForRegular() {
         String[] schoolYear = Evaluator.instance()
                 .getCurrentAcademicTerm()
@@ -1234,7 +1271,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                         + " - G"
                         + this.currentStudent.get_group();
                 this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
-
+                
             }
         }
     }
@@ -1242,6 +1279,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     /**
      * Change student information.
      */
+    @Deprecated
     private void onShowStudentInfo() {
         this.vbox_studentOptions.setVisible(false);
         InfoStudentController controller = new InfoStudentController(this.currentStudent);
@@ -1256,7 +1294,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShow();
         setView("home");
     }
-
+    
     private void onShowHistory() {
         this.vbox_studentOptions.setVisible(false);
         StudentHistoryController controller = new StudentHistoryController(this.currentStudent,
@@ -1272,38 +1310,45 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageMaximized(true)
                 .stageShow();
     }
-
-//    private void onShowCredit() {
-//        this.vbox_studentOptions.setVisible(false);
-//        CreditController controller = new CreditController(this.currentStudent.getCict_id());
+    
+    private void onShowInputMode() {
+        this.vbox_studentOptions.setVisible(false);
+//        InputModeController controller = new InputModeController(this.currentStudent.getCict_id());
 //        Mono.fx().create()
 //                .setPackageName("org.cict.evaluation.student.credit")
-//                .setFxmlDocument("Credit")
+//                .setFxmlDocument("mode")
 //                .makeFX()
 //                .setController(controller)
 //                .makeScene()
 //                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
-//                .stageResizeable(true)
-//                .stageMaximized(true)
+//                .stageResizeable(false)
+//                .stageTitle("Input Mode")
 //                .stageShow();
-//        //setView("home");
-//    }
-    private void onShowInputMode() {
-        this.vbox_studentOptions.setVisible(false);
-        InputModeController controller = new InputModeController(this.currentStudent.getCict_id());
+//        setView("home");
+        if (this.FLAG_CROSS_ENROLLEE) {
+            Mono.fx().snackbar().showInfo(application_root, "Cross Enrollees cannot credit any subjects.");
+            return;
+        }
+        String mode = CreditController.MODE_READ;
+        if (Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
+            mode = CreditController.MODE_CREDIT;
+        }
+        System.out.println("ID FROM EVALUATION: " + String.valueOf(this.currentStudent.getCict_id()));
+        CreditController controller = new CreditController(
+                this.currentStudent.getCict_id(),
+                mode);
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.credit")
-                .setFxmlDocument("mode")
+                .setFxmlDocument("Credit")
                 .makeFX()
                 .setController(controller)
                 .makeScene()
-                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
-                .stageResizeable(false)
-                .stageTitle("Input Mode")
+                .makeStageApplication()
+                .stageResizeable(true)
+                .stageMaximized(true)
                 .stageShow();
-        //setView("home");
     }
-
+    
     private void hideDropDown() {
         //this.vbox_settings.setVisible(false);
         this.vbox_studentOptions.setVisible(false);
@@ -1316,27 +1361,27 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     private SimpleTable studentTable = new SimpleTable();
     private ArrayList<StudentMapping> lst_student;
-
-    private void createTable() {
+    
+    private void createQueueTable() {
 //        for(StudentMapping student: lst_student) {
 //            createRow(student);
 //        }
         for (int i = 0; i < 5; i++) {
             createRow(i);
         }
-
+        
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(studentTable);
         simpleTableView.setFixedWidth(true);
-
+        
         simpleTableView.setParentOnScene(vbox_list);
     }
-
+    
     private void createRow(int num/*StudentMapping subject*/) {
-
+        
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
-
+        
         HBox programRow = (HBox) Mono.fx().create()
                 .setPackageName("org.cict.evaluation")
                 .setFxmlDocument("eval-row")
@@ -1345,15 +1390,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         Label lbl_number = searchAccessibilityText(programRow, "number");
         Label lbl_id = searchAccessibilityText(programRow, "id");
         Label lbl_name = searchAccessibilityText(programRow, "name");
-
+        
         lbl_number.setText(num + "");
-
+        
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(programRow);
-
+        
         row.addCell(cellParent);
-
+        
         studentTable.addRow(row);
     }
 }

@@ -48,6 +48,7 @@ import update.org.cict.controller.adding.ValidateAddingSubject;
 
 public class GradeEncoderUI {
 
+    //--------------------------------------------------------------------------
     private final Integer FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
     private Integer ACAD_TERM_id;
     private Date POSTED_DATE;
@@ -58,16 +59,16 @@ public class GradeEncoderUI {
     public HBox pnl_spreadsheet;
 
     private void logs(String str) {
-        if(false)
+        if (true) {
             System.out.println("@GradeEncoderUI: " + str);
+        }
     }
-    
+
     public GradeEncoderUI() {
         this.POSTED = false;
         /**
          * @improper_date: 09.02.2017
          */
-        this.POSTED_DATE = new Date();
         this.POSTED_DATE = Mono.orm().getServerTime().getDateWithFormat();
         initialize();
     }
@@ -79,7 +80,7 @@ public class GradeEncoderUI {
     public void setAcadTermId(Integer id) {
         this.ACAD_TERM_id = id;
     }
-    
+
     public void setCurriculumID(Integer id, Integer yr, Integer sem) {
         this.CURRICULUM_id = id;
         this.yearLevel = yr;
@@ -90,9 +91,7 @@ public class GradeEncoderUI {
     private StudentMapping studentMap;
 
     public void setCictId(Integer cict_id) {
-        /**
-         * Get Student Curriculum.
-         */
+        // get student curriculum
         this.CICT_id = cict_id;
         studentMap = (StudentMapping) Database.connect().student().getPrimary(cict_id);
     }
@@ -231,6 +230,7 @@ public class GradeEncoderUI {
         };
     }
 
+    //--------------------------------------------------------------------------
     /**
      * <@Spreadsheetview JavaFX ControlsFX dependencies>
      * setups you spreadsheet view ^^v
@@ -238,7 +238,15 @@ public class GradeEncoderUI {
     private SpreadsheetView spreadSheet;
     private Integer CICT_id;
     private ArrayList<SubjectMapping> subjectsToBePrinted;
+    private GridBase spreadSheetGrid;
+    private final int gridColumnCount = 5;
+    //--------------------------------------------------------------------------
 
+    /**
+     * Create Spread sheet.
+     *
+     * @return
+     */
     public SpreadsheetView createSpreadsheet() {
         SpreadsheetView spv = new SpreadsheetView(this.getSpreadSheetGrid());
         try {
@@ -257,15 +265,18 @@ public class GradeEncoderUI {
         return this.spreadSheet;
     }
 
-    private GridBase spreadSheetGrid;
-
+    /**
+     * Generate the grid.
+     *
+     * @return
+     */
     private GridBase getSpreadSheetGrid() {
         this.spreadSheetGrid = this.addGridRows();
         ObservableList<ObservableList<SpreadsheetCell>> cells = spreadSheetGrid.getRows();
         int row = 0;
-        for (ObservableList<SpreadsheetCell> cell: cells) {
+        for (ObservableList<SpreadsheetCell> cell : cells) {
             try {
-                if(!cell.get(3).isEditable()) {
+                if (!cell.get(3).isEditable()) {
                     this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(true);
                     this.spreadSheetGrid.setCellValue(row, this.finalCol, "NP");
                     this.spreadSheetGrid.setCellValue(row, this.remarkCol, "NOT FOR ENCODING");
@@ -276,14 +287,12 @@ public class GradeEncoderUI {
                     this.spreadSheetGrid.getRows().get(row).get(this.finalCol).setEditable(true);
                 }
                 row++;
-            } catch(NullPointerException a) {
+            } catch (NullPointerException a) {
                 a.printStackTrace();
             }
         }
         return this.spreadSheetGrid;
     }
-
-    private final int gridColumnCount = 5;
 
     /**
      * initialize at addGridRows creates a GridBase Variable
@@ -292,25 +301,27 @@ public class GradeEncoderUI {
      * @return returns the grid with column headers
      */
     private GridBase createSpreadSheetGrid(int rows) {
-        GridBase grid = new GridBase(rows, this.gridColumnCount);
-        /* Add Header to grid */
-        grid.getColumnHeaders().add("Code");
-        grid.getColumnHeaders().add("Descriptive Title");
-        grid.getColumnHeaders().add("Units");
-        grid.getColumnHeaders().add("Final");
-        grid.getColumnHeaders().add("Remarks");
-        return grid;
+        try {
+            GridBase grid = new GridBase(rows, this.gridColumnCount);
+            /* Add Header to grid */
+            grid.getColumnHeaders().add("Code");
+            grid.getColumnHeaders().add("Descriptive Title");
+            grid.getColumnHeaders().add("Units");
+            grid.getColumnHeaders().add("Final");
+            grid.getColumnHeaders().add("Remarks");
+            return grid;
+        } catch (Exception e) {
+            logs("Create Spredsheet Grid Error");
+            return null;
+        }
     }
 
     /**
-     * add your Rows Here
+     * Add Rows.
      *
-     * @return the complete grid with data
+     * @return
      */
-    private int subjectCounter = 0;
-
     private GridBase addGridRows() {
-
         GridBase grid = createSpreadSheetGrid(10);
         /* Grid Rows */
         ObservableList<ObservableList<SpreadsheetCell>> gridRows = FXCollections.observableArrayList();
@@ -318,117 +329,111 @@ public class GradeEncoderUI {
 //            boolean editable = true;
             SubjectMapping subject = (SubjectMapping) subjectsToBePrinted.get(i);
             checkForPrerequisteRequired(subject, gridRows, i);
-//            List prereq = Mono.orm()
-//                    .newSearch(Database.connect().curriculum_requisite_line())
-//                    .eq("SUBJECT_id_get", subject.getId())
-//                    /**
-//                     * Specific curriculum_id of the pre-requisite.
-//                     *
-//                     * @date 09.02.2017
-//                     */
-//                    .put(PublicConstants.getCurriculumRequisite(studentMap))
-//                    .active();
-//            if (!prereq.isEmpty()) {
-//                for (Object prereq1 : prereq) {
-//                    CurriculumRequisiteLineMapping curriculumReqLine = (CurriculumRequisiteLineMapping) prereq1;
-//                    try {
-//
-//                        GradeMapping grade = Mono.orm()
-//                                .newSearch(Database.connect().grade())
-//                                .eq("SUBJECT_id", curriculumReqLine.getSUBJECT_id_req())
-//                                .eq("STUDENT_id", this.CICT_id)
-//                                .active(Order.desc(DB.grade().id)).first();
-//                        try {
-//                            if (!grade.getRemarks().equalsIgnoreCase("passed")) {
-//                                editable = false;
-//                            } else {
-//                                editable = true;
-//                                break;
-//                            }
-//                            if (!grade.getRemarks().equalsIgnoreCase("incomplete")) {
-//                                editable = false;
-//                            } else {
-//                                editable = false;
-//                                break;
-//                            }
-//                        } catch (NullPointerException a) {
-//                            editable = true;
-//                            break;
-//                        }
-//                    } catch (IndexOutOfBoundsException a) {
-//                        editable = false;
-//                    }
-//                }
-//            } else 
-//                logs("PRE REQ IS EMPTY");
-//            gridRows.add(gridRowFactory(editable, i, subject.getCode(), subject.getDescriptive_title(), String.valueOf(subject.getLec_units() + subject.getLab_units()), "", ""));
-//            
         }
-        /* set Row */
+        //----------------------------------------------------------------------
         grid.setRows(gridRows);
         grid.setRowHeightCallback((param) -> {
-            return 25.0; //To change body of generated lambdas, choose Tools | Templates.
+            // row height
+            return 25.0;
         });
-
         return grid;
     }
-    
+
+    /**
+     * Checks for pre requisite before adding a row. disables the field if no
+     * pre requisite was detected.
+     *
+     * @param subject
+     * @param gridRows
+     * @param i
+     */
     private void checkForPrerequisteRequired(SubjectMapping subject, ObservableList<ObservableList<SpreadsheetCell>> gridRows, int i) {
-        CurricularLevelAssesor assessor = new CurricularLevelAssesor(studentMap);
-        assessor.assess();
-        AssessmentResults annualAsses = assessor.getAnnualAssessment(yearLevel);
-        annualAsses.getSemestralResults(semester).forEach(sem_details -> {
-            boolean editable = true;
-            if(Objects.equals(subject.getId(), sem_details.getSubjectID())) {
-                ArrayList<Integer> pre_ids = new ArrayList<>();
-                Integer[] preqid = new Integer[0];
-                if (sem_details.getSubjectRequisites() == null) {
-                    // do nothing no preq
-                    gridRows.add(gridRowFactory(editable, i, subject.getCode(), subject.getDescriptive_title(), String.valueOf(subject.getLec_units() + subject.getLab_units()), "", ""));
-                    return;
-                } else {
-                    sem_details.getSubjectRequisites().forEach(pre_requisite -> {
-                            pre_ids.add(pre_requisite.getSUBJECT_id_req());
-                    });
-                    preqid = pre_ids.toArray(new Integer[pre_ids.size()]);
-                
+        try {
+            CurricularLevelAssesor assessor = new CurricularLevelAssesor(studentMap);
+            assessor.assess();
+            AssessmentResults annualAsses = assessor.getAnnualAssessment(yearLevel);
+            if (annualAsses == null) {
+                return;
+            }
+            //------------------------------------------------------------------
+            annualAsses.getSemestralResults(semester).forEach(sem_details -> {
+                if (Objects.equals(subject.getId(), sem_details.getSubjectID())) {
+                    ArrayList<Integer> pre_ids = new ArrayList<>();
+
+                    if (sem_details.getSubjectRequisites() == null) {
+                        // do nothing no preq
+                        gridRows.add(gridRowFactory(true, // editable
+                                i,
+                                subject.getCode(),
+                                subject.getDescriptive_title(),
+                                String.valueOf(subject.getLec_units() + subject.getLab_units()),
+                                "",
+                                ""));
+                        return;
+                    }
+                    //----------------------------------------------------------
                     // if this assessment contains a grade
                     if (sem_details.getGradeDetails() != null) {
                         logs("GRADES NOT NULL");
                     }
-
-                    for (int q = 0; q < preqid.length; q++) {
+                    //----------------------------------------------------------
+                    boolean editable = false;
+                    // check for pre requisites.
+                    sem_details.getSubjectRequisites().forEach(pre_requisite -> {
+                        pre_ids.add(pre_requisite.getSUBJECT_id_req());
+                    });
+                    Integer[] preqid = pre_ids.toArray(new Integer[pre_ids.size()]);
+                    //----------------------------------------------------------
+                    // loop all pre requisite ID and check for grades.
+                    for (Integer requisitedID : preqid) {
                         GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
                                 .eq(DB.grade().STUDENT_id, studentMap.getCict_id())
-                                .eq(DB.grade().SUBJECT_id, preqid[q])
+                                .eq(DB.grade().SUBJECT_id, requisitedID)
                                 .active(Order.desc(DB.grade().id))
                                 .first();
-                        if(grade == null) {
-                            logs("NO GRADE OF PRE REQ FOR SUBJECT ID " + preqid[q]);
+
+                        if (grade == null) {
+                            logs("NO GRADE OF PRE REQ FOR SUBJECT ID " + requisitedID);
                             editable = false;
-                        } else {
-                            try {
-                                if (!grade.getRemarks().equalsIgnoreCase("passed")) {
-                                    editable = false;
-                                } else {
-                                    editable = true;
-                                    break;
-                                }
-                                if (grade.getRemarks().equalsIgnoreCase("incomplete")) {
-                                    editable = true;
-                                    break;
-                                } else {
-                                    editable = false;
-                                }
-                            } catch (NullPointerException a) {
-                                editable = false;
-                            }
+                            break;
                         }
-                    }
+
+                        //------------------------------------------------------
+                        boolean isPassed;
+                        boolean isIncomplete;
+                        try {
+                            isPassed = grade.getRemarks().equalsIgnoreCase("passed");
+                            isIncomplete = grade.getRemarks().equalsIgnoreCase("incomplete");
+                        } catch (NullPointerException a) {
+                            editable = false;
+                            break;
+                        }
+
+                        if (isPassed || isIncomplete) {
+                            editable = true;
+                        } else {
+                            editable = false;
+                            break;
+                        }
+                        //------------------------------------------------------
+                    } // END LOOP
+
+                    //----------------------------------------------------------
+                    // add row
+                    gridRows.add(gridRowFactory(editable,
+                            i,
+                            subject.getCode(),
+                            subject.getDescriptive_title(),
+                            String.valueOf(subject.getLec_units() + subject.getLab_units()),
+                            "",
+                            ""));
+                    //----------------------------------------------------------
                 }
-                gridRows.add(gridRowFactory(editable, i, subject.getCode(), subject.getDescriptive_title(), String.valueOf(subject.getLec_units() + subject.getLab_units()), "", ""));
-            }
-        });
+            });
+        } catch (Exception e) {
+            System.out.println("@GRADE ENCODER UI CHECK PRE REQUISITE");
+        }
+
     }
 
     private final String cellTextAlignmentCenter = "-fx-alignment: BASELINE-CENTER;";
@@ -482,7 +487,7 @@ public class GradeEncoderUI {
         SpreadsheetCell ratingCell = this.rowCellFactory(row, this.finalCol, _final, editable);
         ratingCell.itemProperty().addListener(this.ratingCellValueChangeListenerAction(ratingCell.getRow(), editable));
         gridRow.add(ratingCell); // the column that is editable
-        gridRow.add(this.rowCellFactory(row, this.remarkCol, remarks, false));  
+        gridRow.add(this.rowCellFactory(row, this.remarkCol, remarks, false));
         return gridRow;
     }
 
@@ -494,7 +499,7 @@ public class GradeEncoderUI {
     private ChangeListener<Object> ratingCellValueChangeListenerAction(int row, boolean editable) {
         return (ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
             //ObjectProperty op = (ObjectProperty) observable;
-            if(editable) {
+            if (editable) {
                 this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(true);
                 String cellValue[] = validateGrade(newValue, row);
                 this.spreadSheetGrid.setCellValue(row, this.finalCol, cellValue[0]);
@@ -538,12 +543,12 @@ public class GradeEncoderUI {
                         cellValue = this.checkGradeRange(Double.parseDouble(rating), row);
                     } catch (NumberFormatException e) {
                         this.rowPainter(row, this.colorBlanked);
-                        if (!rating.equalsIgnoreCase("UNPOSTED")) {
-                            Mono.fx().alert().createWarning()
-                                    .setHeader("Invalid Grade")
-                                    .setMessage("Please refer from the table on your left for valid range.")
-                                    .show();
-                        }
+
+                        Mono.fx().alert().createWarning()
+                                .setHeader("Invalid Grade")
+                                .setMessage("Please refer from the table on your left for valid range.")
+                                .show();
+
                         return cellValue;
                     }
                 }
@@ -554,7 +559,7 @@ public class GradeEncoderUI {
         }
         return cellValue;
     }
-    
+
 //    private boolean willShow = false;
 //    private void checkForPreReq(Object grade, String cellValue[], int row) {
 //        TablePosition cellFocusPosition = this.spreadSheet.getSelectionModel().getFocusedCell();
@@ -623,7 +628,6 @@ public class GradeEncoderUI {
 //            }
 //        } catch (Exception e) {}
 //    }
-    
     private void setToDefaultCell(int row) {
         this.spreadSheetGrid.getRows().get(row).get(this.finalCol).setEditable(true);
         this.spreadSheetGrid.setCellValue(row, this.finalCol, "");
@@ -748,6 +752,7 @@ public class GradeEncoderUI {
      * @param rating
      */
     private SubjectMapping subject = null;
+
     private void enterGrade(String rating) {
         this.isKeyEvent = false;
         subject = null;
@@ -776,37 +781,37 @@ public class GradeEncoderUI {
                 return;
             }
             // validate pre req here
-            String subjectCode = this.spreadSheetGrid.getRows().get(cellFocusPosition.getRow()).get(cellFocusPosition.getColumn()-3).getText();
+            String subjectCode = this.spreadSheetGrid.getRows().get(cellFocusPosition.getRow()).get(cellFocusPosition.getColumn() - 3).getText();
             logs("SELECTED " + subjectCode);
             ArrayList<SubjectMapping> subjects = Mono.orm().newSearch(Database.connect().subject())
                     .eq(DB.subject().code, subjectCode)
                     .active()
                     .all();
-            
-            for(SubjectMapping temp: subjects) {
+
+            for (SubjectMapping temp : subjects) {
                 CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                         .eq(DB.curriculum_subject().SUBJECT_id, temp.getId())
                         .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
                         .active()
                         .first();
-                if(csMap != null) {
+                if (csMap != null) {
                     subject = temp;
                     break;
                 }
             }
-            if(subject != null) {
+            if (subject != null) {
                 ValidateAddingSubject validate = new ValidateAddingSubject();
                 validate.studentCICT_id = studentMap.getCict_id();
                 validate.subjectID = subject.getId();
-                validate.setOnSuccess(onSuccess->{
+                validate.setOnSuccess(onSuccess -> {
                     setToDefaultCell(focusRow);
                     this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                 });
-                validate.setOnCancel(onCancel-> {
+                validate.setOnCancel(onCancel -> {
                     if (validate.isAlreadyTaken()) {
                         logs("SUBJECT ALREADY TAKEN ");
                         showWarningNotification("Subject Already Taken", subject.getCode() + " is already taken.\n"
-                                        + "Verified For S/N: " + studentMap.getId() + ", " + studentMap.getLast_name() + ".");
+                                + "Verified For S/N: " + studentMap.getId() + ", " + studentMap.getLast_name() + ".");
                     } else if (validate.isPreReqNotAllTaken()) {
                         logs("INCOMPLETE PRE-REQUISITE SUBJECT/S REQUIREMENT");
                         ArrayList<Integer> preReqIds = validate.getPreReqRequiredIds();
@@ -823,7 +828,7 @@ public class GradeEncoderUI {
                         showWarningNotification("Pre-Requisites Required.", subject.getCode() + "\n"
                                 + "Verified For S/N: " + studentMap.getId() + ", " + studentMap.getLast_name() + ".\n"
                                 + "Requires: " + prereqs);
-                    } else if(validate.isNoSectionOffered()) {
+                    } else if (validate.isNoSectionOffered()) {
                         setToDefaultCell(focusRow);
                         this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                     } else {
@@ -843,14 +848,14 @@ public class GradeEncoderUI {
 //            JOptionPane.showMessageDialog(null, "Cannot encode this grade.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
- 
+
     private void showWarningNotification(String title, String message) {
         Notifications.create()
                 .title(title)
                 .text(message)
                 .showWarning();
     }
-    
+
     /**
      * checks if it's the same the focus will not move down if it's the same
      * because it will not trigger itemProperty change listener because there is
@@ -897,60 +902,87 @@ public class GradeEncoderUI {
     /**
      * notifies the user for the result of the posting
      *
-     * @param res value from verification result
+     * @param res value from verification result number of empty rows.
      */
     private void notifyUser(int res, Button btn_post) {
-        
         if (res != 0) {
             int result = Mono.fx().alert().createConfirmation()
                     .setHeader("Empty Row Found")
                     .setMessage("There are [" + res + "] subjects with no grade found. Are you sure you want to post now?")
                     .confirmYesNo();
-            if(result == 1) {
-                //encode 
-            } else {
+            if (result != 1) {
                 return;
             }
-        } else
-            btn_post.setDisable(true);
-        
-//        if (res != 0) {
-//            btn_post.setDisable(true);
-//            Mono.fx().snackbar()
-//                    .showInfo(this.notificationPane, "[ " + res + " ] "
-//                            + "empty row please fill in the grade.");
-//            btn_post.setDisable(false);
-//        } else {
-            btn_post.setDisable(true);
-            EncodeGrade encodeGrade = Evaluator.instance().createGradeEncoder();
-            encodeGrade.CICT_id = this.CICT_id;
-            encodeGrade.spreadSheet = this.spreadSheet;
-            encodeGrade.CURRICULUM_id = studentMap.getCURRICULUM_id();
-            if(ACAD_TERM_id != null)
-                encodeGrade.ACAD_TERM_id = this.ACAD_TERM_id;
-            encodeGrade.MODE = this.MODE;
+        }
 
-            encodeGrade.setOnSuccess(onSuccess -> {
-                if (encodeGrade.isAlreadyPosted()) {
-                    Mono.fx().snackbar().showSuccess(this.notificationPane, "Grades already posted.");
-                } else if (encodeGrade.isPosted()) {
-                    Mono.fx().alert()
-                            .createInfo()
-                            .setHeader("Done")
-                            .setMessage("Grades successfully posted.")
-                            .showAndWait();
-                    Mono.fx().getParentStage(this.notificationPane).close();
-                } else {
-                    Notifications.create()
-                            .text("No new grade and subject to be posted.")
-                            .title("No Changes Made")
-                            .showWarning();
-                            
+        EncodeGrade encodeGrade = Evaluator.instance().createGradeEncoder();
+        encodeGrade.CICT_id = this.CICT_id;
+        encodeGrade.spreadSheet = this.spreadSheet;
+        encodeGrade.CURRICULUM_id = studentMap.getCURRICULUM_id();
+//        if (ACAD_TERM_id != null) {
+//            encodeGrade.ACAD_TERM_id = this.ACAD_TERM_id;
+//        }
+//        encodeGrade.MODE = this.MODE;
+
+        final boolean FLAG_DISABLED_POST = btn_post.isDisabled();
+
+        encodeGrade.whenStarted(() -> {
+            btn_post.setDisable(true);
+        });
+        encodeGrade.whenCancelled(() -> {
+            // two reasons this will be cancelled
+            System.out.println("SUBJECTS NOT FOUND");
+            System.out.println("FAILED TO FIND SUBJECT IN CURRICULUM");
+            Mono.fx().alert()
+                    .createError()
+                    .setHeader("Transaction Failed")
+                    .setMessage("Please Try Again.")
+                    .showAndWait();
+        });
+
+        encodeGrade.whenFailed(() -> {
+            // when insertion failed
+            Mono.fx().alert()
+                    .createError()
+                    .setHeader("Transaction Failed")
+                    .setMessage("Cannot insert or update new values from the database.")
+                    .showAndWait();
+//            Mono.fx().getParentStage(this.notificationPane).close();
+        });
+
+        encodeGrade.whenSuccess(() -> {
+            if (encodeGrade.isAlreadyPosted()) {
+                Mono.fx().alert()
+                        .createInfo()
+                        .setHeader("Done")
+                        .setMessage("No Changes Where Made.")
+                        .showAndWait();
+                Mono.fx().getParentStage(this.notificationPane).close();
+            } else {
+                Mono.fx().alert()
+                        .createInfo()
+                        .setHeader("Done")
+                        .setMessage("Grades successfully posted.")
+                        .showAndWait();
+                Mono.fx().getParentStage(this.notificationPane).close();
+            }
+
+//            else {
+//                Notifications.create()
+//                        .text("No new grade and subject to be posted.")
+//                        .title("No Changes Made")
+//                        .showWarning();
+//
 //                    Mono.fx().snackbar().showSuccess(this.notificationPane, "No grade and subject to be posted.");
 //                    btn_post.setDisable(false);
-                }
-            });
-            encodeGrade.transact();
+//            }
+        });
+        encodeGrade.whenFinished(() -> {
+            // finished
+            btn_post.setDisable(FLAG_DISABLED_POST);
+        });
+
+        encodeGrade.transact();
 //        }
     }
 

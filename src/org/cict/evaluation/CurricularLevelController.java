@@ -119,6 +119,8 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         this.showAssessment();
     }
 
+    private CurricularLevelAssesor assessmentResults;
+
     private void showAssessment() {
         // Student Mapping as constructor parameter.
         CurricularLevelAssesor cla = new CurricularLevelAssesor(STUDENT_current);
@@ -145,7 +147,8 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         };
 
         assessTx.setOnSuccess(onSuccess -> {
-            showValues(cla);
+            assessmentResults = cla;
+            showValues(assessmentResults);
         });
         assessTx.setOnFailure(onFailure -> {
             /**
@@ -172,6 +175,11 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             is3rdYrCompleted = false,
             is4thYrCompleted = false;
 
+    /**
+     * Load initial values.
+     *
+     * @param cla
+     */
     private void showValues(CurricularLevelAssesor cla) {
         /**
          * DESCRIPTION
@@ -285,6 +293,12 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
     }
 
+    /**
+     * Formats string to decimal
+     *
+     * @param percent
+     * @return
+     */
     private String format2Decimal(Double percent) {
         percent = percent * 100.0;
         DecimalFormat df = new DecimalFormat("0.00");
@@ -309,7 +323,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             } else {
 //                setYearLevel(1);
                 ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(1);
-                if(allSubject == null) {
+                if (allSubject == null) {
                     Mono.fx().alert()
                             .createError()
                             .setHeader("No Subject Found")
@@ -464,8 +478,8 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
                 onShowMissingRecord(allSubject, titles, 4);
             }
         });
-        
-        Mono.fx().key(KeyCode.ENTER).release(application_pane, ()->{
+
+        Mono.fx().key(KeyCode.ENTER).release(application_pane, () -> {
             Mono.fx().getParentStage(application_pane).close();
         });
     }
@@ -519,8 +533,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
         for (int ctrSem = 1; ctrSem <= 2; ctrSem++) {
             temp_list = new ArrayList<>();
-            if(selectedYearAssessemnt == null)
+            if (selectedYearAssessemnt == null) {
                 return null;
+            }
             for (SubjectAssessmentDetials subAssessmentDetail : selectedYearAssessemnt) {
                 if (subAssessmentDetail.getSemester() == 1) {
                     if (ctrSem == 1) {
@@ -542,7 +557,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
     }
 
     /**
-     * Errors occurred with this method call.
+     * -----------------------------------------------------------------------
      *
      * @param subjects
      * @param titles
@@ -550,8 +565,11 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
      */
     private void onShowMissingRecord(ArrayList<ArrayList<SubjectMapping>> subjects, ArrayList<String> titles, Integer yearLevel) {
         try {
+
             MissingRecordController controller = new MissingRecordController(this.STUDENT_current,
                     subjects, titles, yearLevel);
+            //
+
             Mono.fx().create()
                     .setPackageName("org.cict.evaluation.encoder")
                     .setFxmlDocument("missing_record")

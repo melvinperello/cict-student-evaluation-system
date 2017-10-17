@@ -30,6 +30,7 @@ import app.lazy.models.GradeMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import com.jhmvin.fx.async.TransactionException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,10 +40,20 @@ import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.spreadsheet.Grid;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetView;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 
 /**
+ * Encodes grade from the spreadsheet view.
  *
  * @author Joemar
+ *
+ * Code Legibility Level (0/10), Extremely messy and incomprehensible.
+ * exceptions are not well handled. errors are thrown sometimes and sometimes
+ * don't. Does not follow a logical flow.
+ *
+ * @reviewed 10/17/2017
+ * @editor Melvin.
  */
 public class EncodeGrade extends Transaction {
 
@@ -53,131 +64,261 @@ public class EncodeGrade extends Transaction {
 
     private final Integer FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
     public Integer ACAD_TERM_id;
-    private final Date POSTED_DATE = new Date();
-    private boolean POSTED = false;
-    private boolean ALREADY_POSTED = false;
+
+//    private boolean POSTED = false;
+    private boolean beenModified = false;
 
     public boolean isAlreadyPosted() {
-        return this.ALREADY_POSTED;
+        return this.beenModified;
     }
 
-    public boolean isPosted() {
-        return this.POSTED;
-    }
-
+//    public boolean isPosted() {
+//        return this.POSTED;
+//    }
     @Override
     protected boolean transaction() {
-        Grid grid = this.spreadSheet.getGrid();
-        ObservableList<ObservableList<SpreadsheetCell>> cells = grid.getRows();
-        int alreadyPostedGradeCount = 0, postedGradeCount = 0;
-        for (int i = 0; i < grid.getRowCount(); i++) { //gets the info needed from the spreadsheet view and stores in the database
-            GradeMapping grades = new GradeMapping();
-            ObservableList<SpreadsheetCell> cell = cells.get(i);
-            try {
-                String remarks = cell.get(4).getItem().toString().toUpperCase();
-                if(remarks.equalsIgnoreCase("not for encoding")) {
-                    continue;
-                }
-                ArrayList<SubjectMapping> subjects = Mono.orm()
-                        .newSearch(Database.connect().subject())
-                        .eq("code", cell.get(0).getItem().toString())
-                        .active()
-                        .all();
-                SubjectMapping subject = null;
-                for(SubjectMapping temp_subject: subjects) {
-                    CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                            .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
-                            .eq(DB.curriculum_subject().SUBJECT_id, temp_subject.getId())
-                            .active()
-                            .first();
-                    if(csMap != null) {
-                        subject = temp_subject;
-                        break;
-                    }
-                }
-                try {
-                    GradeMapping grade_posted = Mono.orm()
-                            .newSearch(Database.connect().grade())
-                            .eq("STUDENT_id", this.CICT_id)
-                            .eq("SUBJECT_id", subject.getId())
-                            .active()
-                            .first();
-                    if ("unposted".equalsIgnoreCase(this.MODE)) {
-                        grade_posted.setSUBJECT_id(subject.getId());
-                        grade_posted.setSTUDENT_id(this.CICT_id);
-                        if(ACAD_TERM_id != null)
-                            grade_posted.setACADTERM_id(this.ACAD_TERM_id);
-                        String rtng_val = cell.get(3).getItem().toString();
-                        grade_posted.setRating(rtng_val);
-                        grade_posted.setRemarks(remarks);
-                        grade_posted.setPosted_by(FACULTY_id);
-                        grade_posted.setPosting_date(POSTED_DATE);
-                        grade_posted.setPosted(1);
-                        /**
-                         * Replaced is credited by this line of code
-                         */
-                        if (SubjectClassification.isCreditted(subject.getType())) {
-                            grade_posted.setCredit(Double.parseDouble(cell.get(2).getItem().toString()));
-                        }
-                        if (grade_posted.getRating().equalsIgnoreCase("INC")) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.add(Calendar.YEAR, 1);
-                            grade_posted.setInc_expire(cal.getTime());
-                        }
-                        if (Database.connect().grade().update(grade_posted)) {
-                            log("UNPOSTED GRADE UPDATED");
-                        }
-                        this.POSTED = true;
-                    } else {
-                        Integer id = grade_posted.getSUBJECT_id();
-                        log("SUBJECT ID " + id + " ALREADY POSTED");
-                        alreadyPostedGradeCount++;
-                    }
-                } catch (NullPointerException es) {
-                    if(!remarks.equalsIgnoreCase("")) {
-                        grades.setSUBJECT_id(subject.getId());
-                        grades.setSTUDENT_id(this.CICT_id);
-                        if(ACAD_TERM_id != null)
-                            grades.setACADTERM_id(this.ACAD_TERM_id);
-                        String rtng_val = cell.get(3).getItem().toString();
-                        grades.setRating(rtng_val);
-                        grades.setRemarks(remarks);
-                        grades.setPosted_by(FACULTY_id);
-                        grades.setPosting_date(POSTED_DATE);
-                        grades.setPosted(1);
-                        /**
-                         * Replaced is credited by this line of code
-                         */
-                        if (SubjectClassification.isCreditted(subject.getType())) {
-                            grades.setCredit(Double.parseDouble(cell.get(2).getItem().toString()));
-                        }
-                        if (grades.getRating().equalsIgnoreCase("INC")) {
-                            Calendar cal = Calendar.getInstance();
-                            cal.add(Calendar.YEAR, 1);
-                            grades.setInc_expire(cal.getTime());
-                        }
-                        if (Database.connect().grade().insert(grades) != -1) {
-                            postedGradeCount++;
-                        }
-                        this.POSTED = true;
-                    }
-                }
+        final Calendar serverCalendar = Mono.orm().getServerTime().getCalendar();
+        final Date serverDate = Mono.orm().getServerTime().getDateWithFormat();
 
-                if (alreadyPostedGradeCount >= grid.getRowCount()) {
-                    this.ALREADY_POSTED = true;
-                }
-            } catch (NullPointerException ef) {
-                this.POSTED = false;
-                ef.printStackTrace();
+        // Start Transaction
+        Session localSession = Mono.orm().openSession();
+        org.hibernate.Transaction dataTx = localSession.beginTransaction();
+        //----------------------------------------------------------------------
+        // spreadsheet grid
+        Grid grid = this.spreadSheet.getGrid();
+        // get gridRows
+        ObservableList<ObservableList<SpreadsheetCell>> gridRows = grid.getRows();
+        // counters
+        int alreadyPostedGradeCount = 0, postedGradeCount = 0;
+        // loop
+        for (int rowIndex = 0; rowIndex < grid.getRowCount(); rowIndex++) {
+            //------------------------------------------------------------------
+            ObservableList<SpreadsheetCell> individualRow = gridRows.get(rowIndex);
+            String subjectCode = individualRow.get(0).getItem().toString();
+            String gradeRating = individualRow.get(3).getItem().toString();
+            String gradeRemarks = individualRow.get(4).getItem().toString().toUpperCase();
+            // check if not for encoding then skip
+            if (gradeRemarks.equalsIgnoreCase("not for encoding")) {
+                continue;
             }
 
+            //------------------------------------------------------------------
+            // search subjects from the repository
+            ArrayList<SubjectMapping> subjects = Mono.orm()
+                    .newSearch(Database.connect().subject())
+                    .eq("code", subjectCode)
+                    .active()
+                    .all();
+
+            if (subjects == null) {
+                System.out.println("SUBJECTS NOT FOUND");
+                return false;
+            }
+            // identify the subject from the curriculum list
+            SubjectMapping subject = null;
+            for (SubjectMapping temp_subject : subjects) {
+                CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                        .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                        .eq(DB.curriculum_subject().SUBJECT_id, temp_subject.getId())
+                        .active()
+                        .first();
+                if (csMap != null) {
+                    subject = temp_subject;
+                    break;
+                }
+            }
+
+            if (subject == null) {
+                System.out.println("FAILED TO FIND SUBJECT IN CURRICULUM");
+                return false;
+            }
+            //------------------------------------------------------------------
+            // check grades for this subject
+            // this can be posted or unposted as long as there is an existing grade
+            GradeMapping existingGrade = Mono.orm()
+                    .newSearch(Database.connect().grade())
+                    .eq("STUDENT_id", this.CICT_id)
+                    .eq("SUBJECT_id", subject.getId())
+                    .active(Order.desc(DB.grade().id))
+                    .first();
+
+            // no existing grade
+            if (existingGrade == null) {
+                // insert new
+                //--------------------------------------------------------------
+                GradeMapping grades = new GradeMapping();
+                grades.setSUBJECT_id(subject.getId());
+                grades.setSTUDENT_id(this.CICT_id);
+                grades.setACADTERM_id(null);
+                grades.setRating(gradeRating);
+                grades.setRemarks(gradeRemarks);
+                //--------------------------------------------------------------
+                grades.setCreated_by(FACULTY_id);
+                grades.setCreated_date(serverDate);
+                grades.setCredit_method("REGULAR");
+                grades.setPosted_by(FACULTY_id);
+                grades.setPosting_date(serverDate);
+                grades.setPosted(1);
+                grades.setActive(1);
+                //--------------------------------------------------------------
+                if (SubjectClassification.isCreditted(subject.getType())) {
+                    // if creditted set credit value
+                    grades.setCredit(Double.parseDouble(individualRow.get(2).getItem().toString()));
+                }
+                //--------------------------------------------------------------
+                if (grades.getRating().equalsIgnoreCase("INC")) {
+                    Calendar cal = serverCalendar;
+                    cal.add(Calendar.YEAR, 1);
+                    grades.setInc_expire(cal.getTime());
+                }
+                //--------------------------------------------------------------
+                int newGradeID = Database.connect().grade().transactionalInsert(localSession, grades);
+                if (newGradeID <= 0) {
+                    // failed
+                    dataTx.rollback();
+                    throw new TransactionException("Cannot insert " + grades.getSUBJECT_id());
+                    // this transaction will end
+                    // whenFailed callback will be invoked
+                }
+                postedGradeCount++;
+
+            } else {
+                // update old and insert new
+                // since editting of passed subjects are not allowed skip them
+                if (existingGrade.getRemarks().equalsIgnoreCase("PASSED")) {
+                    continue;
+                }
+                // if the values are the same skip update
+                if (existingGrade.getRating().equalsIgnoreCase(gradeRating)) {
+                    // same grade rating skip this record
+                    continue;
+                }
+                // if not update the record
+                GradeMapping newGrade = new GradeMapping();
+                newGrade.setSUBJECT_id(existingGrade.getSUBJECT_id());
+                newGrade.setSTUDENT_id(existingGrade.getSTUDENT_id());
+                newGrade.setACADTERM_id(existingGrade.getACADTERM_id());
+                newGrade.setRating(gradeRating); // new rating
+                newGrade.setRemarks(gradeRemarks); // new remarks
+                newGrade.setReason_for_update("UPDATED FAILED OR INCOMPLETE GRADE");
+                //--------------------------------------------------------------
+                // created meta
+                newGrade.setCreated_by(existingGrade.getCreated_by() == null ? FACULTY_id : existingGrade.getCreated_by());
+                newGrade.setCreated_date(existingGrade.getCreated_date() == null ? serverDate : existingGrade.getCreated_date());
+                //--------------------------------------------------------------
+                newGrade.setCredit_method(existingGrade.getCredit_method() == null ? "REGULAR" : existingGrade.getCredit_method());
+                //--------------------------------------------------------------
+                if (existingGrade.getPosted().equals(0)
+                        || existingGrade.getPosted_by() == null
+                        || existingGrade.getPosting_date() == null) {
+                    newGrade.setReason_for_update("GRADE POSTING");
+                    newGrade.setPosted_by(FACULTY_id);
+                    newGrade.setPosting_date(serverDate);
+                } else {
+                    newGrade.setPosted_by(existingGrade.getPosted_by());
+                    newGrade.setPosting_date(existingGrade.getPosting_date());
+                }
+                newGrade.setPosted(1);
+                newGrade.setActive(1);
+                //--------------------------------------------------------------
+                newGrade.setUpdated_by(FACULTY_id);
+                newGrade.setUpdated_date(serverDate);
+                //--------------------------------------------------------------
+                if (SubjectClassification.isCreditted(subject.getType())) {
+                    // if creditted set credit value
+                    newGrade.setCredit(Double.parseDouble(individualRow.get(2).getItem().toString()));
+                }
+                //--------------------------------------------------------------
+                if (newGrade.getRating().equalsIgnoreCase("INC")) {
+                    Calendar cal = serverCalendar;
+                    cal.add(Calendar.YEAR, 1);
+                    newGrade.setInc_expire(cal.getTime());
+                }
+                //--------------------------------------------------------------
+                int updatedGradeID = Database.connect().grade().transactionalInsert(localSession, newGrade);
+                if (updatedGradeID <= 0) {
+                    // failed
+                    dataTx.rollback();
+                    throw new TransactionException("Cannot update " + newGrade.getSUBJECT_id());
+                    // this transaction will end
+                    // whenFailed callback will be invoked
+                }
+
+                // if the updated grade was inserted deactivate the old grade
+                existingGrade.setActive(0);
+                boolean deactivateOld = Database.connect().grade().transactionalSingleUpdate(localSession, existingGrade);
+                if (!deactivateOld) {
+                    dataTx.rollback();
+                    throw new TransactionException();
+                }
+                // if finished gracefully
+                alreadyPostedGradeCount++;
+            }
+
+//            try {
+//
+//                try {
+//
+//                    if ("unposted".equalsIgnoreCase(this.MODE)) {
+//                        existingGrade.setSUBJECT_id(subject.getId());
+//                        existingGrade.setSTUDENT_id(this.CICT_id);
+//                        if (ACAD_TERM_id != null) {
+//                            existingGrade.setACADTERM_id(this.ACAD_TERM_id);
+//                        }
+//
+//                        existingGrade.setRating(gradeRating);
+//                        existingGrade.setRemarks(gradeRemarks);
+//                        existingGrade.setPosted_by(FACULTY_id);
+//                        existingGrade.setPosting_date(POSTED_DATE);
+//                        existingGrade.setPosted(1);
+//                        /**
+//                         * Replaced is credited by this line of code
+//                         */
+//                        if (SubjectClassification.isCreditted(subject.getType())) {
+//                            existingGrade.setCredit(Double.parseDouble(individualRow.get(2).getItem().toString()));
+//                        }
+//                        if (existingGrade.getRating().equalsIgnoreCase("INC")) {
+//                            Calendar cal = Calendar.getInstance();
+//                            cal.add(Calendar.YEAR, 1);
+//                            existingGrade.setInc_expire(cal.getTime());
+//                        }
+//                        if (Database.connect().grade().update(existingGrade)) {
+//                            log("UNPOSTED GRADE UPDATED");
+//                        }
+//                        this.POSTED = true;
+//                    } else {
+//                        Integer id = existingGrade.getSUBJECT_id();
+//                        log("SUBJECT ID " + id + " ALREADY POSTED");
+//                        alreadyPostedGradeCount++;
+//                    }
+//                } catch (NullPointerException es) {
+//                    if (!gradeRemarks.equalsIgnoreCase("")) {
+//
+//                        this.POSTED = true;
+//                    }
+//                }
+//
+//                if (alreadyPostedGradeCount >= grid.getRowCount()) {
+//                    this.beenModified = true;
+//                }
+//            } catch (NullPointerException ef) {
+//                this.POSTED = false;
+//                ef.printStackTrace();
+//            }
+        } // end of loop
+//        if (this.POSTED) {
+//            return true;
+//        }
+        if ((postedGradeCount + alreadyPostedGradeCount) == 0) {
+            this.beenModified = true;
         }
-        if (this.POSTED) {
-            return true;
-        }
+
         log("NUMBER OF POSTED GRADE: " + postedGradeCount);
         log("NUMBER OF ALREADY POSTED GRADE: " + alreadyPostedGradeCount);
-        return false;
+//        this.POSTED = true;
+        dataTx.commit();
+        localSession.close();
+        return true;
     }
 
     @Override

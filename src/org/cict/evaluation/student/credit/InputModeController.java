@@ -35,6 +35,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @author Joemar
  */
+@Deprecated
 public class InputModeController implements ControllerFX {
 
     @FXML
@@ -64,7 +65,7 @@ public class InputModeController implements ControllerFX {
         });
     }
 
-    private void onClick(String mode) {
+    public void onClick(String mode) {
         String message;
         if (mode.equalsIgnoreCase("encode")) {
             this.MODE = CreditController.MODE_ENCODE;
@@ -92,7 +93,7 @@ public class InputModeController implements ControllerFX {
         } else {
             title = "Encode Subjects";
         }
-        CreditController controller = new CreditController(this.CICT_id, this.MODE, title);
+        CreditController controller = new CreditController(this.CICT_id, this.MODE);
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.credit")
                 .setFxmlDocument("Credit")

@@ -53,6 +53,14 @@ import org.controlsfx.control.StatusBar;
  */
 public class CreditController implements ControllerFX {
 
+    // ROW COLOR
+    private final String defaultColor = "#FFFFFF";
+
+    // STATIC VALUES
+    public final static String MODE_CREDIT = "CREDIT";
+    public final static String MODE_ENCODE = "ENCODE";
+    public final static String MODE_READ = "READ";
+
     @FXML
     private Label lbl_title;
     @FXML
@@ -73,21 +81,10 @@ public class CreditController implements ControllerFX {
     @FXML
     private StatusBar status_bar;
 
-    private final Integer CICT_ID;
-    //private Integer CURRICULUM_ID;
-    private final CreditTreeView creditview;
-    private final CreditTree creditTree;
-    private StudentMapping STUDENT_MAP;
-
-    private final ArrayList<Object[]> studentGrades = new ArrayList<>();
-    private final ArrayList<Object[]> retrievedGrades = new ArrayList<>();
-    private String creditMode = "";
-    private final String TITLE;
-
-    public CreditController(Integer studentCictID, String mode, String title) {
+    public CreditController(Integer studentCictID, String mode) {
         this.CICT_ID = studentCictID;
         this.creditMode = mode;
-        this.TITLE = title;
+        this.TITLE = mode;
         /**
          * Create credit tree;
          */
@@ -112,191 +109,73 @@ public class CreditController implements ControllerFX {
 
     }
 
-    /**
-     * Colors of the row.
-     */
-    private final String defaultColor = "#FFFFFF";
-
-    //static values
-    public final static String MODE_CREDIT = "CREDIT";
-    public final static String MODE_ENCODE = "ENCODE";
-    public final static String MODE_READ = "READ";
+    //--------------------------------------------------------------------------
+    private final String TITLE;
+    private String creditMode = "";
+    private final CreditTreeView creditview;
+    private final CreditTree creditTree;
+    //--------------------------------------------------------------------------
+    private final Integer CICT_ID;
+    private StudentMapping STUDENT_MAP;
+    private final ArrayList<Object[]> studentGrades = new ArrayList<>();
+    private final ArrayList<Object[]> retrievedGrades = new ArrayList<>();
+    //--------------------------------------------------------------------------
 
     @Override
     public void onInitialization() {
+        //----------------------------------------------------------------------
         lbl_title.setText(TITLE);
         this.createView();
-        this.setValues();
-        /**
-         * If read only mode.
-         */
+        this.setStudentInformation();
+        //----------------------------------------------------------------------
         if (creditMode.equalsIgnoreCase(MODE_READ)) {
-            /**
-             * may disable all text credit tree
-             */
+            // disable all text
             this.creditTree.disableAllText();
             this.creditTree.setReadOnly(true);
             this.btn_save.setDisable(true);
         } else if (creditMode.equalsIgnoreCase(MODE_CREDIT)) {
-            // to re enable rows with grades already
+            // re enable text fields.
             this.creditTree.enableAllText();
         }
     }
 
-    @Override
-    public void onEventHandling() {
-        //btn_save.setDisable(this.readOnly);
-        btn_save.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            // if (readOnly == false) {
-            readContents();
-            // }
-        });
-    }
-
-    //-------------------------------------------------------------------------
-    //-------------------------------------------------------------------------
     /**
-     * Read the contents of the credit tree in a separate thread.
+     * Set Student Information.
      */
-    private void readContents() {
-        /**
-         * refresh grade list.
-         */
-        this.studentGrades.clear();
+    private void setStudentInformation() {
 
-        // check all fields
-        SimpleTask checkFields = new SimpleTask("check-credit-fields");
-
-        checkFields.setTask(() -> {
-            /**
-             * check
-             */
-            readRows();
-        });
-        checkFields.setOnStart(start -> {
-            btn_save.setDisable(true);
-            creditTree.disableAllText();
-            status_bar.setText("Starting Verification.");
-        });
-        checkFields.setOnSuccess(success -> {
-            /**
-             * Ask to save to database.
-             */
-            saveValues();
-
-            status_bar.setText("Verification Complete.");
-            btn_save.setDisable(false);
-            creditTree.enableAllText();
-        });
-        checkFields.setOnCancelled(event -> {
-            status_bar.setText("Verification has been cancelled by system.");
-            btn_save.setDisable(false);
-            creditTree.enableAllText();
-        });
-        checkFields.setOnFailed(event -> {
-            status_bar.setText("Verification Failed.");
-            btn_save.setDisable(false);
-            creditTree.enableAllText();
-        });
-        checkFields.start();
-
-    }
-
-    /**
-     * Save values to db.
-     */
-    private void saveValues() {
-        CreditEncode ce = new CreditEncode();
-        ce.cict_id = this.CICT_ID;
-        ce.grades = this.studentGrades;
-        ce.setOnStart(onStart -> {
-            status_bar.setText("Saving To Database.");
-        });
-        ce.setOnSuccess(event -> {
-            status_bar.setText("Successfully Saved.");
-        });
-
-        int choice = Mono.fx()
-                .alert()
-                .createConfirmation()
-                .setTitle("Confirmation")
-                .setHeader("Save Your Changes ?")
-                .setMessage("This will save the following changes to the database.")
-                .confirmYesNo();
-
-        if (choice == 1) {
-            ce.transact();
-            Notifications.create()
-                    .title("Saved Successfully")
-                    .text("Grades are successfully saved in the database.")
-                    .showInformation();
-        } else {
-
+        this.lbl_STUDENT_id.setText(this.STUDENT_MAP.getId());
+        this.lbl_STUDENT_name.setText(this.STUDENT_MAP.getLast_name() + ", "
+                + this.STUDENT_MAP.getFirst_name() + " " + (this.STUDENT_MAP.getMiddle_name() == null ? "" : this.STUDENT_MAP.getMiddle_name()));
+        //----------------------------------------------------------------------
+        // Display Student Curriculum
+        CurriculumMapping curriculum = null;
+        if (this.STUDENT_MAP.getCURRICULUM_id() != null) {
+            curriculum = Database.connect().curriculum()
+                    .getPrimary(this.STUDENT_MAP.getCURRICULUM_id());
+        }
+        CurriculumMapping prepCur = null;
+        if (this.STUDENT_MAP.getPREP_id() != null) {
+            prepCur = Database.connect().curriculum()
+                    .getPrimary(this.STUDENT_MAP.getPREP_id());
+        }
+        String displayCur = "Cannot Retrieve Data";
+        if (curriculum != null) {
+            displayCur = curriculum.getName();
         }
 
-    }
-
-    /**
-     * Read all rows in the view.
-     */
-    private void readRows() {
-        for (int x = 0; x < creditTree.getChildColumns().size(); x++) {
-            for (int y = 0; y < creditTree.getChildColumns().get(x).getChildRows().size(); y++) {
-                readRows(x, y);
-                FXThread.pause(200);
-            }
+        if (prepCur != null) {
+            displayCur += (" - " + prepCur.getName());
         }
-    }
-
-    /**
-     * UI change must be on FX Thread.
-     *
-     * @param x
-     * @param y
-     */
-    private void readRows(int x, int y) {
-        Platform.runLater(() -> {
-            creditTree.setFocusedCell(x, y);
-            CreditTreeRow cr = creditTree.getRowAt(x, y);
-
-            /**
-             * Center Scroll pane.
-             */
-            CreditTree.centerNodeInScrollPane(creditview, cr);
-            CreditTree.centerH(creditview, creditTree.getColumn(x));
-            Integer id = cr.getID();
-            creditTree.showLines(id);
-
-            status_bar.setText("Verifying " + cr.lblSubjectCode.getText() + "...");
-
-            // subject id;
-            Integer subject_id = cr.getID();
-            // grade
-            String grade = cr.txtGrade.getText();
-
-            System.out.println("ID: " + subject_id + " -- " + "GRADE: " + grade);
-
-            if (!grade.isEmpty()) {
-                // object array
-                Object[] holder = {subject_id, grade};
-                studentGrades.add(holder);
-            } else {
-                // if grade is empty
-                // marked this grade to be removed if there is a grade.
-                Object[] holder = {subject_id, ""};
-                studentGrades.add(holder);
-            }
-
-        });
+        this.lbl_CURRICULUM_name.setText(displayCur);
     }
 
     /**
      * Creates the credit view
      */
     private void createView() {
-
         STUDENT_MAP = (StudentMapping) Database.connect().student().getPrimary(this.CICT_ID);
-
+        //----------------------------------------------------------------------
         CurricularLevelAssesor assessor = new CurricularLevelAssesor(STUDENT_MAP);
         assessor.assess();
         for (int yrctr = 1; yrctr <= 4; yrctr++) {
@@ -365,26 +244,141 @@ public class CreditController implements ControllerFX {
         creditview.prefHeightProperty().bind(this.hbox_main.prefHeightProperty());
         // add this view
         this.hbox_main.getChildren().add(creditview);
+    }
 
-        /**
-         * Retrieving values.
-         */
-        //this.setRetrievedGrades();
+    @Override
+    public void onEventHandling() {
+        //btn_save.setDisable(this.readOnly);
+        btn_save.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            // if (readOnly == false) {
+            readContents();
+            // }
+        });
     }
 
     /**
-     * Set Student Information.
+     * Read All Text Fields.
      */
-    private void setValues() {
-        this.lbl_STUDENT_id.setText(this.STUDENT_MAP.getId());
-        this.lbl_STUDENT_name.setText(this.STUDENT_MAP.getLast_name() + ", "
-                + this.STUDENT_MAP.getFirst_name() + " " + this.STUDENT_MAP.getMiddle_name());
-        CurriculumMapping curriculum = Mono.orm()
-                .newSearch(Database.connect().curriculum())
-                .eq("id", this.STUDENT_MAP.getCURRICULUM_id())
-                .execute()
-                .first();
-        this.lbl_CURRICULUM_name.setText(curriculum.getName());
+    private void readContents() {
+        // refresh
+        this.studentGrades.clear();
+        //----------------------------------------------------------------------
+        SimpleTask checkFields = new SimpleTask("check-credit-fields");
+        checkFields.setTask(() -> {
+            // focus on every row.
+            readRows();
+        });
+        checkFields.setOnStart(start -> {
+            btn_save.setDisable(true);
+            creditTree.disableAllText();
+            status_bar.setText("Starting Verification.");
+        });
+        checkFields.setOnSuccess(success -> {
+            // ask to save new values
+            saveValues();
+            status_bar.setText("Verification Complete.");
+            btn_save.setDisable(false);
+            creditTree.enableAllText();
+        });
+        checkFields.setOnCancelled(event -> {
+            status_bar.setText("Verification has been cancelled by system.");
+            btn_save.setDisable(false);
+            creditTree.enableAllText();
+        });
+        checkFields.setOnFailed(event -> {
+            status_bar.setText("Verification Failed.");
+            btn_save.setDisable(false);
+            creditTree.enableAllText();
+        });
+        checkFields.start();
+    }
+
+    /**
+     * Save values to db.
+     */
+    private void saveValues() {
+        CreditEncode ce = new CreditEncode();
+        ce.cict_id = this.CICT_ID;
+        ce.grades = this.studentGrades;
+        ce.setOnStart(onStart -> {
+            status_bar.setText("Saving To Database.");
+        });
+        ce.setOnSuccess(event -> {
+            status_bar.setText("Successfully Saved.");
+        });
+
+        int choice = Mono.fx()
+                .alert()
+                .createConfirmation()
+                .setTitle("Confirmation")
+                .setHeader("Save Your Changes ?")
+                .setMessage("This will save the following changes to the database.")
+                .confirmYesNo();
+
+        if (choice == 1) {
+            ce.transact();
+            Notifications.create()
+                    .title("Saved Successfully")
+                    .text("Grades are successfully saved in the database.")
+                    .showInformation();
+        } else {
+
+        }
+
+    }
+
+    /**
+     * Focuses on every row.
+     */
+    private void readRows() {
+        for (int x = 0; x < creditTree.getChildColumns().size(); x++) {
+            for (int y = 0; y < creditTree.getChildColumns().get(x).getChildRows().size(); y++) {
+                readRows(x, y);
+                FXThread.pause(200);
+            }
+        }
+    }
+
+    /**
+     * Method to focus on a specific row.
+     *
+     * @param x
+     * @param y
+     */
+    private void readRows(int x, int y) {
+        Platform.runLater(() -> {
+            creditTree.setFocusedCell(x, y);
+            CreditTreeRow cr = creditTree.getRowAt(x, y);
+
+            /**
+             * Center Scroll pane.
+             */
+            CreditTree.centerNodeInScrollPane(creditview, cr);
+            CreditTree.centerH(creditview, creditTree.getColumn(x));
+            Integer id = cr.getID();
+            creditTree.showLines(id);
+
+            status_bar.setText("Verifying " + cr.lblSubjectCode.getText() + "...");
+
+            // subject id;
+            Integer subject_id = cr.getID();
+            // grade
+            String grade = cr.txtGrade.getText();
+
+            System.out.println("ID: " + subject_id + " -- " + "GRADE: " + grade);
+
+            if (!grade.isEmpty()) {
+                // object array
+                Object[] holder = {subject_id, grade};
+                studentGrades.add(holder);
+            } else {
+                // if grade is empty
+                // marked this grade to be removed if there is a grade.
+                Object[] holder = {subject_id, ""};
+                studentGrades.add(holder);
+            }
+
+        });
     }
 
 }

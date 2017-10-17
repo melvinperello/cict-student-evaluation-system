@@ -227,7 +227,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void onShowGrades() {
-        CreditController controller = new CreditController(this.studentSearched.getCict_id(), CreditController.MODE_READ, "Grades [Read Only]");
+        CreditController controller = new CreditController(this.studentSearched.getCict_id(), CreditController.MODE_READ);
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.credit")
                 .setFxmlDocument("Credit")

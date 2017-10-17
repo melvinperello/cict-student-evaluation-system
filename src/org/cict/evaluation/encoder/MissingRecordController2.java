@@ -61,6 +61,7 @@ import org.hibernate.criterion.Order;
  *
  * @author Joemar
  */
+@Deprecated
 public class MissingRecordController2 extends SceneFX implements ControllerFX{
 
     @FXML

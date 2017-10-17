@@ -57,6 +57,7 @@ public class SearchStudent extends Transaction {
     private ArrayList<LoadGroupMapping> studentLoadGroup;
     private ArrayList<SubjectMapping> studentSubject;
     private boolean isAlreadyEvaluated = false;
+    private boolean isCrossEnrollee = false;
 
     public StudentMapping getCurrentStudent() {
         return currentStudent;
@@ -84,6 +85,10 @@ public class SearchStudent extends Transaction {
 
     public boolean isAlreadyEvaluated() {
         return isAlreadyEvaluated;
+    }
+
+    public boolean isCrossEnrollee() {
+        return this.isCrossEnrollee;
     }
 
     /**
@@ -145,12 +150,16 @@ public class SearchStudent extends Transaction {
             return true;
         }
 
-        // Not evaluated part
-        // check if the student is a cross enrollee
+        //----------------------------------------------------------------------
+        /**
+         * Checks if the student is a cross-enrollee.
+         */
         if (currentStudent.getResidency().equalsIgnoreCase("CROSS_ENROLLEE")) {
             // if the student is a cross-enrollee.
+            this.isCrossEnrollee = true;
             return true;
         }
+        //----------------------------------------------------------------------
 
         // get curriculum id
         studentCurriculum = (CurriculumMapping) Mono.orm()
