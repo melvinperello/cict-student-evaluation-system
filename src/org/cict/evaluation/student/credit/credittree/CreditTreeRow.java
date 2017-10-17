@@ -5,7 +5,10 @@
  */
 package org.cict.evaluation.student.credit.credittree;
 
+import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.SimpleImage;
+import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.fx.events.EventsFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.ObjectBinding;
@@ -30,6 +33,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
+import org.cict.evaluation.student.credit.grade.GradeHistory;
 
 /**
  *
@@ -98,7 +102,7 @@ public class CreditTreeRow extends HBox {
          */
         Image deleteIcon
                 = SimpleImage.make("org.cict.evaluation.student.credit.credittree",
-                        "Trash_64px.png");
+                        "grade_history.png");
         ImageView deleteImage = new ImageView(deleteIcon);
         deleteImage.setFitHeight(20.0);
         deleteImage.setFitWidth(20.0);
@@ -111,40 +115,28 @@ public class CreditTreeRow extends HBox {
         this.btnDelete.setPrefHeight(20.0);
         this.btnDelete.setPrefHeight(20.0);
 
-        this.getChildren().addAll(lblSubjectCode, txtGrade/*, this.btnDelete*/);
+        EventsFX.clickEvent(btnDelete, () -> {
+            this.showGradeHistory();
+        });
+
+        this.getChildren().addAll(lblSubjectCode, txtGrade, this.btnDelete);
 
     }
 
-    private void initializeFx() {
-//        this.PRE_REQUISITES = new Integer[0];
-//
-//        TreeRowFx row = new TreeRowFx();
-//        this.lblSubjectCode = row.lbl_code;
-//        this.txtGrade = row.txt_grade;
-//        HBox.setHgrow(row.row, Priority.ALWAYS);
-//        this.events();
-//
-//        this.getChildren().add(row.row);
-
+    private void showGradeHistory() {
+        GradeHistory controller = new GradeHistory();
+        controller.setSubjectID(SUBJECT_ID);
+        Mono.fx().create()
+                .setPackageName("org.cict.evaluation.student.credit.grade")
+                .setFxmlDocument("GradeHistory")
+                .makeFX()
+                .setController(controller)
+                .makeScene()
+                .makeStageApplication()
+                .stageTitle("Grade History")
+                .stageShowAndWait();
     }
 
-//    private class TreeRowFx extends SceneFX {
-//
-//        private HBox row;
-//        private Label lbl_code;
-//        private TextField txt_grade;
-//
-//        public TreeRowFx() {
-//            row = Mono.fx().create()
-//                    .setPackageName("org.cict.evaluation.student.credit.credittree")
-//                    .setFxmlDocument("CreditTreeRow")
-//                    .makeFX()
-//                    .pullOutLayout();
-//
-//            lbl_code = super.searchAccessibilityText(row, "lbl_code");
-//            txt_grade = super.searchAccessibilityText(row, "txt_grade");
-//        }
-//    }
     /**
      * Sets the color of this row.
      *

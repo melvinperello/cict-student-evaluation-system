@@ -1,6 +1,6 @@
 .credit-row-label{
     -fx-pref-width: 100px;
-    -fx-font-size: 15px;
+    -fx-font-size: 11px;
 }
 
 .credit-row-text{
@@ -14,7 +14,8 @@
 }
 
 .credit-row-delete{
+    /* History*/
     -fx-border-color: white;
-    -fx-background-color: #EB5463;
+    -fx-background-color: #4FC0E8;
 }
 

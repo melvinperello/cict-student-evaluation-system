@@ -84,7 +84,9 @@ public class CreditController implements ControllerFX {
     public CreditController(Integer studentCictID, String mode) {
         this.CICT_ID = studentCictID;
         this.creditMode = mode;
-        this.TITLE = mode;
+        this.TITLE = mode.equals(CreditController.MODE_READ) ? "Viewing Mode"
+                : mode.equals(CreditController.MODE_CREDIT) ? "Editing Mode"
+                : "Credit Tree";
         /**
          * Create credit tree;
          */

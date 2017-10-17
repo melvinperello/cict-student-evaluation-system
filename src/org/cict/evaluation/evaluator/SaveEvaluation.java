@@ -29,14 +29,14 @@ import org.hibernate.Session;
  * @author Jhon Melvin
  */
 public class SaveEvaluation extends Transaction {
-
+    
     private void log(Object message) {
         boolean enableLoggin = true;
         if (enableLoggin) {
             System.out.println("@SaveEvaluation: " + message.toString());
         }
     }
-
+    
     public Integer studentID;
     public Integer acadTermID;
     public Integer facultyID;
@@ -53,11 +53,11 @@ public class SaveEvaluation extends Transaction {
      */
     private boolean isAlreadyEvaluated;
     private int evaluationID;
-
+    
     public int getEvaluationID() {
         return evaluationID;
     }
-
+    
     @Override
     protected boolean transaction() {
 
@@ -79,7 +79,7 @@ public class SaveEvaluation extends Transaction {
             log("Already Evaluated");
             return true;
         }
-
+        
         log("Starting . . .");
         /**
          * If not proceed to evaluation
@@ -112,7 +112,7 @@ public class SaveEvaluation extends Transaction {
 
         // get temporary evaluation.
         int temp_eval_id = Database.connect().grade().transactionalInsert(currentSession, eval);
-
+        
         if (temp_eval_id < 0) {
             // if errors occured during temporary insert
             dataTransaction.rollback();
@@ -137,7 +137,7 @@ public class SaveEvaluation extends Transaction {
             load_subject.setLOADGRP_id(subject.loadGroupID);
             load_subject.setSTUDENT_id(studentID);
             load_subject.setAdded_by(facultyID);
-
+            
             int insert_load_subject = Database.connect()
                     .load_subject()
                     .transactionalInsert(currentSession, load_subject);
@@ -149,7 +149,7 @@ public class SaveEvaluation extends Transaction {
                 isInserted = false;
                 break;
             }
-
+            
             GradeMapping grades = MapFactory.map().grade();
             grades.setSTUDENT_id(studentID);
             grades.setSUBJECT_id(subject.subjectID);
@@ -161,7 +161,8 @@ public class SaveEvaluation extends Transaction {
             grades.setCreated_by(facultyID);
             grades.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
             grades.setPosted(0);
-
+            grades.setReason_for_update("Created by Evaluation");
+            
             int insert_grade = Database
                     .connect()
                     .grade()
@@ -174,7 +175,7 @@ public class SaveEvaluation extends Transaction {
                 isInserted = false;
                 break;
             }
-
+            
         }
 
         /**
@@ -192,10 +193,10 @@ public class SaveEvaluation extends Transaction {
             log("subject successfully inserted");
             dataTransaction.commit();
         }
-
+        
         return true;
     }
-
+    
     @Override
     protected void after() {
 //        PrintAdvising slip = Evaluator.instance().printAdvising();
@@ -203,5 +204,5 @@ public class SaveEvaluation extends Transaction {
 //        slip.academicTerm = acadTermID;
 //        slip.transact();
     }
-
+    
 }

@@ -31,7 +31,9 @@ import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
+import java.util.Calendar;
 import org.cict.PublicConstants;
+import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -41,7 +43,7 @@ import org.hibernate.criterion.Order;
  * @author Jhon Melvin
  */
 public class CreditEncode extends Transaction {
-
+    
     private void logs(Object message) {
         System.out.println("@CreditEncode: " + message.toString());
     }
@@ -55,15 +57,15 @@ public class CreditEncode extends Transaction {
      */
     @Override
     protected boolean transaction() {
-
+        
         Session local_session = Mono.orm().openSession();
         // if server cannot create session.
         if (local_session == null) {
             return false;
         }
-
+        
         org.hibernate.Transaction dataTx = local_session.beginTransaction();
-
+        
         for (Object[] grade : grades) {
             /**
              * Iteration values values.
@@ -79,7 +81,7 @@ public class CreditEncode extends Transaction {
                     .eq(DB.subject().id, subject_id)
                     .execute()
                     .first();
-
+            
             if (subject == null) {
                 // cancel transaction
                 return false;
@@ -95,12 +97,11 @@ public class CreditEncode extends Transaction {
                     .active(Order.desc(DB.grade().id))
                     .first();
 
-            /**
-             * if no grade insert new
-             */
+            //------------------------------------------------------------------
+            // new grade
             if (studentGrade == null) {
                 if (rating.equalsIgnoreCase("")) {
-                    // if grade was empty continue
+                    // if grade was empty int the credit tree
                     continue;
                 }
                 
@@ -108,17 +109,26 @@ public class CreditEncode extends Transaction {
                 studentGrade = MapFactory.map().grade();
                 studentGrade.setSTUDENT_id(cict_id);
                 studentGrade.setSUBJECT_id(subject_id);
+                studentGrade.setRating(rating);
+                studentGrade.setRemarks(PublicConstants.getRemarks(rating));
+                //--------------------------------------------------------------
                 studentGrade.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
                 studentGrade.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
+                //--------------------------------------------------------------
                 studentGrade.setPosted(1);
                 studentGrade.setPosted_by(CollegeFaculty.instance().getFACULTY_ID());
                 studentGrade.setPosting_date(Mono.orm().getServerTime().getDateWithFormat());
-                studentGrade.setCredit_method("REGULAR");
+                studentGrade.setCredit_method("CREDIT");
                 studentGrade.setCredit(subject.getLab_units() + subject.getLec_units());
-
-                studentGrade.setRating(rating);
-                studentGrade.setRemarks(PublicConstants.getRemarks(rating));
-
+                //--------------------------------------------------------------
+                if (studentGrade.getRating().equalsIgnoreCase("INC")) {
+                    Calendar cal = Mono.orm().getServerTime().getCalendar();
+                    cal.add(Calendar.YEAR, 1);
+                    studentGrade.setInc_expire(cal.getTime());
+                }
+                //--------------------------------------------------------------
+                studentGrade.setReason_for_update("Added Grade Using Credit Tree");
+                
                 Integer id = Database.connect().grade()
                         .transactionalInsert(local_session, studentGrade);
                 if (id < 0) {
@@ -128,52 +138,46 @@ public class CreditEncode extends Transaction {
                     return false;
                 }
             } else {
-
-                /**
-                 * Checks if the grade is not changed.
-                 */
+                //--------------------------------------------------------------
+                // upate grade
+                //--------------------------------------------------------------
+                // if unchanged to not update
                 if (rating.equalsIgnoreCase(studentGrade.getRating())) {
                     // continue to next iteration of the loop
                     logs("Skipping unmodified grades");
                     continue;
-                    /**
-                     * Everything below will be skipped.
-                     */
                 }
-
-                logs("Updating grades.");
-
-                /**
-                 * When there is already a grade, make that record inactive.
-                 */
+                //--------------------------------------------------------------
+                // IF EMPTY it means grade will be deleted
+                boolean deleteGrade = false;
+                if (rating.equalsIgnoreCase("")) {
+                    studentGrade.setReason_for_update("Grade Deleted");
+                    deleteGrade = true;
+                }
+                //--------------------------------------------------------------
+                // deactivate current grade to insert new values
                 studentGrade.setActive(0);
                 boolean res = Database.connect().grade().transactionalSingleUpdate(local_session, studentGrade);
-
+                
                 if (!res) {
-
                     dataTx.rollback();
                     logs("Failed to update old");
                     return false;
                 }
-
-                /**
-                 * IF THE GRADE WAS CHANGED and empty. now the old grade was set
-                 * to inactive and no new grade will be inserted.
-                 */
-                if (rating.equalsIgnoreCase("")) {
+                //--------------------------------------------------------------
+                if (deleteGrade) {
+                    // do not insert new grade
                     continue;
                 }
 
+                //--------------------------------------------------------------
                 /**
                  * Insert a new record with updated values.
                  */
                 GradeMapping grade_copy = MapFactory.map().grade();
                 grade_copy.setRating(rating);
                 grade_copy.setRemarks(PublicConstants.getRemarks(rating));
-
-                /**
-                 * If the grade is already posted. copy values from previous.
-                 */
+                //--------------------------------------------------------------
                 if (studentGrade.getPosted() == 1) {
                     grade_copy.setPosted(studentGrade.getPosted());
                     grade_copy.setPosted_by(studentGrade.getPosted_by());
@@ -186,20 +190,28 @@ public class CreditEncode extends Transaction {
                     grade_copy.setPosted_by(CollegeFaculty.instance().getFACULTY_ID());
                     grade_copy.setPosting_date(Mono.orm().getServerTime().getDateWithFormat());
                 }
-
+                //--------------------------------------------------------------
                 grade_copy.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
                 grade_copy.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
-                // copied values
+                //--------------------------------------------------------------
                 grade_copy.setSTUDENT_id(studentGrade.getSTUDENT_id());
                 grade_copy.setSUBJECT_id(studentGrade.getSUBJECT_id());
                 grade_copy.setCreated_by(studentGrade.getCreated_by());
                 grade_copy.setCreated_date(studentGrade.getCreated_date());
-                //
+                //--------------------------------------------------------------
                 grade_copy.setCredit_method("CREDIT");
                 grade_copy.setCredit(subject.getLab_units() + subject.getLec_units());
-
+                grade_copy.setACADTERM_id(studentGrade.getACADTERM_id());
+                //--------------------------------------------------------------
+                if (grade_copy.getRating().equalsIgnoreCase("INC")) {
+                    Calendar cal = Mono.orm().getServerTime().getCalendar();
+                    cal.add(Calendar.YEAR, 1);
+                    grade_copy.setInc_expire(cal.getTime());
+                }
+                //--------------------------------------------------------------
+                grade_copy.setReason_for_update("Grade Modification using Credit Tree");
                 Integer new_id = Database.connect().grade().transactionalInsert(local_session, grade_copy);
-
+                
                 if (new_id < 0) {
                     // error in insert
                     dataTx.rollback();
@@ -217,10 +229,10 @@ public class CreditEncode extends Transaction {
         logs("complete");
         return true;
     }
-
+    
     @Override
     protected void after() {
-
+        
     }
-
+    
 }

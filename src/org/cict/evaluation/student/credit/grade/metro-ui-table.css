@@ -1,0 +1,59 @@
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+/* Scroll Up down Button */
+.scroll-pane  .scroll-bar:vertical .increment-arrow,
+.scroll-pane  .scroll-bar:vertical .decrement-arrow,
+.scroll-pane  .scroll-bar:vertical .increment-button,
+.scroll-pane  .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+}
+
+/* Scroll bar itself */
+.scroll-pane .scroll-bar:vertical,
+.scroll-pane .scroll-bar:horizontal{
+    -fx-background-color: transparent;
+}
+
+/* The rails of the bar*/
+.scroll-pane .scroll-bar:vertical .track,
+.scroll-pane .scroll-bar:horizontal .track{
+    -fx-background-color: transparent;
+}
+
+/* The bar over the rails*/
+.scroll-pane .scroll-bar:vertical .thumb,
+.scroll-pane .scroll-bar:horizontal .thumb{
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
+}
+
+
+
+
+
+.metro-table{
+    -fx-border-width: 1 0 0 0;
+    -fx-border-style: dashed;
+    -fx-border-color: #FFFFFF;
+}
+
+.metro-row{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: dashed;
+    -fx-border-color: #FFFFFF;
+}
+
+/*
+.metro-row:hover{
+    -fx-background-color: #74B1F4;
+}
+*/
+

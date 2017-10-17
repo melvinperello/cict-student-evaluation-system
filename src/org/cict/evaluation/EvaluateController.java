@@ -70,101 +70,101 @@ import update3.org.cict.access.Access;
  * @author Jhon Melvin
  */
 public class EvaluateController extends SceneFX implements ControllerFX {
-    
+
     @FXML
     private AnchorPane anchor_evaluate;
-    
+
     @FXML
     private AnchorPane anchor_right;
-    
+
     @FXML
     private JFXButton btnFind;
-    
+
     @FXML
     private TextField txtStudentNumber;
-    
+
     @FXML
     private AnchorPane anchor_preview;
-    
+
     @FXML
     private AnchorPane anchor_studentInfo;
-    
+
     @FXML
     private Label lblName;
-    
+
     @FXML
     private Label lblCourseSection;
-    
+
     @FXML
     private JFXButton btn_studentOptions;
-    
+
     @FXML
     private ScrollPane scroll_subjects;
-    
+
     @FXML
     private JFXButton btnEvaluate;
-    
+
     @FXML
     private Label lbl_subjectTotal;
-    
+
     @FXML
     private Label lbl_unitsTotal;
-    
+
     @FXML
     private VBox vbox_studentOptions;
-    
+
     @FXML
     private JFXButton btnHistory;
-    
+
     @FXML
     private JFXButton btn_checklist;
-    
+
     @FXML
     private JFXButton btn_encoding;
-    
+
     @FXML
     private JFXButton btnCreditUnits;
-    
+
     @FXML
     private AnchorPane anchor_results;
-    
+
     @FXML
     private HBox hbox_search;
-    
+
     @FXML
     private HBox hbox_loading;
-    
+
     @FXML
     private HBox hbox_none;
-    
+
     @FXML
     private HBox hbox_already;
-    
+
     @FXML
     private JFXButton btn_already_print;
-    
+
     @FXML
     private JFXButton btn_already_evaluate;
-    
+
     @FXML
     private JFXButton btn_winSection;
-    
+
     @FXML
     private JFXButton btn_home;
-    
+
     @FXML
     private AnchorPane anchor_main1;
-    
+
     @FXML
     private VBox vbox_list;
-    
+
     public EvaluateController() {
         //
     }
 
     // Maximum allowed units
     private final static Double MAX_UNITS = PublicConstants.MAX_UNITS;
-    
+
     private void log(Object message) {
         boolean logging = true;
         if (logging) {
@@ -206,7 +206,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         scroll_subjects.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             Evaluator.mouseDropSubject(currentStudent, MAX_UNITS, unitCount, vbox_subjects, anchor_right);
         });
-        
+
         createQueueTable();
     }
 
@@ -248,7 +248,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     @Override
     public void onEventHandling() {
         this.hideDropDownEvents();
-        
+
         super.addClickEvent(btn_home, () -> {
             Home.callHome(this);
         });
@@ -279,7 +279,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             vbox_studentOptions.setVisible(!vbox_studentOptions.isVisible());
         });
         super.addClickEvent(btn_encoding, () -> {
-            this.onEncoding();
+            Mono.fx().snackbar().showInfo(application_root, "This feature is under construction.");
         });
         super.addClickEvent(btnHistory, () -> {
             this.onShowHistory();
@@ -305,7 +305,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.hideDropDown();
             this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
         });
-        
+
         super.addClickEvent(btn_already_evaluate, () -> {
             // RE-EVALUATE Student.
             this.hideDropDown();
@@ -327,7 +327,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.hbox_search.setVisible(false); // search
         this.hbox_none.setVisible(false); // no results
         this.hbox_already.setVisible(false);
-        
+
         vbox_studentOptions.setVisible(false);
         //vbox_settings.setVisible(false);
 
@@ -337,18 +337,18 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 this.hbox_search.setVisible(true); // search
                 this.btnFind.setDisable(false);
                 break;
-            
+
             case "search":
                 this.anchor_results.setVisible(true);
                 this.hbox_loading.setVisible(true); // search
                 this.btnFind.setDisable(true);
                 break;
-            
+
             case "no_results":
                 this.anchor_results.setVisible(true);
                 this.hbox_none.setVisible(true); // search
                 break;
-            
+
             case "preview":
                 anchor_evaluate.setDisable(false);
                 this.anchor_preview.setVisible(true);
@@ -421,20 +421,20 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         } else {
             countSearch = 0;
         }
-        
+
         setView("search");
-        
+
         SearchStudent search = new SearchStudent();
         search.studentNumber = txtStudentNumber.getText().trim();
-        
+
         search.setOnSuccess(event -> {
             this.onSearchSuccess(search);
         });
-        
+
         search.setOnFailure(event -> {
             setView("no_results");
         });
-        
+
         search.setOnCancel(event -> {
             this.onSearchCancelled(search);
         });
@@ -465,12 +465,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             setView("no_results");
             return;
         }
-        
+
         if (FLAG_ALREADY_EVALUATED) {
             setView("already");
             return;
         }
-        
+
         System.out.println("@EvaluateController: Search Success");
 
         //----------------------------------------------------------------------
@@ -515,7 +515,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
             return;
         }
-        
+
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.CICT_id = currentStudent.getCict_id();
         printCheckList.setOnStart(onStart -> {
@@ -539,7 +539,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         printCheckList.transact();
     }
-    
+
     private void hideDropDownEvents() {
         txtStudentNumber.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
             this.hideDropDown();
@@ -571,7 +571,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .setTitle("Confirmation")
                 .setMessage("Are you sure you want to continue ?")
                 .confirmYesNo();
-        
+
         if (res != 1) {
             return;
         }
@@ -594,12 +594,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // allowed user
             isAllowed = true;
         }
-        
+
         if (!isAllowed) {
             Mono.fx().snackbar().showError(application_root, "You Are Not Allowed To Re-evaluate Students.");
             return;
         }
-        
+
         RevokeEvaluation revoked_evaluation = Registrar.instance().createRevokeEvaluation();
         revoked_evaluation.cict_id = currentStudent.getCict_id();
         if (allowedUser == null) {
@@ -622,10 +622,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // cancelled is called upon error.
         });
         revoked_evaluation.whenFailed(() -> {
-            
+
         });
         revoked_evaluation.whenSuccess(() -> {
-            
+
         });
         revoked_evaluation.whenFinished(() -> {
             GenericLoadingShow.instance().hide();
@@ -640,7 +640,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             setView("home");
             this.searchStudent();
         });
-        
+
         revoked_evaluation.setRestTime(500);
         revoked_evaluation.transact();
     }
@@ -680,7 +680,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // make chouces
             if (choice == 1) {
                 SectionsController sectionController = new SectionsController();
-                
+
                 Mono.fx().create()
                         .setPackageName("org.cict.evaluation.sectionviewer")
                         .setFxmlDocument("section_viewer")
@@ -690,9 +690,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                         .makeStage()
                         .stageResizeable(false)
                         .stageShow();
-                
+
                 sectionController.searchCallBack("Suggestions For " + txtStudentNumber.getText().trim());
-                
+
                 return;
             }
         }
@@ -732,7 +732,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
         }
         evaluateTask.subjects = toInsert;
-        
+
         evaluateTask.whenStarted(() -> {
             GenericLoadingShow.instance().show();
         });
@@ -749,7 +749,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             GenericLoadingShow.instance().hide();
             setView("home");
         });
-        
+
         evaluateTask.setRestTime(500);
         evaluateTask.transact();
     }
@@ -810,17 +810,17 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .stageResizeable(false)
                     .stageCenter()
                     .stageShowAndWait();
-            
+
             evaluationMap.setPrint_type(controller.getSelected().toUpperCase());
             Database.connect().evaluation().update(evaluationMap);
         }
-        
+
         if (controller.isPrinting()) {
             String text = "Printing Evaluation Slip";
             if (isNew) {
                 text = "Evaluated Successfully, printing Evaluation Slip";
             }
-            
+
             Notifications.create()
                     .title("Success (" + controller.getSelected() + " Student)")
                     .text(text)
@@ -846,7 +846,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         return controller.getStudent();
     }
-    
+
     private void showFirstAssistant() {
         anchor_evaluate.setDisable(true);
         setView("home");
@@ -863,7 +863,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageCenter()
                 .stageShowAndWait();
     }
-    
+
     private void showAssistant() {
         AssistantController controller = new AssistantController(currentStudent);
         Mono.fx().create()
@@ -879,7 +879,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         currentStudent.setYear_level(controller.getNewYearLevel());
     }
-    
+
     private void onShowCurricularLevel() {
         CurricularLevelController controller = new CurricularLevelController(this.currentStudent);
         Mono.fx().create()
@@ -940,7 +940,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         previewTk.whenFailed(() -> {
             log("EvaluateController: Failed Loading Preview.");
         });
-        
+
         previewTk.whenFinished(() -> {
             // done
             btnFind.setDisable(false);
@@ -970,7 +970,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 // IF CROSS ENROLLEE DO NOT PROCEED BELOW CODE
                 return;
             }
-            
+
             try {
                 // students section
                 String section = this.currentStudent.getYear_level()
@@ -982,10 +982,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             } catch (Exception e) {
                 this.lblCourseSection.setText("No Data");
             }
-            
+
         });
     }
-    
+
     private void loadPreview() {
         // load details
         this.loadStudentDetails();
@@ -993,7 +993,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         Platform.runLater(() -> {
             this.vbox_subjects.getChildren().clear();
         });
-        
+
         log(" $showPreview: started");
         /**
          * If the student has no assigned sections or no matches have found.
@@ -1014,14 +1014,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     isOkToAdd(x);
                 }
             }
-            
+
         }
-        
+
         Mono.fx().thread().wrap(() -> {
             lbl_subjectTotal.setText(subjectCount.toString());
             lbl_unitsTotal.setText(unitCount.toString());
         });
-        
+
     }
 
     /**
@@ -1042,9 +1042,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         sv.loadGroupID = studentLoadGroup.get(x).getId();
         sv.loadSecID = studentLoadGroup.get(x).getLOADSEC_id();
         sv.subjectID = studentSubject.get(x).getId();
-        
+
         sv.validate();
-        
+
         log(" $isOkToAdd: verified");
         if (sv.isEligibleToTake()) {
             log(" $isOkToAdd: student is eligible");
@@ -1108,11 +1108,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                             .showInfo(anchor_right, subjects.code.getText() + " Has Been Removed.");
                 }
             });
-            
+
             Mono.fx().thread().wrap(() -> {
                 vbox_subjects.getChildren().add(subjects);
             });
-            
+
         } catch (IndexOutOfBoundsException a) {
             log(" $isOkToAdd: IndexOutOfBoundsException");
         }
@@ -1188,56 +1188,60 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                         + "Sorry for the inconvinience.")
                 .showAndWait();
     }
-    
+
     private ArrayList<ArrayList<SubjectMapping>> subjectsWithNoGrade;
-    
+
+    @Deprecated
+    /**
+     * All encoding features are now in the curricular level assessor.
+     */
     private void onEncoding() {
-        CheckGrade checkGrade = Evaluator.instance().createGradeChecker();
-        checkGrade.curriculumId = this.currentStudent.getCURRICULUM_id();
-        checkGrade.studentId = this.currentStudent.getCict_id();
-        checkGrade.studentYearLevel = this.currentStudent.getYear_level();
-        checkGrade.RATING_TO_CHECK = "UNPOSTED";
-        
-        checkGrade.setOnStart(onStart -> {
-            this.btnFind.setDisable(true);
-        });
-        checkGrade.setOnSuccess(success -> {
-            GenericLoadingShow.instance().hide();
-            try {
-                this.subjectsWithNoGrade = checkGrade.getSubjectsWithNoGrade();
-                if (subjectsWithNoGrade.size() > 0) {
-                    this.onShowGradeEncoderForRegular("unposted");
-                }
-            } catch (NullPointerException a) {
-                System.out.println("@EvaluateController: NO SUBJECT TO SHOW");
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("No Subject Found")
-                        .setMessage("There is no subject to show.")
-                        .showAndWait();
-            }
-            this.btnEvaluate.setDisable(false);
-            this.btnFind.setDisable(false);
-            setView("home");
-        });
-        
-        checkGrade.setOnStart(onStart -> {
-            GenericLoadingShow.instance().show();
-            this.vbox_studentOptions.setVisible(false);
-            this.btnEvaluate.setDisable(true);
-            this.btnFind.setDisable(true);
-        });
-        
-        checkGrade.setOnCancel(onCancel -> {
-            this.onError();
-        });
-        checkGrade.setOnFailure(failure -> {
-            this.onError();
-        });
-        checkGrade.setRestTime(300);
-        checkGrade.transact();
+//        CheckGrade checkGrade = Evaluator.instance().createGradeChecker();
+//        checkGrade.curriculumId = this.currentStudent.getCURRICULUM_id();
+//        checkGrade.studentId = this.currentStudent.getCict_id();
+//        checkGrade.studentYearLevel = this.currentStudent.getYear_level();
+//        checkGrade.RATING_TO_CHECK = "UNPOSTED";
+//        
+//        checkGrade.setOnStart(onStart -> {
+//            this.btnFind.setDisable(true);
+//        });
+//        checkGrade.setOnSuccess(success -> {
+//            GenericLoadingShow.instance().hide();
+//            try {
+//                this.subjectsWithNoGrade = checkGrade.getSubjectsWithNoGrade();
+//                if (subjectsWithNoGrade.size() > 0) {
+//                    this.onShowGradeEncoderForRegular("unposted");
+//                }
+//            } catch (NullPointerException a) {
+//                System.out.println("@EvaluateController: NO SUBJECT TO SHOW");
+//                Mono.fx().alert()
+//                        .createInfo()
+//                        .setHeader("No Subject Found")
+//                        .setMessage("There is no subject to show.")
+//                        .showAndWait();
+//            }
+//            this.btnEvaluate.setDisable(false);
+//            this.btnFind.setDisable(false);
+//            setView("home");
+//        });
+//        
+//        checkGrade.setOnStart(onStart -> {
+//            GenericLoadingShow.instance().show();
+//            this.vbox_studentOptions.setVisible(false);
+//            this.btnEvaluate.setDisable(true);
+//            this.btnFind.setDisable(true);
+//        });
+//        
+//        checkGrade.setOnCancel(onCancel -> {
+//            this.onError();
+//        });
+//        checkGrade.setOnFailure(failure -> {
+//            this.onError();
+//        });
+//        checkGrade.setRestTime(300);
+//        checkGrade.transact();
     }
-    
+
     private void onShowGradeEncoderForRegular(String mode) {
         GradeEncoderController controller = new GradeEncoderController(mode, this.currentStudent,
                 this.subjectsWithNoGrade.get(0),
@@ -1253,7 +1257,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShow();
         setView("home");
     }
-    
+
     private void updateYearLevelForRegular() {
         String[] schoolYear = Evaluator.instance()
                 .getCurrentAcademicTerm()
@@ -1271,7 +1275,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                         + " - G"
                         + this.currentStudent.get_group();
                 this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
-                
+
             }
         }
     }
@@ -1294,7 +1298,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShow();
         setView("home");
     }
-    
+
     private void onShowHistory() {
         this.vbox_studentOptions.setVisible(false);
         StudentHistoryController controller = new StudentHistoryController(this.currentStudent,
@@ -1310,21 +1314,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageMaximized(true)
                 .stageShow();
     }
-    
+
     private void onShowInputMode() {
         this.vbox_studentOptions.setVisible(false);
-//        InputModeController controller = new InputModeController(this.currentStudent.getCict_id());
-//        Mono.fx().create()
-//                .setPackageName("org.cict.evaluation.student.credit")
-//                .setFxmlDocument("mode")
-//                .makeFX()
-//                .setController(controller)
-//                .makeScene()
-//                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
-//                .stageResizeable(false)
-//                .stageTitle("Input Mode")
-//                .stageShow();
-//        setView("home");
+
         if (this.FLAG_CROSS_ENROLLEE) {
             Mono.fx().snackbar().showInfo(application_root, "Cross Enrollees cannot credit any subjects.");
             return;
@@ -1346,9 +1339,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .makeStageApplication()
                 .stageResizeable(true)
                 .stageMaximized(true)
-                .stageShow();
+                .stageShowAndWait();
+        //----------------------------------------------------------------------
+        // search student again to refresh values
+        this.searchStudent();
     }
-    
+
     private void hideDropDown() {
         //this.vbox_settings.setVisible(false);
         this.vbox_studentOptions.setVisible(false);
@@ -1361,7 +1357,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     private SimpleTable studentTable = new SimpleTable();
     private ArrayList<StudentMapping> lst_student;
-    
+
     private void createQueueTable() {
 //        for(StudentMapping student: lst_student) {
 //            createRow(student);
@@ -1369,19 +1365,19 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         for (int i = 0; i < 5; i++) {
             createRow(i);
         }
-        
+
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(studentTable);
         simpleTableView.setFixedWidth(true);
-        
+
         simpleTableView.setParentOnScene(vbox_list);
     }
-    
+
     private void createRow(int num/*StudentMapping subject*/) {
-        
+
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
-        
+
         HBox programRow = (HBox) Mono.fx().create()
                 .setPackageName("org.cict.evaluation")
                 .setFxmlDocument("eval-row")
@@ -1390,15 +1386,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         Label lbl_number = searchAccessibilityText(programRow, "number");
         Label lbl_id = searchAccessibilityText(programRow, "id");
         Label lbl_name = searchAccessibilityText(programRow, "name");
-        
+
         lbl_number.setText(num + "");
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(programRow);
-        
+
         row.addCell(cellParent);
-        
+
         studentTable.addRow(row);
     }
 }

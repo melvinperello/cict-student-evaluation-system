@@ -155,24 +155,28 @@ public class RevokeEvaluation extends Transaction {
                 .active()
                 .all();
 
-        for (GradeMapping revoke_grade : revoke_grades) {
-            revoke_grade.setRating("CANCELLED");
-            revoke_grade.setRemarks("CANCELLED");
-            revoke_grade.setCredit(0.00);
-            revoke_grade.setUpdated_by(registrar_id);
-            revoke_grade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
-            revoke_grade.setReason_for_update("REVOKED_EVALUATION");
-            revoke_grade.setActive(0);
+        //----------------------------------------------------------------------
+        // sometimes grade will be editted and may affect evaluation
+        if (revoke_grades != null) {
+            for (GradeMapping revoke_grade : revoke_grades) {
+                revoke_grade.setRating("CANCELLED");
+                revoke_grade.setRemarks("CANCELLED");
+                revoke_grade.setCredit(0.00);
+                revoke_grade.setUpdated_by(registrar_id);
+                revoke_grade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+                revoke_grade.setReason_for_update("REVOKED_EVALUATION");
+                revoke_grade.setActive(0);
 
-            Boolean is_revoke_grade = Database
-                    .connect()
-                    .grade()
-                    .transactionalSingleUpdate(currentSession, revoke_grade);
+                Boolean is_revoke_grade = Database
+                        .connect()
+                        .grade()
+                        .transactionalSingleUpdate(currentSession, revoke_grade);
 
-            if (!is_revoke_grade) {
-                System.out.println("RevokeEvaluation: Error in grade update");
-                dataTransaction.rollback();
-                return false;
+                if (!is_revoke_grade) {
+                    System.out.println("RevokeEvaluation: Error in grade update");
+                    dataTransaction.rollback();
+                    return false;
+                }
             }
         }
 
