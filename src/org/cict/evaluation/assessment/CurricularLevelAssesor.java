@@ -30,11 +30,14 @@ import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
+import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import java.util.ArrayList;
+import java.util.Calendar;
 import org.cict.PublicConstants;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.criterion.Order;
 
 /**
@@ -147,6 +150,82 @@ public class CurricularLevelAssesor {
         results.setAllSubjects(subList);
 
         return results;
+    }
+
+    /**
+     * Expire checker.
+     */
+    private void checkExpired() {
+        AcademicTermMapping currentTerm = SystemProperties.instance().getCurrentAcademicTerm();
+
+        ArrayList<GradeMapping> studentGrades = Mono.orm()
+                .newSearch(Database.connect().grade())
+                .eq(DB.grade().STUDENT_id, this.studentMap.getCict_id())
+                .eq(DB.grade().rating, "INC")
+                .active(Order.desc(DB.grade().id))
+                .all();
+
+        for (GradeMapping grade : studentGrades) {
+            if (grade.getACADTERM_id() != null) {
+                int difference = currentTerm.getId() - grade.getACADTERM_id();
+                if (difference > 2) {
+                    // this grade is expired
+                    makeGradeExpired(grade);
+                    continue;
+                }
+            } else {
+                // not null
+                if (grade.getInc_expire() != null) {
+                    // check expire time
+                    if (Mono.orm().getServerTime().isPastServerTime(grade.getInc_expire())) {
+                        // expired
+                        makeGradeExpired(grade);
+                    }
+                } else {
+                    // if null check the creation time
+                    Calendar creationDate = Calendar.getInstance();
+                    creationDate.setTime(grade.getCreated_date());
+                    creationDate.add(Calendar.YEAR, 1);
+
+                    if (Mono.orm().getServerTime().isPastServerTime(creationDate.getTime())) {
+                        // expired
+                        makeGradeExpired(grade);
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void makeGradeExpired(GradeMapping grade) {
+        GradeMapping newGrade = MapFactory.map().grade();
+        newGrade.setACADTERM_id(grade.getACADTERM_id());
+        newGrade.setCreated_by(grade.getCreated_by());
+        newGrade.setCreated_date(grade.getCreated_date());
+        newGrade.setCredit(grade.getCredit());
+        newGrade.setCredit_method(grade.getCredit_method());
+        newGrade.setInc_expire(grade.getInc_expire());
+        newGrade.setPosted(grade.getPosted());
+        newGrade.setPosted_by(grade.getPosted_by());
+        newGrade.setPosting_date(grade.getPosting_date());
+        newGrade.setRating(grade.getRating());
+        newGrade.setReferrence_curriculum(grade.getReferrence_curriculum());
+        newGrade.setRemarks(grade.getRemarks());
+        newGrade.setSTUDENT_id(grade.getSTUDENT_id());
+        newGrade.setSUBJECT_id(grade.getSUBJECT_id());
+
+        newGrade.setActive(1);
+        newGrade.setReason_for_update("INC Grade has Expired");
+        newGrade.setUpdated_by(null);
+        newGrade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+
+        //
+        grade.setActive(0);
+        boolean oldDeactivated = Database.connect().grade().update(grade);
+
+        //
+        Integer newInserted = Database.connect().grade().insert(newGrade);
+
     }
 
     /**
