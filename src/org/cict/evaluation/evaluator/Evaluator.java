@@ -56,12 +56,6 @@ public class Evaluator implements Process {
     }
 
     private Evaluator() {
-        //
-//        currentAcademicTerm = Mono.orm()
-//                .newSearch(Database.connect().academic_term())
-//                .eq("current", 1)
-//                .active()
-//                .first();
         currentAcademicTerm = SystemProperties.instance().getCurrentAcademicTerm();
     }
 

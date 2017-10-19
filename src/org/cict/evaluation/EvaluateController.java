@@ -242,6 +242,29 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         lbl_unitsTotal.setText(unitCount.toString());
     }
 
+    private void checkEvaluationService(Runnable runMe) {
+        Integer evaluation_service = SystemProperties.instance().getCurrentAcademicTerm().getEvaluation_service();
+        if (evaluation_service == null) {
+            Mono.fx().alert().createWarning().setTitle("Checking Service")
+                    .setHeader("Evaluation Service")
+                    .setMessage("Cannot check the evaluation service. Please Try Again.")
+                    .show();
+        } else {
+            switch (evaluation_service) {
+                case 1:
+                    runMe.run();
+                    break;
+                default:
+                    Mono.fx().alert().createWarning().setTitle("Evaluation Service")
+                            .setHeader("Evaluation is OFFLINE")
+                            .setMessage("Evaluation Service is currently offline, no evaluation can be save at the moment")
+                            .show();
+                    Home.callHome(this);
+                    break;
+            }
+        }
+    }
+
     /**
      * Registered Events in the evaluation window.
      */
@@ -261,7 +284,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         // search student, this dependes on the value of the text field
         super.addClickEvent(btnFind, () -> {
             this.hideDropDown();
-            this.searchStudent();
+            checkEvaluationService(() -> {
+                this.searchStudent();
+            });
         });
 
         // enter key as click in btn_find will execute if button is enabled.
@@ -295,7 +320,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         // save student evaluation
         super.addClickEvent(btnEvaluate, () -> {
             this.hideDropDown();
-            saveEvaluation();
+            checkEvaluationService(() -> {
+                saveEvaluation();
+            });
         });
 
         //----------------------------------------------------------------------
@@ -309,7 +336,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_already_evaluate, () -> {
             // RE-EVALUATE Student.
             this.hideDropDown();
-            onRevokeEvaluation();
+            checkEvaluationService(() -> {
+                onRevokeEvaluation();
+            });
         });
         //----------------------------------------------------------------------
     }

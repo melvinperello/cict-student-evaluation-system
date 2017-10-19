@@ -35,6 +35,8 @@ import org.hibernate.criterion.Criterion;
  */
 public class PublicConstants {
 
+    public final static String[] LEGACY_CURRICULUM = new String[]{"ACT (15-16)","BSIT (11-12)", "BITCT (11-12)", "BSIT (15-16)"};
+            
     /**
      * System.
      */

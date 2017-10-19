@@ -235,6 +235,8 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     private void writeEncodedGrades() {
         // enable the post button
         this.btnPost.setDisable(false);
+        // disable first value filtering to write notes
+        this.gei.setValueFiltering(false);
         // starts here
         int writeCount = 0;
         ArrayList<SubjectMapping> subjects = this.subjectsWithNoGrade;
@@ -267,6 +269,8 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                 }
             }
         }
+
+        this.gei.setValueFiltering(true);
         //----------------------------------------------------------------------
         // now when the loop is over let's compare how many rows we have against writeCount
         // this will decide if the post button will be disabled
@@ -274,6 +278,8 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             System.out.println("ROW SIZE: " + sheetyGrid.getRows().size());
             // if they are equal grades are complete
             this.btnPost.setDisable(true); // disable the post button
+            // re enable value filtering
+
         }
 
     }

@@ -2,7 +2,7 @@
 // SQL_table: curriculum
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 16, 2017 07:52:07 PM
+// Created: Oct 18, 2017 11:33:01 AM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -44,6 +44,7 @@ private java.lang.Integer removed_by;
 private java.lang.Integer implemented;
 private java.util.Date implementation_date;
 private java.lang.Integer implemented_by;
+private java.lang.Integer obsolete_term;
 private java.lang.Integer active;
 
 @Id
@@ -203,6 +204,15 @@ public java.lang.Integer getImplemented_by() {
 
 public void setImplemented_by(java.lang.Integer fieldImplementedBy) {
 	this.implemented_by = fieldImplementedBy;
+}
+
+@Column(name = "obsolete_term", nullable = true, length = 10)
+public java.lang.Integer getObsolete_term() {
+	return this.obsolete_term;
+}
+
+public void setObsolete_term(java.lang.Integer fieldObsoleteTerm) {
+	this.obsolete_term = fieldObsoleteTerm;
 }
 
 @Column(name = "active", nullable = false, length = 10)

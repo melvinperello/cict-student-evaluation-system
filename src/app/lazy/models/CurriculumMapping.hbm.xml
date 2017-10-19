@@ -55,6 +55,9 @@
 <property name="implemented_by" type="java.lang.Integer">
 <column name="implemented_by" length="10"/>
 </property>
+<property name="obsolete_term" type="java.lang.Integer">
+<column name="obsolete_term" length="10"/>
+</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

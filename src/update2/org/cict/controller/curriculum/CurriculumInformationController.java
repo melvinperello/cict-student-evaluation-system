@@ -24,6 +24,7 @@
 package update2.org.cict.controller.curriculum;
 
 import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.CurriculumHistoryMapping;
 import app.lazy.models.CurriculumHistorySummaryMapping;
 import app.lazy.models.CurriculumMapping;
@@ -36,6 +37,7 @@ import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.SimpleImage;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -49,6 +51,7 @@ import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -56,6 +59,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -64,6 +69,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.CheckComboBox;
@@ -105,6 +111,12 @@ public class CurriculumInformationController extends SceneFX implements Controll
     @FXML
     private ComboBox<String> cmb_preparatory;
 
+    @FXML
+    private ComboBox<AcademicTermMapping> cmb_obselete;
+       
+    @FXML
+    private JFXCheckBox chkbx_obsolete;
+    
     @FXML
     private Label lbl_id;
 
@@ -213,11 +225,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
         }
         
         addTextFieldFilters();
+        setAcademicTerms();
     }
     
     private void addTextFieldFilters() {
         StringFilter textField = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager->{
@@ -228,9 +240,55 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     }
                 });
         textField.clone().setTextSource(txt_name).applyFilter();
-        textField.clone().setTextSource(txt_major).applyFilter();
-        textField.clone().setTextSource(txt_description).applyFilter();
+        
+        StringFilter textField1 = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textField1.clone().setTextSource(txt_major).applyFilter();
+        textField1.clone().setTextSource(txt_description).applyFilter();
        
+    }
+    
+    private void setAcademicTerms() {
+        ArrayList<AcademicTermMapping> acadTerms = Mono.orm().newSearch(Database.connect().academic_term())
+                .active(Order.desc(DB.academic_term().school_year)).all();
+        if(acadTerms!=null) {
+            Callback<ListView<AcademicTermMapping>, ListCell<AcademicTermMapping>> factory = lv -> {
+                return new ListCell<AcademicTermMapping>() {
+                    @Override
+                    protected void updateItem(AcademicTermMapping item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty ? "" : (item.getSchool_year() + " " + item.getSemester()));
+                    }
+                };
+            };
+            
+            this.cmb_obselete.getItems().clear();
+            this.cmb_obselete.getItems().addAll(acadTerms);
+            this.cmb_obselete.setCellFactory(factory);
+            this.cmb_obselete.setButtonCell(factory.call(null));
+            
+            if (CURRICULUM.getObsolete_term()!= null) {
+                for (AcademicTermMapping term : acadTerms) {
+                    if (term.getId().equals(CURRICULUM.getObsolete_term())) {
+                        this.cmb_obselete.getSelectionModel().select(term);
+                        chkbx_obsolete.setSelected(true);
+                        cmb_obselete.setDisable(false);
+                        break;
+                    }
+                }
+            }
+        } else {
+            System.out.println("NO ACADEMIC TERM FOUND");
+        }
     }
 
     @Override
@@ -327,6 +385,39 @@ public class CurriculumInformationController extends SceneFX implements Controll
             onBack();
         });
 
+        this.cmb_obselete.valueProperty().addListener((ObservableValue<? extends AcademicTermMapping> observable, AcademicTermMapping oldValue, AcademicTermMapping newValue) -> {
+            if(newValue==null)
+                return;
+            CURRICULUM.setObsolete_term(newValue.getId());
+            if(Database.connect().curriculum().update(CURRICULUM)) {
+                Notifications.create().title("Updated Successfully")
+                        .text("Obsolete of the curriculum is updated.")
+                        .showInformation();
+            } else {
+                Notifications.create().title("Process Failed")
+                        .text("Something went wrong.")
+                        .showInformation();
+            }
+        });
+        
+        chkbx_obsolete.selectedProperty().addListener((a)->{
+            cmb_obselete.setDisable(!chkbx_obsolete.isSelected());
+            if(!chkbx_obsolete.isSelected()) {
+                CURRICULUM.setObsolete_term(null);
+                if(Database.connect().curriculum().update(CURRICULUM)) {
+                    Notifications.create().title("Updated Successfully")
+                            .text("Obsolete of the curriculum is removed.")
+                            .showInformation();
+                    setAcademicTerms();
+                } else {
+                    Notifications.create().title("Process Failed")
+                            .text("Something went wrong in removing\n"
+                                    + "the term.")
+                            .showInformation();
+                }
+            }
+        });
+        
     }
     
     private final String SECTION_BASE_COLOR = "#414852";

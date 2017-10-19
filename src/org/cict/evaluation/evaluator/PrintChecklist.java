@@ -37,6 +37,7 @@ import com.jhmvin.fx.async.Transaction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.assessment.AssessmentResults;
@@ -55,17 +56,15 @@ import org.cict.reports.checklist.BSIT1516;
 public class PrintChecklist extends Transaction {
 
     public Integer CICT_id;
+    public Integer CURRICULUM_id;
+    public Boolean printLegacy = false;
 
     private StudentMapping student;
     private String address = "", sectionName = "", highSchool = "";
     private AcademicProgramMapping acadProg;
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
-    private Integer CURRICULUM_ACT_id = 6,
-            CURRICULUM_BSIT_new_id = 7,
-            CURRICULUM_BSIT_old_id = 9,
-            CURRICULUM_BITCT_id = 10;
-
+    
     @Override
     protected boolean transaction() {
         student = Database.connect().student().getPrimary(CICT_id);
@@ -73,7 +72,10 @@ public class PrintChecklist extends Transaction {
             System.out.println("NO STUDENT");
             return false;
         }
-        curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
+        if(CURRICULUM_id != null)
+            curriculum = Database.connect().curriculum().getPrimary(CURRICULUM_id);
+        else
+            curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
         if (curriculum == null) {
             System.out.println("NO CURRICULUM");
             return false;
@@ -138,13 +140,13 @@ public class PrintChecklist extends Transaction {
 
     private void getResult(CurricularLevelAssesor cla, int year, boolean hasPrepData) {
         AssessmentResults result = cla.getAnnualAssessment(year);
-        if (hasPrepData) {
-            if (year <= 2) {
-                curriculum = cla.getPrepCurriculum();
-            } else {
-                curriculum = cla.getConsCurriculum();
-            }
-        }
+//        if (hasPrepData) {
+//            if (year <= 2) {
+//                curriculum = cla.getPrepCurriculum();
+//            } else {
+//                curriculum = cla.getConsCurriculum();
+//            }
+//        }
 
         for (int semester = 1; semester <= 2; semester++) {
             ArrayList<SubjectAssessmentDetials> sadetails;
@@ -225,6 +227,14 @@ public class PrintChecklist extends Transaction {
 
     @Override
     protected void after() {
+        String LEGACY = null;
+        for(String legacy: PublicConstants.LEGACY_CURRICULUM) {
+            if(legacy.equalsIgnoreCase(curriculum.getName())) {
+                LEGACY = legacy;
+                break;
+            }
+        }
+        
         String doc = student.getId() + "_"
                 + Mono.orm().getServerTime().getCalendar().getTimeInMillis();
 
@@ -245,66 +255,12 @@ public class PrintChecklist extends Transaction {
         }
         //------------------------------------------------------------------
         //------------------------------------------------------------------
-
-        if (curriculum.getId() == CURRICULUM_BSIT_new_id) { //temp
-            BSIT1516 bsit1516 = new BSIT1516(RESULT);
-            bsit1516.STUDENT_NUMBER = student.getId();
-            String fullName = student.getLast_name() + ", " + student.getFirst_name();
-            String midName = student.getMiddle_name();
-            if (midName != null) {
-                fullName += " " + midName;
-            }
-            bsit1516.STUDENT_NAME = fullName;
-            bsit1516.STUDENT_ADDRESS = address;
-            for (Object[] detail : details) {
-                String key = (String) detail[4];
-                SubjectMapping subject = (SubjectMapping) detail[0];
-                if (subject.getCode().equalsIgnoreCase("CAPS 01")) {
-                    detail[2] = "Regular 3rd year \nStanding";
-                    detail[3] = "Regular 3rd year \nStanding";
-                }
-                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                    detail[1] = "486 hours";
-                    detail[2] = "4th Year Standing";
-                }
-                switch (key) {
-                    case "11":
-                        store(fyrfsem, detail);
-                        break;
-                    case "12":
-                        store(fyrssem, detail);
-                        break;
-                    case "21":
-                        store(syrfsem, detail);
-                        break;
-                    case "22":
-                        store(syrssem, detail);
-                        break;
-                    case "31":
-                        store(tyrfsem, detail);
-                        break;
-                    case "32":
-                        store(tyrssem, detail);
-                        break;
-                    case "41":
-                        store(fryrfsem, detail);
-                        break;
-                    case "42":
-                        store(fryrssem, detail);
-                        break;
-                }
-
-            }
-            bsit1516.SUBJECTS_PER_SEM.put("11", fyrfsem);
-            bsit1516.SUBJECTS_PER_SEM.put("12", fyrssem);
-            bsit1516.SUBJECTS_PER_SEM.put("21", syrfsem);
-            bsit1516.SUBJECTS_PER_SEM.put("22", syrssem);
-            bsit1516.SUBJECTS_PER_SEM.put("31", tyrfsem);
-            bsit1516.SUBJECTS_PER_SEM.put("32", tyrssem);
-            bsit1516.SUBJECTS_PER_SEM.put("41", fryrfsem);
-            bsit1516.SUBJECTS_PER_SEM.put("42", fryrssem);
-            int val = bsit1516.print();
-        } else if (curriculum.getId() == CURRICULUM_ACT_id) {
+        if(LEGACY==null) {
+            printStandard(RESULT);
+            return;
+        }
+        
+        if (LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[0]) && !printLegacy) {
             ACT act = new ACT(RESULT);
             act.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
@@ -337,7 +293,7 @@ public class PrintChecklist extends Transaction {
             act.SUBJECTS_PER_SEM.put("21", syrfsem);
             act.SUBJECTS_PER_SEM.put("22", syrssem);
             int val = act.print();
-        } else if (curriculum.getId() == CURRICULUM_BSIT_old_id) {
+        } else if (LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[1]) && !printLegacy) {
             BSIT1112 bsit1112 = new BSIT1112(RESULT);
             bsit1112.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
@@ -390,7 +346,7 @@ public class PrintChecklist extends Transaction {
             bsit1112.SUBJECTS_PER_SEM.put("41", fryrfsem);
             bsit1112.SUBJECTS_PER_SEM.put("42", fryrssem);
             bsit1112.print();
-        } else if (curriculum.getId() == CURRICULUM_BITCT_id) {
+        } else if (LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[2]) && !printLegacy) {
             BITCT bsit1112 = new BITCT(RESULT);
             bsit1112.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
@@ -443,7 +399,7 @@ public class PrintChecklist extends Transaction {
             bsit1112.SUBJECTS_PER_SEM.put("41", fryrfsem);
             bsit1112.SUBJECTS_PER_SEM.put("42", fryrssem);
             bsit1112.print();
-        } else {
+        } else if(LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[3]) && !printLegacy) {
             BSIT1516 bsit1516 = new BSIT1516(RESULT);
             bsit1516.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
@@ -471,14 +427,14 @@ public class PrintChecklist extends Transaction {
             for (Object[] detail : details) {
                 String key = (String) detail[4];
                 SubjectMapping subject = (SubjectMapping) detail[0];
-//                if(subject.getCode().equalsIgnoreCase("CAPS 01")) {
-//                    detail[2] = "Regular 3rd year \nStanding";
-//                    detail[3] = "Regular 3rd year \nStanding";
-//                }
-//                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-//                    detail[1] = "486 hours";
-//                    detail[2] = "4th Year Standing";
-//                }
+                if(subject.getCode().equalsIgnoreCase("CAPS 01")) {
+                    detail[2] = "Regular 3rd year \nStanding";
+                    detail[3] = "Regular 3rd year \nStanding";
+                }
+                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                    detail[1] = "486 hours";
+                    detail[2] = "4th Year Standing";
+                }
                 switch (key) {
                     case "11":
                         store(fyrfsem, detail);
@@ -518,7 +474,68 @@ public class PrintChecklist extends Transaction {
                 bsit1516.SUBJECTS_PER_SEM.put("42", fryrssem);
             }
             int val = bsit1516.print();
+        } else {
+            printStandard(RESULT);
         }
+    }
+    
+    private void printStandard(String RESULT) {
+        BSIT1516 bsit1516 = new BSIT1516(RESULT);
+        bsit1516.STUDENT_NUMBER = student.getId();
+        String fullName = student.getLast_name() + ", " + student.getFirst_name();
+        String midName = student.getMiddle_name();
+        if (midName != null) {
+            fullName += " " + midName;
+        }
+        bsit1516.STUDENT_NAME = fullName;
+        bsit1516.STUDENT_ADDRESS = address;
+        for (Object[] detail : details) {
+            String key = (String) detail[4];
+//                SubjectMapping subject = (SubjectMapping) detail[0];
+//                if (subject.getCode().equalsIgnoreCase("CAPS 01")) {
+//                    detail[2] = "Regular 3rd year \nStanding";
+//                    detail[3] = "Regular 3rd year \nStanding";
+//                }
+//                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+//                    detail[1] = "486 hours";
+//                    detail[2] = "4th Year Standing";
+//                }
+            switch (key) {
+                case "11":
+                    store(fyrfsem, detail);
+                    break;
+                case "12":
+                    store(fyrssem, detail);
+                    break;
+                case "21":
+                    store(syrfsem, detail);
+                    break;
+                case "22":
+                    store(syrssem, detail);
+                    break;
+                case "31":
+                    store(tyrfsem, detail);
+                    break;
+                case "32":
+                    store(tyrssem, detail);
+                    break;
+                case "41":
+                    store(fryrfsem, detail);
+                    break;
+                case "42":
+                    store(fryrssem, detail);
+                    break;
+            }
+        }
+        bsit1516.SUBJECTS_PER_SEM.put("11", fyrfsem);
+        bsit1516.SUBJECTS_PER_SEM.put("12", fyrssem);
+        bsit1516.SUBJECTS_PER_SEM.put("21", syrfsem);
+        bsit1516.SUBJECTS_PER_SEM.put("22", syrssem);
+        bsit1516.SUBJECTS_PER_SEM.put("31", tyrfsem);
+        bsit1516.SUBJECTS_PER_SEM.put("32", tyrssem);
+        bsit1516.SUBJECTS_PER_SEM.put("41", fryrfsem);
+        bsit1516.SUBJECTS_PER_SEM.put("42", fryrssem);
+        int val = bsit1516.print();
     }
 
     private void store(ArrayList<Object[]> subjectDetails, Object[] detail) {

@@ -1,4 +1,4 @@
-package org.cict.reports.checklist;
+package org.cict.reports.deficiency;
 
 import app.lazy.models.SubjectMapping;
 import com.itextpdf.text.BaseColor;
@@ -9,18 +9,18 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.ExceptionConverter;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Utilities;
-import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Desktop;
 import java.io.File;
@@ -29,14 +29,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.cict.SubjectClassification;
 
-public class BSIT1516 {
+public class Deficiency {
 
-//    public static String document;
+    /**
+     * Path to the resulting PDF file.
+     */
     public static String RESULT;
 
-    public BSIT1516( String res) {
-//        document = filename;
-        RESULT = res;//"reports/checklist/" + document + ".pdf";
+    public Deficiency( String res) {
+        RESULT = res;
     }
 
     public int print() {
@@ -69,10 +70,7 @@ public class BSIT1516 {
     public String STUDENT_NAME = "DE LA CRUZ, JOEMAR NUCOM",
             STUDENT_ADDRESS = "8-152 SUCAD APALIT, PAMPANGA",
             STUDENT_NUMBER = "09123456789",
-            COURSE = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
-            SCHOOL_YEAR = "2015-2016",
-            MAJOR = ""; 
-    public Boolean IS_LADDERIZED = true;
+            CURRICULUM_NAME = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY"; 
     public HashMap<String,ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
     
     /**
@@ -89,15 +87,13 @@ public class BSIT1516 {
     private static final Font font5Plain = new Font(FontFamily.HELVETICA, 5);
     private static final Font font5Bold = new Font(FontFamily.HELVETICA, 5, Font.BOLD);
     private static final Font font5BoldItalic = new Font(FontFamily.HELVETICA, 5, Font.BOLDITALIC);
-    
     /**
      * PRIVATE VARIABLES
      */
     private String name,
             address,
             studentNo;
-    private static String course, sy, major;
-    private static Boolean isLadderized;
+    private static String curriculumName;
     private HashMap<String,ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
     
     public void init() {
@@ -105,10 +101,7 @@ public class BSIT1516 {
         this.name = this.STUDENT_NAME;
         this.address = this.STUDENT_ADDRESS;
         this.subjectsPerSem = this.SUBJECTS_PER_SEM;
-        course = COURSE;
-        isLadderized = IS_LADDERIZED;
-        sy = SCHOOL_YEAR;
-        major = MAJOR;
+        this.curriculumName = CURRICULUM_NAME;
     }
     
     private static PdfWriter writer;
@@ -125,6 +118,8 @@ public class BSIT1516 {
                 Utilities.inchesToPoints(13f)), 55, 55, 50, 20); //lrtb
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
+            PageNumeration event = new PageNumeration();
+            writer.setPageEvent(event);
         }catch(FileNotFoundException es){
             return 1;
         }
@@ -143,7 +138,7 @@ public class BSIT1516 {
         document.add(createHeader());
         document.add(createStudentInfo());
         document.add(createBody());
-        writer.setPageEvent(new MyFooter3());
+//        writer.setPageEvent(new MyFooter());
         document.close();
         return 0;
     }
@@ -164,12 +159,9 @@ public class BSIT1516 {
     private static Paragraph createTitle() {
         Paragraph p = new Paragraph(10);
         p.setAlignment(Element.ALIGN_CENTER);
-        if(isLadderized)
-            p.add(new Chunk("A ladderized curriculum leading to the degree of\n",font6Plain));
-        p.add(getTextUnderlined(course + "\n",font7Bold));
-        if(!major.isEmpty())
-            p.add(getTextUnderlined("MAJOR IN " + major + "\n",font7Bold));
-        p.add(new Chunk("AY " + sy + "\n\n",font6Plain));
+        p.add(new Chunk("Deficiency Report\n",font13Plain));
+        p.add(getTextUnderlined(curriculumName + "\n",font7Bold));
+//        p.add(new Chunk("AY 2015-2016\n\n",font6Plain));
         return p;
     }
     
@@ -196,11 +188,10 @@ public class BSIT1516 {
         tbl_stud.setTotalWidth(575);
         tbl_stud.setLockedWidth(true);
         tbl_stud.addCell(createCellWithObject(createCurriculumTable(0,2),false,true));
-//        if(isLadderized)
-            tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
+        tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
         return tbl_stud;
     }
-     
+      
     private String objectKey, yearLevel, semester;
     private int  year = 1;
     private Double totalUnitsLabOverall = 0.0,
@@ -222,6 +213,35 @@ public class BSIT1516 {
             for (int k = 0; k < 2; k++) {
                 this.setTitleHeader();
                 tbl_stud.addCell(createSimpleCell(semester, font5Bold, 11, true, false));
+                
+                //check if there is a subject in this sem
+                ArrayList<Object[]> subjects = this.subjectsPerSem.get(objectKey);
+                //0-subjectmap
+                //1-total hrs
+                //2-prereq
+                //3-co-req
+                try{
+                    if(subjects == null)
+                        return null;
+                }catch(NullPointerException a) {
+                    tbl_stud.addCell(createSimpleCell("NO", font5Plain, 0, false, false));
+                    tbl_stud.addCell(createSimpleCell("MISSING", font5Plain, 0, true, false));
+                    tbl_stud.addCell(createSimpleCell(getShortenedDetail("RECORD"
+                            , 38), font5Plain, 0, false, false));
+                    tbl_stud.addCell(createSimpleCell("OF", font5Plain, 0, true, false));
+                    tbl_stud.addCell(createSimpleCell("GRADE", font5Plain, 0, true, false));
+                    tbl_stud.addCell(createSimpleCell("IN", font5Plain, 0, true, false));
+                    tbl_stud.addCell(createSimpleCell("THIS", font5Plain, 0, true, false));
+                    tbl_stud.addCell(createSimpleCell("SEMESTER", font5Plain, 0, true, false));
+                    //change sem
+                    if(sem == 1)
+                        sem = 2;
+                    else
+                        sem = 1;
+                    
+                    continue;
+                }
+                
                 tbl_stud.addCell(createSimpleCell("COURSE CODE", font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell("DESCRIPTIVE TITLE", font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell("LEC\nUNITS", font5Bold, 0, true, false));
@@ -238,16 +258,11 @@ public class BSIT1516 {
                         totalUnitsLec = 0.0,
                         totalUnitsCre = 0.0;
                 Integer totalHrsWk = 0;
-                ArrayList<Object[]> subjects = this.subjectsPerSem.get(objectKey);
-                //0-subjectmap
-                //1-total hrs
-                //2-prereq
-                //3-co-req
                 for (int j = 0; j < subjects.size(); j++) {
                     SubjectMapping subject = (SubjectMapping) subjects.get(j)[0];
                     tbl_stud.addCell(createSimpleCell(subject.getCode(), font5Plain, 0, false, false));
-                    tbl_stud.addCell(createSimpleCell(subject.getDescriptive_title(), font5Plain, 0, false, false));
-                    
+                    tbl_stud.addCell(createSimpleCell(getShortenedDetail(subject.getDescriptive_title()
+                            , 38), font5Plain, 0, false, false));
                     Double totalUnits = 0.0;
                     if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_NSTP)) {
                         tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true, false));
@@ -282,19 +297,10 @@ public class BSIT1516 {
                 tbl_stud.addCell(createSimpleCell(String.valueOf(totalUnitsLec), font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell(String.valueOf(totalUnitsLab), font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell(String.valueOf(totalUnitsCre), font5Bold, 0, true, false));
-                String totalHrsWkStr = "";
-                if(totalHrsWk != 0)
-                    totalHrsWkStr = String.valueOf(totalHrsWk);
-                tbl_stud.addCell(createSimpleCell(totalHrsWkStr, font5Bold, 0, true, false));
+                tbl_stud.addCell(createSimpleCell(String.valueOf(totalHrsWk), font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell("", font5Bold, 0, true, false));
                 tbl_stud.addCell(createSimpleCell("", font5Bold, 0, true, false));
-                if(isLadderized) {
-                    if(year == 2 && sem == 2) {
-                        value = 10;
-                        tbl_stud.addCell(createSimpleCell("At the end of Second Year (All comprising subjects are taken and passed), "
-                                + "the student earns a 2 - year Certificate if Associate in\nComputer Technology (ACT)", font7Bold, 8, true, false));
-                    }
-                }
+
                 //change sem
                 if(sem == 1)
                     sem = 2;
@@ -380,16 +386,11 @@ public class BSIT1516 {
         return cell;
     }
     
-    private Integer value;
     private PdfPCell createSimpleCell(String content, Font font, int colspan, boolean center, boolean colored) {
         PdfPCell cell = new PdfPCell();
         cell.setHorizontalAlignment(Element.ALIGN_MIDDLE);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        Integer a = 5;
-        if(value != null)
-            a = value;
-        Paragraph p = new Paragraph(a);
-        value = null;
+        Paragraph p = new Paragraph(5);
         if(center)
             p.setAlignment(Element.ALIGN_CENTER);
         if(colored)
@@ -426,23 +427,80 @@ public class BSIT1516 {
     }
 }
 
-class MyFooter3 extends PdfPageEventHelper {
-    
-    private static final Font font_footer = new Font(FontFamily.HELVETICA, 8);
-    public void onEndPage(PdfWriter writer, Document document) {
-        PdfContentByte cb = writer.getDirectContent();
-        Phrase footer = new Phrase("BulSU-OP-CICT-03F2",font_footer);
-        Phrase footer2 = new Phrase("Revision: 0",font_footer);
-        
-        ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
-                footer,
-                30, //x
-                document.bottom() - 0, //y
-                0);
-        ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
-                footer2,
-                30,
-                (document.bottom() - 10), 
-                0);
+
+
+class PageNumeration extends PdfPageEventHelper {
+    /** The template with the total number of pages. */
+    PdfTemplate total;
+
+    private Font font_footer, font_footer2;
+
+    public PageNumeration (){
+        try{
+            font_footer = new Font(FontFamily.HELVETICA, 9, Font.NORMAL);
+            font_footer2 = new Font(FontFamily.HELVETICA, 7, Font.NORMAL);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
+
+    /**
+     * Creates the PdfTemplate that will hold the total number of pages.
+     * @see com.itextpdf.text.pdf.PdfPageEventHelper#onOpenDocument(
+     *      com.itextpdf.text.pdf.PdfWriter, com.itextpdf.text.Document)
+     */
+    public void onOpenDocument(PdfWriter writer, Document document) {
+        total = writer.getDirectContent().createTemplate(30, 12);
+    }
+
+    /**
+     * Adds a header to every page
+     * @see com.itextpdf.text.pdf.PdfPageEventHelper#onEndPage(
+     *      com.itextpdf.text.pdf.PdfWriter, com.itextpdf.text.Document)
+     */
+    public void onEndPage(PdfWriter writer, Document document) {
+        PdfPTable table = new PdfPTable(3);
+        try {
+            table.setWidths(new int[]{24, 24, 2});
+            table.getDefaultCell().setFixedHeight(10);
+            table.getDefaultCell().setBorder(Rectangle.TOP);
+            PdfPCell cell = new PdfPCell();
+            cell.setBorder (0);
+            cell.setBorderWidthTop (1);
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell.setPhrase(new Phrase("2017-09-06 14:19:06 | JOEMAR DE LA CRUZ", font_footer2));
+            table.addCell(cell);
+
+            cell = new PdfPCell();
+            cell.setBorder (0);
+            cell.setBorderWidthTop (1);
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            cell.setPhrase(new Phrase(String.format("Page %d of ", writer.getPageNumber()), font_footer));
+            table.addCell(cell);
+
+            cell = new PdfPCell(Image.getInstance(total));
+            cell.setBorder (0);
+            cell.setBorderWidthTop (1);
+            table.addCell(cell);
+            table.setTotalWidth(document.getPageSize().getWidth()
+                    - document.leftMargin() - document.rightMargin());
+            table.writeSelectedRows(0, -1, document.leftMargin(),
+                    document.bottomMargin() + 10, writer.getDirectContent());
+        }
+        catch(DocumentException de) {
+            throw new ExceptionConverter(de);
+        }
+    }
+
+    /**
+     * Fills out the total number of pages before the document is closed.
+     * @see com.itextpdf.text.pdf.PdfPageEventHelper#onCloseDocument(
+     *      com.itextpdf.text.pdf.PdfWriter, com.itextpdf.text.Document)
+     */
+    public void onCloseDocument(PdfWriter writer, Document document) {
+        ColumnText.showTextAligned(total, Element.ALIGN_LEFT,
+                new Phrase(String.valueOf(writer.getPageNumber()), font_footer),
+                2, 1, 0);
+    }
+}  

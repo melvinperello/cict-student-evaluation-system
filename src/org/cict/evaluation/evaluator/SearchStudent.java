@@ -37,6 +37,7 @@ import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.Database;
 import app.lazy.models.MapFactory;
+import org.cict.authentication.authenticator.SystemProperties;
 
 /**
  *
@@ -188,10 +189,12 @@ public class SearchStudent extends Transaction {
         int acadProg = studentProgram.getId();
         // get section
 
+        // fixed added: acadterm field in query
         studentSection = Mono.orm()
                 .newSearch(Database.connect().load_section())
                 .eq("ACADTERM_id", academicTerm)
                 .eq("ACADPROG_id", acadProg)
+                .eq(DB.load_section().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
                 .eq("section_name", section)
                 .eq("year_level", year)
                 .eq("_group", group)

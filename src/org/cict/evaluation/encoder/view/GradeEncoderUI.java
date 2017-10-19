@@ -87,6 +87,17 @@ public class GradeEncoderUI {
         this.semester = sem;
     }
 
+    private boolean valueFiltering = true;
+
+    /**
+     * Sets if the spreadsheet will filter values or not.
+     *
+     * @param valueFiltering
+     */
+    public void setValueFiltering(boolean valueFiltering) {
+        this.valueFiltering = valueFiltering;
+    }
+
     //----------------------------------------------------
     private StudentMapping studentMap;
 
@@ -500,11 +511,15 @@ public class GradeEncoderUI {
         return (ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
             //ObjectProperty op = (ObjectProperty) observable;
             if (editable) {
+
                 this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(true);
+
                 String cellValue[] = validateGrade(newValue, row);
                 this.spreadSheetGrid.setCellValue(row, this.finalCol, cellValue[0]);
                 this.spreadSheetGrid.setCellValue(row, this.remarkCol, cellValue[1]);
+
                 this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(false);
+
             }
         };
     }
@@ -542,6 +557,15 @@ public class GradeEncoderUI {
                     try {
                         cellValue = this.checkGradeRange(Double.parseDouble(rating), row);
                     } catch (NumberFormatException e) {
+                        if (!this.valueFiltering) {
+                            if (rating.equalsIgnoreCase("EXP")) {
+                                cellValue[0] = "EXP";
+                                cellValue[1] = "EXPIRED";
+                                this.rowPainter(row, this.colorBlanked);
+                                return cellValue;
+                            }
+                        }
+
                         this.rowPainter(row, this.colorBlanked);
 
                         Mono.fx().alert().createWarning()
@@ -554,6 +578,7 @@ public class GradeEncoderUI {
                 }
             }
         } catch (NullPointerException s) {
+
             this.rowPainter(row, this.colorBlanked);
             return cellValue;
         }
@@ -1012,8 +1037,17 @@ public class GradeEncoderUI {
                         rowPaint(x, "#FFFFFF");
                         errorCount++;
                     } else {
-                        // not empty
-                        rowPaint(x, getRemarkColor(cellRemark));
+                        if (cellText.equalsIgnoreCase("EXP")) {
+                            Platform.runLater(() -> {
+                                spreadSheetGrid.getRows().get(x).get(finalCol).setItem("");
+                            });
+
+                            rowPaint(x, "#FFFFFF");
+                            errorCount++;
+                        } else {
+                            rowPaint(x, getRemarkColor(cellRemark));
+                        }
+
                     }
 
                 }

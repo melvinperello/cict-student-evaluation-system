@@ -292,11 +292,6 @@ public class CreditTreeRow extends HBox {
                     return;
                 }
 
-                if (Character.toString(newValue.charAt(0)).equalsIgnoreCase("e")) {
-                    this.txtGrade.setText("EXP");
-                    return;
-                }
-
                 try {
                     Double val = Double.parseDouble(newValue);
                     if (val > 3.00) {
