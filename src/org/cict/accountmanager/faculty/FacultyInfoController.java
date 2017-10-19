@@ -176,7 +176,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         cmb_rank.getItems().add("Professor I");
         cmb_rank.getItems().add("Professor II");
         cmb_rank.getItems().add("Professor III");
-        cmb_rank.getSelectionModel().selectFirst();
+//        cmb_rank.getSelectionModel().selectFirst();
         
         cmb_des.getItems().clear();
         cmb_des.getItems().add("Instructor");
@@ -186,7 +186,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         cmb_des.getItems().add("Department Head");
         cmb_des.getItems().add("Associate Dean");
         cmb_des.getItems().add("Dean");
-        cmb_des.getSelectionModel().selectFirst();
+//        cmb_des.getSelectionModel().selectFirst();
         
         cmb_dept.getItems().clear();
         ArrayList<AcademicProgramMapping> acads = Mono.orm().newSearch(Database.connect().academic_program())
@@ -196,7 +196,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         for(AcademicProgramMapping acad: acads) {
             cmb_dept.getItems().add(acad.getCode());
         }
-        cmb_dept.getSelectionModel().selectFirst();
+//        cmb_dept.getSelectionModel().selectFirst();
     }
 
     /**
@@ -215,21 +215,6 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
                     }
                 });
         textId.clone().setTextSource(txt_id).applyFilter();
-
-//        StringFilter text50Max = TextInputFilters.string()
-//                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
-//                .setMaxCharacters(50)
-//                .setNoLeadingTrailingSpaces(false)
-//                .setFilterManager(filterManager -> {
-//                    if (!filterManager.isValid()) {
-//                        Mono.fx().alert().createWarning().setHeader("Warning")
-//                                .setMessage(filterManager.getMessage())
-//                                .show();
-//                    }
-//                });
-//        text50Max.clone().setTextSource(cmb_dept).applyFilter();
-//        text50Max.clone().setTextSource(txt_des).applyFilter();
-//        text50Max.clone().setTextSource(cmb_rank).applyFilter();
 
         StringFilter textName = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_SPACE)
@@ -459,6 +444,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         // if no account
         if (afMap == null) {
             System.out.println("NO ACCOUNT");
+            btn_nav.setDisable(true);
             return;
         }
         // set username
@@ -490,7 +476,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         lbl_name1.setText(faculty.getMiddle_name()==null || faculty.getMiddle_name().isEmpty() ? "---" : WordUtils.capitalizeFully(faculty.getMiddle_name()));
         lbl_name11.setText(faculty.getLast_name()==null ? "---" : WordUtils.capitalizeFully(faculty.getLast_name()));
         lbl_gender.setText(faculty.getGender()==null || faculty.getGender().isEmpty()  ? "NOT SPECIFIED" : WordUtils.capitalizeFully(faculty.getGender()));
-        lbl_rank.setText(faculty.getRank()==null || faculty.getRank().isEmpty()  ? "NOT SPECIFIED" : faculty.getRank());
+        lbl_rank.setText(faculty.getRank()==null || faculty.getRank().isEmpty()  ? "UNRANKED" : faculty.getRank());
         lbl_department.setText(faculty.getDepartment()==null || faculty.getDepartment().isEmpty()  ? "NONE" : (faculty.getDepartment()));
         lbl_designation.setText(faculty.getDesignation()==null || faculty.getDesignation().isEmpty()  ? "NONE" : WordUtils.capitalizeFully(faculty.getDesignation()));
     }

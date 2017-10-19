@@ -21,13 +21,6 @@
          <children>
             <Label alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="Faculty Information" HBox.hgrow="ALWAYS" />
             <JFXButton fx:id="btn_back" text="Back">
-               <graphic>
-                  <ImageView fitHeight="28.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../src/images/Long%20Arrow%20Left_64px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <font>
                   <Font size="18.0" />
                </font>

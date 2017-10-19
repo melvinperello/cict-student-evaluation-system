@@ -57,6 +57,11 @@ public class FetchFacultyInfo extends Transaction {
         for (FacultyMapping facultyMap : facultyMaps) {
             FacultyInformation fInfo = new FacultyInformation(facultyMap);
             if (fInfo.getAccountFacultyMapping() == null) {
+                if(fInfo.getFacultyMapping().getActive().equals(0)) {
+                    deactivatedFaculty.add(fInfo);
+                } else {
+                    activeFaculty.add(fInfo);
+                }
                 continue;
             }
             if (fInfo.getAccountFacultyMapping().getActive().equals(0)) {

@@ -25,6 +25,7 @@ import update3.org.cict.controller.sectionmain.SectionHomeController;
 import update3.org.cict.my_account.MyAccountHome;
 import update3.org.cict.termcalendar.AcademicTermHome;
 import update4.org.cict.linked_manager.LinkedHome;
+import update5.org.cict.student.controller.StudentHomeController;
 
 public class Home extends SceneFX implements ControllerFX {
 
@@ -67,9 +68,9 @@ public class Home extends SceneFX implements ControllerFX {
     public Home() {
         //
     }
-    
+
     public final static String SCENE_TRANSITION_COLOR = "#414852";
- 
+
     @Override
     public void onInitialization() {
         /**
@@ -182,6 +183,10 @@ public class Home extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_linked, () -> {
             onShowLinkedManagement();
+        });
+
+        super.addClickEvent(btn_student, () -> {
+            onShowStudentHome();
         });
 
     }
@@ -400,6 +405,14 @@ public class Home extends SceneFX implements ControllerFX {
         this.changeRoot(controller,
                 "update4.org.cict.linked_manager",
                 "LinkedHome");
+    }
+
+    private void onShowStudentHome() {
+        ControllerFX controller = new StudentHomeController();
+        this.changeRoot(controller,
+                "update5.org.cict.student.layout",
+                "student-home");
+
     }
 
     /**

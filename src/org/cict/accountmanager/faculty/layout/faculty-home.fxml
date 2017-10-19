@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
@@ -49,28 +50,21 @@
                   <Insets right="10.0" />
                </padding>
             </HBox>
-            <JFXButton fx:id="btn_home" prefHeight="46.0" prefWidth="259.0" styleClass="metro-nav-button" text="Home">
-               <graphic>
-                  <ImageView fitHeight="32.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../src/images/Long%20Arrow%20Left_64px.png" />
-                     </image>
-                  </ImageView>
-               </graphic></JFXButton>
+            <JFXButton fx:id="btn_home" prefHeight="46.0" prefWidth="259.0" styleClass="metro-nav-button" text="Home" />
          </children>
          <padding>
             <Insets left="20.0" right="30.0" top="10.0" />
          </padding>
       </HBox>
-      <VBox fx:id="vbox_list" layoutX="21.0" layoutY="80.0" prefHeight="511.0" prefWidth="1340.0" styleClass="metro-table" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="80.0" />
-      <AnchorPane fx:id="anchor_new_faculty" layoutX="-1.0" layoutY="108.0" prefHeight="496.0" prefWidth="1385.0" styleClass="metro-base-color" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="120.0">
+      <VBox fx:id="vbox_list" layoutX="21.0" layoutY="97.0" prefHeight="494.0" prefWidth="1311.0" styleClass="metro-table" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="97.0" />
+      <AnchorPane fx:id="anchor_new_faculty" layoutX="-1.0" layoutY="68.0" prefHeight="536.0" prefWidth="1385.0" styleClass="metro-base-color" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="68.0">
          <children>
             <Label layoutX="49.0" layoutY="16.0" text="New Faculty">
                <font>
                   <Font name="System Bold" size="23.0" />
                </font>
             </Label>
-            <VBox layoutX="49.0" layoutY="55.0" prefHeight="274.0" prefWidth="461.0" spacing="10.0">
+            <VBox layoutX="49.0" layoutY="55.0" prefHeight="434.0" prefWidth="461.0" spacing="10.0">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
@@ -168,7 +162,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txt_rank_new" accessibleText="txt_rank_new" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="221.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" />
+                        <ComboBox fx:id="cmb_rank" prefHeight="25.0" prefWidth="275.0" styleClass="metro-combo-box" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="175.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
@@ -178,7 +172,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txt_designation_new" accessibleText="txt_designation_new" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="221.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" />
+                        <ComboBox fx:id="cmb_des" prefHeight="25.0" prefWidth="275.0" styleClass="metro-combo-box" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="238.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
@@ -188,7 +182,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txt_dept" accessibleText="txt_designation_new" maxWidth="1.7976931348623157E308" prefHeight="27.0" prefWidth="221.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" />
+                        <ComboBox fx:id="cmb_dept" prefHeight="25.0" prefWidth="275.0" styleClass="metro-combo-box" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" spacing="20.0">
@@ -224,11 +218,115 @@
                   </HBox>
                </children>
             </VBox>
+            <VBox fx:id="vbox_faculty_tip" layoutX="646.0" layoutY="107.0" maxHeight="-Infinity" spacing="10.0" style="-fx-border-color: white;">
+               <children>
+                  <Label text="Tips You Must Know!">
+                     <font>
+                        <Font name="System Bold" size="26.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="41.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/Idea_96px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <HBox spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="Field with (*) is considered to be a required field. They must not be empty." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="You can use prefix words to search specific user in the faculty manager." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="111.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="Prefix &quot;ID&quot;. Use this to search for a faculty's ID number. ( e.g. ID 12345 )" wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="163.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="Prefix &quot;Department&quot; or &quot;Dept&quot;. Use this to search for a faculty's department where he/she belongs. ( e.g. Department BSIT )" wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="194.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="No Prefix. If there is no prefix found, it will be considered as a faculty's name, so make sure to specify a prefix if needed." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="40.0" prefWidth="118.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0">
          <children>
-            <JFXButton fx:id="btn_new_faculty" layoutX="5.0" layoutY="4.0" prefWidth="109.0" style="-fx-border-color: #fff;" styleClass="metro-nav-button" text="New Faculty" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
+            <JFXButton fx:id="btn_new_faculty" layoutX="5.0" layoutY="4.0" prefWidth="109.0" style="-fx-border-color: #fff;" text="New Faculty" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0">
                <graphic>
                   <ImageView fitHeight="22.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -236,9 +334,275 @@
                      </image>
                   </ImageView>
                </graphic>
+               <styleClass>
+                  <String fx:value="metro-nav-button" />
+                  <String fx:value="metro-base-color" />
+               </styleClass>
             </JFXButton>
          </children>
       </AnchorPane>
+      <VBox fx:id="vbox_no_found" layoutY="75.0" prefHeight="453.0" prefWidth="1391.0" visible="false" AnchorPane.bottomAnchor="76.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
+         <children>
+            <Label text="No result found. Try using another key.">
+               <font>
+                  <Font size="29.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <VBox fx:id="vbox_faculty_tip1" maxHeight="-Infinity" spacing="10.0" style="-fx-border-color: white;">
+               <children>
+                  <Label text="Searching Hints">
+                     <font>
+                        <Font name="System Bold" size="26.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="41.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/Idea_96px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <HBox spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="You can use prefix words to search specific user in the faculty manager." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="111.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="Prefix &quot;ID&quot;. Use this to search for a faculty's ID number. ( e.g. ID 12345 )" wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="163.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="Prefix &quot;Department&quot; or &quot;Dept&quot;. Use this to search for a faculty's department where he/she belongs. ( e.g. Department BSIT )" wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="194.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="No Prefix. If there is no prefix found, it will be considered as a faculty's name, so make sure to specify a prefix if needed." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="50.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="30.0" right="300.0" top="20.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+         <padding>
+            <Insets left="30.0" />
+         </padding>
+      </VBox>
+      <VBox fx:id="vbox_no_found1" layoutX="10.0" layoutY="85.0" prefHeight="441.0" prefWidth="1391.0" visible="false" AnchorPane.bottomAnchor="78.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="85.0">
+         <children>
+            <Label fx:id="lbl_no_found1" text="No result found. Try using another key.">
+               <font>
+                  <Font size="29.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <VBox fx:id="vbox_faculty_tip11" maxHeight="-Infinity" spacing="10.0" style="-fx-border-color: white;">
+               <children>
+                  <VBox>
+                     <children>
+                        <Label text="Sorting Details">
+                           <font>
+                              <Font name="System Bold" size="26.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="41.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/Idea_96px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Label>
+                        <Label prefWidth="504.0" text="Faculty are sorted into active and inactive state." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="35.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="Active" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="174.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="When his/her account is activated." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="236.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="When the faculty has no account, the state of the faculty itself will be the checkpoint." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="21.0" layoutY="90.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="Inactive" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="111.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="The faculty is considered as inactive when his/her account is deactivated." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="21.0" layoutY="163.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/images/Info_96px.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefWidth="504.0" text="When the faculty has no account and the faculty itself is removed, he/she is sorted as inactive." wrapText="true">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="50.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets left="30.0" right="300.0" top="20.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+         <padding>
+            <Insets left="30.0" />
+         </padding>
+      </VBox>
    </children>
    <stylesheets>
       <URL value="@metro-ui.css" />

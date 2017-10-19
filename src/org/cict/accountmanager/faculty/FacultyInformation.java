@@ -45,6 +45,14 @@ public class FacultyInformation {
             System.out.println("NO ACCOUNT: " + faculty.getBulsu_id());
         }
     }
+    
+    public Boolean hasAccount() {
+        return (afMap!=null);
+    }
+    
+    public Boolean isAccountActived() {
+        return (afMap==null? faculty.getActive()==1: afMap.getActive()==1);
+    }
 
     private FacultyMapping faculty;
     private AccountFacultyMapping afMap;
@@ -64,36 +72,46 @@ public class FacultyInformation {
     }
 
     public String getFullName() {
+        if(faculty==null)
+            return "";
         String middleName = " ";
-        String temp = MonoString.removeExtraSpace(faculty.getMiddle_name()).trim();
-        if(temp != null && !temp.isEmpty())
-            middleName = " " + temp + " ";
-            
         return  faculty.getFirst_name() 
-                + middleName + faculty.getLast_name();
+                + (faculty.getMiddle_name()==null? " " : (" " + faculty.getMiddle_name() + " ")) + faculty.getLast_name();
     }
 
     public String getFirtsName() {
+        if(faculty==null)
+            return "";
         return  faculty.getFirst_name();
     }
 
     public String getMiddleName() {
+        if(faculty==null)
+            return "";
         return faculty.getMiddle_name();
     }
 
     public String getLastName() {
+        if(faculty==null)
+            return "";
         return faculty.getLast_name();
     }
 
     public String getDepartment() {
+        if(faculty==null)
+            return "";
         return faculty.getDepartment();
     }
     
     public String getBulsuID() {
+        if(faculty==null)
+            return "";
         return faculty.getBulsu_id();
     }
     
     public String getAccessLevel() {
-        return afMap.getAccess_level();
+        if(faculty==null || afMap==null)
+            return "";
+        return afMap==null? "" : afMap.getAccess_level();
     }
 }

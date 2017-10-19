@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="70.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <stylesheets>
+      <URL value="@metro-ui-table.css" />
+      <URL value="@metro-ui.css" />
+   </stylesheets>
+   <styleClass>
+      <String fx:value="metro-base-color" />
+      <String fx:value="metro-row" />
+   </styleClass>
+   <children>
+      <VBox HBox.hgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="30.0">
+               <children>
+                  <Label accessibleText="name" text="De La Cruz, Joemar Nucom">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox spacing="20.0">
+               <children>
+                  <Label accessibleText="id" style="-fx-text-fill: #E6E9ED;" text="20141123478">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" spacing="2.0">
+                     <children>
+                        <Label style="-fx-text-fill: #E6E9ED;" text="Section:">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label accessibleText="section" style="-fx-text-fill: #E6E9ED;" text="BSIT 1A-G1">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="10.0" top="5.0" />
+   </padding>
+</HBox>
