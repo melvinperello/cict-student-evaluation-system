@@ -42,7 +42,12 @@ public class CheckStudent extends Transaction {
     public EvaluationMapping getEvaluationMap() {
         return evaluationMap;
     }
-
+    
+    private Boolean isCrossEnrollee = false;
+    public Boolean isCrossEnrollee() {
+        return isCrossEnrollee;
+    }
+    
     @Override
     protected boolean transaction() {
         // Search for the student
@@ -58,6 +63,15 @@ public class CheckStudent extends Transaction {
             return true;
         }
 
+        /**
+        * Checks if the student is a cross-enrollee.
+        */
+        if (studentMap.getResidency().equalsIgnoreCase("CROSS_ENROLLEE")) {
+           // if the student is a cross-enrollee.
+           this.isCrossEnrollee = true;
+           return true;
+        }
+        
         // student course name
         AcademicProgramMapping aMap = TransactionHelperFunctions.getAcademicProgram(studentMap.getCURRICULUM_id());
         studentSection = aMap.getName() + " | " +

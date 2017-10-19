@@ -13,31 +13,35 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchor_add_change" prefHeight="700.0" prefWidth="1200.0" stylesheets="@adding-home.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchor_add_change" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #82BDFF;" stylesheets="@adding-home.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="381.0" layoutY="161.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
+      <AnchorPane layoutX="381.0" layoutY="161.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #82BDFF;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="320.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
          <children>
             <HBox alignment="CENTER_RIGHT" layoutX="14.0" layoutY="14.0" prefHeight="42.0" prefWidth="774.0" spacing="20.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <TextField fx:id="txtStudentNumber" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="457.0" promptText="Student Number" style="-fx-border-color: #000;">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </TextField>
-                        <JFXButton fx:id="btnFind" alignment="CENTER" graphicTextGap="10.0" prefHeight="30.0" prefWidth="39.0" text=" ">
-                           <graphic>
-                              <ImageView fitHeight="32.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@img/Search_64px.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </JFXButton>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <TextField fx:id="txtStudentNumber" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="457.0" promptText="Student Number" style="-fx-border-color: #000;">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <JFXButton fx:id="btnFind" alignment="CENTER" graphicTextGap="10.0" prefHeight="30.0" prefWidth="39.0" text=" ">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@img/Search_64px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                        </HBox>
                      </children>
                   </HBox>
-                  <JFXButton fx:id="btn_winAdd" alignment="CENTER" graphicTextGap="10.0" prefHeight="30.0" prefWidth="133.0" style="-fx-border-color: #000;" text="Add Subject">
+                  <JFXButton fx:id="btn_winAdd" alignment="CENTER" graphicTextGap="10.0" prefHeight="41.0" prefWidth="147.0" style="-fx-background-color: #00B193;" text="Add Subject" textFill="WHITE">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -45,13 +49,16 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
                   </JFXButton>
                </children>
                <padding>
                   <Insets right="20.0" />
                </padding>
             </HBox>
-            <StackPane layoutX="205.0" layoutY="228.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="82.0">
+            <StackPane layoutX="205.0" layoutY="228.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="82.0">
                <children>
                   <AnchorPane fx:id="anchor_preview" visible="false">
                      <children>
@@ -85,14 +92,14 @@
                            </children>
                         </AnchorPane>
                         <VBox fx:id="vbox_tableHandler" layoutY="104.0" stylesheets="@adding-table.css" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="104.0" />
-                        <JFXButton fx:id="btnSaveChanges" layoutX="388.0" layoutY="488.0" prefHeight="19.0" prefWidth="128.0" style="-fx-border-color: #7A7A7A; -fx-border-width: 2;" text="Save Changes" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <JFXButton fx:id="btnSaveChanges" layoutX="388.0" layoutY="488.0" prefHeight="19.0" prefWidth="128.0" style="-fx-background-color: #00B193;" text="Save Changes" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </JFXButton>
                         <HBox layoutX="6.0" layoutY="506.0" prefHeight="27.0" prefWidth="393.0" spacing="5.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="293.0">
                            <children>
-                              <Label maxHeight="1.7976931348623157E308" text="TOTAL SUBJECTS:" textFill="#575353">
+                              <Label maxHeight="1.7976931348623157E308" text="TOTAL SUBJECTS:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -105,7 +112,7 @@
                                     <Insets left="10.0" />
                                  </padding>
                               </Label>
-                              <Label maxHeight="1.7976931348623157E308" text="TOTAL UNITS:" textFill="#575353">
+                              <Label maxHeight="1.7976931348623157E308" text="TOTAL UNITS:" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -188,16 +195,16 @@
                   </AnchorPane>
                   <AnchorPane fx:id="anchor_results">
                      <children>
-                        <HBox fx:id="hbox_search" alignment="CENTER_LEFT" layoutX="1.0" layoutY="180.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="hbox_search" alignment="CENTER_LEFT" layoutX="1.0" layoutY="180.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #002050;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                            <children>
-                              <VBox style="-fx-background-color: #0074A2;">
+                              <VBox style="-fx-background-color: #002050;">
                                  <HBox.margin>
                                     <Insets right="20.0" />
                                  </HBox.margin>
                                  <children>
                                     <ImageView fitHeight="113.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@img/Edit%20File_96px.png" />
+                                          <Image url="@img/puzzle.png" />
                                        </image>
                                     </ImageView>
                                  </children>
@@ -207,13 +214,13 @@
                               </VBox>
                               <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="632.0">
                                  <children>
-                                    <Label text="Easier way to add and change subject is here" wrapText="true">
+                                    <Label text="Easier way to add and change subject is here" textFill="#66a6fe" wrapText="true">
                                        <font>
                                           <Font name="System Bold" size="28.0" />
                                        </font>
                                     </Label>
-                                    <Line endX="500.0" startX="-100.0" />
-                                    <Label text="Just search the student by their student number. Click Add Subject for adding and click the extension button for more." textFill="#060722" wrapText="true">
+                                    <Line endX="500.0" startX="-100.0" stroke="#66a6fe" />
+                                    <Label text="Just search the student by their student number. Click Add Subject for adding and click the extension button for more." textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -224,8 +231,11 @@
                                  </children>
                               </VBox>
                            </children>
+                           <padding>
+                              <Insets bottom="20.0" top="20.0" />
+                           </padding>
                         </HBox>
-                        <HBox fx:id="hbox_loading" alignment="CENTER_LEFT" layoutX="11.0" layoutY="190.0" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="hbox_loading" alignment="CENTER_LEFT" layoutX="11.0" layoutY="190.0" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -254,8 +264,11 @@
                                  </children>
                               </VBox>
                            </children>
+                           <padding>
+                              <Insets bottom="20.0" top="20.0" />
+                           </padding>
                         </HBox>
-                        <HBox fx:id="hbox_none" alignment="CENTER_LEFT" layoutX="21.0" layoutY="200.0" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="hbox_none" alignment="CENTER_LEFT" layoutX="21.0" layoutY="200.0" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <VBox style="-fx-background-color: #FF5757;">
                                  <HBox.margin>
@@ -288,8 +301,11 @@
                                  </children>
                               </VBox>
                            </children>
+                           <padding>
+                              <Insets bottom="20.0" top="20.0" />
+                           </padding>
                         </HBox>
-                        <HBox fx:id="hbox_already" alignment="CENTER_LEFT" layoutX="11.0" layoutY="190.0" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="hbox_already" alignment="CENTER_LEFT" layoutX="11.0" layoutY="190.0" prefHeight="100.0" prefWidth="200.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <VBox style="-fx-background-color: #32C24D;">
                                  <HBox.margin>
@@ -347,6 +363,9 @@
                                  </children>
                               </VBox>
                            </children>
+                           <padding>
+                              <Insets bottom="20.0" top="20.0" />
+                           </padding>
                         </HBox>
                      </children>
                   </AnchorPane>
@@ -354,33 +373,34 @@
             </StackPane>
          </children>
       </AnchorPane>
-      <AnchorPane id="header-panel" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #66A6FE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane id="header-panel" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #4567C4;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="68.0" layoutY="18.0" prefHeight="36.0" prefWidth="341.0" style="-fx-text-fill: #fff;" text="ADDING &amp; CHANGING" AnchorPane.bottomAnchor="13.0" AnchorPane.topAnchor="18.0">
                <font>
-                  <Font size="14.0" />
+                  <Font size="22.0" />
                </font>
             </Label>
-            <ImageView fitHeight="23.0" fitWidth="50.0" layoutX="1084.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="93.0" AnchorPane.topAnchor="16.0">
-               <image>
-                  <Image url="@img/Long%20Arrow%20Left_64px.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="1130.0" layoutY="18.0" text="Home" textFill="WHITE" AnchorPane.rightAnchor="37.0" />
-            <ImageView fitHeight="30.0" fitWidth="33.0" layoutX="23.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="23.0" AnchorPane.topAnchor="12.0">
+            <ImageView fitHeight="30.0" fitWidth="33.0" layoutX="23.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="23.0" AnchorPane.topAnchor="19.0">
                <image>
                   <Image url="@img/Edit_64px.png" />
                </image>
             </ImageView>
-            <JFXButton fx:id="btn_home" graphicTextGap="10.0" layoutX="1069.0" layoutY="9.0" maxWidth="150.0" minWidth="50.0" prefHeight="36.0" prefWidth="111.0" text="." AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="8.0">
+            <JFXButton fx:id="btn_home" graphicTextGap="10.0" layoutX="1069.0" layoutY="9.0" maxWidth="150.0" minWidth="50.0" prefHeight="36.0" prefWidth="111.0" text="Home" textFill="WHITE" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="8.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
                <font>
-                  <Font size="6.0" />
+                  <Font size="17.0" />
                </font>
+               <graphic>
+                  <ImageView fitHeight="23.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/Long%20Arrow%20Left_64px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </JFXButton>
-            <JFXButton fx:id="btn_home1" graphicTextGap="10.0" layoutX="14.0" layoutY="20.0" maxWidth="150.0" minWidth="50.0" prefHeight="30.0" prefWidth="50.0" text="." AnchorPane.topAnchor="12.0">
+            <JFXButton fx:id="btn_home1" graphicTextGap="10.0" layoutX="14.0" layoutY="19.0" maxWidth="150.0" minWidth="50.0" prefHeight="30.0" prefWidth="50.0" text="." AnchorPane.topAnchor="19.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
@@ -390,7 +410,7 @@
             </JFXButton>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="anchor_main" layoutY="52.0" prefHeight="648.0" prefWidth="300.0" style="-fx-background-color: #81D7FA;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="51.0">
+      <AnchorPane fx:id="anchor_main" layoutY="52.0" prefHeight="648.0" prefWidth="300.0" style="-fx-background-color: #FDFDFD;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
          <children>
             <VBox layoutX="65.0" layoutY="383.0" prefHeight="200.0" prefWidth="100.0" spacing="3.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="300.0">
                <children>

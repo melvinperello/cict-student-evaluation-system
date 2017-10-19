@@ -538,33 +538,101 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     /**
      * Print the checklist.
      */
+//    private void printChecklist() {
+//        // disallows cross enrollees to print a check list.
+//        if (this.FLAG_CROSS_ENROLLEE) {
+//            Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
+//            return;
+//        }
+//
+//        PrintChecklist printCheckList = new PrintChecklist();
+//        printCheckList.CICT_id = currentStudent.getCict_id();
+//        printCheckList.setOnStart(onStart -> {
+//            GenericLoadingShow.instance().show();
+//        });
+//        printCheckList.setOnSuccess(onSuccess -> {
+//            GenericLoadingShow.instance().hide();
+//            Notifications.create().title("Please wait, we're nearly there.")
+//                    .text("Printing the Checklist.").showInformation();
+//        });
+//        printCheckList.setOnCancel(onCancel -> {
+//            GenericLoadingShow.instance().hide();
+//            Notifications.create().title("Cannot Produce a Checklist")
+//                    .text("Something went wrong, sorry for the inconvinience.").showWarning();
+//        });
+//        printCheckList.setOnFailure(onFailed -> {
+//            GenericLoadingShow.instance().hide();
+//            Notifications.create().title("Cannot Produce a Checklist")
+//                    .text("Something went wrong, sorry for the inconvinience.").showError();
+//            System.out.println("FAILED");
+//        });
+//        printCheckList.transact();
+//    }
+
     private void printChecklist() {
         // disallows cross enrollees to print a check list.
         if (this.FLAG_CROSS_ENROLLEE) {
             Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
             return;
         }
-
+        
+        CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(currentStudent.getCURRICULUM_id());
+        CurriculumMapping curriculum_prep = null;
+        if(currentStudent.getPREP_id()!=null){
+            curriculum_prep = Database.connect().curriculum().getPrimary(currentStudent.getPREP_id());
+        }
+        Boolean isLegacyExist = false;
+        for(String legacy: PublicConstants.LEGACY_CURRICULUM) {
+            if(legacy.equalsIgnoreCase(curriculum.getName())) {
+                isLegacyExist = true;
+                break;
+            }
+            if(curriculum_prep!=null){
+                if(legacy.equalsIgnoreCase(curriculum_prep.getName())) {
+                    isLegacyExist = true;
+                    break;
+                }
+            }
+        }
+        
+        Boolean printLegacy = false;
+        if(isLegacyExist) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setHeader("Checklist Format")
+                    .setMessage("Please choose a format.")
+                    .confirmCustom("Legacy", "Standard");
+            if(res==1)
+                printLegacy = true;
+        }
+        if(curriculum_prep != null) {
+            if(printLegacy)
+                printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
+            else
+                printCheckList(printLegacy, curriculum_prep.getId(), null);
+        } else
+            printCheckList(printLegacy, curriculum.getId(), null);
+    }
+    
+    private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id){
         PrintChecklist printCheckList = new PrintChecklist();
+        printCheckList.printLegacy = printLegacy;
         printCheckList.CICT_id = currentStudent.getCict_id();
+        printCheckList.CURRICULUM_id = curriculum_ID;
         printCheckList.setOnStart(onStart -> {
             GenericLoadingShow.instance().show();
         });
         printCheckList.setOnSuccess(onSuccess -> {
             GenericLoadingShow.instance().hide();
-            Notifications.create().title("Please wait, we're nearly there.")
-                    .text("Printing the Checklist.").showInformation();
+            if(prep_id==null){
+                Notifications.create().title("Please wait, we're nearly there.")
+                        .text("Printing the Checklist.").showInformation();
+            } else
+                printCheckList(printLegacy, prep_id, null);
         });
         printCheckList.setOnCancel(onCancel -> {
             GenericLoadingShow.instance().hide();
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
-        });
-        printCheckList.setOnFailure(onFailed -> {
-            GenericLoadingShow.instance().hide();
-            Notifications.create().title("Cannot Produce a Checklist")
-                    .text("Something went wrong, sorry for the inconvinience.").showError();
-            System.out.println("FAILED");
         });
         printCheckList.transact();
     }

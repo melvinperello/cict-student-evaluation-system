@@ -1,6 +1,7 @@
 package update.org.cict.controller.adding;
 
 import app.lazy.models.AccountFacultyMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
@@ -41,6 +42,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
+import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.CurricularLevelController;
@@ -50,6 +52,7 @@ import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.evaluation.student.info.InfoStudentController;
+import org.cict.reports.deficiency.PrintDeficiency;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.adding.subjectviewer.AddingDataPipe;
 import update.org.cict.controller.adding.subjectviewer.AddingSubjects;
@@ -207,16 +210,66 @@ public class AddingHome extends SceneFX implements ControllerFX {
         });
     }
 
+    private Boolean FLAG_CROSS_ENROLLEE;
     private void printChecklist() {
+        // disallows cross enrollees to print a check list.
+        if (this.FLAG_CROSS_ENROLLEE) {
+            Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
+            return;
+        }
+        
+        CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(studentSearched.getCURRICULUM_id());
+        CurriculumMapping curriculum_prep = null;
+        if(studentSearched.getPREP_id()!=null){
+            curriculum_prep = Database.connect().curriculum().getPrimary(studentSearched.getPREP_id());
+        }
+        Boolean isLegacyExist = false;
+        for(String legacy: PublicConstants.LEGACY_CURRICULUM) {
+            if(legacy.equalsIgnoreCase(curriculum.getName())) {
+                isLegacyExist = true;
+                break;
+            }
+            if(curriculum_prep!=null){
+                if(legacy.equalsIgnoreCase(curriculum_prep.getName())) {
+                    isLegacyExist = true;
+                    break;
+                }
+            }
+        }
+        
+        Boolean printLegacy = false;
+        if(isLegacyExist) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setHeader("Checklist Format")
+                    .setMessage("Please choose a format.")
+                    .confirmCustom("Legacy", "Standard");
+            if(res==1)
+                printLegacy = true;
+        }
+        if(curriculum_prep != null) {
+            if(printLegacy)
+                printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
+            else
+                printCheckList(printLegacy, curriculum_prep.getId(), null);
+        } else
+            printCheckList(printLegacy, curriculum.getId(), null);
+    }
+    
+    private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id){
         PrintChecklist printCheckList = new PrintChecklist();
+        printCheckList.printLegacy = printLegacy;
         printCheckList.CICT_id = studentSearched.getCict_id();
+        printCheckList.CURRICULUM_id = curriculum_ID;
         printCheckList.setOnStart(onStart -> {
             GenericLoadingShow.instance().show();
         });
         printCheckList.setOnSuccess(onSuccess -> {
             GenericLoadingShow.instance().hide();
-            Notifications.create().title("Please wait, we're nearly there.")
-                    .text("Printing the Checklist.").showInformation();
+            if(prep_id==null){
+                Notifications.create().title("Please wait, we're nearly there.")
+                        .text("Printing the Checklist.").showInformation();
+            } else
+                printCheckList(printLegacy, prep_id, null);
         });
         printCheckList.setOnCancel(onCancel -> {
             GenericLoadingShow.instance().hide();
@@ -463,6 +516,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 this.currentStudentEvaluationDetails = checkStudentTx.getEvaluationMap();
                 this.studentSearched = checkStudentTx.getStudentMap();
 
+                FLAG_CROSS_ENROLLEE = checkStudentTx.isCrossEnrollee();
                 if (show) {
                     showFirstAssistant();
                 }
@@ -1442,6 +1496,34 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                         this.systemOverride(INTERNSHIP_WITH_OTHERS, subinfo, "add", null, null);
                                     })
                                     .showWarning();
+                            int res = Mono.fx().alert()
+                                    .createConfirmation()
+                                    .setHeader("Deficieny Report")
+                                    .setMessage("Do you want to print the student's subject with missing grade?")
+                                    .confirmYesNo();
+                            if(res==1) {
+                                PrintDeficiency print = new PrintDeficiency();
+                                print.CICT_id = studentSearched.getCict_id();
+                                print.whenSuccess(()->{
+                                    Notifications.create()
+                                            .title("Nearly there.")
+                                            .text("Printing the deficiency report.")
+                                            .showInformation();
+                                });
+                                print.whenCancelled(()->{
+                                    Notifications.create()
+                                            .title("Request Cancelled")
+                                            .text("Sorry for the inconviniece.")
+                                            .showWarning();
+                                });
+                                print.whenFailed(()->{
+                                    Notifications.create()
+                                            .title("Request Failed")
+                                            .text("Something went wrong. Sorry for the inconviniece.")
+                                            .showInformation();
+                                });
+                                print.transact();
+                            }
                             AddingDataPipe.instance().resetIsChanged();
                             return;
                         }
