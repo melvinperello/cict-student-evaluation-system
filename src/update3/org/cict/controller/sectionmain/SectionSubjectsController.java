@@ -622,7 +622,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     }
 
     private FacultyMapping selectFaculty() {
-        FacultyChooser facultyChooser = M.app().restore(FacultyChooser.class);
+        FacultyChooser facultyChooser = M.load(FacultyChooser.class);
         facultyChooser.onDelayedStart(); // do not put database transactions on startUp
         try {
             System.out.println("Stage Recycled. ^^v");

@@ -12,24 +12,34 @@
    <children>
       <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@images/faculty.png" />
+            <Image url="@images/Open%20Book_100px.png" />
          </image>
       </ImageView>
       <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="lbl_name" text="Perello, Jhon Melvin Nieto">
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Label fx:id="lbl_code" maxWidth="1.7976931348623157E308" text="MATH 113" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbl_id" text="ID 25">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Label fx:id="lbl_title" text="POLITICS AND GOVERNANCE WITH PHILIPPINE CONSTITUTIONS" wrapText="true" />
+            <Label fx:id="lbl_type" text="MAJOR (PROGRAMMING)">
                <font>
-                  <Font name="System Bold" size="20.0" />
+                  <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="lbl_bulsu_id" text="Bulsu 2017-a">
+            <Label fx:id="lbl_units" text="LEC 3.0 - LAB 1.0">
                <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="lbl_department" text="BSIT Department">
-               <font>
-                  <Font name="System Bold" size="15.0" />
+                  <Font name="System Bold" size="12.0" />
                </font>
             </Label>
          </children>

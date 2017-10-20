@@ -23,55 +23,24 @@
  */
 package update3.org.subjectselector;
 
-import update3.org.facultychooser.*;
-import com.melvin.mono.fx.MonoLauncher;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import com.melvin.mono.fx.MonoApplication;
+import com.melvin.mono.fx.bootstrap.M;
 
 /**
  *
  * @author Jhon Melvin
  */
-public class RowSubject extends MonoLauncher {
+public class Sample extends MonoApplication {
 
-    @FXML
-    private Label lbl_code;
-
-    @FXML
-    private Label lbl_id;
-
-    @FXML
-    private Label lbl_title;
-
-    @FXML
-    private Label lbl_type;
-
-    @FXML
-    private Label lbl_units;
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
-    public void onStartUp() {
-
-    }
-
-    public Label getLbl_code() {
-        return lbl_code;
-    }
-
-    public Label getLbl_id() {
-        return lbl_id;
-    }
-
-    public Label getLbl_title() {
-        return lbl_title;
-    }
-
-    public Label getLbl_type() {
-        return lbl_type;
-    }
-
-    public Label getLbl_units() {
-        return lbl_units;
+    public void start() {
+        SubjectSelector ss = M.load(SubjectSelector.class);
+        ss.onDelayedStart();
+        ss.createStageApplication().show();
     }
 
 }

@@ -50,22 +50,22 @@ import org.hibernate.criterion.Restrictions;
  * @author Jhon Melvin
  */
 public class FacultyChooser extends MonoLauncher {
-
+    
     @FXML
     private VBox application_root;
-
+    
     @FXML
     private TextField txt_search;
-
+    
     @FXML
     private JFXButton btn_search;
-
+    
     @FXML
     private JFXButton btn_cancel;
-
+    
     @FXML
     private VBox vbox_table;
-
+    
     @Override
     public void onStartUp() {
         MonoClick.addClickEvent(btn_cancel, () -> {
@@ -79,13 +79,13 @@ public class FacultyChooser extends MonoLauncher {
             }
         });
     }
-
+    
     private FacultyMapping selectedFaculty;
-
+    
     public FacultyMapping getSelectedFaculty() {
         return selectedFaculty;
     }
-
+    
     private void onSearchFaculty() {
         SearchFaculty searchTx = new SearchFaculty();
         searchTx.setSearchValue(txt_search.getText().trim());
@@ -104,10 +104,10 @@ public class FacultyChooser extends MonoLauncher {
             this.btn_search.setDisable(false);
             this.setCursor(Cursor.DEFAULT);
         });
-
+        
         searchTx.transact();
     }
-
+    
     private void fetchAll() {
         FetchFaculty fetchAllTx = new FetchFaculty();
         fetchAllTx.whenStarted(() -> {
@@ -125,10 +125,10 @@ public class FacultyChooser extends MonoLauncher {
             this.btn_search.setDisable(false);
             this.setCursor(Cursor.DEFAULT);
         });
-
+        
         fetchAllTx.transact();
     }
-
+    
     @Override
     public void onDelayedStart() {
         super.onDelayedStart(); //To change body of generated methods, choose Tools | Templates.
@@ -136,15 +136,15 @@ public class FacultyChooser extends MonoLauncher {
         this.txt_search.setText("");
         this.fetchAll();
     }
-
+    
     private void createTable(ArrayList<FacultyMapping> list) {
         if (list == null) {
             list = new ArrayList<FacultyMapping>();
         }
         SimpleTable tbl_faculty = new SimpleTable();
         for (FacultyMapping map : list) {
-
-            RowFaculty rowController = M.app().reload(RowFaculty.class);
+            
+            RowFaculty rowController = M.load(RowFaculty.class);
             Pane rowFaculty = rowController.getApplicationRoot();
             String facultyName = "";
             facultyName += (map.getLast_name() + ", ");
@@ -155,7 +155,7 @@ public class FacultyChooser extends MonoLauncher {
             rowController.getLbl_name().setText(facultyName);
             rowController.getLbl_bulsu_id().setText(map.getBulsu_id());
             rowController.getLbl_department().setText(map.getDepartment() == null || map.getDepartment().isEmpty() ? "No Department" : map.getDepartment());
-
+            
             MonoClick.addClickEvent(rowFaculty, () -> {
                 this.selectedFaculty = map;
                 this.close();
@@ -163,20 +163,20 @@ public class FacultyChooser extends MonoLauncher {
             });
             // add to table
             tbl_faculty.addRow(SimpleTable.fxRow(rowFaculty, 100.0));
-
+            
         }
         SimpleTable.fxTable(tbl_faculty, vbox_table);
-
+        
     }
-
+    
     class SearchFaculty extends FetchFaculty {
-
+        
         private String searchValue;
-
+        
         public void setSearchValue(String searchValue) {
             this.searchValue = searchValue;
         }
-
+        
         @Override
         protected boolean transaction() {
             Searcher searchFaculty = Mono.orm()
@@ -220,20 +220,20 @@ public class FacultyChooser extends MonoLauncher {
                     Restrictions.ilike(DB.faculty().last_name, textPart, MatchMode.ANYWHERE)
             );
         }
-
+        
     }
 
     /**
      *
      */
     class FetchFaculty extends Transaction {
-
+        
         protected ArrayList<FacultyMapping> facultyList = new ArrayList<>();
-
+        
         public ArrayList<FacultyMapping> getFacultyList() {
             return facultyList;
         }
-
+        
         @Override
         protected boolean transaction() {
             facultyList = Mono.orm()
@@ -242,11 +242,11 @@ public class FacultyChooser extends MonoLauncher {
                     .all();
             return true;
         }
-
+        
         @Override
         protected void after() {
-
+            
         }
     }
-
+    
 }

@@ -23,28 +23,23 @@
  */
 package update3.org.subjectselector;
 
-import update3.org.facultychooser.*;
-import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
+import app.lazy.models.SubjectMapping;
 import com.melvin.mono.fx.MonoLauncher;
-import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
-import com.jhmvin.orm.SQL;
-import com.jhmvin.orm.Searcher;
+import com.melvin.mono.fx.bootstrap.M;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import update3.org.facultychooser.RowFaculty;
 
 /**
  *
@@ -70,7 +65,7 @@ public class SubjectSelector extends MonoLauncher {
     @Override
     public void onStartUp() {
         MonoClick.addClickEvent(btn_cancel, () -> {
-
+            this.close();
         });
         MonoClick.addClickEvent(btn_search, () -> {
 
@@ -79,6 +74,72 @@ public class SubjectSelector extends MonoLauncher {
 
     @Override
     public void onDelayedStart() {
+        fetchAllSubjects();
+    }
+
+    private void fetchAllSubjects() {
+        FetchSubjects allTx = new FetchSubjects();
+        allTx.whenStarted(() -> {
+            this.btn_search.setDisable(true);
+            this.setCursor(Cursor.WAIT);
+        });
+        allTx.whenCancelled(() -> {
+        });
+        allTx.whenFailed(() -> {
+        });
+        allTx.whenSuccess(() -> {
+            createTable(allTx.getAllSubjects());
+        });
+        allTx.whenFinished(() -> {
+            this.btn_search.setDisable(false);
+            this.setCursor(Cursor.DEFAULT);
+        });
+        allTx.transact();
+    }
+
+    private void createTable(ArrayList<SubjectMapping> list) {
+        if (list == null) {
+            list = new ArrayList<SubjectMapping>();
+        }
+        SimpleTable tbl_faculty = new SimpleTable();
+        for (SubjectMapping map : list) {
+
+            RowSubject rowController = M.load(RowSubject.class);
+            Pane rowSubject = rowController.getApplicationRoot();
+            rowController.getLbl_code().setText(map.getCode());
+            rowController.getLbl_title().setText(map.getDescriptive_title());
+            rowController.getLbl_id().setText("ID " + map.getId());
+
+            // add to table
+            tbl_faculty.addRow(SimpleTable.fxRow(rowSubject, 100.0));
+
+        }
+        SimpleTable.fxTable(tbl_faculty, vbox_table);
+
+    }
+
+    class FetchSubjects extends Transaction {
+
+        private ArrayList<SubjectMapping> allSubjects;
+
+        public ArrayList<SubjectMapping> getAllSubjects() {
+            return allSubjects;
+        }
+
+        @Override
+        protected boolean transaction() {
+            allSubjects = Mono.orm()
+                    .newSearch(Database.connect().subject())
+                    .active()
+                    .all();
+
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
+        }
 
     }
 

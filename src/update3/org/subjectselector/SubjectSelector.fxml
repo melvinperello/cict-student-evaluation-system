@@ -9,22 +9,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0" styleClass="metro-base-color" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox>
          <children>
-            <Label styleClass="metro-title-33" text="Search Faculty" />
+            <Label styleClass="metro-title-33" text="Select Subject" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
             <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@images/search.png" />
+                  <Image url="@images/Google%20Web%20Search_50px.png" />
                </image>
             </ImageView>
-            <TextField fx:id="txt_search" prefHeight="25.0" prefWidth="241.0" promptText="Search Faculty Name" />
+            <TextField fx:id="txt_search" prefHeight="25.0" prefWidth="241.0" promptText="Search Subject Code" />
             <JFXButton fx:id="btn_search" prefHeight="27.0" prefWidth="101.0" style="-fx-border-color: white;" text="Search" textFill="WHITE" />
             <JFXButton fx:id="btn_cancel" prefHeight="27.0" prefWidth="101.0" style="-fx-border-color: white;" text="Cancel" textFill="WHITE" />
          </children>
