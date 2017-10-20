@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="100.0" prefWidth="500.0" spacing="20.0" styleClass="metro-row" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/faculty.png" />
+         </image>
+      </ImageView>
+      <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="lbl_name" text="Perello, Jhon Melvin Nieto">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_bulsu_id" text="Bulsu 2017-a">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_department" text="BSIT Department">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="20.0" right="20.0" />
+   </padding>
+</HBox>
