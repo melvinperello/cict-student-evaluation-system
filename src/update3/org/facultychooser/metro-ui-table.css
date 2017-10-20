@@ -49,9 +49,11 @@
     -fx-border-width: 0 0 1 0;
     -fx-border-style: dashed;
     -fx-border-color: #FFFFFF;
+    -fx-background-color: #5E9CE9;
 }
 .metro-row:hover{
     -fx-cursor: hand;
+    -fx-background-color: #3584e3;
 }
 
 .label{

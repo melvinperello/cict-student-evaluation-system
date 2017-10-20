@@ -23,8 +23,9 @@
  */
 package update3.org.facultychooser;
 
-import com.izumi.mono.fx.MonoApplication;
-import com.izumi.mono.fx.bootstrap.Mono;
+import com.melvin.mono.fx.MonoApplication;
+import com.melvin.mono.fx.bootstrap.M;
+import java.util.ArrayList;
 import static javafx.application.Application.launch;
 import javafx.scene.Cursor;
 import javafx.scene.layout.VBox;
@@ -37,16 +38,14 @@ import javafx.stage.Stage;
 public class Sample extends MonoApplication {
 
     public static void main(String[] args) {
-
         launch(args);
     }
 
     @Override
     public void start() {
-        FacultyChooser facultyChooser = Mono.app().restore(FacultyChooser.class.getName());
-
-        facultyChooser.show();
-
+        FacultyChooser facultyChooser = M.app().restore(FacultyChooser.class);
+        facultyChooser.onDelayedStart(); // do not put database transactions on startUp
+        facultyChooser.showAndWait();
     }
 
 }

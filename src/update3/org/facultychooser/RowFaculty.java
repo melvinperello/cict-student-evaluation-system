@@ -23,7 +23,7 @@
  */
 package update3.org.facultychooser;
 
-import com.izumi.mono.fx.MonoLauncher;
+import com.melvin.mono.fx.MonoLauncher;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
