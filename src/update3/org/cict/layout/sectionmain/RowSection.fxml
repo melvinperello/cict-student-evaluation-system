@@ -19,7 +19,7 @@
             <Image url="@../section_images/section_white.png" />
          </image>
       </ImageView>
-      <Label accessibleText="lbl_section" text="BSIT 3A-G1" textFill="WHITE">
+      <Label fx:id="lbl_section" accessibleText="lbl_section" text="BSIT 3A-G1" textFill="WHITE">
          <font>
             <Font size="25.0" />
          </font>
@@ -41,7 +41,7 @@
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_count" text="30" textFill="WHITE">
+            <Label fx:id="lbl_count" accessibleText="lbl_count" text="30" textFill="WHITE">
                <font>
                   <Font size="25.0" />
                </font>
@@ -61,7 +61,7 @@
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_adviser" maxWidth="1.7976931348623157E308" prefWidth="400.0" text="PERELLO, Jhon Melvin Nieto" textFill="WHITE" HBox.hgrow="NEVER">
+            <Label fx:id="lbl_adviser" accessibleText="lbl_adviser" maxWidth="1.7976931348623157E308" prefWidth="400.0" text="PERELLO, Jhon Melvin Nieto" textFill="WHITE" HBox.hgrow="NEVER">
                <font>
                   <Font size="23.0" />
                </font>
@@ -71,7 +71,7 @@
             </Label>
          </children>
       </HBox>
-      <JFXButton accessibleText="btn_section_information" style="-fx-border-color: #FFFFFF;" text="Information" textFill="WHITE" />
+      <JFXButton fx:id="btn_information" accessibleText="btn_section_information" style="-fx-border-color: #FFFFFF;" text="Information" textFill="WHITE" />
    </children>
    <styleClass>
       <String fx:value="metro-row" />

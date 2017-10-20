@@ -43,6 +43,7 @@ import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -54,6 +55,7 @@ import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.SystemProperties;
 import update3.org.cict.layout.default_loader.LoaderView;
+import update3.org.cict.layout.sectionmain.RowSection;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 
 /**
@@ -61,28 +63,28 @@ import update3.org.cict.window_prompts.empty_prompt.EmptyView;
  * @author Jhon Melvin
  */
 public class WinRegularSectionsController extends SceneFX implements ControllerFX {
-    
+
     @FXML
     private VBox vbox_section;
-    
+
     @FXML
     private VBox application_root;
-    
+
     @FXML
     private JFXButton btn_create_sections;
-    
+
     @FXML
     private JFXButton btn_back;
-    
+
     @FXML
     private Label lbl_current_term;
-    
+
     @FXML
     private Label lbl_curriculum_code;
-    
+
     @FXML
     private Label lbl_curriculum_type;
-    
+
     @FXML
     private StackPane stack_main;
 
@@ -94,9 +96,9 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
     private static void sout(Object message) {
         System.out.println(message.toString());
     }
-    
+
     public WinRegularSectionsController() {
-        
+
     }
 
     /**
@@ -111,19 +113,19 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
     private AcademicProgramMapping academicProgramMap;
     private CurriculumMapping curriculumMap;
     private String currentTermString;
-    
+
     public void setAcademicProgramMap(AcademicProgramMapping academicProgramMap) {
         this.academicProgramMap = academicProgramMap;
     }
-    
+
     public void setCurriculumMap(CurriculumMapping curriculumMap) {
         this.curriculumMap = curriculumMap;
     }
-    
+
     public void setCurrentTermString(String currentTermString) {
         this.currentTermString = currentTermString;
     }
-    
+
     @Override
     public void onInitialization() {
         /**
@@ -141,7 +143,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
             this.emptyView.detach();
             this.fetchSections();
         });
-        
+
         lbl_current_term.setText(currentTermString);
         lbl_curriculum_code.setText(curriculumMap.getName());
         // curriculum type
@@ -174,7 +176,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
         sectionsTx.acadTermID = SystemProperties.instance().getCurrentAcademicTerm().getId();
         sectionsTx.acadProgID = academicProgramMap.getId();
         sectionsTx.curriculumID = curriculumMap.getId();
-        
+
         sectionsTx.whenStarted(() -> {
             this.emptyView.detach();
             /**
@@ -183,14 +185,14 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
             this.loaderView.setMessage("Retrieving Sections");
             this.loaderView.attach();
         });
-        
+
         sectionsTx.whenSuccess(() -> {
             /**
              * Continue to next task.
              */
             loadSectionTask(sectionsTx.sectionInformation);
         });
-        
+
         sectionsTx.whenCancelled(() -> {
             /**
              * When there is no sections, canceled call back was triggered.
@@ -202,14 +204,14 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
              */
             emptyView.attach();
         });
-        
+
         sectionsTx.whenFinished(() -> {
             /**
              * When finished do not detached another task will run to execute
              * FXML LOADING.
              */
         });
-        
+
         sectionsTx.transact();
     }
 
@@ -224,15 +226,15 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
         loadSectionWrk.setTask(() -> {
             loadSections(sectionInformation);
         });
-        
+
         loadSectionWrk.whenSuccess(() -> {
             // Task Executed.
         });
-        
+
         loadSectionWrk.whenFailed(() -> {
             // UI Loading Failed.s
         });
-        
+
         loadSectionWrk.whenFinished(() -> {
             /**
              * Remove loading screen.
@@ -241,18 +243,18 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
         });
         loadSectionWrk.start();
     }
-    
+
     @Override
     public void onEventHandling() {
         super.addClickEvent(btn_create_sections, () -> {
-            
+
             LayoutDataFX layoutFx = new LayoutDataFX(application_root, this);
             SectionCreateWizard controller = new SectionCreateWizard();
             controller.setWinRegularSectionControllerFx(layoutFx);
             controller.setProgramMap(academicProgramMap);
             controller.setCurriculumMap(curriculumMap);
             controller.setCurriculumType(lbl_curriculum_type.getText());
-            
+
             Pane rootSectionWizard = Mono.fx()
                     .create()
                     .setPackageName("update3.org.cict.layout.sectionmain")
@@ -260,13 +262,13 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                     .makeFX()
                     .setController(controller)
                     .pullOutLayout();
-            
+
             Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                 super.replaceRoot(rootSectionWizard);
             }, rootSectionWizard);
-            
+
         });
-        
+
         super.addClickEvent(btn_back, () -> {
             SectionHomeController controller = new SectionHomeController();
             Pane pane = Mono.fx()
@@ -276,7 +278,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                     .makeFX()
                     .setController(controller)
                     .pullOutLayout();
-            
+
             Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                 super.replaceRoot(pane);
             }, pane);
@@ -326,7 +328,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
              * Load each sections.
              */
             Integer section_count = loadEachSections(tblSections, yearlevel, sectionInformation);
-            
+
             lbl_section_count.setText(section_count.toString());
         }
 
@@ -342,7 +344,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
         Mono.fx().thread().wrap(() -> {
             simpleTableView.setParentOnScene(vbox_section);
         });
-        
+
     }
 
     /**
@@ -357,13 +359,13 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
          */
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(50.0);
-        
+
         HBox rowSection = (HBox) Mono.fx().create()
                 .setPackageName("update3.org.cict.layout.sectionmain")
                 .setFxmlDocument("row-div-yearlevel")
                 .makeFX()
                 .pullOutLayout();
-        
+
         Label lbl_year_level = super.searchAccessibilityText(rowSection, "lbl_year_level");
         Label lbl_section_count = super.searchAccessibilityText(rowSection, "lbl_section_count");
         /**
@@ -375,32 +377,32 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                                 : "Fourth";
         yearString = yearString + " " + "Year";
         lbl_year_level.setText(yearString);
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContentAsPane(rowSection);
-        
+
         row.addCell(cellParent);
         row.setRowIdentifier("heading");
-        
+
         table.addRow(row);
-        
+
         return lbl_section_count;
     }
-    
+
     private Integer loadEachSections(SimpleTable table,
             Integer yearLevel,
             ArrayList<SectionData> sectionInformation) {
         /**
          * Load all sections with data
          */
-        
+
         Integer sectionCount = 0;
         for (SectionData sectionData : sectionInformation) {
             LoadSectionMapping sectionMap = sectionData.sectionDetails;
             String adviserName = sectionData.adviserName;
             String studentCount = sectionData.studentCount;
-            
+
             if (!sectionMap.getYear_level().equals(yearLevel)) {
                 // if not equal
                 continue;
@@ -411,26 +413,32 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
              */
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(50.0);
-            
-            HBox rowSection = (HBox) Mono.fx().create()
-                    .setPackageName("update3.org.cict.layout.sectionmain")
-                    .setFxmlDocument("row-section")
-                    .makeFX()
-                    .pullOutLayout();
-            
-            JFXButton btn_section_information = super.searchAccessibilityText(rowSection, "btn_section_information");
-            Label lbl_section = super.searchAccessibilityText(rowSection, "lbl_section");
-            Label lbl_adviser = super.searchAccessibilityText(rowSection, "lbl_adviser");
-            Label lbl_count = super.searchAccessibilityText(rowSection, "lbl_count");
+
+            RowSection rowFx = M.load(RowSection.class);
+//            HBox rowSection = (HBox) Mono.fx().create()
+//                    .setPackageName("update3.org.cict.layout.sectionmain")
+//                    .setFxmlDocument("row-section")
+//                    .makeFX()
+//                    .pullOutLayout();
+
+//            JFXButton btn_section_information = super.searchAccessibilityText(rowSection, "btn_section_information");
+//            Label lbl_section = super.searchAccessibilityText(rowSection, "lbl_section");
+//            Label lbl_adviser = super.searchAccessibilityText(rowSection, "lbl_adviser");
+//            Label lbl_count = super.searchAccessibilityText(rowSection, "lbl_count");
+            JFXButton btn_section_information = rowFx.getBtn_information();
+            Label lbl_section = rowFx.getLbl_section();
+            Label lbl_adviser = rowFx.getLbl_adviser();
+            Label lbl_count = rowFx.getLbl_count();
+
             String sectionName = sectionMap.getYear_level()
                     + sectionMap.getSection_name() + "-G"
                     + sectionMap.get_group();
-            
+
             lbl_section.setText(sectionName);
             lbl_adviser.setText(adviserName);
             //System.out.println(sectionName + " : " + studentCount);
             lbl_count.setText(studentCount);
-            
+
             super.addClickEvent(btn_section_information, () -> {
                 // current layout data
                 LayoutDataFX fxData = new LayoutDataFX(application_root, this);
@@ -438,11 +446,12 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                 controller.setDataFx(fxData);
                 controller.setSectionMap(sectionMap);
                 controller.setAcademicProgramMap(academicProgramMap);/*?*/
-                controller.setCurriculumMap(curriculumMap); /*?*/
+                controller.setCurriculumMap(curriculumMap);
+                /*?*/
                 controller.setCurrentTermString(currentTermString);
                 controller.setCurriculumType(lbl_curriculum_type.getText());/*?*/
-                controller.setSectionName(sectionName); 
-                
+                controller.setSectionName(sectionName);
+
                 Pane pane = Mono.fx()
                         .create()
                         .setPackageName("update3.org.cict.layout.sectionmain")
@@ -450,31 +459,31 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                         .makeFX()
                         .setController(controller)
                         .pullOutLayout();
-                
+
                 Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                     super.replaceRoot(pane);
                 }, pane);
             });
-            
+
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
-            cellParent.setContentAsPane(rowSection);
-            
+            cellParent.setContentAsPane(rowFx.getApplicationRoot());
+
             row.addCell(cellParent);
             row.setRowIdentifier("data");
-            
+
             table.addRow(row);
             // increate section counter
             sectionCount++;
         } // end loop
 
         return sectionCount;
-        
+
     }
 
     //--------------------------------------------------------------------------
     private class FetchSections extends Transaction {
-        
+
         private Integer acadTermID;
         private Integer acadProgID;
         private Integer curriculumID;
@@ -487,7 +496,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
          * Result Variables.
          */
         private ArrayList<SectionData> sectionInformation;
-        
+
         @Override
         protected boolean transaction() {
             sectionInformation = new ArrayList<SectionData>();
@@ -501,23 +510,23 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                     .eq(DB.load_section().college, collegeName)
                     .active()
                     .all();
-            
+
             if (sectionsData == null) {
                 return false;
             }
-            
+
             for (LoadSectionMapping sectionMap : sectionsData) {
-                
+
                 SectionData sectionWithAdviser = new SectionData();
                 sectionWithAdviser.sectionDetails = sectionMap;
-                
+
                 Integer facultyID = sectionMap.getAdviser();
                 // if no adviser
                 if (facultyID == null) {
                     //FacultyMapping adviserDetails = Database.connect().faculty().getPrimary(facultyID);
                     sectionWithAdviser.adviserName = "NOT SET";
                 } else {
-                    
+
                     FacultyMapping adviserDetails = Database.connect().faculty().getPrimary(facultyID);
                     sectionWithAdviser.adviserName = getAdviserFullname(adviserDetails);
                 } // end if
@@ -530,7 +539,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                 Integer sectionGroup = sectionMap.get_group();
                 Integer currentTerm = this.acadTermID;
                 Integer curID = this.curriculumID;
-                
+
                 Searcher studentCountSearch = Mono.orm()
                         .newSearch(Database.connect().student())
                         .eq(DB.student().section, sectionName)
@@ -539,17 +548,17 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                         .eq(DB.student().last_evaluation_term, currentTerm)
                         .eq(DB.student().CURRICULUM_id, curID)
                         .pull();
-                
+
                 String studentCount = Mono.orm()
                         .projection(studentCountSearch)
                         .count(DB.student().cict_id);
                 sectionWithAdviser.studentCount = studentCount;
                 sectionInformation.add(sectionWithAdviser);
             }
-            
+
             return true;
         }
-        
+
         private String getAdviserFullname(FacultyMapping adviserDetails) {
             String advsierName = "";
             String lName = adviserDetails.getLast_name();
@@ -566,23 +575,23 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
             }
             return advsierName;
         }
-        
+
         @Override
         protected void after() {
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-        
+
     }
 
     /**
      *
      */
     private class SectionData {
-        
+
         private AcademicProgramMapping programDetails;
         private LoadSectionMapping sectionDetails;
         private String adviserName;
         private String studentCount;
     }
-    
+
 }
