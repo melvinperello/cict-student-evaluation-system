@@ -497,8 +497,13 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             exportToExcel();
         });
 
-        MonoClick.addClickEvent(txt_adviser, () -> {
-
+        super.addClickEvent(txt_adviser, () -> {
+            FacultyMapping selected_faculty = selectFaculty();
+            if (selected_faculty != null) {
+                txt_adviser.setText(selected_faculty.getLast_name() + ", " + selected_faculty.getFirst_name());
+            } else {
+                txt_adviser.setText("");
+            }
         });
 
     }

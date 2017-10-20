@@ -37,6 +37,7 @@ import com.jhmvin.orm.SQL;
 import com.jhmvin.orm.Searcher;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -90,6 +91,7 @@ public class FacultyChooser extends MonoLauncher {
         searchTx.setSearchValue(txt_search.getText().trim());
         searchTx.whenStarted(() -> {
             this.btn_search.setDisable(true);
+            this.setCursor(Cursor.WAIT);
         });
         searchTx.whenCancelled(() -> {
         });
@@ -100,6 +102,7 @@ public class FacultyChooser extends MonoLauncher {
         });
         searchTx.whenFinished(() -> {
             this.btn_search.setDisable(false);
+            this.setCursor(Cursor.DEFAULT);
         });
 
         searchTx.transact();
@@ -109,6 +112,7 @@ public class FacultyChooser extends MonoLauncher {
         FetchFaculty fetchAllTx = new FetchFaculty();
         fetchAllTx.whenStarted(() -> {
             this.btn_search.setDisable(true);
+            this.setCursor(Cursor.WAIT);
         });
         fetchAllTx.whenCancelled(() -> {
         });
@@ -119,6 +123,7 @@ public class FacultyChooser extends MonoLauncher {
         });
         fetchAllTx.whenFinished(() -> {
             this.btn_search.setDisable(false);
+            this.setCursor(Cursor.DEFAULT);
         });
 
         fetchAllTx.transact();
@@ -133,6 +138,9 @@ public class FacultyChooser extends MonoLauncher {
     }
 
     private void createTable(ArrayList<FacultyMapping> list) {
+        if (list == null) {
+            list = new ArrayList<FacultyMapping>();
+        }
         SimpleTable tbl_faculty = new SimpleTable();
         for (FacultyMapping map : list) {
 
