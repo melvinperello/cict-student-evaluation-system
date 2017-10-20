@@ -67,6 +67,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
+import org.hibernate.criterion.Order;
 import update3.org.cict.ChoiceRange;
 import update3.org.cict.scheduling.ScheduleConstants;
 import update3.org.cict.SectionConstants;
@@ -76,6 +78,7 @@ import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 import update3.org.excelprinter.StudentMasterListPrinter;
 import update3.org.facultychooser.FacultyChooser;
+import update3.org.facultychooser.FacultyNamer;
 
 /**
  *
@@ -356,6 +359,8 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
     }
 
+    private FacultyMapping sectionAdviser;
+
     /**
      * initialization routine if there are academic program and curriculum.
      */
@@ -372,6 +377,13 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.lbl_curriculum_type.setText(curriculumType);
         //
         this.lbl_section_name.setText(sectionName);
+
+        if (this.sectionMap.getAdviser() != null) {
+            this.sectionAdviser = Database.connect().faculty().getPrimary(this.sectionMap.getAdviser());
+            this.txt_adviser.setText(FacultyNamer.getName(sectionAdviser));
+        } else {
+            this.txt_adviser.setText("");
+        }
 
         // initial text field values
         txt_year_level.setText(sectionMap.getYear_level().toString());
@@ -500,11 +512,92 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         super.addClickEvent(txt_adviser, () -> {
             FacultyMapping selected_faculty = selectFaculty();
             if (selected_faculty != null) {
+                this.sectionAdviser = selected_faculty;
                 txt_adviser.setText(selected_faculty.getLast_name() + ", " + selected_faculty.getFirst_name());
             } else {
+                this.sectionAdviser = null;
                 txt_adviser.setText("");
             }
         });
+
+        super.addClickEvent(btn_save_changes, () -> {
+            int c = Mono.fx().alert().createConfirmation().setTitle("Confirmation")
+                    .setHeader("Update Section?")
+                    .setMessage("Are you sure you want to update this section ?")
+                    .confirmYesNo();
+
+            if (c == 1) {
+                updateSectionInfo();
+            }
+        });
+
+        //----------------------------------------------------------------------
+        // btn pero label talaga to
+        super.addClickEvent(btn_change_instructor, (() -> {
+
+        }));
+        //----------------------------------------------------------------------
+
+    }
+
+    private void updateSectionInfo() {
+        String yearLevel = MonoText.getFormatted(txt_year_level);
+        String name = MonoText.getFormatted(txt_section_name);
+        String group = MonoText.getFormatted(txt_section_group);
+
+        if (yearLevel.isEmpty() || name.isEmpty() || group.isEmpty()) {
+            Mono.fx().snackbar().showError(application_root, "Some fields are empty.");
+            return;
+        }
+
+        Integer y, g;
+        try {
+            y = new Integer(yearLevel);
+            g = new Integer(group);
+        } catch (NumberFormatException e) {
+            Mono.fx().snackbar().showError(application_root, "Invalid Year Level or Group Number");
+            return;
+        }
+
+        //----------------------------------------------------------------------
+        // before updating check if it exists.
+        LoadSectionMapping a = Mono.orm().newSearch(Database.connect().load_section())
+                .eq(DB.load_section()._group, g)
+                .eq(DB.load_section().year_level, y)
+                .eq(DB.load_section().section_name, name)
+                .eq(DB.load_section().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
+                .eq(DB.load_section().CURRICULUM_id, this.curriculumMap.getId())
+                .active(Order.desc(DB.load_section().id))
+                .first();
+
+        if (a != null) {
+            // check if its the same.
+            if (a.getId().equals(this.sectionMap.getId())) {
+                // allow self update
+            } else {
+                Mono.fx().snackbar().showError(application_root, "Cannot update section, Another section has the same information.");
+                return;
+            }
+        }
+        //----------------------------------------------------------------------
+
+        LoadSectionMapping sMap = Database.connect().load_section().getPrimary(this.sectionMap.getId());
+        sMap.setSection_name(name);
+        sMap.setYear_level(y);
+        sMap.set_group(g);
+        try {
+            sMap.setAdviser(sectionAdviser.getId());
+        } catch (Exception e) {
+            // no adviser.
+            sMap.setAdviser(null);
+        }
+
+        boolean updatedSec = Database.connect().load_section().update(sMap);
+        if (updatedSec) {
+            Mono.fx().snackbar().showSuccess(application_root, "Section Updated Successfully.");
+        } else {
+            Mono.fx().snackbar().showError(application_root, "Cannot update section.");
+        }
 
     }
 

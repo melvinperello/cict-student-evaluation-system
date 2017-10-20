@@ -23,27 +23,31 @@
  */
 package update3.org.facultychooser;
 
-import com.melvin.mono.fx.MonoApplication;
-import com.melvin.mono.fx.bootstrap.M;
-import java.util.ArrayList;
-import static javafx.application.Application.launch;
-import javafx.scene.Cursor;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import app.lazy.models.FacultyMapping;
 
 /**
  *
  * @author Jhon Melvin
  */
-public class Sample extends MonoApplication {
+public class FacultyNamer {
 
-    public static void main(String[] args) {
-        launch(args);
+    /**
+     * Convenient name in getting the name of the faculty.
+     *
+     * @param map
+     * @return
+     */
+    public static String getName(FacultyMapping map) {
+        if (map == null) {
+            return "";
+        }
+        String name = "";
+        name += (map.getLast_name() + " ");
+        name += (map.getFirst_name());
+
+        if (map.getMiddle_name() != null) {
+            name += (" " + map.getMiddle_name());
+        }
+        return name;
     }
-
-    @Override
-    public void start() {
-
-    }
-
 }
