@@ -31,7 +31,6 @@ import app.lazy.models.FacultyMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
-import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.MapFactory;
 import app.lazy.models.SubjectMapping;
 import com.izum.fx.textinputfilters.StringFilter;
@@ -50,8 +49,11 @@ import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
+import com.melvin.mono.fx.events.MonoClick;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -60,6 +62,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import update3.org.cict.ChoiceRange;
@@ -70,6 +75,7 @@ import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 import update3.org.excelprinter.StudentMasterListPrinter;
+import update3.org.facultychooser.FacultyChooser;
 
 /**
  *
@@ -491,6 +497,26 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             exportToExcel();
         });
 
+        MonoClick.addClickEvent(txt_adviser, () -> {
+
+        });
+
+    }
+
+    private FacultyMapping selectFaculty() {
+        FacultyChooser facultyChooser = M.app().restore(FacultyChooser.class);
+        facultyChooser.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            System.out.println("Stage Recycled. ^^v");
+            facultyChooser.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = facultyChooser.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+
+        FacultyMapping selectedFaculty = facultyChooser.getSelectedFaculty();
+        return selectedFaculty;
     }
 
     private void openScheduleViewer() {

@@ -43,9 +43,7 @@ public class Sample extends MonoApplication {
 
     @Override
     public void start() {
-        FacultyChooser facultyChooser = M.app().restore(FacultyChooser.class);
-        facultyChooser.onDelayedStart(); // do not put database transactions on startUp
-        facultyChooser.showAndWait();
+
     }
 
 }

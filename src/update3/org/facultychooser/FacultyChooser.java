@@ -27,7 +27,6 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import com.melvin.mono.fx.MonoLauncher;
-import com.melvin.mono.fx.Stageable;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import com.jfoenix.controls.JFXButton;
@@ -49,7 +48,7 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Jhon Melvin
  */
-public class FacultyChooser extends MonoLauncher implements Stageable {
+public class FacultyChooser extends MonoLauncher {
 
     @FXML
     private VBox application_root;
@@ -72,33 +71,44 @@ public class FacultyChooser extends MonoLauncher implements Stageable {
             this.close();
         });
         MonoClick.addClickEvent(btn_search, () -> {
-            SearchFaculty searchTx = new SearchFaculty();
-            searchTx.setSearchValue(txt_search.getText().trim());
-            searchTx.whenStarted(() -> {
-            });
-            searchTx.whenCancelled(() -> {
-            });
-            searchTx.whenFailed(() -> {
-            });
-            searchTx.whenSuccess(() -> {
-                this.createTable(searchTx.getFacultyList());
-            });
-            searchTx.whenFinished(() -> {
-            });
-
-            searchTx.transact();
+            if (this.txt_search.getText().isEmpty()) {
+                this.fetchAll();
+            } else {
+                onSearchFaculty();
+            }
         });
     }
 
-    private void onSearchFaculty() {
+    private FacultyMapping selectedFaculty;
 
+    public FacultyMapping getSelectedFaculty() {
+        return selectedFaculty;
     }
 
-    @Override
-    public void onDelayedStart() {
-        super.onDelayedStart(); //To change body of generated methods, choose Tools | Templates.
+    private void onSearchFaculty() {
+        SearchFaculty searchTx = new SearchFaculty();
+        searchTx.setSearchValue(txt_search.getText().trim());
+        searchTx.whenStarted(() -> {
+            this.btn_search.setDisable(true);
+        });
+        searchTx.whenCancelled(() -> {
+        });
+        searchTx.whenFailed(() -> {
+        });
+        searchTx.whenSuccess(() -> {
+            this.createTable(searchTx.getFacultyList());
+        });
+        searchTx.whenFinished(() -> {
+            this.btn_search.setDisable(false);
+        });
+
+        searchTx.transact();
+    }
+
+    private void fetchAll() {
         FetchFaculty fetchAllTx = new FetchFaculty();
         fetchAllTx.whenStarted(() -> {
+            this.btn_search.setDisable(true);
         });
         fetchAllTx.whenCancelled(() -> {
         });
@@ -108,9 +118,18 @@ public class FacultyChooser extends MonoLauncher implements Stageable {
             this.createTable(fetchAllTx.getFacultyList());
         });
         fetchAllTx.whenFinished(() -> {
+            this.btn_search.setDisable(false);
         });
 
         fetchAllTx.transact();
+    }
+
+    @Override
+    public void onDelayedStart() {
+        super.onDelayedStart(); //To change body of generated methods, choose Tools | Templates.
+        this.selectedFaculty = null;
+        this.txt_search.setText("");
+        this.fetchAll();
     }
 
     private void createTable(ArrayList<FacultyMapping> list) {
@@ -119,10 +138,21 @@ public class FacultyChooser extends MonoLauncher implements Stageable {
 
             RowFaculty rowController = M.app().reload(RowFaculty.class);
             Pane rowFaculty = rowController.getApplicationRoot();
-            rowController.getLbl_name().setText(map.getFirst_name());
+            String facultyName = "";
+            facultyName += (map.getLast_name() + ", ");
+            facultyName += map.getFirst_name();
+            if (map.getMiddle_name() != null) {
+                facultyName += (" " + map.getMiddle_name());
+            }
+            rowController.getLbl_name().setText(facultyName);
             rowController.getLbl_bulsu_id().setText(map.getBulsu_id());
-            rowController.getLbl_department().setText(map.getDepartment());
+            rowController.getLbl_department().setText(map.getDepartment() == null || map.getDepartment().isEmpty() ? "No Department" : map.getDepartment());
 
+            MonoClick.addClickEvent(rowFaculty, () -> {
+                this.selectedFaculty = map;
+                this.close();
+                //this.close();
+            });
             // add to table
             tbl_faculty.addRow(SimpleTable.fxRow(rowFaculty, 100.0));
 
