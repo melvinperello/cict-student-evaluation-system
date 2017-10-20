@@ -24,6 +24,7 @@
 package update3.org.facultychooser;
 
 import com.izumi.mono.fx.MonoApplication;
+import com.izumi.mono.fx.bootstrap.Mono;
 import static javafx.application.Application.launch;
 import javafx.scene.Cursor;
 import javafx.scene.layout.VBox;
@@ -36,15 +37,15 @@ import javafx.stage.Stage;
 public class Sample extends MonoApplication {
 
     public static void main(String[] args) {
+
         launch(args);
     }
 
     @Override
     public void start() {
+        FacultyChooser facultyChooser = Mono.app().restore(FacultyChooser.class.getName());
 
-        FacultyChooser facultyChooser = new FacultyChooser();
-        VBox root = facultyChooser.open();
-        facultyChooser.showAndWait();
+        facultyChooser.show();
 
     }
 
