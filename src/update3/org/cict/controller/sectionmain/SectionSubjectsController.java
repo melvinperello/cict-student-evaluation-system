@@ -534,7 +534,27 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         // btn pero label talaga to
         super.addClickEvent(btn_change_instructor, (() -> {
-
+            try {
+                FacultyMapping selected_faculty = selectFaculty();
+                LoadGroupMapping map = Database.connect().load_group().getPrimary(this.selected_load_group_in_sections.getId());
+                if (selected_faculty.getId().equals(map.getFaculty())) {
+                    Mono.fx().snackbar().showInfo(application_root, "No Changes Were Made.");
+                    return;
+                } else {
+                    map.setFaculty(selected_faculty.getId());
+                    //update
+                    boolean updated = Database.connect().load_group().update(map);
+                    if (updated) {
+                        Mono.fx().snackbar().showSuccess(application_root, "Instructor Has Been Changed.");
+                        FacultyMapping instructor = Database.connect().faculty().getPrimary(map.getFaculty());
+                        lbl_instructor_big.setText(FacultyNamer.getName(instructor));
+                    } else {
+                        Mono.fx().snackbar().showError(application_root, "Cannot Connect To Database.");
+                    }
+                }
+            } catch (Exception e) {
+                Mono.fx().snackbar().showError(application_root, "Failed To Update.");
+            }
         }));
         //----------------------------------------------------------------------
 
@@ -949,6 +969,8 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             vbox_view_subjects.setVisible(true);
             vbox_view_schedule.setVisible(false);
             vbox_add_schedule.setVisible(false);
+            /* Added to refresh when going back from schedule */
+            fetchSectionSubject();
         }, vbox_view_subjects);
         /**
          * detach empty schedule if ever schedule was empty.
@@ -1247,13 +1269,14 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 if (loadGroup.getFaculty() == null) {
                     subjectData.instructorName = "No Data";
                 } else {
-                    FacultyMapping intructor = Database.connect().faculty().getPrimary(loadGroup);
+                    FacultyMapping intructor = Database.connect().faculty().getPrimary(loadGroup.getFaculty());
                     try {
                         String instructorName = intructor.getLast_name() + ", ";
+
+                        instructorName += intructor.getFirst_name();
                         if (intructor.getMiddle_name() != null) {
-                            instructorName += intructor.getMiddle_name() + " ";
+                            instructorName += (" " + intructor.getMiddle_name());
                         }
-                        instructorName += intructor.getLast_name();
                         subjectData.instructorName = instructorName;
                     } catch (NullPointerException e) {
                         subjectData.instructorName = "Unreadable Data";
