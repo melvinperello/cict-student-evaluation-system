@@ -2,7 +2,7 @@
 // SQL_table: curriculum_history_summary
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 16, 2017 07:52:09 PM
+// Created: Oct 21, 2017 03:55:52 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello

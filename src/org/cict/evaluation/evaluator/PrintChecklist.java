@@ -64,7 +64,7 @@ public class PrintChecklist extends Transaction {
     private AcademicProgramMapping acadProg;
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
-    
+    private String DEFAULT_IMAGE_LOC = "src/org/cict/reports/checklist/images/default.png";
     @Override
     protected boolean transaction() {
         student = Database.connect().student().getPrimary(CICT_id);
@@ -72,19 +72,27 @@ public class PrintChecklist extends Transaction {
             System.out.println("NO STUDENT");
             return false;
         }
-        if(CURRICULUM_id != null)
+        
+        CurriculumMapping curriculum_ = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
+        acadProg = Database.connect().academic_program().getPrimary(curriculum_.getACADPROG_id());
+        
+        if(CURRICULUM_id != null) {
             curriculum = Database.connect().curriculum().getPrimary(CURRICULUM_id);
-        else {
+            AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
+            sectionName = apMap.getCode() + " " + student.getYear_level() + student.getSection()
+                    + "-G" + student.get_group();
+        } else {
             System.out.println("NO CURRICULUM ID");
             curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
+            sectionName = acadProg.getCode() + " " + student.getYear_level() + student.getSection()
+                    + "-G" + student.get_group();
         }
+        
         if (curriculum == null) {
             System.out.println("NO CURRICULUM");
             return false;
         }
         
-        CurriculumMapping curriculum_ = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
-        acadProg = Database.connect().academic_program().getPrimary(curriculum_.getACADPROG_id());
         if (student.getHas_profile() == 1) {
             StudentProfileMapping spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
@@ -119,10 +127,7 @@ public class PrintChecklist extends Transaction {
             }
             highSchool = "";
         }
-        AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
-        sectionName = apMap.getCode() + " " + student.getYear_level() + student.getSection()
-                + "-G" + student.get_group();
-
+        
         CurricularLevelAssesor cla = new CurricularLevelAssesor(student);
         cla.assess();
         getResult(cla, 1, cla.hasPrepData());
@@ -134,14 +139,6 @@ public class PrintChecklist extends Transaction {
 
     private void getResult(CurricularLevelAssesor cla, int year, boolean hasPrepData) {
         AssessmentResults result = cla.getAnnualAssessment(year);
-//        if (hasPrepData) {
-//            if (year <= 2) {
-//                curriculum = cla.getPrepCurriculum();
-//            } else {
-//                curriculum = cla.getConsCurriculum();
-//            }
-//        }
-
         for (int semester = 1; semester <= 2; semester++) {
             ArrayList<SubjectAssessmentDetials> sadetails;
             try {
@@ -237,8 +234,6 @@ public class PrintChecklist extends Transaction {
 
         String RESULT = SAVE_DIRECTORY + "/" + doc + ".pdf";
 
-        //------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------
         /**
          * Check if the report save directory is already existing and created if
          * not this will try to create the needed directories.
@@ -250,8 +245,7 @@ public class PrintChecklist extends Transaction {
             System.err.println("Directory is not created.");
             return;
         }
-        //------------------------------------------------------------------
-        //------------------------------------------------------------------
+        
         if(LEGACY==null) {
             System.out.println("Print Standard");
             printStandard(RESULT, false);
@@ -302,7 +296,7 @@ public class PrintChecklist extends Transaction {
             bsit1112.STUDENT_NAME = fullName;
             bsit1112.STUDENT_ADDRESS = address;
             bsit1112.STUDENT_HS = highSchool;
-            bsit1112.IMAGE_LOCATION = "src/org/cict/reports/checklist/images/me.png";
+            bsit1112.IMAGE_LOCATION = DEFAULT_IMAGE_LOC;
 
             for (Object[] detail : details) {
                 String key = (String) detail[4];
@@ -348,14 +342,12 @@ public class PrintChecklist extends Transaction {
             BITCT bitct = new BITCT(RESULT);
             bitct.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
-            String midName = student.getMiddle_name();
-            if (midName != null) {
-                fullName += " " + midName;
-            }
+            String midName = (student.getMiddle_name()==null? "" : student.getMiddle_name());
+            fullName += (midName!=null? (" " + midName) : "");
             bitct.STUDENT_NAME = fullName;
             bitct.STUDENT_ADDRESS = address;
             bitct.STUDENT_HS = highSchool;
-            bitct.IMAGE_LOCATION = "src/org/cict/reports/checklist/images/me.png";
+            bitct.IMAGE_LOCATION = DEFAULT_IMAGE_LOC;
 
             for (Object[] detail : details) {
                 String key = (String) detail[4];
@@ -401,11 +393,11 @@ public class PrintChecklist extends Transaction {
             BSIT1516 bsit1516 = new BSIT1516(RESULT, false);
             bsit1516.PRINT_ORIGINAL = true;
             bsit1516.STUDENT_NUMBER = student.getId();
+            
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
-            String midName = student.getMiddle_name();
-            if (midName != null) {
-                fullName += " " + midName;
-            }
+            String midName = (student.getMiddle_name()==null? "" : student.getMiddle_name());
+            fullName += (midName!=null? (" " + midName) : "");
+            
             bsit1516.STUDENT_NAME = fullName;
             bsit1516.STUDENT_ADDRESS = address;
             if (acadProg != null) {
@@ -413,9 +405,6 @@ public class PrintChecklist extends Transaction {
             }
 
             Boolean isLadderized = curriculum.getLadderization().equalsIgnoreCase("yes");
-//            bsit1516.IS_LADDERIZED = isLadderized;
-//            String year = SystemProperties.instance().getCurrentAcademicTerm().getSchool_year();
-//            bsit1516.SCHOOL_YEAR = year;
             String major = curriculum.getMajor();
             try {
                 if (!major.equalsIgnoreCase("none")) {
@@ -484,11 +473,11 @@ public class PrintChecklist extends Transaction {
         BSIT1516 standard = new BSIT1516(RESULT, true);
         standard.STUDENT_NUMBER = student.getId();
         standard.PRINT_ORIGINAL = printOriginal;
+        
         String fullName = student.getLast_name() + ", " + student.getFirst_name();
-        String midName = student.getMiddle_name();
-        if (midName != null) {
-            fullName += " " + midName;
-        }
+        String midName = (student.getMiddle_name()==null? "" : student.getMiddle_name());
+        fullName += (midName!=null? (" " + midName) : "");
+            
         standard.STUDENT_NAME = fullName;
         standard.STUDENT_ADDRESS = address;
         if (acadProg != null) {

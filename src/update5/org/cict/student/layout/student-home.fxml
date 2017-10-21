@@ -17,7 +17,138 @@
 
 <StackPane fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="654.0" prefWidth="1079.0" styleClass="metro-base-color" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox styleClass="metro-base-color">
+      <VBox fx:id="vbox_result" prefHeight="557.0" prefWidth="1080.0" styleClass="metro-base-color" visible="false">
+         <children>
+            <VBox alignment="CENTER_RIGHT">
+               <children>
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="37.0" prefWidth="881.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="435.0" text=" " />
+                              <Label text="Search by">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cmb_category" prefHeight="0.0" prefWidth="191.0" styleClass="metro-combo-box" />
+                           </children>
+                        </HBox>
+                        <JFXButton fx:id="btn_home1" prefHeight="46.0" prefWidth="259.0" styleClass="metro-nav-button" text="Back" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets left="20.0" right="2.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets right="28.0" top="7.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="metro-base-color" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <ImageView fitHeight="43.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/search-14-x.png" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER" prefHeight="0.0" prefWidth="669.0" spacing="3.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="44.0" prefWidth="731.0" spacing="10.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="44.0" prefWidth="650.0" style="-fx-border-color: #fff;">
+                                       <children>
+                                          <TextField fx:id="txt_search_key" prefHeight="41.0" prefWidth="886.0">
+                                             <styleClass>
+                                                <String fx:value="metro-base-color" />
+                                                <String fx:value="label" />
+                                             </styleClass>
+                                             <font>
+                                                <Font size="17.0" />
+                                             </font>
+                                          </TextField>
+                                          <JFXButton fx:id="btn_search" alignment="CENTER" contentDisplay="CENTER" text=" " textAlignment="CENTER">
+                                             <graphic>
+                                                <ImageView fitHeight="35.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/Google%20Web%20Search_96px.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </JFXButton>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <CheckBox fx:id="chkbx_onlyEnrolled" mnemonicParsing="false" styleClass="label" text="Only enrolled students" />
+                           </children>
+                           <HBox.margin>
+                              <Insets top="10.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <StackPane VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets left="55.0" right="70.0" />
+                     </VBox.margin>
+                     <children>
+                        <VBox fx:id="vbox_list" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" />
+                        <VBox fx:id="vbox_no_result" prefHeight="455.0" prefWidth="906.0">
+                           <StackPane.margin>
+                              <Insets />
+                           </StackPane.margin>
+                           <children>
+                              <Label text="Try using another key to search.">
+                                 <font>
+                                    <Font size="35.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </StackPane>
+               </children>
+               <padding>
+                  <Insets left="20.0" right="28.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="1031.0" style="-fx-background-color: #656D79;">
+               <children>
+                  <Label fx:id="lbl_status1" text="Done" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </VBox>
+         </children>
+         <stylesheets>
+            <URL value="@metro-ui.css" />
+            <URL value="@metro-ui-table.css" />
+         </stylesheets>
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
+      </VBox>
+      <VBox fx:id="vbox_home" styleClass="metro-base-color">
          <children>
             <VBox alignment="CENTER_RIGHT">
                <children>
@@ -231,133 +362,6 @@
                </padding>
             </VBox>
          </children>
-      </VBox>
-      <VBox fx:id="vbox_result" prefHeight="557.0" prefWidth="1080.0" styleClass="metro-base-color" visible="false">
-         <children>
-            <VBox alignment="CENTER_RIGHT">
-               <children>
-                  <HBox alignment="CENTER_RIGHT">
-                     <children>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="37.0" prefWidth="881.0" spacing="5.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label prefHeight="17.0" prefWidth="435.0" text=" " />
-                              <Label text="Search by">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="cmb_category" prefHeight="0.0" prefWidth="191.0" styleClass="metro-combo-box" />
-                           </children>
-                        </HBox>
-                        <JFXButton fx:id="btn_home1" prefHeight="46.0" prefWidth="259.0" styleClass="metro-nav-button" text="Back" />
-                     </children>
-                  </HBox>
-               </children>
-               <padding>
-                  <Insets left="20.0" right="2.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets right="28.0" top="7.0" />
-               </VBox.margin>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="metro-base-color" VBox.vgrow="ALWAYS">
-               <children>
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                        <ImageView fitHeight="43.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/search-14-x.png" />
-                           </image>
-                        </ImageView>
-                        <VBox alignment="CENTER" prefHeight="0.0" prefWidth="669.0" spacing="3.0">
-                           <children>
-                              <HBox alignment="CENTER" prefHeight="44.0" prefWidth="731.0" spacing="10.0">
-                                 <children>
-                                    <HBox alignment="CENTER" prefHeight="44.0" prefWidth="650.0" style="-fx-border-color: #fff;">
-                                       <children>
-                                          <TextField fx:id="txt_search_key" prefHeight="41.0" prefWidth="886.0">
-                                             <styleClass>
-                                                <String fx:value="metro-base-color" />
-                                                <String fx:value="label" />
-                                             </styleClass>
-                                             <font>
-                                                <Font size="17.0" />
-                                             </font>
-                                          </TextField>
-                                          <JFXButton fx:id="btn_search" alignment="CENTER" contentDisplay="CENTER" text=" " textAlignment="CENTER">
-                                             <graphic>
-                                                <ImageView fitHeight="35.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@images/Google%20Web%20Search_96px.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                          </JFXButton>
-                                       </children>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                       <padding>
-                                          <Insets left="10.0" />
-                                       </padding>
-                                    </HBox>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER">
-                           <children>
-                              <CheckBox fx:id="chkbx_onlyEnrolled" mnemonicParsing="false" styleClass="label" text="Only enrolled students" />
-                           </children>
-                           <HBox.margin>
-                              <Insets top="10.0" />
-                           </HBox.margin>
-                        </VBox>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="20.0" top="10.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <VBox fx:id="vbox_list" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" VBox.vgrow="ALWAYS">
-                     <VBox.margin>
-                        <Insets left="55.0" right="70.0" />
-                     </VBox.margin></VBox>
-               </children>
-               <padding>
-                  <Insets left="20.0" right="28.0" />
-               </padding>
-            </VBox>
-            <VBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="1031.0" style="-fx-background-color: #656D79;">
-               <children>
-                  <Label fx:id="lbl_status1" text="Done" />
-               </children>
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </VBox>
-         </children>
-         <stylesheets>
-            <URL value="@metro-ui.css" />
-            <URL value="@metro-ui-table.css" />
-         </stylesheets>
-         <StackPane.margin>
-            <Insets />
-         </StackPane.margin>
-      </VBox>
-      <VBox fx:id="vbox_no_result" prefHeight="480.0" prefWidth="1079.0" visible="false">
-         <StackPane.margin>
-            <Insets top="130.0" />
-         </StackPane.margin>
-         <children>
-            <Label text="Try using another key to search.">
-               <font>
-                  <Font size="35.0" />
-               </font>
-            </Label>
-         </children>
-         <padding>
-            <Insets left="70.0" top="10.0" />
-         </padding>
       </VBox>
    </children>
    <padding>

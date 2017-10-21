@@ -7,8 +7,6 @@
 }
 
 .btn-remove {
-
-
     -fx-pref-height: 15px;
     -fx-pref-width: 100px;
     -fx-font-size: 14px;
@@ -32,7 +30,7 @@
 }
 
 .simple-table-row:hover .simple-table-cell {
-    -fx-background-color: #AFAFAE;
+    -fx-background-color: #4567C4;
     -fx-text-fill: white;
 }
 
@@ -68,14 +66,14 @@
 
 
 .table-mutate-as-changed{
-    -fx-background-color: #F0AD4E;
+    -fx-background-color: #DB7000;
 }
 
 .table-mutate-as-removed{
-    -fx-background-color: #D9524E;
+    -fx-background-color: #880506;
 }
 
 .table-mutate-as-added{
-    -fx-background-color: #7ACE42;
+    -fx-background-color: #106C39;
 }
 

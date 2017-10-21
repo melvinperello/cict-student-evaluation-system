@@ -161,7 +161,6 @@ public class Deficiency {
         p.setAlignment(Element.ALIGN_CENTER);
         p.add(new Chunk("Deficiency Report\n",font13Plain));
         p.add(getTextUnderlined(curriculumName + "\n",font7Bold));
-//        p.add(new Chunk("AY 2015-2016\n\n",font6Plain));
         return p;
     }
     
@@ -187,8 +186,11 @@ public class Deficiency {
         tbl_stud.setPaddingTop(10f);
         tbl_stud.setTotalWidth(575);
         tbl_stud.setLockedWidth(true);
-        tbl_stud.addCell(createCellWithObject(createCurriculumTable(0,2),false,true));
-        tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
+        try {
+            tbl_stud.addCell(createCellWithObject(createCurriculumTable(0,2),false,true));
+            tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
+        } catch (Exception e) {
+        }
         return tbl_stud;
     }
       
@@ -212,14 +214,15 @@ public class Deficiency {
             tbl_stud.addCell(createSimpleCell(yearLevel, font5Bold, 11, true, true));
             for (int k = 0; k < 2; k++) {
                 this.setTitleHeader();
-                tbl_stud.addCell(createSimpleCell(semester, font5Bold, 11, true, false));
-                
                 //check if there is a subject in this sem
                 ArrayList<Object[]> subjects = this.subjectsPerSem.get(objectKey);
                 //0-subjectmap
                 //1-total hrs
                 //2-prereq
                 //3-co-req
+                if(subjects.isEmpty())
+                    return null;
+                tbl_stud.addCell(createSimpleCell(semester, font5Bold, 11, true, false));
                 try{
                     if(subjects == null)
                         return null;
@@ -262,7 +265,7 @@ public class Deficiency {
                     SubjectMapping subject = (SubjectMapping) subjects.get(j)[0];
                     tbl_stud.addCell(createSimpleCell(subject.getCode(), font5Plain, 0, false, false));
                     tbl_stud.addCell(createSimpleCell(getShortenedDetail(subject.getDescriptive_title()
-                            , 38), font5Plain, 0, false, false));
+                            , 100), font5Plain, 0, false, false));
                     Double totalUnits = 0.0;
                     if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_NSTP)) {
                         tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true, false));

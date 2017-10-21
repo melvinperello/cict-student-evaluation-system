@@ -25,6 +25,7 @@ package org.cict.evaluation.evaluator;
 
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.CurriculumSubjectMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.SubjectMapping;
@@ -45,7 +46,7 @@ public class CheckGrade extends Transaction{
     public Integer curriculumId;
     
     public String RATING_TO_CHECK = "CANCELLED";
-    private AcademicTermMapping ACADEMIC_TERM;
+//    private AcademicTermMapping ACADEMIC_TERM;
     private GradeMapping CURRENT_GRADE;
     private ArrayList<CurriculumSubjectMapping> SUBJECTS_WITH_NO_GRADE;
     private ArrayList<ArrayList<SubjectMapping>> FILTERED_SUBJECTS;
@@ -68,14 +69,14 @@ public class CheckGrade extends Transaction{
     @Override
     protected boolean transaction() {
         // get the current academic program map
-        this.ACADEMIC_TERM = Mono.orm()
-                .newSearch(Database.connect().academic_term())
-                .eq("id", Evaluator.instance().getCurrentAcademicTerm().getId())
-                .active()
-                .first();
+//        this.ACADEMIC_TERM = Mono.orm()
+//                .newSearch(Database.connect().academic_term())
+//                .eq(DB.academic_term().id, Evaluator.instance().getCurrentAcademicTerm().getId())
+//                .active()
+//                .first();
         int flag = 1;
         int year = this.studentYearLevel;
-        int semester = this.ACADEMIC_TERM.getSemester_regular();
+        int semester = Evaluator.instance().getCurrentAcademicTerm().getSemester_regular();
         this.SUBJECTS_WITH_NO_GRADE = new ArrayList<>();
         while(flag != 0){
             if(semester == 1){
@@ -105,15 +106,15 @@ public class CheckGrade extends Transaction{
         //get list of subjects of the student's curriculum
         List studentSubjects = Mono.orm()
                 .newSearch(Database.connect().curriculum_subject())
-                .eq("CURRICULUM_id", this.curriculumId)
-                .eq("year", year)
-                .eq("semester", semester)
+                .eq(DB.curriculum_subject().CURRICULUM_id, this.curriculumId)
+                .eq(DB.curriculum_subject().year, year)
+                .eq(DB.curriculum_subject().semester, semester)
                 .active();
         for (Object studentSubject : studentSubjects) {
             CurriculumSubjectMapping currentSubject = (CurriculumSubjectMapping) studentSubject;
             this.CURRENT_GRADE = Mono.orm().newSearch(Database.connect().grade())
-                    .eq("STUDENT_id", this.studentId)
-                    .eq("SUBJECT_id", currentSubject.getSUBJECT_id())
+                    .eq(DB.grade().STUDENT_id, this.studentId)
+                    .eq(DB.grade().SUBJECT_id, currentSubject.getSUBJECT_id())
                     .active()
                     .first();
             if(this.CURRENT_GRADE == null || this.CURRENT_GRADE.getRating().equalsIgnoreCase(RATING_TO_CHECK)){
@@ -147,7 +148,7 @@ public class CheckGrade extends Transaction{
                             Objects.equals(counterForSemester, currentCurriculumSubject.getSemester())){
                         SubjectMapping subject = Mono.orm()
                                 .newSearch(Database.connect().subject())
-                                .eq("id", currentCurriculumSubject.getSUBJECT_id())
+                                .eq(DB.subject().id, currentCurriculumSubject.getSUBJECT_id())
                                 .active()
                                 .first();
                         String yearSem = this.formatYearAndSemester(
@@ -162,10 +163,10 @@ public class CheckGrade extends Transaction{
                 }
                 if(0 != subjectsPerSemester.size())
                     this.FILTERED_SUBJECTS.add(subjectsPerSemester);
-                if(counterForSemester == 1){
+                if(counterForSemester.equals(1)){
                     counterForSemester = 2;
                 }
-                else if(counterForSemester == 2){
+                else if(counterForSemester.equals(2)){
                     counterForYearLevel += 1;
                     counterForSemester = 1;
                 }
@@ -195,9 +196,9 @@ public class CheckGrade extends Transaction{
             default:
                 break;
         }
-        if(semester == 1)
+        if(semester.equals(1))
             formatted_string += "First Semester";
-        else if(semester == 2)
+        else if(semester.equals(2))
             formatted_string += "Second Semester";
         return formatted_string;
     }

@@ -68,10 +68,11 @@ public class FetchAcademicPrograms extends Transaction {
             info.setApCreatedBy(created_by);
             
             // implementor
-            FacultyMapping implementor = Mono.orm().newSearch(Database.connect().faculty())
+            FacultyMapping implementor = (academicProgram.getImplemented_by()==null? null: Database.connect().faculty().getPrimary(academicProgram.getImplemented_by()));
+            /*Mono.orm().newSearch(Database.connect().faculty())
                     .eq(DB.faculty().id, academicProgram.getImplemented_by())
                     .execute()
-                    .first();
+                    .first();*/
 
             if (implementor != null) {
                 String implemented_by = implementor.getFirst_name() + " " + implementor.getLast_name();

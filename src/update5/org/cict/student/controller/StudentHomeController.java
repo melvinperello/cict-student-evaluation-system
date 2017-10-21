@@ -41,9 +41,11 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.SQL;
+import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -55,6 +57,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
@@ -112,6 +115,9 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     private VBox vbox_no_result;
     
     @FXML
+    private VBox vbox_home;
+    
+    @FXML
     private Label lbl_status;
     
     @FXML
@@ -121,7 +127,6 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     public void onInitialization() {
         super.bindScene(application_root);
         this.setComboBox();
-        txt_search_key_main.requestFocus();
     }
     private final String NAME = "NAME"
             , STUDENT_NUM = "STUDENT NUMBER"
@@ -149,7 +154,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         });
         super.addClickEvent(btn_home1, ()->{
             vbox_result.setVisible(false);
-            vbox_no_result.setVisible(false);
+            changeHome(vbox_home);
         });
         cmb_category_main.valueProperty().addListener((a)->{
             SELECTED_mode = cmb_category_main.getSelectionModel().getSelectedItem();
@@ -157,6 +162,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         });
         cmb_category.valueProperty().addListener((a)->{
             SELECTED_mode = cmb_category.getSelectionModel().getSelectedItem();
+            cmb_category_main.getSelectionModel().select(SELECTED_mode);
         });
         super.addClickEvent(btn_search1_main, ()->{
             onSearch();
@@ -171,9 +177,10 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     
     public void onSearch() {
         String searchWord = "";
-        if(vbox_result.isVisible())
+        if(vbox_result.isVisible()) {
             searchWord = MonoString.removeExtraSpace(txt_search_key.getText()).toUpperCase();
-        else {
+            txt_search_key_main.setText(txt_search_key.getText());
+        } else {
             searchWord = MonoString.removeExtraSpace(txt_search_key_main.getText()).toUpperCase();
             txt_search_key.setText(txt_search_key_main.getText());
         }
@@ -187,102 +194,131 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         }
         
         if(SELECTED_mode.equalsIgnoreCase(NAME)) {
-            Criterion search_for_name = SQL.or(
-                    Restrictions.ilike(DB.student().last_name, searchWord, MatchMode.ANYWHERE),
-                    Restrictions.ilike(DB.student().first_name, searchWord, MatchMode.ANYWHERE),
-                    Restrictions.ilike(DB.student().middle_name, searchWord, MatchMode.ANYWHERE));
-            fetchStudent(search_for_name, false, null, null);
+//            Criterion search_for_name = SQL.or(
+//                    Restrictions.ilike(DB.student().last_name, searchWord, MatchMode.ANYWHERE),
+//                    Restrictions.ilike(DB.student().first_name, searchWord, MatchMode.ANYWHERE),
+//                    Restrictions.ilike(DB.student().middle_name, searchWord, MatchMode.ANYWHERE));
+            fetchStudent(searchWord, false, null, null);
         } else if(SELECTED_mode.equalsIgnoreCase(STUDENT_NUM)) {
-            Criterion search_for_stud_num = SQL.or(
-                    Restrictions.ilike(DB.student().id, searchWord, MatchMode.ANYWHERE));
-            fetchStudent(search_for_stud_num, false, null, null);
+//            Criterion search_for_stud_num = SQL.or(
+//                    Restrictions.ilike(DB.student().id, searchWord, MatchMode.ANYWHERE));
+            fetchStudent(searchWord, false, null, null);
         } else if(SELECTED_mode.equalsIgnoreCase(ACAD_PROG)) {
             String[] keys = searchWord.split(" ");
             if(keys.length == 1) {
                 // assuming that it is a academic code
-                Criterion search_for_academic_program = SQL.or(
-                        Restrictions.ilike(DB.academic_program().code, searchWord, MatchMode.ANYWHERE));
-                fetchStudent(search_for_academic_program, true, null, null);
+//                Criterion search_for_academic_program = SQL.or(
+//                        Restrictions.ilike(DB.academic_program().code, searchWord, MatchMode.ANYWHERE));
+                fetchStudent(searchWord, true, null, null);
             } else if(keys.length>=2) {
                 String[] section = keys[1].split("-");
                 if(section.length==1) {
                     // assuming that the inputted text is a program code and a section name
-                    Criterion search_for_academic_program = SQL.or(
-                            Restrictions.ilike(DB.academic_program().code, keys[0], MatchMode.ANYWHERE));
-                    fetchStudent(search_for_academic_program, true, keys[1], null);
+//                    Criterion search_for_academic_program = SQL.or(
+//                            Restrictions.ilike(DB.academic_program().code, keys[0], MatchMode.ANYWHERE));
+                    fetchStudent(keys[0], true, keys[1], null);
                 } else if(section.length==2) {
-                    // assuming that the inputted text is a program code, a section name and a group
-                    Criterion search_for_academic_program = SQL.or(
-                            Restrictions.ilike(DB.academic_program().code, keys[0], MatchMode.ANYWHERE));
+//                    // assuming that the inputted text is a program code, a section name and a group
+//                    Criterion search_for_academic_program = SQL.or(
+//                            Restrictions.ilike(DB.academic_program().code, keys[0], MatchMode.ANYWHERE));
                     Integer group;
                     try {
                         group = Integer.valueOf(section[1].substring(1));
                     } catch (Exception e) {
                         group = null;
                     }
-                    fetchStudent(search_for_academic_program, true, section[0], group);
+                    fetchStudent(keys[0], true, section[0], group);
                 }
             }
         }
     }
     
     private ArrayList<StudentMapping> students = new ArrayList<>();
-    private void fetchStudent(Criterion criterion, Boolean isSearchingForAcadProgCode, String section, Integer group) {
+    private void fetchStudent(String value, Boolean isSearchingForAcadProgCode, String section, Integer group) {
         students.clear();
         FetchStudents fetch = new FetchStudents();
-        fetch.setCriterion(criterion);
+        fetch.setSearchValue(value);
         fetch.setEnrolledSelected(isEnrolledSelected);
-        fetch.isSearchingForAcadProgCode = isSearchingForAcadProgCode;
+        fetch.isSearchingForAcadProgCode(isSearchingForAcadProgCode);
         fetch.setSectionKey(section);
         fetch.setGroupKey(group);
+        
+        //
+        fetch.setSearchMode(SELECTED_mode);
         fetch.whenStarted(()->{
             vbox_no_result.setVisible(false);
             tableStudent.getChildren().clear();
+            vbox_list.setVisible(false);
         });
         fetch.whenRunning(()->{
             lbl_status.setText("Loading...");
         });
         fetch.whenSuccess(()->{
             students = fetch.getResult();
+//            vbox_result.setVisible(true);
             if(students.isEmpty()) {
                 lbl_status1.setText("No result. " + fetch.getMessage());
-                vbox_no_result.setVisible(true);
+//                vbox_no_result.setVisible(true);
+                changeResult(vbox_no_result);
             } else {
                 createStudentTable(students);
                 lbl_status1.setText("Done. Total Result Found: " + students.size());
+                if(!vbox_list.isVisible())
+                    changeResult(vbox_list);
             }
-            vbox_result.setVisible(true);
         });
         fetch.whenFailed(()->{
             lbl_status.setText("Process failed. Something went wrong. " + fetch.getMessage());
             lbl_status1.setText("Process failed. Something went wrong. " + fetch.getMessage());
-            vbox_result.setVisible(true);
+//            vbox_result.setVisible(true);
             tableStudent.getChildren().clear();
-            vbox_no_result.setVisible(true);
+//            vbox_no_result.setVisible(true);
+            changeResult(vbox_no_result);
         });
         fetch.whenCancelled(()->{
             lbl_status.setText(fetch.getMessage());
             lbl_status1.setText(fetch.getMessage());
-            vbox_result.setVisible(true);
+//            vbox_result.setVisible(true);
             tableStudent.getChildren().clear();
-            vbox_no_result.setVisible(true);
+//            vbox_no_result.setVisible(true);
+            changeResult(vbox_no_result);
         });
         fetch.whenFinished(()->{
             if(fetch.getResult()==null) {
-                vbox_no_result.setVisible(true);
+//                vbox_no_result.setVisible(true);
                 tableStudent.getChildren().clear();
                 lbl_status1.setText("No result. " + fetch.getMessage());
                 lbl_status1.setText("No result. " + fetch.getMessage());
             }
+            if(!vbox_result.isVisible())
+                changeHome(vbox_result);
         });
         fetch.setRestTime(1000);
         fetch.transact();
     }
     
+    private void changeResult(Node node) {
+        Animate.fade(node, 150, ()->{
+            vbox_list.setVisible(false);
+            vbox_no_result.setVisible(false);
+            
+            node.setVisible(true);
+        }, vbox_list, vbox_no_result);
+        
+    }
+    
+    private void changeHome(Node node) {
+        Animate.fade(node, 150, ()->{
+            vbox_home.setVisible(false);
+            vbox_result.setVisible(false);
+            
+            node.setVisible(true);
+        }, vbox_home, vbox_result);
+    }
+    
     private SimpleTable tableStudent = new SimpleTable();
     private void createStudentTable(ArrayList<StudentMapping> studentToDisplay) {
         try {
-//            Mono.fx().thread().wrap(()->{
             tableStudent.getChildren().clear();
             
             if (studentToDisplay.isEmpty()) {
@@ -296,8 +332,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             SimpleTableView simpleTableView = new SimpleTableView();
             simpleTableView.setTable(tableStudent);
             simpleTableView.setFixedWidth(true);
-                simpleTableView.setParentOnScene(vbox_list);
-//            });
+            simpleTableView.setParentOnScene(vbox_list);
         } catch (NullPointerException a) {
             a.printStackTrace();
         }
@@ -317,15 +352,10 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         Label lbl_id = searchAccessibilityText(studentRow, "id");
         Label lbl_name = searchAccessibilityText(studentRow, "name");
         Label lbl_section = searchAccessibilityText(studentRow, "section");
-//        Label lbl_college = searchAccessibilityText(studentRow, "college");
-//        Label lbl_campus = searchAccessibilityText(studentRow, "campus");
-
         lbl_id.setText(student.getId());
         String middleName = student.getMiddle_name();
         String mName = middleName==null || middleName.isEmpty()? "" : (" " + middleName);
         lbl_name.setText(student.getLast_name() + ", " + student.getFirst_name() + mName);
-//        lbl_campus.setText(student.getCampus()==null? "NOT SET" : student.getCampus());
-//        lbl_college.setText(student.getCollege()==null? "NOT SET" : student.getCollege());
         lbl_section.setText(studInfo.getSection());
         
         SimpleTableCell cellParent = new SimpleTableCell();
@@ -344,15 +374,6 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     
     private void showStudentInfo(StudentMapping currentStudent) {
         InfoStudentController controller = new InfoStudentController(currentStudent);
-//        Mono.fx().create()
-//                .setPackageName("update5.org.cict.student.layout")
-//                .setFxmlDocument("InfoStudent")
-//                .makeFX()
-//                .setController(controller)
-//                .makeScene()
-//                .makeStageWithOwner(Mono.fx().getParentStage(application_root))
-//                .stageResizeable(false)
-//                .stageShowAndWait();
         LayoutDataFX home = new LayoutDataFX(application_root, this);
         controller.setHomeFX(home);
         Pane fxRoot = Mono.fx().create()
@@ -380,11 +401,11 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         cmb_category.getItems().add("Academic Program");
         cmb_category.getSelectionModel().selectFirst();
     }
-
+    
     private class FetchStudents extends Transaction {
-        private Criterion search_key;
-        public void setCriterion(Criterion crtrn) {
-            this.search_key = crtrn;
+        private String searchValue;
+        public void setSearchValue(String value) {
+            this.searchValue = value;
         }
         
         private String section_key;
@@ -422,11 +443,19 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             this.isSearchingForAcadProgCode = is_it;
         }
         
+        private String mode;
+        public void setSearchMode(String mode) {
+            this.mode = mode;
+        }
+        
         @Override
         protected boolean transaction() {
             if(!isSearchingForAcadProgCode) {
-                students = Mono.orm().newSearch(Database.connect().student())
-                        .put(search_key)
+                Searcher searchStudent = Mono.orm()
+                        .newSearch(Database.connect().student())
+                        .pull();
+                
+                students = this.recursiveQuery(searchStudent)
                         .active(Order.asc(DB.student().last_name)).all();
                 
                 if(students==null? true: students.isEmpty()) {
@@ -435,7 +464,8 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                 }
             } else {
                 ArrayList<AcademicProgramMapping> acads = Mono.orm().newSearch(Database.connect().academic_program())
-                        .put(search_key).active().all();
+                        .put(SQL.or(Restrictions.ilike(DB.academic_program().code
+                                , (searchValue), MatchMode.ANYWHERE))).active().all();
                 if(acads==null) {
                     msg = "No academic program found with the given key.";
                     return false;
@@ -497,6 +527,29 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             return true;
         }
 
+        private Searcher recursiveQuery(Searcher searchQuery) {
+            if(mode.equalsIgnoreCase("NAME")) {
+                for (String textPart : this.searchValue.split(" ")) {
+                    if (textPart.isEmpty()) {
+                        continue;
+                    }
+                    searchQuery.put(forAllNames(textPart));
+                }
+            } else if(mode.equalsIgnoreCase("STUDENT NUMBER")) {
+                searchQuery.put(SQL
+                        .or(Restrictions.ilike(DB.student().id, (searchValue), MatchMode.ANYWHERE)));
+            }
+            return searchQuery.pull();
+        }
+
+        private Criterion forAllNames(String textPart) {
+            return SQL.or(
+                    Restrictions.ilike(DB.faculty().first_name, textPart, MatchMode.ANYWHERE),
+                    Restrictions.ilike(DB.faculty().middle_name, textPart, MatchMode.ANYWHERE),
+                    Restrictions.ilike(DB.faculty().last_name, textPart, MatchMode.ANYWHERE)
+            );
+        }
+        
         @Override
         protected void after() {
         

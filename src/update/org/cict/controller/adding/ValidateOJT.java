@@ -134,7 +134,7 @@ public class ValidateOJT {
                     } else if(studentYearLevel > temp_value.getYearLevel()) {
                         valid = true;
                     } else /* studentYearLevel == temp_value.getYearLevel() */{
-                        if(currentSemester == 2) {
+                        if(currentSemester.equals(2)) {
                             if(temp_value.getSemester() < currentSemester) {
                                 valid = true;
                             }

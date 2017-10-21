@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -28,13 +29,6 @@
             <HBox alignment="CENTER_RIGHT" layoutX="579.0" layoutY="4.0" maxWidth="1.7976931348623157E308" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0">
                <children>
                   <JFXButton fx:id="btn_home" graphicTextGap="10.0" maxWidth="150.0" minWidth="150.0" prefHeight="41.0" prefWidth="150.0" style="-fx-border-color: #fff;" styleClass="metro-nav-button" text="Back" textFill="WHITE">
-                     <graphic>
-                        <ImageView fitHeight="31.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/Back%20Arrow_32px.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -46,7 +40,11 @@
             </HBox>
          </children>
       </AnchorPane>
-      <VBox fx:id="vbox_subjects" layoutX="40.0" layoutY="94.0" prefHeight="517.0" prefWidth="1180.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-table" stylesheets="@../metro-ui-table.css" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
+      <VBox fx:id="vbox_subjects" layoutX="40.0" layoutY="94.0" prefHeight="517.0" prefWidth="1180.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-table" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
+         <stylesheets>
+            <URL value="@../metro-ui-table.css" />
+            <URL value="@../metro-row.css" />
+         </stylesheets></VBox>
       <HBox fx:id="hbox_searching" alignment="CENTER" layoutX="11.0" layoutY="250.0" prefHeight="150.0" prefWidth="1165.0" visible="false" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="9.0">
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">

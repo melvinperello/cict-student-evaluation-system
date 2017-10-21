@@ -103,10 +103,11 @@ public class FetchCurriculumInfo extends Transaction{
         /**
          * created by and date
          */
-        FacultyMapping createdByFaculty = Mono.orm().newSearch(Database.connect().faculty())
+        FacultyMapping createdByFaculty = (curriculum.getCreated_by()==null? null: Database.connect().faculty().getPrimary(curriculum.getCreated_by()));
+                /*Mono.orm().newSearch(Database.connect().faculty())
                 .eq(DB.faculty().id, curriculum.getCreated_by())
                 .active()
-                .first();
+                .first();*/
         if(createdByFaculty == null) {
             this.createdBy = "N / A";
         } else 
@@ -124,10 +125,11 @@ public class FetchCurriculumInfo extends Transaction{
             isImplemented = true;
             status = "IMPLEMENTED";
             try {
-                FacultyMapping implementedByFaculty = Mono.orm().newSearch(Database.connect().faculty())
+                FacultyMapping implementedByFaculty= (curriculum.getImplemented_by()==null? null: Database.connect().faculty().getPrimary(curriculum.getImplemented_by()));
+                /*Mono.orm().newSearch(Database.connect().faculty())
                         .eq(DB.faculty().id, curriculum.getImplemented_by())
                         .active()
-                        .first();
+                        .first();*/
                 if(implementedByFaculty == null) {
                     this.implementedBy = "N / A";
                 } else 

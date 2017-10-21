@@ -176,7 +176,6 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         cmb_rank.getItems().add("Professor I");
         cmb_rank.getItems().add("Professor II");
         cmb_rank.getItems().add("Professor III");
-//        cmb_rank.getSelectionModel().selectFirst();
         
         cmb_des.getItems().clear();
         cmb_des.getItems().add("Instructor");
@@ -186,7 +185,6 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         cmb_des.getItems().add("Department Head");
         cmb_des.getItems().add("Associate Dean");
         cmb_des.getItems().add("Dean");
-//        cmb_des.getSelectionModel().selectFirst();
         
         cmb_dept.getItems().clear();
         ArrayList<AcademicProgramMapping> acads = Mono.orm().newSearch(Database.connect().academic_program())
@@ -196,7 +194,6 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         for(AcademicProgramMapping acad: acads) {
             cmb_dept.getItems().add(acad.getCode());
         }
-//        cmb_dept.getSelectionModel().selectFirst();
     }
 
     /**
@@ -237,12 +234,12 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
     public void onEventHandling() {
 
         this.addClickEvent(btn_back, () -> {
-
+            FacultyMainController controller = homeFx.getController();
+            controller.onSearch(false);
+            
             Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                 super.replaceRoot(homeFx.getApplicationRoot());
             }, homeFx.getApplicationRoot());
-
-            homeFx.getController().onInitialization();
         });
 
         this.addClickEvent(btn_save, () -> {
@@ -323,7 +320,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
     }
 
     private void setAcc(boolean active) {
-        String title = "", btn = "", status = "";
+        String title, btn, status;
         if (active) {
             afMap.setActive(1);
             title = "Activated Successfully";

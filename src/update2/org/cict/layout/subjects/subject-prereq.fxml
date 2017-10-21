@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -32,13 +31,6 @@
                      <font>
                         <Font size="18.0" />
                      </font>
-                     <graphic>
-                        <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/Back%20Arrow_32px.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
                   </JFXButton>
                </children>
                <VBox.margin>
@@ -217,9 +209,9 @@
                   </Label>
                   <HBox alignment="CENTER_RIGHT" spacing="20.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="btn_new_prereq" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="175.0" style="-fx-background-color: #656D79; -fx-border-color: #fff;" text="New Pre-requisite" textFill="WHITE">
+                        <JFXButton fx:id="btn_new_prereq" prefHeight="41.0" prefWidth="203.0" style="-fx-border-color: #fff; -fx-pref-width: 200;" text="New Pre-requisite" textFill="WHITE">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="18.0" />
                            </font>
                            <graphic>
                               <ImageView fitHeight="23.0" fitWidth="27.0" opacity="0.66" pickOnBounds="true" preserveRatio="true">
@@ -228,10 +220,10 @@
                                  </image>
                               </ImageView>
                            </graphic>
-                        </Button>
-                        <Button fx:id="btn_new_coreq" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="173.0" style="-fx-background-color: #656D79; -fx-border-color: #fff;" text="New Co-requisite" textFill="WHITE">
+                        </JFXButton>
+                        <JFXButton fx:id="btn_new_coreq" layoutX="10.0" layoutY="15.0" prefHeight="41.0" prefWidth="203.0" style="-fx-border-color: #fff; -fx-pref-width: 200;" text="New Co-requisite" textFill="WHITE">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="18.0" />
                            </font>
                            <graphic>
                               <ImageView fitHeight="23.0" fitWidth="27.0" opacity="0.66" pickOnBounds="true" preserveRatio="true">
@@ -240,7 +232,7 @@
                                  </image>
                               </ImageView>
                            </graphic>
-                        </Button>
+                        </JFXButton>
                      </children>
                   </HBox>
                </children>
@@ -280,5 +272,6 @@
    <stylesheets>
       <URL value="@../metro-ui.css" />
       <URL value="@../metro-ui-table.css" />
+      <URL value="@../metro-row.css" />
    </stylesheets>
 </VBox>

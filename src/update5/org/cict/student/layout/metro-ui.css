@@ -2,11 +2,6 @@
     -fx-text-fill: #FFFFFF;
 }
 
-/*
-This CSS is for academic term settings
-Created 10-06-2017
-*/
-
 /* For Background */
 .metro-base-color{
     -fx-background-color:  #414852;
@@ -55,4 +50,8 @@ Created 10-06-2017
 
 .metro-combo-box{
     -fx-background-color: #FFFFFF;
+}
+
+.button:hover {
+    -fx-background-color: #10A8AB;
 }

@@ -28,13 +28,13 @@ import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
-import app.lazy.models.StudentMapping;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
@@ -43,11 +43,14 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.SQL;
+import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -61,6 +64,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.text.WordUtils;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Criterion;
@@ -209,7 +213,6 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         cmb_rank.getItems().add("Professor I");
         cmb_rank.getItems().add("Professor II");
         cmb_rank.getItems().add("Professor III");
-//        cmb_rank.getSelectionModel().selectFirst();
         
         cmb_des.getItems().clear();
         cmb_des.getItems().add("Instructor");
@@ -219,7 +222,6 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         cmb_des.getItems().add("Department Head");
         cmb_des.getItems().add("Associate Dean");
         cmb_des.getItems().add("Dean");
-//        cmb_des.getSelectionModel().selectFirst();
         
         cmb_dept.getItems().clear();
         ArrayList<AcademicProgramMapping> acads = Mono.orm().newSearch(Database.connect().academic_program())
@@ -229,7 +231,6 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         for(AcademicProgramMapping acad: acads) {
             cmb_dept.getItems().add(acad.getCode());
         }
-//        cmb_dept.getSelectionModel().selectFirst();
     }
 
     @Override
@@ -247,17 +248,17 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
          * New Faculty
          */
         this.addClickEvent(btn_new_faculty, () -> {
-            vbox_no_found.setVisible(false);
-            vbox_no_found1.setVisible(false);
             txt_bulsu_id.setText("");
             txt_firstname.setText("");
             txt_lastname.setText("");
             txt_middlename.setText("");
             cmb_rank.getSelectionModel().select(null);
             cmb_des.getSelectionModel().select(-1);
-//            cmb_dept.getSelectionModel().select(null);
-            anchor_new_faculty.setVisible(true);
             this.hbox_tools.setDisable(true);
+//            vbox_no_found.setVisible(false);
+//            vbox_no_found1.setVisible(false);
+//            anchor_new_faculty.setVisible(true);
+            changeView(anchor_new_faculty);
         });
 
         /**
@@ -271,24 +272,29 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
          * Cancel creation.
          */
         this.addClickEvent(btn_back_new, () -> {
-            anchor_new_faculty.setVisible(false);
+//            vbox_list.setVisible(false);
             //
             this.hbox_tools.setDisable(false);
             this.onSortChanged();
         });
 
         this.addClickEvent(btn_search, () -> {
-            onSearch();
+            onSearch(true);
         });
 
         Mono.fx().key(KeyCode.ENTER).release(application_root, () -> {
-            onSearch();
+            onSearch(true);
         });
     }
     
+    private void requestFocus(Node control) {
+        Stage stage = Mono.fx().getParentStage(control);
+        stage.requestFocus();
+        control.requestFocus();
+    }
+    
     private void onSortChanged(){
-        vbox_no_found.setVisible(false);
-        anchor_new_faculty.setVisible(false);
+        vbox_list.setVisible(false);
         this.hbox_tools.setDisable(false);
         if (cmb_sort.getSelectionModel().getSelectedIndex() == 1) {
             message = "No inactive faculty found.";
@@ -297,118 +303,6 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             message = "No active faculty found.";
             createFacultyTable(activeFaculty);
         }
-    }
-
-    private void onSearch() {
-        String key = MonoString.removeExtraSpace(txt_search.getText().toUpperCase());
-        if (key == null) {
-            key = "";
-        }
-        if (key.isEmpty()) {
-            if (cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
-                createFacultyTable(activeFaculty);
-            } else {
-                createFacultyTable(deactivatedFaculty);
-            }
-            return;
-        }
-        ArrayList<FacultyInformation> temp_search;
-        if (cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
-            temp_search = search(key, true);
-        } else {
-            temp_search = search(key, false);
-        }
-        if(temp_search==null || temp_search.isEmpty()) {
-            vbox_no_found.setVisible(true);
-            vbox_list.setVisible(false);
-        }
-        createFacultyTable(temp_search);
-    }
-
-    private ArrayList<FacultyInformation> search(String key, boolean isActive) {
-        ArrayList<FacultyInformation> container = new ArrayList<>();
-        ArrayList<FacultyInformation> temp_search = new ArrayList<>();
-        String prefix = "name";
-        String[] str = key.split(" ");
-        if (str[0].equalsIgnoreCase("ID")) {
-            prefix = "id";
-        } else if (str[0].equalsIgnoreCase("department")
-                || str[0].equalsIgnoreCase("dept")) {
-            prefix = "dept";
-        }
-        ArrayList<FacultyMapping> facultyResults;
-        if (prefix.equalsIgnoreCase("name")) {
-            Criterion c = SQL.or(
-                Restrictions.ilike(DB.faculty().last_name, key, MatchMode.ANYWHERE),
-                Restrictions.ilike(DB.faculty().first_name, key, MatchMode.ANYWHERE),
-                Restrictions.ilike(DB.faculty().middle_name, key, MatchMode.ANYWHERE));
-            facultyResults = Mono.orm().newSearch(Database.connect().faculty())
-                    .put(c)
-                    .execute().all();
-            if(facultyResults==null) {
-                System.out.println("No found in search.");
-                return temp_search;
-            }
-            for(FacultyMapping facultyResult: facultyResults) {
-                FacultyInformation info = new FacultyInformation(facultyResult);
-                if(isActive) {
-                    if(info.isAccountActived()) {
-                        temp_search.add(info);
-                    }
-                } else {
-                    if(!info.isAccountActived()) {
-                        temp_search.add(info);
-                    }
-                }
-            }
-        } else if (prefix.equalsIgnoreCase("ID")) {
-            if(str[1]==null)
-                return temp_search;
-            Criterion c = SQL.or(Restrictions.ilike(DB.faculty().bulsu_id, (str[1]), MatchMode.ANYWHERE));
-            facultyResults = Mono.orm().newSearch(Database.connect().faculty())
-                    .put(c)
-                    .execute().all();
-            if(facultyResults==null) {
-                System.out.println("No found in search.");
-                return temp_search;
-            }
-            for(FacultyMapping facultyResult: facultyResults) {
-                FacultyInformation info = new FacultyInformation(facultyResult);
-                if(isActive) {
-                    if(info.isAccountActived()) {
-                        temp_search.add(info);
-                    }
-                } else {
-                    if(!info.isAccountActived()) {
-                        temp_search.add(info);
-                    }
-                }
-            }
-        } else if (prefix.equalsIgnoreCase("dept")) {
-
-            if(isActive) 
-                container = activeFaculty;
-            else
-                container = deactivatedFaculty;
-            for (FacultyInformation info : container) { 
-                /**
-                 * Null Pointer when Department is Null.
-                 */
-                try {
-                    if (info.getDepartment().equalsIgnoreCase(str[1])) {
-                        temp_search.add(info);
-                    }
-                } catch (Exception e) {
-                    /**
-                     * Index Out Of Bound when only "dept" is inputted
-                     */
-                    if ( /*str[1].equalsIgnoreCase("NONE")*/ info.getDepartment() == null) {
-                        temp_search.add(info);
-                    }
-                }
-            }
-        }
-        return temp_search;
     }
 
     private void onBackToHome() {
@@ -420,6 +314,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 
     public void fetchFaculty() {
         FetchFacultyInfo ffInfo = new FetchFacultyInfo();
+        vbox_list.setVisible(false);
         ffInfo.setOnSuccess(onSuccess -> {
             activeFaculty = ffInfo.getActiveFaculty();
             deactivatedFaculty = ffInfo.getDeactivatedFaculty();
@@ -436,19 +331,14 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
     private String message = null;
     private void createFacultyTable(ArrayList<FacultyInformation> facultyToDisplay) {
         try {
-            vbox_list.setVisible(true);
-            vbox_no_found.setVisible(false);
             tableFaculty.getChildren().clear();
-            vbox_no_found1.setVisible(false);
             if (facultyToDisplay.isEmpty()) {
                 System.out.println("EMPTY");
                 if(message==null) {
-                    vbox_no_found.setVisible(true);
-                    vbox_list.setVisible(false);
+                    changeView(vbox_no_found);
                 } else {
                     lbl_no_found1.setText(message);
-                    vbox_no_found1.setVisible(true);
-                    vbox_list.setVisible(false);
+                    changeView(vbox_no_found1);
                     message = null;
                 }
                 return;
@@ -456,13 +346,14 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             for (FacultyInformation currentFacultyInfo : facultyToDisplay) {
                 createRow(currentFacultyInfo, tableFaculty);
             }
-
+            
             SimpleTableView simpleTableView = new SimpleTableView();
             simpleTableView.setTable(tableFaculty);
             simpleTableView.setFixedWidth(true);
             simpleTableView.setParentOnScene(vbox_list);
+            changeView(vbox_list);
         } catch (NullPointerException a) {
-
+            a.printStackTrace();
         }
     }
 
@@ -749,5 +640,197 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         }
         txt_rank.setText(faculty.getRank());
         txt_designation.setText(faculty.getDesignation());
+    }
+    
+    private void changeView(Node showThis) {
+        Animate.fade(showThis, 150, ()->{
+            vbox_no_found.setVisible(false);
+            vbox_no_found1.setVisible(false);
+            anchor_new_faculty.setVisible(false);
+            vbox_list.setVisible(false);
+            showThis.setVisible(true);
+        }, vbox_no_found, vbox_no_found1, anchor_new_faculty, vbox_list);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private String NAME = "NAME", ID = "ID", DEPT = "DEPT";
+    public void onSearch(boolean focus) {
+        if(focus)
+            this.requestFocus(txt_search);
+        String key = MonoString.removeExtraSpace(txt_search.getText().toUpperCase());
+        key = (key==null? "" : key);
+        if (key.isEmpty()) {
+            if (cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
+                createFacultyTable(activeFaculty);
+            } else {
+                createFacultyTable(deactivatedFaculty);
+            }
+            return;
+        }
+        ArrayList<FacultyInformation> temp_search;
+        if (cmb_sort.getSelectionModel().getSelectedIndex() == 0) {
+            search(key, true);
+        } else {
+            search(key, false);
+        }
+    }
+
+    private void search(String key, boolean isActive) {
+        String[] str = key.split(" ");
+        String prefix = str[0];
+        ArrayList<FacultyMapping> facultyResults = null;
+        if (prefix.equalsIgnoreCase(ID)) {
+            try {
+                onSearchFaculty((str[1]==null? "": str[1]), isActive, ID);
+            } catch (IndexOutOfBoundsException e) {
+                changeView(vbox_no_found);
+            }
+        } else if (prefix.equalsIgnoreCase(DEPT) || prefix.equalsIgnoreCase("DEPARTMENT")) {
+            try {
+                onSearchFaculty((str[1]==null? "" : str[1]), isActive, DEPT);
+            } catch (IndexOutOfBoundsException e) {
+                changeView(vbox_no_found);
+            }
+        } else
+            onSearchFaculty(key, isActive, NAME);
+    }
+
+    //------------------------------
+    private void onSearchFaculty(String key, boolean isActive, String mode) {
+        SearchFaculty searchTx = new SearchFaculty();
+        searchTx.setSearchValue(key.trim());
+        searchTx.setSearchMode(mode);
+        searchTx.whenStarted(() -> {
+            this.btn_search.setDisable(true);
+        });
+        searchTx.whenCancelled(() -> {
+            changeView(vbox_no_found);
+        });
+        searchTx.whenFailed(() -> {
+            changeView(vbox_no_found);
+        });
+        searchTx.whenSuccess(() -> {
+            ArrayList<FacultyInformation> temp_search = new ArrayList<>();
+            ArrayList<FacultyMapping> facultyResults = searchTx.getFacultyList();
+            if(facultyResults==null) {
+                System.out.println("No found in search.");
+                changeView(vbox_no_found);
+                return;
+            }
+            for(FacultyMapping facultyResult: facultyResults) {
+                FacultyInformation info = new FacultyInformation(facultyResult);
+                if(isActive) {
+                    if(info.isAccountActived()) {
+                        temp_search.add(info);
+                    }
+                } else {
+                    if(!info.isAccountActived()) {
+                        temp_search.add(info);
+                    }
+                }
+            }
+            if(temp_search.isEmpty()) {
+                changeView(vbox_no_found);
+                return;
+            }
+            createFacultyTable(temp_search);
+            changeView(vbox_list);
+        });
+        searchTx.whenFinished(() -> {
+            Stage stage = Mono.fx().getParentStage(application_root);
+            stage.requestFocus();
+            txt_search.requestFocus();
+            this.btn_search.setDisable(false);
+        });
+
+        searchTx.transact();
+    }
+    
+    class SearchFaculty extends Transaction {
+
+        private String searchValue;
+        public void setSearchValue(String searchValue) {
+            this.searchValue = searchValue;
+        }
+
+        private String mode;
+        public void setSearchMode(String mode) {
+            this.mode = mode;
+        }
+        
+        protected ArrayList<FacultyMapping> facultyList = new ArrayList<>();
+        public ArrayList<FacultyMapping> getFacultyList() {
+            return facultyList;
+        }
+
+        @Override
+        protected boolean transaction() {
+            Searcher searchFaculty = Mono.orm()
+                    .newSearch(Database.connect().faculty())
+                    .pull();
+            facultyList = this.recursiveQuery(searchFaculty)
+                    .execute()
+                    .all();
+            return true;
+        }
+
+        private Searcher recursiveQuery(Searcher searchQuery) {
+            if(mode.equalsIgnoreCase("NAME")) {
+                for (String textPart : this.searchValue.split(" ")) {
+                    if (textPart.isEmpty()) {
+                        continue;
+                    }
+                    searchQuery.put(forAllNames(textPart));
+                }
+            } else if(mode.equalsIgnoreCase("ID")) {
+                searchQuery.put(SQL.or(Restrictions.ilike(DB.faculty().bulsu_id, (searchValue), MatchMode.ANYWHERE)));
+            } else if(mode.equalsIgnoreCase("DEPT")) {
+                searchQuery.put(SQL.or(Restrictions.ilike(DB.faculty().department, (searchValue), MatchMode.ANYWHERE)));
+            }
+            return searchQuery.pull();
+        }
+
+        private Criterion forAllNames(String textPart) {
+            return SQL.or(
+                    Restrictions.ilike(DB.faculty().first_name, textPart, MatchMode.ANYWHERE),
+                    Restrictions.ilike(DB.faculty().middle_name, textPart, MatchMode.ANYWHERE),
+                    Restrictions.ilike(DB.faculty().last_name, textPart, MatchMode.ANYWHERE)
+            );
+        }
+
+        @Override
+        protected void after() {
+        
+        }
+
     }
 }

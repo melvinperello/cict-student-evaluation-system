@@ -199,11 +199,11 @@
             </VBox>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <AnchorPane layoutX="14.0" layoutY="76.0" prefHeight="318.0" prefWidth="445.0" style="-fx-border-color: #fff; -fx-border-width: 2;">
+                  <AnchorPane layoutX="14.0" layoutY="76.0" prefHeight="318.0" prefWidth="445.0" style="-fx-border-color: #fff; -fx-border-width: 2;" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="76.0">
                      <children>
                         <Label layoutX="14.0" layoutY="22.0" text="Subject Creation" textFill="WHITE">
                            <font>
-                              <Font size="22.0" />
+                              <Font size="31.0" />
                            </font>
                            <graphic>
                               <ImageView fitHeight="34.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
@@ -213,52 +213,58 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label layoutX="33.0" layoutY="72.0" text="This requires all the given fields to be filled up." textFill="WHITE">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@img/Next%20page_32px.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Label>
-                        <Label layoutX="33.0" layoutY="104.0" prefHeight="53.0" prefWidth="393.0" text="A subject will be considered as existing if all the given details are equal with another subject." textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@img/Next%20page_32px.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Label>
-                        <Label layoutX="34.0" layoutY="157.0" prefHeight="53.0" prefWidth="393.0" text="Only subject with a type of Major, Internship and Capstone will gain a subtype." textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@img/Next%20page_32px.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Label>
-                        <Label layoutX="64.0" layoutY="215.0" prefHeight="67.0" prefWidth="366.0" text="A subject with an implemented curriculum will no longer be altered or edited. If a detail needs to be updated, adding a new subject is a must." textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
-                        <ImageView fitHeight="25.0" fitWidth="26.0" layoutX="35.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/Next%20page_32px.png" />
-                           </image>
-                        </ImageView>
+                        <VBox layoutX="33.0" layoutY="72.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="72.0">
+                           <children>
+                              <Label maxWidth="1.7976931348623157E308" prefHeight="39.0" prefWidth="398.0" text="This requires all the given fields to be filled up." textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@img/Next%20page_32px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                              <Label maxWidth="1.7976931348623157E308" prefHeight="67.0" prefWidth="350.0" text="A subject will be considered as existing if all the given details are equal with another subject." textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@img/Next%20page_32px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                              <Label maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="393.0" text="Only subject with a type of Major, Internship and Capstone will gain a subtype." textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@img/Next%20page_32px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                              <Label maxWidth="1.7976931348623157E308" prefHeight="67.0" prefWidth="366.0" text="A subject with an implemented curriculum will no longer be altered or edited. If a detail needs to be updated, adding a new subject is a must." textFill="WHITE" wrapText="true" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@img/Next%20page_32px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                           </children>
+                        </VBox>
                      </children>
                   </AnchorPane>
                   <JFXButton fx:id="btn_close" alignment="CENTER" contentDisplay="CENTER" layoutX="420.0" layoutY="1.0" text=" " textAlignment="CENTER" visible="false">
@@ -270,17 +276,10 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
-                  <JFXButton fx:id="btn_back" layoutX="290.0" layoutY="21.0" prefHeight="41.0" prefWidth="169.0" style="-fx-border-color: #fff;" text="Back" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="17.0">
+                  <JFXButton fx:id="btn_back" layoutX="290.0" layoutY="21.0" prefHeight="41.0" prefWidth="169.0" style="-fx-border-color: #fff;" styleClass="metro-nav-button" text="Back" textFill="WHITE" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="17.0">
                      <font>
                         <Font size="18.0" />
                      </font>
-                     <graphic>
-                        <ImageView fitHeight="29.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/Back%20Arrow_32px.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
                   </JFXButton>
                </children>
             </AnchorPane>

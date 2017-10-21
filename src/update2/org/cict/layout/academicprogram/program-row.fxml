@@ -62,6 +62,7 @@
    <stylesheets>
       <URL value="@../metro-ui-table.css" />
       <URL value="@../metro-ui.css" />
+      <URL value="@../metro-row.css" />
    </stylesheets>
    <styleClass>
       <String fx:value="metro-row" />

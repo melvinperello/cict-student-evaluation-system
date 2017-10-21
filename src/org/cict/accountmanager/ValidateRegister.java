@@ -24,6 +24,7 @@
 package org.cict.accountmanager;
 
 import app.lazy.models.AccountFacultyMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import com.jhmvin.Mono;
@@ -69,7 +70,7 @@ public class ValidateRegister extends Transaction{
         //check if bulsu_id exist
         this.faculty = Mono.orm()
                 .newSearch(Database.connect().faculty())
-                .eq("bulsu_id", this.bulsuId)
+                .eq(DB.faculty().bulsu_id, this.bulsuId)
                 .execute()
                 .first();
         if(this.faculty == null){
@@ -80,7 +81,7 @@ public class ValidateRegister extends Transaction{
         //check username if exist
         this.accountFaculty = Mono.orm()
                 .newSearch(Database.connect().account_faculty())
-                .eq("username", this.username)
+                .eq(DB.account_faculty().username, this.username)
                 .execute()
                 .first();
         
@@ -92,7 +93,7 @@ public class ValidateRegister extends Transaction{
         //check if faculty already have an account
         this.accountFaculty = Mono.orm()
                 .newSearch(Database.connect().account_faculty())
-                .eq("FACULTY_id", this.faculty.getId())
+                .eq(DB.account_faculty().FACULTY_id, this.faculty.getId())
                 .execute()
                 .first();
         if(this.accountFaculty != null){
@@ -114,7 +115,7 @@ public class ValidateRegister extends Transaction{
                     .connect()
                     .account_faculty()
                     .insert(this.accountFaculty);
-            if( i != -1) {
+            if(!i.equals(-1)) {
                 authenticatorMessage = "Congratulations! "
                         + "Your account is now available for use.";
                 this.saved = true;

@@ -19,13 +19,6 @@
                </font>
             </Label>
             <JFXButton fx:id="btn_home" graphicTextGap="10.0" maxWidth="150.0" minWidth="150.0" prefHeight="42.0" prefWidth="150.0" style="-fx-border-color: #fff;" styleClass="metro-nav-button" text="Home" textFill="WHITE">
-               <graphic>
-                  <ImageView fitHeight="27.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../res/img/Dog%20House_52px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <font>
                   <Font size="15.0" />
                </font>
@@ -64,7 +57,7 @@
             </ImageView>
          </graphic>
       </Label>
-      <JFXButton fx:id="btn_new_acad" layoutX="109.0" layoutY="298.0" prefHeight="48.0" prefWidth="290.0" style="-fx-border-color: #fff;" text="Create New Academic Program" textFill="WHITE">
+      <JFXButton fx:id="btn_new_acad" layoutX="109.0" layoutY="298.0" prefHeight="48.0" prefWidth="296.0" style="-fx-border-color: #fff;" text="Create New Academic Program" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>
@@ -93,7 +86,7 @@
             </ImageView>
          </graphic>
       </Label>
-      <JFXButton fx:id="btn_view_all_acad" layoutX="425.0" layoutY="298.0" prefHeight="48.0" prefWidth="266.0" style="-fx-border-color: #fff;" text="View All Academic Program" textFill="WHITE">
+      <JFXButton fx:id="btn_view_all_acad" layoutX="425.0" layoutY="298.0" prefHeight="48.0" prefWidth="296.0" style="-fx-border-color: #fff;" text="View All Academic Program" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>
@@ -127,7 +120,7 @@
             <Font size="17.0" />
          </font>
       </JFXButton>
-      <JFXButton fx:id="btn_view_all_subj" layoutX="428.0" layoutY="516.0" prefHeight="48.0" prefWidth="266.0" style="-fx-border-color: #fff;" text="View All Subject" textFill="WHITE">
+      <JFXButton fx:id="btn_view_all_subj" layoutX="428.0" layoutY="516.0" prefHeight="48.0" prefWidth="296.0" style="-fx-border-color: #fff;" text="View All Subject" textFill="WHITE">
          <font>
             <Font size="17.0" />
          </font>

@@ -41,6 +41,7 @@ import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
 import static org.cict.evaluation.evaluator.PrintChecklist.SAVE_DIRECTORY;
 import org.cict.reports.ReportsDirectory;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -68,7 +69,7 @@ public class PrintDeficiency extends Transaction {
         if (student.getHas_profile() == 1) {
             StudentProfileMapping spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
-                    .active().first();
+                    .active(Order.desc(DB.student_profile().id)).first();
             String hNum = spMap.getHouse_no(),
                     brgy = spMap.getBrgy(),
                     city = spMap.getCity(),

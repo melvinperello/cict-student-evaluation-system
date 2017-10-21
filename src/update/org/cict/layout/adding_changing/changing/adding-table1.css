@@ -6,7 +6,7 @@
 }
 
 .simple-table-row:hover .simple-table-cell {
-    -fx-background-color: #727272;
+    -fx-background-color: #4567C4;
     -fx-text-fill: white;
 }
 

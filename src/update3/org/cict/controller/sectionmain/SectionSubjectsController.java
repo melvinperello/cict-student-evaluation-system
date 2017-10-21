@@ -50,10 +50,8 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
-import com.melvin.mono.fx.events.MonoClick;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -62,7 +60,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
@@ -73,6 +70,7 @@ import update3.org.cict.ChoiceRange;
 import update3.org.cict.scheduling.ScheduleConstants;
 import update3.org.cict.SectionConstants;
 import update3.org.cict.controller.sectionmain.deltesection.DeleteSectionTransaction;
+import update3.org.cict.layout.sectionmain.RowSectionSubject;
 import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
@@ -1088,21 +1086,26 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             row.setRowHeight(50.0);
 
             // get contents
-            HBox rowSectionSubject = (HBox) Mono.fx().create()
-                    .setPackageName("update3.org.cict.layout.sectionmain")
-                    .setFxmlDocument("row-section-subject")
-                    .makeFX()
-                    .pullOutLayout();
+//            HBox rowSectionSubject = (HBox) Mono.fx().create()
+//                    .setPackageName("update3.org.cict.layout.sectionmain")
+//                    .setFxmlDocument("row-section-subject")
+//                    .makeFX()
+//                    .pullOutLayout();
+            RowSectionSubject rowFx = M.load(RowSectionSubject.class);
 
-            Label lbl_subject_code = super.searchAccessibilityText(rowSectionSubject, "lbl_subject_code");
-            Label lbl_count = super.searchAccessibilityText(rowSectionSubject, "lbl_count");
-            Label lbl_instructor = super.searchAccessibilityText(rowSectionSubject, "lbl_instructor");
+//            Label lbl_subject_code = super.searchAccessibilityText(rowSectionSubject, "lbl_subject_code");
+//            Label lbl_count = super.searchAccessibilsearchAccessibilityTextityText(rowSectionSubject, "lbl_count");
+//            Label lbl_instructor = super.searchAccessibilityText(rowSectionSubject, "lbl_instructor");
+            Label lbl_subject_code = rowFx.getLbl_code();
+            Label lbl_count = rowFx.getLbl_count();
+            Label lbl_instructor = rowFx.getLbl_instructor();
 
             lbl_subject_code.setText(sectionSubject.subject.getCode());
             lbl_count.setText(sectionSubject.studentCount);
             lbl_instructor.setText(sectionSubject.instructorName);
 
-            JFXButton btn_information = super.searchAccessibilityText(rowSectionSubject, "btn_information");
+//            JFXButton btn_information = super.searchAccessibilityText(rowSectionSubject, "btn_information");
+            JFXButton btn_information = rowFx.getBtn_info();
             /**
              *
              */
@@ -1114,7 +1117,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
-            cellParent.setContentAsPane(rowSectionSubject);
+            cellParent.setContentAsPane(rowFx.getApplicationRoot());
 
             row.addCell(cellParent);
 

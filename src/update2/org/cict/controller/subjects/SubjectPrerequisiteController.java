@@ -91,10 +91,10 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
     private Label lbl_description;
 
     @FXML
-    private Button btn_new_prereq;
+    private JFXButton btn_new_prereq;
 
     @FXML
-    private Button btn_new_coreq;
+    private JFXButton btn_new_coreq;
     
     @FXML
     private VBox vbox_subjects;

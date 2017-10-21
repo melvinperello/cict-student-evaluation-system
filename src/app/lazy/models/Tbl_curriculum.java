@@ -2,7 +2,7 @@
 // SQL_table: curriculum
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 16, 2017 07:52:08 PM
+// Created: Oct 21, 2017 03:55:52 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -34,5 +34,6 @@ public final String removed_by = "removed_by";
 public final String implemented = "implemented";
 public final String implementation_date = "implementation_date";
 public final String implemented_by = "implemented_by";
+public final String obsolete_term = "obsolete_term";
 public final String active = "active";
 }

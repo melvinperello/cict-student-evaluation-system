@@ -1,0 +1,10 @@
+
+.metro-row {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-style: dashed;
+}
+
+.metro-row:hover {
+    -fx-background-color: #1F253D;
+    -fx-text-fill: white;
+}

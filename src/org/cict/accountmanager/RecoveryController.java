@@ -233,17 +233,7 @@ public class RecoveryController extends SceneFX implements ControllerFX{
     }
     
     public void onShowLogin() {
-//        Mono.fx().getParentStage(this.btn_Cancel).close();
         LoginController controller = new LoginController();
-//        Mono.fx().create()
-//                .setPackageName("org.cict.authentication")
-//                .setFxmlDocument("Login")
-//                .makeFX()
-//                .setController(controller)
-//                .makeScene()
-//                .makeStage()
-//                .stageResizeable(false)
-//                .stageShow();
         Pane pane = Mono.fx().create()
                 .setPackageName("org.cict.authentication")
                 .setFxmlDocument("Login")

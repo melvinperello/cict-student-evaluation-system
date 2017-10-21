@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -11,9 +12,9 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="511.0" prefWidth="1000.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="511.0" prefWidth="1000.0" style="-fx-background-color: #001E4C;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="49.0" prefWidth="1000.0" style="-fx-background-color: #66A6FE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="49.0" prefWidth="1000.0" style="-fx-background-color: #4567C4;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" text="CHANGING SUBJECT" textFill="WHITE" AnchorPane.topAnchor="10.0">
                <font>
@@ -47,13 +48,13 @@
                               </ImageView>
                               <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
                                  <children>
-                                    <Label text="No Subject Found" wrapText="true">
+                                    <Label text="No Subject Found" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="System Bold" size="28.0" />
                                        </font>
                                     </Label>
-                                    <Line endX="340.0" startX="-100.0" />
-                                    <Label text="No subject result available for changing." wrapText="true">
+                                    <Line endX="340.0" startX="-100.0" stroke="WHITE" />
+                                    <Label text="No subject result available for changing." textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -65,7 +66,7 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <HBox fx:id="hbox_search" alignment="CENTER" prefHeight="150.0" prefWidth="1000.0" style="-fx-background-color: #fff;" AnchorPane.topAnchor="100.0">
+                        <HBox fx:id="hbox_search" alignment="CENTER" prefHeight="150.0" prefWidth="1000.0" style="-fx-background-color: #fff; -fx-background-radius: 50;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -99,7 +100,11 @@
                   </AnchorPane>
                   <AnchorPane fx:id="anchor_view" prefHeight="452.0" prefWidth="1000.0">
                      <children>
-                        <VBox fx:id="vbox_subjectList" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../adding/adding-table.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                        <VBox fx:id="vbox_subjectList" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0">
+                           <stylesheets>
+                              <URL value="@../adding/adding-table.css" />
+                              <URL value="@../metro-ui-table.css" />
+                           </stylesheets></VBox>
                      </children>
                   </AnchorPane>
                </children>

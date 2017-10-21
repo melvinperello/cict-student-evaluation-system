@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -63,7 +64,7 @@
             <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
          </padding>
       </HBox>
-      <VBox fx:id="vbox_list" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="515.0" prefWidth="927.0" styleClass="metro-table" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" VBox.vgrow="ALWAYS">
+      <VBox fx:id="vbox_list" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="515.0" prefWidth="927.0" styleClass="metro-table" VBox.vgrow="ALWAYS">
          <padding>
             <Insets bottom="5.0" left="20.0" right="20.0" />
          </padding>
@@ -85,18 +86,15 @@
             </Label>
          </children>
          <VBox.margin>
-            <Insets bottom="10.0" left="20.0" right="20.0" />
-         </VBox.margin></VBox>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="15.0" />
+         </VBox.margin>
+         <stylesheets>
+            <URL value="@../metro-ui-table.css" />
+            <URL value="@../metro-row.css" />
+         </stylesheets></VBox>
       <VBox alignment="CENTER_RIGHT">
          <children>
-            <JFXButton fx:id="btn_back" style="-fx-border-color: #fff;" text="Back" textFill="WHITE">
-               <graphic>
-                  <ImageView fitHeight="53.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../subjects/img/Back%20Arrow_32px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
+            <JFXButton fx:id="btn_back" style="-fx-border-color: #fff;" styleClass="metro-nav-button" text="Back" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font>

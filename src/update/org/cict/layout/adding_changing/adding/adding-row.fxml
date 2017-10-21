@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" styleClass="metro-row" stylesheets="@../metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER" style="-fx-background-color: #E55937;">
+      <VBox alignment="CENTER">
          <children>
             <ImageView accessibleText="img_row_extension" fitHeight="46.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -36,7 +36,7 @@
          <children>
             <HBox alignment="CENTER_RIGHT" spacing="5.0">
                <children>
-                  <VBox alignment="CENTER" style="-fx-background-color: #59C0ED;">
+                  <VBox alignment="CENTER">
                      <children>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -49,13 +49,19 @@
                            </font>
                         </Label>
                      </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
                   </VBox>
                   <Label accessibleText="lec" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="42.0" text="3.0">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <VBox alignment="CENTER" style="-fx-background-color: #FDD030;">
+                  <VBox alignment="CENTER">
                      <children>
                         <ImageView fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -68,6 +74,9 @@
                            </font>
                         </Label>
                      </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
                   </VBox>
                   <Label accessibleText="lab" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="40.0" text="3.0">
                      <font>

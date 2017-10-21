@@ -8,14 +8,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="928.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="928.0" spacing="10.0" styleClass="metro-row" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView accessibleText="img_row_extension" fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../res/img/plus_sign.png" />
          </image>
       </ImageView>
-      <VBox accessibleText="bg" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #3498DB;">
+      <VBox accessibleText="bg" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
          <children>
             <Label accessibleText="letter" text="S" textFill="WHITE">
                <font>
@@ -47,7 +47,7 @@
             <Insets left="10.0" />
          </padding>
       </VBox>
-      <VBox alignment="CENTER" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #F39C12;">
+      <VBox alignment="CENTER" prefHeight="30.0" prefWidth="30.0">
          <children>
             <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -69,7 +69,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <VBox alignment="CENTER" layoutX="519.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #59C0ED;">
+      <VBox alignment="CENTER" layoutX="519.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0">
          <children>
             <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -99,11 +99,11 @@
             <Insets right="10.0" />
          </HBox.margin>
          <graphic>
-            <VBox style="-fx-background-color: #AAB2BE;">
+            <VBox>
                <children>
                   <ImageView fitHeight="38.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../res/img/room.png" />
+                        <Image url="@img/Classroom_64px.png" />
                      </image>
                   </ImageView>
                </children>

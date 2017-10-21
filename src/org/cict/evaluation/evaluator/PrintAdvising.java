@@ -26,6 +26,7 @@ package org.cict.evaluation.evaluator;
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.FacultyMapping;
@@ -83,22 +84,30 @@ public class PrintAdvising extends Transaction {
 
         term = Mono.orm()
                 .newSearch(Database.connect().academic_term())
-                .eq("id", academicTerm)
+                .eq(DB.academic_term().id, academicTerm)
                 .execute()
                 .first();
 
         student = Mono.orm()
                 .newSearch(Database.connect().student())
-                .eq("id", studentNumber)
+                .eq(DB.student().id, studentNumber)
                 .execute()
                 .first();
-
+        if(student==null) {
+            System.out.println(this.getClass().getSimpleName() + ": NO STUDENT FOUND");
+            return false;
+        }
+        
         CurriculumMapping curriculum = Mono.orm()
                 .newSearch(Database.connect().curriculum())
-                .eq("id", student.getCURRICULUM_id())
+                .eq(DB.curriculum().id, student.getCURRICULUM_id())
                 .execute()
                 .first();
-
+        if(curriculum==null) {
+            System.out.println(this.getClass().getSimpleName() + ": NO CURRICULUM FOUND");
+            return false;
+        }
+        
         if (curriculum.getMajor() != null) {
             if (!curriculum.getMajor().isEmpty()) {
                 if (!curriculum.getMajor().equalsIgnoreCase("none")) {
@@ -108,14 +117,14 @@ public class PrintAdvising extends Transaction {
         }
 
         course = Mono.orm().newSearch(Database.connect().academic_program())
-                .eq("id", curriculum.getACADPROG_id())
+                .eq(DB.academic_program().id, curriculum.getACADPROG_id())
                 .execute()
                 .first();
 
         evaluation = Mono.orm()
                 .newSearch(Database.connect().evaluation())
-                .eq("STUDENT_id", student.getCict_id())
-                .eq("ACADTERM_id", academicTerm)
+                .eq(DB.evaluation().STUDENT_id, student.getCict_id())
+                .eq(DB.evaluation().ACADTERM_id, academicTerm)
                 .active()
                 .first();
 
@@ -134,36 +143,41 @@ public class PrintAdvising extends Transaction {
 
         evaluator = Mono.orm()
                 .newSearch(Database.connect().faculty())
-                .eq("id", evaluation.getFACULTY_id())
+                .eq(DB.faculty().id, evaluation.getFACULTY_id())
                 .execute()
                 .first();
 
         evaluatedSubjects = Mono.orm()
                 .newSearch(Database.connect().load_subject())
-                .eq("EVALUATION_id", evaluation.getId())
-                .eq("STUDENT_id", student.getCict_id())
+                .eq(DB.load_subject().EVALUATION_id, evaluation.getId())
+                .eq(DB.load_subject().STUDENT_id, student.getCict_id())
                 //                .eq("remarks", "ACCEPTED")
                 .execute()
                 .all();
+        if(evaluatedSubjects==null) {
+            System.out.println(this.getClass().getSimpleName() + ": NO SUBJECT EVALUATED FOUND");
+            return false;
+        }
 
         subjectInformation = new ArrayList<>();
 
+        
         for (LoadSubjectMapping evaluatedSubject : evaluatedSubjects) {
             SubjectMapping subject = Mono.orm()
                     .newSearch(Database.connect().subject())
-                    .eq("id", evaluatedSubject.getSUBJECT_id())
+                    .eq(DB.subject().id, evaluatedSubject.getSUBJECT_id())
                     .execute()
                     .first();
 
             LoadGroupMapping load_group = Mono.orm()
                     .newSearch(Database.connect().load_group())
-                    .eq("id", evaluatedSubject.getLOADGRP_id())
+                    .eq(DB.load_group().id, evaluatedSubject.getLOADGRP_id())
                     .execute()
                     .first();
 
             LoadSectionMapping load_section = Mono.orm()
                     .newSearch(Database.connect().load_section())
-                    .eq("id", load_group.getLOADSEC_id())
+                    .eq(DB.load_section().id, load_group.getLOADSEC_id())
                     .execute()
                     .first();
 
@@ -195,8 +209,7 @@ public class PrintAdvising extends Transaction {
         slip.INFO_DATE = date_now;
         slip.INFO_ACAD_YEAR = term.getSchool_year();
         slip.INFO_TERM = term.getSemester_regular().toString();
-        slip.INFO_CAMPUS = "MALOLOS";
-        slip.INFO_MAJOR = "";
+        slip.INFO_CAMPUS = (student.getCampus()==null? "MAIN" : student.getCampus());
 
         /**
          * Code added 8/2/17 ********************
@@ -230,12 +243,10 @@ public class PrintAdvising extends Transaction {
 
         // student
         slip.INFO_STUD_NUM = student.getId();
-        slip.INFO_STUD_NAME = (student.getLast_name() + ", " + student.getFirst_name() + " " + student.getMiddle_name()).toUpperCase(Locale.ENGLISH);
-        slip.INFO_COURSE = course.getName();
-        if (major != null) {
-            slip.INFO_MAJOR = major;
-        }
-
+        slip.INFO_STUD_NAME = (student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "": student.getMiddle_name())).toUpperCase(Locale.ENGLISH);
+        slip.INFO_COURSE = (course.getName()==null? "":course.getName());
+        slip.INFO_MAJOR = (major==null? "": major);
+        
         ArrayList<AdvisingSlipData> table = new ArrayList<>();
         for (JoinTables join : subjectInformation) {
             SubjectMapping subject = join.info;
@@ -249,7 +260,7 @@ public class PrintAdvising extends Transaction {
                 if (section.getYear_level() != 0) {
                     sectionName = section.getYear_level().toString()
                             + section.getSection_name()
-                            + " - G" + section.get_group().toString();
+                            + " - G" + (section.get_group()==null? "":section.get_group().toString());
                 } else {
                     sectionName = section.getSection_name();
                 }

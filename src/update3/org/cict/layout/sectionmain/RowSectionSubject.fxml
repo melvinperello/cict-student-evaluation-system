@@ -19,7 +19,7 @@
             <Image url="@../section_images/book_white.png" />
          </image>
       </ImageView>
-      <Label accessibleText="lbl_subject_code" text="MATH 113" textFill="WHITE">
+      <Label fx:id="lbl_code" accessibleText="lbl_subject_code" text="MATH 113" textFill="WHITE">
          <font>
             <Font size="25.0" />
          </font>
@@ -41,7 +41,7 @@
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_count" text="30" textFill="WHITE">
+            <Label fx:id="lbl_count" accessibleText="lbl_count" text="30" textFill="WHITE">
                <font>
                   <Font size="25.0" />
                </font>
@@ -61,14 +61,14 @@
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_instructor" prefWidth="200.0" text="Evelyn Samson" textFill="WHITE">
+            <Label fx:id="lbl_instructor" accessibleText="lbl_instructor" prefWidth="200.0" text="Evelyn Samson" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>
             </Label>
          </children>
       </HBox>
-      <JFXButton accessibleText="btn_information" prefWidth="90.0" style="-fx-border-color: #FFFFFF;" text="Information" textFill="WHITE" />
+      <JFXButton fx:id="btn_info" accessibleText="btn_information" prefWidth="90.0" style="-fx-border-color: #FFFFFF;" text="Information" textFill="WHITE" />
    </children>
    <styleClass>
       <String fx:value="metro-row" />

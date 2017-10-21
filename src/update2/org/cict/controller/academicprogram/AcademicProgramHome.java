@@ -115,12 +115,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
          * Required when using SceneFX.
          */
         bindScene(application_root);
-        //----------------------------
-//        FetchAcademicPrograms fetchProgramsTx = new FetchAcademicPrograms();
-//        fetchProgramsTx.setOnSuccess(onSuccess -> {
-//            createProgramsTable(fetchProgramsTx.getAcademicProgramsCollection());
-//        });
-//        fetchProgramsTx.transact();
+        
         this.refreshAcademicProgramTable(2000);
         /**
          * insert valid floors values must be Integer
@@ -128,10 +123,6 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         validFloorAssignment.add(3);
         validFloorAssignment.add(4);
         
-//        cmb_sort_.getItems().clear();
-//        cmb_sort_.getItems().add("SAVED");
-//        cmb_sort_.getItems().add("NOT SAVED");
-//        cmb_sort_.getSelectionModel().selectFirst();
     }
     
     private LayoutDataFX homeFX;
@@ -143,7 +134,6 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
     @Override
     public void onEventHandling() {
         this.addClickEvent(btn_home, () -> {
-//            Home.callHome(this);
             AcademicHome controller = new AcademicHome();
             Pane pane = Mono.fx().create()
                     .setPackageName("update2.org.cict.layout.academicprogram")
@@ -175,9 +165,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                 super.replaceRoot(pane);
             }, pane);
         });
-//        cmb_sort_.valueProperty().addListener((e) -> {
-//            changeView();
-//        });
+        
     this.addClickEvent(btn_home1, ()->{
         changeView();
     });
@@ -200,19 +188,23 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         if (selected.equalsIgnoreCase("Show Saved")) {
             btn_home1.setText("Show Not Saved");
             if (implementedAcadPrograms.isEmpty()) {
-                vbox_no_found.setVisible(true);
-                vbox_search.setVisible(false);
+//                vbox_no_found.setVisible(true);
+//                vbox_search.setVisible(false);
+                changeView(vbox_no_found);
             } else {
-                vbox_no_found.setVisible(false);
+//                vbox_no_found.setVisible(false);
+//                changeView(vbox_search);
                 createProgramsTable(implementedAcadPrograms);
             }
         } else {
             btn_home1.setText("Show Saved");
             if (unImplementedAcadPrograms.isEmpty()) {
-                vbox_no_found.setVisible(true);
-                vbox_search.setVisible(false);
+//                vbox_no_found.setVisible(true);
+//                vbox_search.setVisible(false);
+                changeView(vbox_no_found);
             } else {
-                vbox_no_found.setVisible(false);
+//                vbox_no_found.setVisible(false);
+//                changeView(vbox_search);
                 createProgramsTable(unImplementedAcadPrograms);
             }
         }
@@ -251,11 +243,20 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         simpleTableView.setFixedWidth(true);
         // attach to parent variable name in scene builder
         Mono.fx().thread().wrap(()->{
+            changeView(vbox_table_holder);
             simpleTableView.setParentOnScene(vbox_table_holder);
         });
-        this.vbox_search.setVisible(false);
-        this.vbox_table_holder.setVisible(true);
-        
+//        this.vbox_search.setVisible(false);
+//        this.vbox_table_holder.setVisible(true);
+    }
+    
+    private void changeView(Node showThis) {
+        Animate.fade(showThis, 150, ()->{
+            vbox_no_found.setVisible(false);
+            vbox_search.setVisible(false);
+            vbox_table_holder.setVisible(false);
+            showThis.setVisible(true);
+        }, vbox_no_found, vbox_search, vbox_table_holder);
     }
     
     private void createRow(AcademicProgramInfo academicPrograms) {
@@ -385,8 +386,8 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         if (apMap.getImplemented().equals(1)) {
             lbl_status.setText("SAVED");
             isImplemented = true;
-            lbl_implementation_date.setText(dateFormat.format(apMap.getImplementation_date()));
-            lbl_implemented_by.setText(info.getApImplementedBy());
+            lbl_implementation_date.setText((apMap.getImplementation_date()==null? "" : dateFormat.format(apMap.getImplementation_date())));
+            lbl_implemented_by.setText((info.getApImplementedBy()==null? "" : info.getApImplementedBy()));
             txt_code.setEditable(false);
             txt_program_name.setEditable(false);
             btn_delete.setDisable(true);
@@ -438,7 +439,30 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         /**
          * Row Extension Image Event.
          */
-        addClickEvent(img_extension, () -> {
+        super.addClickEvent(img_extension, () -> {
+            if (row.isExtensionShown()) {
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                row.hideExtension();
+            } else {
+                // close all row extension
+                for (Node tableRows : programsTable.getRows()) {
+                    SimpleTableRow simplerow = (SimpleTableRow) tableRows;
+                    SimpleTableCell simplecell = simplerow.getCell(0);
+                    HBox simplerowcontent = simplecell.getContent();
+                    ImageView simplerowimage = findByAccessibilityText(simplerowcontent, "img_row_extension");
+                    
+                    simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                    simplerow.hideExtension();
+                }
+
+                // show row extension
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "hide_extension.png"));
+                row.setRowExtension(programRowExtension);
+                row.showExtension();
+            }
+        });
+        
+        super.addDoubleClickEvent(row, () -> {
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
                 row.hideExtension();
@@ -483,22 +507,10 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
          */
         createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
         
-//        cmb_sort.valueProperty().addListener((e) -> {
-//            int selected = cmb_sort.getSelectionModel().getSelectedIndex();
-//            vbox_curriculum_table_holder.getChildren().clear();
-//            if (selected == 0) {
-//                /**
-//                 * Curriculum Rows.
-//                 */
-//                createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
-//            } else {
-//                createCurriculumRows(vbox_curriculum_table_holder, unImplementedCurriculums, lbl_count);
-//            }
-//        });
-
         this.addClickEvent(btn_show, ()->{
             String selected = btn_show.getText(); //cmb_sort.getSelectionModel().getSelectedIndex();
             vbox_curriculum_table_holder.getChildren().clear();
+            
             if (selected.equalsIgnoreCase("Show Implemented")) {
                 btn_show.setText("Show Unimplemented");
                 createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
@@ -511,7 +523,6 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
     
     private void createCurriculumRows(VBox holder, ArrayList<CurriculumMapping> curriculum, Label lbl_count) {
         SimpleTable curriculumTable = new SimpleTable();
-        
         if (curriculum == null) {
             return;
         }

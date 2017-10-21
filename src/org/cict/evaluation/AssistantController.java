@@ -170,7 +170,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
             if(index < studentYrLvl) {
                 invalid = true;
                 message = "We prohibit changing the year level of the student backward. Please ask your local registrar for assistance.";
-            } else if(index == (studentYrLvl+1)) {
+            } else if(index.equals(studentYrLvl+1)) {
                 // valid
             }else if(index > studentYrLvl) {
                 invalid = true;
@@ -317,10 +317,9 @@ public class AssistantController extends SceneFX implements ControllerFX {
     private ArrayList<SubjectMapping> allSubjects;
     private ArrayList<SubjectMapping> getSubjects(boolean canTake) {
         AcademicTermMapping atMap = Evaluator.instance().getCurrentAcademicTerm();
-//        ArrayList<SubjectMapping> allSubjects = new ArrayList<>();
         Integer sem = atMap.getSemester_regular();
         if(sem != null) {
-            if(sem != 0) {
+            if(!sem.equals(0)) {
                 if(index == null)
                     index = STUDENT.getYear_level();
                 ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm().newSearch(Database.connect().curriculum_subject())
@@ -341,44 +340,6 @@ public class AssistantController extends SceneFX implements ControllerFX {
                                 .active()
                                 .first();
                          checkForPrerequisteRequired(subjectToBeAdded, sem, canTake, annualAsses);
-//                        ArrayList<CurriculumRequisiteLineMapping> preReqs = Mono.orm().newSearch(Database.connect().curriculum_requisite_line())
-//                                .eq(DB.curriculum_requisite_line().SUBJECT_id_get, subjectToBeAdded.getId())
-//                                .active()
-//                                .all();
-//                        if(preReqs != null) {
-//                            for(CurriculumRequisiteLineMapping preReq: preReqs) {
-//                                GradeMapping gradeOfPrereq = Mono.orm().newSearch(Database.connect().grade())
-//                                        .eq(DB.grade().SUBJECT_id, preReq.getSUBJECT_id_req())
-//                                        .eq(DB.grade().STUDENT_id, STUDENT.getCict_id())
-//                                        .active(Order.desc(DB.grade().id))
-//                                        .first();
-//                                if(gradeOfPrereq == null) {
-//                                    canBeTaken = false;
-//                                    break;
-//                                } else {
-//                                    String remarks = gradeOfPrereq.getRemarks();
-//                                    switch(remarks) {
-//                                        case "PASSED":
-//                                        case "INCOMPLETE":
-//                                            break;
-//                                        default:
-//                                            canBeTaken = false;
-//                                            break;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        if(canTake) {
-//                            if(canBeTaken) {
-//                                if(!isAlreadyTaken(subjectToBeAdded))
-//                                    allSubjects.add(subjectToBeAdded);
-//                            }
-//                        } else {
-//                            if(!canBeTaken) {
-//                                if(!isAlreadyTaken(subjectToBeAdded))
-//                                    allSubjects.add(subjectToBeAdded);
-//                            }
-//                        }
                     }
                 } else
                     System.out.println("CSMAP IS NULL");
@@ -393,14 +354,12 @@ public class AssistantController extends SceneFX implements ControllerFX {
     private void checkForPrerequisteRequired(SubjectMapping subject, Integer semester, Boolean canTake, AssessmentResults annualAsses) {
         
         annualAsses.getSemestralResults(semester).forEach(sem_details -> {
-//            boolean editable = true;
             boolean canBeTaken = true;
             if(Objects.equals(subject.getId(), sem_details.getSubjectID())) {
                 ArrayList<Integer> pre_ids = new ArrayList<>();
                 Integer[] preqid = new Integer[0];
                 if (sem_details.getSubjectRequisites() == null) {
                     // do nothing no preq
-//                    gridRows.add(gridRowFactory(editable, i, subject.getCode(), subject.getDescriptive_title(), String.valueOf(subject.getLec_units() + subject.getLab_units()), "", ""));
                     canBeTaken = true;
                 } else {
                     sem_details.getSubjectRequisites().forEach(pre_requisite -> {
@@ -432,18 +391,6 @@ public class AssistantController extends SceneFX implements ControllerFX {
                                         canBeTaken = false;
                                         break;
                                 }
-//                                if (!grade.getRemarks().equalsIgnoreCase("passed")) {
-//                                    canBeTaken = false;
-//                                } else {
-//                                    canBeTaken = true;
-//                                    break;
-//                                }
-//                                if (grade.getRemarks().equalsIgnoreCase("incomplete")) {
-//                                    canBeTaken = true;
-//                                    break;
-//                                } else {
-//                                    canBeTaken = false;
-//                                }
                             } catch (NullPointerException a) {
                                 canBeTaken = false;
                             }
@@ -462,9 +409,6 @@ public class AssistantController extends SceneFX implements ControllerFX {
                             allSubjects.add(subject);
                     }
                 }
-//                if(editable)
-//                    allSubjects.add(subject);
-//                gridRows.add(gridRowFactory(editable, i, subject.getCode(), subject.getDescriptive_title(), String.valueOf(subject.getLec_units() + subject.getLab_units()), "", ""));
             }
         });
     }

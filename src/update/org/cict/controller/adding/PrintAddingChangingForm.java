@@ -236,6 +236,7 @@ public class PrintAddingChangingForm extends Transaction{
         addChangeForm.STUDENT_NAME = studentFullName;
         addChangeForm.STUDENT_SECTION = section;
         addChangeForm.COLLEGE_DEAN = "ENGR. NOEMI REYES";
+        addChangeForm.REGISTRAR = "LEILANI M. LIZARDO";
         addChangeForm.DATE = date_now;
         addChangeForm.STUDENT_CURRENT_UNITS = String.valueOf(getCurrentUnits());
         boolean canPrint = false;

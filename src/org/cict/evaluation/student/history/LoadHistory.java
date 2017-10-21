@@ -24,6 +24,7 @@
 package org.cict.evaluation.student.history;
 
 import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.FacultyMapping;
@@ -122,18 +123,21 @@ public class LoadHistory {
                 String canceledBy = "", canceledDate = "";
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
                 try{
-                    canceledBy = this.getFacultyName(currentEvaluation.getCancelled_by());
-                    canceledDate = formatter.format(currentEvaluation.getCancelled_date()).toString();
-                }catch(NullPointerException a) {}
-                holder.add(new History(this.ACADEMIC_TERM.getSchool_year(),
-                        StudentValues.getYearLevel(currentEvaluation.getYear_level()),
-                        this.ACADEMIC_TERM.getSemester(), 
-                        currentEvaluation.getType(),
-                        this.getFacultyName(currentEvaluation.getFACULTY_id()),
-                        formatter.format(currentEvaluation.getEvaluation_date()).toString(),
+                    canceledBy = (currentEvaluation.getCancelled_by()==null? "NAME NOT FOUND":this.getFacultyName(currentEvaluation.getCancelled_by()));
+                    canceledDate = (currentEvaluation.getCancelled_date()==null? "DATE NOT FOUND": formatter.format(currentEvaluation.getCancelled_date()).toString());
+                }catch(NullPointerException a) {
+                    canceledBy = "NAME NOT FOUND";
+                    canceledDate = "DATE NOT FOUND";
+                }
+                holder.add(new History((this.ACADEMIC_TERM.getSchool_year()==null? "" : this.ACADEMIC_TERM.getSchool_year()),
+                        (currentEvaluation.getYear_level()==null? "" : StudentValues.getYearLevel(currentEvaluation.getYear_level())),
+                        (this.ACADEMIC_TERM.getSemester()==null? "" : this.ACADEMIC_TERM.getSemester()), 
+                        (currentEvaluation.getType()==null?"":currentEvaluation.getType()),
+                        (currentEvaluation.getFACULTY_id()==null? "" : this.getFacultyName(currentEvaluation.getFACULTY_id())),
+                        (currentEvaluation.getEvaluation_date()==null? "" : formatter.format(currentEvaluation.getEvaluation_date()).toString()),
                         canceledBy,
                         canceledDate,
-                        currentEvaluation.getRemarks()));
+                        (currentEvaluation.getRemarks()==null? "":currentEvaluation.getRemarks())));
             }
         }catch(NullPointerException a){}
         lstData.removeAll(lstData);
@@ -143,28 +147,32 @@ public class LoadHistory {
     private List searchResult() {
         return Mono.orm()
                 .newSearch(Database.connect().evaluation())
-                .eq("STUDENT_id", this.STUDENT.getCict_id())
+                .eq(DB.evaluation().STUDENT_id, this.STUDENT.getCict_id())
                 .execute()
                 .all();
     }
     
     private AcademicTermMapping ACADEMIC_TERM;
     private void setAcademicTerm(Integer acadTermId) {
-        this.ACADEMIC_TERM = Mono.orm()
+        this.ACADEMIC_TERM = Database.connect().academic_term().getPrimary(acadTermId);
+        /*Mono.orm()
                 .newSearch(Database.connect().academic_term())
-                .eq("id", acadTermId)
+                .eq(DB.academic_term().id, acadTermId)
                 .execute()
-                .first();
+                .first();*/
     }
     
     private String getFacultyName(Integer faculty_id) {
-        FacultyMapping faculty = Mono.orm()
+        FacultyMapping faculty = Database.connect().faculty().getPrimary(faculty_id);
+                /*Mono.orm()
                 .newSearch(Database.connect().faculty())
                 .eq("id", faculty_id)
                 .active()
-                .first();
+                .first();*/
+        if(faculty==null)
+            return "";
         return faculty.getLast_name() + ", " +
                 faculty.getFirst_name() + " " +
-                faculty.getMiddle_name();
+                (faculty.getMiddle_name()==null? "" : faculty.getMiddle_name());
     }
 }

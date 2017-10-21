@@ -13,27 +13,20 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #001E4C;" stylesheets="@../metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="41.0" prefWidth="1000.0" style="-fx-background-color: #66A6FE;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="52.0" prefWidth="1000.0" style="-fx-background-color: #4567C4;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" text="ADDING SUBJECT" textFill="WHITE" AnchorPane.topAnchor="5.0">
                <font>
-                  <Font size="15.0" />
+                  <Font size="21.0" />
                </font>
-               <graphic>
-                  <ImageView fitHeight="29.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/Plus%20Math_32px.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
             </Label>
          </children>
       </AnchorPane>
       <HBox alignment="CENTER_LEFT" layoutY="110.0" prefHeight="88.0" prefWidth="1000.0" spacing="30.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="88.0" prefWidth="448.0" spacing="5.0" HBox.hgrow="ALWAYS">
+            <HBox alignment="CENTER_LEFT" prefHeight="88.0" prefWidth="690.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
                   <TextField fx:id="txtSearch" prefHeight="37.0" prefWidth="497.0" promptText="Search . . . ( e.g.  IT 113)" style="-fx-border-color: #7A7A7A; -fx-border-width: 2;">
                      <font>
@@ -49,9 +42,13 @@
                         </ImageView>
                      </graphic>
                   </JFXButton>
+                  <JFXButton fx:id="btnShowAll" alignment="CENTER" disable="true" graphicTextGap="10.0" prefHeight="37.0" prefWidth="138.0" style="-fx-background-color: #00B193;" text="Show all subject" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </JFXButton>
                </children>
             </HBox>
-            <JFXButton fx:id="btnShowAll" alignment="CENTER" disable="true" graphicTextGap="10.0" layoutX="513.0" layoutY="33.0" prefHeight="37.0" prefWidth="116.0" style="-fx-border-color: #000;" text="Show all subject" />
          </children>
          <padding>
             <Insets left="20.0" right="20.0" />
@@ -75,13 +72,13 @@
                               </ImageView>
                               <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
                                  <children>
-                                    <Label text="No Result Found . . ." wrapText="true">
+                                    <Label text="No Result Found . . ." textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font name="System Bold" size="28.0" />
                                        </font>
                                     </Label>
-                                    <Line endX="340.0" startX="-100.0" />
-                                    <Label text="Note: Only subjects with open section will be shown. Here's a cup of coffee for you ♥ cheer up!" wrapText="true">
+                                    <Line endX="340.0" startX="-100.0" stroke="WHITE" />
+                                    <Label text="Note: Only subjects with open section will be shown. Here's a cup of coffee for you ♥ cheer up!" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -93,7 +90,7 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <HBox fx:id="hbox_search" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #fff;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                        <HBox fx:id="hbox_search" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #fff; -fx-background-radius: 50;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -105,13 +102,13 @@
                               </ImageView>
                               <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
                                  <children>
-                                    <Label text="Searching Every Corner . . ." wrapText="true">
+                                    <Label style="-fx-text-fill: #000;" text="Searching Every Corner . . ." wrapText="true">
                                        <font>
                                           <Font name="System Bold" size="28.0" />
                                        </font>
                                     </Label>
                                     <Line endX="340.0" startX="-100.0" />
-                                    <Label text="You can search using the subject code (e.g. &quot;IT 215&quot;). Don't worry I'm not case sensitive. Happy to help!" textAlignment="JUSTIFY" wrapText="true">
+                                    <Label style="-fx-text-fill: #000;" text="You can search using the subject code (e.g. &quot;IT 215&quot;). Don't worry I'm not case sensitive. Happy to help!" textAlignment="JUSTIFY" wrapText="true">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -127,7 +124,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="anchor_view" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <VBox fx:id="vbox_subjectList" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@adding-table.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                        <VBox fx:id="vbox_subjectList" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" stylesheets="@adding-table.css" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
                      </children>
                   </AnchorPane>
                </children>

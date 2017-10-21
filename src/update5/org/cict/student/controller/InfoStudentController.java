@@ -34,11 +34,9 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
-import java.util.ArrayList;
 import java.util.Objects;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -48,9 +46,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.cict.authentication.authenticator.CollegeFaculty;
-import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
+import org.cict.reports.deficiency.PrintDeficiency;
+import org.cict.reports.profile.student.PrintStudentProfile;
 import org.controlsfx.control.Notifications;
 
 /**
@@ -231,6 +230,67 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_verify, () -> {
             this.onVerify();
         });
+        
+        super.addClickEvent(btn_view_deficiency, ()->{
+            btn_view_deficiency.setDisable(true);
+            this.printDeficiency();
+        });
+        
+        super.addClickEvent(btn_view_profile, ()->{
+            btn_view_profile.setDisable(true);
+            this.printProfile();
+        });
+    }
+    
+    private void printProfile() {
+        PrintStudentProfile profile = new PrintStudentProfile();
+        profile.CICT_id = CURRENT_STUDENT.getCict_id();
+        profile.whenSuccess(()->{
+            Notifications.create()
+                    .title("Printing Student Profile")
+                    .text("Please wait a moment.")
+                    .showInformation();
+            btn_view_profile.setDisable(false);
+        });
+        profile.whenCancelled(()->{
+            Notifications.create()
+                    .title("Something went wrong.")
+                    .text("Student not found.")
+                    .showInformation();
+        });
+        profile.whenFailed(()->{
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Please try again later.")
+                    .showInformation();
+        });
+        profile.transact();
+    }
+    
+    private void printDeficiency() {
+        PrintDeficiency print = new PrintDeficiency();
+        print.CICT_id = CURRENT_STUDENT.getCict_id();
+        print.whenSuccess(()->{
+            btn_view_deficiency.setDisable(false);
+            Notifications.create()
+                    .title("Printing the Deficiency Report.")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenCancelled(()->{
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text(print.getMessage() + 
+                            "\nSorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(()->{
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.transact();
     }
 
     private void onVerify() {
@@ -293,9 +353,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             this.cmb_yrlvl.getSelectionModel().select(CURRENT_STUDENT.getYear_level() == null || CURRENT_STUDENT.getYear_level() == 1 ? 0 : CURRENT_STUDENT.getYear_level() - 1);
             close = false;
             btn_verify.setDisable((this.CURRENT_STUDENT.getVerified() != 0));
-            if (CURRENT_STUDENT.getGender().equalsIgnoreCase("MALE")) {
+            if ((CURRENT_STUDENT.getGender()==null? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("MALE")) {
                 rbtn_male.setSelected(true);
-            } else if (CURRENT_STUDENT.getGender().equalsIgnoreCase("FEMALE")) {
+            } else if ((CURRENT_STUDENT.getGender()==null? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("FEMALE")) {
                 rbtn_female.setSelected(true);
             } else {
                 // if none was set in the database
@@ -303,7 +363,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             }
         } catch (NullPointerException f) {
             close = true;
-            f.printStackTrace();
         }
     }
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
@@ -35,42 +36,9 @@
                         </ImageView>
                      </graphic>
                   </Label>
-                  <Button fx:id="btn_implement" mnemonicParsing="false" prefHeight="38.0" prefWidth="160.0" style="-fx-background-color: #414852; -fx-border-color: #fff;" text="Implement" textFill="WHITE">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="29.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@img/implementation.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btn_history" layoutX="709.0" layoutY="10.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="160.0" style="-fx-background-color: #414852; -fx-border-color: #fff;" text="History" textFill="WHITE">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="29.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../academicprogram/images/reminder.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btn_back" layoutX="1142.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="116.0" style="-fx-background-color: #414852; -fx-border-color: #fff;" text="Back" textFill="WHITE">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="29.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../subjects/img/Back%20Arrow_32px.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
+                  <JFXButton fx:id="btn_implement" styleClass="metro-nav-button" text="Implement" />
+                  <JFXButton fx:id="btn_history" layoutX="812.0" layoutY="19.0" styleClass="metro-nav-button" text="History" />
+                  <JFXButton fx:id="btn_back" layoutX="1132.0" layoutY="19.0" styleClass="metro-nav-button" text="Back" />
                </children>
             </HBox>
          </children>
@@ -163,12 +131,12 @@
                               </Label>
                               <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                                  <children>
-                                    <RadioButton fx:id="rbtn_yes" disable="true" mnemonicParsing="false" text="Yes" textFill="WHITE">
+                                    <RadioButton fx:id="rbtn_yes" mnemonicParsing="false" text="Yes" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton fx:id="rbtn_no" disable="true" mnemonicParsing="false" selected="true" text="No" textFill="WHITE">
+                                    <RadioButton fx:id="rbtn_no" mnemonicParsing="false" selected="true" text="No" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -185,7 +153,7 @@
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cmb_type" disable="true" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                              <ComboBox fx:id="cmb_type" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                               <Label layoutX="132.0" layoutY="68.0" text=":" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <font>
                                     <Font size="15.0" />
@@ -201,7 +169,7 @@
                                     <Font size="15.0" />
                                  </font>
                               </Label>
-                              <CheckComboBox fx:id="cmb_prereq" disable="true" prefHeight="33.0" prefWidth="269.0" style="-fx-border-color: #D5D5D5;" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                              <CheckComboBox fx:id="cmb_prereq" prefHeight="33.0" prefWidth="269.0" style="-fx-border-color: #D5D5D5;" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                               <Label layoutX="10.0" layoutY="62.0" text="Curriculum ID" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
@@ -222,7 +190,7 @@
                                     <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="cmb_preparatory" disable="true" layoutX="137.0" layoutY="196.0" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                              <ComboBox fx:id="cmb_preparatory" layoutX="137.0" layoutY="196.0" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                               <JFXCheckBox fx:id="chkbx_obsolete" checkedColor="#f9fcfa" prefHeight="21.0" prefWidth="91.0" styleClass="label" text="Obsolete in" unCheckedColor="#e2e2e2" GridPane.rowIndex="8">
                                  <font>
                                     <Font size="15.0" />
@@ -238,10 +206,7 @@
                   </HBox>
                   <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" prefHeight="0.0" prefWidth="387.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Button fx:id="btn_edit" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="38.0" prefWidth="393.0" style="-fx-background-color: #414852; -fx-border-color: #fff;" text="Save Changes" textFill="WHITE" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font size="17.0" />
-                           </font>
+                        <JFXButton fx:id="btn_edit" style="-fx-pref-width: 400;" styleClass="metro-nav-button" text="Save Changes">
                            <graphic>
                               <ImageView fitHeight="29.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -249,7 +214,7 @@
                                  </image>
                               </ImageView>
                            </graphic>
-                        </Button>
+                        </JFXButton>
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" left="20.0" right="20.0" />
@@ -382,7 +347,7 @@
                         <Insets top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <VBox fx:id="vbox_semesters" alignment="CENTER" minHeight="-Infinity" minWidth="100.0" prefHeight="504.0" prefWidth="653.0" styleClass="metro-table" stylesheets="@../../../../../update3/org/cict/layout/sectionmain/metro-ui-table.css" VBox.vgrow="ALWAYS">
+                  <VBox fx:id="vbox_semesters" alignment="CENTER" minHeight="-Infinity" minWidth="100.0" prefHeight="504.0" prefWidth="653.0" styleClass="metro-table" VBox.vgrow="ALWAYS">
                      <children>
                         <VBox fx:id="vbox_no_result" alignment="CENTER">
                            <children>
@@ -401,6 +366,10 @@
                            </children>
                         </VBox>
                      </children>
+                     <stylesheets>
+                        <URL value="@../metro-ui-table.css" />
+                        <URL value="@../metro-row.css" />
+                     </stylesheets>
                   </VBox>
                </children>
                <HBox.margin>

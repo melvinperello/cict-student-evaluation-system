@@ -60,7 +60,7 @@ public class FirstAssistantController extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_closee, ()->{
             Mono.fx().getParentStage(anchor_main).close();
         });
-        Mono.fx().key(KeyCode.ENTER).release(anchor_main, ()->{
+        Mono.fx().key(KeyCode.SHIFT).release(anchor_main, ()->{
             Mono.fx().getParentStage(anchor_main).close();
         });
     }

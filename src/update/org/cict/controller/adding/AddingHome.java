@@ -19,6 +19,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -804,8 +805,31 @@ public class AddingHome extends SceneFX implements ControllerFX {
         Label lbl_lab = searchAccessibilityText(subjectRow, "lab");
         Label lbl_section = searchAccessibilityText(subjectRow, "section");
 
-        addClickEvent(img_extension, () -> {
+        super.addClickEvent(img_extension, ()->{
+            if (row.isExtensionShown()) {
+                img_extension.setImage(SimpleImage.make("res.img", "plus_sign.png"));
+                row.hideExtension();
+            } else if (!row.isExtensionShown()) {
+                // close all row extension
+                for (Node tableRows : table.getRows()) {
+                    SimpleTableRow simplerow = (SimpleTableRow) tableRows;
+                    SimpleTableCell simplecell = simplerow.getCell(0);
+                    HBox simplerowcontent = simplecell.getContent();
+                    ImageView simplerowimage = findByAccessibilityText(simplerowcontent, "img_row_extension");
 
+                    simplerowimage.setImage(SimpleImage.make("res.img", "plus_sign.png"));
+                    simplerow.hideExtension();
+                }
+
+                // show row extension
+                img_extension.setImage(SimpleImage.make("res.img", "negative_sign.png"));
+                row.showExtension();
+            } else {
+                System.out.println("EXTENSION NOTHING HAPPENED");
+            }
+        });
+        
+        super.addDoubleClickEvent(row, ()->{
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("res.img", "plus_sign.png"));
                 row.hideExtension();
@@ -836,12 +860,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         lbl_lab.setText(subject.getLab_units().toString());
         lbl_section.setText(subInfo.getFullSectionName());
 
-        VBox bg = searchAccessibilityText(subjectRow, "bg");
         Label lbl_icon = searchAccessibilityText(subjectRow, "letter");
-        if (SubjectClassification.isMajor(subject.getType())) {
-            bg.setStyle(lbl_icon.getStyle() + "-fx-background-color: #D84452;");
-        }
-
         lbl_icon.setText(subject.getCode().charAt(0) + "");
 
         SimpleTableCell cellParent = new SimpleTableCell();
@@ -1502,27 +1521,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                     .setMessage("Do you want to print the student's subject with missing grade?")
                                     .confirmYesNo();
                             if(res==1) {
-                                PrintDeficiency print = new PrintDeficiency();
-                                print.CICT_id = studentSearched.getCict_id();
-                                print.whenSuccess(()->{
-                                    Notifications.create()
-                                            .title("Nearly there.")
-                                            .text("Printing the deficiency report.")
-                                            .showInformation();
-                                });
-                                print.whenCancelled(()->{
-                                    Notifications.create()
-                                            .title("Request Cancelled")
-                                            .text("Sorry for the inconviniece.")
-                                            .showWarning();
-                                });
-                                print.whenFailed(()->{
-                                    Notifications.create()
-                                            .title("Request Failed")
-                                            .text("Something went wrong. Sorry for the inconviniece.")
-                                            .showInformation();
-                                });
-                                print.transact();
+                                printDeficiency();
                             }
                             AddingDataPipe.instance().resetIsChanged();
                             return;
@@ -1541,6 +1540,30 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             + " before starting the add process.")
                     .showAndWait();
         }
+    }
+    
+    private void printDeficiency() {
+        PrintDeficiency print = new PrintDeficiency();
+        print.CICT_id = studentSearched.getCict_id();
+        print.whenSuccess(()->{
+            Notifications.create()
+                    .title("Nearly there.")
+                    .text("Printing the deficiency report.")
+                    .showInformation();
+        });
+        print.whenCancelled(()->{
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(()->{
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.transact();
     }
     
     /**
@@ -1643,196 +1666,117 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 if (mode.equalsIgnoreCase("ADD")) {
                     SimpleTableView tableView = (SimpleTableView) this.vbox_tableHandler.getChildren().get(0);
                     
-//                    if (isNormalTransaction) {
-                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            logs("VALIDATED SUBJECT IS A TYPE INTERNSHIP");
-                            if (count == 1) {
-                                for (int i = 0; i < table.getChildren().size(); i++) {
-                                    SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
-                                    String row_status = (String) currentTableRow.getRowMetaData().get(KEY_ROW_STATUS);
-                                    if (!row_status.equalsIgnoreCase("REMOVED")) {
-                                        SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
-                                        SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
-                                        if (SubjectClassification.isMajor(subjectInTheList.getType())) {
-                                            //invalid
-//                                            showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                            logs("1");
-                                            Notifications.create()
-                                                    .title("Warning")
-                                                    .text("Cannot take Internship with a Major Subject."
-                                                            + "\nClick for more details.")
-                                                    .onAction(a -> {
-                                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
-                                                    })
-                                                    .position(Pos.BOTTOM_RIGHT).showWarning();
-                                            return;
-                                        }
-                                    }
-                                }
-                            } else if (count == 0) {
-                                //valid
-                                logs("3");
-                            } else {
-                                //invalid
-//                                showWarningNotification("Warning", "Internship can only be taken with"
-//                                        + "\n 1 Minor or Elective subject.");
-                                logs("4");
-                                    
-                                Notifications.create()
-                                        .title("Warning")
-                                        .text("Internship can only be taken with"
-                                        + "\n 1 Minor or Elective subject."
-                                                + "\nClick for more details.")
-                                        .onAction(a -> {
-                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
-                                        })
-                                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                                return;
-                            }
-                        } else if (isInternshipExist) {
-                            if (count > 1) {
-                                //invalid
-//                                showWarningNotification("Warning", "Internship can only be taken with"
-//                                        + "\n 1 Minor or Elective subject.");
-                                logs("5");    
-                                Notifications.create()
-                                        .title("Warning")
-                                        .text("Internship can only be taken with"
-                                        + "\n 1 Minor or Elective subject."
-                                                + "\nClick for more details.")
-                                        .onAction(a -> {
-                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
-                                        })
-                                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                                return;
-                            } else {
-                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
-                                    //invalid
-//                                    showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                    logs("6");    
-                                    Notifications.create()
-                                            .title("Warning")
-                                            .text("Cannot take Internship with a Major Subject."
-                                                    + "\nClick for more details.")
-                                            .onAction(a -> {
-                                                this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
-                                            })
-                                            .position(Pos.BOTTOM_RIGHT).showWarning();
-                                    return;
-                                } else {
-                                    //valid
-                                    logs("7");
-                                }
-                            }
-                        }
-
-//                        if (totalUnitsAll >= 27) {
-//                            int res = Mono.fx()
-//                                    .alert()
-//                                    .createConfirmation()
-//                                    .setHeader("Maximum Units Reached")
-//                                    .setMessage("Just to inform. The student reached the maximum number of units per semester."
-//                                            + " Are you still want to add the subject?")
-//                                    .confirmYesNo();
-//                            if (res == 1) {
-//                                createRow(subinfo, true);
-////                                createNewRow(subinfo, tableView, table);
-//                            }
-//                        } else {
-                            createRow(subinfo, true);
-//                        }
-//                    } else {
-//                        // if registrar is true, continue adding w/out validations
-////                        createNewRow(subinfo, tableView, table);
-//                        
-//                        createRow(subinfo, true);
-//                    }
-                } else if (mode.equalsIgnoreCase("CHANGE")) {
-                    int res = 1;
-//                    SubjectInformationHolder subinfo_CHANGE_SUBJECT = (SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO);
-                    SubjectMapping OLD_subject = null;
-//                    if (isNormalTransaction) {
-//                        subinfo_CHANGE_SUBJECT = (SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO);
-                        OLD_subject = subinfo_CHANGE_SUBJECT.getSubjectMap();
-                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            if (count > 2) {
-                                //invalid
-//                                showWarningNotification("Warning", "Internship can only be taken with"
-//                                        + "\n 1 Minor or Elective subject.");
-                                logs("1");
-                                    
-                                Notifications.create()
-                                        .title("Warning")
-                                        .text("Internship can only be taken with"
-                                        + "\n 1 Minor or Elective subject."
-                                                + "\nClick for more details.")
-                                        .onAction(a -> {
-                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
-                                        })
-                                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                                return;
-                            } else if (count <= 2) {
-                                for (int i = 0; i < table.getChildren().size(); i++) {
-                                    SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
-
-                                    if (row.getId().equalsIgnoreCase(currentTableRow.getId())) {
-                                        logs("SKIP");
-                                        continue;
-                                    }
-
+                    if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                        logs("VALIDATED SUBJECT IS A TYPE INTERNSHIP");
+                        if (count == 1) {
+                            for (int i = 0; i < table.getChildren().size(); i++) {
+                                SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
+                                String row_status = (String) currentTableRow.getRowMetaData().get(KEY_ROW_STATUS);
+                                if (!row_status.equalsIgnoreCase("REMOVED")) {
                                     SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
                                     SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
                                     if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                         //invalid
-                                        showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                        logs("3");    
+                                        logs("1");
                                         Notifications.create()
                                                 .title("Warning")
                                                 .text("Cannot take Internship with a Major Subject."
                                                         + "\nClick for more details.")
                                                 .onAction(a -> {
-                                                    this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                                    this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
                                                 })
                                                 .position(Pos.BOTTOM_RIGHT).showWarning();
                                         return;
-                                    } else {
-                                        //valid
                                     }
                                 }
-                            } else {
-                                //valid
-                                logs("5");
                             }
-                        }
-
-                        if (OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)
-                                && isInternshipExist) {
-                            isInternshipExist = false;
+                        } else if (count == 0) {
                             //valid
-                            logs("8");
-                        }
+                            logs("3");
+                        } else {
+                            //invalid
+                            logs("4");
 
-                        if (isInternshipExist) {
-                            if (count > 2) {
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with"
+                                    + "\n 1 Minor or Elective subject."
+                                            + "\nClick for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        }
+                    } else if (isInternshipExist) {
+                        if (count > 1) {
+                            //invalid
+                            logs("5");    
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with"
+                                    + "\n 1 Minor or Elective subject."
+                                            + "\nClick for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        } else {
+                            if (SubjectClassification.isMajor(validatedSubject.getType())) {
                                 //invalid
-//                                showWarningNotification("Warning", "Internship can only be taken with"
-//                                        + "\n 1 Minor or Elective subject.");
-                                logs("5"); 
+                                logs("6");    
                                 Notifications.create()
                                         .title("Warning")
-                                        .text("Internship can only be taken with"
-                                        + "\n 1 Minor or Elective subject."
+                                        .text("Cannot take Internship with a Major Subject."
                                                 + "\nClick for more details.")
                                         .onAction(a -> {
-                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
                                         })
                                         .position(Pos.BOTTOM_RIGHT).showWarning();
                                 return;
                             } else {
-                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
+                                //valid
+                                logs("7");
+                            }
+                        }
+                    }
+                    createRow(subinfo, true);
+                } else if (mode.equalsIgnoreCase("CHANGE")) {
+                    int res = 1;
+//                    SubjectInformationHolder subinfo_CHANGE_SUBJECT = (SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO);
+                    SubjectMapping OLD_subject = null;
+                    OLD_subject = subinfo_CHANGE_SUBJECT.getSubjectMap();
+                    if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                        if (count > 2) {
+                            //invalid
+                            logs("1");
+
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with"
+                                    + "\n 1 Minor or Elective subject."
+                                            + "\nClick for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        } else if (count <= 2) {
+                            for (int i = 0; i < table.getChildren().size(); i++) {
+                                SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
+
+                                if (row.getId().equalsIgnoreCase(currentTableRow.getId())) {
+                                    logs("SKIP");
+                                    continue;
+                                }
+
+                                SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
+                                SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
+                                if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                     //invalid
-//                                    showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                    logs("6");  
+                                    showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
+                                    logs("3");    
                                     Notifications.create()
                                             .title("Warning")
                                             .text("Cannot take Internship with a Major Subject."
@@ -1841,38 +1785,62 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                                 this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
                                             })
                                             .position(Pos.BOTTOM_RIGHT).showWarning();
-                                        
                                     return;
                                 } else {
                                     //valid
-                                    logs("7");
                                 }
                             }
+                        } else {
+                            //valid
+                            logs("5");
                         }
+                    }
 
-//                        if (totalUnitsAll >= 27) {
-//                            res = Mono.fx()
-//                                    .alert()
-//                                    .createConfirmation()
-//                                    .setHeader("Maximum Units Reached")
-//                                    .setMessage("Just to inform. The student reached the maximum number of units per semester."
-//                                            + " Are you still want to add the subject?")
-//                                    .confirmYesNo();
-//                        }
-//                    }
+                    if (OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)
+                            && isInternshipExist) {
+                        isInternshipExist = false;
+                        //valid
+                        logs("8");
+                    }
+
+                    if (isInternshipExist) {
+                        if (count > 2) {
+                            //invalid
+                            logs("5"); 
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with"
+                                    + "\n 1 Minor or Elective subject."
+                                            + "\nClick for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        } else {
+                            if (SubjectClassification.isMajor(validatedSubject.getType())) {
+                                //invalid
+                                logs("6");  
+                                Notifications.create()
+                                        .title("Warning")
+                                        .text("Cannot take Internship with a Major Subject."
+                                                + "\nClick for more details.")
+                                        .onAction(a -> {
+                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                        })
+                                        .position(Pos.BOTTOM_RIGHT).showWarning();
+
+                                return;
+                            } else {
+                                //valid
+                                logs("7");
+                            }
+                        }
+                    }
                     if (res == 1) {
                         //change here
                         //make sure to get the right index when mutating the row
                         // subject code and this is a label
-//                        row.getCell(1).<Label>getContent().setText(subinfo.getSubjectMap().getCode());
-//                        // subject title
-//                        row.getCell(2).<Label>getContent().setText(subinfo.getSubjectMap().getDescriptive_title());
-//                        // since change requires the same units we do not need to mutate the units column
-//                        //UNITS HERE
-//                        row.getCell(4).<Label>getContent().setText(subinfo.getSubjectMap().getLec_units().toString());
-//                        row.getCell(6).<Label>getContent().setText(subinfo.getSubjectMap().getLab_units().toString());
-//                        // section column
-//                        row.getCell(7).<Label>getContent().setText(subinfo.getFullSectionName());
                         SubjectMapping subject = subinfo.getSubjectMap();
                         double totalNew = subject.getLec_units() + subject.getLab_units();
                         double totalOld = OLD_subject.getLec_units() + OLD_subject.getLab_units();
@@ -1901,7 +1869,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         Label lbl_lec = searchAccessibilityText(simplerowcontent, "lec");
                         Label lbl_lab = searchAccessibilityText(simplerowcontent, "lab");
                         Label lbl_section = searchAccessibilityText(simplerowcontent, "section");
-
+                        Label lbl_icon = searchAccessibilityText(simplerowcontent, "letter");
+                        
+                        lbl_icon.setText(subject.getCode().charAt(0) + "");
                         lbl_code.setText(subject.getCode());
                         lbl_descriptive_title.setText(subject.getDescriptive_title());
                         lbl_lec.setText(subject.getLec_units() + "");
@@ -2530,48 +2500,86 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void setView(String view) {
+        switch (view) {
+            case "home":
+//                this.studentSearched = null;
+//                this.anchor_results.setVisible(true);
+//                this.hbox_search.setVisible(true); // search
+//                this.btnFind.setDisable(false);
+//                this.btn_winAdd.setDisable(true);
+                
+                Animate.fade(anchor_results, 150, ()->{
+                    reset();
+                    this.studentSearched = null;
+                    this.anchor_results.setVisible(true);
+                    this.hbox_search.setVisible(true); // search
+                    this.btnFind.setDisable(false);
+                    this.btn_winAdd.setDisable(true);
+                }, this.anchor_preview, this.anchor_results);
+                break;
+
+            case "search":
+//                this.anchor_results.setVisible(true);
+//                this.hbox_loading.setVisible(true); // search
+//                this.btnFind.setDisable(true);
+//                this.btn_winAdd.setDisable(true);
+                
+                Animate.fade(anchor_results, 150, ()->{
+                    reset();
+                    this.anchor_results.setVisible(true);
+                    this.hbox_loading.setVisible(true); // search
+                    this.btnFind.setDisable(true);
+                    this.btn_winAdd.setDisable(true);
+                }, this.anchor_preview, this.anchor_results);
+                break;
+
+            case "no_results":
+//                this.btn_winAdd.setDisable(true);
+//                this.anchor_results.setVisible(true);
+//                this.hbox_none.setVisible(true); // search
+                
+                Animate.fade(anchor_results, 150, ()->{
+                    reset();
+                    this.btn_winAdd.setDisable(true);
+                    this.anchor_results.setVisible(true);
+                    this.hbox_none.setVisible(true); // search
+                }, this.anchor_preview, this.anchor_results);
+                break;
+
+            case "preview":
+//                anchor_add_change.setDisable(false);
+//                this.anchor_preview.setVisible(true); 
+                
+                Animate.fade(anchor_preview, 150, ()->{
+                    reset();
+                    anchor_add_change.setDisable(false);
+                    this.anchor_preview.setVisible(true); 
+                }, this.anchor_preview, this.anchor_results);
+                break;
+            case "already":
+//                this.anchor_results.setVisible(true);
+//                this.hbox_already.setVisible(true); // search
+//                this.btn_winAdd.setDisable(true);
+                
+                Animate.fade(anchor_results, 150, ()->{
+                    reset();
+                    this.anchor_results.setVisible(true);
+                    this.hbox_already.setVisible(true); // search
+                    this.btn_winAdd.setDisable(true);
+                }, this.anchor_preview, this.anchor_results);
+                break;
+        }
+    }
+    
+    private void reset() {
         this.btnFind.setDisable(false);
+        this.btn_winAdd.setDisable(false);
         this.anchor_preview.setVisible(false);
         this.anchor_results.setVisible(false);
         this.hbox_loading.setVisible(false); // loading
         this.hbox_search.setVisible(false); // search
         this.hbox_none.setVisible(false); // no results
         this.hbox_already.setVisible(false);
-        this.btn_winAdd.setDisable(false);
-
         vbox_studentOptions.setVisible(false);
-
-        switch (view) {
-            case "home":
-                this.studentSearched = null;
-                this.anchor_results.setVisible(true);
-                this.hbox_search.setVisible(true); // search
-                this.btnFind.setDisable(false);
-                this.btn_winAdd.setDisable(true);
-                break;
-
-            case "search":
-                this.anchor_results.setVisible(true);
-                this.hbox_loading.setVisible(true); // search
-                this.btnFind.setDisable(true);
-                this.btn_winAdd.setDisable(true);
-                break;
-
-            case "no_results":
-                this.btn_winAdd.setDisable(true);
-                this.anchor_results.setVisible(true);
-                this.hbox_none.setVisible(true); // search
-                break;
-
-            case "preview":
-                anchor_add_change.setDisable(false);
-                this.anchor_preview.setVisible(true);
-                break;
-            case "already":
-                this.anchor_results.setVisible(true);
-                this.hbox_already.setVisible(true); // search
-                this.btn_winAdd.setDisable(true);
-                break;
-        }
     }
 }
