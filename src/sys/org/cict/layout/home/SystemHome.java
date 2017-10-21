@@ -56,43 +56,43 @@ import update5.org.cict.student.controller.StudentHomeController;
  * @author Jhon Melvin
  */
 public class SystemHome extends MonoLauncher {
-
+    
     @FXML
     private JFXButton btn_evaluation;
-
+    
     @FXML
     private JFXButton btn_adding;
-
+    
     @FXML
     private JFXButton btn_faculty_center;
-
+    
     @FXML
     private JFXButton btn_my_account;
-
+    
     @FXML
     private JFXButton btn_logout;
-
+    
     @FXML
     private JFXButton btn_academic_term;
-
+    
     @FXML
     private JFXButton btn_academic_programs;
-
+    
     @FXML
     private JFXButton btn_student;
-
+    
     @FXML
     private JFXButton btn_section;
-
+    
     @FXML
     private JFXButton btn_faculty;
-
+    
     @FXML
     private JFXButton btn_access_controls;
-
+    
     @FXML
     private JFXButton btn_linked;
-
+    
     @Override
     public void onStartUp() {
         //----------------------------------------------------------------------
@@ -103,54 +103,54 @@ public class SystemHome extends MonoLauncher {
                 onShowEvaluation();
             });
         });
-
+        
         MonoClick.addClickEvent(btn_adding, () -> {
             checkStatus("adding", () -> {
                 onShowAddingAndChanging();
             });
         });
-
+        
         MonoClick.addClickEvent(btn_academic_programs, () -> {
             this.onShowAcademicPrograms();
         });
-
+        
         MonoClick.addClickEvent(btn_section, () -> {
             this.onShowSectionManagement();
         });
-
+        
         MonoClick.addClickEvent(btn_faculty, () -> {
             this.onShowFacultyManagement();
         });
-
+        
         MonoClick.addClickEvent(btn_logout, () -> {
             onLogout();
         });
-
+        
         MonoClick.addClickEvent(btn_academic_term, () -> {
             onShowAcademicTerm();
         });
-
+        
         MonoClick.addClickEvent(btn_access_controls, () -> {
             onShowAccessControls();
         });
-
+        
         MonoClick.addClickEvent(btn_my_account, () -> {
             onShowMyAccount();
         });
-
+        
         MonoClick.addClickEvent(btn_linked, () -> {
             onShowLinkedManagement();
         });
-
+        
         MonoClick.addClickEvent(btn_student, () -> {
             onShowStudentHome();
         });
-
+        
         MonoClick.addClickEvent(btn_faculty_center, () -> {
             Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
         });
     }
-
+    
     @Override
     public void onDelayedStart() {
         this.application_root = this.getApplicationRoot();
@@ -160,7 +160,7 @@ public class SystemHome extends MonoLauncher {
     private Pane application_root;
     private static Stage APPLICATION_STAGE;
     public final static String SCENE_TRANSITION_COLOR = "#414852";
-
+    
     public static void launchHome() {
         SystemHome homeFx = M.load(SystemHome.class);
         Stage mainStage = homeFx.createStageApplication();
@@ -182,7 +182,7 @@ public class SystemHome extends MonoLauncher {
             onClose.consume();
         });
     }
-
+    
     private void onLogout() {
         int res = Mono.fx().alert()
                 .createConfirmation()
@@ -196,13 +196,13 @@ public class SystemHome extends MonoLauncher {
                 GenericLoadingShow.instance().show();
             });
             logout.whenCancelled(() -> {
-
+                
             });
             logout.whenFailed(() -> {
                 // sometimes it fails to logout
             });
             logout.whenSuccess(() -> {
-
+                
             });
             logout.whenFinished(() -> {
                 GenericLoadingShow.instance().hide();
@@ -213,34 +213,35 @@ public class SystemHome extends MonoLauncher {
                 // close the stage.
                 APPLICATION_STAGE.close();
                 // relaunch the login screen.
-                relaunchLogin();
-
+                // kill the app to be sure that values will be refreshed
+                MainApplication.die(0);
+                
             });
             logout.setRestTime(300);
             logout.transact();
         }
     }
-
+    
     private void relaunchLogin() {
         MainApplication.launchLogin();
     }
 
     //--------------------------------------------------------------------------
     private void changeRoot(ControllerFX controller, String packer, String fxml) {
-
+        
         Pane fxRoot = Mono.fx().create()
                 .setPackageName(packer)
                 .setFxmlDocument(fxml)
                 .makeFX()
                 .setController(controller)
                 .pullOutLayout();
-
+        
         super.setSceneColor(SCENE_TRANSITION_COLOR);
         Animate.fade(this.getApplicationRoot(), 150, () -> {
             this.changeRoot(fxRoot);
         }, fxRoot);
     }
-
+    
     public static void callHome(SceneFX scene) {
         SystemHome homeFx = M.load(SystemHome.class);
         homeFx.onDelayedStart();
@@ -267,14 +268,14 @@ public class SystemHome extends MonoLauncher {
             btn_evaluation.setDisable(true);
             btn_adding.setDisable(true);
         });
-
+        
         ssc.whenCancelled(() -> {
         });
-
+        
         ssc.whenFailed(() -> {
             Mono.fx().snackbar().showInfo(application_root, "Service is Currently Not Available");
         });
-
+        
         ssc.whenSuccess(() -> {
             if (operation.equalsIgnoreCase("evaluation")) {
                 if (ssc.isEvaluationActive()) {
@@ -290,17 +291,17 @@ public class SystemHome extends MonoLauncher {
                     // offline
                     Mono.fx().snackbar().showInfo(application_root, "Adding Service is Offline");
                 }
-
+                
             } else if (operation.equalsIgnoreCase("encoding")) {
                 // 
             }
         });
-
+        
         ssc.whenFinished(() -> {
             btn_evaluation.setDisable(false);
             btn_adding.setDisable(false);
         });
-
+        
         ssc.transact();
     }
 
@@ -315,7 +316,7 @@ public class SystemHome extends MonoLauncher {
      * programs upon verification.
      */
     private void onShowAcademicPrograms() {
-
+        
         if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN,
                 Access.ACCESS_ASST_ADMIN,
                 Access.ACCESS_LOCAL_REGISTRAR)) {
@@ -345,7 +346,7 @@ public class SystemHome extends MonoLauncher {
         this.changeRoot(controller,
                 "update2.org.cict.layout.academicprogram",
                 "academic-home");
-
+        
     }
 
     /**
@@ -359,12 +360,12 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         EvaluateController controller = new EvaluateController();
         this.changeRoot(controller,
                 "org.cict.evaluation",
                 "evaluation_home");
-
+        
     }
 
     /**
@@ -375,12 +376,12 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         AddingHome controller = new AddingHome();
         this.changeRoot(controller,
                 "update.org.cict.layout.adding_changing",
                 "adding-changing-home");
-
+        
     }
 
     /**
@@ -395,14 +396,14 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         SectionHomeController controller = new SectionHomeController();
         this.changeRoot(controller,
                 "update3.org.cict.layout.sectionmain",
                 "sectionHome");
-
+        
     }
-
+    
     private void onShowFacultyManagement() {
         /**
          * Only the administrator can access this section. including the
@@ -412,62 +413,62 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         FacultyMainController controller = new FacultyMainController();
         this.changeRoot(controller,
                 "org.cict.accountmanager.faculty.layout",
                 "faculty-home");
-
+        
     }
-
+    
     private void onShowAcademicTerm() {
         if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         ControllerFX controller = new AcademicTermHome();
         this.changeRoot(controller,
                 "update3.org.cict.termcalendar",
                 "AcademicTermHome");
-
+        
     }
-
+    
     private void onShowAccessControls() {
         if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
+        
         ControllerFX controller = new AccessManagementHome();
         this.changeRoot(controller,
                 "update3.org.cict.access.management",
                 "AccessManagementHome");
-
+        
     }
-
+    
     private void onShowMyAccount() {
-
+        
         ControllerFX controller = new MyAccountHome();
         this.changeRoot(controller,
                 "update3.org.cict.my_account",
                 "MyAccountHome");
-
+        
     }
-
+    
     private void onShowLinkedManagement() {
         ControllerFX controller = new LinkedHome();
         this.changeRoot(controller,
                 "update4.org.cict.linked_manager",
                 "LinkedHome");
     }
-
+    
     private void onShowStudentHome() {
         ControllerFX controller = new StudentHomeController();
         this.changeRoot(controller,
                 "update5.org.cict.student.layout",
                 "student-home");
-
+        
     }
-
+    
 }

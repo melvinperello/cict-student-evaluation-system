@@ -7,10 +7,12 @@ package org.cict;
 
 import app.lazy.models.Database;
 import com.jhmvin.Mono;
+import com.melvin.mono.fx.bootstrap.M;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.cict.authentication.LoginController;
+import sys.org.cict.layout.home.SystemLogin;
 import update3.org.cict.controller.sectionmain.deltesection.DeleteSectionTransaction;
 
 /**
@@ -32,21 +34,30 @@ public class MainApplication extends Application {
     }
 
     public static void launchLogin() {
-        LoginController controller = new LoginController();
-        Mono.fx().create()
-                .setPackageName("org.cict.authentication")
-                .setFxmlDocument("Login")
-                .makeFX()
-                .setController(controller)
-                .makeScene()
-                .makeStageApplication()
-                .stageResizeable(false)
-                .stageTitle("Login")
-                .stageShow();
-        /**
-         * Add a closing event.
-         */
-        controller.onStageClosing();
+//        LoginController controller = new LoginController();
+//        Mono.fx().create()
+//                .setPackageName("org.cict.authentication")
+//                .setFxmlDocument("Login")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStageApplication()
+//                .stageResizeable(false)
+//                .stageTitle("Login")
+//                .stageShow();
+//
+//        /**
+//         * Add a closing event.
+//         */
+//        controller.onStageClosing();
+
+        SystemLogin loginFx = M.load(SystemLogin.class);
+        Stage loginStage = loginFx.createStageApplication();
+        loginStage.setResizable(false);
+        loginStage.setTitle("CICT | Evaluation System");
+
+        loginFx.onDelayedStart();
+        loginStage.show();
 
     }
 

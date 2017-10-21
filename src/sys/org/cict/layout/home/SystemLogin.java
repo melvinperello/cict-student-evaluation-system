@@ -35,7 +35,6 @@ import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.cict.GenericLoadingShow;
@@ -79,6 +78,7 @@ public class SystemLogin extends MonoLauncher {
     @Override
     public void onStartUp() {
         if (Mono.orm().isStarted()) {
+            System.out.println("Starting ORM");
             /**
              * Hibernate was already started and this login screen was a recall.
              */
@@ -88,8 +88,44 @@ public class SystemLogin extends MonoLauncher {
             /**
              * Initial Login Screen.
              */
+            System.out.println("ORM STARTED");
+            this.vbox_login.setVisible(true);
+            this.vbox_loading.setVisible(false);
             this.bootHibernate();
         }
+
+        //----------------------------------------------------------------------
+    }
+
+    private void bootHibernate() {
+        HibernateLauncher startHibernate = Authenticator
+                .instance()
+                .createHibernateLauncher();
+
+        startHibernate.whenStarted(() -> {
+            this.vbox_loading.setVisible(true);
+            this.vbox_login.setVisible(false);
+        });
+        startHibernate.whenCancelled(() -> {
+            System.out.println("ERROR");
+        });
+        startHibernate.whenFailed(() -> {
+            System.out.println("CANCELLED");
+        });
+        startHibernate.whenSuccess(() -> {
+            this.vbox_loading.setVisible(false);
+            this.vbox_login.setVisible(true);
+        });
+        startHibernate.whenFinished(() -> {
+        });
+
+        startHibernate.transact();
+    }
+
+    //--------------------------------------------------------------------------
+    @Override
+    public void onDelayedStart() {
+        onStageClosing();
 
         //----------------------------------------------------------------------
         Mono.fx().key(KeyCode.ENTER).release(this.getApplicationRoot(), () -> {
@@ -109,32 +145,26 @@ public class SystemLogin extends MonoLauncher {
         MonoClick.addClickEvent(btn_forgot, () -> {
             // this.onShowForgotPassword();
         });
-
     }
 
-    private void bootHibernate() {
-        HibernateLauncher startHibernate = Authenticator
-                .instance()
-                .createHibernateLauncher();
-
-        startHibernate.whenStarted(() -> {
-            this.vbox_loading.setVisible(true);
-            this.vbox_login.setVisible(false);
+    /**
+     * Since only the login and the main application have their own stages. we
+     * need to assign a closing event in this stage.
+     */
+    public void onStageClosing() {
+        this.getCurrentStage().setOnCloseRequest(close -> {
+            try {
+                this.onDestroyApplication();
+            } catch (Exception e) {
+                // if the loading and booting up of hibernate and the user wanted to exit.
+                // this will force the application to close.
+                MainApplication.die(0);
+            }
+            close.consume();
         });
-        startHibernate.whenCancelled(() -> {
-        });
-        startHibernate.whenFailed(() -> {
-        });
-        startHibernate.whenSuccess(() -> {
-            this.vbox_loading.setVisible(false);
-            this.vbox_login.setVisible(true);
-        });
-        startHibernate.whenFinished(() -> {
-        });
-
-        startHibernate.transact();
     }
 
+    //--------------------------------------------------------------------------
     private void onLogin() {
         String user = this.txt_username.getText().trim();
         String pass = this.txt_password.getText().trim();
@@ -199,23 +229,6 @@ public class SystemLogin extends MonoLauncher {
          * Change redirect to home.
          */
         Home.launchApp();
-    }
-
-    /**
-     * Since only the login and the main application have their own stages. we
-     * need to assign a closing event in this stage.
-     */
-    public void onStageClosing() {
-        this.getCurrentStage().setOnCloseRequest(close -> {
-            try {
-                this.onDestroyApplication();
-            } catch (Exception e) {
-                // if the loading and booting up of hibernate and the user wanted to exit.
-                // this will force the application to close.
-                MainApplication.die(0);
-            }
-            close.consume();
-        });
     }
 
     /**
