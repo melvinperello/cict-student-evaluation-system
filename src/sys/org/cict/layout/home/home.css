@@ -1,0 +1,22 @@
+#vertical_separator{
+    -fx-border-color: white;
+    -fx-border-width: 0 0 0 5;
+}
+
+.header-text{
+    -fx-font-family: 'Courier New';
+    -fx-text-fill: white;
+}
+
+.footer-text{
+    -fx-text-fill: white;
+}
+
+.label{
+   -fx-text-fill: white;
+}
+
+.home-buttons:hover{
+    -fx-cursor: hand;
+}
+

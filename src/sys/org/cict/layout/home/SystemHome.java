@@ -1,24 +1,47 @@
-package update.org.cict.controller.home;
+/**
+ * CAPSTONE PROJECT.
+ * BSIT 4A-G1.
+ * MONOSYNC TECHNOLOGIES.
+ * MONOSYNC FRAMEWORK VERSION 1.0.0 TEACUP RICE ROLL.
+ * THIS PROJECT IS PROPRIETARY AND CONFIDENTIAL ANY PART THEREOF.
+ * COPYING AND DISTRIBUTION WITHOUT PERMISSION ARE NOT ALLOWED.
+ *
+ * COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY.
+ * LINKED SYSTEM.
+ *
+ * PROJECT MANAGER: JHON MELVIN N. PERELLO
+ * DEVELOPERS:
+ * JOEMAR N. DELA CRUZ
+ * GRETHEL EINSTEIN BERNARDINO
+ *
+ * OTHER LIBRARIES THAT ARE USED BELONGS TO THEIR RESPECTFUL OWNERS AND AUTHORS.
+ * NO COPYRIGHT ARE INTENTIONAL OR INTENDED.
+ * THIS PROJECT IS NOT PROFITABLE HENCE FOR EDUCATIONAL PURPOSES ONLY.
+ * THIS PROJECT IS ONLY FOR COMPLIANCE TO OUR REQUIREMENTS.
+ * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
+ *
+ */
+package sys.org.cict.layout.home;
 
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.MonoLauncher;
+import com.melvin.mono.fx.bootstrap.M;
+import com.melvin.mono.fx.events.MonoClick;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.cict.MainApplication;
 import org.cict.GenericLoadingShow;
+import org.cict.MainApplication;
 import org.cict.ThreadMill;
 import org.cict.accountmanager.AccountManager;
 import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyMainController;
 import org.cict.evaluation.EvaluateController;
 import update.org.cict.controller.adding.AddingHome;
-import sys.org.cict.layout.home.SystemHome;
 import update2.org.cict.controller.academicprogram.AcademicHome;
 import update3.org.cict.access.Access;
 import update3.org.cict.access.management.AccessManagementHome;
@@ -29,189 +52,176 @@ import update4.org.cict.linked_manager.LinkedHome;
 import update5.org.cict.student.controller.StudentHomeController;
 
 /**
- * This class is Deprecated please use the new Class for home
  *
- * @see SystemHome
  * @author Jhon Melvin
- * @deprecated
  */
-@Deprecated
-public class Home extends SceneFX implements ControllerFX {
+public class SystemHome extends MonoLauncher {
 
     @FXML
-    private AnchorPane application_root;
+    private JFXButton btn_evaluation;
 
     @FXML
-    private Button btn_evaluation;
+    private JFXButton btn_adding;
 
     @FXML
-    private Button btn_adding;
+    private JFXButton btn_faculty_center;
 
     @FXML
-    private Button btn_academic_programs;
-
-    @FXML
-    private Button btn_section;
-
-    @FXML
-    private Button btn_faculty;
-
-    @FXML
-    private JFXButton btn_student;
-
-    @FXML
-    private JFXButton btn_access_controls;
-
-    @FXML
-    private JFXButton btn_academic_term;
+    private JFXButton btn_my_account;
 
     @FXML
     private JFXButton btn_logout;
 
     @FXML
-    private JFXButton btn_linked;
+    private JFXButton btn_academic_term;
 
     @FXML
-    private JFXButton btn_my_account;
+    private JFXButton btn_academic_programs;
 
-    public Home() {
-        //
-    }
+    @FXML
+    private JFXButton btn_student;
 
-    private final static String SCENE_TRANSITION_COLOR = "#414852";
+    @FXML
+    private JFXButton btn_section;
+
+    @FXML
+    private JFXButton btn_faculty;
+
+    @FXML
+    private JFXButton btn_access_controls;
+
+    @FXML
+    private JFXButton btn_linked;
 
     @Override
-    public void onInitialization() {
-        /**
-         * Never forget this it is the most important part of SceneFX.
-         */
-        this.bindScene(application_root);
+    public void onStartUp() {
+        //----------------------------------------------------------------------
+
+        //----------------------------------------------------------------------
+        MonoClick.addClickEvent(btn_evaluation, () -> {
+            checkStatus("evaluation", () -> {
+                onShowEvaluation();
+            });
+        });
+
+        MonoClick.addClickEvent(btn_adding, () -> {
+            checkStatus("adding", () -> {
+                onShowAddingAndChanging();
+            });
+        });
+
+        MonoClick.addClickEvent(btn_academic_programs, () -> {
+            this.onShowAcademicPrograms();
+        });
+
+        MonoClick.addClickEvent(btn_section, () -> {
+            this.onShowSectionManagement();
+        });
+
+        MonoClick.addClickEvent(btn_faculty, () -> {
+            this.onShowFacultyManagement();
+        });
+
+        MonoClick.addClickEvent(btn_logout, () -> {
+            onLogout();
+        });
+
+        MonoClick.addClickEvent(btn_academic_term, () -> {
+            onShowAcademicTerm();
+        });
+
+        MonoClick.addClickEvent(btn_access_controls, () -> {
+            onShowAccessControls();
+        });
+
+        MonoClick.addClickEvent(btn_my_account, () -> {
+            onShowMyAccount();
+        });
+
+        MonoClick.addClickEvent(btn_linked, () -> {
+            onShowLinkedManagement();
+        });
+
+        MonoClick.addClickEvent(btn_student, () -> {
+            onShowStudentHome();
+        });
     }
 
-    /**
-     * Launches the main stage for the first time. this will be the stage of the
-     * entire application upon its whole life cycle. it will also use the same
-     * Scene across all windows.
-     */
-    public static void launchApp() {
-//        Home controller = new Home();
-//        Mono.fx().create()
-//                .setPackageName("update.org.cict.layout.home")
-//                .setFxmlDocument("home")
-//                .makeFX()
-//                .setController(controller)
-//                .makeScene()
-//                .makeStageApplication()
-//                .stageMinDimension(1024, 700)
-//                .stageMaximized(true)
-//                .stageShow();
-//
-//        /**
-//         * Adds stage close request.
-//         */
-//        controller.onStageClosing();
-
-        /**
-         * This class is already obsolete all calls from this are passed to the
-         * new class of home.
-         */
-        SystemHome.launchHome();
+    @Override
+    public void onDelayedStart() {
+        this.application_root = this.getApplicationRoot();
     }
 
+    //--------------------------------------------------------------------------
+    private Pane application_root;
     private static Stage APPLICATION_STAGE;
+    public final static String SCENE_TRANSITION_COLOR = "#414852";
+
+    public static void launchHome() {
+        SystemHome homeFx = M.load(SystemHome.class);
+        Stage mainStage = homeFx.createStageApplication();
+        mainStage.setMinWidth(1024);
+        mainStage.setMinHeight(700);
+        mainStage.setMaximized(true);
+        mainStage.show();
+        homeFx.onDelayedStart();
+        homeFx.onStageClosing();
+    }
 
     /**
      * Closing event for this stage.
      */
     private void onStageClosing() {
-        APPLICATION_STAGE = super.getStage();
+        APPLICATION_STAGE = this.getCurrentStage();
         APPLICATION_STAGE.setOnCloseRequest(onClose -> {
             this.onLogout();
             onClose.consume();
         });
     }
 
-    /**
-     * Allows all stages outside home to call this method and return to Home
-     * Root. this will re-create the home root.
-     *
-     * @param scene
-     */
-    public static void callHome(SceneFX scene) {
-//        Home controller = new Home();
-//        Pane home_root = Mono.fx().create()
-//                .setPackageName("update.org.cict.layout.home")
-//                .setFxmlDocument("home")
-//                .makeFX()
-//                .setController(controller)
-//                .pullOutLayout();
-//        // revert back this color will be the background of the scene
-//        // when replacing a root this color will be visible upon transitions
-//        scene.setSceneColor(SCENE_TRANSITION_COLOR);
-//        Animate.fade(scene.getApplicationRoot(), 150, () -> {
-//            scene.replaceRoot(home_root);
-//        }, home_root);
+    private void onLogout() {
+        int res = Mono.fx().alert()
+                .createConfirmation()
+                .setHeader("Logout Account")
+                .setTitle("Confirmation")
+                .setMessage("Are you sure you want to logout this account?")
+                .confirmYesNo();
+        if (res == 1) {
+            Logout logout = AccountManager.instance().createLogout();
+            logout.whenStarted(() -> {
+                GenericLoadingShow.instance().show();
+            });
+            logout.whenCancelled(() -> {
 
-        /**
-         * This class is already obsolete all calls from this are passed to the
-         * new class of home.
-         */
-        SystemHome.callHome(scene);
+            });
+            logout.whenFailed(() -> {
+                // sometimes it fails to logout
+            });
+            logout.whenSuccess(() -> {
+
+            });
+            logout.whenFinished(() -> {
+                GenericLoadingShow.instance().hide();
+                /**
+                 * Only destroy the threads of this session.
+                 */
+                ThreadMill.threads().shutdown();
+                // close the stage.
+                APPLICATION_STAGE.close();
+                // relaunch the login screen.
+                relaunchLogin();
+
+            });
+            logout.setRestTime(300);
+            logout.transact();
+        }
     }
 
-    @Override
-    public void onEventHandling() {
-
-        super.addClickEvent(btn_evaluation, () -> {
-            checkStatus("evaluation", () -> {
-                onShowEvaluation();
-            });
-        });
-
-        super.addClickEvent(btn_adding, () -> {
-            checkStatus("adding", () -> {
-                onShowAddingAndChanging();
-            });
-        });
-
-        super.addClickEvent(btn_academic_programs, () -> {
-            this.onShowAcademicPrograms();
-        });
-
-        super.addClickEvent(btn_section, () -> {
-            this.onShowSectionManagement();
-        });
-
-        super.addClickEvent(btn_faculty, () -> {
-            this.onShowFacultyManagement();
-        });
-
-        super.addClickEvent(btn_logout, () -> {
-            onLogout();
-        });
-
-        super.addClickEvent(btn_academic_term, () -> {
-            onShowAcademicTerm();
-        });
-
-        super.addClickEvent(btn_access_controls, () -> {
-            onShowAccessControls();
-        });
-
-        super.addClickEvent(btn_my_account, () -> {
-            onShowMyAccount();
-        });
-
-        super.addClickEvent(btn_linked, () -> {
-            onShowLinkedManagement();
-        });
-
-        super.addClickEvent(btn_student, () -> {
-            onShowStudentHome();
-        });
-
+    private void relaunchLogin() {
+        MainApplication.launchLogin();
     }
 
+    //--------------------------------------------------------------------------
     private void changeRoot(ControllerFX controller, String packer, String fxml) {
 
         Pane fxRoot = Mono.fx().create()
@@ -222,56 +232,76 @@ public class Home extends SceneFX implements ControllerFX {
                 .pullOutLayout();
 
         super.setSceneColor(SCENE_TRANSITION_COLOR);
-        Animate.fade(application_root, 150, () -> {
-            super.replaceRoot(fxRoot);
+        Animate.fade(this.getApplicationRoot(), 150, () -> {
+            this.changeRoot(fxRoot);
         }, fxRoot);
     }
 
+    public static void callHome(SceneFX scene) {
+        SystemHome homeFx = M.load(SystemHome.class);
+         homeFx.onDelayedStart();
+
+        // revert back this color will be the background of the scene
+        // when replacing a root this color will be visible upon transitions
+        scene.setSceneColor(SCENE_TRANSITION_COLOR);
+        Animate.fade(scene.getApplicationRoot(), 150, () -> {
+            scene.replaceRoot(homeFx.getApplicationRoot());
+        }, homeFx.getApplicationRoot());
+    }
+
+    //--------------------------------------------------------------------------
     /**
-     * There is no user access for logout everyone can logout ofcourse.
+     * Checks the status whether if the evaluation and adding services are
+     * online.
+     *
+     * @param operation
+     * @param next
      */
-    public void onLogout() {
-//        int res = Mono.fx().alert()
-//                .createConfirmation()
-//                .setHeader("Logout Account")
-//                .setTitle("Confirmation")
-//                .setMessage("Are you sure you want to logout this account?")
-//                .confirmYesNo();
-//        if (res == 1) {
-//            Logout logout = AccountManager.instance().createLogout();
-//            logout.whenStarted(() -> {
-//                GenericLoadingShow.instance().show();
-//            });
-//            logout.whenCancelled(() -> {
-//
-//            });
-//            logout.whenFailed(() -> {
-//                // sometimes it fails to logout
-//            });
-//            logout.whenSuccess(() -> {
-//
-//            });
-//            logout.whenFinished(() -> {
-//                GenericLoadingShow.instance().hide();
-//                /**
-//                 * Only destroy the threads of this session.
-//                 */
-//                ThreadMill.threads().shutdown();
-//                // close the stage.
-//                APPLICATION_STAGE.close();
-//                // relaunch the login screen.
-//                relaunchLogin();
-//
-//            });
-//            logout.setRestTime(300);
-//            logout.transact();
-//        }
+    private void checkStatus(String operation, Runnable next) {
+        AcademicTermHome.ServiceStatusChecker ssc = new AcademicTermHome().new ServiceStatusChecker();
+        ssc.whenStarted(() -> {
+            btn_evaluation.setDisable(true);
+            btn_adding.setDisable(true);
+        });
+
+        ssc.whenCancelled(() -> {
+        });
+
+        ssc.whenFailed(() -> {
+            Mono.fx().snackbar().showInfo(application_root, "Service is Currently Not Available");
+        });
+
+        ssc.whenSuccess(() -> {
+            if (operation.equalsIgnoreCase("evaluation")) {
+                if (ssc.isEvaluationActive()) {
+                    onShowEvaluation();
+                } else {
+                    // offline
+                    Mono.fx().snackbar().showInfo(application_root, "Evaluation Service is Offline");
+                }
+            } else if (operation.equalsIgnoreCase("adding")) {
+                if (ssc.isAddingActive()) {
+                    onShowAddingAndChanging();
+                } else {
+                    // offline
+                    Mono.fx().snackbar().showInfo(application_root, "Adding Service is Offline");
+                }
+
+            } else if (operation.equalsIgnoreCase("encoding")) {
+                // 
+            }
+        });
+
+        ssc.whenFinished(() -> {
+            btn_evaluation.setDisable(false);
+            btn_adding.setDisable(false);
+        });
+
+        ssc.transact();
     }
 
-    private void relaunchLogin() {
-//        MainApplication.launchLogin();
-    }
-
+    //--------------------------------------------------------------------------
+    // events
     /**
      * This section is covered to manage the curriculums and academic programs.
      * only the administrator limited to the assistant administrator can apply
@@ -434,89 +464,6 @@ public class Home extends SceneFX implements ControllerFX {
                 "update5.org.cict.student.layout",
                 "student-home");
 
-    }
-
-    /**
-     * This is just a sample function to show the different uses of isDenied
-     * methods.
-     */
-    private void accessSamples() {
-        /**
-         * If the user don't have system level of access it will return true.
-         */
-        Access.isDeniedIfNot(Access.ACCESS_SYSTEM);
-
-        /**
-         * This will return true if the user is not from any access level given
-         * below. this can accept multiple parameters.
-         */
-        Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN,
-                Access.ACCESS_EVALUATOR,
-                Access.ACCESS_SYSTEM);
-
-        /**
-         * Any user with lower access level than the prescribed level. this will
-         * return true. take note that the higher the access level the less
-         * integer value it possess. any access level above evaluator this will
-         * return false hence executing the preceeding codes.
-         *
-         */
-        Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true);
-
-        /**
-         * You can also use the isGranted method.
-         */
-        Access.isGranted(Access.ACCESS_EVALUATOR);
-    }
-
-    /**
-     * Checks the status whether if the evaluation and adding services are
-     * online.
-     *
-     * @param operation
-     * @param next
-     */
-    private void checkStatus(String operation, Runnable next) {
-        AcademicTermHome.ServiceStatusChecker ssc = new AcademicTermHome().new ServiceStatusChecker();
-        ssc.whenStarted(() -> {
-            btn_evaluation.setDisable(true);
-            btn_adding.setDisable(true);
-        });
-
-        ssc.whenCancelled(() -> {
-        });
-
-        ssc.whenFailed(() -> {
-            Mono.fx().snackbar().showInfo(application_root, "Service is Currently Not Available");
-        });
-
-        ssc.whenSuccess(() -> {
-            if (operation.equalsIgnoreCase("evaluation")) {
-                if (ssc.isEvaluationActive()) {
-                    onShowEvaluation();
-                } else {
-                    // offline
-                    Mono.fx().snackbar().showInfo(application_root, "Evaluation Service is Offline");
-                }
-            } else if (operation.equalsIgnoreCase("adding")) {
-                if (ssc.isAddingActive()) {
-                    onShowAddingAndChanging();
-                } else {
-                    // offline
-                    Mono.fx().snackbar().showInfo(application_root, "Adding Service is Offline");
-                }
-
-            } else if (operation.equalsIgnoreCase("encoding")) {
-                // 
-            }
-        });
-
-        ssc.whenFinished(() -> {
-            btn_evaluation.setDisable(false);
-            btn_adding.setDisable(false);
-        });
-
-        ssc.transact();
     }
 
 }

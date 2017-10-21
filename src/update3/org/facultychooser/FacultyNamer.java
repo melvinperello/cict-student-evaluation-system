@@ -24,6 +24,7 @@
 package update3.org.facultychooser;
 
 import app.lazy.models.FacultyMapping;
+import app.lazy.models.utils.FacultyUtility;
 
 /**
  *
@@ -38,16 +39,17 @@ public class FacultyNamer {
      * @return
      */
     public static String getName(FacultyMapping map) {
-        if (map == null) {
-            return "";
-        }
-        String name = "";
-        name += (map.getLast_name() + " ");
-        name += (map.getFirst_name());
-
-        if (map.getMiddle_name() != null) {
-            name += (" " + map.getMiddle_name());
-        }
-        return name;
+//        if (map == null) {
+//            return "";
+//        }
+//        String name = "";
+//        name += (map.getLast_name() + " ");
+//        name += (map.getFirst_name());
+//
+//        if (map.getMiddle_name() != null) {
+//            name += (" " + map.getMiddle_name());
+//        }
+//        return name;
+        return FacultyUtility.getFacultyName(map);
     }
 }
