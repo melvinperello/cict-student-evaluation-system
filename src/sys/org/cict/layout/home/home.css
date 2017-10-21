@@ -13,10 +13,21 @@
 }
 
 .label{
-   -fx-text-fill: white;
+    -fx-text-fill: white;
 }
 
 .home-buttons:hover{
     -fx-cursor: hand;
+}
+
+
+
+.separator-horizontal{
+    -fx-border-color: white;
+    -fx-border-width: 0 0 1 0;
+}
+.separator-vertical{
+    -fx-border-color: white;
+    -fx-border-width: 0 0 0 1;
 }
 

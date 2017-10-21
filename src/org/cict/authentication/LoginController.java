@@ -44,6 +44,7 @@ import update3.org.cict.access.Access;
  *
  * @author Jhon Melvin
  */
+@Deprecated
 public class LoginController extends SceneFX implements ControllerFX {
 
     @FXML
@@ -87,19 +88,18 @@ public class LoginController extends SceneFX implements ControllerFX {
     public void onInitialization() {
         super.bindScene(application_root);
 
-        if (Mono.orm().isStarted()) {
-            /**
-             * Hibernate was already started and this login screen was a recall.
-             */
-            this.pnlLoading.setVisible(false);
-            this.pnlLogin.setVisible(true);
-        } else {
-            /**
-             * Initial Login Screen.
-             */
-            this.bootHibernate();
-        }
-
+//        if (Mono.orm().isStarted()) {
+//            /**
+//             * Hibernate was already started and this login screen was a recall.
+//             */
+//            this.pnlLoading.setVisible(false);
+//            this.pnlLogin.setVisible(true);
+//        } else {
+//            /**
+//             * Initial Login Screen.
+//             */
+//            this.bootHibernate();
+//        }
         imgInvUser.setVisible(false);
         imgInvPassword.setVisible(false);
     }
@@ -108,20 +108,7 @@ public class LoginController extends SceneFX implements ControllerFX {
      * Start the hibernate system.
      */
     private void bootHibernate() {
-        HibernateLauncher startHibernate = Authenticator
-                .instance()
-                .createHibernateLauncher();
-
-        startHibernate.setOnStart(start -> {
-            this.pnlLoading.setVisible(true);
-            this.pnlLogin.setVisible(false);
-        });
-
-        startHibernate.setOnSuccess(onSuccess -> {
-            this.pnlLoading.setVisible(false);
-            this.pnlLogin.setVisible(true);
-        });
-        startHibernate.transact();
+//
     }
 
     /**
@@ -129,16 +116,16 @@ public class LoginController extends SceneFX implements ControllerFX {
      * need to assign a closing event in this stage.
      */
     public void onStageClosing() {
-        super.getStage().setOnCloseRequest(close -> {
-            try {
-                this.onDestroyApplication();
-            } catch (Exception e) {
-                // if the loading and booting up of hibernate and the user wanted to exit.
-                // this will force the application to close.
-                MainApplication.die(0);
-            }
-            close.consume();
-        });
+//        super.getStage().setOnCloseRequest(close -> {
+//            try {
+//                this.onDestroyApplication();
+//            } catch (Exception e) {
+//                // if the loading and booting up of hibernate and the user wanted to exit.
+//                // this will force the application to close.
+//                MainApplication.die(0);
+//            }
+//            close.consume();
+//        });
     }
 
     /**
@@ -203,139 +190,103 @@ public class LoginController extends SceneFX implements ControllerFX {
      * Login Success show main window close the old one.
      */
     private void showMainEvaluation() {
-        super.finish();
-        /**
-         * Change redirect to home.
-         */
-        Home.launchApp();
+//        super.finish();
+//        /**
+//         * Change redirect to home.
+//         */
+//        Home.launchApp();
     }
 
     private void onLogin() {
-        String user = this.txtUsername.getText().trim();
-        String pass = this.txtPassword.getText().trim();
-        if (this.checkEmpty(user, pass)) {
-            ValidateLogin validateLogin = Authenticator
-                    .instance()
-                    .createLoginValidator();
-            // transaction variables
-            validateLogin.username = user;
-            validateLogin.password = pass;
-
-            validateLogin.setOnStart(start -> {
-                GenericLoadingShow.instance().show();
-            });
-
-            validateLogin.setOnSuccess(onSuccess -> {
-                GenericLoadingShow.instance().hide();
-                if (validateLogin.isAuthenticated()) {
-                    checkAccess(validateLogin.getCreatedSessionID());
-                } else {
-                    Mono.fx()
-                            .alert()
-                            .createInfo()
-                            .setTitle("Authentication Gateway")
-                            .setHeader("Authentication Failed")
-                            .setMessage(validateLogin.getAuthenticatorMessage())
-                            .showAndWait();
-                }
-            });
-
-            validateLogin.setOnCancel(cancel -> {
-                onLoginError();
-            });
-
-            validateLogin.setOnFailure(onFailure -> {
-                onLoginError();
-            });
-
-            validateLogin.setRestTime(500);
-            validateLogin.transact();
-        }
-    }
-
-    private void checkAccess(Integer sessionID) {
-        /**
-         * Access is denied with true flag means that any access level above the
-         * required can still access the system.
-         */
-        if (Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true)) {
-            Mono.fx()
-                    .alert()
-                    .createError()
-                    .setTitle("Authentication Gateway")
-                    .setHeader("Access Denied")
-                    .setMessage("You do not have enough access permission to continue. Thank You !")
-                    .showAndWait();
-            return;
-        }
-        /**
-         * Create Keep Alive Thread.
-         */
-        ThreadMill.threads().KEEP_ALIVE_THREAD.setTask(() -> {
-            AccountFacultySessionMapping accountSessionAlive = Mono.orm()
-                    .newSearch(Database.connect().account_faculty_session())
-                    .eq("FACULTY_account_id", CollegeFaculty.instance().getACCOUNT_ID())
-                    .active(Order.desc("session_id"))
-                    .first();
-            Calendar now = Mono.orm().getServerTime().getCalendar();
-            now.add(Calendar.MINUTE, 1);
-            accountSessionAlive.setKeep_alive(now.getTime());
-            Database.connect().account_faculty_session().update(accountSessionAlive);
-        });
-        ThreadMill.threads().KEEP_ALIVE_THREAD.start();
-        /**
-         * Show window.
-         */
-        showMainEvaluation();
+//        String user = this.txtUsername.getText().trim();
+//        String pass = this.txtPassword.getText().trim();
+//        if (this.checkEmpty(user, pass)) {
+//            ValidateLogin validateLogin = Authenticator
+//                    .instance()
+//                    .createLoginValidator();
+//            // transaction variables
+//            validateLogin.username = user;
+//            validateLogin.password = pass;
+//
+//            validateLogin.setOnStart(start -> {
+//                GenericLoadingShow.instance().show();
+//            });
+//
+//            validateLogin.setOnSuccess(onSuccess -> {
+//                GenericLoadingShow.instance().hide();
+//                if (validateLogin.isAuthenticated()) {
+//                    checkAccess(validateLogin.getCreatedSessionID());
+//                } else {
+//                    Mono.fx()
+//                            .alert()
+//                            .createInfo()
+//                            .setTitle("Authentication Gateway")
+//                            .setHeader("Authentication Failed")
+//                            .setMessage(validateLogin.getAuthenticatorMessage())
+//                            .showAndWait();
+//                }
+//            });
+//
+//            validateLogin.setOnCancel(cancel -> {
+//                onLoginError();
+//            });
+//
+//            validateLogin.setOnFailure(onFailure -> {
+//                onLoginError();
+//            });
+//
+//            validateLogin.setRestTime(500);
+//            validateLogin.transact();
+//        }
     }
 
     /**
      * If something went wrong.
      */
     private void onLoginError() {
-        GenericLoadingShow.instance().hide();
-        Mono.fx()
-                .alert()
-                .createError()
-                .setTitle("Authentication Gateway")
-                .setHeader("Authentication Error")
-                .setMessage("We cannot process your login request at "
-                        + "the moment. Sorry For The Inconvenience, Thank You!")
-                .showAndWait();
+//        GenericLoadingShow.instance().hide();
+//        Mono.fx()
+//                .alert()
+//                .createError()
+//                .setTitle("Authentication Gateway")
+//                .setHeader("Authentication Error")
+//                .setMessage("We cannot process your login request at "
+//                        + "the moment. Sorry For The Inconvenience, Thank You!")
+//                .showAndWait();
     }
 
     private boolean checkEmpty(String user, String pass) {
-        if (user.isEmpty()) {
-            Mono.fx()
-                    .alert()
-                    .createWarning()
-                    .setTitle("Credentials")
-                    .setHeader("Username Field is Empty!")
-                    .setMessage("Please fill up the field with your username. Thank You !")
-                    .showAndWait();
-            this.requestFocus(this.txtUsername);
-            this.imgInvUser.setVisible(true);
-            return false;
-        }
-        if (pass.isEmpty()) {
-            Mono.fx()
-                    .alert()
-                    .createWarning()
-                    .setTitle("Credentials")
-                    .setHeader("Password Field is Empty!")
-                    .setMessage("Please fill up the field with your password. Thank You !")
-                    .showAndWait();
-            this.requestFocus(this.txtPassword);
-            this.imgInvPassword.setVisible(true);
-            return false;
-        }
+//        if (user.isEmpty()) {
+//            Mono.fx()
+//                    .alert()
+//                    .createWarning()
+//                    .setTitle("Credentials")
+//                    .setHeader("Username Field is Empty!")
+//                    .setMessage("Please fill up the field with your username. Thank You !")
+//                    .showAndWait();
+//            this.requestFocus(this.txtUsername);
+//            this.imgInvUser.setVisible(true);
+//            return false;
+//        }
+//        if (pass.isEmpty()) {
+//            Mono.fx()
+//                    .alert()
+//                    .createWarning()
+//                    .setTitle("Credentials")
+//                    .setHeader("Password Field is Empty!")
+//                    .setMessage("Please fill up the field with your password. Thank You !")
+//                    .showAndWait();
+//            this.requestFocus(this.txtPassword);
+//            this.imgInvPassword.setVisible(true);
+//            return false;
+//        }
         return true;
     }
 
     private void requestFocus(Node control) {
-        Stage stage = Mono.fx().getParentStage(control);
-        stage.requestFocus();
-        control.requestFocus();
+//        Stage stage = Mono.fx().getParentStage(control);
+//        stage.requestFocus();
+//        control.requestFocus();
     }
 
     public void onShowRegister() {
@@ -354,7 +305,7 @@ public class LoginController extends SceneFX implements ControllerFX {
                 .setPackageName("org.cict.accountmanager")
                 .setFxmlDocument("Register")
                 .makeFX()
-//                .setController(controller)
+                //                .setController(controller)
                 .pullOutLayout();
 
         super.setSceneColor("#2983D5"); // call once on entire scene lifecycle

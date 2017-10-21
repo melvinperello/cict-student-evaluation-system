@@ -598,7 +598,7 @@
                         <Font name="Courier New" size="15.0" />
                      </font>
                   </Label>
-                  <Label styleClass="footer-text" text="Powered by Monosync Studio PH">
+                  <Label styleClass="footer-text" text="Powered by Monosync Studio PH &quot;Innovating Possibilities&quot;">
                      <font>
                         <Font name="Courier New" size="15.0" />
                      </font>

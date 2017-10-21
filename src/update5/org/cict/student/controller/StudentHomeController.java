@@ -57,14 +57,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import update.org.cict.controller.home.Home;
-import static update.org.cict.controller.home.Home.SCENE_TRANSITION_COLOR;
+
 
 /**
  *

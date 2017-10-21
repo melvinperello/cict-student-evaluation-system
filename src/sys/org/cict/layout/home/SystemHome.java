@@ -145,6 +145,10 @@ public class SystemHome extends MonoLauncher {
         MonoClick.addClickEvent(btn_student, () -> {
             onShowStudentHome();
         });
+
+        MonoClick.addClickEvent(btn_faculty_center, () -> {
+            Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
+        });
     }
 
     @Override
@@ -239,7 +243,7 @@ public class SystemHome extends MonoLauncher {
 
     public static void callHome(SceneFX scene) {
         SystemHome homeFx = M.load(SystemHome.class);
-         homeFx.onDelayedStart();
+        homeFx.onDelayedStart();
 
         // revert back this color will be the background of the scene
         // when replacing a root this color will be visible upon transitions
