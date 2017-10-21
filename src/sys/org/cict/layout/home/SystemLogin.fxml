@@ -75,7 +75,7 @@
                   <Insets left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
                <children>
-                  <VBox fx:id="vbox_login" alignment="CENTER" prefHeight="458.0" prefWidth="392.0" spacing="5.0">
+                  <VBox fx:id="vbox_login" alignment="CENTER" prefHeight="458.0" prefWidth="392.0" spacing="5.0" visible="false">
                      <children>
                         <HBox alignment="CENTER">
                            <children>
@@ -141,7 +141,7 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="vbox_loading" alignment="TOP_CENTER" prefHeight="458.0" prefWidth="392.0" spacing="5.0" visible="false">
+                  <VBox fx:id="vbox_loading" alignment="TOP_CENTER" prefHeight="458.0" prefWidth="392.0" spacing="5.0">
                      <children>
                         <HBox alignment="CENTER">
                            <children>

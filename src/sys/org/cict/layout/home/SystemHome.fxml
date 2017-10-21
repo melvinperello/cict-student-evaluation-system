@@ -124,7 +124,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="EMS-01">
+                              <Label fx:id="lbl_system_id" graphicTextGap="10.0" text="EMS-01">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -148,7 +148,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="BULSU2017-a">
+                              <Label fx:id="lbl_bsu_id" graphicTextGap="10.0" text="BULSU2017-a">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -172,7 +172,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="Perello">
+                              <Label fx:id="lbl_lastname" graphicTextGap="10.0" text="Perello">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -196,7 +196,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="Jhon Melvin">
+                              <Label fx:id="lbl_frstname" graphicTextGap="10.0" text="Jhon Melvin">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -220,7 +220,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="Nieto">
+                              <Label fx:id="lbl_middlename" graphicTextGap="10.0" text="Nieto">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -244,7 +244,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="Male">
+                              <Label fx:id="lbl_gender" graphicTextGap="10.0" text="Male">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -272,7 +272,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="Local Registrar">
+                              <Label fx:id="lbl_access" graphicTextGap="10.0" text="Local Registrar">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -296,7 +296,7 @@
                                     <Insets right="10.0" />
                                  </padding>
                               </Label>
-                              <Label graphicTextGap="10.0" text="Local Registrar">
+                              <Label fx:id="lbl_desgination" graphicTextGap="10.0" text="Local Registrar">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -476,7 +476,7 @@
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@images/evaluate.png" />
+                                                <Image url="@images/Calendar_96px.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>

@@ -77,22 +77,6 @@ public class SystemLogin extends MonoLauncher {
 
     @Override
     public void onStartUp() {
-        if (Mono.orm().isStarted()) {
-            System.out.println("Starting ORM");
-            /**
-             * Hibernate was already started and this login screen was a recall.
-             */
-            this.vbox_login.setVisible(false);
-            this.vbox_loading.setVisible(true);
-        } else {
-            /**
-             * Initial Login Screen.
-             */
-            System.out.println("ORM STARTED");
-            this.vbox_login.setVisible(true);
-            this.vbox_loading.setVisible(false);
-            this.bootHibernate();
-        }
 
         //----------------------------------------------------------------------
     }
@@ -125,6 +109,19 @@ public class SystemLogin extends MonoLauncher {
     //--------------------------------------------------------------------------
     @Override
     public void onDelayedStart() {
+        if (Mono.orm().isStarted()) {
+            System.out.println("Starting ORM");
+            /**
+             * Hibernate was already started and this login screen was a recall.
+             */
+        } else {
+            /**
+             * Initial Login Screen.
+             */
+
+            this.bootHibernate();
+        }
+
         onStageClosing();
 
         //----------------------------------------------------------------------
