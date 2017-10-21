@@ -40,23 +40,23 @@ public class ScheduleConstants {
     /**
      * Days of the week.
      */
+    public final static String SUNDAY = "SUNDAY";
     public final static String MONDAY = "MONDAY";
     public final static String TUESDAY = "TUESDAY";
     public final static String WEDNESDAY = "WEDNESDAY";
     public final static String THURSDAY = "THURSDAY";
     public final static String FRIDAY = "FRIDAY";
     public final static String SATURDAY = "SATURDAY";
-    public final static String SUNDAY = "SUNDAY";
 
     public static ObservableList<String> getDayList() {
         ObservableList<String> days = FXCollections.observableArrayList();
+        days.add(WordUtils.capitalizeFully(SUNDAY));
         days.add(WordUtils.capitalizeFully(MONDAY));
         days.add(WordUtils.capitalizeFully(TUESDAY));
         days.add(WordUtils.capitalizeFully(WEDNESDAY));
         days.add(WordUtils.capitalizeFully(THURSDAY));
         days.add(WordUtils.capitalizeFully(FRIDAY));
         days.add(WordUtils.capitalizeFully(SATURDAY));
-        days.add(WordUtils.capitalizeFully(SUNDAY));
         return days;
     }
 

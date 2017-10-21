@@ -51,6 +51,7 @@ import org.cict.evaluation.student.credit.CreditController;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.cict.reports.profile.student.PrintStudentProfile;
 import org.controlsfx.control.Notifications;
+import update3.org.collegechooser.ChooserHome;
 
 /**
  *
@@ -230,35 +231,59 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_verify, () -> {
             this.onVerify();
         });
-        
-        super.addClickEvent(btn_view_deficiency, ()->{
+
+        super.addClickEvent(btn_view_deficiency, () -> {
             btn_view_deficiency.setDisable(true);
             this.printDeficiency();
         });
-        
-        super.addClickEvent(btn_view_profile, ()->{
+
+        super.addClickEvent(btn_view_profile, () -> {
             btn_view_profile.setDisable(true);
             this.printProfile();
         });
+
+        // Code to change student college
+        super.addClickEvent(btn_change_college, () -> {
+            String selectedCollege = ChooserHome.open();
+            if (selectedCollege == null || selectedCollege.equalsIgnoreCase("cancel")) {
+                // operation was cancelled
+                return;
+            }
+
+            if (this.CURRENT_STUDENT.getCollege().equalsIgnoreCase(selectedCollege)) {
+                Mono.fx().snackbar().showInfo(application_root, "No Changes Were Made.");
+                return;
+            }
+
+            // save changes
+            this.CURRENT_STUDENT.setCollege(selectedCollege);
+            boolean updated = Database.connect().student().update(CURRENT_STUDENT);
+            if (updated) {
+                Mono.fx().snackbar().showSuccess(application_root, "Information was updated.");
+            } else {
+                Mono.fx().snackbar().showInfo(application_root, "Cannot Save Changes, Please Try Again.");
+            }
+        });
+
     }
-    
+
     private void printProfile() {
         PrintStudentProfile profile = new PrintStudentProfile();
         profile.CICT_id = CURRENT_STUDENT.getCict_id();
-        profile.whenSuccess(()->{
+        profile.whenSuccess(() -> {
             Notifications.create()
                     .title("Printing Student Profile")
                     .text("Please wait a moment.")
                     .showInformation();
             btn_view_profile.setDisable(false);
         });
-        profile.whenCancelled(()->{
+        profile.whenCancelled(() -> {
             Notifications.create()
                     .title("Something went wrong.")
                     .text("Student not found.")
                     .showInformation();
         });
-        profile.whenFailed(()->{
+        profile.whenFailed(() -> {
             Notifications.create()
                     .title("Request Failed")
                     .text("Please try again later.")
@@ -266,25 +291,25 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         });
         profile.transact();
     }
-    
+
     private void printDeficiency() {
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = CURRENT_STUDENT.getCict_id();
-        print.whenSuccess(()->{
+        print.whenSuccess(() -> {
             btn_view_deficiency.setDisable(false);
             Notifications.create()
                     .title("Printing the Deficiency Report.")
                     .text("Please wait a moment.")
                     .showInformation();
         });
-        print.whenCancelled(()->{
+        print.whenCancelled(() -> {
             Notifications.create()
                     .title("Request Cancelled")
-                    .text(print.getMessage() + 
-                            "\nSorry for the inconviniece.")
+                    .text(print.getMessage()
+                            + "\nSorry for the inconviniece.")
                     .showWarning();
         });
-        print.whenFailed(()->{
+        print.whenFailed(() -> {
             Notifications.create()
                     .title("Request Failed")
                     .text("Something went wrong. Sorry for the inconviniece.")
@@ -353,9 +378,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             this.cmb_yrlvl.getSelectionModel().select(CURRENT_STUDENT.getYear_level() == null || CURRENT_STUDENT.getYear_level() == 1 ? 0 : CURRENT_STUDENT.getYear_level() - 1);
             close = false;
             btn_verify.setDisable((this.CURRENT_STUDENT.getVerified() != 0));
-            if ((CURRENT_STUDENT.getGender()==null? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("MALE")) {
+            if ((CURRENT_STUDENT.getGender() == null ? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("MALE")) {
                 rbtn_male.setSelected(true);
-            } else if ((CURRENT_STUDENT.getGender()==null? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("FEMALE")) {
+            } else if ((CURRENT_STUDENT.getGender() == null ? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("FEMALE")) {
                 rbtn_female.setSelected(true);
             } else {
                 // if none was set in the database

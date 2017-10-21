@@ -223,32 +223,37 @@ public class TimeTableController extends SceneFX implements ControllerFX {
                 // time frames
                 break;
             case 2:
-                // monday schedule
-                displaySchedules(cf, ScheduleConstants.MONDAY);
+                // sunday schedule
+                displaySchedules(cf, ScheduleConstants.SUNDAY);
+
                 break;
             case 3:
-                // tuesday schedule
-                displaySchedules(cf, ScheduleConstants.TUESDAY);
+                // monday schedule
+                displaySchedules(cf, ScheduleConstants.MONDAY);
+
                 break;
             case 4:
-                // wednesday schedule
-                displaySchedules(cf, ScheduleConstants.WEDNESDAY);
+                // tuesday schedule
+                displaySchedules(cf, ScheduleConstants.TUESDAY);
+
                 break;
             case 5:
                 // thursday schedule
                 displaySchedules(cf, ScheduleConstants.THURSDAY);
                 break;
             case 6:
-                // friday schedule
-                displaySchedules(cf, ScheduleConstants.FRIDAY);
+                // wednesday schedule
+                displaySchedules(cf, ScheduleConstants.WEDNESDAY);
+
                 break;
             case 7:
-                // saturday schedule
-                displaySchedules(cf, ScheduleConstants.SATURDAY);
+                // friday schedule
+                displaySchedules(cf, ScheduleConstants.FRIDAY);
+
                 break;
             case 8:
-                // sunday schedule
-                displaySchedules(cf, ScheduleConstants.SUNDAY);
+                // saturday schedule
+                displaySchedules(cf, ScheduleConstants.SATURDAY);
 
                 break;
 

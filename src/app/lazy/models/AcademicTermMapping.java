@@ -2,7 +2,7 @@
 // SQL_table: academic_term
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 21, 2017 03:55:50 PM
+// Created: Oct 21, 2017 10:03:14 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -33,8 +33,14 @@ private java.lang.String semester;
 private java.lang.Integer semester_regular;
 private java.lang.Integer current;
 private java.lang.Integer evaluation_service;
+private java.lang.Integer es_updater;
+private java.util.Date es_update_date;
 private java.lang.Integer adding_service;
+private java.lang.Integer as_updater;
+private java.util.Date as_update_date;
 private java.lang.Integer encoding_service;
+private java.lang.Integer ens_updater;
+private java.util.Date ens_update_date;
 private java.lang.String type;
 private java.lang.String approval_state;
 private java.lang.Integer active;
@@ -95,6 +101,25 @@ public void setEvaluation_service(java.lang.Integer fieldEvaluationService) {
 	this.evaluation_service = fieldEvaluationService;
 }
 
+@Column(name = "es_updater", nullable = true, length = 10)
+public java.lang.Integer getEs_updater() {
+	return this.es_updater;
+}
+
+public void setEs_updater(java.lang.Integer fieldEsUpdater) {
+	this.es_updater = fieldEsUpdater;
+}
+
+@Column(name = "es_update_date", nullable = true, length = 19)
+@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+public java.util.Date getEs_update_date() {
+	return this.es_update_date;
+}
+
+public void setEs_update_date(java.util.Date fieldEsUpdateDate) {
+	this.es_update_date = fieldEsUpdateDate;
+}
+
 @Column(name = "adding_service", nullable = true, length = 10)
 public java.lang.Integer getAdding_service() {
 	return this.adding_service;
@@ -104,6 +129,25 @@ public void setAdding_service(java.lang.Integer fieldAddingService) {
 	this.adding_service = fieldAddingService;
 }
 
+@Column(name = "as_updater", nullable = true, length = 10)
+public java.lang.Integer getAs_updater() {
+	return this.as_updater;
+}
+
+public void setAs_updater(java.lang.Integer fieldAsUpdater) {
+	this.as_updater = fieldAsUpdater;
+}
+
+@Column(name = "as_update_date", nullable = true, length = 19)
+@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+public java.util.Date getAs_update_date() {
+	return this.as_update_date;
+}
+
+public void setAs_update_date(java.util.Date fieldAsUpdateDate) {
+	this.as_update_date = fieldAsUpdateDate;
+}
+
 @Column(name = "encoding_service", nullable = true, length = 10)
 public java.lang.Integer getEncoding_service() {
 	return this.encoding_service;
@@ -111,6 +155,25 @@ public java.lang.Integer getEncoding_service() {
 
 public void setEncoding_service(java.lang.Integer fieldEncodingService) {
 	this.encoding_service = fieldEncodingService;
+}
+
+@Column(name = "ens_updater", nullable = true, length = 10)
+public java.lang.Integer getEns_updater() {
+	return this.ens_updater;
+}
+
+public void setEns_updater(java.lang.Integer fieldEnsUpdater) {
+	this.ens_updater = fieldEnsUpdater;
+}
+
+@Column(name = "ens_update_date", nullable = true, length = 19)
+@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+public java.util.Date getEns_update_date() {
+	return this.ens_update_date;
+}
+
+public void setEns_update_date(java.util.Date fieldEnsUpdateDate) {
+	this.ens_update_date = fieldEnsUpdateDate;
 }
 
 @Column(name = "type", nullable = true, length = 50)

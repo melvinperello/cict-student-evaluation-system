@@ -2,7 +2,7 @@
 // SQL_table: academic_term
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 21, 2017 03:55:52 PM
+// Created: Oct 21, 2017 10:03:16 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -23,8 +23,14 @@ public final String semester = "semester";
 public final String semester_regular = "semester_regular";
 public final String current = "current";
 public final String evaluation_service = "evaluation_service";
+public final String es_updater = "es_updater";
+public final String es_update_date = "es_update_date";
 public final String adding_service = "adding_service";
+public final String as_updater = "as_updater";
+public final String as_update_date = "as_update_date";
 public final String encoding_service = "encoding_service";
+public final String ens_updater = "ens_updater";
+public final String ens_update_date = "ens_update_date";
 public final String type = "type";
 public final String approval_state = "approval_state";
 public final String active = "active";

@@ -41,6 +41,7 @@ public class Sample extends MonoApplication {
         SubjectSelector ss = M.load(SubjectSelector.class);
         ss.onDelayedStart();
         ss.createStageApplication().show();
+
     }
 
 }

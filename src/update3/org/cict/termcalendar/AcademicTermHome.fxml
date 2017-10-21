@@ -49,7 +49,7 @@
       </HBox>
       <HBox>
          <children>
-            <VBox maxWidth="-Infinity" prefHeight="474.0" prefWidth="660.0" spacing="10.0">
+            <VBox maxWidth="-Infinity" prefHeight="474.0" prefWidth="660.0" spacing="5.0">
                <children>
                   <HBox prefWidth="200.0" spacing="30.0">
                      <children>
@@ -79,7 +79,7 @@
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/Chevron%20Right_50px_1.png" />
+                                    <Image url="@images/Info_50px_1.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -87,6 +87,29 @@
                         <Label fx:id="lbl_evaluation_status" graphicTextGap="10.0" text="ONLINE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="45.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="BOTTOM_LEFT" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/Time%20Card_48px.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lbl_eval_service_updater" graphicTextGap="10.0" text="JHON MELVIN PERELLO" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" graphicTextGap="10.0" text="Changed this status at" textFill="WHITE" />
+                        <Label fx:id="lbl_eval_service_date" graphicTextGap="10.0" text="OCTOBER 12, 2017 04:43 PM" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                      </children>
@@ -141,7 +164,7 @@
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/Chevron%20Right_50px_1.png" />
+                                    <Image url="@images/Info_50px_1.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -149,6 +172,29 @@
                         <Label fx:id="lbl_adding_status" graphicTextGap="10.0" text="OFFLINE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="45.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="BOTTOM_LEFT" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/Time%20Card_48px.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lbl_adding_service_updater" graphicTextGap="10.0" text="JHON MELVIN PERELLO" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" graphicTextGap="10.0" text="Changed this status at" textFill="WHITE" />
+                        <Label fx:id="lbl_adding_service_date" graphicTextGap="10.0" text="OCTOBER 12, 2017 04:43 PM" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                      </children>
@@ -203,7 +249,7 @@
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/Chevron%20Right_50px_1.png" />
+                                    <Image url="@images/Info_50px_1.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -211,6 +257,29 @@
                         <Label fx:id="lbl_encoding_status" graphicTextGap="10.0" text="OFFLINE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="45.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="BOTTOM_LEFT" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/Time%20Card_48px.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lbl_encoding_service_date" graphicTextGap="10.0" text="JHON MELVIN PERELLO" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" graphicTextGap="10.0" text="Changed this status at" textFill="WHITE" />
+                        <Label fx:id="lbl_encoding_service_date" graphicTextGap="10.0" text="OCTOBER 12, 2017 04:43 PM" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                      </children>

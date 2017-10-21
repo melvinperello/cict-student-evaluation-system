@@ -25,6 +25,8 @@ package update3.org.cict.termcalendar;
 
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.Database;
+import app.lazy.models.utils.DateString;
+import app.lazy.models.utils.FacultyUtility;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
@@ -32,6 +34,7 @@ import com.jhmvin.fx.async.TransactionException;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import java.util.Date;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -40,6 +43,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import update.org.cict.controller.home.Home;
 
@@ -59,10 +63,22 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     private Label lbl_evaluation_status;
 
     @FXML
+    private Label lbl_eval_service_updater;
+
+    @FXML
+    private Label lbl_eval_service_date;
+
+    @FXML
     private JFXButton btn_evaluation_service;
 
     @FXML
     private Label lbl_adding_status;
+
+    @FXML
+    private Label lbl_adding_service_updater;
+
+    @FXML
+    private Label lbl_adding_service_date;
 
     @FXML
     private JFXButton btn_adding_service;
@@ -71,13 +87,13 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     private Label lbl_encoding_status;
 
     @FXML
+    private Label lbl_encoding_service_date;
+
+    @FXML
     private JFXButton btn_encoding_service;
 
     @FXML
     private Label lbl_current_term;
-
-    @FXML
-    private JFXButton btn_change_term;
 
     public AcademicTermHome() {
         //
@@ -245,12 +261,25 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             this.changeButtonColor(btn_encoding_service, "#35BA9B");
         }
 
+        AcademicTermMapping term = ssc.getCurrentTerm();
+        // please be cautious in using the Faculty Utility Read the informations carefully.
+        String as_updater = FacultyUtility.getFacultyName(FacultyUtility.getFaculty(term.getAs_updater()));
+        String es_updater = FacultyUtility.getFacultyName(FacultyUtility.getFaculty(term.getEs_updater()));
+        String ens_updater = FacultyUtility.getFacultyName(FacultyUtility.getFaculty(term.getEns_updater()));
+
+        lbl_adding_service_updater.setText(as_updater);
+        lbl_eval_service_updater.setText(es_updater);
+        lbl_encoding_service_date.setText(ens_updater);
+
+        lbl_adding_service_date.setText(DateString.formatDate(term.getAs_update_date()));
+        lbl_eval_service_date.setText(DateString.formatDate(term.getEs_update_date()));
+        lbl_encoding_service_date.setText(DateString.formatDate(term.getEns_update_date()));
     }
 
     /**
      * changes the status of a specific service.
      */
-    private class ServiceStateChanger extends Transaction {
+    public class ServiceStateChanger extends Transaction {
 
         private AcademicTermMapping currentTerm = SystemProperties.instance().getCurrentAcademicTerm();
 
@@ -288,6 +317,8 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 } else {
                     // if not equal change the value to the proposed state
                     this.currentTerm.setEvaluation_service(proposedValue);
+                    this.currentTerm.setEs_update_date(Mono.orm().getServerTime().getDateWithFormat());
+                    this.currentTerm.setEs_updater(CollegeFaculty.instance().getFACULTY_ID());
                 }
             }
             // for adding and changing
@@ -299,6 +330,8 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                     return false;
                 } else {
                     this.currentTerm.setAdding_service(proposedValue);
+                    this.currentTerm.setAs_update_date(Mono.orm().getServerTime().getDateWithFormat());
+                    this.currentTerm.setAs_updater(CollegeFaculty.instance().getFACULTY_ID());
                 }
             }
 
@@ -310,8 +343,9 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 if (this.currentTerm.getEncoding_service().equals(proposedValue)) {
                     return false;
                 } else {
-
                     this.currentTerm.setEncoding_service(proposedValue);
+                    this.currentTerm.setEns_update_date(Mono.orm().getServerTime().getDateWithFormat());
+                    this.currentTerm.setEns_updater(CollegeFaculty.instance().getFACULTY_ID());
                 }
             }
 
@@ -359,6 +393,10 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
         public boolean isEncodingActive() {
             return encodingActive;
+        }
+
+        public AcademicTermMapping getCurrentTerm() {
+            return currentTerm;
         }
 
         @Override
