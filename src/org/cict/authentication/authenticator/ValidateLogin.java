@@ -344,6 +344,7 @@ public class ValidateLogin extends Transaction {
          * Faculty Information Stored in the Java Virtual Machine.
          */
         CollegeFaculty.instance().setFACULTY_ID(collegeFaculty.getId());
+        CollegeFaculty.instance().setBULSU_ID(collegeFaculty.getBulsu_id());
         CollegeFaculty.instance().setLAST_NAME(collegeFaculty.getLast_name());
         CollegeFaculty.instance().setFIRST_NAME(collegeFaculty.getFirst_name());
         CollegeFaculty.instance().setMIDDLE_NAME(collegeFaculty.getMiddle_name());

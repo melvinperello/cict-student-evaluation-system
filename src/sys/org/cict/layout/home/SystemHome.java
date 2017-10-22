@@ -35,12 +35,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.ThreadMill;
 import org.cict.accountmanager.AccountManager;
 import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyMainController;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.EvaluateController;
 import update.org.cict.controller.adding.AddingHome;
 import update2.org.cict.controller.academicprogram.AcademicHome;
@@ -57,6 +59,9 @@ import update5.org.cict.student.controller.StudentHomeController;
  * @author Jhon Melvin
  */
 public class SystemHome extends MonoLauncher {
+
+    @FXML
+    private Label lbl_hi;
 
     @FXML
     private Label lbl_system_id;
@@ -121,7 +126,11 @@ public class SystemHome extends MonoLauncher {
     @Override
     public void onStartUp() {
         //----------------------------------------------------------------------
+    }
 
+    @Override
+    public void onDelayedStart() {
+        this.application_root = this.getApplicationRoot();
         //----------------------------------------------------------------------
         MonoClick.addClickEvent(btn_evaluation, () -> {
             checkStatus("evaluation", () -> {
@@ -174,11 +183,51 @@ public class SystemHome extends MonoLauncher {
         MonoClick.addClickEvent(btn_faculty_center, () -> {
             Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
         });
+
+        //----------------------------------------------------------------------
+        this.displayLabels();
     }
 
-    @Override
-    public void onDelayedStart() {
-        this.application_root = this.getApplicationRoot();
+    private void displayLabels() {
+        CollegeFaculty loggedUser = CollegeFaculty.instance();
+        this.setLabelText(lbl_hi, "Hi!, " + loggedUser.getFIRST_NAME() + " !");
+        this.lbl_system_id.setText("EMS-" + loggedUser.getFACULTY_ID());
+        try {
+            this.lbl_bsu_id.setText(loggedUser.getBULSU_ID().toUpperCase());
+        } catch (Exception e) {
+            this.lbl_bsu_id.setText("No ID");
+        }
+        //
+        this.setLabelText(this.lbl_frstname, loggedUser.getFIRST_NAME());
+        this.setLabelText(this.lbl_lastname, loggedUser.getLAST_NAME());
+        this.setLabelText(this.lbl_middlename, loggedUser.getMIDDLE_NAME());
+        this.setLabelText(lbl_gender, loggedUser.getGENDER());
+        this.setLabelText(lbl_access, loggedUser.getACCESS_LEVEL());
+        this.setLabelText(lbl_desgination, loggedUser.getDESIGNATION());
+
+    }
+
+    /**
+     * Null safe label setting text.
+     *
+     * @param label
+     * @param value
+     */
+    private void setLabelText(Label label, String value) {
+        if (value == null) {
+            label.setText("");
+            return;
+        }
+        value = value.trim();
+
+        if (value.isEmpty()) {
+            label.setText("No Data");
+        }
+
+        value = value.replace('_', ' ');
+
+        //ok
+        label.setText(WordUtils.capitalizeFully(value));
     }
 
     //--------------------------------------------------------------------------
@@ -461,7 +510,12 @@ public class SystemHome extends MonoLauncher {
     }
 
     private void onShowAccessControls() {
-        if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR)) {
+        if (Access.isDeniedIfNotFrom(
+                Access.ACCESS_ADMIN,
+                Access.ACCESS_ASST_ADMIN,
+                Access.ACCESS_LOCAL_REGISTRAR,
+                Access.ACCESS_CO_REGISTRAR
+        )) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }

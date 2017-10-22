@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="70.0" prefWidth="1200.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <padding>
+      <Insets left="20.0" right="20.0" />
+   </padding>
+   <children>
+      <VBox alignment="CENTER_LEFT">
+         <children>
+            <ImageView fitHeight="41.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../org/cict/accountmanager/src/images/Name_32px.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_LEFT" spacing="20.0" HBox.hgrow="ALWAYS">
+         <children>
+            <VBox alignment="CENTER_LEFT">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label layoutX="10.0" layoutY="10.0" minWidth="-Infinity" prefWidth="80.0" text="ID">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <Label fx:id="lbl_bulsu_id" accessibleText="id" prefWidth="100.0" text="BULSU ID" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="17.0" prefWidth="80.0" text="Department">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <Label fx:id="lbl_department" accessibleText="access" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="BSIT" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Label fx:id="lbl_name" accessibleText="name" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Joemar De la Cruz">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <VBox alignment="CENTER_RIGHT" prefHeight="69.0" prefWidth="197.0">
+         <children>
+            <JFXButton fx:id="btn_remove" prefHeight="34.0" prefWidth="115.0" style="-fx-border-color: #fff;" styleClass="label" text="Remove">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </VBox>
+   </children>
+   <styleClass>
+      <String fx:value="metro-base-color" />
+      <String fx:value="metro-row" />
+   </styleClass>
+   <stylesheets>
+      <URL value="@metro-ui.css" />
+      <URL value="@metro-ui-table.css" />
+   </stylesheets>
+</HBox>

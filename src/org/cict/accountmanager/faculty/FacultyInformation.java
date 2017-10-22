@@ -100,7 +100,13 @@ public class FacultyInformation {
     public String getDepartment() {
         if(faculty==null)
             return "";
-        return faculty.getDepartment();
+        return (faculty.getDepartment()==null? "" : faculty.getDepartment());
+    }
+    
+    public String getRank() {
+        if(faculty==null)
+            return "";
+        return (faculty.getRank()==null? "" : faculty.getRank());
     }
     
     public String getBulsuID() {

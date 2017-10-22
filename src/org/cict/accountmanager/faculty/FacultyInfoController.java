@@ -387,7 +387,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
             rank = MonoString.removeExtraSpace(cmb_rank.getSelectionModel().getSelectedItem().toString().toUpperCase());
         }
         if (MonoString.removeExtraSpace(cmb_des.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {
-            designation = MonoString.removeExtraSpace(cmb_des.getSelectionModel().getSelectedItem().toString().toUpperCase());
+            designation = MonoString.removeExtraSpace(cmb_des.getSelectionModel().getSelectedItem().toString().replace(" ", "_").toUpperCase());
         }
         if (MonoString.removeExtraSpace(cmb_dept.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {
             dept = MonoString.removeExtraSpace(cmb_dept.getSelectionModel().getSelectedItem().toString().toUpperCase());
@@ -475,7 +475,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         lbl_gender.setText(faculty.getGender()==null || faculty.getGender().isEmpty()  ? "NOT SPECIFIED" : WordUtils.capitalizeFully(faculty.getGender()));
         lbl_rank.setText(faculty.getRank()==null || faculty.getRank().isEmpty()  ? "UNRANKED" : faculty.getRank());
         lbl_department.setText(faculty.getDepartment()==null || faculty.getDepartment().isEmpty()  ? "NONE" : (faculty.getDepartment()));
-        lbl_designation.setText(faculty.getDesignation()==null || faculty.getDesignation().isEmpty()  ? "NONE" : WordUtils.capitalizeFully(faculty.getDesignation()));
+        lbl_designation.setText(faculty.getDesignation()==null || faculty.getDesignation().isEmpty()  ? "NONE" : (faculty.getDesignation().replace("_", " ")));
     }
 
     /**

@@ -90,7 +90,7 @@
                   </HBox>
                   <HBox prefWidth="280.0">
                      <children>
-                        <Label graphicTextGap="10.0" text="Hi, Jhon Melvin !">
+                        <Label fx:id="lbl_hi" graphicTextGap="10.0" text="Hi, Jhon Melvin !">
                            <font>
                               <Font name="Open Sans" size="20.0" />
                            </font>

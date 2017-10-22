@@ -31,6 +31,8 @@ import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.events.MonoClick;
+import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
+import com.sun.javafx.application.HostServicesDelegate;
 import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -137,9 +139,11 @@ public class SystemLogin extends MonoLauncher {
 //            this.onDestroyApplication();
 //        });
         MonoClick.addClickEvent(btn_register, () -> {
+            MainApplication.HOST_SERVICE.showDocument("http://localhost/laravel/cictwebportal/public/home/hello");
             //this.onShowRegister();
         });
         MonoClick.addClickEvent(btn_forgot, () -> {
+            MainApplication.HOST_SERVICE.showDocument("http://localhost/laravel/cictwebportal/public/home/hello");
             // this.onShowForgotPassword();
         });
     }

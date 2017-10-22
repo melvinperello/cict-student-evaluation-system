@@ -8,6 +8,8 @@ package org.cict;
 import app.lazy.models.Database;
 import com.jhmvin.Mono;
 import com.melvin.mono.fx.bootstrap.M;
+import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
+import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -21,12 +23,15 @@ import update3.org.cict.controller.sectionmain.deltesection.DeleteSectionTransac
  */
 public class MainApplication extends Application {
 
+    public static HostServicesDelegate HOST_SERVICE;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.HOST_SERVICE = HostServicesFactory.getInstance(this);
         Mono.version();
         // Destroy the default stage.
         stage = null;

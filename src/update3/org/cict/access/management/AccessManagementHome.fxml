@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="20.0">
          <children>
@@ -222,7 +223,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Create System Administrator" textFill="WHITE">
+                                    <JFXButton fx:id="btn_create_system_admin" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Create System Administrator" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -258,7 +259,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Reset System Administrator Password" textFill="WHITE">
+                                    <JFXButton fx:id="btn_reset_system_admin_pass" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Reset System Administrator Password" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -294,7 +295,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Re-Claim Administrative Rights" textFill="WHITE">
+                                    <JFXButton fx:id="btn_reclaim_system_admin" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Re-Claim Administrative Rights" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -358,7 +359,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
+                                    <JFXButton fx:id="btn_assign_new_sys_admin" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -394,7 +395,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add New Assistant Administrator" textFill="WHITE">
+                                    <JFXButton fx:id="btn_add_new_asst_admin" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add New Assistant Administrator" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -430,7 +431,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign Local Registrar" textFill="WHITE">
+                                    <JFXButton fx:id="btn_assign_local_registrar" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign Local Registrar" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -473,48 +474,41 @@
                               </Label>
                            </children>
                         </HBox>
-                        <VBox spacing="10.0">
+                        <StackPane VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="30.0" right="30.0" top="15.0" />
+                           </VBox.margin>
                            <children>
-                              <HBox prefWidth="200.0" spacing="10.0">
+                              <VBox fx:id="vbox_asst_admin_table" prefHeight="510.0" prefWidth="840.0" spacing="10.0" styleClass="metro-table" visible="false" />
+                              <VBox fx:id="vbox_asst_admin_no_found" prefHeight="200.0" prefWidth="100.0" visible="false">
                                  <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/Next%20page_64px_1.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label text="Leaving your post as a system administrator will make your access level the same as a regular faculty. you need then to assign a new System administrator." wrapText="true">
+                                    <Label text="No Account Found">
                                        <font>
-                                          <Font size="16.0" />
+                                          <Font size="33.0" />
                                        </font>
                                     </Label>
                                  </children>
-                              </HBox>
-                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <graphic>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@images/Admin_48px.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </JFXButton>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" top="10.0" />
-                                 </padding>
-                              </HBox>
+                              </VBox>
                            </children>
-                           <padding>
-                              <Insets left="30.0" top="20.0" />
-                           </padding>
+                        </StackPane>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <JFXButton fx:id="btn_add_new_asst_admin1" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="284.0" style="-fx-border-color: white;" text="Add New Assistant Administrator" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/assistant_admin.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="10.0" right="20.0" />
+                           </VBox.margin>
                         </VBox>
                      </children>
                      <padding>
@@ -558,7 +552,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Assistant Registrars" textFill="WHITE">
+                                    <JFXButton fx:id="btn_add_asst_registrar" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Assistant Registrars" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -594,7 +588,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Evaluators" textFill="WHITE">
+                                    <JFXButton fx:id="btn_add_evaluators" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Add Evaluators" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -637,55 +631,48 @@
                               </Label>
                            </children>
                         </HBox>
-                        <VBox spacing="10.0">
+                        <StackPane>
                            <children>
-                              <HBox prefWidth="200.0" spacing="10.0">
+                              <VBox fx:id="vbox_asst_registrar_table" prefHeight="510.0" prefWidth="840.0" spacing="10.0" styleClass="metro-table" visible="false" />
+                              <VBox fx:id="vbox_asst_registrar_no_found" prefHeight="200.0" prefWidth="100.0" visible="false">
                                  <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/Next%20page_64px_1.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label text="Leaving your post as a system administrator will make your access level the same as a regular faculty. you need then to assign a new System administrator." wrapText="true">
+                                    <Label text="No Account Found">
                                        <font>
-                                          <Font size="16.0" />
+                                          <Font size="33.0" />
                                        </font>
                                     </Label>
                                  </children>
-                              </HBox>
-                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <graphic>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@images/Admin_48px.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </JFXButton>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" top="10.0" />
-                                 </padding>
-                              </HBox>
+                              </VBox>
                            </children>
-                           <padding>
-                              <Insets left="30.0" top="20.0" />
-                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="30.0" right="30.0" top="15.0" />
+                           </VBox.margin>
+                        </StackPane>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <JFXButton fx:id="btn_add_asst_registrar1" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="236.0" style="-fx-border-color: white;" text="Add Assistant Registrars" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/User%20Account_64px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="10.0" right="20.0" />
+                           </VBox.margin>
                         </VBox>
                      </children>
                      <padding>
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_evaluators" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_evaluators" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -701,48 +688,41 @@
                               </Label>
                            </children>
                         </HBox>
-                        <VBox spacing="10.0">
+                        <StackPane>
                            <children>
-                              <HBox prefWidth="200.0" spacing="10.0">
+                              <VBox fx:id="vbox_evaluator_table" prefHeight="510.0" prefWidth="840.0" spacing="10.0" styleClass="metro-table" visible="false" />
+                              <VBox fx:id="vbox_evaluator_no_found" prefHeight="200.0" prefWidth="100.0" visible="false">
                                  <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/Next%20page_64px_1.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label text="Leaving your post as a system administrator will make your access level the same as a regular faculty. you need then to assign a new System administrator." wrapText="true">
+                                    <Label text="No Account Found">
                                        <font>
-                                          <Font size="16.0" />
+                                          <Font size="33.0" />
                                        </font>
                                     </Label>
                                  </children>
-                              </HBox>
-                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <JFXButton graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Assign New System Administrator" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <graphic>
-                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@images/Admin_48px.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </JFXButton>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" top="10.0" />
-                                 </padding>
-                              </HBox>
+                              </VBox>
                            </children>
-                           <padding>
-                              <Insets left="30.0" top="20.0" />
-                           </padding>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="30.0" right="30.0" top="15.0" />
+                           </VBox.margin>
+                        </StackPane>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <JFXButton fx:id="btn_add_evaluators1" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="869.0" style="-fx-border-color: white;" text="Add Evaluators" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/evaluator.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="10.0" right="20.0" />
+                           </VBox.margin>
                         </VBox>
                      </children>
                      <padding>
@@ -760,4 +740,8 @@
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
+   <stylesheets>
+      <URL value="@metro-ui.css" />
+      <URL value="@metro-ui-table.css" />
+   </stylesheets>
 </VBox>
