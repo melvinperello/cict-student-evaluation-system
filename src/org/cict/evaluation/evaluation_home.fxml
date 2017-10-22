@@ -141,7 +141,7 @@
                                     <Insets left="1.0" right="1.0" />
                                  </VBox.margin>
                               </JFXButton>
-                              <JFXButton fx:id="btn_encoding" graphicTextGap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@button-hover.css" text="Encoding    " textFill="#414852" VBox.vgrow="ALWAYS">
+                              <JFXButton fx:id="btn_encoding" graphicTextGap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@button-hover.css" text="Moving Up  " textFill="#414852" VBox.vgrow="ALWAYS">
                                  <graphic>
                                     <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
