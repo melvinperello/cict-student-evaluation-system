@@ -41,6 +41,7 @@ import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.events.MonoClick;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -57,8 +58,9 @@ import update3.org.cict.layout.default_loader.LoaderView;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 
 /**
+ * Controls the list of irregular section.
  *
- * @author Jhon Melvin
+ * @fxml win-irregular-sections
  */
 public class WinIrregularSectionsController extends SceneFX implements ControllerFX {
 
@@ -140,7 +142,7 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
 
     @Override
     public void onEventHandling() {
-        super.addClickEvent(btn_back, () -> {
+        MonoClick.addClickEvent(btn_back, () -> {
             Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                 super.replaceRoot(homeFx.getApplicationRoot());
             }, homeFx.getApplicationRoot());
@@ -153,6 +155,10 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
              * Reload Home.
              */
             homeFx.<SectionHomeController>getController().reloadInformation();
+        });
+
+        MonoClick.addClickEvent(btn_create_class, () -> {
+            sout(this.sectionType);
         });
     }
 

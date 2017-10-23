@@ -79,9 +79,9 @@ import update3.org.facultychooser.FacultyChooser;
 import update3.org.facultychooser.FacultyNamer;
 
 /**
- *
  * This class is used in both regular and irregular sections.
  *
+ * @fxml win-section-view
  * @author Jhon Melvin
  */
 public class SectionSubjectsController extends SceneFX implements ControllerFX {

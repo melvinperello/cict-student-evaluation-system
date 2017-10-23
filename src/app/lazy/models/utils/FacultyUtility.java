@@ -82,6 +82,10 @@ public class FacultyUtility {
      * @return
      */
     public final static FacultyMapping getFaculty(Integer id) {
+        if (id == null) {
+            return null;
+        }
+        //
         try {
             return Database.connect().faculty().getPrimary(id);
         } catch (Exception e) {
