@@ -43,6 +43,7 @@ import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.SQL;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -64,6 +65,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import update2.org.cict.controller.academicprogram.AcademicHome;
 import update2.org.cict.controller.academicprogram.AcademicProgramAccessManager;
+import update2.org.cict.layout.subjects.SubjectRow;
 import update3.org.cict.SectionConstants;
 
 /**
@@ -217,31 +219,37 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
 
-        HBox programRow = (HBox) Mono.fx().create()
-                .setPackageName("update2.org.cict.layout.subjects")
-                .setFxmlDocument("row-subject")
-                .makeFX()
-                .pullOutLayout();
-
-        Label lbl_code = searchAccessibilityText(programRow, "subject_code");
-        Label lbl_descriptive_title = searchAccessibilityText(programRow, "descriptive_title");
-        Label lbl_lec = searchAccessibilityText(programRow, "lec");
-        Label lbl_lab = searchAccessibilityText(programRow, "lab");
-        Label lbl_subtype = searchAccessibilityText(programRow, "subtype");
-        Label lbl_type = searchAccessibilityText(programRow, "type");
+//        HBox programRow = (HBox) Mono.fx().create()
+//                .setPackageName("update2.org.cict.layout.subjects")
+//                .setFxmlDocument("row-subject")
+//                .makeFX()
+//                .pullOutLayout();
+        SubjectRow rowFX = M.load(SubjectRow.class);
         
-        JFXButton btn_more_info = searchAccessibilityText(programRow, "btn_more_info");
+        
+        Label lbl_code = rowFX.getLbl_subject_code(); //searchAccessibilityText(programRow, "subject_code");
+        Label lbl_descriptive_title = rowFX.getLbl_descriptive_title(); //searchAccessibilityText(programRow, "descriptive_title");
+        Label lbl_lec = rowFX.getLbl_lec(); //searchAccessibilityText(programRow, "lec");
+        Label lbl_lab = rowFX.getLbl_lab(); //searchAccessibilityText(programRow, "lab");
+        Label lbl_subtype = rowFX.getLbl_subtype(); //searchAccessibilityText(programRow, "subtype");
+        Label lbl_type = rowFX.getLbl_type(); //searchAccessibilityText(programRow, "type");
+        
+        JFXButton btn_more_info = rowFX.getBtn_more_info(); //searchAccessibilityText(programRow, "btn_more_info");
         btn_more_info.addEventHandler(MouseEvent.MOUSE_CLICKED, (e)->{
             this.onOpenSubjectInfoWindow(subject);
        });
         
-        JFXButton btn_remove = searchAccessibilityText(programRow, "btn_remove");
+        super.addDoubleClickEvent(row, ()->{
+            this.onOpenSubjectInfoWindow(subject);
+        });
+        
+        JFXButton btn_remove = rowFX.getBtn_remove(); //searchAccessibilityText(programRow, "btn_remove");
         
         if (AcademicProgramAccessManager.denyIfNotAdmin()) {
             btn_remove.setDisable(true);
         }
         
-        addClickEvent(btn_remove, () -> {
+        super.addClickEvent(btn_remove, () -> {
             canBeRemove = true;
             FetchSubjectInformation fetch = new FetchSubjectInformation();
             fetch.subjectID = subject.getId();
@@ -275,12 +283,10 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
         
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
-        cellParent.setContent(programRow);
+        cellParent.setContent(rowFX.getApplicationRoot());
 
         row.addCell(cellParent);
-//        Mono.fx().thread().wrap(()->{
-            subjectTable.addRow(row);
-//        });
+        subjectTable.addRow(row);
     }
         
     private void askIfRemove(SubjectMapping subject, SimpleTableRow row) {

@@ -327,7 +327,7 @@ public class MovingUpController extends SceneFX implements ControllerFX {
                     .active().all();
             if(grades!=null) {
                 for(GradeMapping grade: grades) {
-                    grade.setReferrence_curriculum(new_selected);
+                    grade.setReferrence_curriculum(old_curriculum_id);
                     boolean updated = Database.connect().grade().transactionalSingleUpdate(currentSession, grade);
                     
                     if (!updated) {

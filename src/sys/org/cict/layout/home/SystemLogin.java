@@ -29,6 +29,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
+import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.events.MonoClick;
 import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
@@ -99,8 +100,12 @@ public class SystemLogin extends MonoLauncher {
             System.out.println("CANCELLED");
         });
         startHibernate.whenSuccess(() -> {
-            this.vbox_loading.setVisible(false);
-            this.vbox_login.setVisible(true);
+//            this.vbox_loading.setVisible(false);
+//            this.vbox_login.setVisible(true);
+            Animate.fade(vbox_loading, 150, ()->{
+                this.vbox_loading.setVisible(false);
+                this.vbox_login.setVisible(true);
+            }, vbox_login);
         });
         startHibernate.whenFinished(() -> {
         });

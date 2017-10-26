@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -90,7 +91,7 @@
                   </HBox>
                   <HBox prefWidth="280.0">
                      <children>
-                        <Label fx:id="lbl_hi" graphicTextGap="10.0" text="Hi, Jhon Melvin !">
+                        <Label fx:id="lbl_hi" graphicTextGap="10.0" text="Hi, Jhon Melvin!">
                            <font>
                               <Font name="Open Sans" size="20.0" />
                            </font>
@@ -378,7 +379,7 @@
                               </HBox>
                               <HBox VBox.vgrow="ALWAYS">
                                  <children>
-                                    <JFXButton fx:id="btn_evaluation" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #00B6DE;" styleClass="home-buttons" text="Evaluate" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_evaluation" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Evaluate" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -389,8 +390,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-evaluate" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_adding" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #56DEA7;" styleClass="home-buttons" text="Adding" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_adding" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Adding" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -401,8 +406,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-adding" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_faculty_center" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #FF7659;" styleClass="home-buttons" text="Faculty Hub" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_faculty_center" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Faculty Hub" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -413,8 +422,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-faculty-hub" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_my_account" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #9E7AC2;" styleClass="home-buttons" text="Account" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_my_account" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Account" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -425,8 +438,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-account" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_logout" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #F26175;" styleClass="home-buttons" text="Logout" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_logout" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Logout" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -440,6 +457,10 @@
                                        <HBox.margin>
                                           <Insets left="20.0" />
                                        </HBox.margin>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-logout" />
+                                       </styleClass>
                                     </JFXButton>
                                  </children>
                               </HBox>
@@ -472,7 +493,7 @@
                               </HBox>
                               <HBox VBox.vgrow="ALWAYS">
                                  <children>
-                                    <JFXButton fx:id="btn_academic_term" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #27ae60;" styleClass="home-buttons" text="Academic Term" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_academic_term" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Academic Term" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -483,8 +504,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-acad-term" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_academic_programs" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #3498db;" styleClass="home-buttons" text="Academic Programs" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_academic_programs" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Academic Programs" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -495,8 +520,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-acad-prog" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_student" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #1abc9c;" styleClass="home-buttons" text="Students" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_student" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Students" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -507,8 +536,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-student" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_section" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #FF7659;" styleClass="home-buttons" text="Sections" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_section" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Sections" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -519,12 +552,16 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-section" />
+                                       </styleClass>
                                     </JFXButton>
                                  </children>
                               </HBox>
                               <HBox>
                                  <children>
-                                    <JFXButton fx:id="btn_faculty" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #e74c3c;" styleClass="home-buttons" text="Faculty" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_faculty" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Faculty" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -535,8 +572,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-faculty" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_access_controls" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #F26175;" styleClass="home-buttons" text="Access Controls" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_access_controls" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Access Controls" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -547,8 +588,12 @@
                                        <font>
                                           <Font size="20.0" />
                                        </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-access-control" />
+                                       </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_linked" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: #2980b9;" styleClass="home-buttons" text="Linked System" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_linked" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Linked System" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -562,6 +607,10 @@
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-linked" />
+                                       </styleClass>
                                     </JFXButton>
                                  </children>
                               </HBox>

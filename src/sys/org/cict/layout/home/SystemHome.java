@@ -190,7 +190,7 @@ public class SystemHome extends MonoLauncher {
 
     private void displayLabels() {
         CollegeFaculty loggedUser = CollegeFaculty.instance();
-        this.setLabelText(lbl_hi, "Hi!, " + loggedUser.getFIRST_NAME() + " !");
+        this.setLabelText(lbl_hi, "Hi, " + loggedUser.getFIRST_NAME() + "!");
         this.lbl_system_id.setText("EMS-" + loggedUser.getFACULTY_ID());
         try {
             this.lbl_bsu_id.setText(loggedUser.getBULSU_ID().toUpperCase());

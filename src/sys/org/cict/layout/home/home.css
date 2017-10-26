@@ -31,3 +31,63 @@
     -fx-border-width: 0 0 0 1;
 }
 
+.home-buttons:hover {
+    -fx-background-color: #335D7E;
+}
+
+
+/*
+    BUTTONS
+*/
+.btn-evaluate {
+    -fx-background-color: #00ADD4;
+    -fx-text-fill: #ffffff;
+}
+
+.btn-adding {
+    -fx-background-color: #52D49F;
+}
+
+.btn-faculty-hub {
+    -fx-background-color: #FF7659;
+}
+
+.btn-account {
+    -fx-background-color: #9E7AC2;
+}
+
+.btn-logout {
+    -fx-background-color: #F26175;
+}
+
+.btn-acad-term {
+    -fx-background-color: #27AE60;
+}
+
+.btn-acad-prog {
+    -fx-background-color: #3498DB;
+}
+
+.btn-student {
+    -fx-background-color: #1ABC9C;
+}
+
+.btn-section {
+    -fx-background-color: #FF7659;
+}
+
+.btn-faculty {
+    -fx-background-color: #E74C3C;
+}
+
+.btn-access-control {
+    -fx-background-color: #F26175;
+}
+
+.btn-linked {
+    -fx-background-color: #2980B9;
+}
+
+
+
+

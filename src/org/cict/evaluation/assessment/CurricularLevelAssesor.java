@@ -171,6 +171,11 @@ public class CurricularLevelAssesor {
                 .active(Order.desc(DB.grade().id))
                 .all();
 
+        if (studentGrades == null) {
+            // no inc grades.
+            return;
+        }
+
         Date currentDate = Mono.orm().getServerTime().getDateWithFormat();
         Calendar currentCalendar = Calendar.getInstance();
         currentCalendar.setTime(currentDate);

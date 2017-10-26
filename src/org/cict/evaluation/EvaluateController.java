@@ -345,16 +345,16 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         //----------------------------------------------------------------------
     }
-
+    
     private void onShowMovingUp() {
         FetchCurriculumInfo fetch = new FetchCurriculumInfo();
         fetch.student = currentStudent;
-        fetch.whenStarted(() -> {
+        fetch.whenStarted(()->{
             GenericLoadingShow.instance().show();
         });
-        fetch.whenSuccess(() -> {
+        fetch.whenSuccess(()->{
             GenericLoadingShow.instance().hide();
-            if (!fetch.isLadderized()) {
+            if(!fetch.isLadderized()) {
                 Notifications.create().title("Warning")
                         .text("This process is applicable only\n"
                                 + "when the student is in ladderized curriculum.")
@@ -362,20 +362,28 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 btn_encoding.setDisable(true);
             } else {
                 ArrayList<CurriculumMapping> results = fetch.getCurriculumPre();
-                if (results != null) {
+                if(results!=null) {
                     this.onShowMoving_up(results);
                 }
             }
         });
-        fetch.whenCancelled(() -> {
+        fetch.whenCancelled(()->{
             GenericLoadingShow.instance().hide();
+            Notifications.create().title("Process Cancelled")
+                    .text(fetch.getLog())
+                    .showWarning();
+            btn_encoding.setDisable(true);
         });
-        fetch.whenFailed(() -> {
+        fetch.whenFailed(()->{
             GenericLoadingShow.instance().hide();
+            Notifications.create().title("Process Failed")
+                    .text("Something went wrong. Please"
+                            + "\ntry again later.")
+                    .showError();
         });
         fetch.transact();
     }
-
+    
     private void onShowMoving_up(ArrayList<CurriculumMapping> results) {
         MovingUpController controller = new MovingUpController(currentStudent, results);
         Mono.fx().create()
@@ -387,62 +395,68 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .makeStageWithOwner(Mono.fx().getParentStage(lblName))
                 .stageResizeable(false)
                 .stageShowAndWait();
-        if (controller.isSaved()) {
+        if(controller.isSaved()) {
             btn_encoding.setDisable(true);
         }
     }
-
+    
+    
     /**
-     * Transaction for getting the curriculum of the student and checking if
-     * ladderized or not. This will also give the curriculum_pre of the said
-     * curriculum.
-     *
+     * Transaction for getting the curriculum of the student
+     * and checking if ladderized or not. This will also give the curriculum_pre
+     * of the said curriculum.
+     * 
      */
     class FetchCurriculumInfo extends Transaction {
-
         public StudentMapping student;
 
         private boolean ladderized = false;
-
-        private boolean isLadderized() {
+        public boolean isLadderized() {
             return ladderized;
         }
-
+        
         private ArrayList<CurriculumMapping> curriculum_pre = new ArrayList<>();
-
-        private ArrayList<CurriculumMapping> getCurriculumPre() {
+        public ArrayList<CurriculumMapping> getCurriculumPre() {
             return curriculum_pre;
         }
-
+        
+        private String log;
+        public String getLog() {
+            return log;
+        }
         @Override
         protected boolean transaction() {
-            if (student == null) {
+            if(student==null) {
                 System.out.println("No student found.");
+                log = "No student found.";
                 return false;
             }
-            if (student.getCURRICULUM_id() == null) {
+            if(student.getCURRICULUM_id()==null) {
                 System.out.println("No curriculum id found.");
+                log = "No curriculum found.";
                 return false;
             }
             CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
-            if (curriculum == null) {
+            if(curriculum==null) {
                 System.out.println("No curriculum found.");
+                log = "No curriculum found.";
                 return false;
             }
             ladderized = ((curriculum.getLadderization().equalsIgnoreCase("YES")));
-            if (ladderized) {
+            if(ladderized) {
                 ArrayList<CurriculumPreMapping> curriculum_pre_temp = Mono.orm().newSearch(Database.connect().curriculum_pre())
                         .eq(DB.curriculum_pre().curriculum_id_req, curriculum.getId())
                         .active().all();
-                if (curriculum_pre_temp == null) {
+                if(curriculum_pre_temp==null) {
                     System.out.println("No curriculum_pre found.");
+                    log = "No available curriculum found"
+                            + "\nfor moving up process.";
                     return false;
                 }
-                for (CurriculumPreMapping curriculum_pre_tem : curriculum_pre_temp) {
+                for(CurriculumPreMapping curriculum_pre_tem: curriculum_pre_temp) {
                     CurriculumMapping each = Database.connect().curriculum().getPrimary(curriculum_pre_tem.getCurriculum_id_get());
-                    if (each == null) {
+                    if(each==null)
                         continue;
-                    }
                     curriculum_pre.add(each);
                 }
             }
@@ -452,7 +466,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         @Override
         protected void after() {
         }
-
+        
     }
 
     /**
@@ -585,43 +599,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     }
 
     /**
-     * checks student curriculum if obsolete.
-     *
-     * @param map
-     * @return
-     */
-    private boolean checkObsolete(CurriculumMapping map) {
-        try {
-            Integer obsolete = map.getObsolete_term();
-            if (obsolete == null) {
-                // not obsolete because null
-                return false;
-            }
-            if (obsolete.equals(1)) {
-                Mono.fx().alert().createWarning()
-                        .setTitle("Obsolete")
-                        .setHeader("Obsolete Curriculum")
-                        .setMessage("The student is currently enrolled in an"
-                                + " Obsolete Curriculum, the student may be a "
-                                + "returnee or the curriculum is not updated."
-                                + "Please consult the local registrar to apply proper changes.")
-                        .show();
-                this.setView("home");
-                return true;
-            }
-        } catch (Exception e) {
-            Mono.fx().alert().createError()
-                    .setTitle("Curriculum Obsolete")
-                    .setHeader("Curriculum Check Error")
-                    .setMessage("Failed in checking the student curriculum status.")
-                    .show();
-            this.setView("home");
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Success Callback of search student. The following code will be executed
      * if the student was found without errors.
      *
@@ -637,13 +614,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.studentSection = search.getStudentSection();
         this.studentSubject = search.getStudentSubject();
         //----------------------------------------------------------------------
-        // check if curriculum is obsolete.
-        boolean res = this.checkObsolete(search.getStudentCurriculum());
-        if (res) {
-            return;
-        }
-        //----------------------------------------------------------------------
         // Test Results
+
         if (Objects.isNull(this.currentStudent)) {
             System.out.println("@EvaluateController: Search is Empty");
             setView("no_results");
@@ -723,54 +695,52 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        });
 //        printCheckList.transact();
 //    }
+
     private void printChecklist() {
         // disallows cross enrollees to print a check list.
         if (this.FLAG_CROSS_ENROLLEE) {
             Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
             return;
         }
-
+        
         CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(currentStudent.getCURRICULUM_id());
         CurriculumMapping curriculum_prep = null;
-        if (currentStudent.getPREP_id() != null) {
+        if(currentStudent.getPREP_id()!=null){
             curriculum_prep = Database.connect().curriculum().getPrimary(currentStudent.getPREP_id());
         }
         Boolean isLegacyExist = false;
-        for (String legacy : PublicConstants.LEGACY_CURRICULUM) {
-            if (legacy.equalsIgnoreCase(curriculum.getName())) {
+        for(String legacy: PublicConstants.LEGACY_CURRICULUM) {
+            if(legacy.equalsIgnoreCase(curriculum.getName())) {
                 isLegacyExist = true;
                 break;
             }
-            if (curriculum_prep != null) {
-                if (legacy.equalsIgnoreCase(curriculum_prep.getName())) {
+            if(curriculum_prep!=null){
+                if(legacy.equalsIgnoreCase(curriculum_prep.getName())) {
                     isLegacyExist = true;
                     break;
                 }
             }
         }
-
+        
         Boolean printLegacy = false;
-        if (isLegacyExist) {
+        if(isLegacyExist) {
             int res = Mono.fx().alert().createConfirmation()
                     .setHeader("Checklist Format")
                     .setMessage("Please choose a format.")
                     .confirmCustom("Legacy", "Standard");
-            if (res == 1) {
+            if(res==1)
                 printLegacy = true;
-            }
         }
-        if (curriculum_prep != null) {
-            if (printLegacy) {
+        if(curriculum_prep != null) {
+            if(printLegacy)
                 printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
-            } else {
+            else
                 printCheckList(printLegacy, curriculum_prep.getId(), null);
-            }
-        } else {
+        } else
             printCheckList(printLegacy, curriculum.getId(), null);
-        }
     }
-
-    private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
+    
+    private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id){
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
         printCheckList.CICT_id = currentStudent.getCict_id();
@@ -780,12 +750,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         printCheckList.setOnSuccess(onSuccess -> {
             GenericLoadingShow.instance().hide();
-            if (prep_id == null) {
+            if(prep_id==null){
                 Notifications.create().title("Please wait, we're nearly there.")
                         .text("Printing the Checklist.").showInformation();
-            } else {
+            } else
                 printCheckList(printLegacy, prep_id, null);
-            }
         });
         printCheckList.setOnCancel(onCancel -> {
             GenericLoadingShow.instance().hide();
@@ -975,7 +944,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         int faculty_id = CollegeFaculty.instance().getFACULTY_ID();
 
         // create task
-        SaveEvaluation evaluateTask = Evaluator.instance().createSaveEvaluation();
+    SaveEvaluation evaluateTask = Evaluator.instance().createSaveEvaluation();
         evaluateTask.studentID = student_id;
         evaluateTask.acadTermID = acad_term_id;
         evaluateTask.facultyID = faculty_id;
@@ -1237,8 +1206,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             } catch (Exception e) {
                 this.lblCourseSection.setText("No Data");
             }
-
-            btn_encoding.setDisable((this.currentStudent.getPREP_id() != null));
+            
+            btn_encoding.setDisable((this.currentStudent.getPREP_id()!=null));
         });
     }
 
