@@ -36,8 +36,8 @@ import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import org.cict.PublicConstants;
-import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.criterion.Order;
 
 /**
@@ -85,13 +85,17 @@ public class CurricularLevelAssesor {
         this.includeAcadTerm = include;
     }
 
+    private Date serverTime;
+
     public void assess() {
+        this.serverTime = Mono.orm().getServerTime().getDateWithFormat();
         hasPrepData = false;
         this.assessmentDetails.clear();
+        // check expired grades before assessing.
+        this.checkExpired();
+        // asses grades
         this.assessGrades();
     }
-
-
 
     /**
      * Gets the assessment values for a specific year.
@@ -155,10 +159,10 @@ public class CurricularLevelAssesor {
     }
 
     /**
-     * Expire checker.
+     * Expire checker. 1 year expiration.
      */
     private void checkExpired() {
-        AcademicTermMapping currentTerm = SystemProperties.instance().getCurrentAcademicTerm();
+//        AcademicTermMapping currentTerm = SystemProperties.instance().getCurrentAcademicTerm();
 
         ArrayList<GradeMapping> studentGrades = Mono.orm()
                 .newSearch(Database.connect().grade())
@@ -167,59 +171,96 @@ public class CurricularLevelAssesor {
                 .active(Order.desc(DB.grade().id))
                 .all();
 
-        for (GradeMapping grade : studentGrades) {
-            if (grade.getACADTERM_id() != null) {
-                int difference = currentTerm.getId() - grade.getACADTERM_id();
-                if (difference > 2) {
-                    // this grade is expired
-                    makeGradeExpired(grade);
-                    continue;
+        Date currentDate = Mono.orm().getServerTime().getDateWithFormat();
+        Calendar currentCalendar = Calendar.getInstance();
+        currentCalendar.setTime(currentDate);
+
+        for (GradeMapping studentGrade : studentGrades) {
+            Date incExpire = studentGrade.getInc_expire();
+            Date postingDate = studentGrade.getPosting_date();
+            if (incExpire != null) {
+                Calendar expireCalendar = Calendar.getInstance();
+                expireCalendar.setTime(incExpire);
+                if (currentCalendar.getTimeInMillis() > expireCalendar.getTimeInMillis()) {
+                    // grade is expired
+                    makeGradeExpired(studentGrade);
+                    // notify user notifications.
+                }
+            } else if (postingDate != null) {
+                // expire time is null but still remarks is inc.
+                Calendar postingCalendar = Calendar.getInstance();
+                postingCalendar.setTime(postingDate);
+                postingCalendar.add(Calendar.MONTH, PublicConstants.INC_EXPIRE);
+                if (currentCalendar.getTimeInMillis() > postingCalendar.getTimeInMillis()) {
+                    // expired Grade
+                    makeGradeExpired(studentGrade);
+                    // notify user notifications.
                 }
             } else {
-                // not null
-                if (grade.getInc_expire() != null) {
-                    // check expire time
-                    if (Mono.orm().getServerTime().isPastServerTime(grade.getInc_expire())) {
-                        // expired
-                        makeGradeExpired(grade);
-                    }
-                } else {
-                    // if null check the creation time
-                    Calendar creationDate = Calendar.getInstance();
-                    creationDate.setTime(grade.getCreated_date());
-                    creationDate.add(Calendar.YEAR, 1);
-
-                    if (Mono.orm().getServerTime().isPastServerTime(creationDate.getTime())) {
-                        // expired
-                        makeGradeExpired(grade);
-                    }
-                }
+                // no method to detect if grade was expired.
             }
-
         }
+
+//        for (GradeMapping grade : studentGrades) {
+//            if (grade.getACADTERM_id() != null) {
+//                int difference = currentTerm.getId() - grade.getACADTERM_id();
+//                if (difference > 2) {
+//                    // this grade is expired
+//                    makeGradeExpired(grade);
+//                    continue;
+//                }
+//            } else {
+//                // not null
+//                if (grade.getInc_expire() != null) {
+//                    // check expire time
+//                    if (Mono.orm().getServerTime().isPastServerTime(grade.getInc_expire())) {
+//                        // expired
+//                        makeGradeExpired(grade);
+//                    }
+//                } else {
+//                    // if null check the creation time
+//                    Calendar creationDate = Calendar.getInstance();
+//                    creationDate.setTime(grade.getCreated_date());
+//                    creationDate.add(Calendar.YEAR, 1);
+//
+//                    if (Mono.orm().getServerTime().isPastServerTime(creationDate.getTime())) {
+//                        // expired
+//                        makeGradeExpired(grade);
+//                    }
+//                }
+//            }
+//
+//        }
     }
 
     private void makeGradeExpired(GradeMapping grade) {
         GradeMapping newGrade = MapFactory.map().grade();
+        //----------------------------------------------------------------------
         newGrade.setACADTERM_id(grade.getACADTERM_id());
         newGrade.setCreated_by(grade.getCreated_by());
         newGrade.setCreated_date(grade.getCreated_date());
         newGrade.setCredit(grade.getCredit());
         newGrade.setCredit_method(grade.getCredit_method());
+        //----------------------------------------------------------------------
         newGrade.setInc_expire(grade.getInc_expire());
         newGrade.setPosted(grade.getPosted());
         newGrade.setPosted_by(grade.getPosted_by());
         newGrade.setPosting_date(grade.getPosting_date());
-        newGrade.setRating(grade.getRating());
-        newGrade.setReferrence_curriculum(grade.getReferrence_curriculum());
         newGrade.setRemarks(grade.getRemarks());
+        newGrade.setRating(grade.getRating());
+        //----------------------------------------------------------------------
+        newGrade.setReferrence_curriculum(grade.getReferrence_curriculum());
         newGrade.setSTUDENT_id(grade.getSTUDENT_id());
         newGrade.setSUBJECT_id(grade.getSUBJECT_id());
+        //----------------------------------------------------------------------
+        // update remarks and ratings
+        newGrade.setRemarks("EXPIRED");
+        newGrade.setRating("EXP");
 
         newGrade.setActive(1);
         newGrade.setReason_for_update("INC Grade has Expired");
         newGrade.setUpdated_by(null);
-        newGrade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+        newGrade.setUpdated_date(this.serverTime);
 
         //
         grade.setActive(0);

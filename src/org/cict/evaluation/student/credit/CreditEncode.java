@@ -43,7 +43,7 @@ import org.hibernate.criterion.Order;
  * @author Jhon Melvin
  */
 public class CreditEncode extends Transaction {
-    
+
     private void logs(Object message) {
         System.out.println("@CreditEncode: " + message.toString());
     }
@@ -57,15 +57,18 @@ public class CreditEncode extends Transaction {
      */
     @Override
     protected boolean transaction() {
-        
+
+        Calendar incExpireTime = Mono.orm().getServerTime().getCalendar();
+        incExpireTime.add(Calendar.MONTH, PublicConstants.INC_EXPIRE);
+
         Session local_session = Mono.orm().openSession();
         // if server cannot create session.
         if (local_session == null) {
             return false;
         }
-        
+
         org.hibernate.Transaction dataTx = local_session.beginTransaction();
-        
+
         for (Object[] grade : grades) {
             /**
              * Iteration values values.
@@ -81,7 +84,7 @@ public class CreditEncode extends Transaction {
                     .eq(DB.subject().id, subject_id)
                     .execute()
                     .first();
-            
+
             if (subject == null) {
                 // cancel transaction
                 return false;
@@ -104,7 +107,7 @@ public class CreditEncode extends Transaction {
                     // if grade was empty int the credit tree
                     continue;
                 }
-                
+
                 logs("Student GRADE is null");
                 studentGrade = MapFactory.map().grade();
                 studentGrade.setSTUDENT_id(cict_id);
@@ -122,13 +125,11 @@ public class CreditEncode extends Transaction {
                 studentGrade.setCredit(subject.getLab_units() + subject.getLec_units());
                 //--------------------------------------------------------------
                 if (studentGrade.getRating().equalsIgnoreCase("INC")) {
-                    Calendar cal = Mono.orm().getServerTime().getCalendar();
-                    cal.add(Calendar.YEAR, 1);
-                    studentGrade.setInc_expire(cal.getTime());
+                    studentGrade.setInc_expire(incExpireTime.getTime());
                 }
                 //--------------------------------------------------------------
                 studentGrade.setReason_for_update("Added Grade Using Credit Tree");
-                
+
                 Integer id = Database.connect().grade()
                         .transactionalInsert(local_session, studentGrade);
                 if (id < 0) {
@@ -158,7 +159,7 @@ public class CreditEncode extends Transaction {
                 // deactivate current grade to insert new values
                 studentGrade.setActive(0);
                 boolean res = Database.connect().grade().transactionalSingleUpdate(local_session, studentGrade);
-                
+
                 if (!res) {
                     dataTx.rollback();
                     logs("Failed to update old");
@@ -204,14 +205,12 @@ public class CreditEncode extends Transaction {
                 grade_copy.setACADTERM_id(studentGrade.getACADTERM_id());
                 //--------------------------------------------------------------
                 if (grade_copy.getRating().equalsIgnoreCase("INC")) {
-                    Calendar cal = Mono.orm().getServerTime().getCalendar();
-                    cal.add(Calendar.YEAR, 1);
-                    grade_copy.setInc_expire(cal.getTime());
+                    grade_copy.setInc_expire(incExpireTime.getTime());
                 }
                 //--------------------------------------------------------------
                 grade_copy.setReason_for_update("Grade Modification using Credit Tree");
                 Integer new_id = Database.connect().grade().transactionalInsert(local_session, grade_copy);
-                
+
                 if (new_id < 0) {
                     // error in insert
                     dataTx.rollback();
@@ -229,10 +228,10 @@ public class CreditEncode extends Transaction {
         logs("complete");
         return true;
     }
-    
+
     @Override
     protected void after() {
-        
+
     }
-    
+
 }

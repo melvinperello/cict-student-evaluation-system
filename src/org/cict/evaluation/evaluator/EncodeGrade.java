@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.collections.ObservableList;
+import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.spreadsheet.Grid;
@@ -79,6 +80,9 @@ public class EncodeGrade extends Transaction {
     protected boolean transaction() {
         final Calendar serverCalendar = Mono.orm().getServerTime().getCalendar();
         final Date serverDate = Mono.orm().getServerTime().getDateWithFormat();
+        final Calendar incExpireTime = Calendar.getInstance();
+        incExpireTime.setTime(serverDate);
+        incExpireTime.add(Calendar.MONTH, PublicConstants.INC_EXPIRE);
 
         // Start Transaction
         Session localSession = Mono.orm().openSession();
@@ -167,9 +171,7 @@ public class EncodeGrade extends Transaction {
                 }
                 //--------------------------------------------------------------
                 if (grades.getRating().equalsIgnoreCase("INC")) {
-                    Calendar cal = serverCalendar;
-                    cal.add(Calendar.YEAR, 1);
-                    grades.setInc_expire(cal.getTime());
+                    grades.setInc_expire(incExpireTime.getTime());
                 }
                 //--------------------------------------------------------------
                 int newGradeID = Database.connect().grade().transactionalInsert(localSession, grades);
@@ -230,9 +232,7 @@ public class EncodeGrade extends Transaction {
                 }
                 //--------------------------------------------------------------
                 if (newGrade.getRating().equalsIgnoreCase("INC")) {
-                    Calendar cal = serverCalendar;
-                    cal.add(Calendar.YEAR, 1);
-                    newGrade.setInc_expire(cal.getTime());
+                    newGrade.setInc_expire(incExpireTime.getTime());
                 }
                 //--------------------------------------------------------------
                 int updatedGradeID = Database.connect().grade().transactionalInsert(localSession, newGrade);

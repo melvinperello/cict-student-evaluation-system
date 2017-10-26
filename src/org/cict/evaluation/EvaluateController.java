@@ -593,12 +593,16 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private boolean checkObsolete(CurriculumMapping map) {
         try {
             Integer obsolete = map.getObsolete_term();
+            if (obsolete == null) {
+                // not obsolete because null
+                return false;
+            }
             if (obsolete.equals(1)) {
                 Mono.fx().alert().createWarning()
                         .setTitle("Obsolete")
                         .setHeader("Obsolete Curriculum")
                         .setMessage("The student is currently enrolled in an"
-                                + " OBsolete Curriculum, the student may be a "
+                                + " Obsolete Curriculum, the student may be a "
                                 + "returnee or the curriculum is not updated."
                                 + "Please consult the local registrar to apply proper changes.")
                         .show();
