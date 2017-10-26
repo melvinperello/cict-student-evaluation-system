@@ -41,6 +41,9 @@ public class DateString {
     public final static SimpleDateFormat TIME_FORMAT_1
             = new SimpleDateFormat("MMMMMMMMMMM dd, yyyy hh:mm:ss a");
 
+    public final static SimpleDateFormat TIME_FORMAT_2
+            = new SimpleDateFormat("MMMMMMMMMMM dd, yyyy hh:mm a");
+    
     /**
      * It's been very hard to format Dates every time that it will be fetched
      * from the database. it may be late but this is the app.lazy.models.utils

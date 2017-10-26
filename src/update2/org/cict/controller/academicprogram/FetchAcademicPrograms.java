@@ -46,6 +46,15 @@ public class FetchAcademicPrograms extends Transaction {
         return academicProgramsCollection;
     }
 
+    private Integer implemented = 0, unimplemented = 0;
+    public Integer getImplementedCount() {
+        return implemented;
+    }
+    public Integer getUnimplementedCount() {
+        return unimplemented;
+    }
+    
+    
     @Override
     protected boolean transaction() {
         academicProgramsCollection = new ArrayList<>();
@@ -86,6 +95,10 @@ public class FetchAcademicPrograms extends Transaction {
                     .all();
 
             info.setAcademicProgram(academicProgram);
+            if(academicProgram.getImplemented().equals(1))
+                implemented++;
+            else
+                unimplemented++;
             info.setCurriculums(curriculums);
             this.academicProgramsCollection.add(info);
         }

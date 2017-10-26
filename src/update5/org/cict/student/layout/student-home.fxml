@@ -105,11 +105,11 @@
                   </HBox>
                   <StackPane VBox.vgrow="ALWAYS">
                      <VBox.margin>
-                        <Insets left="55.0" right="70.0" />
+                        <Insets left="55.0" right="15.0" />
                      </VBox.margin>
                      <children>
-                        <VBox fx:id="vbox_list" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" />
-                        <VBox fx:id="vbox_no_result" prefHeight="455.0" prefWidth="906.0">
+                        <VBox fx:id="vbox_list" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" visible="false" />
+                        <VBox fx:id="vbox_no_result" prefHeight="455.0" prefWidth="906.0" visible="false">
                            <StackPane.margin>
                               <Insets />
                            </StackPane.margin>
@@ -311,7 +311,7 @@
                         </VBox>
                      </children>
                      <VBox.margin>
-                        <Insets top="40.0" />
+                        <Insets top="20.0" />
                      </VBox.margin>
                   </HBox>
                   <VBox alignment="CENTER" prefHeight="82.0" prefWidth="1079.0">
@@ -347,7 +347,7 @@
                   </VBox>
                </children>
                <padding>
-                  <Insets bottom="10.0" top="30.0" />
+                  <Insets bottom="10.0" top="150.0" />
                </padding>
             </VBox>
             <VBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="1079.0" style="-fx-background-color: #656D79;">

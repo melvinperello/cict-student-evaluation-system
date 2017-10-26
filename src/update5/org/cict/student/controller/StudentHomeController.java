@@ -193,21 +193,12 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         }
         
         if(SELECTED_mode.equalsIgnoreCase(NAME)) {
-//            Criterion search_for_name = SQL.or(
-//                    Restrictions.ilike(DB.student().last_name, searchWord, MatchMode.ANYWHERE),
-//                    Restrictions.ilike(DB.student().first_name, searchWord, MatchMode.ANYWHERE),
-//                    Restrictions.ilike(DB.student().middle_name, searchWord, MatchMode.ANYWHERE));
             fetchStudent(searchWord, false, null, null);
         } else if(SELECTED_mode.equalsIgnoreCase(STUDENT_NUM)) {
-//            Criterion search_for_stud_num = SQL.or(
-//                    Restrictions.ilike(DB.student().id, searchWord, MatchMode.ANYWHERE));
             fetchStudent(searchWord, false, null, null);
         } else if(SELECTED_mode.equalsIgnoreCase(ACAD_PROG)) {
             String[] keys = searchWord.split(" ");
             if(keys.length == 1) {
-                // assuming that it is a academic code
-//                Criterion search_for_academic_program = SQL.or(
-//                        Restrictions.ilike(DB.academic_program().code, searchWord, MatchMode.ANYWHERE));
                 fetchStudent(searchWord, true, null, null);
             } else if(keys.length>=2) {
                 String[] section = keys[1].split("-");

@@ -11,7 +11,7 @@
  *
  * PROJECT MANAGER: JHON MELVIN N. PERELLO
  * DEVELOPERS:
- * JOEMAR N. DELA CRUZ
+ * JOEMAR N. DE LA CRUZ
  * GRETHEL EINSTEIN BERNARDINO
  *
  * OTHER LIBRARIES THAT ARE USED BELONGS TO THEIR RESPECTFUL OWNERS AND AUTHORS.
@@ -21,22 +21,42 @@
  * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
  *
  */
-package update3.org.cict.access;
+package org.cict.evaluation.moving_up;
+
+import com.jfoenix.controls.JFXButton;
+import com.melvin.mono.fx.MonoLauncher;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 /**
  *
- * @author Jhon Melvin
+ * @author Joemar
  */
-public class SystemOverriding {
+public class CurriculumRow extends MonoLauncher {
 
-    public static final String CATEGORY_EVALUATION = "EVALUATION";
+    @FXML
+    private Label lbl_major;
 
-    /**
-     * Evaluation Related System Overriding.
-     */
-    public static final String EVAL_EXCEED_MAX_UNITS = "EXCEED_MAX_UNITS";
-    public static final String EVAL_INTERNSHIP_WITH_OTHERS = "INTERNSHIP_WITH_OTHERS";
-    public static final String EVAL_BYPASSED_PRE_REQUISITES = "BYPASSED_PRE_REQUISITES";
-    public static final String EVAL_INTERN_GRADE_REQUIREMENT = "INTERN_GRADE_REQUIREMENT";
-    public static final String EVAL_GRADE_REQUIREMENT_FOR_MOVING_UP = "GRADE_REQUIREMENT_FOR_MOVING_UP";
+    @FXML
+    private Label lbl_curriculum_name;
+
+    @FXML
+    private JFXButton btn_select;
+
+    @Override
+    public void onStartUp() {
+    }
+
+    public Label getLbl_major() {
+        return lbl_major;
+    }
+
+    public Label getLbl_curriculum_name() {
+        return lbl_curriculum_name;
+    }
+
+    public JFXButton getBtn_select() {
+        return btn_select;
+    }
+    
 }

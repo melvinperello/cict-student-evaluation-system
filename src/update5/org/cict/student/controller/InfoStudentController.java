@@ -25,6 +25,8 @@ package update5.org.cict.student.controller;
 
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.utils.DateString;
+import app.lazy.models.utils.FacultyUtility;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
@@ -62,6 +64,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     @FXML
     private VBox application_root;
 
+    @FXML
+    private VBox vbox_verify;
+            
     @FXML
     private JFXButton btn_back;
 
@@ -130,6 +135,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     @FXML
     private RadioButton rbtn_female;
+    
+    @FXML
+    private Label lbl_verified_by;
+    
+    @FXML
+    private Label lbl_verified_date;
 
     private StudentValues studentValues = new StudentValues();
 
@@ -150,30 +161,15 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         rbtn_male.setToggleGroup(group2);
         rbtn_female.setToggleGroup(group2);
 
-        this.setAllEditable(false);
-        btn_editsave.setText("Edit Info");
+        this.isVerified(false);
         this.setCmbYearLevel();
         this.setCmbCampus();
         this.setValues();
-        this.setAllEditable(Boolean.FALSE);
         addTextFieldFilters();
     }
 
     private void addTextFieldFilters() {
-        StringFilter textId = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT)
-                .setMaxCharacters(50)
-                .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager -> {
-                    if (!filterManager.isValid()) {
-                        Mono.fx().alert().createWarning().setHeader("Warning")
-                                .setMessage(filterManager.getMessage())
-                                .show();
-                    }
-                });
-        textId.clone().setTextSource(txt_studnum).applyFilter();
-
-        StringFilter textName = TextInputFilters.string()
+        StringFilter textFilter = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_SPACE)
                 .setMaxCharacters(100)
                 .setNoLeadingTrailingSpaces(false)
@@ -184,23 +180,20 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                                 .show();
                     }
                 });
-        textName.clone().setTextSource(txt_firstname).applyFilter();
-        textName.clone().setTextSource(txt_lastname).applyFilter();
-        textName.clone().setTextSource(txt_middlename).applyFilter();
-        textName.clone().setTextSource(txt_section).applyFilter();
-
-        StringFilter textGroup = TextInputFilters.string()
-                .setFilterMode(StringFilter.DIGIT)
+        textFilter.clone().setTextSource(txt_firstname).applyFilter();
+        textFilter.clone().setTextSource(txt_lastname).applyFilter();
+        textFilter.clone().setTextSource(txt_middlename).applyFilter();
+        textFilter.clone().setFilterMode(StringFilter.LETTER_DIGIT).setTextSource(txt_section).applyFilter();
+        
+        textFilter.clone().setFilterMode(StringFilter.LETTER_DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(true)
+                .setTextSource(txt_studnum).applyFilter();
+        
+        textFilter.clone().setFilterMode(StringFilter.DIGIT)
                 .setMaxCharacters(11)
                 .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager -> {
-                    if (!filterManager.isValid()) {
-                        Mono.fx().alert().createWarning().setHeader("Warning")
-                                .setMessage(filterManager.getMessage())
-                                .show();
-                    }
-                });
-        textGroup.clone().setTextSource(txt_group).applyFilter();
+                .setTextSource(txt_group).applyFilter();
 
     }
 
@@ -209,13 +202,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         btn_editsave.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {
             onSave();
         });
-
-//        btn_delete.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent e) -> {
-//            if (close) {
-//                this.onClose();
-//            }
-//            this.onRemove();
-//        });
+        
         super.addClickEvent(btn_back, () -> {
             back();
         });
@@ -326,7 +313,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             Notifications.create().title("Verified Successfully")
                     .text("Student Number: " + this.CURRENT_STUDENT.getId())
                     .showInformation();
-            btn_verify.setDisable(true);
+            isVerified(true);
         }
     }
 
@@ -345,22 +332,35 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 .stageShow();
     }
 
-    private void setAllEditable(Boolean answer) {
-        txt_firstname.setEditable(answer);
-        txt_group.setEditable(answer);
-        txt_lastname.setEditable(answer);
-        txt_middlename.setEditable(answer);
-        txt_section.setEditable(answer);
-        txt_studnum.setEditable(answer);
+    private void isVerified(Boolean answer) {
+        vbox_verify.setVisible(!answer);
+        txt_firstname.setDisable(!answer);
+        txt_group.setDisable(!answer);
+        txt_lastname.setDisable(!answer);
+        txt_middlename.setDisable(!answer);
+        txt_section.setDisable(!answer);
+        txt_studnum.setDisable(!answer);
 
         cmb_campus.setDisable(!answer);
         rbtn_female.setDisable(!answer);
         rbtn_male.setDisable(!answer);
         cmb_yrlvl.setDisable(!answer);
+        
+        btn_change_college.setDisable(!answer);
+        btn_change_residency.setDisable(!answer);
+        btn_edit_grades.setDisable(!answer);
+        btn_editsave.setDisable(!answer);
+        btn_shift_course.setDisable(!answer);
+        btn_view_deficiency.setDisable(!answer);
+        btn_view_profile.setDisable(!answer);
+        
+        if(answer) {
+            lbl_verified_by.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(this.CURRENT_STUDENT.getVerfied_by()), FacultyUtility.NameFormat.SURNAME_FIRST));
+            lbl_verified_date.setText(DateString.formatDate(this.CURRENT_STUDENT.getVerification_date(), DateString.TIME_FORMAT_2));
+            btn_verify.setDisable(true);
+        }
     }
-
-    boolean close;
-
+    
     private void setValues() {
         try {
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
@@ -376,8 +376,16 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             txt_studnum.setText(CURRENT_STUDENT.getId());
             setComboBoxValue(CURRENT_STUDENT.getCampus() == null ? "" : CURRENT_STUDENT.getCampus(), cmb_campus);
             this.cmb_yrlvl.getSelectionModel().select(CURRENT_STUDENT.getYear_level() == null || CURRENT_STUDENT.getYear_level() == 1 ? 0 : CURRENT_STUDENT.getYear_level() - 1);
-            close = false;
-            btn_verify.setDisable((this.CURRENT_STUDENT.getVerified() != 0));
+            
+            Boolean verified = (this.CURRENT_STUDENT.getVerified()==null? 0: this.CURRENT_STUDENT.getVerified()) == 1;
+            this.isVerified(verified);
+            if(verified) {
+                lbl_verified_by.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(this.CURRENT_STUDENT.getVerfied_by()), FacultyUtility.NameFormat.SURNAME_FIRST));
+                lbl_verified_date.setText(DateString.formatDate(this.CURRENT_STUDENT.getVerification_date(), DateString.TIME_FORMAT_2));
+            }
+            
+            
+            
             if ((CURRENT_STUDENT.getGender() == null ? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("MALE")) {
                 rbtn_male.setSelected(true);
             } else if ((CURRENT_STUDENT.getGender() == null ? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("FEMALE")) {
@@ -387,7 +395,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 rbtn_male.setSelected(true);
             }
         } catch (NullPointerException f) {
-            close = true;
         }
     }
 
@@ -434,14 +441,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private void onSave() {
-        if (close) {
-            this.back();
-        }
-        this.setAllEditable(Boolean.TRUE);
-        if (btn_editsave.getText().equalsIgnoreCase("Save changes")) {
-            update();
-        }
-        btn_editsave.setText("Save changes");
+        update();
     }
 
     private void update() {
@@ -528,17 +528,43 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
 
         section = removeExtraSpace(txt_section.getText().toUpperCase()) == null || removeExtraSpace(txt_section.getText().toUpperCase()).isEmpty() ? "" : removeExtraSpace(txt_section.getText().toUpperCase());
-
-        group = removeExtraSpace(txt_group.getText()) == null || removeExtraSpace(txt_group.getText()).isEmpty() ? null : 0;
-        if (group.equals(0)) {
+        boolean invalidSection = false;
+        try {
+            Integer value = Integer.valueOf(section);
+            if(value>99 || value<1) {
+                invalidSection = true;
+            }
+        } catch (NumberFormatException e) {
+            if(section.length()>1)
+                invalidSection = true;
+        }
+        if(invalidSection) {
+            Mono.fx().alert()
+                    .createError()
+                    .setHeader("Section")
+                    .setMessage("Please enter a valid section to proceed. "
+                            + "Valid values are only 1-99 or A-Z.")
+                    .showAndWait();
+            return false;
+        }
+        
+        group = (removeExtraSpace(txt_group.getText())==null || removeExtraSpace(txt_group.getText()).isEmpty() ? null : 1);
+        if (group.equals(1)) {
+            boolean invalidGroup = false;
             try {
                 group = (Integer.valueOf(removeExtraSpace(txt_group.getText())));
+                if(!group.equals(1) || !group.equals(2)) {
+                    invalidGroup = true;
+                }
             } catch (NumberFormatException d) {
+                invalidGroup = true;
+            }
+            if(invalidGroup) {
                 Mono.fx().alert()
                         .createError()
                         .setHeader("Group")
                         .setMessage("Please enter a valid student group to proceed. "
-                                + "Single numeric value is required.")
+                                + "Either one(1) or two(2) only.")
                         .showAndWait();
                 return false;
             }

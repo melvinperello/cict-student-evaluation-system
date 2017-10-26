@@ -41,6 +41,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.orm.SQL;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
@@ -58,6 +59,9 @@ import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.SubjectClassification;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import update2.org.cict.controller.academicprogram.AcademicHome;
 import update2.org.cict.controller.academicprogram.AcademicProgramAccessManager;
 import update3.org.cict.SectionConstants;
@@ -72,6 +76,12 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
     private AnchorPane anchor_main;
 
     @FXML
+    private TextField txt_search;
+
+    @FXML
+    private JFXButton btnFind;
+
+    @FXML
     private JFXButton btn_home;
 
     @FXML
@@ -81,117 +91,56 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
     private HBox hbox_searching;
 
     @FXML
-    private JFXButton btn_new_subject;
-
-    @FXML
     private HBox hbox_none;
-
-    @FXML
-    private AnchorPane anchor_new_subject;
-
-    @FXML
-    private VBox vbox_main;
-
-    @FXML
-    private JFXButton btn_back;
-
-    @FXML
-    private TextField text_subjectCode;
-
-    @FXML
-    private TextField txt_descriptiveTitle;
-
-    @FXML
-    private TextField txt_lecUnits;
-
-    @FXML
-    private TextField txt_labUnits;
-
-    @FXML
-    private ComboBox<String> cmbb_type;
-
-    @FXML
-    private ComboBox<String> cmb_subtype;
-
-    @FXML
-    private Button btn_add;
 
 
     private ArrayList<SubjectMapping> lst_subject;
-    private SimpleTable subjectTable = new SimpleTable();
+//    private SimpleTable subjectTable = new SimpleTable();
+    
+    private AnchorPane application_root;
     
     @Override
     public void onInitialization() {
-        bindScene(anchor_main);
+        application_root = anchor_main;
+        bindScene(application_root);
         
         FetchSubjects fetch = new FetchSubjects();
         fetch.setOnStart(onStart -> {
+            this.vbox_subjects.getChildren().clear();
             this.hbox_searching.setVisible(true);
-            btn_new_subject.setDisable(true);
+            this.txt_search.setDisable(true);
+            this.btnFind.setDisable(true);
         });
         fetch.setOnSuccess(onSuccess -> {
             lst_subject = fetch.getSubjectResult();
-            
-//            createTable();
-//            this.hbox_searching.setVisible(false);
-            renderTable();
-            if (AcademicProgramAccessManager.denyIfNotAdmin()) {
-                btn_new_subject.setDisable(true);
-            } else 
-                btn_new_subject.setDisable(false);
+            this.renderTable(lst_subject);
         });
         fetch.setOnCancel(onCancel -> {
+            this.vbox_subjects.getChildren().clear();
             this.hbox_none.setVisible(true);
             this.hbox_searching.setVisible(false);
         });
-        fetch.setRestTime(2000);
         fetch.transact();
-        
-        this.loadComboBox();
-        
-        addTextFieldFilters();
     }
     
-    private void addTextFieldFilters() {
-        StringFilter textField = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
-                .setMaxCharacters(100)
-                .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
-                        Mono.fx().alert().createWarning().setHeader("Warning")
-                                .setMessage(filterManager.getMessage())
-                                .show();
-                    }
-                });
-        textField.clone().setTextSource(text_subjectCode).applyFilter();
-        textField.clone().setTextSource(txt_descriptiveTitle).applyFilter();
-     
-        DoubleFilter textNumber = TextInputFilters.doubleFloating()
-//                .setFilterMode(StringFilter.DIGIT)
-//                .setMaxCharacters(100)
-//                .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
-                        Mono.fx().alert().createWarning().setHeader("Warning")
-                                .setMessage(filterManager.getMessage())
-                                .show();
-                    }
-                });
-        textNumber.clone().setTextSource(txt_labUnits).applyFilter();
-        textNumber.clone().setTextSource(txt_lecUnits).applyFilter();
-    }
-
-    private void renderTable() {
+    private void renderTable(ArrayList<SubjectMapping> lst_subject) {
         SimpleTask rendering_task = new SimpleTask("rendering_task");
+        SimpleTable subjectTable = new SimpleTable();
         rendering_task.setTask(()->{
-            createTable();
+            createTable(lst_subject, subjectTable);
+        });
+        rendering_task.setOnStart((a)->{
+            this.vbox_subjects.getChildren().clear();
+            this.hbox_searching.setVisible(true);
+            this.txt_search.setDisable(true);
+            this.btnFind.setDisable(true);
         });
         rendering_task.setOnSuccess((a)->{
             this.hbox_searching.setVisible(false);
+            this.txt_search.setDisable(false);
+            this.btnFind.setDisable(false);
         });
         rendering_task.start();
-        
     }
     
     private LayoutDataFX homeFX;
@@ -201,12 +150,6 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
     
     @Override
     public void onEventHandling() {
-        
-        addClickEvent(btn_new_subject, () -> {
-            anchor_new_subject.setVisible(true);
-            btn_new_subject.setDisable(true);
-        });
-        
         addClickEvent(btn_home, () -> {
             AcademicHome controller = new AcademicHome();
             Pane pane = Mono.fx().create()
@@ -223,13 +166,39 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
             }, pane);
         });
         
-        addNewSubjectEvents();
+        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
+            this.onSearch();
+        });
+        
+        super.addClickEvent(btnFind, ()->{
+            this.onSearch();
+        });
     }
     
-//    private SimpleTableView simpleTableView;
-    private void createTable() {
+    private void onSearch() {
+        String searchKey = MonoString.removeExtraSpace(txt_search.getText());
+        if(searchKey.isEmpty()) {
+            this.renderTable(lst_subject);
+            return;
+        }
+        ArrayList<SubjectMapping> results = Mono.orm().newSearch(Database.connect().subject())
+                .put(SQL.or(Restrictions.ilike(DB.subject().code, (searchKey), MatchMode.ANYWHERE)))
+                .active(Order.asc(DB.subject().code)).all();
+        if(results==null) {
+            Animate.fade(hbox_searching, 150, ()->{
+                hbox_searching.setVisible(false);
+                vbox_subjects.getChildren().clear();
+                hbox_none.setVisible(true);
+            }, hbox_none);
+            return;
+        }
+        this.renderTable(results);
+    }
+    
+    private void createTable(ArrayList<SubjectMapping> lst_subject, SimpleTable subjectTable) {
+        subjectTable.getChildren().clear();
         for(SubjectMapping subject: lst_subject) {
-            createRow(subject);
+            createRow(subject, subjectTable);
         }
         
         SimpleTableView simpleTableView = new SimpleTableView();
@@ -243,7 +212,7 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
     
     private ArrayList<CurriculumMapping> curriculums;
     private boolean canBeRemove;
-    private void createRow(SubjectMapping subject) {
+    private void createRow(SubjectMapping subject, SimpleTable subjectTable) {
         
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
@@ -309,8 +278,9 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
         cellParent.setContent(programRow);
 
         row.addCell(cellParent);
-
-        subjectTable.addRow(row);
+//        Mono.fx().thread().wrap(()->{
+            subjectTable.addRow(row);
+//        });
     }
         
     private void askIfRemove(SubjectMapping subject, SimpleTableRow row) {
@@ -354,226 +324,6 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
         }
     }
     
-    /**
-     * ADD NEW SUBJECT
-     */
-    
-    private void addNewSubjectEvents() {
-        addClickEvent(btn_add, () -> {
-            this.addNewSubject();
-        });
-        Mono.fx().key(KeyCode.ENTER).release(vbox_main, ()->{
-            this.addNewSubject();
-        });
-        cmbb_type.valueProperty().addListener((e) -> {
-            String selected = cmbb_type.getSelectionModel().getSelectedItem();
-            cmb_subtype.setDisable(!SubjectClassification.isMajor(selected));
-            if(cmb_subtype.isDisable())
-                cmb_subtype.getSelectionModel().select("NONE");
-        });
-        this.addClickEvent(btn_back, ()->{
-            anchor_new_subject.setVisible(false);
-            btn_new_subject.setDisable(false);
-        });
-    }
-    
-    private String acadProgram, subjectCode, descriptiveTitle, type, subType;
-    private Double lecDbl, labDbl;
-    private void addNewSubject() {
-//        acadProgram = cmb_academicProgram.getSelectionModel().getSelectedItem();
-        subjectCode = MonoString.removeExtraSpace(text_subjectCode.getText()).toUpperCase();
-        descriptiveTitle = MonoString.removeExtraSpace(txt_descriptiveTitle.getText()).toUpperCase();
-        String lec = MonoString.removeExtraSpace(txt_lecUnits.getText());
-        String lab = MonoString.removeExtraSpace(txt_labUnits.getText());
-        type = cmbb_type.getSelectionModel().getSelectedItem().toUpperCase();
-        subType = cmb_subtype.getSelectionModel().getSelectedItem().toUpperCase();
-        
-//        if(acadProgram == null) {
-//            Mono.fx().alert()
-//                    .createWarning()
-//                    .setHeader("Academic Program")
-//                    .setMessage("Please select a program to add this subject")
-//                    .showAndWait();
-//            return;
-//        }
-        
-        if (subjectCode.equals("")) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Subject Code")
-                    .setMessage("Please fill up the value for Subject Code.")
-                    .showAndWait();
-//            MonoDialog.showAlert("Subject Code", "Please fill up the value for Subject Code", "error");
-            return;
-        }
-        
-        if (descriptiveTitle.equals("")) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Descriptive Title")
-                    .setMessage("Please fill up the value for Descriptive Title.")
-                    .showAndWait();
-//            MonoDialog.showAlert("Descriptive Title", "Please fill up the value for Descriptive Title", "error");
-            return;
-        }
-        
-        if(lec.equals("")) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Lecture Units")
-                    .setMessage("Please fill up the value for Lecture Units.")
-                    .showAndWait();
-            return;
-        }
-        
-        lecDbl = 0.0;
-        try{
-            lecDbl = Double.valueOf(lec);
-        } catch(NumberFormatException a) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Invalid Lecture Units")
-                    .setMessage("Please fill up a valid value for Lecture Units.")
-                    .showAndWait();
-            return;
-        }
-        
-        if(lab.equals("")) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Laboratory Units")
-                    .setMessage("Please fill up the value for Laboratory Units.")
-                    .showAndWait();
-            return;
-        }
-        
-        labDbl = 0.0;
-        try{
-            labDbl = Double.valueOf(lab);
-        } catch(NumberFormatException a) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Invalid Laboratory Units")
-                    .setMessage("Please fill up a valid value for Laboratory Units.")
-                    .showAndWait();
-            return;
-        }
-        
-        Boolean res = isSubjectExisting();
-        try {
-            if(res) {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Subject Exist")
-                        .setMessage("The subject details you are trying to add is already in the list of subjects. Try changing any detail, and click Add again.")
-                        .showAndWait();
-            } else if(res == false){
-                insertSubject();
-                if(newSubject != null) {
-                   createRow(newSubject);
-                   newSubject = null;
-               }
-                anchor_new_subject.setVisible(false);
-            }
-        } catch(NullPointerException a) {
-            System.out.println("isSubjectExisting : " + res);
-        }
-    }
-    
-    private SubjectMapping newSubject;
-    private Boolean isSubjectExisting() {
-        SubjectMapping exist = Mono.orm().newSearch(Database.connect().subject())
-                .eq(DB.subject().code, subjectCode)
-                .eq(DB.subject().descriptive_title, descriptiveTitle)
-                .eq(DB.subject().type, type)
-                .eq(DB.subject().subtype, subType)
-                .eq(DB.subject().lec_units, lecDbl)
-                .eq(DB.subject().lab_units, labDbl)
-                .execute()
-                .first();
-        
-        if(exist != null) {
-            if(exist.getActive() != 1) {
-                int res = Mono.fx().alert()
-                        .createConfirmation()
-                        .setHeader("Restore Subject")
-                        .setMessage("Subject is already existing but inactive. Do you want to restore it?")
-                        .confirmYesNo();
-                if(res == 1) {
-                    exist.setActive(1);
-                    if(Database.connect().subject().update(exist)) {
-                        Mono.fx().alert()
-                                .createInfo()
-                                .setHeader("Restored Successfully")
-                                .setMessage("Subject is restored successfully.")
-                                .showAndWait();
-                        newSubject = exist;
-                        Mono.fx().getParentStage(btn_add).close();
-                    }
-                }
-                return null;
-            } else
-                return true;
-        } else 
-            return false;
-    }
-    
-    private void insertSubject() {
-        newSubject = new SubjectMapping();
-        newSubject.setCode(subjectCode);
-        newSubject.setDescriptive_title(descriptiveTitle);
-        newSubject.setLec_units(lecDbl);
-        newSubject.setLab_units(labDbl);
-        newSubject.setSubtype(subType);
-        newSubject.setType(type);
-        int res = Database.connect().subject().insert(newSubject);
-        if(res != -1) {
-            Mono.fx().alert()
-                    .createInfo()
-                    .setHeader("Successfully Added")
-                    .setMessage("Subject successfully added to the list.")
-                    .show();
-            txt_descriptiveTitle.setText("");
-            txt_labUnits.setText("");
-            text_subjectCode.setText("");
-            txt_lecUnits.setText("");
-            cmb_subtype.getSelectionModel().selectFirst();
-            cmbb_type.getSelectionModel().selectFirst();
-            btn_new_subject.setDisable(false);
-        } else {
-            Mono.fx().alert()
-                    .createError()
-                    .setHeader("Adding Failed")
-                    .setMessage("Database connection might have a problem.")
-                    .show();
-        }
-    }
-    
-    private void loadComboBox() {
-        /**
-         * Types
-         */
-        cmbb_type.getItems().clear();
-        cmbb_type.getItems().add(SubjectClassification.TYPE_MAJOR);
-        cmbb_type.getItems().add(SubjectClassification.TYPE_MINOR);
-        cmbb_type.getItems().add(SubjectClassification.TYPE_ELECTIVE);
-        cmbb_type.getItems().add(SubjectClassification.TYPE_PE);
-        cmbb_type.getItems().add(SubjectClassification.TYPE_NSTP);
-        cmbb_type.getItems().add(SubjectClassification.TYPE_CAPSTONE);
-        cmbb_type.getItems().add(SubjectClassification.TYPE_INTERNSHIP);
-        cmbb_type.getSelectionModel().selectFirst();
-        
-        /**
-         * Subtypes
-         */
-        cmb_subtype.getItems().clear();
-        cmb_subtype.getItems().add(SubjectClassification.SUBTYPE_NONE);
-        cmb_subtype.getItems().add(SubjectClassification.SUBTYPE_PROGRAMMING);
-        cmb_subtype.getItems().add(SubjectClassification.SUBTYPE_HARDWARE);
-        cmb_subtype.getItems().add(SubjectClassification.SUBTYPE_GRAPHICS);
-        cmb_subtype.getSelectionModel().selectFirst();
-    }
-
     /**
      * SUBJECT INFORMATION
      */

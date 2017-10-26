@@ -85,3 +85,8 @@
     -fx-background-color: #4296f0;
 }
 */
+
+.metro-row:hover {
+    -fx-background-color: #3498DB;
+    -fx-text-fill: white;
+}

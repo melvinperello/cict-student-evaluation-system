@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="70.0" prefHeight="70.0" prefWidth="1000.0" spacing="10.0" styleClass="metro-row" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="159.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="lbl_curriculum_name" accessibleText="lbl_name" alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="216.0" text="BSIT REVISED MAJOR IN GRAPHICS(16-17)" wrapText="true">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_major" accessibleText="lbl_major" text="Graphics Design" wrapText="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <JFXButton fx:id="btn_select" style="-fx-border-color: #000;" text="Select">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </JFXButton>
+   </children>
+   <padding>
+      <Insets left="10.0" right="10.0" />
+   </padding>
+</HBox>

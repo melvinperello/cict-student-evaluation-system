@@ -191,7 +191,7 @@
                                  </font>
                               </Label>
                               <ComboBox fx:id="cmb_preparatory" layoutX="137.0" layoutY="196.0" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                              <JFXCheckBox fx:id="chkbx_obsolete" checkedColor="#f9fcfa" prefHeight="21.0" prefWidth="91.0" styleClass="label" text="Obsolete in" unCheckedColor="#e2e2e2" GridPane.rowIndex="8">
+                              <JFXCheckBox fx:id="chkbx_obsolete" checkedColor="#f9fcfa" prefHeight="21.0" prefWidth="91.0" styleClass="label" text="Obsolete" unCheckedColor="#e2e2e2" GridPane.columnIndex="2" GridPane.rowIndex="8">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -199,7 +199,6 @@
                                     <Insets left="-10.0" />
                                  </GridPane.margin>
                               </JFXCheckBox>
-                              <ComboBox fx:id="cmb_obselete" disable="true" prefHeight="35.0" prefWidth="303.0" style="-fx-background-color: #E2E2E2;" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                            </children>
                         </GridPane>
                      </children>

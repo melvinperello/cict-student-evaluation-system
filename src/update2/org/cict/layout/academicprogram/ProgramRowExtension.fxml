@@ -64,7 +64,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField accessibleText="txt_floor_assignment" alignment="CENTER" prefWidth="60.0" text="3" visible="false">
+            <TextField fx:id="txt_floor_assignment" accessibleText="txt_floor_assignment" alignment="CENTER" prefWidth="60.0" text="3" visible="false">
                <font>
                   <Font size="16.0" />
                </font>

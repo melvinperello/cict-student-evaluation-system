@@ -91,6 +91,8 @@ public class CurricularLevelAssesor {
         this.assessGrades();
     }
 
+
+
     /**
      * Gets the assessment values for a specific year.
      *

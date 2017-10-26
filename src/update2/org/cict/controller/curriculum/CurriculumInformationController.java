@@ -112,9 +112,6 @@ public class CurriculumInformationController extends SceneFX implements Controll
 
     @FXML
     private ComboBox<String> cmb_preparatory;
-
-    @FXML
-    private ComboBox<AcademicTermMapping> cmb_obselete;
        
     @FXML
     private JFXCheckBox chkbx_obsolete;
@@ -227,7 +224,6 @@ public class CurriculumInformationController extends SceneFX implements Controll
         }
         
         addTextFieldFilters();
-        setAcademicTerms();
     }
     
     private void addTextFieldFilters() {
@@ -259,40 +255,6 @@ public class CurriculumInformationController extends SceneFX implements Controll
        
     }
     
-    private void setAcademicTerms() {
-        ArrayList<AcademicTermMapping> acadTerms = Mono.orm().newSearch(Database.connect().academic_term())
-                .active(Order.desc(DB.academic_term().school_year)).all();
-        if(acadTerms!=null) {
-            Callback<ListView<AcademicTermMapping>, ListCell<AcademicTermMapping>> factory = lv -> {
-                return new ListCell<AcademicTermMapping>() {
-                    @Override
-                    protected void updateItem(AcademicTermMapping item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setText(empty ? "" : (item.getSchool_year() + " " + item.getSemester()));
-                    }
-                };
-            };
-            
-            this.cmb_obselete.getItems().clear();
-            this.cmb_obselete.getItems().addAll(acadTerms);
-            this.cmb_obselete.setCellFactory(factory);
-            this.cmb_obselete.setButtonCell(factory.call(null));
-            
-            if (CURRICULUM.getObsolete_term()!= null) {
-                for (AcademicTermMapping term : acadTerms) {
-                    if (term.getId().equals(CURRICULUM.getObsolete_term())) {
-                        this.cmb_obselete.getSelectionModel().select(term);
-                        chkbx_obsolete.setSelected(true);
-                        cmb_obselete.setDisable(false);
-                        break;
-                    }
-                }
-            }
-        } else {
-            System.out.println("NO ACADEMIC TERM FOUND");
-        }
-    }
-
     @Override
     public void onEventHandling() {
         addClickEvent(btn_edit, () -> {
@@ -386,37 +348,23 @@ public class CurriculumInformationController extends SceneFX implements Controll
             onBack();
         });
 
-        this.cmb_obselete.valueProperty().addListener((ObservableValue<? extends AcademicTermMapping> observable, AcademicTermMapping oldValue, AcademicTermMapping newValue) -> {
-            if(newValue==null)
+        chkbx_obsolete.selectedProperty().addListener((a)->{
+            if(run) {
+                run = false;
                 return;
-            CURRICULUM.setObsolete_term(newValue.getId());
+            }
+            CURRICULUM.setObsolete_term((chkbx_obsolete.isSelected()? 1: 0));
             if(Database.connect().curriculum().update(CURRICULUM)) {
                 Notifications.create().title("Updated Successfully")
                         .text("Obsolete of the curriculum is updated.")
                         .showInformation();
             } else {
                 Notifications.create().title("Process Failed")
-                        .text("Something went wrong.")
+                        .text("Something went wrong in removing\n"
+                                + "the term.")
                         .showInformation();
             }
-        });
-        
-        chkbx_obsolete.selectedProperty().addListener((a)->{
-            cmb_obselete.setDisable(!chkbx_obsolete.isSelected());
-            if(!chkbx_obsolete.isSelected()) {
-                CURRICULUM.setObsolete_term(null);
-                if(Database.connect().curriculum().update(CURRICULUM)) {
-                    Notifications.create().title("Updated Successfully")
-                            .text("Obsolete of the curriculum is removed.")
-                            .showInformation();
-                    setAcademicTerms();
-                } else {
-                    Notifications.create().title("Process Failed")
-                            .text("Something went wrong in removing\n"
-                                    + "the term.")
-                            .showInformation();
-                }
-            }
+            
         });
         
         super.addClickEvent(rbtn_no, ()->{
@@ -430,6 +378,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
             setViewCheckCmbBoxPreReq(ladderType);
         });
     }
+    
+    private Boolean run = true;
     
     private void isLadderized(boolean ladderized) {
         if(ladderized) {
@@ -531,6 +481,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             lbl_implemented_date.setText(fetch.getImplementedDateWithFormat());
             lbl_status.setText(fetch.getStatus());
             isImplemented = fetch.isImplemented();
+            chkbx_obsolete.setSelected(CURRICULUM.getObsolete_term()==null || CURRICULUM.getObsolete_term()==0? false: true);
             
             isLadderized(fetch.isLadderized());
             if (fetch.isLadderized()) {
