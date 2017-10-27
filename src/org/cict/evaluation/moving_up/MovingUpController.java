@@ -124,6 +124,7 @@ public class MovingUpController extends SceneFX implements ControllerFX {
         // attach to parent variable name in scene builder
         simpleTableView.setParentOnScene(vbox_list);
     }
+    
     private CurricularLevelAssesor assessmentResults;
 
     private void showAssessment(SimpleTableRow row) {
@@ -294,11 +295,6 @@ public class MovingUpController extends SceneFX implements ControllerFX {
                 .setHeader("Success!")
                 .setMessage("Student and its curriculum is successfully updated.")
                     .show();
-//            Notifications.create()
-//                    .title("Success!")
-//                    .text("Student and its curriculum"
-//                            + "\nis successfully updated.")
-//                    .showInformation();
             isSaved = true;
             Mono.fx().getParentStage(application_root).close();
         });

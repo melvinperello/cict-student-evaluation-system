@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="80.0" prefWidth="600.0" styleClass="metro-row" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="lbl_name" text="Joemar De La Cruz">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_student_num" prefHeight="17.0" prefWidth="176.0" text="2014123456" />
+            <StackPane>
+               <children>
+                  <HBox fx:id="hbox_view_org" alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="484.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="lbl_org" prefHeight="17.0" prefWidth="176.0" text="LSC" HBox.hgrow="ALWAYS" />
+                        <JFXButton fx:id="btn_change_org" style="-fx-border-color: #fff;" styleClass="label" text="Change Organization">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                     <StackPane.margin>
+                        <Insets right="10.0" />
+                     </StackPane.margin>
+                  </HBox>
+                  <HBox fx:id="hbox_change_org" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" visible="false">
+                     <children>
+                        <ComboBox fx:id="cmb_org" prefHeight="25.0" prefWidth="178.0" styleClass="metro-combo-box" />
+                        <JFXButton fx:id="btn_save_changes" style="-fx-border-color: #fff;" styleClass="label" text="Save Changes">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </StackPane>
+         </children>
+      </VBox>
+      <JFXButton fx:id="btn_remove" style="-fx-border-color: #fff;" styleClass="label" text="Remove">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </JFXButton>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@metro-ui.css" />
+      <URL value="@student-chooser.css" />
+   </stylesheets>
+</HBox>

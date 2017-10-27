@@ -35,6 +35,9 @@ import app.lazy.models.StudentMapping;
 public class StudentInformation {
     
     private StudentMapping student;
+    public StudentMapping getStudentMapping() {
+        return student;
+    }
     public StudentInformation(StudentMapping student) {
         this.student = student;
         run();

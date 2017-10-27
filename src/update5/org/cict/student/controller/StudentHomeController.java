@@ -355,14 +355,14 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         row.addCell(cellParent);
         
         row.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            showStudentInfo(student);
+            showStudentInfo((StudentInformation) row.getRowMetaData().get(KEY_MORE_INFO));
         });
         
         row.getRowMetaData().put(KEY_MORE_INFO, studInfo);
         table.addRow(row);
     }
     
-    private void showStudentInfo(StudentMapping currentStudent) {
+    private void showStudentInfo(StudentInformation currentStudent) {
         InfoStudentController controller = new InfoStudentController(currentStudent);
         LayoutDataFX home = new LayoutDataFX(application_root, this);
         controller.setHomeFX(home);

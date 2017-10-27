@@ -23,7 +23,12 @@
  */
 package update5.org.cict.student.controller;
 
+import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.CurriculumMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.GradeMapping;
+import app.lazy.models.StudentCourseHistoryMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.utils.DateString;
 import app.lazy.models.utils.FacultyUtility;
@@ -32,10 +37,17 @@ import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.Transaction;
+import com.jhmvin.fx.controls.simpletable.SimpleTable;
+import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
+import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
+import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
+import java.util.ArrayList;
 import java.util.Objects;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -46,14 +58,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.cict.reports.profile.student.PrintStudentProfile;
 import org.controlsfx.control.Notifications;
+import org.hibernate.Session;
 import update3.org.collegechooser.ChooserHome;
+import update5.org.cict.student.layout.CourseHistoryRow;
+import update5.org.cict.student.layout.CurriculumChooser;
 
 /**
  *
@@ -131,6 +150,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     private JFXButton btn_shift_course;
 
     @FXML
+    private JFXButton btn_shift_course1;
+
+    @FXML
     private RadioButton rbtn_male;
 
     @FXML
@@ -142,10 +164,44 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     @FXML
     private Label lbl_verified_date;
 
-    private StudentValues studentValues = new StudentValues();
+    @FXML
+    private Label lbl_acad_prog;
 
-    public InfoStudentController(StudentMapping currentStudent) {
-        this.CURRENT_STUDENT = currentStudent;
+    @FXML
+    private Label lbl_currriculum;
+
+    @FXML
+    private HBox hbox_main_view;
+
+    @FXML
+    private JFXButton btn_show_course_history;
+
+    @FXML
+    private JFXButton btn_show_course_history1;
+
+    @FXML
+    private VBox vbox_history;
+
+    @FXML
+    private HBox hbox_home;
+
+    @FXML
+    private VBox vbox_shown;
+
+    private StudentValues studentValues = new StudentValues();
+    private CurriculumMapping curriculum;
+    private AcademicProgramMapping acadProg;
+
+    public InfoStudentController(StudentInformation currentStudent) {
+        this.CURRENT_STUDENT = currentStudent.getStudentMapping();
+        this.curriculum = currentStudent.getCurriculumMapping();
+        this.acadProg = currentStudent.getAcademicProgramMapping();
+    }
+
+    private void setStudentInformation(StudentInformation currentStudent) {
+        this.CURRENT_STUDENT = currentStudent.getStudentMapping();
+        this.curriculum = currentStudent.getCurriculumMapping();
+        this.acadProg = currentStudent.getAcademicProgramMapping();
     }
 
     private LayoutDataFX homeFX;
@@ -166,6 +222,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         this.setCmbCampus();
         this.setValues();
         addTextFieldFilters();
+
+        vbox_shown.setVisible(false);
+        hbox_home.setVisible(true);
     }
 
     private void addTextFieldFilters() {
@@ -251,6 +310,224 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             }
         });
 
+        super.addClickEvent(btn_shift_course, () -> {
+            this.onShiftCourse();
+        });
+
+        super.addClickEvent(btn_show_course_history, () -> {
+            this.loadHistory();
+            Animate.fade(hbox_home, 150, () -> {
+                hbox_home.setVisible(false);
+                vbox_shown.setVisible(true);
+            }, vbox_shown);
+        });
+        super.addClickEvent(btn_show_course_history1, () -> {
+            Animate.fade(vbox_shown, 150, () -> {
+                vbox_shown.setVisible(false);
+                hbox_home.setVisible(true);
+            }, hbox_home);
+        });
+    }
+
+    private void loadHistory() {
+        ArrayList<StudentCourseHistoryMapping> results = Mono.orm().newSearch(Database.connect().student_course_history())
+                .eq(DB.student_course_history().student_id, CURRENT_STUDENT.getCict_id())
+                .active().all();
+        if (results == null) {
+
+        } else {
+            createHistoryTable(results);
+        }
+    }
+
+    private final String KEY_MORE_INFO = "MORE_INFO";
+
+    private void createHistoryTable(ArrayList<StudentCourseHistoryMapping> results) {
+        vbox_history.getChildren().clear();
+        SimpleTable tblHistory = new SimpleTable();
+        for (StudentCourseHistoryMapping each : results) {
+            SimpleTableRow row = new SimpleTableRow();
+            row.setRowHeight(83.0);
+            CourseHistoryRow rowFX = M.load(CourseHistoryRow.class);
+            Label lbl_name_current = rowFX.getLbl_current_curriculum();
+            Label lbl_name_current_date = rowFX.getLbl_current_curriculum_date();
+            Label lbl_name_prev = rowFX.getLbl_prevoius_curriculum();
+            Label lbl_name_prev_date = rowFX.getLbl_prevoius_curriculum_date();
+
+            lbl_name_current.setText(getCurriculumName(each.getCurriculum_id()));
+            lbl_name_current_date.setText(each.getCurriculum_assigment() == null ? "NOT SET" : "" + each.getCurriculum_assigment());
+            lbl_name_prev.setText(getCurriculumName(each.getPrep_id()));
+            lbl_name_prev_date.setText(each.getPrep_assignment() == null ? "NOT SET" : "" + each.getPrep_assignment());
+
+            SimpleTableCell cellParent = new SimpleTableCell();
+            cellParent.setResizePriority(Priority.ALWAYS);
+            cellParent.setContentAsPane(rowFX.getApplicationRoot());
+
+            row.addCell(cellParent);
+
+            tblHistory.addRow(row);
+        }
+
+        // table view
+        SimpleTableView simpleTableView = new SimpleTableView();
+        simpleTableView.setTable(tblHistory);
+        simpleTableView.setFixedWidth(true);
+        // attach to parent variable name in scene builder
+        simpleTableView.setParentOnScene(vbox_history);
+    }
+
+    private String getCurriculumName(Integer id) {
+        CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(id);
+        if (curriculum == null) {
+            return "NONE";
+        } else {
+            return curriculum.getName();
+        }
+    }
+
+    private void onShiftCourse() {
+        CurriculumMapping selected = selectCurriculum("Are you sure you want to shift the student's course?");
+        if (selected == null) {
+            return;
+        }
+        System.out.println(selected.getName());
+        Integer course_ref = this.insertCourseHistory(selected);
+        this.processGrades(selected.getId(), course_ref);
+    }
+
+    private void processGrades(Integer curriculum_id, Integer course_ref) {
+        TransactGrades transact = new TransactGrades();
+        transact.student_id = CURRENT_STUDENT.getCict_id();
+        transact.curriculum_id = curriculum_id;
+        transact.course_reference = course_ref;
+        transact.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text(transact.log)
+                    .showWarning();
+        });
+        transact.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong.")
+                    .showError();
+        });
+        transact.whenSuccess(() -> {
+            StudentInformation currentStudent = new StudentInformation(Database.connect().student().getPrimary(CURRENT_STUDENT.getCict_id()));
+            if (currentStudent.getStudentMapping() == null) {
+                return;
+            }
+            this.setStudentInformation(currentStudent);
+            this.setValues();
+            Notifications.create()
+                    .title("Successfully Shifted")
+                    .text("Student's curriculum is changed"
+                            + "\n successfully.")
+                    .showInformation();
+        });
+        transact.transact();
+    }
+
+    class TransactGrades extends Transaction {
+
+        public Integer curriculum_id;
+        public Integer student_id;
+        public Integer course_reference;
+
+        public String log;
+
+        @Override
+        protected boolean transaction() {
+            Session currentSession = Mono.orm().session();
+            // start your transaction
+            org.hibernate.Transaction dataTransaction = currentSession.beginTransaction();
+            ArrayList<GradeMapping> grades = Mono.orm().newSearch(Database.connect().grade())
+                    .eq(DB.grade().STUDENT_id, student_id)
+                    .active().all();
+            if (grades != null) {
+                for (GradeMapping grade : grades) {
+                    grade.setActive(0);
+                    grade.setCourse_reference(course_reference);
+                    if (!Database.connect().grade().transactionalSingleUpdate(currentSession, grade)) {
+                        // if errors occured during temporary insert
+                        dataTransaction.rollback();
+                        log = "Curriculum is not properly updated.";
+                        System.out.println(log);
+                        return false;
+                    }
+                }
+            }
+            StudentMapping student = Database.connect().student().getPrimary(student_id);
+            if (student != null) {
+                student.setCURRICULUM_id(curriculum_id);
+                student.setCurriculum_assignment(Mono.orm().getServerTime().getDateWithFormat());
+
+                if (!Database.connect().student().transactionalSingleUpdate(currentSession, student)) {
+                    dataTransaction.rollback();
+                    log = "Student is not properly updated.";
+                    System.out.println(log);
+                    return false;
+                }
+            } else {
+                dataTransaction.rollback();
+                log = "No student found.";
+                System.out.println(log);
+                return false;
+            }
+            dataTransaction.commit();
+            return true;
+        }
+
+        @Override
+        protected void after() {
+
+        }
+
+    }
+
+    private Integer insertCourseHistory(CurriculumMapping curriculum) {
+        StudentCourseHistoryMapping schMap = new StudentCourseHistoryMapping();
+        schMap.setActive(1);
+        schMap.setCurriculum_assigment(Mono.orm().getServerTime().getDateWithFormat());
+        schMap.setCurriculum_id(curriculum.getId());
+        schMap.setPrep_assignment(CURRENT_STUDENT.getPrep_assignment());
+        schMap.setPrep_id(CURRENT_STUDENT.getPREP_id());
+        schMap.setStudent_id(CURRENT_STUDENT.getCict_id());
+        return Database.connect().student_course_history().insert(schMap);
+    }
+
+    private CurriculumMapping selectCurriculum(String message) {
+        CurriculumChooser curriculumChooser = M.load(CurriculumChooser.class);
+        curriculumChooser.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            System.out.println("Stage Recycled. ^^v");
+            curriculumChooser.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = curriculumChooser.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+
+        CurriculumMapping selected = curriculumChooser.getSelected();
+        if (selected != null && message != null) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage(message).confirmYesNo();
+            if (res == -1) {
+                return null;
+            }
+        }
+        if (selected == null) {
+            return null;
+        }
+        if (selected.getId().equals(curriculum.getId())) {
+            Notifications.create()
+                    .title("Nothing Happened")
+                    .text("Student is already in this"
+                            + "\n curriculum.")
+                    .showError();
+            return null;
+        }
+        return selected;
     }
 
     private void printProfile() {
@@ -358,31 +635,15 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private void isVerified(Boolean answer) {
-        vbox_verify.setVisible(!answer);
-        txt_firstname.setDisable(!answer);
-        txt_group.setDisable(!answer);
-        txt_lastname.setDisable(!answer);
-        txt_middlename.setDisable(!answer);
-        txt_section.setDisable(!answer);
-        txt_studnum.setDisable(!answer);
-
-        cmb_campus.setDisable(!answer);
-        rbtn_female.setDisable(!answer);
-        rbtn_male.setDisable(!answer);
-        cmb_yrlvl.setDisable(!answer);
-
-        btn_change_college.setDisable(!answer);
-        btn_change_residency.setDisable(!answer);
-        btn_edit_grades.setDisable(!answer);
-        btn_editsave.setDisable(!answer);
-        btn_shift_course.setDisable(!answer);
-        btn_view_deficiency.setDisable(!answer);
-        btn_view_profile.setDisable(!answer);
-
         if (answer) {
+            vbox_verify.setVisible(false);
+            hbox_main_view.setDisable(false);
             lbl_verified_by.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(this.CURRENT_STUDENT.getVerfied_by()), FacultyUtility.NameFormat.SURNAME_FIRST));
             lbl_verified_date.setText(DateString.formatDate(this.CURRENT_STUDENT.getVerification_date(), DateString.TIME_FORMAT_2));
             btn_verify.setDisable(true);
+        } else {
+            hbox_main_view.setDisable(true);
+            vbox_verify.setVisible(true);
         }
     }
 
@@ -417,6 +678,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 // if none was set in the database
                 rbtn_male.setSelected(true);
             }
+
+            // -----------------------------------------------------
+            lbl_acad_prog.setText((acadProg == null ? "NONE" : acadProg.getName()));
+            lbl_currriculum.setText((curriculum == null ? "NONE" : curriculum.getName()));
         } catch (NullPointerException f) {
         }
     }
@@ -577,7 +842,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             boolean invalidGroup = false;
             try {
                 group = (Integer.valueOf(removeExtraSpace(txt_group.getText())));
-                if (!group.equals(1) || !group.equals(2)) {
+                if (!group.equals(1) && !group.equals(2)) {
                     invalidGroup = true;
                 }
             } catch (NumberFormatException d) {
