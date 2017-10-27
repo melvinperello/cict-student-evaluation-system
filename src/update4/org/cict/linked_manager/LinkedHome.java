@@ -26,7 +26,9 @@ package update4.org.cict.linked_manager;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import update.org.cict.controller.home.Home;
 
@@ -54,15 +56,47 @@ public class LinkedHome extends SceneFX implements ControllerFX {
     @FXML
     private VBox vbox_home;
 
+    @FXML
+    private VBox vbox_new_session;
+
+    @FXML
+    private VBox vbox_marshalls;
+
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+        // default view.
+        this.changeView(vbox_home);
+    }
+
+    /**
+     * Changes the layout view.
+     *
+     * @param whatView
+     */
+    private void changeView(Node whatView) {
+        Animate.fade(whatView, 150, () -> {
+            vbox_home.setVisible(false);
+            vbox_new_session.setVisible(false);
+            vbox_marshalls.setVisible(false);
+            whatView.setVisible(true);
+        }, vbox_home, vbox_new_session, vbox_marshalls);
     }
 
     @Override
     public void onEventHandling() {
         super.addClickEvent(btn_home, () -> {
             Home.callHome(this);
+        });
+
+        super.addClickEvent(btn_linked_session, () -> {
+            this.changeView(vbox_home);
+        });
+        super.addClickEvent(btn_new_session, () -> {
+            this.changeView(vbox_new_session);
+        });
+        super.addClickEvent(btn_marshalls, () -> {
+            this.changeView(vbox_marshalls);
         });
 
     }

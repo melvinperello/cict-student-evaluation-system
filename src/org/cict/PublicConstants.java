@@ -39,6 +39,7 @@ public class PublicConstants {
      * INC expiration in months.
      */
     public final static int INC_EXPIRE = 12;
+    public final static String EXPIRE_DESCRIPTION = "INC GRADE HAS EXPIRED.";
 
     public final static String[] LEGACY_CURRICULUM = new String[]{"ACT (15-16)", "BSIT (11-12)", "BITCT (11-12)", "BSIT (15-16)"};
 

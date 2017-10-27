@@ -37,6 +37,7 @@ import com.jhmvin.Mono;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import javafx.application.Platform;
 import org.cict.PublicConstants;
 import org.hibernate.criterion.Order;
 
@@ -87,14 +88,26 @@ public class CurricularLevelAssesor {
 
     private Date serverTime;
 
-    public void assess() {
+    /**
+     * Assess the student's standing.
+     *
+     * @return true if success and false if error was encoutered.
+     */
+    public boolean assess() {
         this.serverTime = Mono.orm().getServerTime().getDateWithFormat();
         hasPrepData = false;
         this.assessmentDetails.clear();
         // check expired grades before assessing.
-        this.checkExpired();
+
         // asses grades
-        this.assessGrades();
+        try {
+            this.checkExpired();
+            // if check of expired was failed will not proceed here
+            this.assessGrades();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -263,7 +276,7 @@ public class CurricularLevelAssesor {
         newGrade.setRating("EXP");
 
         newGrade.setActive(1);
-        newGrade.setReason_for_update("INC Grade has Expired");
+        newGrade.setReason_for_update(PublicConstants.EXPIRE_DESCRIPTION);
         newGrade.setUpdated_by(null);
         newGrade.setUpdated_date(this.serverTime);
 
