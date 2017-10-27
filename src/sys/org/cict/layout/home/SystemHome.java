@@ -32,6 +32,7 @@ import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -125,7 +126,7 @@ public class SystemHome extends MonoLauncher {
 
     @Override
     public void onStartUp() {
-        //----------------------------------------------------------------------
+        // call upon loading automatically.
     }
 
     @Override
@@ -188,6 +189,9 @@ public class SystemHome extends MonoLauncher {
         this.displayLabels();
     }
 
+    /**
+     * Display Information labels on the left side.
+     */
     private void displayLabels() {
         CollegeFaculty loggedUser = CollegeFaculty.instance();
         this.setLabelText(lbl_hi, "Hi, " + loggedUser.getFIRST_NAME() + "!");
@@ -219,14 +223,10 @@ public class SystemHome extends MonoLauncher {
             return;
         }
         value = value.trim();
-
         if (value.isEmpty()) {
             label.setText("No Data");
         }
-
         value = value.replace('_', ' ');
-
-        //ok
         label.setText(WordUtils.capitalizeFully(value));
     }
 
@@ -235,6 +235,11 @@ public class SystemHome extends MonoLauncher {
     private static Stage APPLICATION_STAGE;
     public final static String SCENE_TRANSITION_COLOR = "#414852";
 
+    /**
+     * Launch the main menu from the very beginning.
+     *
+     * @param systemLaunch
+     */
     public static void launchHome(boolean systemLaunch) {
         SystemHome homeFx = M.load(SystemHome.class);
         Stage mainStage = homeFx.createStageApplication();
@@ -250,7 +255,7 @@ public class SystemHome extends MonoLauncher {
          * Run application as system.
          */
         if (systemLaunch) {
-            AccessManagementHome controller = homeFx.showAccess();
+            AccessManagementHome controller = homeFx.showAccessControls();
             // disable buttons for system account.
             controller.whenSystem();
         }
@@ -267,7 +272,32 @@ public class SystemHome extends MonoLauncher {
         });
     }
 
-    private boolean systemExit() {
+    //--------------------------------------------------------------------------
+    /**
+     * Incase of a system glitch and the system account was able to access the
+     * main menu.
+     *
+     * @return
+     */
+    private boolean sysWarning() {
+        boolean restricted = restrictSystem();
+        if (restricted) {
+            Mono.fx().alert()
+                    .createWarning().setTitle("System")
+                    .setHeader("System Restriction")
+                    .setMessage("System Account is restricted to use this feature.")
+                    .show();
+        }
+        return restricted;
+    }
+
+    /**
+     * To ensure that a system account will not have authority to touch any
+     * modules.
+     *
+     * @return
+     */
+    private boolean restrictSystem() {
         CollegeFaculty cf_instance = CollegeFaculty.instance();
         if (cf_instance == null) {
             return true;
@@ -279,9 +309,16 @@ public class SystemHome extends MonoLauncher {
                 return true;
             }
         }
+
         return false;
     }
 
+    //--------------------------------------------------------------------------
+    /**
+     * Logout the current user and terminate the program. this method is not
+     * called directly it is called as a stage closing event. please do not
+     * invoke this method directly.
+     */
     private void onLogout() {
         int res = Mono.fx().alert()
                 .createConfirmation()
@@ -289,49 +326,53 @@ public class SystemHome extends MonoLauncher {
                 .setTitle("Confirmation")
                 .setMessage("Are you sure you want to logout this account?")
                 .confirmYesNo();
-        if (res == 1) {
-            //------------------------------------------------------------------
-            if (systemExit()) {
-                MainApplication.die(0);
-                return;
-            }
-            //------------------------------------------------------------------
-            Logout logout = AccountManager.instance().createLogout();
-            logout.whenStarted(() -> {
-                GenericLoadingShow.instance().show();
-            });
-            logout.whenCancelled(() -> {
-
-            });
-            logout.whenFailed(() -> {
-                // sometimes it fails to logout
-            });
-            logout.whenSuccess(() -> {
-
-            });
-            logout.whenFinished(() -> {
-                GenericLoadingShow.instance().hide();
-                /**
-                 * Only destroy the threads of this session.
-                 */
-                ThreadMill.threads().shutdown();
-                // close the stage.
-                APPLICATION_STAGE.close();
-                // relaunch the login screen.
-                // kill the app to be sure that values will be refreshed
-                MainApplication.die(0);
-
-            });
-            logout.setRestTime(300);
-            logout.transact();
+        if (res != 1) {
+            return;
         }
+        //------------------------------------------------------------------
+        if (this.restrictSystem()) {
+            MainApplication.die(0);
+            return;
+        }
+        //------------------------------------------------------------------
+        Logout logout = AccountManager.instance().createLogout();
+        logout.whenStarted(() -> {
+            //
+        });
+        logout.whenCancelled(() -> {
+            //
+        });
+        logout.whenFailed(() -> {
+            // sometimes it fails to logout
+        });
+        logout.whenSuccess(() -> {
+            //
+        });
+        logout.whenFinished(() -> {
+            // destroy threads.
+            ThreadMill.threads().shutdown();
+            // close the stage.
+            APPLICATION_STAGE.close();
+            // kill the app to be sure that values will be refreshed
+            MainApplication.die(0);
+        });
+        logout.transact();
     }
 
+    @Deprecated
     private void relaunchLogin() {
+        // relaunching the app is dangerous as it does not resets singletons
         MainApplication.launchLogin();
     }
 
     //--------------------------------------------------------------------------
+    /**
+     * Replaces the current root that is being displayed.
+     *
+     * @param controller
+     * @param packer
+     * @param fxml
+     */
     private void changeRoot(ControllerFX controller, String packer, String fxml) {
 
         Pane fxRoot = Mono.fx().create()
@@ -347,10 +388,15 @@ public class SystemHome extends MonoLauncher {
         }, fxRoot);
     }
 
+    /**
+     * Call Home menu from other modules. this is used as a callback when
+     * calling home from other menu.
+     *
+     * @param scene
+     */
     public static void callHome(SceneFX scene) {
         SystemHome homeFx = M.load(SystemHome.class);
         homeFx.onDelayedStart();
-
         // revert back this color will be the background of the scene
         // when replacing a root this color will be visible upon transitions
         scene.setSceneColor(SCENE_TRANSITION_COLOR);
@@ -368,6 +414,12 @@ public class SystemHome extends MonoLauncher {
      * @param next
      */
     private void checkStatus(String operation, Runnable next) {
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+
         AcademicTermHome.ServiceStatusChecker ssc = new AcademicTermHome().new ServiceStatusChecker();
         ssc.whenStarted(() -> {
             btn_evaluation.setDisable(true);
@@ -396,9 +448,6 @@ public class SystemHome extends MonoLauncher {
                     // offline
                     Mono.fx().snackbar().showInfo(application_root, "Adding Service is Offline");
                 }
-
-            } else if (operation.equalsIgnoreCase("encoding")) {
-                // 
             }
         });
 
@@ -411,7 +460,6 @@ public class SystemHome extends MonoLauncher {
     }
 
     //--------------------------------------------------------------------------
-    // events
     /**
      * This section is covered to manage the curriculums and academic programs.
      * only the administrator limited to the assistant administrator can apply
@@ -421,37 +469,21 @@ public class SystemHome extends MonoLauncher {
      * programs upon verification.
      */
     private void onShowAcademicPrograms() {
-
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
         if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN,
                 Access.ACCESS_ASST_ADMIN,
                 Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
-        /**
-         * Since AcademicProgramHome implements ControllerFX it is said that it
-         * will inherit it as an interface and not as an direct child. therefore
-         * it will also be classified under the ControllerFX interface. also it
-         * is a Direct Child of SceneFX therefore you can also use:
-         * <pre>
-         *      SceneFX fx = new AcademicProgramHome();
-         *      or the most common you can declare iself as the instance of its own class:
-         *      AcademicProgramHome controller = new AcademicProgramHome();
-         *      In this case it both reflects and uses the traits of both
-         *      SceneFX and ControllerFX
-         * </pre>
-         *
-         */
-//        ControllerFX controller = new AcademicProgramHome();
-//        this.changeRoot(controller,
-//                "update2.org.cict.layout.academicprogram",
-//                "academic-program-home");
         ControllerFX controller = new AcademicHome();
         this.changeRoot(controller,
                 "update2.org.cict.layout.academicprogram",
                 "academic-home");
-
     }
 
     /**
@@ -459,6 +491,9 @@ public class SystemHome extends MonoLauncher {
      * EVALUATOR we assume that the lowest possible user here is EVALUATOR
      * hence, adding an access control here is not necessary. but for assurance
      * and verification we will still do so.
+     *
+     * This method is not called directly it is called by checks status method.
+     * please do not invoke this method directly.
      */
     private void onShowEvaluation() {
         if (Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true)) {
@@ -474,7 +509,8 @@ public class SystemHome extends MonoLauncher {
     }
 
     /**
-     * Same as adding and changing.
+     * This method is not called directly it is called by checks status method.
+     * please do not invoke this method directly.
      */
     private void onShowAddingAndChanging() {
         if (Access.isDeniedIfNot(Access.ACCESS_EVALUATOR, true)) {
@@ -494,10 +530,18 @@ public class SystemHome extends MonoLauncher {
      * including assistant administrators.
      */
     private void onShowSectionManagement() {
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+
         /**
          * Only the administrator can access this section.
          */
-        if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+        if (Access.isDeniedIfNotFrom(
+                Access.ACCESS_ADMIN,
+                Access.ACCESS_ASST_ADMIN)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
@@ -509,37 +553,58 @@ public class SystemHome extends MonoLauncher {
 
     }
 
+    /**
+     * Faculty menu.
+     */
     private void onShowFacultyManagement() {
-        /**
-         * Only the administrator can access this section. including the
-         * assistant administrator.
-         */
-        if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+        if (Access.isDeniedIfNotFrom(
+                Access.ACCESS_ADMIN,
+                Access.ACCESS_ASST_ADMIN)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
         FacultyMainController controller = new FacultyMainController();
         this.changeRoot(controller,
                 "org.cict.accountmanager.faculty.layout",
                 "faculty-home");
-
     }
 
+    /**
+     * Displays the academic term.
+     */
     private void onShowAcademicTerm() {
-        if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR)) {
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+        if (Access.isDeniedIfNotFrom(
+                Access.ACCESS_ADMIN,
+                Access.ACCESS_ASST_ADMIN,
+                Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-
         ControllerFX controller = new AcademicTermHome();
         this.changeRoot(controller,
                 "update3.org.cict.termcalendar",
                 "AcademicTermHome");
-
     }
 
+    /**
+     * When access control button was clicked.
+     */
     private void onShowAccessControls() {
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
         if (Access.isDeniedIfNotFrom(
                 Access.ACCESS_ADMIN,
                 Access.ACCESS_ASST_ADMIN,
@@ -549,13 +614,13 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-        this.showAccess();
+        this.showAccessControls();
     }
 
     /**
-     * Can be use by system.
+     * Display Access Controls
      */
-    private AccessManagementHome showAccess() {
+    private AccessManagementHome showAccessControls() {
         AccessManagementHome controller = new AccessManagementHome();
         this.changeRoot(controller,
                 "update3.org.cict.access.management",
@@ -564,7 +629,16 @@ public class SystemHome extends MonoLauncher {
     }
 
     //--------------------------------------------------------------------------
+    /**
+     * Show My Account Options.
+     */
     private void onShowMyAccount() {
+
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
 
         ControllerFX controller = new MyAccountHome();
         this.changeRoot(controller,
@@ -573,14 +647,32 @@ public class SystemHome extends MonoLauncher {
 
     }
 
+    /**
+     * Show Linked Application Settings.
+     */
     private void onShowLinkedManagement() {
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+
         ControllerFX controller = new LinkedHome();
         this.changeRoot(controller,
                 "update4.org.cict.linked_manager",
                 "LinkedHome");
     }
 
+    /**
+     * Show student menu.
+     */
     private void onShowStudentHome() {
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+
         ControllerFX controller = new StudentHomeController();
         this.changeRoot(controller,
                 "update5.org.cict.student.layout",

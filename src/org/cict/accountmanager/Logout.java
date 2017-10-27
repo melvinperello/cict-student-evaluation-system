@@ -65,6 +65,10 @@ public class Logout extends Transaction {
                 .active()
                 .all();
         boolean allDone = true;
+        if (sessions == null) {
+            dataTx.rollback();
+            return true; // call success.
+        }
         for (AccountFacultySessionMapping faculty_session : sessions) {
             faculty_session.setSession_end(Mono.orm().getServerTime().getDateWithFormat());
             boolean isOk = Database.connect()

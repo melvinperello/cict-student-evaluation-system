@@ -31,9 +31,13 @@ import com.jhmvin.Mono;
  */
 public class Hasher {
 
-    public static void main(String[] args) {
+    /**
+     * Use this class to generate hash codes for password and username.
+     *
+     * @param args
+     */
+    public static void main(String... args) {
         String username = Mono.security().hashFactory().hash_sha512("m o n o s y n c s t u d i o p h - c i c t e v a l u a t i o n - [06101997]");
-        
         System.out.println(username);
         String password = Mono.security().hashFactory().hash_sha512("5521300850");
         System.out.println(password);
