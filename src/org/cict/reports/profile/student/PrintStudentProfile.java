@@ -32,6 +32,7 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ProfileImage;
 import org.cict.reports.ReportsDirectory;
 import org.hibernate.criterion.Order;
 
@@ -42,24 +43,46 @@ import org.hibernate.criterion.Order;
 public class PrintStudentProfile extends Transaction {
 
     public Integer CICT_id;
-    
+
     private StudentMapping student;
-    private String address = "", studentContact = "", emailAdd = ""
-            , guardianName = "", guardianAddr = "", guardianContact = ""
-            , imageLoc = "";
-    
+    private String address = "", studentContact = "", emailAdd = "", guardianName = "", guardianAddr = "", guardianContact = "", imageLoc = "";
+
+    //--------------------------------------------------------------------------
+    // store image here
+    private String studentImage;
+    //--------------------------------------------------------------------------
+    private boolean noProfile;
+
+    public boolean hasNoProfile() {
+        return noProfile;
+    }
+    //--------------------------------------------------------------------------
+
     @Override
     protected boolean transaction() {
+        // assume that the student has a profile
+        this.noProfile = false;
+        //----------------------------------------------------------------------
         student = Database.connect().student().getPrimary(CICT_id);
-        if(student==null) {
+        if (student == null) {
             System.out.println("NO STUDENT FOUND");
             return false;
         }
-        
+
         if (student.getHas_profile() == 1) {
             StudentProfileMapping spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
-                    .active(Order.desc(DB.student_profile().id)).first();
+                    .active(Order.desc(DB.student_profile().id))
+                    .first();
+
+            //------------------------------------------------------------------
+            if (spMap == null) {
+                // the student has no profile
+                this.noProfile = true;
+                return false; // cancel this transaction
+            }
+            //------------------------------------------------------------------
+
             String hNum = spMap.getHouse_no(),
                     brgy = spMap.getBrgy(),
                     city = spMap.getCity(),
@@ -88,17 +111,23 @@ public class PrintStudentProfile extends Transaction {
                     address = province;
                 }
             }
-            studentContact = (spMap.getMobile()==null? "" : spMap.getMobile());
-            emailAdd = (spMap.getEmail()==null? "" : spMap.getEmail());
-            guardianName = (spMap.getIce_name()==null? "" : spMap.getIce_name());
-            guardianAddr = (spMap.getIce_address()==null? "" : spMap.getIce_address());
-            guardianContact = (spMap.getIce_contact()==null? "" : spMap.getIce_contact());
-            imageLoc = (spMap.getProfile_picture()==null? "" : spMap.getProfile_picture());
+            studentContact = (spMap.getMobile() == null ? "" : spMap.getMobile());
+            emailAdd = (spMap.getEmail() == null ? "" : spMap.getEmail());
+            guardianName = (spMap.getIce_name() == null ? "" : spMap.getIce_name());
+            guardianAddr = (spMap.getIce_address() == null ? "" : spMap.getIce_address());
+            guardianContact = (spMap.getIce_contact() == null ? "" : spMap.getIce_contact());
+            imageLoc = (spMap.getProfile_picture() == null ? "" : spMap.getProfile_picture());
+
+            //------------------------------------------------------------------
+            // assign picture
+            studentImage = spMap.getProfile_picture();
+            //------------------------------------------------------------------
         }
         return true;
     }
 
     private String SAVE_DIRECTORY = "reports/profile/student";
+
     @Override
     protected void after() {
         String doc = student.getId() + "_"
@@ -121,12 +150,12 @@ public class PrintStudentProfile extends Transaction {
         //------------------------------------------------------------------
         //------------------------------------------------------------------
 
-        String fullName = student.getLast_name() + ", " + student.getFirst_name() 
-                + (student.getMiddle_name()==null? "": (" " +student.getMiddle_name()));
-        
+        String fullName = student.getLast_name() + ", " + student.getFirst_name()
+                + (student.getMiddle_name() == null ? "" : (" " + student.getMiddle_name()));
+
         StudentProfile studentProfile = new StudentProfile(RESULT);
         AcademicTermMapping acadTerm = SystemProperties.instance().getCurrentAcademicTerm();
-        studentProfile.SEMESTER = acadTerm.getSemester_regular()==1? "1st" : "2nd";
+        studentProfile.SEMESTER = acadTerm.getSemester_regular() == 1 ? "1st" : "2nd";
         studentProfile.SCHOOL_YEAR = acadTerm.getSchool_year();
         studentProfile.IMAGE_LOCATION = imageLoc;
         studentProfile.STUDENT_NAME = WordUtils.capitalizeFully(fullName);
@@ -136,8 +165,27 @@ public class PrintStudentProfile extends Transaction {
         studentProfile.GUARDIAN_NAME = WordUtils.capitalizeFully(guardianName);
         studentProfile.GUARDIAN_ADDRESS = WordUtils.capitalizeFully(guardianAddr);
         studentProfile.GUARDIAN_CONTACT_NO = WordUtils.capitalizeFully(guardianContact);
-        
-        int val = studentProfile.print();
+
+        //----------------------------------------------------------------------
+        if (studentImage == null
+                || studentImage.isEmpty()
+                || studentImage.equalsIgnoreCase("NONE")) {
+            // do not run downloader
+            // print the profile
+            // in this case the image setter was not called but we have assigned default value
+            int val = studentProfile.print();
+        } else {
+            // this is a downloader thread please put next actions inside
+            ProfileImage.download(studentImage, path -> {
+                // now we have the path
+                // this will return null if not fetched from the server
+                // we can call the setter to set the image
+                studentProfile.setProfileImage(path);
+                // and then print
+                int val = studentProfile.print();
+            });
+        }
+        //----------------------------------------------------------------------
     }
-    
+
 }

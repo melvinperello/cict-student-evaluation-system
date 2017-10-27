@@ -66,7 +66,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_verify;
-            
+
     @FXML
     private JFXButton btn_back;
 
@@ -135,10 +135,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     @FXML
     private RadioButton rbtn_female;
-    
+
     @FXML
     private Label lbl_verified_by;
-    
+
     @FXML
     private Label lbl_verified_date;
 
@@ -184,12 +184,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         textFilter.clone().setTextSource(txt_lastname).applyFilter();
         textFilter.clone().setTextSource(txt_middlename).applyFilter();
         textFilter.clone().setFilterMode(StringFilter.LETTER_DIGIT).setTextSource(txt_section).applyFilter();
-        
+
         textFilter.clone().setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(true)
                 .setTextSource(txt_studnum).applyFilter();
-        
+
         textFilter.clone().setFilterMode(StringFilter.DIGIT)
                 .setMaxCharacters(11)
                 .setNoLeadingTrailingSpaces(true)
@@ -202,7 +202,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         btn_editsave.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) -> {
             onSave();
         });
-        
+
         super.addClickEvent(btn_back, () -> {
             back();
         });
@@ -225,7 +225,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         });
 
         super.addClickEvent(btn_view_profile, () -> {
-            btn_view_profile.setDisable(true);
             this.printProfile();
         });
 
@@ -257,24 +256,50 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     private void printProfile() {
         PrintStudentProfile profile = new PrintStudentProfile();
         profile.CICT_id = CURRENT_STUDENT.getCict_id();
-        profile.whenSuccess(() -> {
-            Notifications.create()
-                    .title("Printing Student Profile")
-                    .text("Please wait a moment.")
-                    .showInformation();
-            btn_view_profile.setDisable(false);
+        //----------------------------------------------------------------------
+        // proper call back do not put disabling before this method call
+        // always disable a button inside whenStarted to assure that the task had started.
+        profile.whenStarted(() -> {
+            // disable + wait cursor (Optional)
+            btn_view_profile.setDisable(true);
+            super.cursorWait();
         });
+        // Cancel
         profile.whenCancelled(() -> {
+            //------------------------------------------------------------------
+            if (profile.hasNoProfile()) {
+                Notifications.create()
+                        .title("No Profile")
+                        .text("The student has not yet submitted a profile")
+                        .showInformation();
+                return;
+            }
+            //------------------------------------------------------------------
+
             Notifications.create()
                     .title("Something went wrong.")
                     .text("Student not found.")
                     .showInformation();
         });
+        // Failed
         profile.whenFailed(() -> {
             Notifications.create()
                     .title("Request Failed")
                     .text("Please try again later.")
                     .showInformation();
+        });
+        // If everything seems right
+        // Success
+        profile.whenSuccess(() -> {
+            Notifications.create()
+                    .title("Printing Student Profile")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        // What Ever Happens
+        profile.whenFinished(() -> {
+            btn_view_profile.setDisable(false);
+            super.cursorDefault();
         });
         profile.transact();
     }
@@ -345,7 +370,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         rbtn_female.setDisable(!answer);
         rbtn_male.setDisable(!answer);
         cmb_yrlvl.setDisable(!answer);
-        
+
         btn_change_college.setDisable(!answer);
         btn_change_residency.setDisable(!answer);
         btn_edit_grades.setDisable(!answer);
@@ -353,14 +378,14 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         btn_shift_course.setDisable(!answer);
         btn_view_deficiency.setDisable(!answer);
         btn_view_profile.setDisable(!answer);
-        
-        if(answer) {
+
+        if (answer) {
             lbl_verified_by.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(this.CURRENT_STUDENT.getVerfied_by()), FacultyUtility.NameFormat.SURNAME_FIRST));
             lbl_verified_date.setText(DateString.formatDate(this.CURRENT_STUDENT.getVerification_date(), DateString.TIME_FORMAT_2));
             btn_verify.setDisable(true);
         }
     }
-    
+
     private void setValues() {
         try {
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
@@ -376,16 +401,14 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             txt_studnum.setText(CURRENT_STUDENT.getId());
             setComboBoxValue(CURRENT_STUDENT.getCampus() == null ? "" : CURRENT_STUDENT.getCampus(), cmb_campus);
             this.cmb_yrlvl.getSelectionModel().select(CURRENT_STUDENT.getYear_level() == null || CURRENT_STUDENT.getYear_level() == 1 ? 0 : CURRENT_STUDENT.getYear_level() - 1);
-            
-            Boolean verified = (this.CURRENT_STUDENT.getVerified()==null? 0: this.CURRENT_STUDENT.getVerified()) == 1;
+
+            Boolean verified = (this.CURRENT_STUDENT.getVerified() == null ? 0 : this.CURRENT_STUDENT.getVerified()) == 1;
             this.isVerified(verified);
-            if(verified) {
+            if (verified) {
                 lbl_verified_by.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(this.CURRENT_STUDENT.getVerfied_by()), FacultyUtility.NameFormat.SURNAME_FIRST));
                 lbl_verified_date.setText(DateString.formatDate(this.CURRENT_STUDENT.getVerification_date(), DateString.TIME_FORMAT_2));
             }
-            
-            
-            
+
             if ((CURRENT_STUDENT.getGender() == null ? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("MALE")) {
                 rbtn_male.setSelected(true);
             } else if ((CURRENT_STUDENT.getGender() == null ? "" : CURRENT_STUDENT.getGender()).equalsIgnoreCase("FEMALE")) {
@@ -531,14 +554,15 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         boolean invalidSection = false;
         try {
             Integer value = Integer.valueOf(section);
-            if(value>99 || value<1) {
+            if (value > 99 || value < 1) {
                 invalidSection = true;
             }
         } catch (NumberFormatException e) {
-            if(section.length()>1)
+            if (section.length() > 1) {
                 invalidSection = true;
+            }
         }
-        if(invalidSection) {
+        if (invalidSection) {
             Mono.fx().alert()
                     .createError()
                     .setHeader("Section")
@@ -547,19 +571,19 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .showAndWait();
             return false;
         }
-        
-        group = (removeExtraSpace(txt_group.getText())==null || removeExtraSpace(txt_group.getText()).isEmpty() ? null : 1);
+
+        group = (removeExtraSpace(txt_group.getText()) == null || removeExtraSpace(txt_group.getText()).isEmpty() ? null : 1);
         if (group.equals(1)) {
             boolean invalidGroup = false;
             try {
                 group = (Integer.valueOf(removeExtraSpace(txt_group.getText())));
-                if(!group.equals(1) || !group.equals(2)) {
+                if (!group.equals(1) || !group.equals(2)) {
                     invalidGroup = true;
                 }
             } catch (NumberFormatException d) {
                 invalidGroup = true;
             }
-            if(invalidGroup) {
+            if (invalidGroup) {
                 Mono.fx().alert()
                         .createError()
                         .setHeader("Group")

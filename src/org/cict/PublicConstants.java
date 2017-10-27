@@ -35,6 +35,10 @@ import org.hibernate.criterion.Criterion;
  */
 public class PublicConstants {
 
+    public final static String getServer() {
+        return "127.0.0.1";
+    }
+
     /**
      * INC expiration in months.
      */
