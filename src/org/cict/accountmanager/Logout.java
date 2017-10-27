@@ -33,6 +33,7 @@ import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import update3.org.cict.access.Access;
 
 /**
  *
@@ -42,6 +43,7 @@ public class Logout extends Transaction {
 
     @Override
     protected boolean transaction() {
+
         Integer accountFacultyId = this.getAccountFacultyId();
         log("FacultyID " + CollegeFaculty.instance().getFACULTY_ID()
                 + " | AccountFacultyID " + accountFacultyId);
@@ -73,8 +75,11 @@ public class Logout extends Transaction {
                 break;
             } else {
                 log("Session success update ...");
-                ThreadMill.threads().KEEP_ALIVE_THREAD.pause();
-                ThreadMill.threads().KEEP_ALIVE_THREAD.stop();
+                /**
+                 * Thread shutdown is in the home.
+                 */
+//                ThreadMill.threads().shutdown();
+
             }
         }
 
@@ -94,12 +99,14 @@ public class Logout extends Transaction {
     }
 
     private Integer getAccountFacultyId() {
-        AccountFacultyMapping accountFaculty = Mono.orm()
-                .newSearch(Database.connect().account_faculty())
-                .eq("FACULTY_id", CollegeFaculty.instance().getFACULTY_ID())
-                .active()
-                .first();
-        return accountFaculty.getId();
+
+//        AccountFacultyMapping accountFaculty = Mono.orm()
+//                .newSearch(Database.connect().account_faculty())
+//                .eq("FACULTY_id", CollegeFaculty.instance().getFACULTY_ID())
+//                .active()
+//                .first();
+//        return accountFaculty.getId();
+        return CollegeFaculty.instance().getACCOUNT_ID();
     }
 
     private void log(String log) {

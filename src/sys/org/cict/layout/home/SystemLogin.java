@@ -102,7 +102,7 @@ public class SystemLogin extends MonoLauncher {
         startHibernate.whenSuccess(() -> {
 //            this.vbox_loading.setVisible(false);
 //            this.vbox_login.setVisible(true);
-            Animate.fade(vbox_loading, 150, ()->{
+            Animate.fade(vbox_loading, 150, () -> {
                 this.vbox_loading.setVisible(false);
                 this.vbox_login.setVisible(true);
             }, vbox_login);
@@ -175,6 +175,16 @@ public class SystemLogin extends MonoLauncher {
         String user = this.txt_username.getText().trim();
         String pass = this.txt_password.getText().trim();
         if (this.checkEmpty(user, pass)) {
+            boolean isSystem = SystemAccess.checkSystemAccess(user, pass);
+            if (isSystem) {
+                // launch app with system privilages.
+                CollegeFaculty.instance().setACCESS_LEVEL(Access.ACCESS_SYSTEM);
+                // execute system privelage
+                this.close();
+                Home.launchSystem();
+                return;
+            }
+
             ValidateLogin validateLogin = Authenticator
                     .instance()
                     .createLoginValidator();

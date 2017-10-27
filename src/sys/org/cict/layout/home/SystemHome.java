@@ -235,7 +235,7 @@ public class SystemHome extends MonoLauncher {
     private static Stage APPLICATION_STAGE;
     public final static String SCENE_TRANSITION_COLOR = "#414852";
 
-    public static void launchHome() {
+    public static void launchHome(boolean systemLaunch) {
         SystemHome homeFx = M.load(SystemHome.class);
         Stage mainStage = homeFx.createStageApplication();
         mainStage.setMinWidth(1024);
@@ -245,6 +245,15 @@ public class SystemHome extends MonoLauncher {
         mainStage.show();
         homeFx.onDelayedStart();
         homeFx.onStageClosing();
+
+        /**
+         * Run application as system.
+         */
+        if (systemLaunch) {
+            AccessManagementHome controller = homeFx.showAccess();
+            // disable buttons for system account.
+            controller.whenSystem();
+        }
     }
 
     /**
@@ -258,6 +267,21 @@ public class SystemHome extends MonoLauncher {
         });
     }
 
+    private boolean systemExit() {
+        CollegeFaculty cf_instance = CollegeFaculty.instance();
+        if (cf_instance == null) {
+            return true;
+        } else {
+            // if not null
+            if (cf_instance.getACCESS_LEVEL() == null
+                    || cf_instance.getACCESS_LEVEL().equals(Access.ACCESS_SYSTEM)) {
+                // if system or access was null
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void onLogout() {
         int res = Mono.fx().alert()
                 .createConfirmation()
@@ -266,6 +290,12 @@ public class SystemHome extends MonoLauncher {
                 .setMessage("Are you sure you want to logout this account?")
                 .confirmYesNo();
         if (res == 1) {
+            //------------------------------------------------------------------
+            if (systemExit()) {
+                MainApplication.die(0);
+                return;
+            }
+            //------------------------------------------------------------------
             Logout logout = AccountManager.instance().createLogout();
             logout.whenStarted(() -> {
                 GenericLoadingShow.instance().show();
@@ -519,14 +549,21 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
+        this.showAccess();
+    }
 
-        ControllerFX controller = new AccessManagementHome();
+    /**
+     * Can be use by system.
+     */
+    private AccessManagementHome showAccess() {
+        AccessManagementHome controller = new AccessManagementHome();
         this.changeRoot(controller,
                 "update3.org.cict.access.management",
                 "AccessManagementHome");
-
+        return controller;
     }
 
+    //--------------------------------------------------------------------------
     private void onShowMyAccount() {
 
         ControllerFX controller = new MyAccountHome();

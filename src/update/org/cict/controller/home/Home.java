@@ -94,28 +94,11 @@ public class Home extends SceneFX implements ControllerFX {
      * Scene across all windows.
      */
     public static void launchApp() {
-//        Home controller = new Home();
-//        Mono.fx().create()
-//                .setPackageName("update.org.cict.layout.home")
-//                .setFxmlDocument("home")
-//                .makeFX()
-//                .setController(controller)
-//                .makeScene()
-//                .makeStageApplication()
-//                .stageMinDimension(1024, 700)
-//                .stageMaximized(true)
-//                .stageShow();
-//
-//        /**
-//         * Adds stage close request.
-//         */
-//        controller.onStageClosing();
+        SystemHome.launchHome(false);
+    }
 
-        /**
-         * This class is already obsolete all calls from this are passed to the
-         * new class of home.
-         */
-        SystemHome.launchHome();
+    public static void launchSystem() {
+        SystemHome.launchHome(true);
     }
 
     private static Stage APPLICATION_STAGE;

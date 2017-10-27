@@ -138,6 +138,10 @@ public class Access {
     }
 
     public static boolean isDeniedIfNot(String lowestRequired, boolean byLevel) {
+        if (lowestRequired == null) {
+            // deny if null access
+            return true;
+        }
         return !isGranted(lowestRequired, byLevel);
     }
 

@@ -73,11 +73,12 @@ public class MainApplication extends Application {
      */
     public static void die(int exitStatus) {
         try {
+            Mono.orm().shutdown();
             Platform.exit();
             Runtime.getRuntime().halt(exitStatus);
-        } catch (SecurityException e) {
+        } catch (Exception e) {
             // not allowerd to kill the process.
-            System.err.println(e.getLocalizedMessage());
+            Runtime.getRuntime().halt(exitStatus);
         }
     }
 

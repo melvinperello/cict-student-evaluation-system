@@ -64,7 +64,7 @@ import update3.org.facultychooser.FacultyChooser;
  * @author Jhon Melvin
  */
 public class AccessManagementHome extends SceneFX implements ControllerFX {
- 
+
     @FXML
     private VBox application_root;
 
@@ -133,13 +133,13 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_add_asst_registrar1;
-    
+
     @FXML
     private JFXButton btn_add_evaluators;
 
     @FXML
     private JFXButton btn_add_evaluators1;
-    
+
     @FXML
     private VBox vbox_co_registrar;
 
@@ -161,14 +161,26 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     public AccessManagementHome() {
         //
     }
-    
+
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
-        
+
         this.changeView(vbox_system);
     }
-    
+
+    /**
+     * The Following are disabled when using system.
+     */
+    public void whenSystem() {
+        btn_home.setDisable(true);
+        btn_view_admin.setDisable(true);
+        btn_view_assistant_admin.setDisable(true);
+        btn_view_local_registrar.setDisable(true);
+        btn_view_co_registrar.setDisable(true);
+        btn_view_evaluator.setDisable(true);
+    }
+
     private void changeView(Node whatView) {
         Animate.fade(whatView, 150, () -> {
             vbox_system.setVisible(false);
@@ -181,7 +193,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         }, vbox_system, vbox_admin, vbox_assistant_admin, vbox_local_registrar,
                 vbox_co_registrar, vbox_evaluators);
     }
-    
+
     @Override
     public void onEventHandling() {
         super.addClickEvent(btn_home, () -> {
@@ -208,100 +220,103 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             this.changeView(vbox_evaluators);
             fetchFaculty(Access.ACCESS_EVALUATOR, vbox_evaluator_table, true);
         });
-        
+
         this.systemAccountEvents();
-        
+
         this.systemAdminEvents();
-        
+
         this.localRegistrarEvents();
     }
-    
+
     private void systemAccountEvents() {
-        super.addClickEvent(btn_create_system_admin, ()->{
-           if(this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
-               
-           }
+        super.addClickEvent(btn_create_system_admin, () -> {
+            if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
+
+            }
         });
-        super.addClickEvent(btn_reset_system_admin_pass, ()->{
-           if(this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
-               
-           }
+        super.addClickEvent(btn_reset_system_admin_pass, () -> {
+            if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
+
+            }
         });
-        super.addClickEvent(btn_reclaim_system_admin, ()->{
-           if(this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
-               
-           }
+        super.addClickEvent(btn_reclaim_system_admin, () -> {
+            if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
+
+            }
         });
     }
-    
+
     private void systemAdminEvents() {
-        super.addClickEvent(btn_assign_new_sys_admin, ()->{
-            if(this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+        super.addClickEvent(btn_assign_new_sys_admin, () -> {
+            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 assignSystemAdmin();
             }
         });
-        super.addClickEvent(btn_add_new_asst_admin, ()->{
-            if(this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+        super.addClickEvent(btn_add_new_asst_admin, () -> {
+            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 addNewAsstAdmin();
             }
         });
-        super.addClickEvent(btn_assign_local_registrar, ()->{
-            if(this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+        super.addClickEvent(btn_assign_local_registrar, () -> {
+            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 assignLocalRegistrar();
             }
         });
-        
-        super.addClickEvent(btn_add_new_asst_admin1, ()->{
-            if(this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
-                if(addNewAsstAdmin())
+
+        super.addClickEvent(btn_add_new_asst_admin1, () -> {
+            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+                if (addNewAsstAdmin()) {
                     fetchFaculty(Access.ACCESS_ASST_ADMIN, vbox_asst_admin_table, true);
+                }
             }
         });
     }
-    
+
     private void localRegistrarEvents() {
-        super.addClickEvent(btn_add_asst_registrar, ()->{
-            if(this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+        super.addClickEvent(btn_add_asst_registrar, () -> {
+            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 this.assignAsstRegistrar();
             }
         });
-        super.addClickEvent(btn_add_evaluators, ()->{
-            if(this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
+        super.addClickEvent(btn_add_evaluators, () -> {
+            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
                 this.addEvaluator();
             }
         });
-        
-        super.addClickEvent(btn_add_asst_registrar1, ()->{
-            if(this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
-                if(this.assignAsstRegistrar())
+
+        super.addClickEvent(btn_add_asst_registrar1, () -> {
+            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+                if (this.assignAsstRegistrar()) {
                     fetchFaculty(Access.ACCESS_CO_REGISTRAR, vbox_asst_registrar_table, true);
+                }
             }
         });
-        super.addClickEvent(btn_add_evaluators1, ()->{
-            if(this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
-                if(this.addEvaluator())
+        super.addClickEvent(btn_add_evaluators1, () -> {
+            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
+                if (this.addEvaluator()) {
                     fetchFaculty(Access.ACCESS_EVALUATOR, vbox_evaluator_table, true);
+                }
             }
         });
     }
-    
+
     private boolean isSameAccount(Integer facultyID) {
-        if(facultyID.equals(CollegeFaculty.instance().getFACULTY_ID())) {
-            
+        if (facultyID.equals(CollegeFaculty.instance().getFACULTY_ID())) {
+
             int res = 0;
-            if(isGranted(null, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (isGranted(null, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 res = Mono.fx().alert().createConfirmation()
                         .setMessage("Managing your account is prohibited."
                                 + " Do you still want to continue?")
                         .confirmYesNo();
             }
-            if(res==1) 
+            if (res == 1) {
                 return false;
-            else {
+            } else {
                 Notifications.create().darkStyle()
                         .title("Request Cancelled")
                         .text("Managing your account is prohibited."
-                            + "\nPlease ask your System Administrator"
+                                + "\nPlease ask your System Administrator"
                                 + "\nabout this matter.")
                         .showWarning();
                 return true;
@@ -314,21 +329,22 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         AccountFacultyMapping afMap = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().FACULTY_id, facultyID)
                 .active().first();
-        if(afMap==null) {
+        if (afMap == null) {
             Notifications.create().darkStyle()
                     .title("Request Failed")
                     .text("The faculty you selected has no account yet.")
                     .showWarning();
         } else {
-            if(Access.isGranted(accessLvl, afMap.getAccess_level(), true)) {
-                if(Access.isGrantedIf(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (Access.isGranted(accessLvl, afMap.getAccess_level(), true)) {
+                if (Access.isGrantedIf(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                     int res = Mono.fx().alert().createConfirmation()
                             .setMessage("This will exhibit demotion of access level. "
                                     + "It is prohibited to change a high admission into lower. "
                                     + "Do you still want to continue?")
                             .confirmYesNo();
-                    if(res==1) 
+                    if (res == 1) {
                         return afMap;
+                    }
                 }
                 Notifications.create().darkStyle()
                         .title("Request Denied")
@@ -339,24 +355,25 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         }
         return afMap;
     }
-    
+
     // -------------------------------------------------------------------------
     // ACCESS LEVEL CHECKER
     //-------------------------------------
     private boolean isGranted(Object errorSnackBarMessage, String... grantedAccessLvl) {
         boolean granted = false;
-        for(String current: grantedAccessLvl) {
-            if(Access.isGranted(current, CollegeFaculty.instance().getACCESS_LEVEL())) {
+        for (String current : grantedAccessLvl) {
+            if (Access.isGranted(current, CollegeFaculty.instance().getACCESS_LEVEL())) {
                 return true;
             }
         }
-        
-        if(errorSnackBarMessage==null)
+
+        if (errorSnackBarMessage == null) {
             return false;
+        }
         Mono.fx().snackbar().showError(application_root, errorSnackBarMessage.toString());
         return false;
     }
-    
+
     // --------------------------------------------------------------
     // TABLE LOADER
     // ------------------------------------------
@@ -364,73 +381,75 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         holder.setVisible(false);
         FetchFaculty fetch = new FetchFaculty();
         fetch.accessLevel = access_level;
-        fetch.whenSuccess(()->{
+        fetch.whenSuccess(() -> {
             ArrayList<FacultyInformation> results = fetch.getResults();
             createTable(results, holder, access_level);
-            if(!fade)
+            if (!fade) {
                 return;
-            if(access_level.equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
-                Animate.fade(vbox_asst_admin_no_found, 200, ()->{
+            }
+            if (access_level.equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
+                Animate.fade(vbox_asst_admin_no_found, 200, () -> {
                     vbox_asst_admin_no_found.setVisible(false);
                     vbox_asst_admin_table.setVisible(true);
                 }, vbox_asst_admin_table);
-            } else if(access_level.equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
-                Animate.fade(vbox_asst_registrar_no_found, 200, ()->{
+            } else if (access_level.equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
+                Animate.fade(vbox_asst_registrar_no_found, 200, () -> {
                     vbox_asst_registrar_no_found.setVisible(false);
                     vbox_asst_registrar_table.setVisible(true);
                 }, vbox_asst_registrar_table);
-            } else if(access_level.equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
-                Animate.fade(vbox_evaluator_no_found, 200, ()->{
+            } else if (access_level.equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
+                Animate.fade(vbox_evaluator_no_found, 200, () -> {
                     vbox_evaluator_no_found.setVisible(false);
                     vbox_evaluator_table.setVisible(true);
                 }, vbox_evaluator_table);
             }
         });
-        fetch.whenCancelled(()->{
+        fetch.whenCancelled(() -> {
             System.out.println("CANCELLED");
-            if(access_level.equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
-                Animate.fade(vbox_asst_admin_table, 150, ()->{
+            if (access_level.equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
+                Animate.fade(vbox_asst_admin_table, 150, () -> {
                     vbox_asst_admin_table.setVisible(false);
                     vbox_asst_admin_no_found.setVisible(true);
                 }, vbox_asst_admin_no_found);
-            } else if(access_level.equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
-                Animate.fade(vbox_asst_registrar_table, 150, ()->{
+            } else if (access_level.equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
+                Animate.fade(vbox_asst_registrar_table, 150, () -> {
                     vbox_asst_registrar_table.setVisible(false);
                     vbox_asst_registrar_no_found.setVisible(true);
                 }, vbox_asst_registrar_no_found);
-            } else if(access_level.equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
-                Animate.fade(vbox_evaluator_table, 150, ()->{
+            } else if (access_level.equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
+                Animate.fade(vbox_evaluator_table, 150, () -> {
                     vbox_evaluator_table.setVisible(false);
                     vbox_evaluator_no_found.setVisible(true);
                 }, vbox_evaluator_no_found);
             }
         });
-        fetch.whenFailed(()->{
+        fetch.whenFailed(() -> {
             System.out.println("FAILED");
         });
         fetch.transact();
     }
-    
+
     private final String KEY_MORE_INFO = "MORE_INFO";
+
     private void createTable(ArrayList<FacultyInformation> list, VBox parent, String accessLevelShown) {
         SimpleTable tblFaculty = new SimpleTable();
-        for(FacultyInformation each: list) {
+        for (FacultyInformation each : list) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(70.0);
             FacultyRow rowFX = M.load(FacultyRow.class);
             Label lbl_bulsu_id = rowFX.getLbl_bulsu_id();
             Label lbl_dept = rowFX.getLbl_department();
-            Label lbl_name= rowFX.getLbl_name();
+            Label lbl_name = rowFX.getLbl_name();
             JFXButton btn_remove = rowFX.getBtn_remove();
-            
+
             lbl_bulsu_id.setText(each.getBulsuID());
-            lbl_dept.setText((each.getDepartment().isEmpty()? "NOT SET": each.getDepartment()));
+            lbl_dept.setText((each.getDepartment().isEmpty() ? "NOT SET" : each.getDepartment()));
             lbl_name.setText(each.getFullName());
-            
-            super.addClickEvent(btn_remove, ()->{
+
+            super.addClickEvent(btn_remove, () -> {
                 this.onRemove(row, accessLevelShown, tblFaculty);
             });
-            
+
             row.getRowMetaData().put(KEY_MORE_INFO, each);
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
@@ -443,7 +462,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
              */
             tblFaculty.addRow(row);
         }
-        
+
         // table view
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(tblFaculty);
@@ -451,7 +470,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         // attach to parent variable name in scene builder
         simpleTableView.setParentOnScene(parent);
     }
-    
+
     // -----------------------------------------------------------
     // FACULTY SELECTOR
     // -----------------------------------------------
@@ -468,34 +487,37 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         }
 
         FacultyMapping selectedFaculty = facultyChooser.getSelectedFaculty();
-        if(selectedFaculty!=null && message!=null) {
+        if (selectedFaculty != null && message != null) {
             int res = Mono.fx().alert().createConfirmation()
                     .setMessage(message).confirmYesNo();
-            if(res==-1)
+            if (res == -1) {
                 return null;
+            }
         }
         return selectedFaculty;
     }
-    
+
     class FetchFaculty extends Transaction {
+
         public String accessLevel;
 
         private ArrayList<FacultyInformation> results = new ArrayList<>();
+
         public ArrayList<FacultyInformation> getResults() {
             return results;
         }
-        
+
         @Override
         protected boolean transaction() {
             ArrayList<FacultyMapping> faculty = Mono.orm().newSearch(Database.connect().faculty())
                     .eq(DB.faculty().designation, accessLevel)
                     .active(Order.asc(DB.faculty().last_name))
                     .all();
-            if(faculty==null) {
+            if (faculty == null) {
                 System.out.println("No " + accessLevel + " found.");
                 return false;
             }
-            for(FacultyMapping result: faculty) {
+            for (FacultyMapping result : faculty) {
                 FacultyInformation info = new FacultyInformation(result);
                 results.add(info);
             }
@@ -506,38 +528,39 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         protected void after() {
         }
     }
-    
+
     // --------------------------------------------------
     // ACTION
     // -------------------------------------------------
     private void assignSystemAdmin() {
         FacultyMapping selectedFaculty = selectFaculty("This will remove your authority of being a System Administrator and change it into Faculty. Account will automatically logout after. Do you still want to continue?");
-        if(selectedFaculty==null)
+        if (selectedFaculty == null) {
             return;
-        if(isSameAccount(selectedFaculty.getId())) {
+        }
+        if (isSameAccount(selectedFaculty.getId())) {
             return;
         }
         AccountFacultyMapping afMap = this.getAccountFaculty(selectedFaculty.getId(), Access.ACCESS_ADMIN);
-        if(afMap==null) {
+        if (afMap == null) {
             return;
-        } 
+        }
         afMap.setAccess_level(Access.ACCESS_ADMIN);
         selectedFaculty.setDesignation(Access.ACCESS_ADMIN);
-        if(Database.connect().account_faculty().update(afMap) &&
-                Database.connect().faculty().update(selectedFaculty)) {
+        if (Database.connect().account_faculty().update(afMap)
+                && Database.connect().faculty().update(selectedFaculty)) {
             Notifications.create().darkStyle()
                     .title("Assigned Successfully")
                     .text("New System Administrator is assigned.")
                     .showInformation();
             AccountFacultyMapping userAFMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
             FacultyMapping userFMap = Database.connect().faculty().getPrimary(CollegeFaculty.instance().getFACULTY_ID());
-            if(userAFMap==null){
+            if (userAFMap == null) {
                 System.out.println("No Account found for user.");
                 return;
             }
             userAFMap.setAccess_level(Access.ACCESS_FACULTY);
             userFMap.setDesignation(Access.ACCESS_FACULTY);
-            if(!Database.connect().account_faculty().update(userAFMap)) {
+            if (!Database.connect().account_faculty().update(userAFMap)) {
                 System.out.println("User not set into Faculty.");
             } else {
                 this.onLogout();
@@ -549,48 +572,51 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showError();
         }
     }
-    
+
     private boolean addNewAsstAdmin() {
         FacultyMapping selectedFaculty = selectFaculty(null);
-        if(selectedFaculty==null)
+        if (selectedFaculty == null) {
             return false;
-        if(this.isSameAccount(selectedFaculty.getId()))
+        }
+        if (this.isSameAccount(selectedFaculty.getId())) {
             return false;
+        }
         AccountFacultyMapping afMap = this.getAccountFaculty(selectedFaculty.getId(), Access.ACCESS_ASST_ADMIN);
-        if(afMap==null) {
+        if (afMap == null) {
             return false;
-        } 
+        }
         afMap.setAccess_level(Access.ACCESS_ASST_ADMIN);
         selectedFaculty.setDesignation(Access.ACCESS_ASST_ADMIN);
-        if(Database.connect().account_faculty().update(afMap) &&
-                Database.connect().faculty().update(selectedFaculty)) {
-             Notifications.create().darkStyle()
-                     .title("Added Successfully")
-                     .text("New Assistant System Administrator"
-                             + "\nis added.")
-                     .showInformation();
-             return true;
+        if (Database.connect().account_faculty().update(afMap)
+                && Database.connect().faculty().update(selectedFaculty)) {
+            Notifications.create().darkStyle()
+                    .title("Added Successfully")
+                    .text("New Assistant System Administrator"
+                            + "\nis added.")
+                    .showInformation();
+            return true;
         } else {
             Notifications.create().darkStyle()
                     .title("Request Failed")
                     .text("Something went wrong. Try again later")
                     .showError();
-            return  false;
+            return false;
         }
     }
-    
+
     private void assignLocalRegistrar() {
         FacultyMapping selectedFaculty = selectFaculty(null);
-        if(selectedFaculty==null)
+        if (selectedFaculty == null) {
             return;
-        if(isSameAccount(selectedFaculty.getId())) {
+        }
+        if (isSameAccount(selectedFaculty.getId())) {
             return;
         }
         AccountFacultyMapping afMap = this.getAccountFaculty(selectedFaculty.getId(), Access.ACCESS_LOCAL_REGISTRAR);
-        if(afMap==null) {
+        if (afMap == null) {
             return;
         }
-        if(!selectedFaculty.getDesignation().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
+        if (!selectedFaculty.getDesignation().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("Request Failed")
                     .text("The faculty is not designated"
@@ -598,7 +624,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showError();
             return;
         }
-        if(afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
+        if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
                     .text("Something went wrong. Try again later")
@@ -606,11 +632,11 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             return;
         }
         afMap.setAccess_level(Access.ACCESS_LOCAL_REGISTRAR);
-        if(Database.connect().account_faculty().update(afMap)) {
-             Notifications.create().darkStyle()
-                     .title("Assigned Successfully")
-                     .text("New Local Registrar is assigned.")
-                     .showInformation();
+        if (Database.connect().account_faculty().update(afMap)) {
+            Notifications.create().darkStyle()
+                    .title("Assigned Successfully")
+                    .text("New Local Registrar is assigned.")
+                    .showInformation();
         } else {
             Notifications.create().darkStyle()
                     .title("Request Failed")
@@ -618,56 +644,58 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showError();
         }
     }
-    
+
     private boolean assignAsstRegistrar() {
         FacultyMapping selectedFaculty = selectFaculty(null);
-        if(selectedFaculty==null)
+        if (selectedFaculty == null) {
             return false;
-        if(isSameAccount(selectedFaculty.getId())) {
+        }
+        if (isSameAccount(selectedFaculty.getId())) {
             return false;
         }
         AccountFacultyMapping afMap = this.getAccountFaculty(selectedFaculty.getId(), Access.ACCESS_CO_REGISTRAR);
-        if(afMap==null) {
+        if (afMap == null) {
             return false;
         }
         afMap.setAccess_level(Access.ACCESS_CO_REGISTRAR);
         selectedFaculty.setDesignation(Access.ACCESS_CO_REGISTRAR);
-        if(Database.connect().account_faculty().update(afMap) &&
-                Database.connect().faculty().update(selectedFaculty)) {
-             Notifications.create().darkStyle()
-                     .title("Assigned Successfully")
-                     .text("New Assistant Registrar is assigned.")
-                     .showInformation();
-             return true;
+        if (Database.connect().account_faculty().update(afMap)
+                && Database.connect().faculty().update(selectedFaculty)) {
+            Notifications.create().darkStyle()
+                    .title("Assigned Successfully")
+                    .text("New Assistant Registrar is assigned.")
+                    .showInformation();
+            return true;
         } else {
             Notifications.create().darkStyle()
                     .title("Request Failed")
                     .text("Something went wrong. Try again later")
                     .showWarning();
-            return  false;
+            return false;
         }
     }
-    
+
     private boolean addEvaluator() {
         FacultyMapping selectedFaculty = selectFaculty(null);
-        if(selectedFaculty==null)
+        if (selectedFaculty == null) {
             return false;
-        if(isSameAccount(selectedFaculty.getId())) {
+        }
+        if (isSameAccount(selectedFaculty.getId())) {
             return false;
         }
         AccountFacultyMapping afMap = this.getAccountFaculty(selectedFaculty.getId(), Access.ACCESS_EVALUATOR);
-        if(afMap==null) {
+        if (afMap == null) {
             return false;
         }
         afMap.setAccess_level(Access.ACCESS_EVALUATOR);
         selectedFaculty.setDesignation(Access.ACCESS_EVALUATOR);
-        if(Database.connect().account_faculty().update(afMap) &&
-                Database.connect().faculty().update(selectedFaculty)) {
-             Notifications.create().darkStyle()
-                     .title("Added Successfully")
-                     .text("New Evaluator is added.")
-                     .showInformation();
-             return true;
+        if (Database.connect().account_faculty().update(afMap)
+                && Database.connect().faculty().update(selectedFaculty)) {
+            Notifications.create().darkStyle()
+                    .title("Added Successfully")
+                    .text("New Evaluator is added.")
+                    .showInformation();
+            return true;
         } else {
             Notifications.create().darkStyle()
                     .title("Request Failed")
@@ -676,41 +704,41 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             return false;
         }
     }
-    
+
     private void onRemove(SimpleTableRow row, String accessLevelShown, SimpleTable tblFaculty) {
         FacultyInformation info = (FacultyInformation) row.getRowMetaData().get(KEY_MORE_INFO);
-        if(isSameAccount(info.getFacultyMapping().getId())) {
+        if (isSameAccount(info.getFacultyMapping().getId())) {
             return;
         }
-        if(accessLevelShown.equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
-            if(this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN)) {
+        if (accessLevelShown.equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN)) {
                 this.setToDefaultAccessLevel(info, tblFaculty, row);
             }
-        } else if(accessLevelShown.equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
-            if(this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+        } else if (accessLevelShown.equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
+            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 this.setToDefaultAccessLevel(info, tblFaculty, row);
             }
-        } else if(accessLevelShown.equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
+        } else if (accessLevelShown.equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
             boolean accessDenied = false;
-            if(this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 this.setToDefaultAccessLevel(info, tblFaculty, row);
             }
         }
     }
-    
+
     private void setToDefaultAccessLevel(FacultyInformation info, SimpleTable table, SimpleTableRow row) {
         AccountFacultyMapping afMap = info.getAccountFacultyMapping();
         FacultyMapping fMap = info.getFacultyMapping();
         afMap.setAccess_level(Access.ACCESS_FACULTY);
         fMap.setDesignation(Access.ACCESS_FACULTY);
-        if(Database.connect().account_faculty().update(afMap) &&
-                Database.connect().faculty().update(fMap)) {
-             Notifications.create().darkStyle()
-                     .title("Removed Successfully")
-                     .text("Account selected is now in"
-                             + "\n Faculty Access Level.")
-                     .showInformation();
-             table.getChildren().remove(row);
+        if (Database.connect().account_faculty().update(afMap)
+                && Database.connect().faculty().update(fMap)) {
+            Notifications.create().darkStyle()
+                    .title("Removed Successfully")
+                    .text("Account selected is now in"
+                            + "\n Faculty Access Level.")
+                    .showInformation();
+            table.getChildren().remove(row);
         } else {
             Notifications.create().darkStyle()
                     .title("Request Failed")
@@ -718,7 +746,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showWarning();
         }
     }
-    
+
     /**
      * There is no user access for logout everyone can logout ofcourse.
      */
