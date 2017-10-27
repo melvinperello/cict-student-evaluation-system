@@ -2,7 +2,7 @@
 // SQL_table: grade
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 21, 2017 10:03:16 PM
+// Created: Oct 27, 2017 10:27:36 AM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -35,5 +35,6 @@ public final String updated_by = "updated_by";
 public final String updated_date = "updated_date";
 public final String reason_for_update = "reason_for_update";
 public final String referrence_curriculum = "referrence_curriculum";
+public final String course_reference = "course_reference";
 public final String active = "active";
 }

@@ -137,9 +137,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2128 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2138 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~333 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~350 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1788, 1, '2017-10-12 00:07:10', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -481,7 +481,17 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(2124, 1, '2017-10-26 18:59:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2125, 1, '2017-10-26 19:01:44', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2126, 1, '2017-10-26 19:05:53', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(2127, 1, '2017-10-26 19:16:13', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(2127, 1, '2017-10-26 19:16:13', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2128, 1, '2017-10-26 19:47:57', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2129, 1, '2017-10-26 20:10:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2130, 1, '2017-10-26 20:57:28', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2131, 1, '2017-10-26 21:04:26', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2132, 1, '2017-10-26 21:08:43', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2133, 2, '2017-10-26 21:11:54', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2134, 1, '2017-10-26 21:23:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2135, 1, '2017-10-26 22:42:04', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2136, 1, '2017-10-26 22:51:47', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2137, 1, '2017-10-27 09:46:33', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -500,9 +510,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1956 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1966 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~354 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~371 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
 	(1595, 1, '2017-10-11 18:39:01', '2017-10-11 18:40:31', '%192.168.254.151@40-2C-F4-04-E9-6E%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 18:39:58', 'EVALUATION_SYSTEM', 1),
@@ -865,7 +875,17 @@ INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `sess
 	(1952, 1, '2017-10-26 18:59:39', '2017-10-26 19:01:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 19:00:53', 'EVALUATION_SYSTEM', 1),
 	(1953, 1, '2017-10-26 19:01:44', '2017-10-26 19:06:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 19:05:29', 'EVALUATION_SYSTEM', 1),
 	(1954, 1, '2017-10-26 19:05:53', '2017-10-26 19:13:53', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 19:12:58', 'EVALUATION_SYSTEM', 1),
-	(1955, 1, '2017-10-26 19:16:13', '2017-10-26 19:21:14', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 19:20:17', 'EVALUATION_SYSTEM', 1);
+	(1955, 1, '2017-10-26 19:16:13', '2017-10-26 19:21:14', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 19:20:17', 'EVALUATION_SYSTEM', 1),
+	(1956, 1, '2017-10-26 19:47:57', '2017-10-26 19:57:28', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 19:56:33', 'EVALUATION_SYSTEM', 1),
+	(1957, 1, '2017-10-26 20:10:46', '2017-10-26 20:11:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 20:10:49', 'EVALUATION_SYSTEM', 1),
+	(1958, 1, '2017-10-26 20:57:29', '2017-10-26 21:04:29', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 21:03:53', 'EVALUATION_SYSTEM', 1),
+	(1959, 1, '2017-10-26 21:04:26', '2017-10-26 21:08:57', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 21:08:06', 'EVALUATION_SYSTEM', 1),
+	(1960, 1, '2017-10-26 21:08:43', '2017-10-26 21:12:13', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 21:11:17', 'EVALUATION_SYSTEM', 1),
+	(1961, 2, '2017-10-26 21:11:54', '2017-10-26 21:14:24', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 21:13:51', 'EVALUATION_SYSTEM', 1),
+	(1962, 1, '2017-10-26 21:23:15', '2017-10-26 21:29:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 21:28:40', 'EVALUATION_SYSTEM', 1),
+	(1963, 1, '2017-10-26 22:42:04', '2017-10-26 22:43:04', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 22:42:14', 'EVALUATION_SYSTEM', 1),
+	(1964, 1, '2017-10-26 22:51:47', '2017-10-26 23:05:17', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-26 23:04:32', 'EVALUATION_SYSTEM', 1),
+	(1965, 1, '2017-10-27 09:46:33', '2017-10-27 10:27:33', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -938,7 +958,7 @@ INSERT INTO `curriculum` (`id`, `ACADPROG_id`, `major`, `name`, `description`, `
 	(7, 4, 'NONE', 'ACT (16-17)', 'NO DESCRIPTION', 'YES', 'PREPARATORY', 2, '2017-09-06 14:19:54', 3, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 1),
 	(9, 5, 'NONE', 'BSIT OLD (11-12)', 'NO DESCRIPTION', 'NO', 'NONE', 4, '2017-09-23 18:13:06', 3, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1),
 	(10, 7, 'NONE', 'BITCT', 'NO DESCRIPTION', 'NO', 'NONE', 4, '2017-09-23 20:54:17', 3, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 1),
-	(11, 5, 'NONE', 'BSIT (16-17)', 'NO DESCRIPTION', 'YES', 'CONSEQUENT', 2, '2017-10-18 04:58:42', 1, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1, 1);
+	(11, 5, 'NONE', 'BSIT (16-17)', 'NO DESCRIPTION', 'YES', 'CONSEQUENT', 2, '2017-10-18 04:58:42', 1, '2017-10-26 21:00:44', 1, NULL, NULL, 0, NULL, NULL, 1, 1);
 /*!40000 ALTER TABLE `curriculum` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.curriculum_history
@@ -962,10 +982,12 @@ CREATE TABLE IF NOT EXISTS `curriculum_history` (
   `implemented_by` int(11) DEFAULT NULL,
   `active` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`history_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_history: ~0 rows (approximately)
+-- Dumping data for table cictems.curriculum_history: ~1 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_history` DISABLE KEYS */;
+INSERT INTO `curriculum_history` (`history_id`, `CURRICULUM_id`, `major`, `name`, `description`, `ladderization`, `ladderization_type`, `study_years`, `created_date`, `created_by`, `updated_date`, `updated_by`, `removed_date`, `removed_by`, `implemented`, `implementation_date`, `implemented_by`, `active`) VALUES
+	(1, 11, 'NONE', 'BSIT (16-17)', 'NO DESCRIPTION', 'YES', 'CONSEQUENT', 2, '2017-10-18 04:58:42', 1, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1);
 /*!40000 ALTER TABLE `curriculum_history` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.curriculum_history_summary
@@ -981,12 +1003,13 @@ CREATE TABLE IF NOT EXISTS `curriculum_history_summary` (
   KEY `cur_history_fk_faculty` (`created_by`),
   CONSTRAINT `cur_history_fk_curriculum_id` FOREIGN KEY (`curriculum_id`) REFERENCES `curriculum` (`id`),
   CONSTRAINT `cur_history_fk_faculty` FOREIGN KEY (`created_by`) REFERENCES `faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_history_summary: ~0 rows (approximately)
+-- Dumping data for table cictems.curriculum_history_summary: ~1 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_history_summary` DISABLE KEYS */;
 INSERT INTO `curriculum_history_summary` (`history_id`, `curriculum_id`, `description`, `created_by`, `created_date`, `active`) VALUES
-	(189, 11, 'ADDED CO-REQUISITE [ID:177] IT 333 FOR [ID:157] IT 373 FROM THIRD YEAR-FIRST SEMESTER', 1, '2017-10-18 05:16:48', 1);
+	(189, 11, 'ADDED CO-REQUISITE [ID:177] IT 333 FOR [ID:157] IT 373 FROM THIRD YEAR-FIRST SEMESTER', 1, '2017-10-18 05:16:48', 1),
+	(190, 11, 'CURRICULUM PRIMARY, CURRICULUM EQUIVALENT OF THE CURRICULUM ARE UPDATED', 1, '2017-10-26 21:00:44', 1);
 /*!40000 ALTER TABLE `curriculum_history_summary` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.curriculum_pre
@@ -1009,10 +1032,13 @@ CREATE TABLE IF NOT EXISTS `curriculum_pre` (
   CONSTRAINT `cur_pre_removed` FOREIGN KEY (`removed_by`) REFERENCES `faculty` (`id`),
   CONSTRAINT `get_fk` FOREIGN KEY (`curriculum_id_get`) REFERENCES `curriculum` (`id`),
   CONSTRAINT `req_fk` FOREIGN KEY (`curriculum_id_req`) REFERENCES `curriculum` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_pre: ~0 rows (approximately)
+-- Dumping data for table cictems.curriculum_pre: ~2 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_pre` DISABLE KEYS */;
+INSERT INTO `curriculum_pre` (`id`, `curriculum_id_get`, `curriculum_id_req`, `cur_type`, `created_date`, `created_by`, `removed_date`, `removed_by`, `active`) VALUES
+	(1, 11, 7, 'PRIMARY', '2017-10-26 21:00:44', 1, NULL, NULL, 1),
+	(2, 11, 6, 'EQUIVALENT', '2017-10-26 21:00:44', 1, NULL, NULL, 1);
 /*!40000 ALTER TABLE `curriculum_pre` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.curriculum_requisite_ext
@@ -1546,6 +1572,7 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `updated_date` datetime(6) DEFAULT NULL,
   `reason_for_update` varchar(50) COLLATE utf8_unicode_ci DEFAULT '' COMMENT 'IF the grade will be changed',
   `referrence_curriculum` int(11) DEFAULT NULL,
+  `course_reference` int(11) DEFAULT NULL,
   `active` int(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `grade_fk_from_student_id` (`STUDENT_id`),
@@ -1555,6 +1582,8 @@ CREATE TABLE IF NOT EXISTS `grade` (
   KEY `grade_fk_from_faculty_id_update` (`updated_by`),
   KEY `grade_fk_from_faculty_id_created` (`created_by`),
   KEY `grade_fk_ref_cur` (`referrence_curriculum`),
+  KEY `grade_fk_course_ref` (`course_reference`),
+  CONSTRAINT `grade_fk_course_ref` FOREIGN KEY (`course_reference`) REFERENCES `student_course_history` (`id`),
   CONSTRAINT `grade_fk_from_academic_term_id` FOREIGN KEY (`ACADTERM_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `grade_fk_from_faculty_id_created` FOREIGN KEY (`created_by`) REFERENCES `faculty` (`id`),
   CONSTRAINT `grade_fk_from_faculty_id_posted` FOREIGN KEY (`posted_by`) REFERENCES `faculty` (`id`),
@@ -1562,42 +1591,78 @@ CREATE TABLE IF NOT EXISTS `grade` (
   CONSTRAINT `grade_fk_from_student_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`),
   CONSTRAINT `grade_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`),
   CONSTRAINT `grade_fk_ref_cur` FOREIGN KEY (`referrence_curriculum`) REFERENCES `curriculum` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=291 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
+) ENGINE=InnoDB AUTO_INCREMENT=327 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
 
--- Dumping data for table cictems.grade: ~12 rows (approximately)
+-- Dumping data for table cictems.grade: ~67 rows (approximately)
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
-INSERT INTO `grade` (`id`, `STUDENT_id`, `SUBJECT_id`, `ACADTERM_id`, `rating`, `remarks`, `credit`, `credit_method`, `created_by`, `created_date`, `posted`, `posted_by`, `posting_date`, `inc_expire`, `updated_by`, `updated_date`, `reason_for_update`, `referrence_curriculum`, `active`) VALUES
-	(260, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, NULL, '', NULL, 0),
-	(261, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, NULL, '', NULL, 0),
-	(262, 58, 112, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, 1),
-	(263, 58, 113, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, 1),
-	(264, 58, 114, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, 1),
-	(265, 58, 115, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, 1),
-	(266, 58, 116, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, 1),
-	(267, 58, 117, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, 1),
-	(268, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, NULL, '', NULL, 0),
-	(269, 58, 119, NULL, 'INC', 'INCOMPLETE', 0, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, 1),
-	(270, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:56.000000', 'INC Grade has Expired', NULL, 0),
-	(271, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:56.000000', 'INC Grade has Expired', NULL, 0),
-	(272, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:56.000000', 'INC Grade has Expired', NULL, 0),
-	(273, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:59.000000', 'INC Grade has Expired', NULL, 0),
-	(274, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:59.000000', 'INC Grade has Expired', NULL, 0),
-	(275, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:59.000000', 'INC Grade has Expired', NULL, 0),
-	(276, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:01.000000', 'INC Grade has Expired', NULL, 0),
-	(277, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:01.000000', 'INC Grade has Expired', NULL, 0),
-	(278, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:01.000000', 'INC Grade has Expired', NULL, 0),
-	(279, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:45.000000', 'INC Grade has Expired', NULL, 0),
-	(280, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:45.000000', 'INC Grade has Expired', NULL, 0),
-	(281, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:45.000000', 'INC Grade has Expired', NULL, 0),
-	(282, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:46.000000', 'INC Grade has Expired', NULL, 0),
-	(283, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:46.000000', 'INC Grade has Expired', NULL, 0),
-	(284, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:46.000000', 'INC Grade has Expired', NULL, 0),
-	(285, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:47.000000', 'INC Grade has Expired', NULL, 0),
-	(286, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:47.000000', 'INC Grade has Expired', NULL, 0),
-	(287, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:47.000000', 'INC Grade has Expired', NULL, 0),
-	(288, 58, 118, NULL, 'EXP', 'EXPIRED', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:06:03.000000', 'INC Grade has Expired', NULL, 1),
-	(289, 58, 111, NULL, 'EXP', 'EXPIRED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:06:03.000000', 'INC Grade has Expired', NULL, 1),
-	(290, 58, 110, NULL, 'EXP', 'EXPIRED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:06:03.000000', 'INC Grade has Expired', NULL, 1);
+INSERT INTO `grade` (`id`, `STUDENT_id`, `SUBJECT_id`, `ACADTERM_id`, `rating`, `remarks`, `credit`, `credit_method`, `created_by`, `created_date`, `posted`, `posted_by`, `posting_date`, `inc_expire`, `updated_by`, `updated_date`, `reason_for_update`, `referrence_curriculum`, `course_reference`, `active`) VALUES
+	(260, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(261, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(262, 58, 112, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(263, 58, 113, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(264, 58, 114, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(265, 58, 115, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(266, 58, 116, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(267, 58, 117, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(268, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(269, 58, 119, NULL, 'INC', 'INCOMPLETE', 0, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2018-10-26 19:00:19', NULL, NULL, '', NULL, NULL, 0),
+	(270, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:56.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(271, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:56.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(272, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:56.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(273, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:59.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(274, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:59.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(275, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:01:59.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(276, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:01.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(277, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:01.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(278, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:01.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(279, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:45.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(280, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:45.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(281, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:45.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(282, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:46.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(283, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:46.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(284, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:46.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(285, 58, 110, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:47.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(286, 58, 111, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:47.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(287, 58, 118, NULL, 'INC', 'INCOMPLETE', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:02:47.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(288, 58, 118, NULL, 'EXP', 'EXPIRED', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:06:03.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(289, 58, 111, NULL, 'EXP', 'EXPIRED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:06:03.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(290, 58, 110, NULL, 'EXP', 'EXPIRED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', '2017-10-26 19:00:19', NULL, '2017-10-26 19:06:03.000000', 'INC Grade has Expired', NULL, NULL, 0),
+	(291, 58, 110, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(292, 58, 111, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(293, 58, 112, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(294, 58, 113, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(295, 58, 114, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(296, 58, 115, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(297, 58, 116, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(298, 58, 117, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(299, 58, 118, NULL, '1.00', 'PASSED', 2, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(300, 58, 119, NULL, '1.00', 'PASSED', 0, 'REGULAR', 1, '2017-10-26 19:00:19', 1, 1, '2017-10-26 19:00:19', NULL, 1, '2017-10-26 21:09:55.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', 7, NULL, 1),
+	(301, 58, 128, NULL, '1.00', 'PASSED', 2, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(302, 58, 120, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(303, 58, 121, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(304, 58, 122, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(305, 58, 123, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(306, 58, 147, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(307, 58, 124, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(308, 58, 148, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(309, 58, 149, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(310, 58, 129, NULL, '1.00', 'PASSED', 0, 'REGULAR', 1, '2017-10-26 21:10:08', 1, 1, '2017-10-26 21:10:08', NULL, NULL, NULL, '', 7, NULL, 1),
+	(311, 58, 130, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(312, 58, 131, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(313, 58, 172, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(314, 58, 126, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(315, 58, 133, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(316, 58, 134, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(317, 58, 135, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(318, 58, 137, NULL, '1.00', 'PASSED', 2, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(319, 58, 138, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(320, 58, 139, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(321, 58, 141, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(322, 58, 136, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(323, 58, 142, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(324, 58, 143, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(325, 58, 145, NULL, '1.00', 'PASSED', 2, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1),
+	(326, 58, 202, NULL, '1.00', 'PASSED', 3, 'CREDIT', 2, '2017-10-26 21:12:25', 1, 2, '2017-10-26 21:12:25', NULL, NULL, NULL, 'Added Grade Using Credit Tree', 7, NULL, 1);
 /*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_entrance
@@ -2921,7 +2986,9 @@ CREATE TABLE IF NOT EXISTS `student` (
   `cict_id` int(30) NOT NULL AUTO_INCREMENT,
   `id` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'bulsu_id from the registrar',
   `CURRICULUM_id` int(11) DEFAULT NULL,
+  `curriculum_assignment` datetime DEFAULT NULL,
   `PREP_id` int(11) DEFAULT NULL,
+  `prep_assignment` datetime DEFAULT NULL,
   `last_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `first_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `middle_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
@@ -2955,14 +3022,30 @@ CREATE TABLE IF NOT EXISTS `student` (
 
 -- Dumping data for table cictems.student: ~6 rows (approximately)
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` (`cict_id`, `id`, `CURRICULUM_id`, `PREP_id`, `last_name`, `first_name`, `middle_name`, `gender`, `year_level`, `section`, `_group`, `has_profile`, `enrollment_type`, `admission_year`, `college`, `campus`, `residency`, `university`, `created_by`, `created_date`, `verified`, `verification_date`, `verfied_by`, `last_evaluation_term`, `active`) VALUES
-	(57, '2014113844', 9, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', 2, '', 1, 1, 'REGULAR', 'NOT_SET', 'CIT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 17:53:54', 1, '2017-10-19 18:40:10', 1, 11, 1),
-	(58, '2014123456', 7, NULL, 'DAZO', 'ARLEALYN', '', 'FEMALE', 2, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 18:41:14', 1, '2017-10-21 21:13:41', 1, 11, 1),
-	(59, '2014112470', 6, NULL, 'MERCADO', 'JELYN', 'CARLOS', 'FEMALE', 1, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-09-10 06:57:02', 1, '2017-10-26 03:10:26', 1, 11, 1),
-	(60, '2015123456', 9, NULL, 'SAMPLE', 'SAMPLE', 'SAMPLE', NULL, 1, 'A', 1, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'LINKED_ACC_24_USER_2014112470_MERCADO', '2017-09-10 12:07:01', 0, NULL, NULL, 11, 1),
-	(61, '2014112233', NULL, NULL, 'EWAN', 'EWAN', 'EWAN', 'FEMALE', NULL, NULL, NULL, 1, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-09-13 07:37:52', 0, NULL, NULL, 11, 1),
-	(62, '2014123123', NULL, NULL, 'DELA CRUZ', 'JUAN', 'MENDOZA', NULL, NULL, NULL, NULL, 0, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-10-15 02:45:13', 0, NULL, NULL, 11, 1);
+INSERT INTO `student` (`cict_id`, `id`, `CURRICULUM_id`, `curriculum_assignment`, `PREP_id`, `prep_assignment`, `last_name`, `first_name`, `middle_name`, `gender`, `year_level`, `section`, `_group`, `has_profile`, `enrollment_type`, `admission_year`, `college`, `campus`, `residency`, `university`, `created_by`, `created_date`, `verified`, `verification_date`, `verfied_by`, `last_evaluation_term`, `active`) VALUES
+	(57, '2014113844', 9, NULL, NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', 2, '', 1, 1, 'REGULAR', 'NOT_SET', 'CIT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 17:53:54', 1, '2017-10-19 18:40:10', 1, 11, 1),
+	(58, '2014123456', 11, NULL, 7, NULL, 'DAZO', 'ARLEALYN', '', 'FEMALE', 2, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 18:41:14', 1, '2017-10-21 21:13:41', 1, 11, 1),
+	(59, '2014112470', 6, NULL, NULL, NULL, 'MERCADO', 'JELYN', 'CARLOS', 'FEMALE', 1, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-09-10 06:57:02', 1, '2017-10-26 03:10:26', 1, 11, 1),
+	(60, '2015123456', 9, NULL, NULL, NULL, 'SAMPLE', 'SAMPLE', 'SAMPLE', NULL, 1, 'A', 1, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'LINKED_ACC_24_USER_2014112470_MERCADO', '2017-09-10 12:07:01', 0, NULL, NULL, 11, 1),
+	(61, '2014112233', NULL, NULL, NULL, NULL, 'EWAN', 'EWAN', 'EWAN', 'FEMALE', NULL, NULL, NULL, 1, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-09-13 07:37:52', 0, NULL, NULL, 11, 1),
+	(62, '2014123123', NULL, NULL, NULL, NULL, 'DELA CRUZ', 'JUAN', 'MENDOZA', NULL, NULL, NULL, NULL, 0, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-10-15 02:45:13', 0, NULL, NULL, 11, 1);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
+
+-- Dumping structure for table cictems.student_course_history
+CREATE TABLE IF NOT EXISTS `student_course_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` int(11) DEFAULT NULL,
+  `curriculum_id` int(11) DEFAULT NULL,
+  `curriculum_assigment` datetime DEFAULT NULL,
+  `prep_id` int(11) DEFAULT NULL,
+  `prep_assignment` datetime DEFAULT NULL,
+  `active` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Dumping data for table cictems.student_course_history: ~0 rows (approximately)
+/*!40000 ALTER TABLE `student_course_history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `student_course_history` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.student_profile
 CREATE TABLE IF NOT EXISTS `student_profile` (

@@ -2,7 +2,7 @@
 // SQL_table: student
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 21, 2017 10:03:16 PM
+// Created: Oct 27, 2017 10:27:37 AM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -20,7 +20,9 @@ public class Tbl_student {
 public final String cict_id = "cict_id";
 public final String id = "id";
 public final String CURRICULUM_id = "CURRICULUM_id";
+public final String curriculum_assignment = "curriculum_assignment";
 public final String PREP_id = "PREP_id";
+public final String prep_assignment = "prep_assignment";
 public final String last_name = "last_name";
 public final String first_name = "first_name";
 public final String middle_name = "middle_name";

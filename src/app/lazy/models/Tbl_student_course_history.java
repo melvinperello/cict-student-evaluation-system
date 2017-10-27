@@ -1,8 +1,8 @@
 // SQL_db: cictems
-// SQL_table: linked_pila_3f
+// SQL_table: student_course_history
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 27, 2017 10:27:36 AM
+// Created: Oct 27, 2017 10:27:37 AM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -16,8 +16,12 @@ package app.lazy.models;
  *
  * @author Jhon Melvin
  */
-public class Tbl_linked_pila_3f {
+public class Tbl_student_course_history {
 public final String id = "id";
-public final String pila_id = "pila_id";
+public final String student_id = "student_id";
+public final String curriculum_id = "curriculum_id";
+public final String curriculum_assigment = "curriculum_assigment";
+public final String prep_id = "prep_id";
+public final String prep_assignment = "prep_assignment";
 public final String active = "active";
 }

@@ -91,6 +91,9 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_student student = new Tbl_student();
     public static Tbl_student student() {
         return student;
+    }private final static Tbl_student_course_history student_course_history = new Tbl_student_course_history();
+    public static Tbl_student_course_history student_course_history() {
+        return student_course_history;
     }private final static Tbl_student_profile student_profile = new Tbl_student_profile();
     public static Tbl_student_profile student_profile() {
         return student_profile;

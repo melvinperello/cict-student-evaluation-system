@@ -104,6 +104,9 @@ return new LoadSubjectMapping();
 public StudentMapping student() {
 return new StudentMapping();
 }
+public StudentCourseHistoryMapping student_course_history() {
+return new StudentCourseHistoryMapping();
+}
 public StudentProfileMapping student_profile() {
 return new StudentProfileMapping();
 }

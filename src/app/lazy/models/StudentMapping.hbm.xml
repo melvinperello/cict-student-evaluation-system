@@ -13,8 +13,14 @@
 <property name="CURRICULUM_id" type="java.lang.Integer">
 <column name="CURRICULUM_id" length="10"/>
 </property>
+<property name="curriculum_assignment" type="java.util.Date">
+<column name="curriculum_assignment" length="19"/>
+</property>
 <property name="PREP_id" type="java.lang.Integer">
 <column name="PREP_id" length="10"/>
+</property>
+<property name="prep_assignment" type="java.util.Date">
+<column name="prep_assignment" length="19"/>
 </property>
 <property name="last_name" type="java.lang.String">
 <column name="last_name" length="100"/>

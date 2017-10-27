@@ -44,6 +44,7 @@ private MonoModels tbl_load_group_schedule;
 private MonoModels tbl_load_section;
 private MonoModels tbl_load_subject;
 private MonoModels tbl_student;
+private MonoModels tbl_student_course_history;
 private MonoModels tbl_student_profile;
 private MonoModels tbl_subject;
 private MonoModels tbl_system_override_logs;
@@ -124,6 +125,8 @@ Mono.orm().addMappings("LoadSubjectMapping");
 this.tbl_load_subject = Mono.orm().createModel(LoadSubjectMapping.class);
 Mono.orm().addMappings("StudentMapping");
 this.tbl_student = Mono.orm().createModel(StudentMapping.class);
+Mono.orm().addMappings("StudentCourseHistoryMapping");
+this.tbl_student_course_history = Mono.orm().createModel(StudentCourseHistoryMapping.class);
 Mono.orm().addMappings("StudentProfileMapping");
 this.tbl_student_profile = Mono.orm().createModel(StudentProfileMapping.class);
 Mono.orm().addMappings("SubjectMapping");
@@ -220,6 +223,9 @@ return tbl_load_subject;
 }
 public MonoModels student() {
 return tbl_student;
+}
+public MonoModels student_course_history() {
+return tbl_student_course_history;
 }
 public MonoModels student_profile() {
 return tbl_student_profile;

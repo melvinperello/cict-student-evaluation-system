@@ -2,7 +2,7 @@
 // SQL_table: student
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 21, 2017 10:03:15 PM
+// Created: Oct 27, 2017 10:27:36 AM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -30,7 +30,9 @@ public class StudentMapping implements java.io.Serializable {
 private java.lang.Integer cict_id;
 private java.lang.String id;
 private java.lang.Integer CURRICULUM_id;
+private java.util.Date curriculum_assignment;
 private java.lang.Integer PREP_id;
+private java.util.Date prep_assignment;
 private java.lang.String last_name;
 private java.lang.String first_name;
 private java.lang.String middle_name;
@@ -82,6 +84,16 @@ public void setCURRICULUM_id(java.lang.Integer fieldCurriculumId) {
 	this.CURRICULUM_id = fieldCurriculumId;
 }
 
+@Column(name = "curriculum_assignment", nullable = true, length = 19)
+@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+public java.util.Date getCurriculum_assignment() {
+	return this.curriculum_assignment;
+}
+
+public void setCurriculum_assignment(java.util.Date fieldCurriculumAssignment) {
+	this.curriculum_assignment = fieldCurriculumAssignment;
+}
+
 @Column(name = "PREP_id", nullable = true, length = 10)
 public java.lang.Integer getPREP_id() {
 	return this.PREP_id;
@@ -89,6 +101,16 @@ public java.lang.Integer getPREP_id() {
 
 public void setPREP_id(java.lang.Integer fieldPrepId) {
 	this.PREP_id = fieldPrepId;
+}
+
+@Column(name = "prep_assignment", nullable = true, length = 19)
+@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+public java.util.Date getPrep_assignment() {
+	return this.prep_assignment;
+}
+
+public void setPrep_assignment(java.util.Date fieldPrepAssignment) {
+	this.prep_assignment = fieldPrepAssignment;
 }
 
 @Column(name = "last_name", nullable = true, length = 100)

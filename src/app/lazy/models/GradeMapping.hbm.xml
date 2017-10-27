@@ -58,6 +58,9 @@
 <property name="referrence_curriculum" type="java.lang.Integer">
 <column name="referrence_curriculum" length="10"/>
 </property>
+<property name="course_reference" type="java.lang.Integer">
+<column name="course_reference" length="10"/>
+</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

@@ -2,7 +2,7 @@
 // SQL_table: grade
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Oct 21, 2017 10:03:15 PM
+// Created: Oct 27, 2017 10:27:35 AM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -45,6 +45,7 @@ private java.lang.Integer updated_by;
 private java.util.Date updated_date;
 private java.lang.String reason_for_update;
 private java.lang.Integer referrence_curriculum;
+private java.lang.Integer course_reference;
 private java.lang.Integer active;
 
 @Id
@@ -213,6 +214,15 @@ public java.lang.Integer getReferrence_curriculum() {
 
 public void setReferrence_curriculum(java.lang.Integer fieldReferrenceCurriculum) {
 	this.referrence_curriculum = fieldReferrenceCurriculum;
+}
+
+@Column(name = "course_reference", nullable = true, length = 10)
+public java.lang.Integer getCourse_reference() {
+	return this.course_reference;
+}
+
+public void setCourse_reference(java.lang.Integer fieldCourseReference) {
+	this.course_reference = fieldCourseReference;
 }
 
 @Column(name = "active", nullable = true, length = 10)
