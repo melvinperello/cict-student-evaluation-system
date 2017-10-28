@@ -51,7 +51,7 @@
                                     <Font size="25.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblCourseSection" layoutX="27.0" layoutY="53.0" prefHeight="21.0" prefWidth="529.0" text="BS INFORMATION TECHNOLOGY | 3A-G1" textFill="WHITE" AnchorPane.leftAnchor="26.0" AnchorPane.topAnchor="52.0">
+                              <Label fx:id="lblCourseSection" layoutX="27.0" layoutY="53.0" prefHeight="21.0" prefWidth="629.0" text="BS INFORMATION TECHNOLOGY | 3A-G1" textFill="WHITE" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="213.0" AnchorPane.topAnchor="52.0">
                                  <font>
                                     <Font size="15.0" />
                                  </font>

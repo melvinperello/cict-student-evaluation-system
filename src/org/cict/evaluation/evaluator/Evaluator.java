@@ -196,9 +196,16 @@ public class Evaluator implements Process {
         }
 
         /**
-         * Forcibly adds the subject without filters.
+         * Overloaded method default for force adding of subject.
          */
         private void forceAdd() {
+            this.forceAdd(false);
+        }
+
+        /**
+         * Forcibly adds the subject without filters.
+         */
+        private void forceAdd(boolean crossEnrollee) {
 
             Integer subjectID = Evaluator.instance().pressedSubjectID;
             Integer sectionID = Evaluator.instance().pressedSectionID;
@@ -213,12 +220,22 @@ public class Evaluator implements Process {
                     + "\nOverrided For S/N: "
                     + currentStudent.getId() + " ," + currentStudent.getLast_name() + "."
                     + "\nThis action was captured and logged.";
+            String title = "System Rules Overriden";
+
+            if (crossEnrollee) {
+                text = subjectMap.getCode()
+                        + "\nAdded For S/N: "
+                        + currentStudent.getId() + " ," + currentStudent.getLast_name() + "."
+                        + "\nNo Validation was Called.";
+                title = "Cross-Enrollment";
+            }
             Notifications.create()
-                    .title("System Rules Override")
+                    .title(title)
                     .text(text)
                     .position(Pos.BOTTOM_RIGHT).showWarning();
-            //
 
+            //------------------------------------------------------------------
+            //
             SubjectView addedSubject = new SubjectView();
             addedSubject.code.setText(subjectMap.getCode());
             addedSubject.title.setText(subjectMap.getDescriptive_title());
@@ -405,6 +422,14 @@ public class Evaluator implements Process {
                 // checks if already in the list.
                 return;
             }
+            //------------------------------------------------------------------
+            // CROSS-ENROLLEE FILTER SHOULD BE ADDED HERE
+            if (currentStudent.getResidency().equalsIgnoreCase("CROSS_ENROLLEE")) {
+                // this is a cross enrollment force add
+                forceAdd(true);
+                return;
+            }
+            //------------------------------------------------------------------
             // check for ojt if can take with other subject on the same time
             if (!this.isOJTVerified()) {
                 // if ojt not verified

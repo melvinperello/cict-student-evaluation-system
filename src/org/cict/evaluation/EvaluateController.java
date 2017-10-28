@@ -530,7 +530,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private ArrayList<SubjectMapping> studentSubject;
     private LoadSectionMapping studentSection;
     // unused variables for student information
-    //private CurriculumMapping studentCurriculum;
+    private CurriculumMapping studentCurriculum;
     //--------------------------------------------------------------------------
     /**
      * This block is the process of searching the student and automatically
@@ -619,6 +619,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.studentProgram = search.getStudentProgram();
         this.studentSection = search.getStudentSection();
         this.studentSubject = search.getStudentSubject();
+        this.studentCurriculum = search.getStudentCurriculum();
         //----------------------------------------------------------------------
         // Test Results
 
@@ -1238,11 +1239,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             try {
                 // students section
                 String section = this.currentStudent.getYear_level()
-                        + " "
+                        + ""
                         + this.currentStudent.getSection()
                         + " - G"
                         + this.currentStudent.get_group();
-                this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
+
+                this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section + " | " + this.studentCurriculum.getName());
             } catch (Exception e) {
                 this.lblCourseSection.setText("No Data");
             }
