@@ -87,6 +87,12 @@ public class ChooserHome extends SceneFX implements ControllerFX {
 
         SimpleTable tblColleges = new SimpleTable();
         for (String[] strings : SectionHomeController.COLLEGE_LIST) {
+            //------------------------------------------------------------------
+            // Do not include cict
+            if (strings[0].equalsIgnoreCase("CICT")) {
+                continue;
+            }
+            //------------------------------------------------------------------
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(100.0);
 

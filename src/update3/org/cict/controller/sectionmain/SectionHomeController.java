@@ -105,7 +105,7 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
         {"CBA", "COLLEGE OF BUSINESS ADMINISTRATION", "CBA.png"},
         {"CCJE", "COLLEGE OF CRIMINAL JUSTICE EDUCATION", "CCJE.png"},
         {"CHE", "COLLEGE OF HOME ECONOMICS", "CHE.png"},
-        // {"CICT", "COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY", "CICT.png"},
+        {"CICT", "COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY", "CICT.png"},
         {"CIT", "COLLEGE OF INDUSTRIAL TECHNOLOGY", "CIT.png"},
         {"CLAW", "COLLEGE OF LAW", "CLAW.png"},
         {"CON", "COLLEGE OF NURSING", "CN.png"},

@@ -48,6 +48,7 @@ import org.cict.reports.checklist.ACT;
 import org.cict.reports.checklist.BITCT;
 import org.cict.reports.checklist.BSIT1112;
 import org.cict.reports.checklist.BSIT1516;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -65,19 +66,23 @@ public class PrintChecklist extends Transaction {
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
     private String DEFAULT_IMAGE_LOC = "src/org/cict/reports/checklist/images/default.png";
+
     @Override
     protected boolean transaction() {
+        //----------------------------------------------------------------------
         student = Database.connect().student().getPrimary(CICT_id);
         if (student == null) {
             System.out.println("NO STUDENT");
             return false;
         }
-        
-        CurriculumMapping curriculum_ = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
-        acadProg = Database.connect().academic_program().getPrimary(curriculum_.getACADPROG_id());
-        
-        if(CURRICULUM_id != null) {
-            curriculum = Database.connect().curriculum().getPrimary(CURRICULUM_id);
+        //----------------------------------------------------------------------
+        // @Question: What is the difference between 'curriculum_' and 'curriculum'
+        CurriculumMapping /*This One*/ curriculum_ = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
+        acadProg = Database.connect().academic_program()
+                .getPrimary(curriculum_.getACADPROG_id());
+
+        if (CURRICULUM_id != null) {
+            curriculum /*And This One*/ = Database.connect().curriculum().getPrimary(CURRICULUM_id);
             AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
             sectionName = apMap.getCode() + " " + student.getYear_level() + student.getSection()
                     + "-G" + student.get_group();
@@ -87,53 +92,66 @@ public class PrintChecklist extends Transaction {
             sectionName = acadProg.getCode() + " " + student.getYear_level() + student.getSection()
                     + "-G" + student.get_group();
         }
-        
+
         if (curriculum == null) {
             System.out.println("NO CURRICULUM");
             return false;
         }
-        
-        if (student.getHas_profile() == 1) {
-            StudentProfileMapping spMap = Mono.orm().newSearch(Database.connect().student_profile())
+
+        // Get Student Address.
+        //----------------------------------------------------------------------
+        if (student.getHas_profile().equals(1)) {
+            //------------------------------------------------------------------
+            // search the latest profile order desc
+            StudentProfileMapping spMap = Mono.orm()
+                    .newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
-                    .active().first();
-            String hNum = spMap.getHouse_no(),
-                    brgy = spMap.getBrgy(),
-                    city = spMap.getCity(),
-                    province = spMap.getProvince();
-            if (hNum != null) {
-                address = hNum;
-            }
-            if (brgy != null) {
-                if (!address.isEmpty()) {
-                    address += " " + spMap.getBrgy();
-                } else {
-                    address = brgy;
+                    .active(Order.desc(DB.student_profile().id))
+                    .first();
+            //------------------------------------------------------------------
+            // check if profile was found
+            if (spMap != null) {
+                String hNum = spMap.getHouse_no(),
+                        brgy = spMap.getBrgy(),
+                        city = spMap.getCity(),
+                        province = spMap.getProvince();
+                if (hNum != null) {
+                    address = hNum;
                 }
-            }
-            if (city != null) {
-                if (!address.isEmpty()) {
-                    address += " " + city;
-                } else {
-                    address = city;
+                if (brgy != null) {
+                    if (!address.isEmpty()) {
+                        address += " " + spMap.getBrgy();
+                    } else {
+                        address = brgy;
+                    }
                 }
-            }
-            if (province != null) {
-                if (!address.isEmpty()) {
-                    address += ", " + province;
-                } else {
-                    address = province;
+                if (city != null) {
+                    if (!address.isEmpty()) {
+                        address += " " + city;
+                    } else {
+                        address = city;
+                    }
                 }
+                if (province != null) {
+                    if (!address.isEmpty()) {
+                        address += ", " + province;
+                    } else {
+                        address = province;
+                    }
+                }
+                highSchool = "";
             }
-            highSchool = "";
+            //------------------------------------------------------------------
         }
-        
+        // (End of Getting Address)---------------------------------------------
+        // CLA
         CurricularLevelAssesor cla = new CurricularLevelAssesor(student);
         cla.assess();
         getResult(cla, 1, cla.hasPrepData());
         getResult(cla, 2, cla.hasPrepData());
         getResult(cla, 3, cla.hasPrepData());
         getResult(cla, 4, cla.hasPrepData());
+        //----------------------------------------------------------------------
         return true;
     }
 
@@ -219,16 +237,16 @@ public class PrintChecklist extends Transaction {
     @Override
     protected void after() {
         String LEGACY = null;
-        if(printLegacy) {
-            for(String legacy: PublicConstants.LEGACY_CURRICULUM) {
-                if(legacy.equalsIgnoreCase(curriculum.getName())) {
+        if (printLegacy) {
+            for (String legacy : PublicConstants.LEGACY_CURRICULUM) {
+                if (legacy.equalsIgnoreCase(curriculum.getName())) {
                     LEGACY = legacy;
                     System.out.println("Print Legacy " + LEGACY);
                     break;
                 }
             }
         }
-        
+
         String doc = student.getId() + "_"
                 + Mono.orm().getServerTime().getCalendar().getTimeInMillis();
 
@@ -245,13 +263,13 @@ public class PrintChecklist extends Transaction {
             System.err.println("Directory is not created.");
             return;
         }
-        
-        if(LEGACY==null) {
+
+        if (LEGACY == null) {
             System.out.println("Print Standard");
             printStandard(RESULT, false);
             return;
         }
-        
+
         if (LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[0]) && printLegacy) {
             ACT act = new ACT(RESULT);
             act.STUDENT_NUMBER = student.getId();
@@ -342,8 +360,8 @@ public class PrintChecklist extends Transaction {
             BITCT bitct = new BITCT(RESULT);
             bitct.STUDENT_NUMBER = student.getId();
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
-            String midName = (student.getMiddle_name()==null? "" : student.getMiddle_name());
-            fullName += (midName!=null? (" " + midName) : "");
+            String midName = (student.getMiddle_name() == null ? "" : student.getMiddle_name());
+            fullName += (midName != null ? (" " + midName) : "");
             bitct.STUDENT_NAME = fullName;
             bitct.STUDENT_ADDRESS = address;
             bitct.STUDENT_HS = highSchool;
@@ -389,15 +407,15 @@ public class PrintChecklist extends Transaction {
             bitct.SUBJECTS_PER_SEM.put("41", fryrfsem);
             bitct.SUBJECTS_PER_SEM.put("42", fryrssem);
             bitct.print();
-        } else if(LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[3]) && printLegacy) {
+        } else if (LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[3]) && printLegacy) {
             BSIT1516 bsit1516 = new BSIT1516(RESULT, false);
             bsit1516.PRINT_ORIGINAL = true;
             bsit1516.STUDENT_NUMBER = student.getId();
-            
+
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
-            String midName = (student.getMiddle_name()==null? "" : student.getMiddle_name());
-            fullName += (midName!=null? (" " + midName) : "");
-            
+            String midName = (student.getMiddle_name() == null ? "" : student.getMiddle_name());
+            fullName += (midName != null ? (" " + midName) : "");
+
             bsit1516.STUDENT_NAME = fullName;
             bsit1516.STUDENT_ADDRESS = address;
             if (acadProg != null) {
@@ -415,11 +433,11 @@ public class PrintChecklist extends Transaction {
             for (Object[] detail : details) {
                 String key = (String) detail[4];
                 SubjectMapping subject = (SubjectMapping) detail[0];
-                if(subject.getCode().equalsIgnoreCase("CAPS 01")) {
+                if (subject.getCode().equalsIgnoreCase("CAPS 01")) {
                     detail[2] = "Regular 3rd year \nStanding";
                     detail[3] = "Regular 3rd year \nStanding";
                 }
-                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                     detail[1] = "486 hours";
                     detail[2] = "4th Year Standing";
                 }
@@ -459,31 +477,32 @@ public class PrintChecklist extends Transaction {
             bsit1516.SUBJECTS_PER_SEM.put("32", tyrssem);
             bsit1516.SUBJECTS_PER_SEM.put("41", fryrfsem);
             bsit1516.SUBJECTS_PER_SEM.put("42", fryrssem);
-                
+
             int val = bsit1516.print();
         } else {
             Boolean isBSIT1516 = false;
-            if(LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[3]))
+            if (LEGACY.equalsIgnoreCase(PublicConstants.LEGACY_CURRICULUM[3])) {
                 isBSIT1516 = true;
+            }
             printStandard(RESULT, isBSIT1516);
         }
     }
-    
+
     private void printStandard(String RESULT, Boolean printOriginal) {
         BSIT1516 standard = new BSIT1516(RESULT, true);
         standard.STUDENT_NUMBER = student.getId();
         standard.PRINT_ORIGINAL = printOriginal;
-        
+
         String fullName = student.getLast_name() + ", " + student.getFirst_name();
-        String midName = (student.getMiddle_name()==null? "" : student.getMiddle_name());
-        fullName += (midName!=null? (" " + midName) : "");
-            
+        String midName = (student.getMiddle_name() == null ? "" : student.getMiddle_name());
+        fullName += (midName != null ? (" " + midName) : "");
+
         standard.STUDENT_NAME = fullName;
         standard.STUDENT_ADDRESS = address;
         if (acadProg != null) {
             standard.COURSE = acadProg.getName();
         }
-        
+
         String year = SystemProperties.instance().getCurrentAcademicTerm().getSchool_year();
         standard.SCHOOL_YEAR = year;
         String major = curriculum.getMajor();

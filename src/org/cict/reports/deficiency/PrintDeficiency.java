@@ -39,7 +39,6 @@ import org.cict.SubjectClassification;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
-import static org.cict.evaluation.evaluator.PrintChecklist.SAVE_DIRECTORY;
 import org.cict.reports.ReportsDirectory;
 import org.hibernate.criterion.Order;
 
@@ -50,22 +49,23 @@ import org.hibernate.criterion.Order;
 public class PrintDeficiency extends Transaction {
 
     public Integer CICT_id;
-    
 
     private CurricularLevelAssesor assessmentResults;
     private StudentMapping student;
     private CurriculumMapping curriculum;
     private AcademicProgramMapping acadProg;
-    
+
     @Override
     protected boolean transaction() {
+        //----------------------------------------------------------------------
         student = Database.connect().student().getPrimary(CICT_id);
-        if(student==null) {
+        if (student == null) {
             System.out.println("NO STUDENT FOUND");
             message = "No student found.";
             return false;
         }
-        
+        //----------------------------------------------------------------------
+        // if student has profile get address
         if (student.getHas_profile() == 1) {
             StudentProfileMapping spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
@@ -99,20 +99,32 @@ public class PrintDeficiency extends Transaction {
                 }
             }
         }
-        
-        if(student.getCURRICULUM_id()==null) {
+        //----------------------------------------------------------------------
+        if (student.getCURRICULUM_id() == null) {
             System.out.println("NO CURRICULUM FOUND");
             message = "No curriculum found.";
             return false;
         }
-        curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
-        if(curriculum!=null) {
-            acadProg = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
-            course = acadProg==null? "" : acadProg.getName();
+        //----------------------------------------------------------------------
+        curriculum = Database.connect()
+                .curriculum().getPrimary(student.getCURRICULUM_id());
+        if (curriculum == null) {
+            System.out.println("Cannot Retrieve Curriculum");
+            message = "Cannot Retrieve Curriculum.";
+            return false;
         }
+        acadProg = Database.connect()
+                .academic_program().getPrimary(curriculum.getACADPROG_id());
+        if (acadProg == null) {
+            System.out.println("Cannot Retrieve Academic Program");
+            message = "Cannot Retrieve Academic Program.";
+            return false;
+        }
+        course = acadProg == null ? "" : acadProg.getName();
+        //----------------------------------------------------------------------
         CurricularLevelAssesor cla = new CurricularLevelAssesor(student);
         cla.assess();
-
+        //----------------------------------------------------------------------
         if (cla.hasPrepData()) {
             String text = cla.getPrepCurriculum().getName() + " -> " + cla.getConsCurriculum().getName();
             System.out.println(text);
@@ -123,15 +135,19 @@ public class PrintDeficiency extends Transaction {
         getResult(cla, 2, cla.hasPrepData());
         getResult(cla, 3, cla.hasPrepData());
         getResult(cla, 4, cla.hasPrepData());
+        //----------------------------------------------------------------------
         return true;
     }
+
+    //--------------------------------------------------------------------------
+    // Why unused ?
     private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_1;
     private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_2;
     private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_3;
     private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_4;
-
-    
+    //--------------------------------------------------------------------------
     private ArrayList<Object[]> details = new ArrayList<>();
+
     private void getResult(CurricularLevelAssesor cla, int year, boolean hasPrepData) {
         AssessmentResults result = cla.getAnnualAssessment(year);
         if (hasPrepData) {
@@ -208,7 +224,7 @@ public class PrintDeficiency extends Transaction {
             }
         }
     }
-    
+
     public final static String SAVE_DIRECTORY = "reports/deficiency";
     private ArrayList<Object[]> fyrfsem = new ArrayList<>();
     private ArrayList<Object[]> fyrssem = new ArrayList<>();
@@ -220,7 +236,7 @@ public class PrintDeficiency extends Transaction {
     private ArrayList<Object[]> fryrssem = new ArrayList<>();
     private String address = "";
     private String course = "";
-    
+
     @Override
     protected void after() {
         String doc = student.getId() + "_"
@@ -244,61 +260,62 @@ public class PrintDeficiency extends Transaction {
         //------------------------------------------------------------------
         //------------------------------------------------------------------
 
-        String fullName = student.getLast_name() + ", " + student.getFirst_name() 
-                + (student.getMiddle_name()==null? "": (" " +student.getMiddle_name()));
-        
+        String fullName = student.getLast_name() + ", " + student.getFirst_name()
+                + (student.getMiddle_name() == null ? "" : (" " + student.getMiddle_name()));
+
         Deficiency def = new Deficiency(RESULT);
-        def.STUDENT_NUMBER = student.getId()==null? "NONE" : student.getId();
-        def.STUDENT_NAME = fullName==null? "NONE" : fullName;
+        def.STUDENT_NUMBER = student.getId() == null ? "NONE" : student.getId();
+        def.STUDENT_NAME = fullName == null ? "NONE" : fullName;
         def.STUDENT_ADDRESS = address;
         def.CURRICULUM_NAME = course;
-            for (Object[] detail : details) {
-                String key = (String) detail[4];
-                SubjectMapping subject = (SubjectMapping) detail[0];
-                switch (key) {
-                    case "11":
-                        store(fyrfsem, detail);
-                        break;
-                    case "12":
-                        store(fyrssem, detail);
-                        break;
-                    case "21":
-                        store(syrfsem, detail);
-                        break;
-                    case "22":
-                        store(syrssem, detail);
-                        break;
-                    case "31":
-                        store(tyrfsem, detail);
-                        break;
-                    case "32":
-                        store(tyrssem, detail);
-                        break;
-                    case "41":
-                        store(fryrfsem, detail);
-                        break;
-                    case "42":
-                        store(fryrssem, detail);
-                        break;
-                }
-
+        for (Object[] detail : details) {
+            String key = (String) detail[4];
+            SubjectMapping subject = (SubjectMapping) detail[0];
+            switch (key) {
+                case "11":
+                    store(fyrfsem, detail);
+                    break;
+                case "12":
+                    store(fyrssem, detail);
+                    break;
+                case "21":
+                    store(syrfsem, detail);
+                    break;
+                case "22":
+                    store(syrssem, detail);
+                    break;
+                case "31":
+                    store(tyrfsem, detail);
+                    break;
+                case "32":
+                    store(tyrssem, detail);
+                    break;
+                case "41":
+                    store(fryrfsem, detail);
+                    break;
+                case "42":
+                    store(fryrssem, detail);
+                    break;
             }
-            def.SUBJECTS_PER_SEM.put("11", fyrfsem);
-            def.SUBJECTS_PER_SEM.put("12", fyrssem);
-            def.SUBJECTS_PER_SEM.put("21", syrfsem);
-            def.SUBJECTS_PER_SEM.put("22", syrssem);
-            def.SUBJECTS_PER_SEM.put("31", tyrfsem);
-            def.SUBJECTS_PER_SEM.put("32", tyrssem);
-            def.SUBJECTS_PER_SEM.put("41", fryrfsem);
-            def.SUBJECTS_PER_SEM.put("42", fryrssem);
-            def.print();
+
+        }
+        def.SUBJECTS_PER_SEM.put("11", fyrfsem);
+        def.SUBJECTS_PER_SEM.put("12", fyrssem);
+        def.SUBJECTS_PER_SEM.put("21", syrfsem);
+        def.SUBJECTS_PER_SEM.put("22", syrssem);
+        def.SUBJECTS_PER_SEM.put("31", tyrfsem);
+        def.SUBJECTS_PER_SEM.put("32", tyrssem);
+        def.SUBJECTS_PER_SEM.put("41", fryrfsem);
+        def.SUBJECTS_PER_SEM.put("42", fryrssem);
+        def.print();
     }
-    
+
     private String message = "";
-    public String getMessage(){
+
+    public String getMessage() {
         return message;
     }
-    
+
     private void store(ArrayList<Object[]> subjectDetails, Object[] detail) {
         subjectDetails.add(detail);
     }

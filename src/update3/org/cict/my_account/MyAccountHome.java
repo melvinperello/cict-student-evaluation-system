@@ -44,6 +44,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;

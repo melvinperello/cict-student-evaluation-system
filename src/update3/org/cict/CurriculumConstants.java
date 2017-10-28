@@ -28,9 +28,10 @@ package update3.org.cict;
  * @author Jhon Melvin
  */
 public class CurriculumConstants {
-    private final static String LADDERIZED = "YES";
-    private final static String NOT_LADDERIZED = "NO";
-    private final static String TYPE_NONE = "NONE";
-    private final static String TYPE_CONSEQUENT = "CONSEQUENT";
-    private final static String TYPE_PREPARATORY = "PREPARATORY";
+
+    public final static String LADDERIZED = "YES";
+    public final static String NOT_LADDERIZED = "NO";
+    public final static String TYPE_NONE = "NONE";
+    public final static String TYPE_CONSEQUENT = "CONSEQUENT";
+    public final static String TYPE_PREPARATORY = "PREPARATORY";
 }

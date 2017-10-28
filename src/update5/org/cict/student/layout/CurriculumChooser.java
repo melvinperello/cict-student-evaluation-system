@@ -40,12 +40,11 @@ import com.melvin.mono.fx.events.MonoClick;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cict.evaluation.moving_up.CurriculumRow;
 import org.controlsfx.control.Notifications;
-import update4.org.cict.linked_manager.StudentChooser;
+import update3.org.cict.CurriculumConstants;
 
 /**
  *
@@ -61,44 +60,45 @@ public class CurriculumChooser extends MonoLauncher {
 
     @FXML
     private VBox vbox_no_found;
-    
+
     @FXML
     private JFXButton btn_cancel;
 
     @Override
     public void onStartUp() {
-        MonoClick.addClickEvent(btn_cancel, ()->{
-            Mono.fx().getParentStage(application_root).close();
+        MonoClick.addClickEvent(btn_cancel, () -> {
+            this.close();
         });
     }
-    
+
     private CurriculumMapping selected;
+
     @Override
     public void onDelayedStart() {
         super.onDelayedStart(); //To change body of generated methods, choose Tools | Templates.
         this.selected = null;
         this.loadTable();
     }
-    
+
     private void loadTable() {
         vbox_no_found.setVisible(false);
         vbox_list.setVisible(false);
         FetchCurriculum fetch = new FetchCurriculum();
-        fetch.whenSuccess(()->{
-            Animate.fade(vbox_no_found, 150, ()->{
+        fetch.whenSuccess(() -> {
+            Animate.fade(vbox_no_found, 150, () -> {
                 vbox_no_found.setVisible(false);
                 vbox_list.setVisible(true);
             }, vbox_list);
             createTable(fetch.getResults());
         });
-        fetch.whenCancelled(()->{
-            Animate.fade(vbox_list, 150, ()->{
+        fetch.whenCancelled(() -> {
+            Animate.fade(vbox_list, 150, () -> {
                 vbox_list.setVisible(false);
                 vbox_no_found.setVisible(true);
             }, vbox_no_found);
         });
-        fetch.whenFailed(()->{
-            Animate.fade(vbox_list, 150, ()->{
+        fetch.whenFailed(() -> {
+            Animate.fade(vbox_list, 150, () -> {
                 vbox_list.setVisible(false);
                 vbox_no_found.setVisible(true);
             }, vbox_no_found);
@@ -110,20 +110,31 @@ public class CurriculumChooser extends MonoLauncher {
         });
         fetch.transact();
     }
-    
+
     class FetchCurriculum extends Transaction {
 
         private ArrayList<CurriculumMapping> results;
+
         public ArrayList<CurriculumMapping> getResults() {
             return results;
         }
         private String log;
+
         @Override
         protected boolean transaction() {
-            ArrayList<CurriculumMapping> curriculums = Mono.orm().newSearch(Database.connect().curriculum())
-//                    .eq(DB.curriculum().implemented, 1)
-                    .active().all();
-            if(curriculums==null) {
+            //------------------------------------------------------------------
+            ArrayList<CurriculumMapping> curriculums = Mono.orm()
+                    .newSearch(Database.connect().curriculum())
+                    //                    .eq(DB.curriculum().implemented, 1)
+                    // must not be 1 or must not be null
+                    .neOrNn(DB.curriculum().obsolete_term, 1)
+                    // must not be consequent
+                    // shift to the preparatory then moving up
+                    .ne(DB.curriculum().ladderization_type, CurriculumConstants.TYPE_CONSEQUENT)
+                    .active()
+                    .all();
+            //------------------------------------------------------------------
+            if (curriculums == null) {
                 log = "No account found.";
                 return false;
             }
@@ -135,53 +146,51 @@ public class CurriculumChooser extends MonoLauncher {
         @Override
         protected void after() {
         }
-        
+
     }
-    
+
     private void createTable(ArrayList<CurriculumMapping> lst_info) {
         SimpleTable curriculumTable = new SimpleTable();
         curriculumTable.getChildren().clear();
-        for(CurriculumMapping info: lst_info) {
+        for (CurriculumMapping info : lst_info) {
             createRow(curriculumTable, info);
         }
-        
+
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(curriculumTable);
         simpleTableView.setFixedWidth(true);
-        
+
         simpleTableView.setParentOnScene(vbox_list);
-            
+
     }
-    
-    
-    
+
     private void createRow(SimpleTable marshallTable, CurriculumMapping each) {
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
         CurriculumRow rowFX = M.load(CurriculumRow.class);
-        
-        Label lbl_name = rowFX.getLbl_curriculum_name(); 
+
+        Label lbl_name = rowFX.getLbl_curriculum_name();
         Label lbl_major = rowFX.getLbl_major();
         JFXButton btn_select = rowFX.getBtn_select();
-        
+
         lbl_name.setText(each.getName());
-        lbl_major.setText((each.getMajor()==null? "NONE" : each.getMajor()));
-        MonoClick.addClickEvent(btn_select, ()->{
+        lbl_major.setText((each.getMajor() == null ? "NONE" : each.getMajor()));
+        MonoClick.addClickEvent(btn_select, () -> {
             selected = (CurriculumMapping) row.getRowMetaData().get("MORE_INFO");
             Mono.fx().getParentStage(application_root).close();
         });
-        
+
         row.getRowMetaData().put("MORE_INFO", each);
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(rowFX.getApplicationRoot());
-        
+
         row.addCell(cellParent);
         marshallTable.addRow(row);
     }
-    
-    public CurriculumMapping getSelected(){
+
+    public CurriculumMapping getSelected() {
         return selected;
     }
 }

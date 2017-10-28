@@ -279,7 +279,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         });
 
         super.addClickEvent(btn_view_deficiency, () -> {
-            btn_view_deficiency.setDisable(true);
             this.printDeficiency();
         });
 
@@ -289,25 +288,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
         // Code to change student college
         super.addClickEvent(btn_change_college, () -> {
-            String selectedCollege = ChooserHome.open();
-            if (selectedCollege == null || selectedCollege.equalsIgnoreCase("cancel")) {
-                // operation was cancelled
-                return;
-            }
-
-            if (this.CURRENT_STUDENT.getCollege().equalsIgnoreCase(selectedCollege)) {
-                Mono.fx().snackbar().showInfo(application_root, "No Changes Were Made.");
-                return;
-            }
-
-            // save changes
-            this.CURRENT_STUDENT.setCollege(selectedCollege);
-            boolean updated = Database.connect().student().update(CURRENT_STUDENT);
-            if (updated) {
-                Mono.fx().snackbar().showSuccess(application_root, "Information was updated.");
-            } else {
-                Mono.fx().snackbar().showInfo(application_root, "Cannot Save Changes, Please Try Again.");
-            }
+            this.showCollegeChanger();
         });
 
         super.addClickEvent(btn_shift_course, () -> {
@@ -337,6 +318,31 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
         } else {
             createHistoryTable(results);
+        }
+    }
+
+    /**
+     * Changes the current college of the student.
+     */
+    private void showCollegeChanger() {
+        String selectedCollege = ChooserHome.open();
+        if (selectedCollege == null || selectedCollege.equalsIgnoreCase("cancel")) {
+            // operation was cancelled
+            return;
+        }
+
+        if (this.CURRENT_STUDENT.getCollege().equalsIgnoreCase(selectedCollege)) {
+            Mono.fx().snackbar().showInfo(application_root, "No Changes Were Made.");
+            return;
+        }
+
+        // save changes
+        this.CURRENT_STUDENT.setCollege(selectedCollege);
+        boolean updated = Database.connect().student().update(CURRENT_STUDENT);
+        if (updated) {
+            Mono.fx().snackbar().showSuccess(application_root, "Information was updated.");
+        } else {
+            Mono.fx().snackbar().showInfo(application_root, "Cannot Save Changes, Please Try Again.");
         }
     }
 
@@ -385,21 +391,22 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
     }
 
+    //--------------------------------------------------------------------------
     private void onShiftCourse() {
         CurriculumMapping selected = selectCurriculum("Are you sure you want to shift the student's course?");
         if (selected == null) {
             return;
         }
+        //----------------------------------------------------------------------
         System.out.println(selected.getName());
-        Integer course_ref = this.insertCourseHistory(selected);
-        this.processGrades(selected.getId(), course_ref);
+        this.processGrades(selected.getId());
     }
 
-    private void processGrades(Integer curriculum_id, Integer course_ref) {
+    private void processGrades(Integer curriculum_id/*, Integer course_ref*/) {
         TransactGrades transact = new TransactGrades();
         transact.student_id = CURRENT_STUDENT.getCict_id();
         transact.curriculum_id = curriculum_id;
-        transact.course_reference = course_ref;
+        /*transact.course_reference = course_ref;*/
         transact.whenCancelled(() -> {
             Notifications.create()
                     .title("Request Cancelled")
@@ -432,18 +439,47 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
         public Integer curriculum_id;
         public Integer student_id;
-        public Integer course_reference;
+        //----------------------------------------------------------------------
+        public Integer course_reference; // must be retrieved within transaction
+        //----------------------------------------------------------------------
 
         public String log;
 
         @Override
         protected boolean transaction() {
-            Session currentSession = Mono.orm().session();
+            //------------------------------------------------------------------
+            Session currentSession = Mono.orm().openSession();
             // start your transaction
             org.hibernate.Transaction dataTransaction = currentSession.beginTransaction();
+            //------------------------------------------------------------------
+            // include the insertion of the course history in the transaction
+            StudentCourseHistoryMapping schMap = new StudentCourseHistoryMapping();
+            schMap.setActive(1);
+            schMap.setCurriculum_assigment(Mono.orm().getServerTime().getDateWithFormat());
+            schMap.setCurriculum_id(curriculum.getId());
+            schMap.setPrep_assignment(CURRENT_STUDENT.getPrep_assignment());
+            schMap.setPrep_id(CURRENT_STUDENT.getPREP_id());
+            schMap.setStudent_id(CURRENT_STUDENT.getCict_id());
+            int courseHistoryID = Database.connect().student_course_history()
+                    .transactionalInsert(currentSession, schMap);
+
+            //------------------------------------------------------------------
+            // check if history was properly inserted
+            if (courseHistoryID <= 0) {
+                dataTransaction.rollback();
+                log = "Cannot Insert Course History";
+                return false; // cancel the transaction
+            } else {
+                // assign this history ID
+                this.course_reference = courseHistoryID;
+            }
+            //------------------------------------------------------------------
             ArrayList<GradeMapping> grades = Mono.orm().newSearch(Database.connect().grade())
                     .eq(DB.grade().STUDENT_id, student_id)
-                    .active().all();
+                    .active()
+                    .all();
+            //------------------------------------------------------------------
+            // updating grades with course reference
             if (grades != null) {
                 for (GradeMapping grade : grades) {
                     grade.setActive(0);
@@ -457,6 +493,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     }
                 }
             }
+            //------------------------------------------------------------------
             StudentMapping student = Database.connect().student().getPrimary(student_id);
             if (student != null) {
                 student.setCURRICULUM_id(curriculum_id);
@@ -464,41 +501,37 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
                 if (!Database.connect().student().transactionalSingleUpdate(currentSession, student)) {
                     dataTransaction.rollback();
-                    log = "Student is not properly updated.";
+                    log = "Cannot Update Curriculum For the moment.";
                     System.out.println(log);
                     return false;
                 }
             } else {
                 dataTransaction.rollback();
-                log = "No student found.";
+                log = "Cannot retrieve student data.";
                 System.out.println(log);
                 return false;
             }
+            //------------------------------------------------------------------
             dataTransaction.commit();
             return true;
         }
 
-        @Override
-        protected void after() {
-
-        }
-
     }
 
-    private Integer insertCourseHistory(CurriculumMapping curriculum) {
-        StudentCourseHistoryMapping schMap = new StudentCourseHistoryMapping();
-        schMap.setActive(1);
-        schMap.setCurriculum_assigment(Mono.orm().getServerTime().getDateWithFormat());
-        schMap.setCurriculum_id(curriculum.getId());
-        schMap.setPrep_assignment(CURRENT_STUDENT.getPrep_assignment());
-        schMap.setPrep_id(CURRENT_STUDENT.getPREP_id());
-        schMap.setStudent_id(CURRENT_STUDENT.getCict_id());
-        return Database.connect().student_course_history().insert(schMap);
-    }
-
+//    private Integer insertCourseHistory(CurriculumMapping curriculum) {
+//        StudentCourseHistoryMapping schMap = new StudentCourseHistoryMapping();
+//        schMap.setActive(1);
+//        schMap.setCurriculum_assigment(Mono.orm().getServerTime().getDateWithFormat());
+//        schMap.setCurriculum_id(curriculum.getId());
+//        schMap.setPrep_assignment(CURRENT_STUDENT.getPrep_assignment());
+//        schMap.setPrep_id(CURRENT_STUDENT.getPREP_id());
+//        schMap.setStudent_id(CURRENT_STUDENT.getCict_id());
+//        return Database.connect().student_course_history().insert(schMap);
+//    }
     private CurriculumMapping selectCurriculum(String message) {
         CurriculumChooser curriculumChooser = M.load(CurriculumChooser.class);
         curriculumChooser.onDelayedStart(); // do not put database transactions on startUp
+        //----------------------------------------------------------------------
         try {
             System.out.println("Stage Recycled. ^^v");
             curriculumChooser.getCurrentStage().showAndWait();
@@ -507,6 +540,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             a.initStyle(StageStyle.UNDECORATED);
             a.showAndWait();
         }
+        //----------------------------------------------------------------------
 
         CurriculumMapping selected = curriculumChooser.getSelected();
         if (selected != null && message != null) {
@@ -584,12 +618,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     private void printDeficiency() {
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = CURRENT_STUDENT.getCict_id();
-        print.whenSuccess(() -> {
-            btn_view_deficiency.setDisable(false);
-            Notifications.create()
-                    .title("Printing the Deficiency Report.")
-                    .text("Please wait a moment.")
-                    .showInformation();
+        //----------------------------------------------------------------------
+        print.whenStarted(() -> {
+            btn_view_deficiency.setDisable(true);
+            super.cursorWait();
         });
         print.whenCancelled(() -> {
             Notifications.create()
@@ -604,6 +636,18 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .text("Something went wrong. Sorry for the inconviniece.")
                     .showInformation();
         });
+        print.whenSuccess(() -> {
+            btn_view_deficiency.setDisable(false);
+            Notifications.create()
+                    .title("Printing the Deficiency Report.")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_view_deficiency.setDisable(false);
+            super.cursorDefault();
+        });
+        //----------------------------------------------------------------------
         print.transact();
     }
 
