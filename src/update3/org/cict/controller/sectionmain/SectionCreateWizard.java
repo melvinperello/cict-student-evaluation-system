@@ -63,6 +63,7 @@ import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import update3.org.cict.ChoiceRange;
+import update3.org.cict.CurriculumConstants;
 import update3.org.cict.layout.default_loader.LoaderView;
 import update3.org.cict.window_prompts.fail_prompt.FailView;
 import update3.org.cict.window_prompts.success_prompt.SuccessView;
@@ -317,13 +318,13 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         FormFormat formFormatter = new FormFormat();
 
         FormFormat.IntegerFormat yearFilter = formFormatter.new IntegerFormat();
-        if (curriculumMap.getLadderization_type().equalsIgnoreCase("NONE")) {
+        if (curriculumMap.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_NONE)) {
             yearFilter.setMinLimit(1);
             yearFilter.setMaxLimit(4);
-        } else if (curriculumMap.getLadderization_type().equalsIgnoreCase("PREPARATORY")) {
+        } else if (curriculumMap.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_PREPARATORY)) {
             yearFilter.setMinLimit(1);
             yearFilter.setMaxLimit(2);
-        } else if (curriculumMap.getLadderization_type().equalsIgnoreCase("CONSEQUENT")) {
+        } else if (curriculumMap.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
             yearFilter.setMinLimit(3);
             yearFilter.setMaxLimit(4);
         }

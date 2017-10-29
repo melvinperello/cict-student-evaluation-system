@@ -40,6 +40,7 @@ import java.util.Date;
 import javafx.application.Platform;
 import org.cict.PublicConstants;
 import org.hibernate.criterion.Order;
+import sys.org.cict.enumerations.CurriculumValues;
 
 /**
  *
@@ -309,9 +310,9 @@ public class CurricularLevelAssesor {
         // prep
         ArrayList<CurriculumSubjectMapping> prep_curriculum_subjects = new ArrayList<>();
         // assertion there should always a curriculum result fk of student
-        if (curInfo.getLadderization().equalsIgnoreCase("YES")) {
+        if (curInfo.getLadderization().equalsIgnoreCase(CurriculumValues.Ladderization.YES.toString())) {
             // curriculum is ladderized
-            if (curInfo.getLadderization_type().equalsIgnoreCase("CONSEQUENT")) {
+            if (curInfo.getLadderization_type().equalsIgnoreCase(CurriculumValues.LadderType.CONSEQUENT.toString())) {
 
                 // get pre curriculum info
                 CurriculumMapping preCur = (CurriculumMapping) Database.connect()

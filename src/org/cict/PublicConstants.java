@@ -26,8 +26,8 @@ package org.cict;
 import app.lazy.models.DB;
 import app.lazy.models.StudentMapping;
 import com.jhmvin.orm.SQL;
-import java.util.HashMap;
 import org.hibernate.criterion.Criterion;
+import sys.org.cict.enumerations.GradeValues;
 
 /**
  *
@@ -68,18 +68,11 @@ public class PublicConstants {
     public final int MAX_ATTEMPTS = 3; // max wrong attempts for temp block
 
     /**
-     * Internship subjects.
-     */
-    public final String[] SUBJECT_INTERNSHIP = {
-        "INTERNSHIP",
-        "INTERNSHIP",};
-
-    /**
      * Remarks required for pre-requisites.
      */
     public final static Criterion OK_SUBJECT_REMARKS = SQL
-            .or(SQL.where("remarks").equalTo("PASSED"),
-                    SQL.where("remarks").equalTo("INCOMPLETE"));
+            .or(SQL.where(DB.grade().remarks).equalTo("PASSED"),
+                    SQL.where(DB.grade().remarks).equalTo("INCOMPLETE"));
 
     public static Criterion getCurriculumRequisite(StudentMapping studentMap) {
         //return SQL.where("active").equalTo(1);
@@ -90,23 +83,15 @@ public class PublicConstants {
     }
 
     /**
+     * Please use the code at GradeValues Enumeration
      *
      * @param rating
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static String getRemarks(String rating) {
-        HashMap<String, String> table = new HashMap<>();
-        table.put("1.00", "PASSED");
-        table.put("1.25", "PASSED");
-        table.put("1.50", "PASSED");
-        table.put("2.00", "PASSED");
-        table.put("2.25", "PASSED");
-        table.put("2.50", "PASSED");
-        table.put("3.00", "PASSED");
-        table.put("INC", "INCOMPLETE");
-        table.put("EXP", "EXPIRED");
-
-        return table.get(rating);
+        return GradeValues.RATING_REMAKRS.get(rating);
     }
 
 }

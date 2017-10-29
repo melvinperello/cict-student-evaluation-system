@@ -21,24 +21,29 @@
  * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
  *
  */
-package update3.org.cict;
-
-import sys.org.cict.enumerations.CurriculumValues;
+package sys.org.cict.enumerations;
 
 /**
  *
  * @author Jhon Melvin
  */
-@Deprecated
-public class CurriculumConstants {
+public class CurriculumValues {
 
     /**
-     * PLEASE USE THE ENUMERATION @ sys.org.cict.enumerations
+     * Allowed Values for Ladder.
      */
-    // DO NOT ANYMORE USE VALUES FROM THIS CLASS USE ENUMERATION CONSTANTS.
-    public final static String LADDERIZED = CurriculumValues.Ladderization.YES.toString();
-    public final static String NOT_LADDERIZED = CurriculumValues.Ladderization.NO.toString();
-    public final static String TYPE_NONE = CurriculumValues.LadderType.NONE.toString();
-    public final static String TYPE_CONSEQUENT = CurriculumValues.LadderType.CONSEQUENT.toString();
-    public final static String TYPE_PREPARATORY = CurriculumValues.LadderType.PREPARATORY.toString();
+    public static enum Ladderization {
+        YES, NO;
+    }
+
+    /**
+     * Values for ladder Type.
+     */
+    public static enum LadderType {
+        NONE, PREPARATORY, CONSEQUENT;
+    }
+
+    public static enum RequisiteType {
+        EQUIVALENT, PRIMARY;
+    }
 }

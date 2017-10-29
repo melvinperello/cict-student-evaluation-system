@@ -77,6 +77,7 @@ import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
+import sys.org.cict.enumerations.CurriculumValues;
 import update2.org.cict.controller.academicprogram.AcademicProgramAccessManager;
 import update2.org.cict.controller.academicprogram.AcademicProgramHome;
 import update2.org.cict.controller.subjects.SearchSubjectController;
@@ -112,10 +113,10 @@ public class CurriculumInformationController extends SceneFX implements Controll
 
     @FXML
     private ComboBox<String> cmb_preparatory;
-       
+
     @FXML
     private JFXCheckBox chkbx_obsolete;
-    
+
     @FXML
     private Label lbl_id;
 
@@ -154,15 +155,15 @@ public class CurriculumInformationController extends SceneFX implements Controll
 
     @FXML
     private JFXButton btn_back;
-    
+
     private CurriculumMapping CURRICULUM;
     private final ToggleGroup group = new ToggleGroup();
     private ObservableList<String> ladderTypes = FXCollections.observableArrayList();
     private ArrayList<CurriculumMapping> allCurriculums = new ArrayList<>();
 
-    private String NONE = "NONE";
-    private String PREPARATORY = "PREPARATORY";
-    private String CONSEQUENT = "CONSEQUENT";
+    private String NONE = CurriculumValues.LadderType.NONE.toString();
+    private String PREPARATORY = CurriculumValues.LadderType.PREPARATORY.toString();
+    private String CONSEQUENT = CurriculumValues.LadderType.CONSEQUENT.toString();
 
     private Integer CREATED_BY = CollegeFaculty.instance().getFACULTY_ID();
     private Date CREATED_DATE = Mono.orm().getServerTime().getDateWithFormat();
@@ -211,40 +212,39 @@ public class CurriculumInformationController extends SceneFX implements Controll
 //        setViewCheckCmbBoxPreReq("NO");
         setDetails();
 
-         
         if (AcademicProgramAccessManager.denyIfNotRegistrar()) {
             btn_implement.setDisable(true);
         }
-        
+
         if (AcademicProgramAccessManager.denyIfNotAdmin()) {
             btn_edit.setDisable(true);
             txt_description.setDisable(true);
             txt_major.setDisable(true);
             txt_name.setDisable(true);
         }
-        
+
         addTextFieldFilters();
     }
-    
+
     private void addTextFieldFilters() {
         StringFilter textField = TextInputFilters.string()
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
                     }
                 });
         textField.clone().setTextSource(txt_name).applyFilter();
-        
+
         StringFilter textField1 = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
@@ -252,9 +252,9 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 });
         textField1.clone().setTextSource(txt_major).applyFilter();
         textField1.clone().setTextSource(txt_description).applyFilter();
-       
+
     }
-    
+
     @Override
     public void onEventHandling() {
         addClickEvent(btn_edit, () -> {
@@ -293,7 +293,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
                         .show();
                 return;
             }
-            if(CURRICULUM.getImplemented() == 1) {
+            if (CURRICULUM.getImplemented() == 1) {
                 btn_implement.setDisable(true);
             }
             int res = Mono.fx().alert().createConfirmation()
@@ -343,18 +343,18 @@ public class CurriculumInformationController extends SceneFX implements Controll
         this.addClickEvent(btn_history, () -> {
             showHistory();
         });
-        
-        this.addClickEvent(btn_back, ()->{
+
+        this.addClickEvent(btn_back, () -> {
             onBack();
         });
 
-        chkbx_obsolete.selectedProperty().addListener((a)->{
-            if(run) {
+        chkbx_obsolete.selectedProperty().addListener((a) -> {
+            if (run) {
                 run = false;
                 return;
             }
-            CURRICULUM.setObsolete_term((chkbx_obsolete.isSelected()? 1: 0));
-            if(Database.connect().curriculum().update(CURRICULUM)) {
+            CURRICULUM.setObsolete_term((chkbx_obsolete.isSelected() ? 1 : 0));
+            if (Database.connect().curriculum().update(CURRICULUM)) {
                 Notifications.create().title("Updated Successfully")
                         .text("Obsolete of the curriculum is updated.")
                         .showInformation();
@@ -364,25 +364,25 @@ public class CurriculumInformationController extends SceneFX implements Controll
                                 + "the term.")
                         .showInformation();
             }
-            
+
         });
-        
-        super.addClickEvent(rbtn_no, ()->{
+
+        super.addClickEvent(rbtn_no, () -> {
             isLadderized(false);
         });
-        super.addClickEvent(rbtn_yes, ()->{
+        super.addClickEvent(rbtn_yes, () -> {
             isLadderized(true);
         });
-        cmb_type.valueProperty().addListener((a)->{
+        cmb_type.valueProperty().addListener((a) -> {
             ladderType = cmb_type.getSelectionModel().getSelectedItem();
             setViewCheckCmbBoxPreReq(ladderType);
         });
     }
-    
+
     private Boolean run = true;
-    
+
     private void isLadderized(boolean ladderized) {
-        if(ladderized) {
+        if (ladderized) {
             laderized = "YES";
             setViewCheckCmbBoxPreReq("YES");
             cmb_type.setDisable(false);
@@ -391,14 +391,16 @@ public class CurriculumInformationController extends SceneFX implements Controll
             laderized = "NO";
             setViewCheckCmbBoxPreReq("NO");
             cmb_type.setDisable(true);
-            if(!cmb_type.getItems().contains(NONE))
+            if (!cmb_type.getItems().contains(NONE)) {
                 cmb_type.getItems().add(NONE);
+            }
             cmb_type.getSelectionModel().select(NONE);
         }
-        
+
     }
-    
+
     private final String SECTION_BASE_COLOR = "#414852";
+
     private void onBack() {
         AcademicProgramHome controller = new AcademicProgramHome();
         Pane pane = Mono.fx().create()
@@ -435,12 +437,14 @@ public class CurriculumInformationController extends SceneFX implements Controll
         if (mode.equalsIgnoreCase(PREPARATORY)
                 || mode.equalsIgnoreCase("NO")) {
             cmb_prereq.getCheckModel().clearChecks();
-            if(!cmb_prereq.getItems().contains(NONE))
+            if (!cmb_prereq.getItems().contains(NONE)) {
                 cmb_prereq.getItems().add(NONE);
+            }
             cmb_prereq.getCheckModel().check(NONE);
             cmb_prereq.setDisable(true);
-            if(!cmb_preparatory.getItems().contains(NONE))
+            if (!cmb_preparatory.getItems().contains(NONE)) {
                 cmb_preparatory.getItems().add(NONE);
+            }
             cmb_preparatory.getSelectionModel().select(NONE);
             cmb_preparatory.setDisable(true);
         } else if (mode.equalsIgnoreCase(CONSEQUENT)
@@ -481,8 +485,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
             lbl_implemented_date.setText(fetch.getImplementedDateWithFormat());
             lbl_status.setText(fetch.getStatus());
             isImplemented = fetch.isImplemented();
-            chkbx_obsolete.setSelected(CURRICULUM.getObsolete_term()==null || CURRICULUM.getObsolete_term()==0? false: true);
-            
+            chkbx_obsolete.setSelected(CURRICULUM.getObsolete_term() == null || CURRICULUM.getObsolete_term() == 0 ? false : true);
+
             isLadderized(fetch.isLadderized());
             if (fetch.isLadderized()) {
                 rbtn_yes.setSelected(true);
@@ -496,8 +500,9 @@ public class CurriculumInformationController extends SceneFX implements Controll
                         cmb_prereq.getCheckModel().check(preReq.getName());
                     }
                 } else {
-                    if(!cmb_prereq.getItems().contains(NONE))
+                    if (!cmb_prereq.getItems().contains(NONE)) {
                         cmb_prereq.getItems().add(NONE);
+                    }
                     cmb_prereq.getCheckModel().clearChecks();
                     cmb_prereq.getCheckModel().check(NONE);
                 }
@@ -507,7 +512,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             } else {
                 rbtn_no.setSelected(true);
             }
-            if(isImplemented) {
+            if (isImplemented) {
                 txt_description.setDisable(isImplemented);
                 txt_major.setDisable(isImplemented);
                 txt_name.setDisable(isImplemented);
@@ -529,7 +534,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
         int exptdSem = 2;
         int studyYears = this.CURRICULUM.getStudy_years();
         boolean isConsequent = false;
-        if (CURRICULUM.getLadderization_type().equalsIgnoreCase("CONSEQUENT")) {
+        if (CURRICULUM.getLadderization_type().equalsIgnoreCase(CONSEQUENT)) {
             isConsequent = true;
         }
         for (int ctrYr = 1; ctrYr <= studyYears; ctrYr++) {
@@ -606,12 +611,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
         lbl_subjects.setText(subjects.toString());
         lbl_units.setText(units.toString());
         btn_add_subject.setDisable(isImplemented);
-        
-         
+
         if (AcademicProgramAccessManager.denyIfNotAdmin()) {
             btn_add_subject.setDisable(true);
         }
-        
+
         addClickEvent(btn_add_subject, () -> {
             if (!isImplemented) {
                 this.showSubjectSearch(curriculumID, year, sem);
@@ -642,7 +646,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             controller.setYearAndSemester(yr, sem);
             controller.setModeSetting("CURRICULUM");
             controller.title = getYearLevel(yr) + "-" + getSemester(sem);
-            
+
             LayoutDataFX layoutFx = new LayoutDataFX(application_root, this);
             controller.setHomeFx(layoutFx);
             Pane pane = Mono.fx().create()
@@ -657,7 +661,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                 super.replaceRoot(pane);
             }, pane);
-            
+
             if (controller.isAdded()) {
                 setYearAndSemesterView();
             }
@@ -696,8 +700,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 row.showExtension();
             }
         });
-        
-        super.addDoubleClickEvent(row, ()->{
+
+        super.addDoubleClickEvent(row, () -> {
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
                 row.hideExtension();
@@ -780,7 +784,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 if (AcademicProgramAccessManager.denyIfNotAdmin()) {
                     btn_remove.setDisable(true);
                 }
-                
+
                 lbl_subject_code.setText(subject.getCode());
                 lbl_descriptive_title.setText(subject.getDescriptive_title());
                 lbl_lec.setText(subject.getLec_units().toString());
@@ -991,6 +995,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
     }
 
     private String name, description = "", major = "", laderized = "", ladderType = "";
+
     private void validate() {
         name = MonoString.removeExtraSpace(txt_name.getText()).toUpperCase();
         try {
@@ -1038,8 +1043,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
         if (major == null || major.isEmpty()) {
             major = NONE;
         }
-        
-        if(isAnyChangeMade()) {
+
+        if (isAnyChangeMade()) {
             insertCurriculumHistory();
             if (didUpdateDB()) {
                 insertSummary();
@@ -1070,6 +1075,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
     }
 
     private ArrayList<String> changedCol = new ArrayList<>();
+
     private Integer insertSummary() {
         CurriculumHistorySummaryMapping chsMap = new CurriculumHistorySummaryMapping();
         chsMap.setActive(1);
@@ -1077,15 +1083,16 @@ public class CurriculumInformationController extends SceneFX implements Controll
         chsMap.setCreated_date(CREATED_DATE);
         chsMap.setCurriculum_id(curriculumID);
         String summaryDescription = "";
-        if(changedCol.isEmpty())
+        if (changedCol.isEmpty()) {
             return -1;
-        for(String changeCol: changedCol) {
-            summaryDescription += (summaryDescription.isEmpty()? changeCol : (", " + changeCol));
         }
-        chsMap.setDescription(summaryDescription + (changedCol.size()>1? " OF THE CURRICULUM ARE UPDATED" : " OF THE CURRICULUM IS UPDATED."));
+        for (String changeCol : changedCol) {
+            summaryDescription += (summaryDescription.isEmpty() ? changeCol : (", " + changeCol));
+        }
+        chsMap.setDescription(summaryDescription + (changedCol.size() > 1 ? " OF THE CURRICULUM ARE UPDATED" : " OF THE CURRICULUM IS UPDATED."));
         return Database.connect().curriculum_history_summary().insert(chsMap);
     }
-    
+
     private boolean didUpdateDB() {
         changedCol.clear();
         if (!CURRICULUM.getDescription().equalsIgnoreCase(description)) {
@@ -1100,13 +1107,13 @@ public class CurriculumInformationController extends SceneFX implements Controll
             CURRICULUM.setName(name);
             changedCol.add("CURRICULUM NAME");
         }
-        
+
         //
-        if(!CURRICULUM.getLadderization().equalsIgnoreCase(laderized)) {
+        if (!CURRICULUM.getLadderization().equalsIgnoreCase(laderized)) {
             CURRICULUM.setLadderization(laderized);
-            if(laderized.equalsIgnoreCase("YES"))
+            if (laderized.equalsIgnoreCase("YES")) {
                 CURRICULUM.setStudy_years(2);
-            else {
+            } else {
                 CURRICULUM.setStudy_years(4);
                 this.clearAllPrimaryExcept(null, false);
                 this.clearAllEquivalent();
@@ -1114,26 +1121,26 @@ public class CurriculumInformationController extends SceneFX implements Controll
             changedCol.add("LADDERIZATION");
             changedCol.add("STUDY YEARS");
         }
-        if(!CURRICULUM.getLadderization_type().equalsIgnoreCase(ladderType)) {
+        if (!CURRICULUM.getLadderization_type().equalsIgnoreCase(ladderType)) {
             CURRICULUM.setLadderization_type(ladderType);
             changedCol.add("LADDERIZATION TYPE");
         }
-        
-        if(ladderType.equalsIgnoreCase(CONSEQUENT)) {
+
+        if (ladderType.equalsIgnoreCase(CONSEQUENT)) {
             String name = cmb_preparatory.getSelectionModel().getSelectedItem();
             CurriculumMapping prep = null;
-            if(allCurriculums!=null) {
+            if (allCurriculums != null) {
                 for (CurriculumMapping currentCurriculum : allCurriculums) {
-                    if(currentCurriculum.getName().equalsIgnoreCase(name)){
+                    if (currentCurriculum.getName().equalsIgnoreCase(name)) {
                         prep = currentCurriculum;
                         break;
                     }
                 }
-                
+
                 // PRIMARY
-                if(prep!=null) {
+                if (prep != null) {
                     boolean isPrimaryChanged = clearAllPrimaryExcept(prep.getId(), false);
-                    if(isPrimaryChanged) {
+                    if (isPrimaryChanged) {
                         CurriculumPreMapping new_pre = new CurriculumPreMapping();
                         new_pre.setActive(1);
                         new_pre.setCreated_by(CREATED_BY);
@@ -1142,31 +1149,32 @@ public class CurriculumInformationController extends SceneFX implements Controll
                         new_pre.setCurriculum_id_get(CURRICULUM.getId());
                         new_pre.setCurriculum_id_req(prep.getId());
                         Integer res = Database.connect().curriculum_pre().insert(new_pre);
-                        if(res.equals(-1))
+                        if (res.equals(-1)) {
                             System.out.println("NEW PRIMARY FOR CURRICULUM " + CURRICULUM.getName() + " IS NOT INSERTED.");
-                        else
+                        } else {
                             changedCol.add("CURRICULUM PRIMARY");
+                        }
                     }
                 }
             }
-            
+
             // EQUIVALENT
             clearAllEquivalent();
             ArrayList<CurriculumMapping> equivalents = new ArrayList<>();
             ObservableList<String> checked = cmb_prereq.getCheckModel().getCheckedItems();
-            if(checked!=null) {
-                if(allCurriculums!=null) {
-                    for(String check: checked) {
+            if (checked != null) {
+                if (allCurriculums != null) {
+                    for (String check : checked) {
                         for (CurriculumMapping currentCurriculum : allCurriculums) {
-                            if(currentCurriculum.getName().equalsIgnoreCase(check)){
+                            if (currentCurriculum.getName().equalsIgnoreCase(check)) {
                                 equivalents.add(currentCurriculum);
                             }
                         }
                     }
                 }
-                
-                if(!equivalents.isEmpty()) {
-                    for(CurriculumMapping equivalent: equivalents){
+
+                if (!equivalents.isEmpty()) {
+                    for (CurriculumMapping equivalent : equivalents) {
                         CurriculumPreMapping new_eq = new CurriculumPreMapping();
                         new_eq.setActive(1);
                         new_eq.setCreated_by(CREATED_BY);
@@ -1175,10 +1183,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
                         new_eq.setCurriculum_id_get(CURRICULUM.getId());
                         new_eq.setCurriculum_id_req(equivalent.getId());
                         Integer res = Database.connect().curriculum_pre().insert(new_eq);
-                        if(res.equals(-1))
+                        if (res.equals(-1)) {
                             System.out.println("NEW EQUIVALENT FOR CURRICULUM " + CURRICULUM.getName() + " IS NOT INSERTED.");
-                        else
+                        } else {
                             changedCol.add("CURRICULUM EQUIVALENT");
+                        }
                     }
                 }
             }
@@ -1208,8 +1217,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
         }
         return (!changedCol.isEmpty());
     }
-    
-    private boolean isAnyChangeMade(){
+
+    private boolean isAnyChangeMade() {
         if (!CURRICULUM.getDescription().equalsIgnoreCase(description)) {
             changedCol.add("DESCRIPTION");
         }
@@ -1219,81 +1228,85 @@ public class CurriculumInformationController extends SceneFX implements Controll
         if (!CURRICULUM.getName().equalsIgnoreCase(name)) {
             changedCol.add("CURRICULUM NAME");
         }
-        if(!CURRICULUM.getLadderization().equalsIgnoreCase(laderized)) {
+        if (!CURRICULUM.getLadderization().equalsIgnoreCase(laderized)) {
             changedCol.add("LADDERIZATION");
             changedCol.add("STUDY YEARS");
         }
-        if(!CURRICULUM.getLadderization_type().equalsIgnoreCase(ladderType)) {
+        if (!CURRICULUM.getLadderization_type().equalsIgnoreCase(ladderType)) {
             changedCol.add("LADDERIZATION TYPE");
         }
-        if(allCurriculums != null) {
+        if (allCurriculums != null) {
             CurriculumMapping prep = null;
             for (CurriculumMapping currentCurriculum : allCurriculums) {
-                if(currentCurriculum.getName().equalsIgnoreCase(name)){
+                if (currentCurriculum.getName().equalsIgnoreCase(name)) {
                     prep = currentCurriculum;
                     break;
                 }
             }
-            if(clearAllPrimaryExcept(prep.getId(), true))
+            if (clearAllPrimaryExcept(prep.getId(), true)) {
                 changedCol.add("CURRICULUM PRIMARY");
-            
+            }
+
             // EQUIVALENTT
             ObservableList<String> checked = cmb_prereq.getCheckModel().getCheckedItems();
             ArrayList<CurriculumMapping> equivalents = new ArrayList<>();
-            for(String check: checked) {
+            for (String check : checked) {
                 for (CurriculumMapping currentCurriculum : allCurriculums) {
-                    if(currentCurriculum.getName().equalsIgnoreCase(check)){
+                    if (currentCurriculum.getName().equalsIgnoreCase(check)) {
                         equivalents.add(currentCurriculum);
                     }
                 }
             }
-            if(!equivalents.isEmpty())
+            if (!equivalents.isEmpty()) {
                 changedCol.add("CURRICULUM EQUIVALENT");
+            }
         }
         return (!changedCol.isEmpty());
     }
-    
+
     private boolean clearAllPrimaryExcept(Integer id, boolean forChecking) {
         boolean isPrimaryChanged = true;
         ArrayList<CurriculumPreMapping> prevs = Mono.orm().newSearch(Database.connect().curriculum_pre())
                 .eq(DB.curriculum_pre().curriculum_id_get, CURRICULUM.getId())
                 .eq(DB.curriculum_pre().cur_type, "PRIMARY")
                 .active().all();
-        if(prevs!=null) {
+        if (prevs != null) {
             System.out.println(prevs.size());
-            for(CurriculumPreMapping prev: prevs) {
-                if(id!=null){
-                    if(id.equals(prev.getCurriculum_id_req())) {
+            for (CurriculumPreMapping prev : prevs) {
+                if (id != null) {
+                    if (id.equals(prev.getCurriculum_id_req())) {
                         isPrimaryChanged = false;
                         System.out.println("SKIP");
                         continue;
                     }
                 }
                 System.out.println("REMOVED");
-                if(!forChecking) {
+                if (!forChecking) {
                     prev.setActive(0);
                     prev.setRemoved_by(CREATED_BY);
                     prev.setRemoved_date(CREATED_DATE);
-                    if(!Database.connect().curriculum_pre().update(prev))
+                    if (!Database.connect().curriculum_pre().update(prev)) {
                         System.out.println("CURRICULUM_pre with an ID of " + prev.getId() + " is not removed.");
+                    }
                 }
             }
         }
         return isPrimaryChanged;
     }
-    
+
     private void clearAllEquivalent() {
         ArrayList<CurriculumPreMapping> prevs_eq = Mono.orm().newSearch(Database.connect().curriculum_pre())
                 .eq(DB.curriculum_pre().curriculum_id_get, CURRICULUM.getId())
                 .eq(DB.curriculum_pre().cur_type, "EQUIVALENT")
                 .active().all();
-        if(prevs_eq!=null) {
-            for(CurriculumPreMapping prev: prevs_eq) {
+        if (prevs_eq != null) {
+            for (CurriculumPreMapping prev : prevs_eq) {
                 prev.setActive(0);
                 prev.setRemoved_by(CREATED_BY);
                 prev.setRemoved_date(CREATED_DATE);
-                if(!Database.connect().curriculum_pre().update(prev))
+                if (!Database.connect().curriculum_pre().update(prev)) {
                     System.out.println("CURRICULUM_pre with an ID of " + prev.getId() + " is not removed.");
+                }
             }
         }
     }

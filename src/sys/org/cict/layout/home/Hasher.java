@@ -42,4 +42,6 @@ public class Hasher {
         String password = Mono.security().hashFactory().hash_sha512("5521300850");
         System.out.println(password);
     }
+
+
 }
