@@ -69,7 +69,7 @@
             </Label>
          </children>
       </HBox>
-      <VBox alignment="CENTER_RIGHT" prefHeight="69.0" prefWidth="197.0">
+      <VBox alignment="CENTER_RIGHT" prefHeight="69.0" prefWidth="189.0">
          <children>
             <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="134.0" spacing="10.0">
                <children>
@@ -87,11 +87,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT" spacing="5.0">
                <children>
-                  <Label text="Designation" visible="false">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font></Label>
-                  <Label accessibleText="designation" maxWidth="1.7976931348623157E308" text="DEAN" />
+                  <Label accessibleText="designation" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="170.0" text="DEAN" textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>

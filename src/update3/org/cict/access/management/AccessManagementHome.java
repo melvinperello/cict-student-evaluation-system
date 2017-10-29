@@ -231,17 +231,17 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     private void systemAccountEvents() {
         super.addClickEvent(btn_create_system_admin, () -> {
             if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
-
+                this.createNewAdmin();
             }
         });
         super.addClickEvent(btn_reset_system_admin_pass, () -> {
             if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
-
+                this.resetAdminPassword();
             }
         });
         super.addClickEvent(btn_reclaim_system_admin, () -> {
             if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
-
+                this.reclaimAdminRights();
             }
         });
     }
@@ -335,7 +335,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .text("The faculty you selected has no account yet.")
                     .showWarning();
         } else {
-            if (Access.isGranted(accessLvl, afMap.getAccess_level(), true)) {
+            if (Access.getAccessLevel(accessLvl) > Access.getAccessLevel(afMap.getAccess_level())) {
                 if (Access.isGrantedIf(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                     int res = Mono.fx().alert().createConfirmation()
                             .setMessage("This will exhibit demotion of access level. "
@@ -470,6 +470,53 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         // attach to parent variable name in scene builder
         simpleTableView.setParentOnScene(parent);
     }
+    
+    // -----------------------------------------------------------
+    // ADMIN CREATOR
+    // -----------------------------------------
+    private void createNewAdmin() {
+        ArrayList<AccountFacultyMapping> afMaps = this.getCurrentAdmin();
+        if(afMaps!=null) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage("There is an existing active Administrator. This will remove his/her administrative rights.")
+                    .confirmCustom("Continue", "Cancel");
+            if(res!=1)
+                return;
+        }
+        
+        CreateSystemAdmin create = M.load(CreateSystemAdmin.class);
+        try {
+            create.getCurrentStage().showAndWait();
+            create.onDelayedStart();
+        } catch (NullPointerException e) {
+            Stage a = create.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+    }
+    
+    // -----------------------------------------------------------------
+    // RESET ADMIN PASSWORD
+    // --------------------------------------
+    private void resetAdminPassword() {
+        AccountFacultyMapping afMap = Mono.orm().newSearch(Database.connect().account_faculty())
+                .eq(DB.account_faculty().access_level, Access.ACCESS_ADMIN)
+                .active().first();
+        if(afMap==null) {
+            Mono.fx().alert().createWarning()
+                .setMessage("No System Administrator Account found. Create a new one first by clicking Create System Administrator.")
+                .show();
+            return;
+        }
+        ResetAdminPassword create = M.load(ResetAdminPassword.class);
+        try {
+            create.getCurrentStage().show();
+        } catch (NullPointerException e) {
+            Stage a = create.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+    }
 
     // -----------------------------------------------------------
     // FACULTY SELECTOR
@@ -532,6 +579,65 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     // --------------------------------------------------
     // ACTION
     // -------------------------------------------------
+    private void reclaimAdminRights() {
+        FacultyMapping selectedFaculty = selectFaculty("This will reclaim the rights of the previous admin and transfer the authority to the selected faculty. Continue?");
+        if(selectedFaculty==null)
+            return;
+        
+        ArrayList<AccountFacultyMapping> afMaps = this.getCurrentAdmin();
+        if(afMaps!=null) {
+            for(AccountFacultyMapping afMap: afMaps) {
+                FacultyInformation info = new FacultyInformation(afMap);
+                info.getFacultyMapping().setDesignation(Access.ACCESS_FACULTY);
+                afMap.setAccess_level(Access.ACCESS_FACULTY);
+                
+                if (!Database.connect().account_faculty().update(afMap)
+                        || !Database.connect().faculty().update(info.getFacultyMapping())) {
+                    Notifications.create().darkStyle()
+                            .title("Request Failed")
+                            .text("Something went wrong. Try again later")
+                            .showError();
+                    return;
+                }
+            }
+        }
+        FacultyInformation infoNewAdmin = new FacultyInformation(selectedFaculty);
+        AccountFacultyMapping afMapNewAdmin = infoNewAdmin.getAccountFacultyMapping();
+        
+        if (!afMapNewAdmin.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
+            Notifications.create().darkStyle()
+                    .title("No Changes Made")
+                    .text("Faculty selected is already"
+                            + "\n a Administrator.")
+                    .showError();
+            return;
+        }
+        
+        afMapNewAdmin.setAccess_level(Access.ACCESS_ADMIN);
+        selectedFaculty.setDesignation(Access.ACCESS_ADMIN);
+        if (!Database.connect().account_faculty().update(afMapNewAdmin)
+                || !Database.connect().faculty().update(selectedFaculty)) {
+            Notifications.create().darkStyle()
+                    .title("Request Failed")
+                    .text("Something went wrong. Try again later")
+                    .showError();
+            return;
+        } else {
+            Notifications.create().darkStyle()
+                    .title("Assigned Successfully")
+                    .text("New System Administrator is assigned.")
+                    .showInformation();
+        }
+        
+    }
+    
+    private ArrayList<AccountFacultyMapping> getCurrentAdmin() {
+        ArrayList<AccountFacultyMapping> afMaps = Mono.orm().newSearch(Database.connect().account_faculty())
+                .eq(DB.account_faculty().access_level, Access.ACCESS_ADMIN)
+                .active().all();
+        return afMaps;
+    }
+    
     private void assignSystemAdmin() {
         FacultyMapping selectedFaculty = selectFaculty("This will remove your authority of being a System Administrator and change it into Faculty. Account will automatically logout after. Do you still want to continue?");
         if (selectedFaculty == null) {
@@ -544,6 +650,16 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return;
         }
+        
+        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
+            Notifications.create().darkStyle()
+                    .title("No Changes Made")
+                    .text("Faculty selected is already"
+                            + "\n a Administrator.")
+                    .showError();
+            return;
+        }
+        
         afMap.setAccess_level(Access.ACCESS_ADMIN);
         selectedFaculty.setDesignation(Access.ACCESS_ADMIN);
         if (Database.connect().account_faculty().update(afMap)
@@ -585,6 +701,14 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return false;
         }
+        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
+            Notifications.create().darkStyle()
+                    .title("No Changes Made")
+                    .text("Faculty selected is already"
+                            + "\n a Assistant Administrator.")
+                    .showError();
+            return false;
+        }
         afMap.setAccess_level(Access.ACCESS_ASST_ADMIN);
         selectedFaculty.setDesignation(Access.ACCESS_ASST_ADMIN);
         if (Database.connect().account_faculty().update(afMap)
@@ -618,16 +742,17 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         }
         if (!selectedFaculty.getDesignation().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
             Notifications.create().darkStyle()
-                    .title("Request Failed")
+                    .title("Request Cancelled")
                     .text("The faculty is not designated"
                             + "\n as a Local Registrar.")
-                    .showError();
+                    .showWarning();
             return;
         }
         if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
-                    .text("Something went wrong. Try again later")
+                    .text("Faculty selected is already"
+                            + "\n a Local Registrar.")
                     .showWarning();
             return;
         }
@@ -657,6 +782,16 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return false;
         }
+        
+        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
+            Notifications.create().darkStyle()
+                    .title("No Changes Made")
+                    .text("Faculty selected is already"
+                            + "\n a Assistant Registrar.")
+                    .showError();
+            return false;
+        }
+        
         afMap.setAccess_level(Access.ACCESS_CO_REGISTRAR);
         selectedFaculty.setDesignation(Access.ACCESS_CO_REGISTRAR);
         if (Database.connect().account_faculty().update(afMap)
@@ -687,6 +822,16 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return false;
         }
+        
+        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
+            Notifications.create().darkStyle()
+                    .title("No Changes Made")
+                    .text("Faculty selected is already"
+                            + "\n a Evaluator.")
+                    .showError();
+            return false;
+        }
+        
         afMap.setAccess_level(Access.ACCESS_EVALUATOR);
         selectedFaculty.setDesignation(Access.ACCESS_EVALUATOR);
         if (Database.connect().account_faculty().update(afMap)

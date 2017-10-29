@@ -388,7 +388,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 || faculty.getDepartment().equals("NONE"))
                 ? "NO"
                 : faculty.getDepartment());
-        lbl_designation.setText((faculty.getDesignation() == null || faculty.getDesignation().isEmpty()) ? "NONE" : faculty.getDesignation());
+        lbl_designation.setText((faculty.getDesignation() == null || faculty.getDesignation().isEmpty()) ? "NONE" : faculty.getDesignation().replace("_", " "));
 
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);

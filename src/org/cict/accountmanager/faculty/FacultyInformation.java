@@ -46,6 +46,11 @@ public class FacultyInformation {
         }
     }
     
+    public FacultyInformation(AccountFacultyMapping account) {
+        this.afMap = account;
+        this.faculty = Database.connect().faculty().getPrimary(account.getFACULTY_id());
+    }
+    
     public Boolean hasAccount() {
         return (afMap!=null);
     }
@@ -57,12 +62,6 @@ public class FacultyInformation {
     private FacultyMapping faculty;
     private AccountFacultyMapping afMap;
 
-//    public void setFacultyMapping(FacultyMapping faculty) {
-//        this.faculty = faculty;
-//    }
-//    public void setAccountFacultyMapping(AccountFacultyMapping afMap) {
-//        this.afMap = afMap;
-//    }
     public FacultyMapping getFacultyMapping() {
         return this.faculty;
     }

@@ -503,7 +503,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         if(faculty.getDesignation()== null)
             cmb_des.getSelectionModel().selectFirst();
         else
-            cmb_des.getSelectionModel().select(faculty.getDesignation());
+            cmb_des.getSelectionModel().select(faculty.getDesignation().replace("_", " "));
         
         if(faculty.getDepartment()== null)
             cmb_dept.getSelectionModel().selectFirst();

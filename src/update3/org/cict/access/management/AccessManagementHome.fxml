@@ -295,7 +295,7 @@
                               </HBox>
                               <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <JFXButton fx:id="btn_reclaim_system_admin" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Re-Claim Administrative Rights" textFill="WHITE">
+                                    <JFXButton fx:id="btn_reclaim_system_admin" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Reclaim Administrative Rights" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -493,7 +493,7 @@
                         </StackPane>
                         <VBox alignment="CENTER">
                            <children>
-                              <JFXButton fx:id="btn_add_new_asst_admin1" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="284.0" style="-fx-border-color: white;" text="Add New Assistant Administrator" textFill="WHITE" VBox.vgrow="ALWAYS">
+                              <JFXButton fx:id="btn_add_new_asst_admin1" graphicTextGap="10.0" prefHeight="42.0" prefWidth="284.0" style="-fx-border-color: white;" text="Add New Assistant Administrator" textFill="WHITE">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -650,7 +650,7 @@
                         </StackPane>
                         <VBox alignment="CENTER">
                            <children>
-                              <JFXButton fx:id="btn_add_asst_registrar1" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="236.0" style="-fx-border-color: white;" text="Add Assistant Registrars" textFill="WHITE" VBox.vgrow="ALWAYS">
+                              <JFXButton fx:id="btn_add_asst_registrar1" graphicTextGap="10.0" prefHeight="42.0" prefWidth="236.0" style="-fx-border-color: white;" text="Add Assistant Registrars" textFill="WHITE">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -707,7 +707,7 @@
                         </StackPane>
                         <VBox alignment="CENTER">
                            <children>
-                              <JFXButton fx:id="btn_add_evaluators1" graphicTextGap="10.0" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="869.0" style="-fx-border-color: white;" text="Add Evaluators" textFill="WHITE" VBox.vgrow="ALWAYS">
+                              <JFXButton fx:id="btn_add_evaluators1" graphicTextGap="10.0" prefHeight="42.0" prefWidth="252.0" style="-fx-border-color: white;" text="Add Evaluators" textFill="WHITE">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
