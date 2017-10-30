@@ -69,35 +69,42 @@ public class PrintDeficiency extends Transaction {
         if (student.getHas_profile() == 1) {
             StudentProfileMapping spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
-                    .active(Order.desc(DB.student_profile().id)).first();
-            String hNum = spMap.getHouse_no(),
-                    brgy = spMap.getBrgy(),
-                    city = spMap.getCity(),
-                    province = spMap.getProvince();
-            if (hNum != null) {
-                address = hNum;
-            }
-            if (brgy != null) {
-                if (!address.isEmpty()) {
-                    address += " " + spMap.getBrgy();
-                } else {
-                    address = brgy;
+                    .active(Order.desc(DB.student_profile().id))
+                    .first();
+            //------------------------------------------------------------------
+            // Address Information
+            if (spMap != null) {
+                String hNum = spMap.getHouse_no(),
+                        brgy = spMap.getBrgy(),
+                        city = spMap.getCity(),
+                        province = spMap.getProvince();
+                if (hNum != null) {
+                    address = hNum;
+                }
+                if (brgy != null) {
+                    if (!address.isEmpty()) {
+                        address += " " + spMap.getBrgy();
+                    } else {
+                        address = brgy;
+                    }
+                }
+                if (city != null) {
+                    if (!address.isEmpty()) {
+                        address += " " + city;
+                    } else {
+                        address = city;
+                    }
+                }
+                if (province != null) {
+                    if (!address.isEmpty()) {
+                        address += ", " + province;
+                    } else {
+                        address = province;
+                    }
                 }
             }
-            if (city != null) {
-                if (!address.isEmpty()) {
-                    address += " " + city;
-                } else {
-                    address = city;
-                }
-            }
-            if (province != null) {
-                if (!address.isEmpty()) {
-                    address += ", " + province;
-                } else {
-                    address = province;
-                }
-            }
+            //------------------------------------------------------------------
+
         }
         //----------------------------------------------------------------------
         if (student.getCURRICULUM_id() == null) {
