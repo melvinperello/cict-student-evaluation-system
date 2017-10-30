@@ -306,179 +306,71 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         return fomratted;
     }
 
+    /**
+     * On Click Event.
+     *
+     * @param percent
+     * @param level
+     */
+    private void onClickLevel(Double percent, int level) {
+        //------------------------------------------------------------------
+        // percentage
+        logs(String.valueOf(level) + " YR PERCENT: " + percent);
+        //------------------------------------------------------------------
+        // check year level
+        if (level > STUDENT_current.getYear_level()) {
+            Mono.fx().alert()
+                    .createWarning()
+                    .setHeader("Ops, Not Yet")
+                    .setMessage("The student is not yet in this year level.")
+                    .showAndWait();
+            return;
+        }
+        //------------------------------------------------------------------
+        // completion
+        if (percent >= BAR_MAX) {
+            logs("COMPLETED");
+            Mono.fx().alert()
+                    .createInfo()
+                    .setHeader("Completed")
+                    .setMessage("You already completed the first year level.")
+                    .showAndWait();
+            return;
+        }
+        //------------------------------------------------------------------
+        ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(1);
+        if (allSubject == null) {
+            Mono.fx().alert()
+                    .createError()
+                    .setHeader("No Subject Found")
+                    .setMessage("There are no subjects found for the year level of this curriculum.")
+                    .show();
+            return;
+        }
+        ArrayList<String> titles = this.getTitles(level);
+        //show missing
+        onShowMissingRecord(allSubject, titles, level);
+    }
+
     @Override
     public void onEventHandling() {
-        CurricularLevelAssesor cla = new CurricularLevelAssesor(STUDENT_current);
+        //----------------------------------------------------------------------
         addClickEvent(btn_1st, () -> {
-            Double percent = hbox_1progress.getPrefWidth();
-            logs("1ST YR PERCENT: " + percent);
-            if (percent >= 780.0) {
-                logs("COMPLETED");
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Completed")
-                        .setMessage("You already completed the first year level.")
-                        .showAndWait();
-//                setYearLevel(2);
-            } else {
-//                setYearLevel(1);
-                ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(1);
-                if (allSubject == null) {
-                    Mono.fx().alert()
-                            .createError()
-                            .setHeader("No Subject Found")
-                            .setMessage("There are no subjects found for the year level of this curriculum.")
-                            .show();
-                    return;
-                }
-                ArrayList<String> titles = this.getTitles(1);
-                //show missing
-                onShowMissingRecord(allSubject, titles, 1);
-            }
+            this.onClickLevel(hbox_1progress.getPrefWidth(), 1);
         });
+        //----------------------------------------------------------------------
         addClickEvent(btn_2nd, () -> {
-            Double percent = hbox_2_progess.getPrefWidth();
-            logs("2ND YR PERCENT: " + percent);
-
-            if (2 > STUDENT_current.getYear_level()) {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Ops, Not Yet")
-                        .setMessage("The student is not yet in this year level.")
-                        .showAndWait();
-                return;
-            }
-
-            if (percent >= 780.0) {
-                logs("COMPLETED");
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Completed")
-                        .setMessage("You already completed the second year level.")
-                        .showAndWait();
-//                setYearLevel(3);
-            } else {
-//                if(is1stYrCompleted) {
-//                } else {
-//                    Mono.fx().alert()
-//                            .createWarning()
-//                            .setHeader("Incomplete First Level ")
-//                            .setMessage("Please complete all the previous level first before encoding the last.")
-//                            .showAndWait();
-//                    return;
-//                }
-//                setYearLevel(2);
-                ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(2);
-                ArrayList<String> titles = this.getTitles(2);
-                //show missing
-                onShowMissingRecord(allSubject, titles, 2);
-            }
+            this.onClickLevel(hbox_2_progess.getPrefWidth(), 2);
         });
+        //----------------------------------------------------------------------
         addClickEvent(btn_3rd, () -> {
-            Double percent = hbox_3_progress.getPrefWidth();
-            logs("3RD YR PERCENT: " + percent);
-
-            if (3 > STUDENT_current.getYear_level()) {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Ops, Not Yet")
-                        .setMessage("The student is not yet in this year level.")
-                        .showAndWait();
-                return;
-            }
-
-            if (percent >= 780.0) {
-                logs("COMPLETED");
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Completed")
-                        .setMessage("You already completed the third year level.")
-                        .showAndWait();
-//                setYearLevel(4);
-            } else {
-//                if(is1stYrCompleted) {
-//                    if(is2ndYrCompleted) {
-//                    } else {
-//                        Mono.fx().alert()
-//                                .createWarning()
-//                                .setHeader("Incomplete Second Level ")
-//                                .setMessage("Please complete all the previous level first before encoding the last.")
-//                                .showAndWait();
-//                        return;
-//                    }
-//                } else {
-//                    Mono.fx().alert()
-//                            .createWarning()
-//                            .setHeader("Incomplete First Level ")
-//                            .setMessage("Please complete all the previous level first before encoding the last.")
-//                            .showAndWait();
-//                    return;
-//                }
-//                setYearLevel(3);
-                ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(3);
-                ArrayList<String> titles = this.getTitles(3);
-                //show missing
-                onShowMissingRecord(allSubject, titles, 3);
-            }
+            this.onClickLevel(hbox_3_progress.getPrefWidth(), 3);
         });
+        //----------------------------------------------------------------------
         addClickEvent(btn_4th, () -> {
-            Double percent = hbox_4_progress.getPrefWidth();
-            logs("4TH YR PERCENT: " + percent);
-
-            if (4 > STUDENT_current.getYear_level()) {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Ops, Not Yet")
-                        .setMessage("The student is not yet in this year level.")
-                        .showAndWait();
-                return;
-            }
-
-            if (percent >= 780.0) {
-                logs("COMPLETED");
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Completed")
-                        .setMessage("You already completed the fourth year level.")
-                        .showAndWait();
-                return;
-            } else {
-//                if(is1stYrCompleted) {
-//                    if(is2ndYrCompleted) {
-//                        if(is3rdYrCompleted) {
-//                            // valid for encoding fourth year
-//                        } else {
-//                            Mono.fx().alert()
-//                                    .createWarning()
-//                                    .setHeader("Incomplete Third Level ")
-//                                    .setMessage("Please complete all the previous level first before encoding the last.")
-//                                    .showAndWait();
-//                            return;
-//                        }
-//                    } else {
-//                        Mono.fx().alert()
-//                                .createWarning()
-//                                .setHeader("Incomplete Second Level ")
-//                                .setMessage("Please complete all the previous level first before encoding the last.")
-//                                .showAndWait();
-//                        return;
-//                    }
-//                } else {
-//                    Mono.fx().alert()
-//                            .createWarning()
-//                            .setHeader("Incomplete First Level ")
-//                            .setMessage("Please complete all the previous level first before encoding the last.")
-//                            .showAndWait();
-//                    return;
-//                }
-//                setYearLevel(4);
-                ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(4);
-                ArrayList<String> titles = this.getTitles(4);
-                //show missing
-                onShowMissingRecord(allSubject, titles, 4);
-            }
+            this.onClickLevel(hbox_4_progress.getPrefWidth(), 4);
         });
-
+        //----------------------------------------------------------------------
         Mono.fx().key(KeyCode.ENTER).release(application_pane, () -> {
             Mono.fx().getParentStage(application_pane).close();
         });
@@ -557,7 +449,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
     }
 
     /**
-     * -----------------------------------------------------------------------
+     * Shows the missing records of the student.
      *
      * @param subjects
      * @param titles
@@ -565,11 +457,12 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
      */
     private void onShowMissingRecord(ArrayList<ArrayList<SubjectMapping>> subjects, ArrayList<String> titles, Integer yearLevel) {
         try {
-
+            //------------------------------------------------------------------
+            // create Missing Records Instance
             MissingRecordController controller = new MissingRecordController(this.STUDENT_current,
                     subjects, titles, yearLevel);
-            //
-
+            //------------------------------------------------------------------
+            // show GUI and wait until it closes
             Mono.fx().create()
                     .setPackageName("org.cict.evaluation.encoder")
                     .setFxmlDocument("missing_record")
@@ -579,15 +472,20 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
                     .makeStageWithOwner(Mono.fx().getParentStage(application_pane))
                     .stageResizeable(false)
                     .stageShowAndWait();
+            //------------------------------------------------------------------
+            // refresh values
+            // the above code was replaced to show and wait
+            // when the encoder was closed the missing record will also be closed
+            // and then will refresh this assessors values.
             this.showAssessment();
         } catch (Exception e) {
-            System.err.println("►►►►►►►►►►► 09.13.2017 ►►►►►►►►►►►");
+            System.err.println("09.13.2017 This error already occured");
             e.printStackTrace();
-            System.err.println("►►►►►►►►►►►►►►►►►►►►►►►►►►►►►");
         }
 
     }
 
+    @Deprecated
     private void setYearLevel(Integer year) {
         STUDENT_current.setYear_level(year);
         if (!Database.connect().student().update(STUDENT_current)) {

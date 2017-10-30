@@ -270,7 +270,7 @@ public class GradeEncoderUI {
             spv.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             spv.setShowRowHeader(true);
         } catch (java.lang.IndexOutOfBoundsException d) {
-            logs("IndexOutOfBoundsException");
+            logs("IndexOutOfBoundsException @  Create Spreadsheet");
         }
         this.spreadSheet = spv;
         return this.spreadSheet;
@@ -299,6 +299,7 @@ public class GradeEncoderUI {
                 }
                 row++;
             } catch (NullPointerException a) {
+                System.err.println("Error at getSpreadSheetGrid");
                 a.printStackTrace();
             }
         }
@@ -333,21 +334,27 @@ public class GradeEncoderUI {
      * @return
      */
     private GridBase addGridRows() {
-        GridBase grid = createSpreadSheetGrid(10);
-        /* Grid Rows */
-        ObservableList<ObservableList<SpreadsheetCell>> gridRows = FXCollections.observableArrayList();
-        for (int i = 0; i < this.subjectsToBePrinted.size(); i++) {
+        try {
+
+            GridBase grid = createSpreadSheetGrid(10);
+            /* Grid Rows */
+            ObservableList<ObservableList<SpreadsheetCell>> gridRows = FXCollections.observableArrayList();
+            for (int i = 0; i < this.subjectsToBePrinted.size(); i++) {
 //            boolean editable = true;
-            SubjectMapping subject = (SubjectMapping) subjectsToBePrinted.get(i);
-            checkForPrerequisteRequired(subject, gridRows, i);
+                SubjectMapping subject = (SubjectMapping) subjectsToBePrinted.get(i);
+                checkForPrerequisteRequired(subject, gridRows, i);
+            }
+            //----------------------------------------------------------------------
+            grid.setRows(gridRows);
+            grid.setRowHeightCallback((param) -> {
+                // row height
+                return 25.0;
+            });
+            return grid;
+        } catch (Exception e) {
+            System.err.println("error @ AddGridRows");
+            return null;
         }
-        //----------------------------------------------------------------------
-        grid.setRows(gridRows);
-        grid.setRowHeightCallback((param) -> {
-            // row height
-            return 25.0;
-        });
-        return grid;
     }
 
     /**
@@ -510,17 +517,23 @@ public class GradeEncoderUI {
     private ChangeListener<Object> ratingCellValueChangeListenerAction(int row, boolean editable) {
         return (ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
             //ObjectProperty op = (ObjectProperty) observable;
-            if (editable) {
+            try {
+                if (editable) {
 
-                this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(true);
+                    this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(true);
 
-                String cellValue[] = validateGrade(newValue, row);
-                this.spreadSheetGrid.setCellValue(row, this.finalCol, cellValue[0]);
-                this.spreadSheetGrid.setCellValue(row, this.remarkCol, cellValue[1]);
+                    String cellValue[] = validateGrade(newValue, row);
+                    this.spreadSheetGrid.setCellValue(row, this.finalCol, cellValue[0]);
+                    this.spreadSheetGrid.setCellValue(row, this.remarkCol, cellValue[1]);
 
-                this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(false);
+                    this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(false);
 
+                }
+            } catch (Exception e) {
+                System.err.println("@Error in ratingCellValueChangeListener");
+                e.printStackTrace();
             }
+
         };
     }
 

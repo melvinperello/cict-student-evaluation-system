@@ -189,24 +189,30 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
 
     private Boolean canEdit = true;
 
+    /**
+     * Create a row represented as a semester.
+     *
+     * @param title
+     * @param index
+     */
     private void createRow(String title, Integer index) {
+        //----------------------------------------------------------------------
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(55.0);
-
+        //----------------------------------------------------------------------
         HBox titleRow = (HBox) Mono.fx().create()
                 .setPackageName("org.cict.evaluation.encoder")
                 .setFxmlDocument("missing-record-row")
                 .makeFX()
                 .pullOutLayout();
-
+        //----------------------------------------------------------------------
         Label lbl_title = searchAccessibilityText(titleRow, "title");
         Label lbl_subject = searchAccessibilityText(titleRow, "number");
         Button btn_encode = searchAccessibilityText(titleRow, "encode");
-
+        //----------------------------------------------------------------------
         lbl_title.setText(title);
-
         lbl_subject.setText(unacquiredCount(index) + "");
-
+        //----------------------------------------------------------------------
         addClickEvent(btn_encode, () -> {
             this.onShowGradeEncoder(index, title);
         });
@@ -214,13 +220,12 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
         addDoubleClickEvent(row, () -> {
             this.onShowGradeEncoder(index, title);
         });
-
+        //----------------------------------------------------------------------
+        // Create Row and add to table.
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(titleRow);
-
         row.addCell(cellParent);
-
         recordTable.addRow(row);
     }
 
@@ -234,12 +239,14 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
      * @param selected
      */
     private void onShowGradeEncoder(Integer index, String selected) {
+        //----------------------------------------------------------------------
         if (!isOkayToView(index + 1)) {
             return;
         }
+        //----------------------------------------------------------------------
+        // disable all
         vbox_main.setDisable(true);
-//        btnSkip.setDisable(true);
-//        vbox_list.setDisable(true);
+        //----------------------------------------------------------------------
         try {
             if (this.FILTERED_SUBJECTS.get(index) == null) {
                 Mono.fx().alert().createWarning()
@@ -248,7 +255,12 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
                         .show();
                 return;
             }
-
+            //------------------------------------------------------------------
+            /**
+             * @Request: Please describe what does the following segment does.
+             * @Description:
+             * @Date: 10/31/2017
+             */
             Transaction loadEncoder = new Transaction() {
                 @Override
                 protected boolean transaction() {
@@ -258,18 +270,19 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
                     controller.setYearAndSem(year_level, index + 1);
                     return true;
                 }
-
-                @Override
-                protected void after() {
-                }
             };
-
-            loadEncoder.setOnStart(onStart -> {
+            //------------------------------------------------------------------
+            loadEncoder.whenStarted(() -> {
                 vbox_main.getScene().setCursor(Cursor.WAIT);
             });
-
-            loadEncoder.setOnSuccess(onSuccess -> {
-                boolean isDone = false;
+            loadEncoder.whenCancelled(() -> {
+            });
+            loadEncoder.whenFailed(() -> {
+                System.err.println("ERROROROROR");
+            });
+            loadEncoder.whenSuccess(() -> {
+                //--------------------------------------------------------------
+                // Launch Encoder
                 Mono.fx().create()
                         .setPackageName("org.cict.evaluation.encoder")
                         .setFxmlDocument("GradeEncoder")
@@ -278,16 +291,15 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
                         .makeScene()
                         .makeStageApplication()
                         .stageMaximized(true)
-                        .stageShow();
-                System.out.println("DONE 1");
-                isDone = true;
-                if (isDone) {
-                    vbox_main.getScene().setCursor(Cursor.DEFAULT);
-                }
+                        .stageShowAndWait();
+                //--------------------------------------------------------------
+                // The above code was changed to show and wait
+                // to make sure that the encoder is closed before this will be closed
+                // and an event to refresh cla will be called upon closing this window
                 Mono.fx().getParentStage(btnDone).close();
             });
-            loadEncoder.setOnFailure(onFailure -> {
-                System.err.println("ERROROROROR");
+            loadEncoder.whenFinished(() -> {
+                vbox_main.getScene().setCursor(Cursor.DEFAULT);
             });
 
             loadEncoder.transact();
