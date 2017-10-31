@@ -13,16 +13,16 @@ import org.cict.evaluation.views.SectionSearchView;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
-import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.SubjectMapping;
+import java.util.HashMap;
 
 /**
  *
@@ -41,7 +41,7 @@ public class SearchBySubject extends Transaction {
     private ArrayList<SubjectMapping> searchedSubject;
     private ArrayList<LoadGroupMapping> loadGroups;
     private ArrayList<LoadSectionMapping> loadSections;
-    private ArrayList<Integer> loadGroupPopulation;
+    private ArrayList<String> loadGroupPopulation;
 
     public void log(Object message) {
         System.out.println(this.getClass().getSimpleName() + ": " + message);
@@ -61,6 +61,7 @@ public class SearchBySubject extends Transaction {
     protected boolean transaction() {
         System.out.println("Search By Subject Started.");
 
+        //----------------------------------------------------------------------
         /**
          * Get the subject mapping. since there will be many subjects with same
          * code we should get all of them.
@@ -71,17 +72,17 @@ public class SearchBySubject extends Transaction {
                 .active()
                 .all();
 
+        //----------------------------------------------------------------------
         if (Objects.isNull(searchedSubject)) {
             System.out.println("Subject not found");
             return false;
         }
-
+        //----------------------------------------------------------------------
         /**
          * If subject is existing get all load_groups with this subject ID.
          */
         loadGroups = new ArrayList<>();
         for (SubjectMapping subjectMap : searchedSubject) {
-            
             int subject_id = subjectMap.getId();
             ArrayList<LoadGroupMapping> lg = Mono.orm()
                     .newSearch(Database.connect().load_group())
@@ -97,13 +98,13 @@ public class SearchBySubject extends Transaction {
 
             // if not empty add to collection
             loadGroups.addAll(lg);
-
         }
-
+        //----------------------------------------------------------------------
         if (loadGroups.isEmpty()) {
             // no sections for that subject.
             return false;
         }
+        //----------------------------------------------------------------------
 
         /**
          * If load groups where found get its section and population.
@@ -121,18 +122,8 @@ public class SearchBySubject extends Transaction {
 
             // get population
             int load_group_ids = load_group.getId(); // for load subject
-            int population = 0;
-            List res = Mono.orm()
-                    .newSearch(Database.connect().load_subject())
-                    .eq("LOADGRP_id", load_group_ids)
-                    .active();
-            if (Objects.isNull(res)) {
-                population = 0;
-            } else {
-                population = res.size();
-            }
-
-            loadGroupPopulation.add(population);
+            String populationString = SearchBySection.getLoadGroupPopulation(load_group_ids);
+            loadGroupPopulation.add(populationString);
         });
         log("Success Search by Subject");
         return true;
@@ -147,16 +138,36 @@ public class SearchBySubject extends Transaction {
         return null;
     }
 
+    //--------------------------------------------------------------------------
+    // stores the curriculum locally to avoid unecessary redundant fetches
+    private HashMap<Integer, CurriculumMapping> curDataStore;
+
+    // fetch only from the database if not existing from current collection
+    private CurriculumMapping getStoredCurriculum(Integer id) {
+        CurriculumMapping cur = curDataStore.getOrDefault(id, null);
+        if (cur == null) {
+            cur = Database.connect().curriculum().getPrimary(id);
+            curDataStore.put(id, cur);
+            System.out.println("@SearchBySubject.getStoredCurriculum: FETCHED");
+            return cur;
+        } else {
+            System.out.println("@SearchBySubject.getStoredCurriculum: RECYCLED");
+            return cur;
+        }
+    }
+    //--------------------------------------------------------------------------
+
     @Override
     protected void after() {
         if (!this.checkResults()) {
             return;
         }
+        curDataStore = new HashMap<>();
 
         for (int x = 0; x < this.loadGroups.size(); x++) {
             // join tables
             SubjectMapping subject = getSubjectByID(loadGroups.get(x).getSUBJECT_id());
-            
+
             SectionSearchView ssv = new SectionSearchView();
             String code = subject.getCode();
             ssv.labelCode.setText(code);
@@ -164,10 +175,10 @@ public class SearchBySubject extends Transaction {
             ssv.labelTitle.setText(title);
 //            ssv.labelMax.setText("30");
 //            ssv.labelExpected.setText("~ 20");
-            String current = this.loadGroupPopulation.get(x).toString();
+            String current = this.loadGroupPopulation.get(x);
             ssv.labelCurrent.setText(current);
-            //
 
+            //
             AcademicProgramMapping acadProg = Mono.orm()
                     .newSearch(Database.connect().academic_program())
                     .eq("id", loadSections.get(x).getACADPROG_id())
@@ -200,8 +211,11 @@ public class SearchBySubject extends Transaction {
             ssv.subjectID = subject.getId();
             ssv.sectionID = this.loadSections.get(x).getId();
 
-            searchResults.add(ssv);
+            //------------------------------------------------------------------
+            ssv.lbl_curname.setText(getStoredCurriculum(this.loadSections.get(x).getCURRICULUM_id()).getName());
+            //------------------------------------------------------------------
 
+            searchResults.add(ssv);
         }
     }
 

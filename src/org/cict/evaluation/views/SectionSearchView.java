@@ -10,6 +10,7 @@ package org.cict.evaluation.views;
 
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.SceneFX;
+import com.melvin.mono.fx.bootstrap.M;
 import org.cict.evaluation.evaluator.Evaluator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -40,6 +41,9 @@ public class SectionSearchView extends HBox {
     public Integer subjectID;
     public Integer sectionID;
 
+    //
+    public Label lbl_curname;
+
     public SectionSearchView() {
         this.constructFX();
     }
@@ -50,7 +54,7 @@ public class SectionSearchView extends HBox {
         this.labelTitle = fx.lbl_title;
         this.labelCurrent = fx.lbl_current;
         this.labelSection = fx.lbl_section;
-
+        this.lbl_curname = fx.lbl_curname;
         HBox.setHgrow(fx.row, Priority.ALWAYS);
         this.getChildren().add(fx.row);
 
@@ -78,20 +82,28 @@ public class SectionSearchView extends HBox {
         public Label lbl_title;
         public Label lbl_section;
         public Label lbl_current;
+        public Label lbl_curname;
 
         public ConstructFX() {
 
-            this.row = Mono.fx()
-                    .create()
-                    .setPackageName("org.cict.evaluation.views")
-                    .setFxmlDocument("SectionSearchView")
-                    .makeFX()
-                    .pullOutLayout();
-
-            lbl_code = super.searchAccessibilityText(row, "lbl_code");
-            lbl_title = super.searchAccessibilityText(row, "lbl_title");
-            lbl_section = super.searchAccessibilityText(row, "lbl_section");
-            lbl_current = super.searchAccessibilityText(row, "lbl_current");
+            SectionSearchViewFX sectionRow = M.load(SectionSearchViewFX.class);
+            this.row = sectionRow.getApplicationRoot();
+            lbl_code = sectionRow.getLbl_code();
+            lbl_title = sectionRow.getLbl_title();
+            lbl_section = sectionRow.getLbl_section();
+            lbl_current = sectionRow.getLbl_current();
+            this.lbl_curname = sectionRow.getLbl_curname();
+//            this.row = Mono.fx()
+//                    .create()
+//                    .setPackageName("org.cict.evaluation.views")
+//                    .setFxmlDocument("SectionSearchView")
+//                    .makeFX()
+//                    .pullOutLayout();
+//
+//            lbl_code = super.searchAccessibilityText(row, "lbl_code");
+//            lbl_title = super.searchAccessibilityText(row, "lbl_title");
+//            lbl_section = super.searchAccessibilityText(row, "lbl_section");
+//            lbl_current = super.searchAccessibilityText(row, "lbl_current");
         }
 
     }

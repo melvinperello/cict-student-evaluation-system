@@ -28,15 +28,16 @@ import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.orm.SQL;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.CurriculumRequisiteLineMapping;
 import app.lazy.models.CurriculumSubjectMapping;
+import app.lazy.models.DB;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.Database;
+import com.jhmvin.orm.Searcher;
 import org.cict.PublicConstants;
 import org.cict.evaluation.views.SubjectSuggestionView;
 import org.hibernate.criterion.Order;
@@ -148,8 +149,17 @@ public class SearchSuggestions extends Transaction {
                     .put(PublicConstants.getCurriculumRequisite(student))
                     .active()
                     .all();
+            //------------------------------------------------------------------
+            // check if there is a section for this subject
+            Searcher search = Mono.orm().newSearch(Database.connect().load_group())
+                    .eq(DB.load_group().SUBJECT_id, subjectWithNoGrade.getId())
+                    .eq(DB.load_group().active, 1);
+            String count = Mono.orm().projection(search).count(DB.load_group().id);
 
-            if (preRequisiteID == null) {
+            //------------------------------------------------------------------
+            if (count.equals("0")) {
+                // do not add no section found
+            } else if (preRequisiteID == null) {
                 // no pre requisite
                 canBeTaken.add(subjectWithNoGrade);
             } else {

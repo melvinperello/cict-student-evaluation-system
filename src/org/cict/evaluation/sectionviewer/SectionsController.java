@@ -5,6 +5,8 @@
  */
 package org.cict.evaluation.sectionviewer;
 
+import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.Database;
 import artifacts.MonoString;
 import org.cict.evaluation.evaluator.Evaluator;
 import com.jfoenix.controls.JFXButton;
@@ -171,16 +173,28 @@ public class SectionsController implements ControllerFX {
         /**
          * Sections
          */
-        // it
-        course_hint.put("bs it", "BSIT");
-        course_hint.put("bsit", "BSIT");
-        // comtech
-        course_hint.put("bit ct", "BITCT");
-        course_hint.put("bit comtech", "BITCT");
-        course_hint.put("bitct", "BITCT");
-        // act
-        course_hint.put("bs act", "BSACT");
-        course_hint.put("bsact", "BSACT");
+//        // it
+//        course_hint.put("bs it", "BSIT");
+//        course_hint.put("bsit", "BSIT");
+//        // comtech
+//        course_hint.put("bit ct", "BITCT");
+//        course_hint.put("bit comtech", "BITCT");
+//        course_hint.put("bitct", "BITCT");
+//        // act
+//        course_hint.put("act", "ACT");
+        //----------------------------------------------------------------------
+        ArrayList<AcademicProgramMapping> programMaps = Mono.orm().newSearch(Database.connect().academic_program())
+                .execute()
+                .all();
+        if (programMaps != null) {
+            course_hint.clear(); // clear the course hint
+            for (AcademicProgramMapping map : programMaps) {
+                course_hint.put(map.getCode(), map.getCode());
+                course_hint.put(map.getName(), map.getCode());
+            }
+            System.err.println("HINTS ADDED");
+        }
+        //----------------------------------------------------------------------
 
         /**
          * Checks if its looking for a section
@@ -231,7 +245,12 @@ public class SectionsController implements ControllerFX {
             } else {
                 // if invalid search parameters
                 // no results none execition
-                setView("no_result");
+                // setView("no_result");
+                // try searching as a subject code
+                //--------------------------------------------------------------
+                String possibleSubjectCode = MonoString.removeExtraSpace(keyword);
+                this.searchBySubjectCodeTask(possibleSubjectCode);
+                //--------------------------------------------------------------
             }
 
         } else {
@@ -240,8 +259,10 @@ public class SectionsController implements ControllerFX {
              * using subject code.
              */
             // let's assume the keyword is a subject code and remove spaces in between
+            //--------------------------------------------------------------
             String possibleSubjectCode = MonoString.removeExtraSpace(keyword);
             this.searchBySubjectCodeTask(possibleSubjectCode);
+            //--------------------------------------------------------------
         }
     }
 

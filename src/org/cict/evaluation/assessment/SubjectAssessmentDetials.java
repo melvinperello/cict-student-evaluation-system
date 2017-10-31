@@ -29,6 +29,7 @@ import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.SubjectMapping;
 import java.util.ArrayList;
+import sys.org.cict.enumerations.GradeValues;
 
 /**
  *
@@ -117,10 +118,15 @@ public class SubjectAssessmentDetials {
      * @return
      */
     public boolean isAcquired() {
+        //----------------------------------------------------------------------
         if (this.gradeDetails == null) {
             return false;
+        } else if (this.gradeDetails.getRemarks()
+                .equalsIgnoreCase(GradeValues.Remarks.PASSED.toString())) {
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     public Integer getSemester() {

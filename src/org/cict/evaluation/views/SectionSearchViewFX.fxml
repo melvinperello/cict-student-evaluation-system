@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -17,12 +18,12 @@
       </ImageView>
       <VBox alignment="CENTER_LEFT">
          <children>
-            <Label accessibleText="lbl_code" text="Math 113">
+            <Label fx:id="lbl_code" accessibleText="lbl_code" text="Math 113">
                <font>
-                  <Font size="18.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label accessibleText="lbl_title" text="Plane Trigonometry">
+            <Label fx:id="lbl_title" accessibleText="lbl_title" text="Plane Trigonometry">
                <font>
                   <Font size="13.0" />
                </font>
@@ -36,7 +37,7 @@
                   <Image url="@images/student.png" />
                </image>
             </ImageView>
-            <Label accessibleText="lbl_current" text="30" HBox.hgrow="ALWAYS">
+            <Label fx:id="lbl_current" accessibleText="lbl_current" text="30" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="29.0" />
                </font>
@@ -46,15 +47,23 @@
                   <Image url="@images/section.png" />
                </image>
             </ImageView>
-            <Label accessibleText="lbl_section" prefWidth="150.0" text="BSIT 1A-G1">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Label>
+            <VBox alignment="CENTER_LEFT">
+               <children>
+                  <Label fx:id="lbl_section" accessibleText="lbl_section" prefWidth="150.0" text="BSIT 1A-G1">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbl_curname" accessibleText="lbl_section" prefWidth="150.0" text="CurriculumHere" />
+               </children>
+            </VBox>
          </children>
       </HBox>
    </children>
    <padding>
       <Insets left="20.0" right="20.0" />
    </padding>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
 </HBox>

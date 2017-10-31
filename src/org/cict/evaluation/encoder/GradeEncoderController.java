@@ -94,7 +94,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     @FXML
     private Button btnPost;
 
-    private final GradeEncoderUI gei = new GradeEncoderUI();
+    private GradeEncoderUI gei;
     private SpreadsheetView spv;
     private StudentMapping CURRENT_STUDENT;
     private ArrayList<SubjectMapping> subjectsWithNoGrade;
@@ -107,6 +107,11 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         this.subjectsWithNoGrade = subjectsWithNoGrade;
         this.TITLE = title;
         this.MODE = mode;
+        try {
+            this.gei = new GradeEncoderUI();
+        } catch (Exception e) {
+            System.err.println("Error in constructing spreadsheet");
+        }
     }
 
     public void setYearAndSem(Integer yr, Integer sem) {

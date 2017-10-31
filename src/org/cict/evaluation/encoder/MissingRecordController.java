@@ -175,8 +175,8 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
             //------------------------------------------------------------------
             // counted as not defficiency
             boolean isPassed = grade.getRemarks().equalsIgnoreCase("PASSED");
-            boolean isIncomplete = grade.getRemarks().equalsIgnoreCase("INCOMPLETE");
-            boolean isEitherOfTwo = (isPassed || isIncomplete);
+            //boolean isIncomplete = grade.getRemarks().equalsIgnoreCase("INCOMPLETE");
+            boolean isEitherOfTwo = (isPassed || false); // only passed is counted
             // counted as defficiency
             if (!isEitherOfTwo) {
                 count++;

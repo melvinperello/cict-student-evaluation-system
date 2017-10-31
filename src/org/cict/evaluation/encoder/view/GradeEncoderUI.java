@@ -517,21 +517,42 @@ public class GradeEncoderUI {
     private ChangeListener<Object> ratingCellValueChangeListenerAction(int row, boolean editable) {
         return (ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
             //ObjectProperty op = (ObjectProperty) observable;
+
             try {
                 if (editable) {
-
-                    this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(true);
-
-                    String cellValue[] = validateGrade(newValue, row);
-                    this.spreadSheetGrid.setCellValue(row, this.finalCol, cellValue[0]);
-                    this.spreadSheetGrid.setCellValue(row, this.remarkCol, cellValue[1]);
-
-                    this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(false);
-
+                    //----------------------------------------------------------
+                    if (newValue == null) {
+                        // Stack Overflow exception
+                        // GridCell Error
+                        // Resolved @ 10/31/2017
+                    } else if (newValue.toString().equals("")) {
+                        // do nothing if empty
+                    } else if (newValue.equals(oldValue)) {
+                        // do nothing if the same
+                    } else {
+                        // allow editting of the remarks column
+                        System.out.println("1");
+                        this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(true);
+                        System.out.println("2");
+                        String cellValue[] = validateGrade(newValue, row);
+                        System.out.println("4");
+                        this.spreadSheetGrid.setCellValue(row, this.remarkCol, cellValue[1]);
+                        System.out.println("5");
+                        // disallow editting of the remarks column
+                        this.spreadSheetGrid.getRows().get(row).get(this.remarkCol).setEditable(false);
+                        System.out.println("3");
+                        this.spreadSheetGrid.setCellValue(row, this.finalCol, cellValue[0]);
+                        System.out.println("6");
+                    }
+                    //----------------------------------------------------------
+                } else {
+                    System.out.println("Im called");
+                    System.out.println(editable);
+                    System.out.println(row);
                 }
             } catch (Exception e) {
                 System.err.println("@Error in ratingCellValueChangeListener");
-                e.printStackTrace();
+                System.err.println("This error was already catched and won't cause any problems @GradeEncoderUi.ratingCellValueChangeListenerAction()");
             }
 
         };
@@ -591,7 +612,6 @@ public class GradeEncoderUI {
                 }
             }
         } catch (NullPointerException s) {
-
             this.rowPainter(row, this.colorBlanked);
             return cellValue;
         }
