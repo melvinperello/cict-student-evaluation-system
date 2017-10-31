@@ -62,23 +62,23 @@ import org.hibernate.criterion.Order;
  * @author Joemar
  */
 @Deprecated
-public class MissingRecordController2 extends SceneFX implements ControllerFX{
+public class MissingRecordControllerBACKYUP extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_main;
-    
+
     @FXML
     private ListView<String> lstvwAcadTerm;
 
     @FXML
     private VBox vbox_list;
-    
+
     @FXML
     private Button btnSkip;
-    
+
     @FXML
     private Button btnDone;
-    
+
     private StudentMapping CURRENT_STUDENT;
     private ArrayList<ArrayList<SubjectMapping>> FILTERED_SUBJECTS;
     private ArrayList<String> TITLES;
@@ -86,20 +86,22 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
     private Integer year_level;
     private Integer current_SEMESTER;
     private Integer current_YEAR;
-    public MissingRecordController2(StudentMapping currentStudent, 
-            ArrayList<ArrayList<SubjectMapping>> subjectsPerSem, 
+
+    public MissingRecordControllerBACKYUP(StudentMapping currentStudent,
+            ArrayList<ArrayList<SubjectMapping>> subjectsPerSem,
             ArrayList<String> yearAndSem, Integer yearLevel) {
         this.FILTERED_SUBJECTS = subjectsPerSem;
         this.TITLES = yearAndSem;
         this.CURRENT_STUDENT = currentStudent;
         this.year_level = yearLevel;
     }
-    
+
     private void logs(String str) {
-        if(true)
+        if (true) {
             System.out.println("@MissingRecordController: " + str);
+        }
     }
-    
+
     @Override
     public void onInitialization() {
         this.init();
@@ -109,17 +111,18 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
     public void onEventHandling() {
         this.buttonEvents();
     }
-    
-    private void buttonEvents(){
+
+    private void buttonEvents() {
         this.btnSkip.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
             this.startAssessment("SKIP");
         });
-        
+
         this.btnDone.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
             this.startAssessment("DONE");
         });
     }
     private SimpleTable recordTable = new SimpleTable();
+
     private void init() {
         AcademicTermMapping acadTermMap = Evaluator.instance().getCurrentAcademicTerm();
         current_SEMESTER = acadTermMap.getSemester_regular();
@@ -128,50 +131,51 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
             current_YEAR = Integer.valueOf(sy[0]);
         } catch (NumberFormatException e) {
         }
-                
+
         for (int i = 0; i < 2; i++) {
             String title = TITLES.get(i);
             createRow(title, i);
         }
-         
+
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(recordTable);
         simpleTableView.setFixedWidth(true);
         simpleTableView.setParentOnScene(vbox_list);
         this.vbox_list.setVisible(true);
     }
-    
+
     private Integer unacquiredCount(Integer sem) {
         Integer count = 0;
         ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm().newSearch(Database.connect().curriculum_subject())
                 .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRENT_STUDENT.getCURRICULUM_id())
-                .eq(DB.curriculum_subject().semester, (sem+1))
+                .eq(DB.curriculum_subject().semester, (sem + 1))
                 .eq(DB.curriculum_subject().year, this.year_level)
                 .active()
                 .all();
-        
-        if(csMaps == null) {
+
+        if (csMaps == null) {
             return count;
         }
-        System.out.println("SEMESTER "+(sem+1));
-        for(CurriculumSubjectMapping csMap: csMaps) {
+        System.out.println("SEMESTER " + (sem + 1));
+        for (CurriculumSubjectMapping csMap : csMaps) {
             GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
                     .eq(DB.grade().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
                     .eq(DB.grade().SUBJECT_id, csMap.getSUBJECT_id())
                     .active(Order.desc(DB.grade().id))
                     .first();
-            if(grade == null) {
+            if (grade == null) {
                 count++;
                 System.out.println(csMap.getSUBJECT_id());
-            } else if(grade.getRemarks().equalsIgnoreCase("UNPOSTED")){
+            } else if (grade.getRemarks().equalsIgnoreCase("UNPOSTED")) {
                 count++;
                 System.out.println(csMap.getSUBJECT_id());
             }
         }
         return count;
     }
-    
+
     private Boolean canEdit = true;
+
     private void createRow(String title, Integer index) {
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(55.0);
@@ -185,18 +189,18 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
         Label lbl_title = searchAccessibilityText(titleRow, "title");
         Label lbl_subject = searchAccessibilityText(titleRow, "number");
         Button btn_encode = searchAccessibilityText(titleRow, "encode");
-        
+
         lbl_title.setText(title);
-        lbl_subject.setText(unacquiredCount(index)+"");
-        
-        addClickEvent(btn_encode, ()->{
+        lbl_subject.setText(unacquiredCount(index) + "");
+
+        addClickEvent(btn_encode, () -> {
             this.onShowGradeEncoder(index, title);
         });
-        
-        addDoubleClickEvent(row, ()-> {
+
+        addDoubleClickEvent(row, () -> {
             this.onShowGradeEncoder(index, title);
         });
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(titleRow);
@@ -205,56 +209,60 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
 
         recordTable.addRow(row);
     }
-    
+
     private GradeEncoderController controller;
+
     private void onShowGradeEncoder(Integer index, String selected) {
-        if(!isOkayToView(index+1))
+        if (!isOkayToView(index + 1)) {
             return;
+        }
         vbox_main.setDisable(true);
 //        btnSkip.setDisable(true);
 //        vbox_list.setDisable(true);
-        try{
-            if(this.FILTERED_SUBJECTS.get(index) == null){
+        try {
+            if (this.FILTERED_SUBJECTS.get(index) == null) {
                 Mono.fx().alert().createWarning()
                         .setHeader("No Subject Found")
                         .setMessage("No subject to encode.")
                         .show();
                 return;
             }
-            
+
             Transaction loadEncoder = new Transaction() {
                 @Override
                 protected boolean transaction() {
-                    controller = new GradeEncoderController("", CURRENT_STUDENT
-                            , FILTERED_SUBJECTS.get(index)
-                            , selected);
-                    controller.setYearAndSem(year_level, index+1);
+                    controller = new GradeEncoderController("", CURRENT_STUDENT,
+                             FILTERED_SUBJECTS.get(index),
+                             selected);
+                    controller.setYearAndSem(year_level, index + 1);
                     return true;
                 }
+
                 @Override
                 protected void after() {
                 }
             };
-            
-            loadEncoder.setOnStart(onStart->{
+
+            loadEncoder.setOnStart(onStart -> {
                 vbox_main.getScene().setCursor(Cursor.WAIT);
             });
-            
+
             loadEncoder.setOnSuccess(onSuccess -> {
                 boolean isDone = false;
                 Mono.fx().create()
-                            .setPackageName("org.cict.evaluation.encoder")
-                            .setFxmlDocument("GradeEncoder")
-                            .makeFX()
-                            .setController(controller)
-                            .makeScene()
-                            .makeStageApplication()
-                            .stageMaximized(true)
-                            .stageShow();
+                        .setPackageName("org.cict.evaluation.encoder")
+                        .setFxmlDocument("GradeEncoder")
+                        .makeFX()
+                        .setController(controller)
+                        .makeScene()
+                        .makeStageApplication()
+                        .stageMaximized(true)
+                        .stageShow();
                 System.out.println("DONE 1");
                 isDone = true;
-                if(isDone)
+                if (isDone) {
                     vbox_main.getScene().setCursor(Cursor.DEFAULT);
+                }
                 Mono.fx().getParentStage(btnDone).close();
             });
             loadEncoder.setOnFailure(onFailure -> {
@@ -262,8 +270,8 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
             });
 
             loadEncoder.transact();
-          
-        } catch(IndexOutOfBoundsException a){
+
+        } catch (IndexOutOfBoundsException a) {
             Mono.fx().alert()
                     .createWarning()
                     .setHeader("No Selected")
@@ -271,24 +279,26 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
                     .showAndWait();
         }
     }
-    
+
     private boolean isOkayToView(Integer semester) {
-        if(Objects.equals(CURRENT_STUDENT.getYear_level(), year_level)) {
-            if(!Objects.equals(semester, current_SEMESTER)) {
+        if (Objects.equals(CURRENT_STUDENT.getYear_level(), year_level)) {
+            if (!Objects.equals(semester, current_SEMESTER)) {
                 Mono.fx().alert()
                         .createWarning()
                         .setHeader("Ops, Not Yet")
                         .setMessage("The student is not yet in this semester.")
                         .showAndWait();
                 return false;
-            } else
+            } else {
                 System.out.println("SEMESTER NOT EQUAL TO CURRENT SEM");
-        } else
+            }
+        } else {
             System.out.println("YEAR LEVEL NOT EQUAL TO STUDENT'S YEAR LEVEL");
+        }
         return true;
     }
-    
-    private void onError(){
+
+    private void onError() {
         Mono.fx().alert()
                 .createWarning()
                 .setHeader("Something went wrong")
@@ -296,7 +306,7 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
                         + "Sorry for the inconvinience.")
                 .showAndWait();
     }
-    
+
     private void startAssessment(String mode) {
         // Student Mapping as constructor parameter.
         CurricularLevelAssesor cla = new CurricularLevelAssesor(CURRENT_STUDENT);
@@ -340,8 +350,9 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
          */
 
     }
-    
+
     private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED;
+
     private void showValues(CurricularLevelAssesor cla, String mode) {
         /**
          * DESCRIPTION
@@ -379,14 +390,14 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
         try {
             AssessmentResults results = cla.getAnnualAssessment(year_level);
             subjectAssessment_UNACQUIRED = results.getUnacquiredSubjects();
-            if(subjectAssessment_UNACQUIRED.isEmpty()) {
+            if (subjectAssessment_UNACQUIRED.isEmpty()) {
                 isCompleted = true;
             }
         } catch (NullPointerException ne) {
             logs("NO DATA");
         }
-        if(mode.equalsIgnoreCase("SKIP")) {
-            if(isCompleted) {
+        if (mode.equalsIgnoreCase("SKIP")) {
+            if (isCompleted) {
                 Mono.fx()
                         .alert()
                         .createInfo()
@@ -405,18 +416,18 @@ public class MissingRecordController2 extends SceneFX implements ControllerFX{
                             + "This can result the evaluation subjects of the student into irregular type.")
                     .confirmCustom("Yes", "No, I'll encode");
 
-            if(choice == 1){
+            if (choice == 1) {
                 Mono.fx().getParentStage(btnDone).close();
             }
-        } else if(mode.equalsIgnoreCase("DONE")) {
-            if(!isCompleted) {
+        } else if (mode.equalsIgnoreCase("DONE")) {
+            if (!isCompleted) {
                 Mono.fx()
-                    .alert()
-                    .createWarning()
-                    .setHeader("Incomplete Record")
-                    .setMessage("Please supply all the needed grades to proceed."
-                            + " Click Skip, if you want to end the process.")
-                    .showAndWait();
+                        .alert()
+                        .createWarning()
+                        .setHeader("Incomplete Record")
+                        .setMessage("Please supply all the needed grades to proceed."
+                                + " Click Skip, if you want to end the process.")
+                        .showAndWait();
             } else {
                 Mono.fx()
                         .alert()

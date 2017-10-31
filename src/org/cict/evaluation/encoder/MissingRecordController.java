@@ -317,36 +317,88 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
     /**
      * Checks if its okay to encode in this semester
      *
-     * @param semester
+     * @param semester the selected semester to encode.
      * @return
      */
     private boolean isOkayToView(Integer semester) {
-        if (Objects.equals(CURRENT_STUDENT.getYear_level(), year_level)) {
-            if (current_SEMESTER == 1) {
+        Integer studentYearLevel = CURRENT_STUDENT.getYear_level();
+        Integer currentSemester = current_SEMESTER;
+        //----------------------------------------------------------------------
+        // if the student is on the same year level as the year that will be encoded
+        // e.g. student is first year and encoding in first year.
+        if (studentYearLevel.equals(year_level)) {
+            if (currentSemester.equals(0)) {
+                // this is a non regular term which means
+                // first sem and second sem have already passed.
+                return true; // allow
+            } else if (currentSemester.equals(semester)) {
+                // if the student is on the same year level as will be encoded
+                // and the current semester is = to the semester that wanted to be encoded.
+                // dis allow this as per the evaluation process will insert unposted grades
+                // this semester must be clean
                 Mono.fx().alert()
                         .createWarning()
-                        .setHeader("Ops, Not Yet")
-                        .setMessage("The student is not yet in this semester.")
+                        .setTitle("Restricted")
+                        .setHeader("Currently For Evaluation")
+                        .setMessage("This semester is reserved for evaluation, encoding for this semester will be allowed in the next academic term.")
                         .showAndWait();
                 return false;
-            } else if (current_SEMESTER > 1) {
-                if (semester == 1) {
-                    return true;
-                } else {
-                    Mono.fx().alert()
-                            .createWarning()
-                            .setHeader("Ops, Not Yet")
-                            .setMessage("The student is not yet in this semester.")
-                            .showAndWait();
-                    return false;
-                }
+            } else if (semester > currentSemester) {
+                Mono.fx().alert()
+                        .createWarning()
+                        .setTitle("Restricted")
+                        .setHeader("Scheduled For Evaluation")
+                        .setMessage("This semester is schedule for evaluation for this student in the next semester.")
+                        .showAndWait();
+                return false;
             } else {
-                System.out.println("SEMESTER NOT EQUAL TO CURRENT SEM");
+                // return true
+                return true;
             }
+        } else if (studentYearLevel > year_level) {
+            // ok
+            return true;
         } else {
-            System.out.println("YEAR LEVEL NOT EQUAL TO STUDENT'S YEAR LEVEL");
+            //
+            Mono.fx().alert()
+                    .createWarning()
+                    .setTitle("Restricted")
+                    .setHeader("Below Required Year Level")
+                    .setMessage("The student is currently below the required year level to encode grades in this semester.")
+                    .showAndWait();
+            return false;
         }
-        return true;
+
+        //----------------------------------------------------------------------
+//
+//        if (Objects.equals(CURRENT_STUDENT.getYear_level(), year_level)) {
+//            if (current_SEMESTER == 1) {
+//                Mono.fx().alert()
+//                        .createWarning()
+//                        .setTitle("Restricted")
+//                        .setHeader("Cannot Encode Yet.")
+//                        .setMessage("The student is not yet in this semester.")
+//                        .showAndWait();
+//                return false;
+//            } else if (current_SEMESTER > 1) {
+//                if (semester == 1) {
+//                    return true;
+//                } else {
+//                    Mono.fx().alert()
+//                            .createWarning()
+//                            .setTitle("Restricted")
+//                            .setHeader("Cannot Encode Yet.")
+//                            .setMessage("The student is not yet in this semester.")
+//                            .showAndWait();
+//                    return false;
+//                }
+//            } else {
+//                System.out.println("SEMESTER NOT EQUAL TO CURRENT SEM");
+//            }
+//        } else {
+//            System.out.println("YEAR LEVEL NOT EQUAL TO STUDENT'S YEAR LEVEL");
+//        }
+//        return true;
     }
     //--------------------------------------------------------------------------
 

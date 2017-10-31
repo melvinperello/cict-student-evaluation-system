@@ -97,14 +97,14 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     private GradeEncoderUI gei;
     private SpreadsheetView spv;
     private StudentMapping CURRENT_STUDENT;
-    private ArrayList<SubjectMapping> subjectsWithNoGrade;
+    private ArrayList<SubjectMapping> subjectsToEncode;
     private String TITLE;
     private String MODE;
     private Integer CURRICULUM_id, yearLevel, semester;
 
-    public GradeEncoderController(String mode, StudentMapping student, ArrayList<SubjectMapping> subjectsWithNoGrade, String title) {
+    public GradeEncoderController(String mode, StudentMapping student, ArrayList<SubjectMapping> subjectsToEncode, String title) {
         this.CURRENT_STUDENT = student;
-        this.subjectsWithNoGrade = subjectsWithNoGrade;
+        this.subjectsToEncode = subjectsToEncode;
         this.TITLE = title;
         this.MODE = mode;
         try {
@@ -143,7 +143,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         } catch (NullPointerException a) {
         }
         gei.setCictId(this.CURRENT_STUDENT.getCict_id());
-        gei.setSubjectsToBePrinted(this.subjectsWithNoGrade);
+        gei.setSubjectsToBePrinted(this.subjectsToEncode);
         gei.setMode(this.MODE);
         gei.setCurriculumID(CURRICULUM_id, yearLevel, semester);
         SimpleTask createSpredSheetTx = new SimpleTask("create-ss");
@@ -244,7 +244,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         this.gei.setValueFiltering(false);
         // starts here
         int writeCount = 0;
-        ArrayList<SubjectMapping> subjects = this.subjectsWithNoGrade;
+        ArrayList<SubjectMapping> subjects = this.subjectsToEncode;
         Grid sheetyGrid = this.spv.getGrid();
         for (ObservableList<SpreadsheetCell> row : sheetyGrid.getRows()) {
             // iterate to all the row of the current spreadsheet
@@ -352,7 +352,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     private Integer getAcadTermId() {
         Integer admissionYear = null;
         try {
-            SubjectMapping subjectReference = this.subjectsWithNoGrade.get(0);
+            SubjectMapping subjectReference = this.subjectsToEncode.get(0);
             CurriculumSubjectMapping curriculumSubjectReference = Mono.orm()
                     .newSearch(Database.connect().curriculum_subject())
                     .eq("SUBJECT_id", subjectReference.getId())

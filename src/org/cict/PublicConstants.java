@@ -35,38 +35,45 @@ import sys.org.cict.enumerations.GradeValues;
  */
 public class PublicConstants {
 
+    //--------------------------------------------------------------------------
+    /**
+     * System Platform Name
+     */
+    public final static String PLATFORM_NAME = "EVALUATION_SYSTEM";
+
+    //--------------------------------------------------------------------------
+    /**
+     * Server IP
+     *
+     * @return
+     */
     public final static String getServer() {
         return "127.0.0.1";
     }
-
-    /**
-     * INC expiration in months.
-     */
+    //--------------------------------------------------------------------------
+    // INC expiration in months
     public final static int INC_EXPIRE = 12;
     public final static String EXPIRE_DESCRIPTION = "INC GRADE HAS EXPIRED.";
-
+    //--------------------------------------------------------------------------
+    // Legacy Curriculums for Checklist
     public final static String[] LEGACY_CURRICULUM = new String[]{
         "ACT (15-16)",
         "BSIT OLD (11-12)",
         "BITCT (11-12)"
     };
-
-    /**
-     * System.
-     */
-    public final static String PLATFORM_NAME = "EVALUATION_SYSTEM";
-
+    //--------------------------------------------------------------------------
     /**
      * Evaluation constants.
      */
     public final static Double MAX_UNITS = 26.0;
     public final static Double MIN_UNITS = 12.0;
-
+    public final static Integer MAX_POPULATION = 1;
+    //--------------------------------------------------------------------------
     /**
      * Authentication constants.
      */
     public final int MAX_ATTEMPTS = 3; // max wrong attempts for temp block
-
+    //--------------------------------------------------------------------------
     /**
      * Remarks required for pre-requisites.
      */
@@ -74,13 +81,20 @@ public class PublicConstants {
             .or(SQL.where(DB.grade().remarks).equalTo("PASSED"),
                     SQL.where(DB.grade().remarks).equalTo("INCOMPLETE"));
 
+    //--------------------------------------------------------------------------
+    /**
+     * Forgotten !!! but required.
+     *
+     * @param studentMap
+     * @return
+     */
     public static Criterion getCurriculumRequisite(StudentMapping studentMap) {
-        //return SQL.where("active").equalTo(1);
         return SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getCURRICULUM_id());
 //        return SQL.or(
 //                SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getCURRICULUM_id()),
 //                SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getPREP_id()));
     }
+    //--------------------------------------------------------------------------
 
     /**
      * Please use the code at GradeValues Enumeration

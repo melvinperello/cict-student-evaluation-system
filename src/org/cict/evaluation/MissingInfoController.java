@@ -45,6 +45,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import sys.org.cict.enumerations.CurriculumValues;
 import update3.org.cict.controller.sectionmain.SectionCreateWizard;
 
 /**
@@ -108,11 +110,18 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
     }
 
     private void loadComboBoxValues() {
-        //
-        ArrayList<CurriculumMapping> allCurriculums = Mono.orm().newSearch(Database.connect().curriculum())
-                //                .eq(DB.curriculum().ladderization, "YES")
+        //----------------------------------------------------------------------
+        ArrayList<CurriculumMapping> allCurriculums = Mono.orm()
+                .newSearch(Database.connect().curriculum())
+                // must not be obsolete
+                .eq(DB.curriculum().obsolete_term, 0)
+                // must not be consequent
+                .put(Restrictions.ne(DB.curriculum().ladderization_type, CurriculumValues.LadderType.CONSEQUENT.toString()))
+                // must be implemented
+                .eq(DB.curriculum().implemented, 1)
                 .active(Order.desc(DB.curriculum().id))
                 .all();
+        //----------------------------------------------------------------------
 
         if (allCurriculums == null) {
             System.out.println("NO CURRICULUM FOUND");

@@ -321,8 +321,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         if (level > STUDENT_current.getYear_level()) {
             Mono.fx().alert()
                     .createWarning()
-                    .setHeader("Ops, Not Yet")
-                    .setMessage("The student is not yet in this year level.")
+                    .setTitle("Restricted")
+                    .setHeader("Below Required Year Level")
+                    .setMessage("The student is currently below the required year level to encode grades.")
                     .showAndWait();
             return;
         }
@@ -333,12 +334,12 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             Mono.fx().alert()
                     .createInfo()
                     .setHeader("Completed")
-                    .setMessage("You already completed the first year level.")
+                    .setMessage("You already completed this year level.")
                     .showAndWait();
             return;
         }
         //------------------------------------------------------------------
-        ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(1);
+        ArrayList<ArrayList<SubjectMapping>> allSubject = this.getFilteredUnacquiredSubjects(level);
         if (allSubject == null) {
             Mono.fx().alert()
                     .createError()
