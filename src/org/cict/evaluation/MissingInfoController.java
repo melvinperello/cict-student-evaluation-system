@@ -262,8 +262,19 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
 //            }
 //        }
 
-        Integer CURRICULUM_id = curriculumIDs.get(cmb_curriculum.getSelectionModel().getSelectedIndex());
-        STUDENT.setCURRICULUM_id(CURRICULUM_id);
+        //----------------------------------------------------------------------
+        try {
+            Integer CURRICULUM_id = curriculumIDs.get(cmb_curriculum.getSelectionModel().getSelectedIndex());
+            STUDENT.setCURRICULUM_id(CURRICULUM_id);
+        } catch (Exception e) {
+            // null pointer or index out of bound
+            Mono.fx().alert().createWarning()
+                    .setHeader("No Curriculum")
+                    .setMessage("Please select a curriculum for this student.")
+                    .showAndWait();
+            return;
+        }
+        //----------------------------------------------------------------------
         STUDENT.setYear_level((cmb_year_level.getSelectionModel().getSelectedIndex() + 1));
         STUDENT.setSection(section.toUpperCase());
         STUDENT.set_group(groupInt);
