@@ -21,6 +21,7 @@ private MonoModels tbl_account_faculty;
 private MonoModels tbl_account_faculty_attempt;
 private MonoModels tbl_account_faculty_session;
 private MonoModels tbl_account_student;
+private MonoModels tbl_announcements;
 private MonoModels tbl_curriculum;
 private MonoModels tbl_curriculum_history;
 private MonoModels tbl_curriculum_history_summary;
@@ -79,6 +80,8 @@ Mono.orm().addMappings("AccountFacultySessionMapping");
 this.tbl_account_faculty_session = Mono.orm().createModel(AccountFacultySessionMapping.class);
 Mono.orm().addMappings("AccountStudentMapping");
 this.tbl_account_student = Mono.orm().createModel(AccountStudentMapping.class);
+Mono.orm().addMappings("AnnouncementsMapping");
+this.tbl_announcements = Mono.orm().createModel(AnnouncementsMapping.class);
 Mono.orm().addMappings("CurriculumMapping");
 this.tbl_curriculum = Mono.orm().createModel(CurriculumMapping.class);
 Mono.orm().addMappings("CurriculumHistoryMapping");
@@ -154,6 +157,9 @@ return tbl_account_faculty_session;
 }
 public MonoModels account_student() {
 return tbl_account_student;
+}
+public MonoModels announcements() {
+return tbl_announcements;
 }
 public MonoModels curriculum() {
 return tbl_curriculum;

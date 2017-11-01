@@ -168,11 +168,15 @@ public class PrintDeficiency extends Transaction {
         for (int semester = 1; semester <= 2; semester++) {
             ArrayList<SubjectAssessmentDetials> sadetails;
             try {
-                sadetails = result.getSemestralResults(semester);
+                sadetails = result.getUnacquiredSubjects();
             } catch (Exception e) {
                 continue;
             }
             for (SubjectAssessmentDetials sadetail : sadetails) {
+                // ------------------------------------------
+                if(!sadetail.getSemester().equals(semester))
+                    continue;
+                // -------------------------------------
                 SubjectMapping subject = sadetail.getSubjectDetails();
                 Object[] detail = new Object[5];
                 if (subject != null) {

@@ -22,6 +22,9 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_account_student account_student = new Tbl_account_student();
     public static Tbl_account_student account_student() {
         return account_student;
+    }private final static Tbl_announcements announcements = new Tbl_announcements();
+    public static Tbl_announcements announcements() {
+        return announcements;
     }private final static Tbl_curriculum curriculum = new Tbl_curriculum();
     public static Tbl_curriculum curriculum() {
         return curriculum;

@@ -18,9 +18,7 @@ import app.lazy.models.EvaluationMapping;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.StudentMapping;
-import java.util.Locale;
-import org.cict.reports.advisingslip.AdvisingSlip;
-import org.cict.reports.advisingslip.AdvisingSlipData;
+import java.util.Date;
 
 import org.hibernate.Session;
 
@@ -29,14 +27,14 @@ import org.hibernate.Session;
  * @author Jhon Melvin
  */
 public class SaveEvaluation extends Transaction {
-    
+
     private void log(Object message) {
         boolean enableLoggin = true;
         if (enableLoggin) {
             System.out.println("@SaveEvaluation: " + message.toString());
         }
     }
-    
+
     public Integer studentID;
     public Integer acadTermID;
     public Integer facultyID;
@@ -53,14 +51,15 @@ public class SaveEvaluation extends Transaction {
      */
     private boolean isAlreadyEvaluated;
     private int evaluationID;
-    
+
     public int getEvaluationID() {
         return evaluationID;
     }
-    
+
     @Override
     protected boolean transaction() {
-
+        // para makatipid sa query sa pagkuha ng date
+        final Date systemDate = Mono.orm().getServerTime().getDateWithFormat();
         // check if student is already evaluated
         log("Checking if already Evaluated");
         currentlyEvaluating = Mono.orm()
@@ -79,7 +78,7 @@ public class SaveEvaluation extends Transaction {
             log("Already Evaluated");
             return true;
         }
-        
+
         log("Starting . . .");
         /**
          * If not proceed to evaluation
@@ -106,13 +105,13 @@ public class SaveEvaluation extends Transaction {
         eval.setACADTERM_id(acadTermID);
         eval.setSTUDENT_id(studentID);
         eval.setFACULTY_id(facultyID);
-        eval.setEvaluation_date(Mono.orm().getServerTime().getDateWithFormat());
+        eval.setEvaluation_date(systemDate);
         eval.setYear_level(student.getYear_level());
         eval.setType("REGULAR");
 
         // get temporary evaluation.
         int temp_eval_id = Database.connect().grade().transactionalInsert(currentSession, eval);
-        
+
         if (temp_eval_id < 0) {
             // if errors occured during temporary insert
             dataTransaction.rollback();
@@ -137,7 +136,7 @@ public class SaveEvaluation extends Transaction {
             load_subject.setLOADGRP_id(subject.loadGroupID);
             load_subject.setSTUDENT_id(studentID);
             load_subject.setAdded_by(facultyID);
-            
+
             int insert_load_subject = Database.connect()
                     .load_subject()
                     .transactionalInsert(currentSession, load_subject);
@@ -149,7 +148,7 @@ public class SaveEvaluation extends Transaction {
                 isInserted = false;
                 break;
             }
-            
+
             GradeMapping grades = MapFactory.map().grade();
             grades.setSTUDENT_id(studentID);
             grades.setSUBJECT_id(subject.subjectID);
@@ -159,10 +158,10 @@ public class SaveEvaluation extends Transaction {
             grades.setCredit(subject.units);
             grades.setCredit_method("REGULAR");
             grades.setCreated_by(facultyID);
-            grades.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
+            grades.setCreated_date(systemDate);
             grades.setPosted(0);
             grades.setReason_for_update("Created by Evaluation");
-            
+
             int insert_grade = Database
                     .connect()
                     .grade()
@@ -175,7 +174,7 @@ public class SaveEvaluation extends Transaction {
                 isInserted = false;
                 break;
             }
-            
+
         }
 
         /**
@@ -191,12 +190,30 @@ public class SaveEvaluation extends Transaction {
          */
         if (isInserted) {
             log("subject successfully inserted");
+            //------------------------------------------------------------------
+            // post evaluation process
+            // set last evaluation term as current
+            student.setLast_evaluation_term(acadTermID);
+            // check if validated
+            if (student.getVerified().equals(0)) {
+                // if the validated validate the student
+                student.setVerified(1);
+                student.setVerification_date(systemDate);
+                student.setVerfied_by(facultyID);
+            }
+            boolean student_update = Database.connect().student().transactionalSingleUpdate(currentSession, student);
+            if (!student_update) {
+                // student info was not updated return false
+                dataTransaction.rollback();
+                return false;
+            }
+            //------------------------------------------------------------------
             dataTransaction.commit();
         }
-        
+
         return true;
     }
-    
+
     @Override
     protected void after() {
 //        PrintAdvising slip = Evaluator.instance().printAdvising();
@@ -204,5 +221,5 @@ public class SaveEvaluation extends Transaction {
 //        slip.academicTerm = acadTermID;
 //        slip.transact();
     }
-    
+
 }

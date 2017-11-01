@@ -1,5 +1,5 @@
 // SQL_db: cictems
-// SQL_table: student_course_history
+// SQL_table: announcements
 // Mono Models
 // Monosync Framewrok v1.8.x
 // Created: Nov 01, 2017 07:15:27 PM
@@ -16,12 +16,11 @@ package app.lazy.models;
  *
  * @author Jhon Melvin
  */
-public class Tbl_student_course_history {
+public class Tbl_announcements {
 public final String id = "id";
-public final String student_id = "student_id";
-public final String curriculum_id = "curriculum_id";
-public final String curriculum_assigment = "curriculum_assigment";
-public final String prep_id = "prep_id";
-public final String prep_assignment = "prep_assignment";
+public final String title = "title";
+public final String message = "message";
+public final String date = "date";
+public final String announced_by = "announced_by";
 public final String active = "active";
 }

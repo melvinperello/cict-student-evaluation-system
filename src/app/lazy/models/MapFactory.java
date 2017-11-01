@@ -35,6 +35,9 @@ return new AccountFacultySessionMapping();
 public AccountStudentMapping account_student() {
 return new AccountStudentMapping();
 }
+public AnnouncementsMapping announcements() {
+return new AnnouncementsMapping();
+}
 public CurriculumMapping curriculum() {
 return new CurriculumMapping();
 }

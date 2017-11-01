@@ -24,8 +24,10 @@
 package update5.org.cict.student.layout;
 
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.GradeMapping;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
@@ -44,6 +46,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cict.evaluation.moving_up.CurriculumRow;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Order;
 import update3.org.cict.CurriculumConstants;
 
 /**
@@ -69,6 +72,11 @@ public class CurriculumChooser extends MonoLauncher {
         MonoClick.addClickEvent(btn_cancel, () -> {
             this.close();
         });
+    }
+    
+    private Integer STUDENT_id;
+    public void setStudentID(Integer id) {
+        this.STUDENT_id = id;
     }
 
     private CurriculumMapping selected;
@@ -130,7 +138,7 @@ public class CurriculumChooser extends MonoLauncher {
                     .neOrNn(DB.curriculum().obsolete_term, 1)
                     // must not be consequent
                     // shift to the preparatory then moving up
-                    .ne(DB.curriculum().ladderization_type, CurriculumConstants.TYPE_CONSEQUENT)
+//                    .ne(DB.curriculum().ladderization_type, CurriculumConstants.TYPE_CONSEQUENT)
                     .active()
                     .all();
             //------------------------------------------------------------------
@@ -177,6 +185,7 @@ public class CurriculumChooser extends MonoLauncher {
         lbl_major.setText((each.getMajor() == null ? "NONE" : each.getMajor()));
         MonoClick.addClickEvent(btn_select, () -> {
             selected = (CurriculumMapping) row.getRowMetaData().get("MORE_INFO");
+            
             Mono.fx().getParentStage(application_root).close();
         });
 
@@ -189,7 +198,7 @@ public class CurriculumChooser extends MonoLauncher {
         row.addCell(cellParent);
         marshallTable.addRow(row);
     }
-
+    
     public CurriculumMapping getSelected() {
         return selected;
     }

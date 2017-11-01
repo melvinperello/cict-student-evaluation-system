@@ -25,6 +25,8 @@ package update5.org.cict.student.controller;
 
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.CurriculumPreMapping;
+import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
@@ -64,12 +66,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.cict.reports.profile.student.PrintStudentProfile;
 import org.controlsfx.control.Notifications;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import update3.org.cict.CurriculumConstants;
 import update3.org.collegechooser.ChooserHome;
 import update5.org.cict.student.layout.CourseHistoryRow;
 import update5.org.cict.student.layout.CurriculumChooser;
@@ -383,6 +388,8 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private String getCurriculumName(Integer id) {
+        if(id==null)
+            return "NONE";
         CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(id);
         if (curriculum == null) {
             return "NONE";
@@ -399,13 +406,106 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
         //----------------------------------------------------------------------
         System.out.println(selected.getName());
-        this.processGrades(selected.getId());
+        //----------------------------
+        this.validateCurriculum(selected);
+    }
+    
+    public void validateCurriculum(CurriculumMapping curriculumSelected) {
+        
+        // check if the curriculum is in the course history
+        // if so, reactivate the grades related to the course history
+        StudentCourseHistoryMapping schMap = Mono.orm().newSearch(Database.connect().student_course_history())
+                .eq(DB.student_course_history().curriculum_id, curriculumSelected.getId())
+                .eq(DB.student_course_history().student_id, CURRENT_STUDENT.getCict_id())
+                .active(Order.desc(DB.student_course_history().id)).first();
+        if(schMap!=null) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage("This curriculum is already taken by this student. Do you want to retain the previous grade?")
+                    .confirmYesNo();
+            Boolean retain = false;
+            if(res==1) {
+                retain = true;
+            }
+            this.processGrades(curriculumSelected.getId(), false, retain, schMap.getId());
+            return;
+        }
+        
+        ArrayList<CurriculumSubjectMapping> subjects = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                .eq(DB.curriculum_subject().CURRICULUM_id, curriculumSelected.getId())
+                .active().all();
+        if(subjects==null)
+            return;
+        // ------------------------------
+        // check the grade for each subject found
+        // ------------------
+        boolean hasGrade = false;
+        for(CurriculumSubjectMapping subject: subjects) {
+            GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
+                    .eq(DB.grade().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
+                    .eq(DB.grade().SUBJECT_id, subject.getSUBJECT_id())
+                    .active(Order.desc(DB.grade().id)).first();
+            if(grade==null) {
+            } else {
+                hasGrade = true;
+                break;
+            }
+        }
+        Boolean retain = false;
+        if(hasGrade) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage("Some subjects in this curriculum are already taken by this student. Do you want to retain them?")
+                    .confirmYesNo();
+            if(res==1) {
+                retain = true;
+            }
+        }
+        this.processGrades(curriculumSelected.getId(), retain, false, null);
     }
 
-    private void processGrades(Integer curriculum_id/*, Integer course_ref*/) {
+    private boolean retain(ArrayList<GradeMapping> currentGrades) {
+        //------------------------------------------------------------------
+        Session currentSession = Mono.orm().openSession();
+        // start your transaction
+        org.hibernate.Transaction dataTransaction = currentSession.beginTransaction();
+        for(GradeMapping currentGrade: currentGrades) {
+            GradeMapping retainedGrade = new GradeMapping();
+            retainedGrade.setACADTERM_id(currentGrade.getACADTERM_id());
+            retainedGrade.setActive(1);
+            retainedGrade.setCourse_reference(currentGrade.getCourse_reference());
+            retainedGrade.setCreated_by(currentGrade.getCreated_by());
+            retainedGrade.setCreated_date(currentGrade.getCreated_date());
+            retainedGrade.setCredit(currentGrade.getCredit());
+            retainedGrade.setCredit_method(currentGrade.getCredit_method());
+            retainedGrade.setInc_expire(currentGrade.getInc_expire());
+            retainedGrade.setPosted(currentGrade.getPosted());
+            retainedGrade.setPosted_by(currentGrade.getPosted_by());
+            retainedGrade.setPosting_date(currentGrade.getPosting_date());
+            retainedGrade.setRating(currentGrade.getRating());
+            retainedGrade.setReason_for_update(currentGrade.getReason_for_update());
+            retainedGrade.setReferrence_curriculum(currentGrade.getReferrence_curriculum());
+            retainedGrade.setRemarks(currentGrade.getRemarks());
+            retainedGrade.setSTUDENT_id(currentGrade.getSTUDENT_id());
+            retainedGrade.setSUBJECT_id(currentGrade.getSUBJECT_id());
+            retainedGrade.setUpdated_by(currentGrade.getUpdated_by());
+            retainedGrade.setUpdated_date(currentGrade.getUpdated_date());
+            int gradeID = Database.connect().grade()
+                    .transactionalInsert(currentSession, retainedGrade);
+            if (gradeID <= 0) {
+                dataTransaction.rollback();
+                return false;
+            }
+        }
+        dataTransaction.commit();
+        return true;
+    }
+
+    private void processGrades(Integer curriculum_id/*, Integer course_ref*/, Boolean retain, Boolean alreadyTaken, Integer prevCourseRef_id) {
         TransactGrades transact = new TransactGrades();
         transact.student_id = CURRENT_STUDENT.getCict_id();
         transact.curriculum_id = curriculum_id;
+        transact.retain = retain;
+        transact.alreadyTaken = alreadyTaken;
+        transact.prevCourseRef_id = prevCourseRef_id;
         /*transact.course_reference = course_ref;*/
         transact.whenCancelled(() -> {
             Notifications.create()
@@ -424,6 +524,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             if (currentStudent.getStudentMapping() == null) {
                 return;
             }
+            
             this.setStudentInformation(currentStudent);
             this.setValues();
             Notifications.create()
@@ -434,7 +535,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         });
         transact.transact();
     }
-
+    
     class TransactGrades extends Transaction {
 
         public Integer curriculum_id;
@@ -442,9 +543,13 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         public Integer course_reference; // must be retrieved within transaction
         //----------------------------------------------------------------------
-
+        
         public String log;
 
+        public Boolean retain;
+        
+        public Boolean alreadyTaken = false;
+        public Integer prevCourseRef_id;
         @Override
         protected boolean transaction() {
             //------------------------------------------------------------------
@@ -480,8 +585,22 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .all();
             //------------------------------------------------------------------
             // updating grades with course reference
+            
+            // --------------------------------
+            // if retain is true, retain it
             if (grades != null) {
                 for (GradeMapping grade : grades) {
+                    if(retain) {
+                        GradeMapping retainThis = this.getRetainedGradeMap(grade);
+                        int gradeID = Database.connect().grade()
+                                .transactionalInsert(currentSession, retainThis);
+                        if (gradeID <= 0) {
+                            dataTransaction.rollback();
+                            log = "Grade is not properly retained.";
+                            System.out.println(log);
+                            return false;
+                        }
+                    }
                     grade.setActive(0);
                     grade.setCourse_reference(course_reference);
                     if (!Database.connect().grade().transactionalSingleUpdate(currentSession, grade)) {
@@ -512,8 +631,52 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 return false;
             }
             //------------------------------------------------------------------
+            // reactivate if alreadyTaken is true
+            //-----------------------------------
+            if(alreadyTaken) {
+                ArrayList<GradeMapping> previousGrades = Mono.orm().newSearch(Database.connect().grade())
+                        .eq(DB.grade().course_reference, prevCourseRef_id)
+                        .eq(DB.grade().STUDENT_id, student_id)
+                        .execute().all();
+                if(previousGrades!=null) {
+                    for(GradeMapping previousGrade: previousGrades) {
+                        previousGrade.setActive(1);
+                        if (!Database.connect().grade().transactionalSingleUpdate(currentSession, previousGrade)) {
+                            dataTransaction.rollback();
+                            log = "Cannot Update Grade For Now.";
+                            System.out.println(log);
+                            return false;
+                        }
+                    }
+                }
+            }
+            
             dataTransaction.commit();
             return true;
+        }
+        
+        private GradeMapping getRetainedGradeMap(GradeMapping currentGrade) {
+            GradeMapping retainedGrade = new GradeMapping();
+            retainedGrade.setACADTERM_id(currentGrade.getACADTERM_id());
+            retainedGrade.setActive(1);
+            retainedGrade.setCourse_reference(currentGrade.getCourse_reference());
+            retainedGrade.setCreated_by(currentGrade.getCreated_by());
+            retainedGrade.setCreated_date(currentGrade.getCreated_date());
+            retainedGrade.setCredit(currentGrade.getCredit());
+            retainedGrade.setCredit_method(currentGrade.getCredit_method());
+            retainedGrade.setInc_expire(currentGrade.getInc_expire());
+            retainedGrade.setPosted(currentGrade.getPosted());
+            retainedGrade.setPosted_by(currentGrade.getPosted_by());
+            retainedGrade.setPosting_date(currentGrade.getPosting_date());
+            retainedGrade.setRating(currentGrade.getRating());
+            retainedGrade.setReason_for_update(currentGrade.getReason_for_update());
+            retainedGrade.setReferrence_curriculum(currentGrade.getReferrence_curriculum());
+            retainedGrade.setRemarks(currentGrade.getRemarks());
+            retainedGrade.setSTUDENT_id(currentGrade.getSTUDENT_id());
+            retainedGrade.setSUBJECT_id(currentGrade.getSUBJECT_id());
+            retainedGrade.setUpdated_by(currentGrade.getUpdated_by());
+            retainedGrade.setUpdated_date(currentGrade.getUpdated_date());
+            return retainedGrade;
         }
 
     }
@@ -528,8 +691,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 //        schMap.setStudent_id(CURRENT_STUDENT.getCict_id());
 //        return Database.connect().student_course_history().insert(schMap);
 //    }
+    
     private CurriculumMapping selectCurriculum(String message) {
         CurriculumChooser curriculumChooser = M.load(CurriculumChooser.class);
+        curriculumChooser.setStudentID(CURRENT_STUDENT.getCict_id());
         curriculumChooser.onDelayedStart(); // do not put database transactions on startUp
         //----------------------------------------------------------------------
         try {
@@ -561,7 +726,52 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .showError();
             return null;
         }
+        
+        //-------------------------------------------
+        // consiquent curriculum, check if all grades are taken and passed
+        if(selected.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage("You are shifting to a consequent curriculum. "
+                            + "This requires all the subjects in the current curriculum"
+                            + " to be taken and passed. Do you still want to continue?")
+                    .confirmYesNo();
+            if(res==1) {
+                if(!canTakeConsequent(selected)) {
+                    Notifications.create().darkStyle()
+                            .title("Cannot Shift Course")
+                            .text("Consequent curriculums requires a"
+                                    + "\ncertain curriculum to make it"
+                                    + "\navailable for shifting.")
+                            .showWarning();
+                    return null;
+                }
+            } else 
+                return null;
+        }
+        //------------------------------------------
         return selected;
+    }
+    
+    private boolean canTakeConsequent(CurriculumMapping selected) {
+        ArrayList<CurriculumPreMapping> prereqs = Mono.orm().newSearch(Database.connect().curriculum_pre())
+                .eq(DB.curriculum_pre().curriculum_id_get, selected.getId())
+                .active().all();
+        if(prereqs==null)
+            return true;
+        Integer student_prep_id = CURRENT_STUDENT.getPREP_id();
+        for(CurriculumPreMapping prereq: prereqs) {
+            if(student_prep_id!=null) {
+                if(student_prep_id.equals(prereq.getCurriculum_id_req()))
+                    return true;
+            }
+            StudentCourseHistoryMapping schMap = Mono.orm().newSearch(Database.connect().student_course_history())
+                    .eq(DB.student_course_history().prep_id, prereq.getCurriculum_id_req())
+                    .eq(DB.student_course_history().student_id, CURRENT_STUDENT.getCict_id())
+                    .active(Order.desc(DB.student_course_history().id)).first();
+            if(schMap!=null)
+                return true;
+        }
+        return false;
     }
 
     private void printProfile() {

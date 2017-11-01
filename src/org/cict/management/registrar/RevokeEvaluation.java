@@ -180,6 +180,23 @@ public class RevokeEvaluation extends Transaction {
             }
         }
 
+        //----------------------------------------------------------------------
+        try {
+
+            StudentMapping student = Database.connect().student().getPrimary(cict_id);
+            student.setLast_evaluation_term(0);
+            boolean studentUpdated = Database.connect().student().transactionalSingleUpdate(currentSession, student);
+            if (!studentUpdated) {
+                System.err.println("RevokeEvaluation failed to update student");
+                dataTransaction.rollback();
+                return false;
+            }
+        } catch (Exception e) {
+            System.err.println("RevokeEvaluation Exception -  failed to update student");
+            dataTransaction.rollback();
+            return false;
+        }
+        //----------------------------------------------------------------------
         /**
          * Commit changes.
          */
