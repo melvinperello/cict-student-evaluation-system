@@ -24,9 +24,13 @@
 package org.cict;
 
 import app.lazy.models.DB;
+import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.SystemVariablesMapping;
+import com.jhmvin.Mono;
 import com.jhmvin.orm.SQL;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import sys.org.cict.enumerations.GradeValues;
 
 /**
@@ -108,4 +112,30 @@ public class PublicConstants {
         return GradeValues.RATING_REMAKRS.get(rating);
     }
 
+    //--------------------------------------------------------------------------
+    public final String KEY_REGISTRAR = "REGISTRAR";
+    public final String KEY_RECOMMENDING_APPROVAL = "RECOMMENDING_APPROVAL";
+
+    /**
+     * Gets values from the system variables from the server using the keys
+     * provided.
+     *
+     * @param key
+     * @return
+     */
+    public final static String getServerValues(String key) {
+        try {
+            SystemVariablesMapping map = Mono.orm()
+                    .newSearch(Database.connect().system_variables())
+                    .eq(DB.system_variables().name, key)
+                    .active(Order.desc(DB.system_variables().id))
+                    .first();
+            if (map == null) {
+                return ""; // to avoid null pointer
+            }
+            return map.getValue();
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }
