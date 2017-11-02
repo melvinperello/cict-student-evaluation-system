@@ -111,6 +111,24 @@
                         <Insets left="-115.0" />
                      </padding>
                   </JFXButton>
+                  <JFXButton fx:id="btn_announcements" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Announcements" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/Advertising_64px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-70.0" />
+                     </padding>
+                  </JFXButton>
                </children>
             </VBox>
             <StackPane HBox.hgrow="ALWAYS">
@@ -401,7 +419,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_marshalls" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_marshalls" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -447,6 +465,59 @@
                                  </children>
                               </VBox>
                               <VBox fx:id="vbox_list" spacing="10.0" styleClass="metro-table" />
+                           </children>
+                        </StackPane>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_announcements" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/Advertising_64px.png" />
+                                 </image>
+                              </ImageView>
+                              <Label maxWidth="1.7976931348623157E308" text="Announcements" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                              <JFXButton fx:id="btn_new_announcement" graphicTextGap="10.0" prefHeight="41.0" prefWidth="195.0" style="-fx-border-color: #FFFFFF;" text="Announce" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="23.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Advertising_64px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                           <padding>
+                              <Insets right="20.0" />
+                           </padding>
+                        </HBox>
+                        <StackPane VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="30.0" right="20.0" top="15.0" />
+                           </VBox.margin>
+                           <children>
+                              <VBox fx:id="vbox_no_announcements" spacing="10.0">
+                                 <children>
+                                    <Label text="No Account Found.">
+                                       <font>
+                                          <Font size="25.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                              <VBox fx:id="vbox_announce_list" spacing="10.0" styleClass="metro-table" />
                            </children>
                         </StackPane>
                      </children>

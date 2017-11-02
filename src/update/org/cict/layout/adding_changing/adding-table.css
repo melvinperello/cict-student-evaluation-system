@@ -30,8 +30,8 @@
 }
 
 .simple-table-row:hover .simple-table-cell {
-    -fx-background-color: #4567C4;
-    -fx-text-fill: white;
+/*    -fx-background-color: #27AE60;
+    -fx-text-fill: white;*/
 }
 
 /* custom names*/
@@ -66,14 +66,18 @@
 
 
 .table-mutate-as-changed{
-    -fx-background-color: #DB7000;
+    -fx-background-color: #F7941F;
 }
 
 .table-mutate-as-removed{
-    -fx-background-color: #880506;
+    -fx-background-color: #BE3144;
 }
 
 .table-mutate-as-added{
-    -fx-background-color: #106C39;
+    -fx-background-color: #3AB34A;
 }
 
+
+.table-mutate-as-default{
+    -fx-background-color: #1DA9FE;
+}

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
+import org.cict.PublicConstants;
 import org.hibernate.criterion.Order;
 import update.org.cict.reports.add_change_form.AddChangeForm;
 
@@ -235,8 +236,8 @@ public class PrintAddingChangingForm extends Transaction{
         addChangeForm.STUDENT_NUMBER = student.getId();
         addChangeForm.STUDENT_NAME = studentFullName;
         addChangeForm.STUDENT_SECTION = section;
-        addChangeForm.COLLEGE_DEAN = "ENGR. NOEMI REYES";
-        addChangeForm.REGISTRAR = "LEILANI M. LIZARDO";
+        addChangeForm.COLLEGE_DEAN = PublicConstants.getServerValues("RECOMMENDING_APPROVAL");//"ENGR. NOEMI REYES";
+        addChangeForm.REGISTRAR = PublicConstants.getServerValues("REGISTRAR"); //"LEILANI M. LIZARDO";
         addChangeForm.DATE = date_now;
         addChangeForm.STUDENT_CURRENT_UNITS = String.valueOf(getCurrentUnits());
         boolean canPrint = false;
@@ -268,7 +269,7 @@ public class PrintAddingChangingForm extends Transaction{
             addChangeForm.STUDENT_SUBJECTS.add(subjectData);
             addChangeForm.IS_ADDED = isAdded;
             addChangeForm.IS_CHANGED = isChanged;
-            addChangeForm.REGISTRAR = "LEILANI M. LIZARDO";
+//            addChangeForm.REGISTRAR = "LEILANI M. LIZARDO";
             canPrint = true;
         }
         if(canPrint)

@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -486,6 +487,25 @@
                                           </ImageView>
                                        </graphic>
                                     </Label>
+                                    <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <JFXButton fx:id="btn_system_values" text="System Values" textFill="WHITE">
+                                             <graphic>
+                                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/Support_64px.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </JFXButton>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </HBox>
                                  </children>
                                  <VBox.margin>
                                     <Insets bottom="10.0" />
@@ -658,23 +678,6 @@
                </HBox.margin>
                <padding>
                   <Insets left="10.0" />
-               </padding>
-            </VBox>
-            <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Label styleClass="footer-text" text="PERELLO, JHON MELVIN NIETO">
-                     <font>
-                        <Font name="Courier New" size="15.0" />
-                     </font>
-                  </Label>
-                  <Label styleClass="footer-text" text="DE LA CRUZ, JOEMAR NUCOM">
-                     <font>
-                        <Font name="Courier New" size="15.0" />
-                     </font>
-                  </Label>
-               </children>
-               <padding>
-                  <Insets right="20.0" />
                </padding>
             </VBox>
          </children>

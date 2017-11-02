@@ -104,6 +104,9 @@ public class SystemHome extends MonoLauncher {
     private JFXButton btn_logout;
 
     @FXML
+    private JFXButton btn_system_values;
+
+    @FXML
     private JFXButton btn_academic_term;
 
     @FXML
@@ -185,6 +188,10 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
         });
 
+        MonoClick.addClickEvent(btn_system_values, () -> {
+            //
+        });
+
         //----------------------------------------------------------------------
         this.displayLabels();
     }
@@ -194,7 +201,7 @@ public class SystemHome extends MonoLauncher {
      */
     private void displayLabels() {
         CollegeFaculty loggedUser = CollegeFaculty.instance();
-        this.setLabelText(lbl_hi, "Hi, " + loggedUser.getFIRST_NAME() + "!");
+        this.setLabelText(lbl_hi, "Hi " + loggedUser.getFIRST_NAME() + "!");
         this.lbl_system_id.setText("EMS-" + loggedUser.getFACULTY_ID());
         try {
             this.lbl_bsu_id.setText(loggedUser.getBULSU_ID().toUpperCase());

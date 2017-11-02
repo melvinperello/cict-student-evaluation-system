@@ -14,7 +14,7 @@
          <children>
             <ImageView accessibleText="img_row_extension" fitHeight="46.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../img/Bookmark_32px.png" />
+                  <Image url="@../img/Course_32px.png" />
                </image>
             </ImageView>
          </children>
@@ -24,12 +24,12 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="code" text="SOCSCI 113" textFill="#434a55">
+            <Label accessibleText="code" text="SOCSCI 113" textFill="#23833b">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label accessibleText="descript" maxWidth="1.7976931348623157E308" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#434a55" />
+            <Label accessibleText="descript" maxWidth="1.7976931348623157E308" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#23833b" />
          </children>
       </VBox>
       <VBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="247.0">
@@ -40,10 +40,10 @@
                      <children>
                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../../res/img/lec.png" />
+                              <Image url="@../img/Literature_64px.png" />
                            </image>
                         </ImageView>
-                        <Label text="LEC" textFill="#656d79">
+                        <Label text="LEC" textFill="#23833b">
                            <font>
                               <Font name="System Bold" size="8.0" />
                            </font>
@@ -56,7 +56,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </VBox>
-                  <Label accessibleText="lec" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="42.0" text="3.0">
+                  <Label accessibleText="lec" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="42.0" text="3.0" textFill="#23833b">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -65,10 +65,10 @@
                      <children>
                         <ImageView fitHeight="19.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../../res/img/lab.png" />
+                              <Image url="@../img/Test%20Tube_64px.png" />
                            </image>
                         </ImageView>
-                        <Label text="LAB" textFill="#656d79">
+                        <Label text="LAB" textFill="#23833b">
                            <font>
                               <Font name="System Bold" size="8.0" />
                            </font>
@@ -78,14 +78,14 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </VBox>
-                  <Label accessibleText="lab" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="40.0" text="3.0">
+                  <Label accessibleText="lab" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="40.0" text="3.0" textFill="#23833b">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <Label accessibleText="section" alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="194.0" text="Click to view sections" textAlignment="CENTER" />
+            <Label accessibleText="section" alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="194.0" text="Click to view sections" textAlignment="CENTER" textFill="#23833b" />
          </children>
          <HBox.margin>
             <Insets bottom="5.0" right="20.0" top="5.0" />

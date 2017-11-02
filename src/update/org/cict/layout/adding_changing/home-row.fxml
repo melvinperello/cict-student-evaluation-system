@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="928.0" spacing="10.0" styleClass="metro-row" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="928.0" spacing="10.0" styleClass="metro-row" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView accessibleText="img_row_extension" fitHeight="50.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -17,7 +18,7 @@
       </ImageView>
       <VBox accessibleText="bg" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0">
          <children>
-            <Label accessibleText="letter" text="S" textFill="WHITE">
+            <Label accessibleText="letter" text="S" textFill="#f3f8f7">
                <font>
                   <Font size="32.0" />
                </font>
@@ -29,12 +30,12 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="code" text="SOCSCI 113">
+            <Label accessibleText="code" text="SOCSCI 113" textFill="#f3f8f7">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label accessibleText="descript" text="PHILIPPINE HISTORY AND GOVERNEMNT">
+            <Label accessibleText="descript" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#f3f8f7">
                <font>
                   <Font size="10.0" />
                </font>
@@ -54,7 +55,7 @@
                   <Image url="@img/Literature_32px.png" />
                </image>
             </ImageView>
-            <Label text="LEC" textFill="WHITE">
+            <Label text="LEC" textFill="#f3f8f7">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
@@ -64,7 +65,7 @@
             <Insets bottom="15.0" top="15.0" />
          </HBox.margin>
       </VBox>
-      <Label accessibleText="lec" prefHeight="32.0" prefWidth="40.0" text="3.0">
+      <Label accessibleText="lec" prefHeight="32.0" prefWidth="40.0" text="3.0" textFill="#f3f8f7">
          <font>
             <Font size="22.0" />
          </font>
@@ -76,7 +77,7 @@
                   <Image url="@img/Test%20Tube_32px.png" />
                </image>
             </ImageView>
-            <Label text="LAB" textFill="WHITE">
+            <Label text="LAB" textFill="#f3f8f7">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
@@ -86,12 +87,12 @@
             <Insets bottom="15.0" top="15.0" />
          </HBox.margin>
       </VBox>
-      <Label accessibleText="lab" layoutX="552.0" layoutY="23.0" prefHeight="32.0" prefWidth="38.0" text="3.0">
+      <Label accessibleText="lab" layoutX="552.0" layoutY="23.0" prefHeight="32.0" prefWidth="38.0" text="3.0" textFill="#f3f8f7">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Label accessibleText="section" layoutX="627.0" layoutY="23.0" prefHeight="27.0" prefWidth="168.0" text="BSIT 4A-G1">
+      <Label accessibleText="section" layoutX="627.0" layoutY="23.0" prefHeight="27.0" prefWidth="168.0" text="BSIT 4A-G1" textFill="#f3f8f7">
          <font>
             <Font size="18.0" />
          </font>
@@ -114,4 +115,8 @@
    <padding>
       <Insets left="10.0" />
    </padding>
+   <stylesheets>
+      <URL value="@metro-ui-table.css" />
+      <URL value="@adding-table.css" />
+   </stylesheets>
 </HBox>

@@ -70,8 +70,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private AnchorPane anchor_add_change;
     @FXML
     private JFXButton btn_home;
-    @FXML
-    private JFXButton btn_home1;
+//    @FXML
+//    private JFXButton btn_home1;
     @FXML
     private AnchorPane anchor_main;
     @FXML
@@ -162,9 +162,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
             onBackToHome();
         });
 
-        btn_home1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            onBackToHome();
-        });
+//        btn_home1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+//            onBackToHome();
+//        });
 
         btnSaveChanges.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
             onSaveChanges(); // -> save the adding to database.
@@ -790,7 +790,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
-
+        
+        row.getStyleClass().add("table-mutate-as-default");
         HBox subjectRow = (HBox) Mono.fx().create()
                 .setPackageName("update.org.cict.layout.adding_changing")
                 .setFxmlDocument("home-row")
@@ -994,6 +995,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
          * Modify row details; when removed.
          */
         row.getRowMetaData().put(KEY_ROW_STATUS, "REMOVED");
+        row.getStyleClass().remove("table-mutate-as-default");
         row.getStyleClass().add("table-mutate-as-removed");
 
         // create UI
@@ -1108,6 +1110,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         row.getRowMetaData().put(KEY_SUB_INFO, newInfo);
         row.getRowMetaData().put(KEY_ROW_STATUS, "CHANGED");
         row.getRowMetaData().put(KEY_OLD_INFO, OLD_info);
+        row.getStyleClass().remove("table-mutate-as-default");
         row.getStyleClass().add("table-mutate-as-changed");
 
         // create UI
@@ -1186,6 +1189,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
          * Modify row details; when removed.
          */
         row.getRowMetaData().put(KEY_ROW_STATUS, "ADDED");
+        row.getStyleClass().remove("table-mutate-as-default");
         row.getStyleClass().add("table-mutate-as-added");
 
         // create UI
@@ -1981,6 +1985,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
                     // when reverted back to normal state.
                     row.getStyleClass().remove("table-mutate-as-changed");
+                    row.getStyleClass().add("table-mutate-as-default");
                     row.getRowMetaData().put(KEY_ROW_STATUS, "REVERT");
 
                     // push the old labels
@@ -2099,6 +2104,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                    }
 
                     row.getRowMetaData().put(KEY_ROW_STATUS, "ORIGINAL");
+                    row.getStyleClass().add("table-mutate-as-default");
                     row.getStyleClass().remove("table-mutate-as-removed");
                     row.hideExtension();
 //                    SimpleTableCell simplecell = row.getCell(0);

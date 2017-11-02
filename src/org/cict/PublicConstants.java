@@ -54,6 +54,10 @@ public class PublicConstants {
     public final static String getServer() {
         return "127.0.0.1";
     }
+
+    public final static String FACULTY_REGISTRATION_LINK = "http://" + getServer() + "/laravel/cictwebportal/public/home/hello";
+    public final static String FACULTY_FORGOT_LINK = "http://" + getServer() + "/laravel/cictwebportal/public/home/hello";
+
     //--------------------------------------------------------------------------
     // INC expiration in months
     public final static int INC_EXPIRE = 12;

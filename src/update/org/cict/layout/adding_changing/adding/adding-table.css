@@ -6,7 +6,6 @@
 }
 
 .simple-table-row:hover .simple-table-cell {
-    -fx-background-color: #4567C4;
-    -fx-text-fill: white;
+    -fx-background-color:#66BB6A;
     -fx-cursor: hand;
 }

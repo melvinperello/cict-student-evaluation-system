@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" styleClass="metro-row" stylesheets="@../metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="58.0" prefWidth="928.0" spacing="10.0" styleClass="metro-row" stylesheets="@../metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox>
          <children>
             <ImageView accessibleText="img_row_extension" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../img/Classroom_32px.png" />
+                  <Image url="@../img/Training_64px.png" />
                </image>
             </ImageView>
          </children>
@@ -24,12 +24,12 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="section" maxWidth="1.7976931348623157E308" text="BSIT 1A-G1" textFill="#434a55">
+            <Label accessibleText="section" maxWidth="1.7976931348623157E308" text="BSIT 1A-G1" textFill="#088830">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label accessibleText="code" text="SOCSCI 113" textFill="#434a55" />
+            <Label accessibleText="code" text="SOCSCI 113" textFill="#088830" />
          </children>
       </VBox>
       <VBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="350.0">
@@ -40,24 +40,24 @@
                      <children>
                         <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../img/Graduation%20Cap_64px.png" />
+                              <Image url="@../img/Flag%20Filled%20_64px.png" />
                            </image>
                         </ImageView>
-                        <Label text="MEAN" textFill="#656d79">
+                        <Label text="MEAN" textFill="#088830">
                            <font>
                               <Font name="System Bold" size="7.0" />
                            </font>
                         </Label>
                      </children>
                   </VBox>
-                  <Label accessibleText="count" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="20.0" text="1" textFill="#434a55" HBox.hgrow="ALWAYS">
+                  <Label accessibleText="count" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="20.0" text="1" textFill="#088830" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="22.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <Label accessibleText="descript" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#434a55" VBox.vgrow="ALWAYS">
+            <Label accessibleText="descript" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#088830" VBox.vgrow="ALWAYS">
                <font>
                   <Font name="System Bold" size="8.0" />
                </font>

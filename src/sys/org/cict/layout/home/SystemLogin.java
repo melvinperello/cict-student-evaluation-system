@@ -42,6 +42,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
+import org.cict.PublicConstants;
 import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.Authenticator;
 import org.cict.authentication.authenticator.CollegeFaculty;
@@ -144,11 +145,11 @@ public class SystemLogin extends MonoLauncher {
 //            this.onDestroyApplication();
 //        });
         MonoClick.addClickEvent(btn_register, () -> {
-            MainApplication.HOST_SERVICE.showDocument("http://localhost/laravel/cictwebportal/public/home/hello");
+            MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_REGISTRATION_LINK);
             //this.onShowRegister();
         });
         MonoClick.addClickEvent(btn_forgot, () -> {
-            MainApplication.HOST_SERVICE.showDocument("http://localhost/laravel/cictwebportal/public/home/hello");
+            MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_FORGOT_LINK);
             // this.onShowForgotPassword();
         });
     }

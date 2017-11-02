@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -13,11 +14,11 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #001E4C;" stylesheets="@../metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="anchor_main" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="52.0" prefWidth="1000.0" style="-fx-background-color: #4567C4;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="107.0" layoutY="34.0" prefHeight="52.0" prefWidth="1000.0" style="-fx-background-color: #27AE60;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" text="ADDING SUBJECT" textFill="WHITE" AnchorPane.topAnchor="5.0">
+            <Label layoutX="15.0" layoutY="17.0" prefHeight="34.0" prefWidth="366.0" style="-fx-text-fill: #fff;" text="ADDING SUBJECT" textFill="WHITE" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="21.0" />
                </font>
@@ -54,7 +55,7 @@
             <Insets left="20.0" right="20.0" />
          </padding>
       </HBox>
-      <AnchorPane layoutX="185.0" layoutY="119.0" prefHeight="481.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="119.0">
+      <AnchorPane layoutX="185.0" layoutY="106.0" prefHeight="494.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="119.0">
          <children>
             <StackPane layoutX="110.0" layoutY="88.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
@@ -90,7 +91,7 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <HBox fx:id="hbox_search" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #fff; -fx-background-radius: 50;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="100.0">
+                        <HBox fx:id="hbox_search" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #fff;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -132,4 +133,8 @@
          </children>
       </AnchorPane>
    </children>
+   <stylesheets>
+      <URL value="@../metro-ui-table.css" />
+      <URL value="@adding-table.css" />
+   </stylesheets>
 </AnchorPane>
