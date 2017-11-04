@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <padding>
+      <Insets bottom="10.0" left="40.0" right="40.0" top="10.0" />
+   </padding>
+   <children>
+      <VBox fx:id="vbox_new" prefHeight="217.0" prefWidth="520.0">
+         <children>
+            <VBox prefHeight="155.0" prefWidth="520.0" spacing="10.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="BOTTOM_LEFT">
+                     <children>
+                        <Label fx:id="lbl_name" maxWidth="1.7976931348623157E308" text="Field Name" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <JFXButton fx:id="btn_remove" style="-fx-background-color: #545454;" text="Remove" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+                  <TextField fx:id="txt_name" prefHeight="36.0" prefWidth="520.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <Label fx:id="lbl_value" layoutX="10.0" layoutY="10.0" text="Field Value">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <StackPane alignment="TOP_LEFT" prefHeight="113.0" prefWidth="520.0">
+                     <children>
+                        <TextArea fx:id="txtarea_message" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" visible="false">
+                           <font>
+                              <Font size="15.0" />
+                           </font></TextArea>
+                        <TextField fx:id="txt_value" prefHeight="38.0" prefWidth="520.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font></TextField>
+                     </children>
+                  </StackPane>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="653.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" spacing="15.0">
+                     <children>
+                        <Label fx:id="lbl_count" textFill="#545454">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <JFXButton fx:id="btn_add_new" style="-fx-background-color: #545454;" text="Update Values" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

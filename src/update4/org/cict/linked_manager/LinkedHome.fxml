@@ -510,7 +510,7 @@
                            <children>
                               <VBox fx:id="vbox_no_announcements" spacing="10.0">
                                  <children>
-                                    <Label text="No Account Found.">
+                                    <Label text="No content found.">
                                        <font>
                                           <Font size="25.0" />
                                        </font>

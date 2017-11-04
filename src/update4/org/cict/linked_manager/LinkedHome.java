@@ -24,12 +24,16 @@
 package update4.org.cict.linked_manager;
 
 import app.lazy.models.AccountStudentMapping;
+import app.lazy.models.AnnouncementsMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.SystemVariablesMapping;
+import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import com.jhmvin.fx.controls.SimpleImage;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
@@ -38,18 +42,28 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import com.melvin.mono.fx.events.MonoClick;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.commons.lang3.text.WordUtils;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Order;
+import sys.org.cict.layout.home.system_variables.SystemValuesRow;
+import sys.org.cict.layout.home.system_variables.SystemValuesRowExtension;
 import update.org.cict.controller.home.Home;
+import static update3.org.cict.access.Access.isGranted;
 
 /**
  *
@@ -144,8 +158,8 @@ public class LinkedHome extends SceneFX implements ControllerFX {
             this.loadMarshalls();
         });
         super.addClickEvent(btn_announcements, () -> {
+            this.loadAnnouncements();
             this.changeView(vbox_announcements);
-
         });
 
         super.addClickEvent(btn_new_marshall, () -> {
@@ -161,6 +175,10 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                         .text("Successfully added a new marshall.")
                         .showInformation();
             }
+        });
+        
+        super.addClickEvent(btn_new_announcement, ()->{
+            this.showCreateAnnouncement();
         });
     }
 
@@ -378,5 +396,206 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         private void run() {
             student = Database.connect().student().getPrimary(this.account.getSTUDENT_id());
         }
+    }
+    
+    //-----------------------------------------------------
+    //----------------------------------------
+    private void loadAnnouncements() {
+        ArrayList<AnnouncementsMapping> collection = Mono.orm().newSearch(Database.connect().announcements())
+                .active(Order.desc(DB.announcements().date)).all();
+        if(collection==null) {
+            this.changeAnnouncementView(vbox_no_announcements);
+            return;
+        }
+        this.createTableAnnouncement(collection);
+    }
+    
+    private SimpleTable systemVarTable = new SimpleTable();
+    private void createTableAnnouncement(ArrayList<AnnouncementsMapping> collection) {
+        systemVarTable.getChildren().clear();
+        for(AnnouncementsMapping each: collection) {
+            this.createAnnouncementRow(each);
+        }
+        SimpleTableView simpleTableView = new SimpleTableView();
+        simpleTableView.setTable(systemVarTable);
+        simpleTableView.setFixedWidth(true);
+        simpleTableView.setParentOnScene(vbox_announce_list);
+        this.changeAnnouncementView(vbox_announce_list);
+        
+    }
+    
+    private void createAnnouncementRow(AnnouncementsMapping each) {
+        SimpleTableRow row = new SimpleTableRow();
+        row.setRowHeight(70.0);
+        SystemValuesRow rowFX = M.load(SystemValuesRow.class);
+        ImageView img_extension = rowFX.getImg_extension();
+        Label lbl_name = rowFX.getTxt_name();
+        Label lbl_date = rowFX.getLbl_datetime();
+        
+        lbl_name.setText(WordUtils.capitalizeFully(each.getTitle()));
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyy");
+        lbl_date.setText(formatter.format(each.getDate()));
+        
+        img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+        
+        row.getRowMetaData().put("MAP", each);
+        row.getRowMetaData().put("FX", rowFX);
+        
+        this.createExtension(systemVarTable, row, img_extension, each);
+        
+        SimpleTableCell cellParent = new SimpleTableCell();
+        cellParent.setResizePriority(Priority.ALWAYS);
+        cellParent.setContent(rowFX.getApplicationRoot());
+        
+        // add cell to row
+        row.addCell(cellParent);
+        systemVarTable.addRow(row);
+    }
+    
+    private void showCreateAnnouncement() {
+        AddAnnouncement systemValues = M.load(AddAnnouncement.class);
+        systemValues.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            systemValues.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = systemValues.createChildStage(this.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+            this.loadAnnouncements();
+        }
+    }
+     
+    private void createExtension(SimpleTable programsTable, SimpleTableRow row, ImageView img_extension, AnnouncementsMapping each) {
+        SystemValuesRowExtension ext = M.load(SystemValuesRowExtension.class);
+        TextField txt_name1 = ext.getTxt_name();
+        TextField txt_value1 = ext.getTxt_value(); 
+        TextArea txt_area = ext.getTxtarea_message();
+        JFXButton btn_add_new1 = ext.getBtn_add_new(); 
+        JFXButton btn_remove = ext.getBtn_remove(); 
+        Label lbl_name = ext.getLbl_name();
+        Label lbl_value = ext.getLbl_value();
+        Label lbl_count = ext.getLbl_count();
+        
+        lbl_name.setText("Title");
+        lbl_value.setText("Message");
+        txt_name1.setText(each.getTitle());
+        txt_value1.setVisible(false);
+        txt_area.setVisible(true);
+        txt_area.setText(WordUtils.capitalizeFully(each.getMessage()));
+        lbl_count.setText(String.valueOf(300-(txt_area.getText().length())));
+        
+        txt_area.textProperty().addListener((a)->{
+            lbl_count.setText(String.valueOf(300-(txt_area.getText().length())));
+        });
+        
+        MonoClick.addClickEvent(btn_add_new1, ()->{
+            if(this.checkIfEmpty(txt_name1, txt_area))
+                return;
+            String name = MonoString.removeExtraSpace(txt_name1.getText());
+            String value = MonoString.removeExtraSpace(txt_area.getText());
+            this.update(row, name, value);
+        });
+        
+        MonoClick.addClickEvent(btn_remove, ()->{
+            AnnouncementsMapping sys = (AnnouncementsMapping) row.getRowMetaData().get("MAP");
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage("Are you sure you want to remove the announcement with a title of \"" + sys.getTitle() +
+                            "\" from the list?")
+                    .confirmYesNo();
+            if(res==1) {
+                sys.setActive(0);
+                if(Database.connect().announcements().update(sys)) {
+                    Notifications.create().darkStyle()
+                            .text("Removed successfully.")
+                            .showInformation();
+                    this.systemVarTable.getChildren().remove(row);
+                }
+            }
+        });
+        
+        MonoClick.addClickEvent(img_extension, ()->{
+            if (row.isExtensionShown()) {
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                row.hideExtension();
+            } else {
+                // close all row extension
+                for (Node tableRows : programsTable.getRows()) {
+                    SimpleTableRow simplerow = (SimpleTableRow) tableRows;
+                    SimpleTableCell simplecell = simplerow.getCell(0);
+                    SystemValuesRow rowFX_ = (SystemValuesRow) simplerow.getRowMetaData().get("FX");
+                    ImageView simplerowimage = rowFX_.getImg_extension(); //findByAccessibilityText(simplerowcontent, "img_row_extension");
+                    
+                    simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                    simplerow.hideExtension();
+                }
+
+                // show row extension
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "hide_extension.png"));
+                row.setRowExtension(ext.getApplicationRoot());
+                row.showExtension();
+            }
+        });
+        
+        MonoClick.addDoubleClickEvent(row, ()->{
+            if (row.isExtensionShown()) {
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                row.hideExtension();
+            } else {
+                // close all row extension
+                for (Node tableRows : programsTable.getRows()) {
+                    SimpleTableRow simplerow = (SimpleTableRow) tableRows;
+                    SimpleTableCell simplecell = simplerow.getCell(0);
+                    SystemValuesRow rowFX_ = (SystemValuesRow) simplerow.getRowMetaData().get("FX");
+                    ImageView simplerowimage = rowFX_.getImg_extension(); //findByAccessibilityText(simplerowcontent, "img_row_extension");
+                    
+                    simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                    simplerow.hideExtension();
+                }
+
+                // show row extension
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "hide_extension.png"));
+                row.setRowExtension(ext.getApplicationRoot());
+                row.showExtension();
+            }
+        });
+    }
+     
+    private void update(SimpleTableRow row, String name, String value) {
+        AnnouncementsMapping updateThis = (AnnouncementsMapping) row.getRowMetaData().get("MAP");
+        updateThis.setTitle(name.toUpperCase());
+        updateThis.setMessage(value.toUpperCase());
+        if(Database.connect().announcements().update(updateThis)) {
+            Notifications.create().darkStyle()
+                    .text("Updated Successfully.")
+                    .showInformation();
+        }
+        this.loadAnnouncements();
+    }
+    
+    private boolean checkIfEmpty(TextField txt_name, TextArea txt_value) {
+        String name = MonoString.removeExtraSpace(txt_name.getText());
+        if(name.isEmpty()) {
+            Mono.fx().alert().createWarning()
+                    .setMessage("Name cannot be empty.")
+                    .show();
+            return true;
+        }
+        String value = MonoString.removeExtraSpace(txt_value.getText());
+        if(value.isEmpty()) {
+            Mono.fx().alert().createWarning()
+                    .setMessage("Value cannot be empty.")
+                    .show();
+            return true;
+        }
+        return false;
+    }
+    
+    private void changeAnnouncementView(Node node) {
+        Animate.fade(node, 150, ()->{
+            vbox_announce_list.setVisible(false);
+            vbox_no_announcements.setVisible(false);
+            node.setVisible(true);
+        }, vbox_announce_list, vbox_no_announcements);
     }
 }

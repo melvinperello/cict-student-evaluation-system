@@ -137,9 +137,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2212 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2216 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~423 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~428 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1788, 1, '2017-10-12 00:07:10', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -565,7 +565,11 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(2208, 1, '2017-11-01 19:32:19', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2209, 1, '2017-11-01 19:39:45', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2210, 1, '2017-11-02 18:39:55', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(2211, 1, '2017-11-02 19:00:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(2211, 1, '2017-11-02 19:00:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2212, 1, '2017-11-02 19:23:19', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2213, 1, '2017-11-02 19:26:33', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2214, 1, '2017-11-02 19:39:30', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2215, 1, '2017-11-02 20:08:06', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -584,9 +588,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2040 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2044 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~444 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~449 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
 	(1595, 1, '2017-10-11 18:39:01', '2017-10-11 18:40:31', '%192.168.254.151@40-2C-F4-04-E9-6E%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 18:39:58', 'EVALUATION_SYSTEM', 1),
@@ -1033,7 +1037,11 @@ INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `sess
 	(2036, 1, '2017-11-01 19:32:19', '2017-11-01 19:33:49', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-01 19:33:12', 'EVALUATION_SYSTEM', 1),
 	(2037, 1, '2017-11-01 19:39:45', '2017-11-01 19:48:15', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-01 19:47:27', 'EVALUATION_SYSTEM', 1),
 	(2038, 1, '2017-11-02 18:39:55', '2017-11-02 18:43:25', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 18:42:40', 'EVALUATION_SYSTEM', 1),
-	(2039, 1, '2017-11-02 19:00:39', '2017-11-02 19:01:40', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 19:00:57', 'EVALUATION_SYSTEM', 1);
+	(2039, 1, '2017-11-02 19:00:39', '2017-11-02 19:01:40', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 19:00:57', 'EVALUATION_SYSTEM', 1),
+	(2040, 1, '2017-11-02 19:23:19', '2017-11-02 19:25:50', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 19:25:19', 'EVALUATION_SYSTEM', 1),
+	(2041, 1, '2017-11-02 19:26:33', '2017-11-02 19:39:04', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 19:38:13', 'EVALUATION_SYSTEM', 1),
+	(2042, 1, '2017-11-02 19:39:30', '2017-11-02 19:48:31', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 19:47:35', 'EVALUATION_SYSTEM', 1),
+	(2043, 1, '2017-11-02 20:08:06', '2017-11-02 20:17:07', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 20:16:25', 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -1054,14 +1062,13 @@ CREATE TABLE IF NOT EXISTS `account_student` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `STUDENT_id` (`STUDENT_id`),
   CONSTRAINT `acc_student_fk_from_student_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_student: ~4 rows (approximately)
+-- Dumping data for table cictems.account_student: ~2 rows (approximately)
 /*!40000 ALTER TABLE `account_student` DISABLE KEYS */;
 INSERT INTO `account_student` (`id`, `STUDENT_id`, `username`, `password`, `recovery_question`, `recovery_answer`, `access_level`, `affiliates`, `state`, `tries`, `blocked_until`, `active`) VALUES
 	(22, 57, 'jhmvin', '123456', 'What was the name of the street you lived in as a child?', 'LGONZALES', 'STUDENT', 'NONE', 0, 0, NULL, 1),
-	(24, 59, 'jlnclsmrc', '123456', 'What primary school did you attend?', 'heyheyhey', 'ORGANIZATIONAL', 'SWITS', 0, 0, NULL, 1),
-	(25, 61, 'jhmvin1233', '123456', 'What are the last six digits of your Student ID?', '111111', 'STUDENT', 'NONE', 0, 0, NULL, 1);
+	(24, 59, 'jlnclsmrc', '123456', 'What primary school did you attend?', 'heyheyhey', 'ORGANIZATIONAL', 'SWITS', 0, 0, NULL, 1);
 /*!40000 ALTER TABLE `account_student` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.announcements
@@ -4930,17 +4937,16 @@ CREATE TABLE IF NOT EXISTS `student` (
   CONSTRAINT `student_fk_from_curriculum_id` FOREIGN KEY (`CURRICULUM_id`) REFERENCES `curriculum` (`id`),
   CONSTRAINT `student_fk_from_curriculum_id_prep` FOREIGN KEY (`PREP_id`) REFERENCES `curriculum` (`id`),
   CONSTRAINT `student_fk_verified_by` FOREIGN KEY (`verfied_by`) REFERENCES `faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.student: ~6 rows (approximately)
+-- Dumping data for table cictems.student: ~5 rows (approximately)
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
 INSERT INTO `student` (`cict_id`, `id`, `CURRICULUM_id`, `curriculum_assignment`, `PREP_id`, `prep_assignment`, `last_name`, `first_name`, `middle_name`, `gender`, `year_level`, `section`, `_group`, `has_profile`, `enrollment_type`, `admission_year`, `college`, `campus`, `residency`, `university`, `created_by`, `created_date`, `verified`, `verification_date`, `verfied_by`, `last_evaluation_term`, `active`) VALUES
 	(57, '2014113844', 9, '2017-10-28 15:29:38', NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', 4, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CIT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 17:53:54', 1, '2017-11-01 12:19:55', 1, 0, 1),
-	(58, '2014123456', 9, '2017-10-29 02:19:51', NULL, NULL, 'DAZO', 'ARLEALYN', 'aa', 'MALE', 3, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 18:41:14', 1, '2017-10-21 21:13:41', 1, 11, 1),
+	(58, '2014123456', 9, '2017-10-29 02:19:51', NULL, NULL, 'DAZO', 'ARLEALYN', '', 'MALE', 3, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 18:41:14', 1, '2017-10-21 21:13:41', 1, 11, 1),
 	(59, '2014112470', 6, NULL, NULL, NULL, 'MERCADO', 'JELYN', 'CARLOS', 'FEMALE', 1, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-09-10 06:57:02', 1, '2017-10-26 03:10:26', 1, 11, 1),
-	(60, '2015123456', 9, NULL, NULL, NULL, 'SAMPLE', 'SAMPLE', 'SAMPLE', NULL, 1, 'A', 1, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'LINKED_ACC_24_USER_2014112470_MERCADO', '2017-09-10 12:07:01', 0, NULL, NULL, 11, 1),
-	(61, '2014112233', NULL, NULL, NULL, NULL, 'EWAN', 'EWAN', 'EWAN', 'FEMALE', NULL, NULL, NULL, 1, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-09-13 07:37:52', 0, NULL, NULL, 11, 1),
-	(62, '2014123123', NULL, NULL, NULL, NULL, 'DELA CRUZ', 'JUAN', 'MENDOZA', NULL, NULL, NULL, NULL, 0, 'CROSS_ENROLLEE', 'NOT_SET', 'CICT', 'MAIN', 'CROSS_ENROLLEE', 'HOME', 'FACULTY', '2017-10-15 02:45:13', 1, '2017-10-29 04:33:28', 1, 11, 1);
+	(89, '2014113849', NULL, NULL, NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', NULL, NULL, NULL, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-11-03 02:32:49', 0, NULL, NULL, NULL, 1),
+	(91, '2014113847', NULL, NULL, NULL, NULL, 'PIZZA', 'BURGER', 'FRIES', 'MALE', NULL, NULL, NULL, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-11-03 02:48:17', 0, NULL, NULL, NULL, 1);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.student_course_history
@@ -4968,31 +4974,30 @@ CREATE TABLE IF NOT EXISTS `student_profile` (
   `STUDENT_id` int(11) DEFAULT NULL,
   `floor_assignment` int(11) DEFAULT NULL,
   `profile_picture` varchar(60) COLLATE utf8_unicode_ci DEFAULT 'NONE',
-  `active` int(11) DEFAULT '1',
   `mobile` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
-  `zipcode` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `city` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `brgy` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `street` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `house_no` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `street` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `brgy` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `city` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `province` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `zipcode` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `email` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `ice_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `ice_address` varchar(150) CHARACTER SET utf8 DEFAULT NULL,
   `ice_contact` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `active` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `profile_fk_from_student_cict_id` (`STUDENT_id`),
   CONSTRAINT `profile_fk_from_student_cict_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.student_profile: ~4 rows (approximately)
+-- Dumping data for table cictems.student_profile: ~3 rows (approximately)
 /*!40000 ALTER TABLE `student_profile` DISABLE KEYS */;
-INSERT INTO `student_profile` (`id`, `STUDENT_id`, `floor_assignment`, `profile_picture`, `active`, `mobile`, `zipcode`, `city`, `brgy`, `street`, `house_no`, `province`, `email`, `ice_name`, `ice_address`, `ice_contact`, `created_date`) VALUES
-	(16, 59, 3, 'NONE', 1, '09368955866', '3018', 'ASDASDASD', 'ASDASDASD', 'ASDASDASDASD', '123', 'ASDASDASDASD', 'jhmvinperello@gmail.com', 'ASDASDASDASD', 'ADDREESS', '09368955866', '2017-09-10 06:58:21'),
-	(19, 61, 3, 'NONE', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2017-09-13 07:38:35'),
-	(20, 61, 3, 'NONE', 1, '09368955866', '3018', '123', '13', '123', '123', 'ASDASDASDASD', 'jhmvinperello@gmail.com', 'ASDASDASD', 'ASDASDAS ASDAS', '09368955866', '2017-09-13 07:40:27'),
-	(27, 57, 3, 'profile_57_1505725202.jpg', 1, '09368955866', '3018', 'BOCAUE', 'BUNDUCAN', 'LGONZALES', '489', 'BULACAN', 'jhmvinperello@gmail.com', 'ELYSSA JELYN C MERCADOD', 'SAMPLE SAMPLEDDDD', '09368955866', '2017-09-18 18:27:09');
+INSERT INTO `student_profile` (`id`, `STUDENT_id`, `floor_assignment`, `profile_picture`, `mobile`, `house_no`, `street`, `brgy`, `city`, `province`, `zipcode`, `email`, `ice_name`, `ice_address`, `ice_contact`, `created_date`, `active`) VALUES
+	(16, 59, 3, 'NONE', '09368955866', '123', 'ASDASDASDASD', 'ASDASDASD', 'ASDASDASD', 'ASDASDASDASD', '3018', 'jhmvinperello@gmail.com', 'ASDASDASDASD', 'ADDREESS', '09368955866', '2017-09-10 06:58:21', 1),
+	(63, 57, 3, 'NONE', '09368955866', '483', 'L GONZALES', 'BUNDUCAN', 'BOCAUE', 'BULACAN', '3018', 'JHMVINPERELLO@GMAIL.COM', 'GUARDIAN OF THE GALAXY', 'BOCAUE BULACAN', '09368955866', '2017-11-03 02:39:30', 1),
+	(66, 91, 3, 'NONE', '09368958662', '483', 'SA TABI LANG, MALAPIT NA', 'ETOASDASD', 'MALOLOS', 'BULACAN', '3000', 'JHMVINPERELLO@GMAIL.COM', 'GRETHEL BERNARDINO', 'SA TABI LANG', '09368955866', '2017-11-03 02:48:17', 1);
 /*!40000 ALTER TABLE `student_profile` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.subject

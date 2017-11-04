@@ -23,6 +23,7 @@
  */
 package sys.org.cict.layout.home;
 
+import sys.org.cict.layout.home.system_variables.SystemValues;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
@@ -32,12 +33,11 @@ import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
-import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.ThreadMill;
 import org.cict.accountmanager.AccountManager;
@@ -189,11 +189,23 @@ public class SystemHome extends MonoLauncher {
         });
 
         MonoClick.addClickEvent(btn_system_values, () -> {
-            //
+            this.onShowSystemVariables();
         });
 
         //----------------------------------------------------------------------
         this.displayLabels();
+    }
+    
+    private void onShowSystemVariables() {
+        SystemValues systemValues = M.load(SystemValues.class);
+        systemValues.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            systemValues.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = systemValues.createChildStage(this.getCurrentStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
     }
 
     /**
