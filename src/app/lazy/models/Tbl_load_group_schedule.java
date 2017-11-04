@@ -2,7 +2,7 @@
 // SQL_table: load_group_schedule
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 02, 2017 07:16:19 PM
+// Created: Nov 04, 2017 10:55:10 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -28,4 +28,5 @@ public final String created_by = "created_by";
 public final String updated_date = "updated_date";
 public final String updated_by = "updated_by";
 public final String active = "active";
+public final String archived = "archived";
 }

@@ -2,7 +2,7 @@
 // SQL_table: linked_pila
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 02, 2017 07:16:17 PM
+// Created: Nov 04, 2017 10:55:06 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -39,6 +39,7 @@ private java.util.Date request_accepted;
 private java.util.Date request_called;
 private java.util.Date request_validity;
 private java.lang.Integer floor_assignment;
+private java.lang.Integer floor_number;
 private java.lang.String status;
 private java.lang.String remarks;
 private java.lang.Integer active;
@@ -154,6 +155,15 @@ public java.lang.Integer getFloor_assignment() {
 
 public void setFloor_assignment(java.lang.Integer fieldFloorAssignment) {
 	this.floor_assignment = fieldFloorAssignment;
+}
+
+@Column(name = "floor_number", nullable = true, length = 10)
+public java.lang.Integer getFloor_number() {
+	return this.floor_number;
+}
+
+public void setFloor_number(java.lang.Integer fieldFloorNumber) {
+	this.floor_number = fieldFloorNumber;
 }
 
 @Column(name = "status", nullable = false, length = 50)

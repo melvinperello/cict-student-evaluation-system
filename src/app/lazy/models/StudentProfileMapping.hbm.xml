@@ -16,29 +16,26 @@
 <property name="profile_picture" type="java.lang.String">
 <column name="profile_picture" length="60"/>
 </property>
-<property name="active" type="java.lang.Integer">
-<column name="active" length="10"/>
-</property>
 <property name="mobile" type="java.lang.String">
 <column name="mobile" length="50"/>
-</property>
-<property name="zipcode" type="java.lang.String">
-<column name="zipcode" length="100"/>
-</property>
-<property name="city" type="java.lang.String">
-<column name="city" length="100"/>
-</property>
-<property name="brgy" type="java.lang.String">
-<column name="brgy" length="100"/>
-</property>
-<property name="street" type="java.lang.String">
-<column name="street" length="100"/>
 </property>
 <property name="house_no" type="java.lang.String">
 <column name="house_no" length="100"/>
 </property>
+<property name="street" type="java.lang.String">
+<column name="street" length="100"/>
+</property>
+<property name="brgy" type="java.lang.String">
+<column name="brgy" length="100"/>
+</property>
+<property name="city" type="java.lang.String">
+<column name="city" length="100"/>
+</property>
 <property name="province" type="java.lang.String">
 <column name="province" length="50"/>
+</property>
+<property name="zipcode" type="java.lang.String">
+<column name="zipcode" length="100"/>
 </property>
 <property name="email" type="java.lang.String">
 <column name="email" length="100"/>
@@ -54,6 +51,9 @@
 </property>
 <property name="created_date" type="java.util.Date">
 <column name="created_date" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
 </property>
 </class>
 </hibernate-mapping>

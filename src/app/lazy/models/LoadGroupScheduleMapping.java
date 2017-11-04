@@ -2,7 +2,7 @@
 // SQL_table: load_group_schedule
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 02, 2017 07:16:17 PM
+// Created: Nov 04, 2017 10:55:06 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -38,6 +38,7 @@ private java.lang.Integer created_by;
 private java.util.Date updated_date;
 private java.lang.Integer updated_by;
 private java.lang.Integer active;
+private java.lang.Integer archived;
 
 @Id
 @GeneratedValue(strategy = IDENTITY)
@@ -140,6 +141,15 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Column(name = "archived", nullable = false, length = 10)
+public java.lang.Integer getArchived() {
+	return this.archived;
+}
+
+public void setArchived(java.lang.Integer fieldArchived) {
+	this.archived = fieldArchived;
 }
 
 }

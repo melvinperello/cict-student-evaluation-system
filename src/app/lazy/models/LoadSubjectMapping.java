@@ -2,7 +2,7 @@
 // SQL_table: load_subject
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 02, 2017 07:16:17 PM
+// Created: Nov 04, 2017 10:55:07 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -39,6 +39,7 @@ private java.util.Date removed_date;
 private java.lang.Integer removed_by;
 private java.lang.Integer changing_reference;
 private java.lang.Integer active;
+private java.lang.Integer arhived;
 
 @Id
 @GeneratedValue(strategy = IDENTITY)
@@ -150,6 +151,15 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Column(name = "arhived", nullable = true, length = 10)
+public java.lang.Integer getArhived() {
+	return this.arhived;
+}
+
+public void setArhived(java.lang.Integer fieldArhived) {
+	this.arhived = fieldArhived;
 }
 
 }

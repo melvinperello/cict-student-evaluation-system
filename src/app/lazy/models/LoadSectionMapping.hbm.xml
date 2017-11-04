@@ -52,5 +52,8 @@
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>
+<property name="archived" type="java.lang.Integer">
+<column name="archived" length="10"/>
+</property>
 </class>
 </hibernate-mapping>

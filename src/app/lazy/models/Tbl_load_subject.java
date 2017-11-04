@@ -2,7 +2,7 @@
 // SQL_table: load_subject
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 02, 2017 07:16:19 PM
+// Created: Nov 04, 2017 10:55:10 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -29,4 +29,5 @@ public final String removed_date = "removed_date";
 public final String removed_by = "removed_by";
 public final String changing_reference = "changing_reference";
 public final String active = "active";
+public final String arhived = "arhived";
 }
