@@ -6,6 +6,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -308,184 +309,393 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox prefWidth="100.0" spacing="10.0" style="-fx-border-color: #FFFFFF;" HBox.hgrow="ALWAYS">
+            <StackPane HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
                <children>
-                  <HBox prefWidth="200.0" spacing="30.0">
+                  <VBox fx:id="vbox_home_term" prefWidth="100.0" spacing="10.0" style="-fx-border-color: #FFFFFF;">
                      <children>
-                        <Label graphicTextGap="20.0" text="Current Academic Term" textFill="WHITE">
-                           <font>
-                              <Font size="30.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/Ok_50px_1.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefWidth="200.0" spacing="30.0">
-                     <children>
-                        <Label fx:id="lbl_current_term" graphicTextGap="10.0" text="A.Y. 2016 - 2017 First Semester" textFill="WHITE">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                           <graphic>
+                        <HBox prefWidth="200.0" spacing="30.0">
+                           <children>
+                              <Label graphicTextGap="20.0" text="Current Academic Term" textFill="WHITE">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Ok_50px_1.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefWidth="200.0" spacing="30.0">
+                           <children>
+                              <Label fx:id="lbl_current_term" graphicTextGap="10.0" text="A.Y. 2016 - 2017 First Semester" textFill="WHITE">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Chevron%20Right_50px_1.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="45.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefWidth="200.0" spacing="30.0">
+                           <children>
+                              <Label graphicTextGap="20.0" text="Changing Academic Term" textFill="WHITE">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Light%20On_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefWidth="200.0" spacing="15.0">
+                           <children>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/Chevron%20Right_50px_1.png" />
+                                    <Image url="@images/Next%20page_50px.png" />
                                  </image>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
                               </ImageView>
-                           </graphic>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="45.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefWidth="200.0" spacing="30.0">
-                     <children>
-                        <Label graphicTextGap="20.0" text="Changing Academic Term" textFill="WHITE">
-                           <font>
-                              <Font size="25.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                              <Label graphicTextGap="10.0" text="Changing Academic Term requires Two Factor Authorization." textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="45.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/Light%20On_50px.png" />
+                                    <Image url="@images/Next%20page_50px.png" />
                                  </image>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
                               </ImageView>
+                              <Label graphicTextGap="10.0" text="Only the System Administrator can initiate a change in the current academic calendar." textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="45.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/Next%20page_50px.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label graphicTextGap="10.0" text="The Local Registrar should confirm and agree in this calendar shifting, once accepted the system will shift into the new academic term leaving all the previous data in the archive." textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="45.0" />
+                           </padding>
+                        </HBox>
+                        <HBox prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/Next%20page_50px.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets top="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label graphicTextGap="10.0" text="Once the academic term has been changed you cannot revert the following changes." textFill="WHITE" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="45.0" />
+                           </padding>
+                        </HBox>
+                        <HBox alignment="CENTER" prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <JFXButton fx:id="btn_change_term" style="-fx-border-color: #FFFFFF;" text="Change Academic Term" textFill="WHITE">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Warning%20Shield_50px_1.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                           <padding>
+                              <Insets left="45.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_change_term" alignment="CENTER" prefHeight="316.0" prefWidth="500.0" style="-fx-border-color: #fff;" styleClass="metro-base-color">
+                     <children>
+                        <Label text="Request for change of Academic Term is pending for approval of the Local Registrar." wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="26.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="20.0" top="30.0" />
+                           </VBox.margin>
+                           <graphic>
+                              <VBox prefHeight="106.0" prefWidth="53.0">
+                                 <children>
+                                    <ImageView fitHeight="53.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/request-waiting.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </VBox>
                            </graphic>
                         </Label>
-                     </children>
-                     <padding>
-                        <Insets left="10.0" top="10.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefWidth="200.0" spacing="15.0">
-                     <children>
-                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/Next%20page_50px.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="5.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label graphicTextGap="10.0" text="Changing Academic Term requires Two Factor Authorization." textFill="WHITE" wrapText="true">
+                        <VBox>
+                           <children>
+                              <Label text="Details are as follows:" wrapText="true">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="55.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="School Year" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbl_school_year1" text="2017-2018" wrapText="true">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="20.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="55.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Semester" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbl_semester1" text="First Semester" wrapText="true">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="20.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="55.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <JFXButton fx:id="btn_cancel_request" prefHeight="41.0" prefWidth="203.0" style="-fx-border-color: #fff;" text="Cancel Request" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
-                           <padding>
-                              <Insets top="5.0" />
-                           </padding>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="45.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefWidth="200.0" spacing="15.0">
-                     <children>
-                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/Next%20page_50px.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="5.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label graphicTextGap="10.0" text="Only the System Administrator can initiate a change in the current academic calendar." textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                           <padding>
-                              <Insets top="5.0" />
-                           </padding>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="45.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefWidth="200.0" spacing="15.0">
-                     <children>
-                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/Next%20page_50px.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="5.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label graphicTextGap="10.0" text="The Local Registrar should confirm and agree in this calendar shifting, once accepted the system will shift into the new academic term leaving all the previous data in the archive." textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                           <padding>
-                              <Insets top="5.0" />
-                           </padding>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="45.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefWidth="200.0" spacing="15.0">
-                     <children>
-                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/Next%20page_50px.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="5.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label graphicTextGap="10.0" text="Once the academic term has been changed you cannot revert the following changes." textFill="WHITE" wrapText="true">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                           <padding>
-                              <Insets top="5.0" />
-                           </padding>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="45.0" />
-                     </padding>
-                  </HBox>
-                  <HBox alignment="CENTER" prefWidth="200.0" spacing="15.0">
-                     <children>
-                        <JFXButton fx:id="btn_change_term" style="-fx-border-color: #FFFFFF;" text="Change Academic Term" textFill="WHITE">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/Warning%20Shield_50px_1.png" />
+                                    <Image url="@images/Event%20Declined_32px.png" />
                                  </image>
                               </ImageView>
                            </graphic>
                         </JFXButton>
                      </children>
                      <padding>
-                        <Insets left="45.0" top="10.0" />
+                        <Insets bottom="20.0" left="30.0" right="30.0" top="10.0" />
                      </padding>
-                  </HBox>
+                     <StackPane.margin>
+                        <Insets bottom="70.0" left="50.0" right="50.0" top="70.0" />
+                     </StackPane.margin>
+                  </VBox>
+                  <VBox fx:id="vbox_request_term" alignment="CENTER" layoutX="60.0" layoutY="110.0" prefHeight="316.0" prefWidth="500.0" style="-fx-border-color: #fff;" styleClass="metro-base-color" visible="false">
+                     <children>
+                        <Label text="Request for change of Academic Term is pending for your approval." wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="26.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </VBox.margin>
+                           <graphic>
+                              <VBox prefHeight="62.0" prefWidth="53.0">
+                                 <children>
+                                    <ImageView fitHeight="53.0" fitWidth="88.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Advertising_64px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </VBox>
+                           </graphic>
+                        </Label>
+                        <VBox>
+                           <children>
+                              <Label text="Details are as follows:" wrapText="true">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="55.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="School Year" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbl_school_year" text="2017-2018" wrapText="true">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="20.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="55.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox layoutX="41.0" layoutY="299.0">
+                           <children>
+                              <Label text="Semester" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lbl_semester" text="First Semester" wrapText="true">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="20.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="55.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <JFXButton fx:id="btn_accept" prefHeight="52.0" prefWidth="203.0" style="-fx-border-color: #fff; -fx-background-color: #30AD23;" text="Accept" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Ok_50px_1.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_decline" prefHeight="52.0" prefWidth="203.0" style="-fx-border-color: #fff; -fx-background-color: #DD5044;" text="Decline" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Close%20Window_64px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                     </padding>
+                     <StackPane.margin>
+                        <Insets bottom="70.0" left="40.0" right="40.0" top="70.0" />
+                     </StackPane.margin>
+                  </VBox>
                </children>
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </VBox>
+            </StackPane>
          </children>
          <padding>
             <Insets top="30.0" />

@@ -11,7 +11,7 @@
  *
  * PROJECT MANAGER: JHON MELVIN N. PERELLO
  * DEVELOPERS:
- * JOEMAR N. DELA CRUZ
+ * JOEMAR N. DE LA CRUZ
  * GRETHEL EINSTEIN BERNARDINO
  *
  * OTHER LIBRARIES THAT ARE USED BELONGS TO THEIR RESPECTFUL OWNERS AND AUTHORS.
@@ -24,7 +24,12 @@
 package update3.org.cict.termcalendar;
 
 import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.LoadGroupMapping;
+import app.lazy.models.LoadGroupScheduleMapping;
+import app.lazy.models.LoadSectionMapping;
+import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.utils.DateString;
 import app.lazy.models.utils.FacultyUtility;
 import com.jfoenix.controls.JFXButton;
@@ -34,18 +39,32 @@ import com.jhmvin.fx.async.TransactionException;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
-import java.util.Date;
+import com.melvin.mono.fx.bootstrap.M;
+import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import org.apache.commons.lang3.text.WordUtils;
+import org.cict.GenericLoadingShow;
+import org.cict.MainApplication;
+import org.cict.ThreadMill;
+import org.cict.accountmanager.AccountManager;
+import org.cict.accountmanager.Logout;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.controlsfx.control.Notifications;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
+import update3.org.cict.access.Access;
 
 /**
  *
@@ -93,8 +112,41 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     private JFXButton btn_encoding_service;
 
     @FXML
+    private VBox vbox_home_term;
+
+    @FXML
     private Label lbl_current_term;
 
+    @FXML
+    private JFXButton btn_change_term;
+
+    @FXML
+    private VBox vbox_change_term;
+
+    @FXML
+    private JFXButton btn_cancel_request;
+
+    @FXML
+    private VBox vbox_request_term;
+
+    @FXML
+    private Label lbl_school_year;
+
+    @FXML
+    private Label lbl_semester;
+
+    @FXML
+    private JFXButton btn_accept;
+
+    @FXML
+    private JFXButton btn_decline;
+
+    @FXML
+    private Label lbl_school_year1;
+
+    @FXML
+    private Label lbl_semester1;
+    
     public AcademicTermHome() {
         //
     }
@@ -111,6 +163,13 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
         // check services status
         this.checkStatus();
+        
+        // set current term
+        this.setCurrentTerm();
+        
+        // check request for acad term change
+        if(Access.isGrantedIf(Access.ACCESS_ADMIN, Access.ACCESS_LOCAL_REGISTRAR))
+            this.checkTermRequest();
     }
 
     @Override
@@ -143,8 +202,324 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             }
         });
 
+        super.addClickEvent(btn_change_term, ()->{
+            this.changeTerm();
+        });
+        
+        super.addClickEvent(btn_cancel_request, ()->{
+            this.cancelRequest();
+        });
+        
+        super.addClickEvent(btn_accept, ()->{
+            this.acceptRequest();
+        });
+        
+        super.addClickEvent(btn_decline, ()->{
+            this.declineRequest();
+        });
     }
-
+    
+    //------------------------------------------------------------
+    //------------------------------------
+    private void declineRequest() {
+        if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
+            
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage("Are you sure you want to decline the request?")
+                    .confirmYesNo();
+            if(res==-1)
+                return;
+            
+            pending.setApproval_state("DECLINED");
+            pending.setActive(0);
+            if(!Database.connect().academic_term().update(pending)) {
+                Notifications.create().darkStyle()
+                        .text("Decline Process Failed")
+                        .showError();
+            } else {
+                Notifications.create().darkStyle()
+                        .text("Request Rejected")
+                        .showInformation();
+                this.checkTermRequest();
+            }
+        } else
+            Mono.fx().snackbar().showError(application_root, "Request Denied. No access for this process.");
+    }
+    
+    private void acceptRequest() {
+        if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
+            if(pending==null)
+                return;
+            else {
+                int res = Mono.fx().alert().createConfirmation()
+                        .setMessage("This will change the current Academic Term and will automatically logout the account. Do you still want to continue?")
+                        .confirmYesNo();
+                if(res==-1)
+                    return;
+                
+                ChangeCurrentTerm reset = new ChangeCurrentTerm();
+                reset.current_term = current;
+                reset.request = pending;
+                btn_accept.setDisable(true);
+                btn_decline.setDisable(true);
+                reset.whenStarted(()->{
+                    GenericLoadingShow.instance().show();
+                });
+                reset.whenFailed(()->{
+                    GenericLoadingShow.instance().hide();
+                    Notifications.create().darkStyle()
+                            .title("Oh no!")
+                            .text("Something went wrong.").showError();
+                });
+                reset.whenCancelled(()->{
+                    GenericLoadingShow.instance().hide();
+                    Notifications.create().darkStyle()
+                            .text(reset.getLog()).showError();
+                });
+                reset.whenSuccess(()->{
+                    GenericLoadingShow.instance().hide();
+                    this.setCurrentTerm();
+                    this.checkTermRequest();
+                    Notifications.create().darkStyle()
+                            .title("Successfully Accepted")
+                            .text("New Academic Term is set.").showInformation();
+                    this.onLogout();
+                });
+                reset.transact();
+            }
+        } else 
+            Mono.fx().snackbar().showError(application_root, "Request Denied. No access for this process.");
+    }
+    
+    private AcademicTermMapping current;
+    private void setCurrentTerm() {
+        current = SystemProperties.instance().getCurrentAcademicTerm();
+        if(current==null) {
+            lbl_current_term.setText("NO CURRENT ACADEMIC TERM FOUND");
+        } else {
+            lbl_current_term.setText("A.Y. " + (current.getSchool_year()==null? "Not Set": current.getSchool_year()) + " " + (current.getSemester()==null? "Semester Not Specified": WordUtils.capitalizeFully(current.getSemester())));
+        }
+        
+    }
+    
+    private void changeTerm() {
+        if(Access.isGranted(Access.ACCESS_ADMIN)) {
+           ChangeAcademicTerm change = M.load(ChangeAcademicTerm.class);
+           change.onDelayedStart();
+            try {
+                change.getCurrentStage().showAndWait();
+            } catch (Exception e) {
+                Stage a = change.createChildStage(super.getStage());
+                a.initStyle(StageStyle.UNDECORATED);
+                a.showAndWait();
+                this.checkTermRequest();
+            }
+        } else {
+            Mono.fx().snackbar().showError(application_root, "Request Denied. No access for this process.");
+        }
+    }
+    
+    private AcademicTermMapping pending;
+    private void checkTermRequest() {
+        pending = Mono.orm().newSearch(Database.connect().academic_term())
+                .eq(DB.academic_term().approval_state, "PENDING")
+                .active(Order.desc(DB.academic_term().id)).first();
+        if(pending==null) {
+            this.changeAcadTermView(vbox_home_term);
+        } else {
+            if(Access.isGranted(Access.ACCESS_ADMIN)) {
+                lbl_school_year1.setText(pending.getSchool_year());
+                lbl_semester1.setText(WordUtils.capitalizeFully(pending.getSemester()));
+                this.changeAcadTermView(vbox_change_term);
+            } else if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
+                lbl_school_year.setText(pending.getSchool_year());
+                lbl_semester.setText(WordUtils.capitalizeFully(pending.getSemester()));
+                this.changeAcadTermView(vbox_request_term);
+            }
+        }
+    }
+    
+    private void changeAcadTermView(Node node) {
+        vbox_request_term.setVisible(false);
+        if(node.getId().equals(vbox_change_term.getId())) {
+            vbox_change_term.setVisible(true);
+            vbox_home_term.setDisable(true);
+        } else if(node.getId().equals(vbox_request_term.getId())) {
+            vbox_request_term.setVisible(true);
+            vbox_change_term.setVisible(false);
+            vbox_home_term.setDisable(true);
+        } else {
+            vbox_change_term.setVisible(false);
+            vbox_home_term.setDisable(false);
+        }
+        vbox_home_term.setVisible(true);
+    }
+    
+    private void cancelRequest() {
+        int res = Mono.fx().alert().createConfirmation()
+                .setMessage("Are you sure you want to cancel the request?")
+                .confirmYesNo();
+        if(res==-1)
+            return;
+        
+        pending.setActive(0);
+        if(Database.connect().academic_term().update(pending)) {
+            Mono.fx().alert().createInfo()
+                    .setHeader("Successfully Cancelled")
+                    .setMessage("Your prevoius request is cancelled successfully.")
+                    .show();
+            this.checkTermRequest();
+        } else {
+            Mono.fx().alert().createError()
+                    .setHeader("Cancel Request Failed")
+                    .setMessage("Something went wrong in the process. Please try again later.")
+                    .show();
+        }
+    }
+    private void onLogout() {
+        Logout logout = AccountManager.instance().createLogout();
+        logout.whenStarted(() -> {
+        });
+        logout.whenCancelled(() -> {
+        });
+        logout.whenFailed(() -> {
+        });
+        logout.whenSuccess(() -> {
+        });
+        logout.whenFinished(() -> {
+            ThreadMill.threads().shutdown();
+            this.getStage().close();
+            MainApplication.die(0);
+        });
+        logout.transact();
+    }
+    
+    // transaction for accepting the requested and changing the current term
+    class ChangeCurrentTerm extends Transaction {
+        
+        public AcademicTermMapping request;
+        public AcademicTermMapping current_term;
+        
+        private String log;
+        public String getLog() {
+            return log;
+        }
+        
+        @Override
+        protected boolean transaction() {
+            
+            // create local session
+            Session currentSession = Mono.orm().session();
+            // start your transaction
+            org.hibernate.Transaction dataTransaction = currentSession.beginTransaction();
+            if(request==null) {
+                log = "No requested Academic Term found";
+                System.out.println("NO REQUESTED ACAD TERM FOUND");
+                return false;
+            }
+            
+            // accept the requested term
+            request.setApproval_state("ACCEPTED");
+            request.setCurrent(1);
+            Boolean accept = Database.connect().academic_term().transactionalSingleUpdate(currentSession, request);
+            if(!accept) {
+                dataTransaction.rollback();
+                log = "Requested Academic Term\n"
+                        + "process failed.";
+                System.out.println("ACAD TERM REQUEST NOT CHANGED INTO ACCEPTED");
+                return false;
+            }
+            
+            // remove the current term into use
+            current_term.setCurrent(0);
+            Boolean remove = Database.connect().academic_term().transactionalSingleUpdate(currentSession, current_term);
+            if(!remove) {
+                dataTransaction.rollback();
+                log = "Current Academic Term cannot\n"
+                        + "process at this moment.";
+                System.out.println("CURRENT ACAD TERM NOT CHANGED INTO [CURRENT = 0]");
+                return false;
+            }
+            
+            // set all active of the ff into active=0 and archived=1
+            
+            // LOAD GROUP
+            ArrayList<LoadGroupMapping> loadGrps = Mono.orm().newSearch(Database.connect().load_group())
+                    .active().all();
+            if(loadGrps!=null) {
+                for(LoadGroupMapping loadGrp: loadGrps) {
+                    loadGrp.setActive(0);
+                    loadGrp.setArchived(1);
+                    if(!Database.connect().load_group().transactionalSingleUpdate(currentSession, loadGrp)) {
+                        dataTransaction.rollback();
+                        log = "Archive process of \n"
+                                + "load per group failed";
+                        System.out.println("LOAD GRP NOT CHANGED INTO [ACTIVE = 0 ; ARCHIVED=1]");
+                        return false;
+                    }
+                }
+            }
+            
+            // LOAD GROUP SCHEDULE
+            ArrayList<LoadGroupScheduleMapping> loadGrpScheds = Mono.orm().newSearch(Database.connect().load_group_schedule())
+                    .active().all();
+            if(loadGrpScheds!=null) {
+                for(LoadGroupScheduleMapping loadGrpSched: loadGrpScheds) {
+                    loadGrpSched.setActive(0);
+                    loadGrpSched.setArchived(1);
+                    if(!Database.connect().load_group_schedule().transactionalSingleUpdate(currentSession, loadGrpSched)) {
+                        dataTransaction.rollback();
+                        log = "Archive process of \n"
+                                + "schedules failed";
+                        System.out.println("LOAD GRP SCHED NOT CHANGED INTO [ACTIVE = 0 ; ARCHIVED=1]");
+                        return false;
+                    }
+                }
+            }
+            
+            // LOAD SECTION
+            ArrayList<LoadSectionMapping> loadSections = Mono.orm().newSearch(Database.connect().load_section())
+                    .active().all();
+            if(loadSections!=null) {
+                for(LoadSectionMapping loadSection: loadSections) {
+                    loadSection.setActive(0);
+                    loadSection.setArchived(1);
+                    if(!Database.connect().load_section().transactionalSingleUpdate(currentSession, loadSection)) {
+                        dataTransaction.rollback();
+                        log = "Archive process of \n"
+                                + "sections failed";
+                        System.out.println("LOAD SECTION NOT CHANGED INTO [ACTIVE = 0 ; ARCHIVED=1]");
+                        return false;
+                    }
+                }
+            }
+            
+            // LOAD SUBJECT
+            ArrayList<LoadSubjectMapping> loadSubjects = Mono.orm().newSearch(Database.connect().load_subject())
+                    .active().all();
+            if(loadSubjects!=null) {
+                for(LoadSubjectMapping loadSubject: loadSubjects) {
+                    loadSubject.setActive(0);
+                    // wrong spelling in ARCHIVED
+                    loadSubject.setArhived(1);
+                    if(!Database.connect().load_subject().transactionalSingleUpdate(currentSession, loadSubject)) {
+                        dataTransaction.rollback();
+                        log = "Archive process of \n"
+                                + "load per student failed";
+                        System.out.println("LOAD SUBJECT NOT CHANGED INTO [ACTIVE = 0 ; ARCHIVED=1]");
+                        return false;
+                    }
+                }
+            }
+            dataTransaction.commit();
+            return true;
+        }
+        
+    }
+    //--------------------------------------------------------
+    // ---------------------------------
+    
+    
     private void setDisableSwitchButtons(boolean disabled) {
         try {
             if (disabled) {
