@@ -41,6 +41,7 @@ import javafx.application.Platform;
 import org.cict.PublicConstants;
 import org.hibernate.criterion.Order;
 import sys.org.cict.enumerations.CurriculumValues;
+import sys.org.cict.enumerations.GradeValues;
 
 /**
  *
@@ -273,8 +274,8 @@ public class CurricularLevelAssesor {
         newGrade.setSUBJECT_id(grade.getSUBJECT_id());
         //----------------------------------------------------------------------
         // update remarks and ratings
-        newGrade.setRemarks("EXPIRED");
-        newGrade.setRating("EXP");
+        newGrade.setRemarks(GradeValues.Remarks.FAILED.toString());
+        newGrade.setRating("5.0");
 
         newGrade.setActive(1);
         newGrade.setReason_for_update(PublicConstants.EXPIRE_DESCRIPTION);

@@ -32,8 +32,8 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import org.cict.PublicConstants;
-import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -57,6 +57,8 @@ public class CreditEncode extends Transaction {
      */
     @Override
     protected boolean transaction() {
+        final Integer facultyUpdater = CollegeFaculty.instance().getFACULTY_ID();
+        final Date updateDate = Mono.orm().getServerTime().getDateWithFormat();
 
         Calendar incExpireTime = Mono.orm().getServerTime().getCalendar();
         incExpireTime.add(Calendar.MONTH, PublicConstants.INC_EXPIRE);
@@ -115,12 +117,15 @@ public class CreditEncode extends Transaction {
                 studentGrade.setRating(rating);
                 studentGrade.setRemarks(PublicConstants.getRemarks(rating));
                 //--------------------------------------------------------------
-                studentGrade.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
-                studentGrade.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
+                studentGrade.setCreated_by(facultyUpdater);
+                studentGrade.setCreated_date(updateDate);
+                // set also the update
+                studentGrade.setUpdated_by(facultyUpdater);
+                studentGrade.setUpdated_date(updateDate);
                 //--------------------------------------------------------------
                 studentGrade.setPosted(1);
-                studentGrade.setPosted_by(CollegeFaculty.instance().getFACULTY_ID());
-                studentGrade.setPosting_date(Mono.orm().getServerTime().getDateWithFormat());
+                studentGrade.setPosted_by(facultyUpdater);
+                studentGrade.setPosting_date(updateDate);
                 studentGrade.setCredit_method("CREDIT");
                 studentGrade.setCredit(subject.getLab_units() + subject.getLec_units());
                 //--------------------------------------------------------------
@@ -128,7 +133,7 @@ public class CreditEncode extends Transaction {
                     studentGrade.setInc_expire(incExpireTime.getTime());
                 }
                 //--------------------------------------------------------------
-                studentGrade.setReason_for_update("Added Grade Using Credit Tree");
+                studentGrade.setReason_for_update("ADDED USING CREDIT TREE");
 
                 Integer id = Database.connect().grade()
                         .transactionalInsert(local_session, studentGrade);
@@ -152,7 +157,9 @@ public class CreditEncode extends Transaction {
                 // IF EMPTY it means grade will be deleted
                 boolean deleteGrade = false;
                 if (rating.equalsIgnoreCase("")) {
-                    studentGrade.setReason_for_update("Grade Deleted");
+                    studentGrade.setUpdated_by(facultyUpdater);
+                    studentGrade.setUpdated_date(updateDate);
+                    studentGrade.setReason_for_update("GRADE REMOVED");
                     deleteGrade = true;
                 }
                 //--------------------------------------------------------------
@@ -192,8 +199,8 @@ public class CreditEncode extends Transaction {
                     grade_copy.setPosting_date(Mono.orm().getServerTime().getDateWithFormat());
                 }
                 //--------------------------------------------------------------
-                grade_copy.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
-                grade_copy.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+                grade_copy.setUpdated_by(facultyUpdater);
+                grade_copy.setUpdated_date(updateDate);
                 //--------------------------------------------------------------
                 grade_copy.setSTUDENT_id(studentGrade.getSTUDENT_id());
                 grade_copy.setSUBJECT_id(studentGrade.getSUBJECT_id());
@@ -208,7 +215,7 @@ public class CreditEncode extends Transaction {
                     grade_copy.setInc_expire(incExpireTime.getTime());
                 }
                 //--------------------------------------------------------------
-                grade_copy.setReason_for_update("Grade Modification using Credit Tree");
+                grade_copy.setReason_for_update("GRADE MODIFICATION USING CREDIT TREE");
                 Integer new_id = Database.connect().grade().transactionalInsert(local_session, grade_copy);
 
                 if (new_id < 0) {
