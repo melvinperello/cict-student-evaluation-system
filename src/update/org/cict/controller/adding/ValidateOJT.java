@@ -64,12 +64,17 @@ public class ValidateOJT {
 
     }
 
+    private static ValidateOJT classInstance;
+
     public static boolean isValidForOJT(StudentMapping currentStudent) {
         /**
          * You cannot instantiate an inner-class without the instance of the
          * parent class.
          */
-        InternshipValidation iv = new ValidateOJT().new InternshipValidation();
+        if (classInstance == null) {
+            classInstance = new ValidateOJT();
+        }
+        InternshipValidation iv = classInstance.new InternshipValidation();
         iv.currentStudent = currentStudent;
         return iv.check();
     }
@@ -87,9 +92,8 @@ public class ValidateOJT {
     private class InternshipValidation {
 
         public StudentMapping currentStudent;
-        
+
         private Integer yearOfOJT, semesterOfOJT;
-        
 
         /**
          * This method can be dismantle to different pieces on future updates.
@@ -97,93 +101,110 @@ public class ValidateOJT {
          * @return
          */
         public boolean check() {
+            //------------------------------------------------------------------
+            // find year level and semester
             run();
-            
-            // check if null
+            //------------------------------------------------------------------
             if (currentStudent == null) {
                 System.out.println("STUDENT IS NULL");
                 return false;
             }
-            
-            if(yearOfOJT > currentStudent.getYear_level()) {
+            //------------------------------------------------------------------
+            if (yearOfOJT > currentStudent.getYear_level()) {
                 System.out.println("YEAR LEVEL IS NOT VALID FOR OJT");
                 return false;
             }
-            
+            //------------------------------------------------------------------
             // run assessor.
             CurricularLevelAssesor assessor = new CurricularLevelAssesor(currentStudent);
             assessor.assess();
-
+            //------------------------------------------------------------------
             Integer studentYearLevel = currentStudent.getYear_level();
+            //------------------------------------------------------------------
             for (int yrCtr = 1; yrCtr <= studentYearLevel; yrCtr++) {
                 AssessmentResults annualAsses = assessor.getAnnualAssessment(yrCtr);
                 ArrayList<SubjectAssessmentDetials> temp_array = annualAsses.getUnacquiredSubjects();
                 if (temp_array == null) {
+                    // if no un acquired subjects during this year continue
                     continue;
                 }
-
-                int count = 0;
+                //--------------------------------------------------------------
+                int count = 0; // Defficiency Count this year. (Annually)
                 Integer currentSemester = SystemProperties.instance().getCurrentAcademicTerm().getSemester_regular();
+                //--------------------------------------------------------------
+                // Get Subject details
+                inner: // loop marker inner
                 for (SubjectAssessmentDetials temp_value : temp_array) {
                     SubjectMapping subject = temp_value.getSubjectDetails();
                     boolean valid = false;
-                    
-                    if(temp_value.getYearLevel() > studentYearLevel) {
+                    //----------------------------------------------------------
+                    if (temp_value.getYearLevel() > studentYearLevel) {
                         System.out.println("Subject " + subject.getCode() + " is not checked with as year of " + temp_value.getYearLevel()
-                        + " with a semester of " + temp_value.getSemester());
-                    } else if(studentYearLevel > temp_value.getYearLevel()) {
+                                + " with a semester of " + temp_value.getSemester());
+                    } else if (studentYearLevel > temp_value.getYearLevel()) {
                         valid = true;
-                    } else /* studentYearLevel == temp_value.getYearLevel() */{
-                        if(currentSemester.equals(2)) {
-                            if(temp_value.getSemester() < currentSemester) {
+                    } else {
+                        //------------------------------------------------------
+                        if (currentSemester.equals(2)) {
+                            if (temp_value.getSemester() < currentSemester) {
                                 valid = true;
                             }
                         }
+                        //------------------------------------------------------
                     }
-                    
-                    if(valid) {
-                        if (SubjectClassification.isMajor(subject.getType())) {
-                            if (!subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                                System.out.println("A MAJOR SUBJECT HAS NO GRADE");
-                                return false;
-                            }
+                    //----------------------------------------------------------
+                    if (!valid) {
+                        continue inner;
+                    }
+                    //----------------------------------------------------------
+                    if (SubjectClassification.isMajor(subject.getType())) {
+                        // if the missing subject is major invalid
+                        if (!subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                            System.out.println("A MAJOR SUBJECT HAS NO GRADE");
+                            return false;
+                        }
+                    } else {
+                        //------------------------------------------------------
+                        if (count > 1) {
+                            // if missing minor subjects are greater than 1
+                            System.out.println("MISSING GRADE EXCEED TO 1");
+                            return false;
                         } else {
-                            if (count > 1) {
-                                System.out.println("MISSING GRADE EXCEED TO 1");
-                                return false;
+                            // if less than 1 test the following
+                            if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_ELECTIVE)
+                                    || subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_MINOR)) {
+                                count++;
                             } else {
-                                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_ELECTIVE)
-                                        || subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_MINOR)) {
-                                    count++;
-                                } else {
-                                    System.out.println("MISSING GRADE OF A NONE ELECTIVE OR MINOR TYPE");
-                                    return false;
-                                }
+                                // if the subject is non elective or major invalid
+                                System.out.println("MISSING GRADE OF A NONE ELECTIVE OR MINOR TYPE");
+                                return false;
                             }
                         }
                     }
+                    //----------------------------------------------------------
                 }
-
             }
-
             return true; // default return.
         }
-        
+
+        /**
+         * Find year and semester of an Internship subject.
+         */
         private void run() {
             ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm().newSearch(Database.connect().curriculum_subject())
                     .eq(DB.curriculum_subject().CURRICULUM_id, currentStudent.getCURRICULUM_id())
                     .active().all();
-            for(CurriculumSubjectMapping csMap: csMaps) {
+            for (CurriculumSubjectMapping csMap : csMaps) {
                 SubjectMapping subject = Mono.orm().newSearch(Database.connect().subject())
                         .eq(DB.subject().id, csMap.getSUBJECT_id())
                         .active().first();
-                
-                if(subject == null) {
+
+                if (subject == null) {
                     System.out.println("@ValidateOJT: SUBJECT ID" + csMap.getSUBJECT_id() + " NOT FOUND");
                     return;
                 }
-                
-                if(subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+
+                if (subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                     yearOfOJT = csMap.getYear();
                     semesterOfOJT = csMap.getSemester();
                     break;
