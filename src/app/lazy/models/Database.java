@@ -3,6 +3,7 @@ package app.lazy.models;
 import com.jhmvin.Mono;
 import com.jhmvin.orm.MonoModels;
 import com.jhmvin.propertymanager.PropertyManager;
+import org.cict.PublicConstants;
 
 public class Database {
 // construct
@@ -57,7 +58,7 @@ public class Database {
     private void setup() {
         Mono.orm().setConnectionDriverClass("org.mariadb.jdbc.Driver");
         Mono.orm().setConnectionProvider("jdbc:mariadb");
-        Mono.orm().setHost(com.melvin.java.properties.PropertyManager.gerPropertyFile("evaluation.properties").getProperty("hostIP"));
+        Mono.orm().setHost(PublicConstants.getServer());
         Mono.orm().setPort(3306);
         Mono.orm().setDatabaseName("cictems");
         Mono.orm().setDatabaseUser("root");
