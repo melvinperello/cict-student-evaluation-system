@@ -335,15 +335,19 @@ public class SystemLogin extends MonoLauncher {
          * Create Keep Alive Thread.
          */
         ThreadMill.threads().KEEP_ALIVE_THREAD.setTask(() -> {
-            AccountFacultySessionMapping accountSessionAlive = Mono.orm()
-                    .newSearch(Database.connect().account_faculty_session())
-                    .eq("FACULTY_account_id", CollegeFaculty.instance().getACCOUNT_ID())
-                    .active(Order.desc("session_id"))
-                    .first();
-            Calendar now = Mono.orm().getServerTime().getCalendar();
-            now.add(Calendar.MINUTE, 1);
-            accountSessionAlive.setKeep_alive(now.getTime());
-            Database.connect().account_faculty_session().update(accountSessionAlive);
+            try {
+                AccountFacultySessionMapping accountSessionAlive = Mono.orm()
+                        .newSearch(Database.connect().account_faculty_session())
+                        .eq("FACULTY_account_id", CollegeFaculty.instance().getACCOUNT_ID())
+                        .active(Order.desc("session_id"))
+                        .first();
+                Calendar now = Mono.orm().getServerTime().getCalendar();
+                now.add(Calendar.MINUTE, 1);
+                accountSessionAlive.setKeep_alive(now.getTime());
+                Database.connect().account_faculty_session().update(accountSessionAlive);
+            } catch (Exception e) {
+                System.err.println("KEEP-ALIVE-THREAD ERROR");
+            }
         });
         ThreadMill.threads().KEEP_ALIVE_THREAD.start();
         /**

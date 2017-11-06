@@ -8,6 +8,7 @@ package com.melvin.java.properties;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -17,9 +18,9 @@ import java.util.logging.Logger;
  *
  * @author Jhon Melvin
  */
-public class PropertyManager {
+public class PropertyFile {
 
-    public static Properties gerPropertyFile(String propertyPath) {
+    public static Properties getPropertyFile(String propertyPath) {
         File propertyFile = new File(propertyPath);
         try {
             FileReader reader = new FileReader(propertyFile);
@@ -33,5 +34,29 @@ public class PropertyManager {
             // cannot load property file
             return null;
         }
+    }
+
+    /**
+     *
+     * @param propertyPath
+     * @param key
+     * @param value
+     * @param comment
+     * @return
+     */
+    public static boolean writePropertyFile(String propertyPath, String key, String value, String comment) {
+        File configFile = new File(propertyPath);
+        Properties props = getPropertyFile(propertyPath);
+        try {
+            props.setProperty(key, value);
+            FileWriter writer = new FileWriter(configFile);
+            props.store(writer, comment);
+            writer.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }
