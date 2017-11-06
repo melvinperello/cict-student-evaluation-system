@@ -32,8 +32,6 @@ import com.jhmvin.Mono;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.events.MonoClick;
-import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
-import com.sun.javafx.application.HostServicesDelegate;
 import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -109,6 +107,15 @@ public class SystemLogin extends MonoLauncher {
             }, vbox_login);
         });
         startHibernate.whenFinished(() -> {
+            if (Mono.orm().getSessionFactory() == null) {
+                // no connection
+                Mono.fx().alert().createError().setTitle("No Connection")
+                        .setHeader("Server Unreachable")
+                        .setMessage("Please check your connection then try again.")
+                        .showAndWait();
+                MainApplication.die(0);
+            }
+
         });
 
         startHibernate.transact();

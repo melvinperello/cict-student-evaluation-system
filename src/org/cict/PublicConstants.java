@@ -52,7 +52,8 @@ public class PublicConstants {
      * @return
      */
     public final static String getServer() {
-        return com.melvin.java.properties.PropertyManager.gerPropertyFile("evaluation.properties").getProperty("hostIP");
+        return "localhost";
+//        return com.melvin.java.properties.PropertyManager.gerPropertyFile("evaluation.properties").getProperty("hostIP");
     }
 
     public final static String FACULTY_REGISTRATION_LINK = "http://" + getServer() + "/laravel/cictwebportal/public/home/hello";

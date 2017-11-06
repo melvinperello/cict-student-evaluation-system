@@ -788,8 +788,14 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         });
         multiTx.whenCancelled(() -> {
             loaderMulti.detach();
-
-            sout("CANCELED >>>>>>");
+            //
+            failMulti.setMessage("This Curriculum Has No Subjects");
+            failMulti.getButton().setText("Ok");
+            super.addClickEvent(failMulti.getButton(), () -> {
+                failMulti.detach();
+            });
+            failMulti.attach();
+            sout("FUCKiNG CANCELED");
         });
         multiTx.whenFailed(() -> {
             loaderMulti.detach();
@@ -1115,6 +1121,10 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 /**
                  * Error Throw if the the curriculum has empty subjects.
                  */
+                if (curriculumSubjects == null) {
+                    return false; // go to cancel callback event
+                }
+
                 for (CurriculumSubjectMapping curSub : curriculumSubjects) {
                     SubjectMapping subject = Database.connect().subject()
                             .getPrimary(curSub.getSUBJECT_id());

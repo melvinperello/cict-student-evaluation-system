@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `academic_program` (
   CONSTRAINT `removed` FOREIGN KEY (`removed_by`) REFERENCES `faculty` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.academic_program: ~4 rows (approximately)
+-- Dumping data for table cictems.academic_program: ~3 rows (approximately)
 /*!40000 ALTER TABLE `academic_program` DISABLE KEYS */;
 INSERT INTO `academic_program` (`id`, `code`, `name`, `floor_assignment`, `created_date`, `created_by`, `removed_date`, `removed_by`, `implemented`, `implementation_date`, `implemented_by`, `active`) VALUES
 	(4, 'ACT', 'ASSOCIATE IN COMPUTER TECHNOLOGY', NULL, '2017-09-06 10:26:29', 4, NULL, NULL, 0, NULL, NULL, 1),
@@ -137,9 +137,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2218 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2223 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~412 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~435 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1788, 1, '2017-10-12 00:07:10', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -571,7 +571,12 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(2214, 1, '2017-11-02 19:39:30', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2215, 1, '2017-11-02 20:08:06', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2216, 1, '2017-11-04 18:52:23', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(2217, 1, '2017-11-04 22:47:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(2217, 1, '2017-11-04 22:47:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2218, 1, '2017-11-05 23:57:37', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2219, 1, '2017-11-05 23:59:28', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@x86', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2220, 1, '2017-11-06 02:53:49', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2221, 1, '2017-11-06 03:01:06', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2222, 1, '2017-11-06 03:18:23', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@x86', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -590,9 +595,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2046 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2051 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~449 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~456 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
 	(1595, 1, '2017-10-11 18:39:01', '2017-10-11 18:40:31', '%192.168.254.151@40-2C-F4-04-E9-6E%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 18:39:58', 'EVALUATION_SYSTEM', 1),
@@ -1045,7 +1050,12 @@ INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `sess
 	(2042, 1, '2017-11-02 19:39:30', '2017-11-02 19:48:31', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 19:47:35', 'EVALUATION_SYSTEM', 1),
 	(2043, 1, '2017-11-02 20:08:06', '2017-11-02 20:17:07', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-02 20:16:25', 'EVALUATION_SYSTEM', 1),
 	(2044, 1, '2017-11-04 18:52:23', '2017-11-04 19:08:53', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-04 19:08:08', 'EVALUATION_SYSTEM', 1),
-	(2045, 1, '2017-11-04 22:47:46', '2017-11-04 22:50:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-04 22:49:51', 'EVALUATION_SYSTEM', 1);
+	(2045, 1, '2017-11-04 22:47:46', '2017-11-04 22:50:46', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-04 22:49:51', 'EVALUATION_SYSTEM', 1),
+	(2046, 1, '2017-11-05 23:57:37', '2017-11-05 23:58:37', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-05 23:57:42', 'EVALUATION_SYSTEM', 1),
+	(2047, 1, '2017-11-05 23:59:28', '2017-11-06 00:00:28', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@x86', '2017-11-05 23:59:30', 'EVALUATION_SYSTEM', 1),
+	(2048, 1, '2017-11-06 02:53:49', '2017-11-06 03:01:19', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-06 03:00:40', 'EVALUATION_SYSTEM', 1),
+	(2049, 1, '2017-11-06 03:01:06', '2017-11-06 03:09:36', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-06 03:08:48', 'EVALUATION_SYSTEM', 1),
+	(2050, 1, '2017-11-06 03:18:23', '2017-11-06 03:19:53', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@x86', '2017-11-06 03:19:20', 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -1068,7 +1078,7 @@ CREATE TABLE IF NOT EXISTS `account_student` (
   CONSTRAINT `acc_student_fk_from_student_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_student: ~3 rows (approximately)
+-- Dumping data for table cictems.account_student: ~2 rows (approximately)
 /*!40000 ALTER TABLE `account_student` DISABLE KEYS */;
 INSERT INTO `account_student` (`id`, `STUDENT_id`, `username`, `password`, `recovery_question`, `recovery_answer`, `access_level`, `affiliates`, `state`, `tries`, `blocked_until`, `active`) VALUES
 	(22, 57, 'jhmvin', '123456', 'What was the name of the street you lived in as a child?', 'LGONZALES', 'STUDENT', 'NONE', 0, 0, NULL, 1),
@@ -1088,7 +1098,7 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   CONSTRAINT `announce_by_fk` FOREIGN KEY (`announced_by`) REFERENCES `faculty` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.announcements: ~1 rows (approximately)
+-- Dumping data for table cictems.announcements: ~0 rows (approximately)
 /*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
 INSERT INTO `announcements` (`id`, `title`, `message`, `date`, `announced_by`, `active`) VALUES
 	(1, 'HELLO', 'ASDWASDWADAWDADAWDAWDAWDAWDAWD', '2017-11-04 18:52:51', 1, 1);
@@ -1182,7 +1192,7 @@ CREATE TABLE IF NOT EXISTS `curriculum_history_summary` (
   CONSTRAINT `cur_history_fk_faculty` FOREIGN KEY (`created_by`) REFERENCES `faculty` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_history_summary: ~0 rows (approximately)
+-- Dumping data for table cictems.curriculum_history_summary: ~2 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_history_summary` DISABLE KEYS */;
 INSERT INTO `curriculum_history_summary` (`history_id`, `curriculum_id`, `description`, `created_by`, `created_date`, `active`) VALUES
 	(189, 11, 'ADDED CO-REQUISITE [ID:177] IT 333 FOR [ID:157] IT 373 FROM THIRD YEAR-FIRST SEMESTER', 1, '2017-10-18 05:16:48', 1),
@@ -1273,7 +1283,7 @@ CREATE TABLE IF NOT EXISTS `curriculum_requisite_line` (
   CONSTRAINT `curriculum_requisite_fk_req_from_subject_id` FOREIGN KEY (`SUBJECT_id_req`) REFERENCES `subject` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_requisite_line: ~102 rows (approximately)
+-- Dumping data for table cictems.curriculum_requisite_line: ~101 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_requisite_line` DISABLE KEYS */;
 INSERT INTO `curriculum_requisite_line` (`id`, `SUBJECT_id_get`, `SUBJECT_id_req`, `CURRICULUM_id`, `created_date`, `created_by`, `removed_date`, `removed_by`, `active`) VALUES
 	(45, 124, 113, 6, '2017-09-09 09:49:21', 3, NULL, NULL, 1),
@@ -1639,14 +1649,15 @@ CREATE TABLE IF NOT EXISTS `evaluation` (
   CONSTRAINT `evaluation_fk_from_faculty_id` FOREIGN KEY (`FACULTY_id`) REFERENCES `faculty` (`id`),
   CONSTRAINT `evaluation_fk_from_student_cict_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`),
   CONSTRAINT `evaluation_fk_self` FOREIGN KEY (`adding_reference_id`) REFERENCES `evaluation` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='has a duplication of student_id in the load_subjects';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='has a duplication of student_id in the load_subjects';
 
--- Dumping data for table cictems.evaluation: ~3 rows (approximately)
+-- Dumping data for table cictems.evaluation: ~4 rows (approximately)
 /*!40000 ALTER TABLE `evaluation` DISABLE KEYS */;
 INSERT INTO `evaluation` (`id`, `STUDENT_id`, `ACADTERM_id`, `FACULTY_id`, `adding_reference_id`, `evaluation_date`, `year_level`, `type`, `remarks`, `print_type`, `cancelled_by`, `cancelled_date`, `active`) VALUES
 	(1, 58, 11, 1, NULL, '2017-10-31 20:27:40', 2, 'REGULAR', 'ACCEPTED', 'OLD', NULL, NULL, 1),
 	(2, 57, 11, 1, NULL, '2017-11-01 12:19:55', 4, 'REGULAR', 'REVOKED', 'OLD', 2, '2017-11-01 12:20:17', 0),
-	(3, 57, 11, 1, NULL, '2017-11-01 12:20:26', 4, 'REGULAR', 'REVOKED', 'OLD', 2, '2017-11-01 18:57:19', 0);
+	(3, 57, 11, 1, NULL, '2017-11-01 12:20:26', 4, 'REGULAR', 'REVOKED', 'OLD', 2, '2017-11-01 18:57:19', 0),
+	(4, 57, 11, 1, NULL, '2017-11-06 03:02:50', 4, 'REGULAR', 'ACCEPTED', 'OLD', NULL, NULL, 1);
 /*!40000 ALTER TABLE `evaluation` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.faculty
@@ -1772,46 +1783,25 @@ CREATE TABLE IF NOT EXISTS `grade` (
   CONSTRAINT `grade_fk_from_student_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`),
   CONSTRAINT `grade_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`),
   CONSTRAINT `grade_fk_ref_cur` FOREIGN KEY (`referrence_curriculum`) REFERENCES `curriculum` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=424 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
+) ENGINE=InnoDB AUTO_INCREMENT=448 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
 
--- Dumping data for table cictems.grade: ~35 rows (approximately)
+-- Dumping data for table cictems.grade: ~14 rows (approximately)
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
 INSERT INTO `grade` (`id`, `STUDENT_id`, `SUBJECT_id`, `ACADTERM_id`, `rating`, `remarks`, `credit`, `credit_method`, `created_by`, `created_date`, `posted`, `posted_by`, `posting_date`, `inc_expire`, `updated_by`, `updated_date`, `reason_for_update`, `referrence_curriculum`, `course_reference`, `active`) VALUES
-	(389, 57, 245, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(390, 57, 246, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(391, 57, 247, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(392, 57, 248, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(393, 57, 249, NULL, '1.00', 'PASSED', 1, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(394, 57, 250, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(395, 57, 251, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(396, 57, 252, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(397, 57, 196, NULL, '1.00', 'PASSED', 2, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(398, 57, 119, NULL, '1.00', 'PASSED', 0, 'REGULAR', 1, '2017-10-31 17:45:26', 1, 1, '2017-10-31 17:45:26', NULL, NULL, NULL, '', NULL, NULL, 1),
-	(399, 57, 253, NULL, 'INC', 'INCOMPLETE', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', '2018-10-31 17:45:44', NULL, NULL, '', NULL, NULL, 0),
-	(400, 57, 254, NULL, '', '', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(401, 57, 255, NULL, '', '', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(402, 57, 256, NULL, '', '', 1, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(403, 57, 257, NULL, '', '', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(404, 57, 258, NULL, '', '', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(405, 57, 259, NULL, '', '', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(406, 57, 206, NULL, '', '', 2, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(407, 57, 129, NULL, '', '', 0, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, NULL, NULL, '', NULL, NULL, 0),
-	(408, 57, 253, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-10-31 17:48:07.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(409, 58, 213, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-10-31 20:27:40', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 1),
-	(410, 58, 214, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-10-31 20:27:40', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 1),
-	(411, 58, 215, 11, 'UNPOSTED', 'UNPOSTED', 2, 'REGULAR', 1, '2017-10-31 20:27:40', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 1),
-	(412, 57, 254, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(413, 57, 255, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(414, 57, 256, NULL, '1.00', 'PASSED', 1, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(415, 57, 257, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(416, 57, 258, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(417, 57, 259, NULL, '1.00', 'PASSED', 3, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(418, 57, 206, NULL, '1.00', 'PASSED', 2, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(419, 57, 129, NULL, '1.00', 'PASSED', 0, 'REGULAR', 1, '2017-10-31 17:45:44', 1, 1, '2017-10-31 17:45:44', NULL, 1, '2017-11-01 02:11:43.000000', 'UPDATED FAILED OR INCOMPLETE GRADE', NULL, NULL, 1),
-	(420, 57, 243, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 1, '2017-11-01 12:19:55', 0, NULL, NULL, NULL, 2, '2017-11-01 12:20:17.000000', 'REVOKED_EVALUATION', NULL, NULL, 0),
-	(421, 57, 244, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 1, '2017-11-01 12:19:55', 0, NULL, NULL, NULL, 2, '2017-11-01 12:20:17.000000', 'REVOKED_EVALUATION', NULL, NULL, 0),
-	(422, 57, 243, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 1, '2017-11-01 12:20:26', 0, NULL, NULL, NULL, 2, '2017-11-01 18:57:19.000000', 'REVOKED_EVALUATION', NULL, NULL, 0),
-	(423, 57, 244, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 1, '2017-11-01 12:20:26', 0, NULL, NULL, NULL, 2, '2017-11-01 18:57:19.000000', 'REVOKED_EVALUATION', NULL, NULL, 0);
+	(434, 57, 114, NULL, '5.0', 'FAILED', 3, 'REGULAR', 1, '2017-11-06 02:54:12', 1, 1, '2017-11-06 02:54:12', '2017-11-06 03:01:31', NULL, '2017-11-06 03:01:45.000000', 'INC GRADE HAS EXPIRED.', NULL, NULL, 1),
+	(435, 57, 243, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-11-06 03:02:50', 0, NULL, NULL, NULL, NULL, NULL, 'Grade Deleted', NULL, NULL, 0),
+	(436, 57, 244, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-11-06 03:02:50', 0, NULL, NULL, NULL, NULL, NULL, 'Grade Deleted', NULL, NULL, 0),
+	(437, 57, 194, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-11-06 03:02:50', 0, NULL, NULL, NULL, NULL, NULL, 'Grade Deleted', NULL, NULL, 0),
+	(438, 57, 114, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-11-06 03:02:50', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 0),
+	(439, 57, 114, 11, '1.00', 'PASSED', 3, 'CREDIT', 1, '2017-11-06 03:02:50', 1, 1, '2017-11-06 03:04:31', NULL, 1, '2017-11-06 03:04:31.000000', 'Grade Modification using Credit Tree', NULL, NULL, 1),
+	(440, 57, 193, NULL, '1.00', 'PASSED', 3, 'CREDIT', 1, '2017-11-06 02:54:12', 1, 1, '2017-11-06 02:54:12', NULL, 1, '2017-11-06 03:05:05.000000', 'Grade Modification using Credit Tree', NULL, NULL, 1),
+	(441, 57, 190, NULL, '1.00', 'PASSED', 3, 'CREDIT', 1, '2017-11-06 03:06:15', 1, 1, '2017-11-06 03:06:15', NULL, NULL, NULL, 'Added Grade Using Credit Tree', NULL, NULL, 1),
+	(442, 57, 196, NULL, '1.00', 'PASSED', 2, 'CREDIT', 1, '2017-11-06 03:06:15', 1, 1, '2017-11-06 03:06:15', NULL, NULL, NULL, 'Added Grade Using Credit Tree', NULL, NULL, 1),
+	(443, 57, 119, NULL, '1.00', 'PASSED', 0, 'CREDIT', 1, '2017-11-06 03:06:15', 1, 1, '2017-11-06 03:06:15', NULL, NULL, NULL, 'Added Grade Using Credit Tree', NULL, NULL, 1),
+	(444, 57, 129, NULL, '1.00', 'PASSED', 0, 'CREDIT', 1, '2017-11-06 03:06:15', 1, 1, '2017-11-06 03:06:15', NULL, NULL, NULL, 'Added Grade Using Credit Tree', NULL, NULL, 1),
+	(445, 57, 206, NULL, '1.00', 'PASSED', 2, 'CREDIT', 1, '2017-11-06 03:06:15', 1, 1, '2017-11-06 03:06:15', NULL, NULL, NULL, 'Added Grade Using Credit Tree', NULL, NULL, 1),
+	(446, 57, 192, NULL, '1.00', 'PASSED', 3, 'CREDIT', 1, '2017-11-06 03:08:41', 1, 1, '2017-11-06 03:08:41', NULL, NULL, NULL, 'Added Grade Using Credit Tree', NULL, NULL, 1),
+	(447, 57, 191, NULL, '1.00', 'PASSED', 3, 'CREDIT', 1, '2017-11-06 03:18:57', 1, 1, '2017-11-06 03:18:57', NULL, 1, '2017-11-06 03:18:57.000000', 'ADDED USING CREDIT TREE', NULL, NULL, 1);
 /*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_entrance
@@ -1826,7 +1816,7 @@ CREATE TABLE IF NOT EXISTS `linked_entrance` (
   PRIMARY KEY (`reference_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_entrance: ~1 rows (approximately)
+-- Dumping data for table cictems.linked_entrance: ~0 rows (approximately)
 /*!40000 ALTER TABLE `linked_entrance` DISABLE KEYS */;
 /*!40000 ALTER TABLE `linked_entrance` ENABLE KEYS */;
 
@@ -1847,12 +1837,13 @@ CREATE TABLE IF NOT EXISTS `linked_marshall_session` (
   KEY `marshall_session_fk_from_account_student_id` (`account_id`),
   CONSTRAINT `marshall_session_fk_from_account_student_id` FOREIGN KEY (`account_id`) REFERENCES `account_student` (`id`),
   CONSTRAINT `marshall_session_fk_from_student_cict_id` FOREIGN KEY (`cict_id`) REFERENCES `student` (`cict_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_marshall_session: ~0 rows (approximately)
+-- Dumping data for table cictems.linked_marshall_session: ~1 rows (approximately)
 /*!40000 ALTER TABLE `linked_marshall_session` DISABLE KEYS */;
 INSERT INTO `linked_marshall_session` (`ses_id`, `cict_id`, `account_id`, `name`, `org`, `imei`, `session_start`, `session_end`, `status`, `active`) VALUES
-	(4, 59, 24, 'MERCADO JELYN CARLOS', 'SWITS', '864394020404424', '2017-11-03 19:40:57', '2017-11-03 20:15:16', 'OFFLINE', 1);
+	(4, 59, 24, 'MERCADO JELYN CARLOS', 'SWITS', '864394020404424', '2017-11-03 19:40:57', '2017-11-03 20:15:16', 'OFFLINE', 1),
+	(5, 59, 24, 'MERCADO JELYN CARLOS', 'LSC', '867542024313101', '2017-11-05 22:17:01', NULL, 'ONLINE', 1);
 /*!40000 ALTER TABLE `linked_marshall_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_pila
@@ -1880,14 +1871,16 @@ CREATE TABLE IF NOT EXISTS `linked_pila` (
   CONSTRAINT `pila_fk_from_academic_term_id` FOREIGN KEY (`ACADTERM_id`) REFERENCES `academic_term` (`id`),
   CONSTRAINT `pila_fk_from_account_student_id` FOREIGN KEY (`ACCOUNT_id`) REFERENCES `account_student` (`id`),
   CONSTRAINT `pila_fk_from_student_cict_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_pila: ~3 rows (approximately)
+-- Dumping data for table cictems.linked_pila: ~5 rows (approximately)
 /*!40000 ALTER TABLE `linked_pila` DISABLE KEYS */;
 INSERT INTO `linked_pila` (`id`, `ACADTERM_id`, `STUDENT_id`, `ACCOUNT_id`, `SETTINGS_id`, `conforme`, `course`, `imei`, `request_accepted`, `request_called`, `request_validity`, `floor_assignment`, `floor_number`, `status`, `remarks`, `active`) VALUES
 	(12, 11, 57, 22, 1, '2014113844', 'BSIT', 'NONE', '2017-11-03 12:42:25', NULL, NULL, 3, 9, 'VOID', 'NONE', 0),
 	(13, 11, 57, 22, 1, '2014113844', 'BSIT', 'NONE', '2017-11-03 19:03:29', NULL, NULL, 3, 0, 'VOID', 'NONE', 0),
-	(14, 11, 57, 22, 1, '2014113844', 'BSIT', 'NONE', '2017-11-03 20:14:45', NULL, NULL, 3, 10, 'VOID', 'NONE', 0);
+	(14, 11, 57, 22, 1, '2014113844', 'BSIT', 'NONE', '2017-11-03 20:14:45', NULL, NULL, 3, 10, 'VOID', 'NONE', 0),
+	(15, 11, 57, 22, 1, '2014113844', 'BSIT', 'NONE', '2017-11-05 22:20:36', NULL, NULL, 3, 11, 'INLINE', 'NONE', 1),
+	(16, 11, 91, NULL, 1, '2014113847', 'NOT SET', 'NONE', '2017-11-05 22:25:51', NULL, NULL, 3, 12, 'INLINE', 'NONE', 1);
 /*!40000 ALTER TABLE `linked_pila` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_pila_3f
@@ -1898,13 +1891,15 @@ CREATE TABLE IF NOT EXISTS `linked_pila_3f` (
   PRIMARY KEY (`id`),
   KEY `pila_fk_id` (`pila_id`),
   CONSTRAINT `pila_fk_id` FOREIGN KEY (`pila_id`) REFERENCES `linked_pila` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_pila_3f: ~2 rows (approximately)
+-- Dumping data for table cictems.linked_pila_3f: ~4 rows (approximately)
 /*!40000 ALTER TABLE `linked_pila_3f` DISABLE KEYS */;
 INSERT INTO `linked_pila_3f` (`id`, `pila_id`, `active`) VALUES
 	(9, 12, 1),
-	(10, 14, 1);
+	(10, 14, 1),
+	(11, 15, 1),
+	(12, 16, 1);
 /*!40000 ALTER TABLE `linked_pila_3f` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_pila_4f
@@ -4903,9 +4898,9 @@ CREATE TABLE IF NOT EXISTS `load_subject` (
   CONSTRAINT `load_subject_fk_from_load_group_id` FOREIGN KEY (`LOADGRP_id`) REFERENCES `load_group` (`id`),
   CONSTRAINT `load_subject_fk_from_student_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`),
   CONSTRAINT `load_subject_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all students enrolled in that subject in a particular section';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all students enrolled in that subject in a particular section';
 
--- Dumping data for table cictems.load_subject: ~7 rows (approximately)
+-- Dumping data for table cictems.load_subject: ~11 rows (approximately)
 /*!40000 ALTER TABLE `load_subject` DISABLE KEYS */;
 INSERT INTO `load_subject` (`id`, `SUBJECT_id`, `LOADGRP_id`, `STUDENT_id`, `EVALUATION_id`, `added_date`, `added_by`, `remarks`, `removed_date`, `removed_by`, `changing_reference`, `active`, `arhived`) VALUES
 	(1, 213, 32757, 58, 1, '2017-10-31 20:27:40', 1, 'ACCEPTED', NULL, NULL, NULL, 1, 0),
@@ -4914,7 +4909,11 @@ INSERT INTO `load_subject` (`id`, `SUBJECT_id`, `LOADGRP_id`, `STUDENT_id`, `EVA
 	(4, 243, 33635, 57, 2, '2017-11-01 12:19:55', 1, 'REVOKED_EVALUATION', '2017-11-01 12:20:17', 2, NULL, 0, 0),
 	(5, 244, 33636, 57, 2, '2017-11-01 12:19:55', 1, 'REVOKED_EVALUATION', '2017-11-01 12:20:17', 2, NULL, 0, 0),
 	(6, 243, 33635, 57, 3, '2017-11-01 12:20:26', 1, 'REVOKED_EVALUATION', '2017-11-01 18:57:19', 2, NULL, 0, 0),
-	(7, 244, 33636, 57, 3, '2017-11-01 12:20:26', 1, 'REVOKED_EVALUATION', '2017-11-01 18:57:19', 2, NULL, 0, 0);
+	(7, 244, 33636, 57, 3, '2017-11-01 12:20:26', 1, 'REVOKED_EVALUATION', '2017-11-01 18:57:19', 2, NULL, 0, 0),
+	(8, 243, 33635, 57, 4, '2017-11-06 03:02:50', 1, 'ACCEPTED', NULL, NULL, NULL, 1, 0),
+	(9, 244, 33636, 57, 4, '2017-11-06 03:02:50', 1, 'ACCEPTED', NULL, NULL, NULL, 1, 0),
+	(10, 194, 32235, 57, 4, '2017-11-06 03:02:50', 1, 'ACCEPTED', NULL, NULL, NULL, 1, 0),
+	(11, 114, 32238, 57, 4, '2017-11-06 03:02:50', 1, 'ACCEPTED', NULL, NULL, NULL, 1, 0);
 /*!40000 ALTER TABLE `load_subject` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.student
@@ -4956,10 +4955,10 @@ CREATE TABLE IF NOT EXISTS `student` (
   CONSTRAINT `student_fk_verified_by` FOREIGN KEY (`verfied_by`) REFERENCES `faculty` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.student: ~4 rows (approximately)
+-- Dumping data for table cictems.student: ~5 rows (approximately)
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
 INSERT INTO `student` (`cict_id`, `id`, `CURRICULUM_id`, `curriculum_assignment`, `PREP_id`, `prep_assignment`, `last_name`, `first_name`, `middle_name`, `gender`, `year_level`, `section`, `_group`, `has_profile`, `enrollment_type`, `admission_year`, `college`, `campus`, `residency`, `university`, `created_by`, `created_date`, `verified`, `verification_date`, `verfied_by`, `last_evaluation_term`, `active`) VALUES
-	(57, '2014113844', 9, '2017-10-28 15:29:38', NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', 4, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CIT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 17:53:54', 1, '2017-11-01 12:19:55', 1, 0, 1),
+	(57, '2014113844', 9, '2017-10-28 15:29:38', NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', 4, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CIT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 17:53:54', 1, '2017-11-01 12:19:55', 1, 11, 1),
 	(58, '2014123456', 9, '2017-10-29 02:19:51', NULL, NULL, 'DAZO', 'ARLEALYN', NULL, 'MALE', 3, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'Main', 'REGULAR', 'HOME', 'FACULTY', '2017-09-09 18:41:14', 1, '2017-10-21 21:13:41', 1, 11, 1),
 	(59, '2014112470', 6, NULL, NULL, NULL, 'MERCADO', 'JELYN', 'CARLOS', 'FEMALE', 1, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-09-10 06:57:02', 1, '2017-10-26 03:10:26', 1, 11, 1),
 	(89, '2014113849', NULL, NULL, NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', NULL, NULL, NULL, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', 'HOME', 'FACULTY', '2017-11-03 02:32:49', 0, NULL, NULL, NULL, 1),
@@ -5007,14 +5006,15 @@ CREATE TABLE IF NOT EXISTS `student_profile` (
   PRIMARY KEY (`id`),
   KEY `profile_fk_from_student_cict_id` (`STUDENT_id`),
   CONSTRAINT `profile_fk_from_student_cict_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.student_profile: ~2 rows (approximately)
+-- Dumping data for table cictems.student_profile: ~4 rows (approximately)
 /*!40000 ALTER TABLE `student_profile` DISABLE KEYS */;
 INSERT INTO `student_profile` (`id`, `STUDENT_id`, `floor_assignment`, `profile_picture`, `mobile`, `house_no`, `street`, `brgy`, `city`, `province`, `zipcode`, `email`, `ice_name`, `ice_address`, `ice_contact`, `created_date`, `active`) VALUES
 	(16, 59, 3, 'NONE', '09368955866', '123', 'ASDASDASDASD', 'ASDASDASD', 'ASDASDASD', 'ASDASDASDASD', '3018', 'jhmvinperello@gmail.com', 'ASDASDASDASD', 'ADDREESS', '09368955866', '2017-09-10 06:58:21', 1),
-	(63, 57, 3, 'NONE', '09368955866', '483', 'L GONZALES', 'BUNDUCAN', 'BOCAUE', 'BULACAN', '3018', 'JHMVINPERELLO@GMAIL.COM', 'GUARDIAN OF THE GALAXY', 'BOCAUE BULACAN', '09368955866', '2017-11-03 02:39:30', 1),
-	(66, 91, 3, 'NONE', '09368958662', '483', 'SA TABI LANG, MALAPIT NA', 'ETOASDASD', 'MALOLOS', 'BULACAN', '3000', 'JHMVINPERELLO@GMAIL.COM', 'GRETHEL BERNARDINO', 'SA TABI LANG', '09368955866', '2017-11-03 02:48:17', 1);
+	(63, 57, 3, 'NONE', '09368955866', '483', 'L GONZALES', 'BUNDUCAN', 'BOCAUE', 'BULACAN', '3018', 'JHMVINPERELLO@GMAIL.COM', 'GUARDIAN OF THE GALAXY', 'BOCAUE BULACAN', '09368955866', '2017-11-03 02:39:30', 0),
+	(66, 91, 3, 'NONE', '09368958662', '483', 'SA TABI LANG, MALAPIT NA', 'ETOASDASD', 'MALOLOS', 'BULACAN', '3000', 'JHMVINPERELLO@GMAIL.COM', 'GRETHEL BERNARDINO', 'SA TABI LANG', '09368955866', '2017-11-03 02:48:17', 1),
+	(67, 57, 3, 'profile_57.jpg', '09368955866', '483', 'GONZALES', 'BUNDUCAN', 'BOCAUE', 'BULACAN', '3018', 'JHMVINPERELLO@GMAIL.COM', 'DONNA GINACION', '483 GONZALES BUNDUCAN BOCAUE BULACAN', '09368955866', '2017-11-05 22:14:45', 1);
 /*!40000 ALTER TABLE `student_profile` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.subject
@@ -5221,7 +5221,7 @@ CREATE TABLE IF NOT EXISTS `system_override_logs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.system_override_logs: ~3 rows (approximately)
+-- Dumping data for table cictems.system_override_logs: ~4 rows (approximately)
 /*!40000 ALTER TABLE `system_override_logs` DISABLE KEYS */;
 INSERT INTO `system_override_logs` (`id`, `category`, `description`, `executed_by`, `executed_date`, `academic_term`, `conforme`, `conforme_type`, `conforme_id`, `active`) VALUES
 	(4, 'EVALUATION', 'INTERNSHIP_WITH_OTHERS', 2, '2017-10-04 20:21:42', 11, 'PERELLO, JHON MELVIN NIETO', 'STUDENT', 57, 1),
@@ -5244,7 +5244,7 @@ CREATE TABLE IF NOT EXISTS `system_variables` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.system_variables: ~1 rows (approximately)
+-- Dumping data for table cictems.system_variables: ~2 rows (approximately)
 /*!40000 ALTER TABLE `system_variables` DISABLE KEYS */;
 INSERT INTO `system_variables` (`id`, `name`, `value`, `created_by`, `created_date`, `updated_by`, `updated_date`, `active`) VALUES
 	(1, 'REGISTRAR', 'LEILANIE M. LIZARDO', NULL, '2017-10-03 17:33:32', NULL, NULL, 1),
