@@ -28,11 +28,13 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
+import artifacts.FTPManager;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.io.File;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.SystemProperties;
-import org.cict.reports.ProfileImage;
 import org.cict.reports.ReportsDirectory;
 import org.hibernate.criterion.Order;
 
@@ -175,15 +177,30 @@ public class PrintStudentProfile extends Transaction {
             // in this case the image setter was not called but we have assigned default value
             int val = studentProfile.print();
         } else {
-            // this is a downloader thread please put next actions inside
-            ProfileImage.download(studentImage, path -> {
-                // now we have the path
-                // this will return null if not fetched from the server
-                // we can call the setter to set the image
-                studentProfile.setProfileImage(path);
-                // and then print
+            String tempProfilePath = "temp/images/profile";
+            String tempProfileImagePath = tempProfilePath + "/" + studentImage;
+            File tempProfileDir = new File(tempProfilePath);
+            File tempProfileImage = new File(tempProfileImagePath);
+            try {
+                FileUtils.forceMkdir(tempProfileDir);
+                FTPManager.download("student_avatar", studentImage, tempProfileImage.getAbsolutePath());
+                studentProfile.setProfileImage(tempProfileImage.getAbsolutePath());
                 int val = studentProfile.print();
-            });
+            } catch (Exception e) {
+                studentProfile.setProfileImage(null);
+                int val = studentProfile.print();
+            }
+            
+            
+//            // this is a downloader thread please put next actions inside
+//            ProfileImage.download(studentImage, path -> {
+//                // now we have the path
+//                // this will return null if not fetched from the server
+//                // we can call the setter to set the image
+//                studentProfile.setProfileImage(path);
+//                // and then print
+//                int val = studentProfile.print();
+//            });
         }
         //----------------------------------------------------------------------
     }

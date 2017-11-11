@@ -142,4 +142,25 @@ public class PublicConstants {
             return "";
         }
     }
+    
+    //--------------------------------------
+    // SYSTEM VARIABLES NAME
+    //----------------------------------
+    public final static String MAX_POPULATION_NAME = "MAXIMUM_POPULATION";
+    public final static String FTP_PORT = "FTP_PORT";
+    //----------------------------------------------
+    
+    public static Integer getMaxPopulation() {
+        SystemVariablesMapping map = Mono.orm().newSearch(Database.connect().system_variables())
+                .eq(DB.system_variables().name, MAX_POPULATION_NAME)
+                .active().first();
+        if(map==null)
+            return MAX_POPULATION;
+        else
+            return Integer.valueOf(map.getValue());
+    }
+    
+    //----------------------------------------------
+    public static String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    //--------------------------------
 }

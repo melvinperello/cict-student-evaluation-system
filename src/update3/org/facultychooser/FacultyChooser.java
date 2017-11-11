@@ -41,6 +41,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -96,6 +97,9 @@ public class FacultyChooser extends MonoLauncher {
         searchTx.whenCancelled(() -> {
         });
         searchTx.whenFailed(() -> {
+            Notifications.create().darkStyle()
+                    .title("Search Failed")
+                    .text("Sorry for the inconvinince. ").showError();
         });
         searchTx.whenSuccess(() -> {
             this.createTable(searchTx.getFacultyList());

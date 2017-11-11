@@ -24,6 +24,7 @@
 package update.org.cict.controller.adding;
 
 import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Objects;
 import javafx.collections.ObservableList;
 import org.cict.evaluation.views.SectionSearchView;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -44,7 +46,7 @@ import org.cict.evaluation.views.SectionSearchView;
  */
 public class SearchSection extends Transaction {
 
-    public String subjectCode;
+    public Integer subjectCode;
     public Integer CURRICULUM_id;
 
     private SubjectMapping searchedSubject;
@@ -89,27 +91,25 @@ public class SearchSection extends Transaction {
 //                .eq(DB.subject().code, subjectCode)
 //                .active()
 //                .first();
-        ArrayList<SubjectMapping> subjects = Mono.orm()
+        SubjectMapping subject = Mono.orm()
                 .newSearch(Database.connect().subject())
-                .eq(DB.subject().code, subjectCode)
-                .active()
-                .all();
-        for(SubjectMapping subject: subjects) {
-            CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                    .eq(DB.curriculum_subject().SUBJECT_id, subject.getId())
-                    .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
-                    .active()
-                    .first();
-            if(csMap != null) {
-                searchedSubject = subject;
-                break;
-            }
-        }
+                .eq(DB.subject().id, subjectCode)
+                .active().first();
+        
+        searchedSubject = subject;
         
         if (Objects.isNull(searchedSubject)) {
             return false;
         }
 
+        CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                .eq(DB.curriculum_subject().SUBJECT_id, searchedSubject.getId())
+                .active(Order.desc(DB.curriculum_subject().id)).first();
+        
+        if(csMap!=null) {
+            CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(csMap.getCURRICULUM_id());
+            subInfo.setCurriculum(curriculum);
+        }
         /**
          * Values for subject info
          *
@@ -214,14 +214,14 @@ public class SearchSection extends Transaction {
             /**
              * @added parameter LoadGroupMapping this.loadGroups.get(x)
              */
-            temp.add(this.addNewSubjectInformationHolder(searchedSubject, loadSections.get(x), this.loadGroups.get(x)));
+            temp.add(this.addNewSubjectInformationHolder(searchedSubject, loadSections.get(x), this.loadGroups.get(x), subInfo.getCurriculum()));
             searchResults.add(temp);
         }
 
     }
 
     private SubjectInformationHolder addNewSubjectInformationHolder(SubjectMapping subject,
-            LoadSectionMapping loadSection, LoadGroupMapping lgMap) {
+            LoadSectionMapping loadSection, LoadGroupMapping lgMap, CurriculumMapping curriculum) {
         SubjectInformationHolder suggested = new SubjectInformationHolder();
         suggested.setSubjectMap(subject);
         suggested.setSectionMap(loadSection);
@@ -242,6 +242,8 @@ public class SearchSection extends Transaction {
         suggested.setAcademicProgramMapping(acadProg);
         // added 08.24.2017
         suggested.setLoadGroup(lgMap);
+        
+        suggested.setCurriculum(curriculum);
         return suggested;
     }
 

@@ -26,6 +26,7 @@ package update5.org.cict.student.layout;
 import com.melvin.mono.fx.MonoLauncher;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 /**
  *
@@ -44,6 +45,9 @@ public class CourseHistoryRow extends MonoLauncher {
 
     @FXML
     private Label lbl_prevoius_curriculum_date;
+    
+    @FXML
+    private VBox vbox_prep;
 
     @Override
     public void onStartUp() {
@@ -63,6 +67,10 @@ public class CourseHistoryRow extends MonoLauncher {
 
     public Label getLbl_prevoius_curriculum_date() {
         return lbl_prevoius_curriculum_date;
+    }
+
+    public VBox getVbox_prep() {
+        return vbox_prep;
     }
     
 }

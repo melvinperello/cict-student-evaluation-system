@@ -38,6 +38,13 @@ public class StudentInformation {
     public StudentMapping getStudentMapping() {
         return student;
     }
+    
+    public String getFullName(){
+        if(student!=null) {
+            return student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "" : student.getMiddle_name());
+        }
+        return "NO STUDENT FOUND";
+    }
     public StudentInformation(StudentMapping student) {
         this.student = student;
         run();

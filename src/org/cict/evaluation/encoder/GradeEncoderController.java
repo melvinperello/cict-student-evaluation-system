@@ -31,25 +31,35 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
+import artifacts.FTPManager;
+import artifacts.ImageUtility;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.apache.commons.io.FileUtils;
 import org.cict.evaluation.encoder.view.GradeEncoderUI;
 import org.cict.evaluation.encoder.view.RatingTableClass;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.spreadsheet.Grid;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetView;
@@ -84,6 +94,12 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
 
     @FXML
     private HBox pnl_spreadsheet;
+    
+    @FXML
+    private HBox pnl_loading;
+    
+    @FXML
+    private HBox pnl_error;
 
     @FXML
     private Label lblTitle;
@@ -93,6 +109,9 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
 
     @FXML
     private Button btnPost;
+    
+    @FXML
+    private ImageView img_profile;
 
     private GradeEncoderUI gei;
     private SpreadsheetView spv;
@@ -111,6 +130,10 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             this.gei = new GradeEncoderUI();
         } catch (Exception e) {
             System.err.println("Error in constructing spreadsheet");
+            Notifications.create().title("Oh no! Something went wrong.")
+                    .text("Subjects are not loaded properly.\n"
+                            + "Please try again later.")
+                    .showError();
         }
     }
 
@@ -134,6 +157,27 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     }
 
     private void init() {
+        //-------------------------------
+        // set image
+        SimpleTask set_profile = new SimpleTask("set_profile");
+        set_profile.setTask(()->{
+            this.setImageView();
+        });
+        set_profile.whenCancelled(()->{
+            Notifications.create().text("Loading of image is cancelled")
+                    .showInformation();
+        });
+        set_profile.whenFailed(()->{
+            Notifications.create().text("Failed to load image.")
+                    .showInformation();
+        });
+        set_profile.whenSuccess(()->{
+        });
+        set_profile.start();
+        //-------------------------------
+        
+        
+        this.changeView(pnl_loading);
         this.CURRICULUM_id = CURRENT_STUDENT.getCURRICULUM_id();
         this.tbl_rating = this.gei.createGradeTable(this.tbl_rating);
         this.gei.setNotificationPane(pnl_main);
@@ -158,9 +202,16 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         });
         createSpredSheetTx.whenCancelled(() -> {
             // cancelled is called upon error.
+            this.changeView(pnl_error);
+            super.cursorDefault();
         });
         createSpredSheetTx.whenFailed(() -> {
-
+            super.cursorDefault();
+            this.changeView(pnl_error);
+            Notifications.create().title("Oh no! Something went wrong.")
+                    .text("Subjects are not loaded properly.\n"
+                            + "Please try again later.")
+                    .showError();
         });
         createSpredSheetTx.whenSuccess(() -> {
             pnl_spreadsheet.getChildren().clear();
@@ -170,6 +221,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             this.writeEncodedGrades();
             //------------------------------------------------------------------
             super.cursorDefault();
+            this.changeView(pnl_spreadsheet);
         });
         createSpredSheetTx.whenFinished(() -> {
             tbl_rating.setDisable(false);
@@ -199,7 +251,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                     .setTitle("Encode Grade")
                     .setHeader("Confirmation")
                     .setMessage("Are you sure you want to post grades? "
-                            + "This will no longer be editable in this process.")
+                            + "This will no longer be editable after this process.")
                     .confirmCustom("Yes", "No");
 
             if (choice == 1) {
@@ -268,6 +320,16 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                     } else {
                         // make the cell updatable
                         row.get(3).setEditable(true);
+                        
+                        // check if the remarks is failed or inc
+                        if(remarks.equalsIgnoreCase("FAILED") || remarks.equalsIgnoreCase("INCOMPLETE")) {
+                            // if these fields are modified, ask for 
+                            // local registrar's credentials
+                            // before saving grades
+                            HashMap<String, String> detail = new HashMap();
+                            detail.put(row.get(0).getText(), remarks);
+                            gei.addRestrictedSubject(detail);
+                        }
                     }
 
                     //----------------------------------------------------------
@@ -377,6 +439,33 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             return acadTerm.getId();
         } catch (IndexOutOfBoundsException a) {
             return null;
+        }
+    }
+    
+    //-------------------------
+    private void changeView(Node node) {
+        Animate.fade(node, 150, ()->{
+            pnl_error.setVisible(false);
+            pnl_loading.setVisible(false);
+            pnl_spreadsheet.setVisible(false);
+            node.setVisible(true);
+        }, pnl_error, pnl_loading, pnl_spreadsheet);
+    }
+    
+    private void setImageView() {
+        StudentProfileMapping spMap = null;
+        if(this.CURRENT_STUDENT.getHas_profile().equals(1)) {
+            spMap = Mono.orm().newSearch(Database.connect().student_profile())
+                    .eq(DB.student_profile().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
+                    .active(Order.desc(DB.student_profile().id)).first();
+        }
+        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        if (studentImage == null
+            || studentImage.isEmpty()
+            || studentImage.equalsIgnoreCase("NONE")) {
+            ImageUtility.addDefaultImageToFx(img_profile, 1);
+        } else {
+            ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 1);
         }
     }
 }

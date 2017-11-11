@@ -73,13 +73,13 @@
                               </ImageView>
                               <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
                                  <children>
-                                    <Label text="No Result Found . . ." textFill="WHITE" wrapText="true">
+                                    <Label text="No Result Found . . ." textFill="#27ae60" wrapText="true">
                                        <font>
                                           <Font name="System Bold" size="28.0" />
                                        </font>
                                     </Label>
-                                    <Line endX="340.0" startX="-100.0" stroke="WHITE" />
-                                    <Label text="Note: Only subjects with open section will be shown. Here's a cup of coffee for you ♥ cheer up!" textFill="WHITE" wrapText="true">
+                                    <Line endX="340.0" startX="-100.0" stroke="#27ae60" />
+                                    <Label text="Note: Only subjects with open section will be shown. Here's a cup of coffee for you ♥ cheer up!" textFill="#27ae60" wrapText="true">
                                        <font>
                                           <Font size="20.0" />
                                        </font>

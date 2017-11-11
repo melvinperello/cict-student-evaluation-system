@@ -45,6 +45,7 @@ import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -57,7 +58,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.result.PrintResult;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -122,9 +126,18 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     @FXML
     private Label lbl_status1;
     
+    @FXML
+    private JFXButton btn_print;
+            
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+        vbox_home.setVisible(false);
+        vbox_result.setVisible(false);
+        Animate.fade(vbox_home, 150, ()->{
+            vbox_result.setVisible(false);
+            vbox_home.setVisible(true);
+        }, vbox_home, vbox_result);
         this.setComboBox();
     }
     private final String NAME = "NAME"
@@ -172,10 +185,70 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
             onSearch();
         });
+        super.addClickEvent(btn_print, ()->{
+            this.printResult();
+        });
     }
     
+    private void printResult() {
+        if(students==null || students.isEmpty()) {
+            Notifications.create()
+                    .title("No Result")
+                    .text("No result found to print.")
+                    .showWarning();
+            return;
+        }
+        String[] colNames = new String[]{"Student Number","Name","Section"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        for (int i = 0; i < students.size(); i++) {
+            StudentMapping result = students.get(i);
+            StudentInformation info = new StudentInformation(result);
+            String[] row = new String[]{(i+1)+".  "+ result.getId(),
+                WordUtils.capitalizeFully(info.getFullName()), info.getSection()};
+            rowData.add(row);
+        }
+        PrintResult print = new PrintResult();
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        print.fileName = "student_list_" + searchWord.toLowerCase();
+        print.reportDescription = "Student Search Result For " + searchWord.toUpperCase();
+        
+        print.reportTitle = "Student List";
+        print.whenStarted(() -> {
+            btn_print.setDisable(true);
+            super.cursorWait();
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_print.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print.setDisable(false);
+            super.cursorDefault();
+        });
+        //----------------------------------------------------------------------
+        print.transact();
+    }
+    
+    
+    private String searchWord = "";
     public void onSearch() {
-        String searchWord = "";
+        
         if(vbox_result.isVisible()) {
             searchWord = MonoString.removeExtraSpace(txt_search_key.getText()).toUpperCase();
             txt_search_key_main.setText(txt_search_key.getText());
@@ -446,7 +519,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                         .pull();
                 
                 students = this.recursiveQuery(searchStudent)
-                        .active(Order.asc(DB.student().last_name)).all();
+                        .execute(Order.asc(DB.student().last_name)).all();
                 
                 if(students==null? true: students.isEmpty()) {
                     msg = "No student found with the given key.";

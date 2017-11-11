@@ -231,7 +231,9 @@ public class MovingUpController extends SceneFX implements ControllerFX {
     
     
     private void systemOverride(String type, SimpleTableRow row) {
-        boolean ok = Access.isEvaluationOverride(allowOverride);
+        Object[] res = Access.isEvaluationOverride(allowOverride);
+        boolean ok = (boolean) res[0];
+        String fileName = (String) res[1];
         if (ok) {
             SystemOverrideLogsMapping map = MapFactory.map().system_override_logs();
             map.setCategory(SystemOverriding.CATEGORY_EVALUATION);
@@ -250,6 +252,8 @@ public class MovingUpController extends SceneFX implements ControllerFX {
             map.setConforme_type("STUDENT");
             map.setConforme_id(student.getCict_id());
 
+            map.setAttachment_file(fileName);
+            
             int id = Database.connect().system_override_logs().insert(map);
             if (id <= 0) {
                 Mono.fx().snackbar().showError(application_root, "Something went wrong please try again.");

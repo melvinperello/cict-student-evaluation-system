@@ -8,10 +8,14 @@ import app.lazy.models.EvaluationMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.SystemOverrideLogsMapping;
+import artifacts.FTPManager;
+import artifacts.ImageUtility;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.controls.SimpleImage;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
@@ -20,6 +24,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import java.io.File;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -41,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
@@ -55,6 +61,7 @@ import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.evaluation.student.info.InfoStudentController;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Order;
 import update.org.cict.controller.adding.subjectviewer.AddingDataPipe;
 import update.org.cict.controller.adding.subjectviewer.AddingSubjects;
 import update.org.cict.controller.adding.subjectviewer.AssistantController2;
@@ -124,6 +131,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private JFXButton btn_add_change_again;
     @FXML
     private JFXButton btn_checklist;
+    @FXML
+    private ImageView img_profile;
 
     private StudentMapping studentSearched;
 
@@ -587,7 +596,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private void onShowStudent(StudentMapping sMap, String section) {
         String studentFullName = sMap.getLast_name() + ", "
                 + sMap.getFirst_name() + " "
-                + sMap.getMiddle_name();
+                + (sMap.getMiddle_name()==null? "":sMap.getMiddle_name());
 
         this.lblCourseSection.setText(section);
         this.lblName.setText(studentFullName);
@@ -601,6 +610,27 @@ public class AddingHome extends SceneFX implements ControllerFX {
      * @param studentMap
      */
     private void onLoadEvaluatedSubjects(EvaluationMapping evaluationMap, StudentMapping studentMap) {
+        
+        //-------------------------------
+        // set image
+        SimpleTask set_profile = new SimpleTask("set_profile");
+        set_profile.setTask(()->{
+            this.setImageView();
+        });
+        set_profile.whenCancelled(()->{
+            Notifications.create().text("Loading of image is cancelled")
+                    .showInformation();
+        });
+        set_profile.whenFailed(()->{
+            Notifications.create().text("Failed to load image.")
+                    .showInformation();
+        });
+        set_profile.whenSuccess(()->{
+        });
+        set_profile.start();
+        //-------------------------------
+        
+        
         CheckEvaluatedSubjects checkEvaluationTx = new CheckEvaluatedSubjects();
         checkEvaluationTx.evaluationMap = evaluationMap;
         checkEvaluationTx.studentMap = studentMap;
@@ -1485,6 +1515,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
     private void onShowAddSubject() {
         try {
+            // if local registrar allow override.
+            allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
+            
             AddingSubjects addingSubjects = new AddingSubjects();
             addingSubjects.setStudentNumber(studentSearched.getId(), studentSearched.getCURRICULUM_id());
 
@@ -1503,10 +1536,19 @@ public class AddingHome extends SceneFX implements ControllerFX {
             AddingDataPipe.instance().isChanged = true;
             add_stage.showAndWait();
             if (AddingDataPipe.instance().isChangedValueRecieved) {
+                
                 try {
                     // if value was recieved
                     SubjectInformationHolder subinfo = AddingDataPipe.instance().isChangedValue;
 
+                    //---------------------
+                    // check if existing before validation
+                    if(!checkIfNotExisting(subinfo.getSubjectMap())) {
+                        showWarningNotification("Subject Exist", "The subject you are trying to add is already in the list.");
+                        AddingDataPipe.instance().resetIsChanged();
+                        return;
+                    }
+                    //--------------------------------------
                     if (subinfo.getSubjectMap().getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                         if (!ValidateOJT.isValidForOJT(studentSearched)) {
                             
@@ -1530,6 +1572,18 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             AddingDataPipe.instance().resetIsChanged();
                             return;
                         }
+                    }
+
+                    if(AddingDataPipe.instance().isMaxPopulationReached) {
+                        Notifications.create().title("Max Population Reached")
+                                .position(Pos.BOTTOM_RIGHT)
+                                .text("Section reached the maximum population."
+                                        + "\nClick This notification for more details.")
+                                .onAction(onAction -> {
+                                    this.systemOverride(MAX_POPULATION, subinfo, "add", null, null);
+                                })
+                                .showWarning();
+                        return;
                     }
                     validateSubject("ADD", null, subinfo);
                 } catch (NullPointerException a) {
@@ -1582,6 +1636,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private final String INTERNSHIP_WITH_OTHERS = SystemOverriding.EVAL_INTERNSHIP_WITH_OTHERS;
     private final String BYPASSED_PRE_REQUISITES = SystemOverriding.EVAL_BYPASSED_PRE_REQUISITES;
     private final String INTERN_GRADE_REQUIREMENT = SystemOverriding.EVAL_INTERN_GRADE_REQUIREMENT;
+    
+    private final String MAX_POPULATION = SystemOverriding.EVAL_EXCEED_MAX_POPULATION;
 
     private SubjectInformationHolder subinfo_CHANGE_SUBJECT;
     
@@ -1589,7 +1645,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         
         // if local registrar allow override.
         allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
-
+        
         /**
          * validate the subject before anything else
          */
@@ -2168,6 +2224,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
         validate.transact();
     }
     
+    private boolean checkIfNotExisting(SubjectMapping validatedSubject) {
+        boolean notExist = true;
+        for (int i = 0; i < table.getChildren().size(); i++) {
+            SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
+            SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
+            SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
+            String row_status = currentTableRow.getRowMetaData().get(KEY_ROW_STATUS).toString();
+            if (!row_status.equalsIgnoreCase("REMOVED")) {
+                if (Objects.equals(validatedSubject.getId(), subjectInTheList.getId())) {
+                    notExist = false;
+                }
+            }
+        }
+        return notExist;
+    }
+    
     
     /**
      * IS OVERRIDABLE BY SYSTEM. checks whether if the student is
@@ -2201,7 +2273,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
     
     
     private void systemOverride(String type, SubjectInformationHolder subinfo, String mode, SimpleTableRow row, SubjectInformationHolder subinfo_CHANGE_SUBJECT) {
-        boolean ok = Access.isEvaluationOverride(allowOverride);
+        Object[] result = Access.isEvaluationOverride(allowOverride);
+        boolean ok = (boolean) result[0];
+        String fileName = (String) result[1];
         if (ok) {
             SystemOverrideLogsMapping map = MapFactory.map().system_override_logs();
             map.setCategory(SystemOverriding.CATEGORY_EVALUATION);
@@ -2220,14 +2294,16 @@ public class AddingHome extends SceneFX implements ControllerFX {
             map.setConforme_type("STUDENT");
             map.setConforme_id(studentSearched.getCict_id());
 
+            //-----------------
+            map.setAttachment_file(fileName);
+            //------------
+                
             int id = Database.connect().system_override_logs().insert(map);
             if (id <= 0) {
                 Mono.fx().snackbar().showError(anchor_main, "Something went wrong please try again.");
             } else {
                 forceTransact(subinfo, mode, row, subinfo_CHANGE_SUBJECT);
             }
-
-            AddingDataPipe.instance().resetIsChanged();
         }
     }
     
@@ -2587,5 +2663,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
         this.hbox_none.setVisible(false); // no results
         this.hbox_already.setVisible(false);
         vbox_studentOptions.setVisible(false);
+    }
+    
+    private void setImageView() {
+        StudentProfileMapping spMap = null;
+        if(this.studentSearched.getHas_profile().equals(1)) {
+            spMap = Mono.orm().newSearch(Database.connect().student_profile())
+                    .eq(DB.student_profile().STUDENT_id, this.studentSearched.getCict_id())
+                    .active(Order.desc(DB.student_profile().id)).first();
+        }
+        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        if (studentImage == null
+            || studentImage.isEmpty()
+            || studentImage.equalsIgnoreCase("NONE")) {
+            ImageUtility.addDefaultImageToFx(img_profile, 0);
+        } else {
+            ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 0);
+        }
     }
 }

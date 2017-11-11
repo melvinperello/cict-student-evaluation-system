@@ -70,7 +70,9 @@ public class Deficiency {
     public String STUDENT_NAME = "DE LA CRUZ, JOEMAR NUCOM",
             STUDENT_ADDRESS = "8-152 SUCAD APALIT, PAMPANGA",
             STUDENT_NUMBER = "09123456789",
-            CURRICULUM_NAME = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY"; 
+            CURRICULUM_NAME = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
+            DATETIME = "DATE NOT FOUND",
+            USER = "USER NOT FOUND"; 
     public HashMap<String,ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
     
     /**
@@ -118,7 +120,7 @@ public class Deficiency {
                 Utilities.inchesToPoints(13f)), 55, 55, 50, 20); //lrtb
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
-            PageNumeration event = new PageNumeration();
+            PageNumeration event = new PageNumeration(DATETIME, USER);
             writer.setPageEvent(event);
         }catch(FileNotFoundException es){
             return 1;
@@ -437,9 +439,12 @@ class PageNumeration extends PdfPageEventHelper {
     PdfTemplate total;
 
     private Font font_footer, font_footer2;
+    private String dateTime, user;
 
-    public PageNumeration (){
+    public PageNumeration (String dateTime, String user){
         try{
+            this.dateTime = dateTime;
+            this.user = user;
             font_footer = new Font(FontFamily.HELVETICA, 9, Font.NORMAL);
             font_footer2 = new Font(FontFamily.HELVETICA, 7, Font.NORMAL);
         }
@@ -472,7 +477,7 @@ class PageNumeration extends PdfPageEventHelper {
             cell.setBorder (0);
             cell.setBorderWidthTop (1);
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell.setPhrase(new Phrase("2017-09-06 14:19:06 | JOEMAR DE LA CRUZ", font_footer2));
+            cell.setPhrase(new Phrase(dateTime + " | " + user +"\nPowered by Monosync", font_footer2));
             table.addCell(cell);
 
             cell = new PdfPCell();
@@ -489,7 +494,7 @@ class PageNumeration extends PdfPageEventHelper {
             table.setTotalWidth(document.getPageSize().getWidth()
                     - document.leftMargin() - document.rightMargin());
             table.writeSelectedRows(0, -1, document.leftMargin(),
-                    document.bottomMargin() + 10, writer.getDirectContent());
+                    document.bottomMargin() - 10, writer.getDirectContent());
         }
         catch(DocumentException de) {
             throw new ExceptionConverter(de);

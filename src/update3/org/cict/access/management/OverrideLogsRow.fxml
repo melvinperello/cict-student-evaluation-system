@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="application_root" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="810.0" styleClass="metro-row" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="75.0" prefWidth="255.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="lbl_executed_by" maxWidth="1.7976931348623157E308" minWidth="-Infinity" text="De La Cruz, Joemar Nucom">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_date" layoutX="10.0" layoutY="10.0" minWidth="-Infinity" text="Date" />
+            <JFXButton fx:id="btn_download" style="-fx-border-color: #fff;" text="Download Attachment File" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/Download_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </JFXButton>
+         </children>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </VBox>
+      <VBox prefHeight="75.0" prefWidth="272.0">
+         <children>
+            <Label fx:id="lbl_conforme" layoutX="16.0" layoutY="16.0" maxWidth="1.7976931348623157E308" text="Perello, Jhon Melvin">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_conforme_type" layoutX="16.0" layoutY="16.0" text="Student">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="16.0" layoutY="50.0" text="Conforme">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </VBox>
+      <VBox prefHeight="75.0" prefWidth="242.0">
+         <children>
+            <Label fx:id="lbl_description" maxWidth="1.7976931348623157E308" text="Exceed max units">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label text="Description">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_category" maxWidth="1.7976931348623157E308" text="Evaluation">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label contentDisplay="RIGHT" text="Category" textAlignment="RIGHT" VBox.vgrow="ALWAYS">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </children>
+   <stylesheets>
+      <URL value="@metro-ui-table.css" />
+      <URL value="@metro-ui.css" />
+   </stylesheets>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</HBox>

@@ -31,6 +31,7 @@ import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.MonoLauncher;
+import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import java.util.Calendar;
 import javafx.fxml.FXML;
@@ -38,6 +39,7 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.PublicConstants;
@@ -75,6 +77,9 @@ public class SystemLogin extends MonoLauncher {
     private JFXButton btn_forgot;
 
     @FXML
+    private JFXButton btn_settings;
+    
+    @FXML
     private VBox vbox_loading;
 
     @Override
@@ -110,10 +115,10 @@ public class SystemLogin extends MonoLauncher {
             if (Mono.orm().getSessionFactory() == null) {
                 // no connection
                 Mono.fx().alert().createError().setTitle("No Connection")
-                        .setHeader("Server Unreachable")
-                        .setMessage("Please check your connection then try again.")
+                        .setHeader("Server " + PublicConstants.getServer() + " Unreachable")
+                        .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
                         .showAndWait();
-                MainApplication.die(0);
+//                MainApplication.die(0);
             }
 
         });
@@ -159,6 +164,19 @@ public class SystemLogin extends MonoLauncher {
             MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_FORGOT_LINK);
             // this.onShowForgotPassword();
         });
+        MonoClick.addClickEvent(btn_settings, (()->{
+            Settings set = M.load(Settings.class);
+            set.onDelayedStart();
+            try {
+                System.out.println("Stage Recycled. ^^v");
+                set.getCurrentStage().showAndWait();
+            } catch (NullPointerException e) {
+                Stage a = set.createChildStage(super.getCurrentStage());
+                a.initStyle(StageStyle.UNDECORATED);
+                a.showAndWait();
+            }
+        }));
+        
     }
 
     /**

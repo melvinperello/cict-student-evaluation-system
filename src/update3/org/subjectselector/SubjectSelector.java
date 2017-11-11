@@ -25,7 +25,6 @@ package update3.org.subjectselector;
 
 import app.lazy.models.DB;
 import app.lazy.models.Database;
-import app.lazy.models.FacultyMapping;
 import app.lazy.models.SubjectMapping;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.events.MonoClick;
@@ -33,8 +32,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
-import com.jhmvin.orm.SQL;
-import com.jhmvin.orm.Searcher;
+import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.melvin.mono.fx.bootstrap.M;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
@@ -42,11 +40,6 @@ import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
-import update3.org.facultychooser.FacultyChooser;
-import update3.org.facultychooser.RowFaculty;
 
 /**
  *
@@ -141,13 +134,24 @@ public class SubjectSelector extends MonoLauncher {
             rowController.getLbl_code().setText(map.getCode());
             rowController.getLbl_title().setText(map.getDescriptive_title());
             rowController.getLbl_id().setText("ID " + map.getId());
-
+            SimpleTableRow row = SimpleTable.fxRow(rowSubject, 100.0);
+            row.getRowMetaData().put("MAP", map);
+            MonoClick.addClickEvent(row, ()->{
+                subject = (SubjectMapping) row.getRowMetaData().get("MAP");
+                Mono.fx().getParentStage(btn_cancel).close();
+            });
+            
             // add to table
-            tbl_faculty.addRow(SimpleTable.fxRow(rowSubject, 100.0));
-
+            tbl_faculty.addRow(row);
         }
+        
         SimpleTable.fxTable(tbl_faculty, vbox_table);
 
+    }
+    
+    private SubjectMapping subject;
+    public SubjectMapping getSubjectSelected() {
+        return subject;
     }
 
     class SearchSubject extends FetchSubjects {

@@ -62,10 +62,13 @@
                      <children>
                         <HBox prefHeight="147.0" prefWidth="374.0">
                            <children>
-                              <ImageView fitHeight="142.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="img_icon" fitHeight="142.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/Customer_32px.png" />
+                                    <Image url="@../../../../../res/img/image_utility/default_image_blue.png" />
                                  </image>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
                               </ImageView>
                               <VBox prefHeight="136.0" prefWidth="267.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                  <children>
@@ -141,25 +144,6 @@
                                     </ImageView>
                                  </graphic>
                               </JFXButton>
-                              <JFXButton fx:id="btn_change_residency" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Change Residency">
-                                 <styleClass>
-                                    <String fx:value="label" />
-                                    <String fx:value="metro-base-color" />
-                                 </styleClass>
-                                 <font>
-                                    <Font size="18.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets bottom="10.0" top="10.0" />
-                                 </padding>
-                                 <graphic>
-                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/Marker_52px.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </JFXButton>
                               <JFXButton fx:id="btn_view_profile" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="View Profile">
                                  <styleClass>
                                     <String fx:value="label" />
@@ -194,6 +178,25 @@
                                     <ImageView fitHeight="33.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@images/No%20Entry_50px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_remove_student" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Remove Student">
+                                 <styleClass>
+                                    <String fx:value="label" />
+                                    <String fx:value="metro-base-color" />
+                                 </styleClass>
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                                 <graphic>
+                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Marker_52px.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -237,7 +240,7 @@
                   </VBox>
                   <StackPane>
                      <children>
-                        <HBox fx:id="hbox_home" visible="false">
+                        <HBox fx:id="hbox_home">
                            <children>
                               <VBox alignment="CENTER" prefHeight="645.0" prefWidth="580.0">
                                  <children>
@@ -601,7 +604,7 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <VBox fx:id="vbox_shown" prefHeight="200.0" prefWidth="100.0">
+                        <VBox fx:id="vbox_shown" prefHeight="200.0" prefWidth="100.0" visible="false">
                            <children>
                               <Label text="Course History">
                                  <font>
@@ -613,31 +616,50 @@
                                     <Insets bottom="10.0" right="30.0" top="5.0" />
                                  </VBox.margin>
                               </VBox>
-                              <JFXButton fx:id="btn_show_course_history1" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="315.0" style="-fx-border-color: #fff;" text="Hide Student Course History">
-                                 <styleClass>
-                                    <String fx:value="label" />
-                                    <String fx:value="metro-base-color" />
-                                 </styleClass>
-                                 <padding>
-                                    <Insets bottom="5.0" top="5.0" />
-                                 </padding>
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                                 <graphic>
-                                    <ImageView fitHeight="22.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/Historical_32px.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
+                              <VBox alignment="CENTER_RIGHT">
                                  <VBox.margin>
                                     <Insets bottom="10.0" right="30.0" />
                                  </VBox.margin>
-                              </JFXButton>
+                                 <children>
+                                    <JFXButton fx:id="btn_show_course_history1" prefHeight="40.0" prefWidth="327.0" style="-fx-border-color: #fff;" text="Hide Student Course History">
+                                       <styleClass>
+                                          <String fx:value="label" />
+                                          <String fx:value="metro-base-color" />
+                                       </styleClass>
+                                       <padding>
+                                          <Insets bottom="5.0" top="5.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="22.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/Historical_32px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="vbox_removed" alignment="CENTER" opacity="0.28" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #F60017;">
+                           <StackPane.margin>
+                              <Insets bottom="20.0" top="10.0" />
+                           </StackPane.margin>
+                           <children>
+                              <Label rotate="-35.5" text="REMOVED">
+                                 <font>
+                                    <Font name="System Bold" size="78.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </VBox>
                      </children>
+                     <HBox.margin>
+                        <Insets right="25.0" />
+                     </HBox.margin>
                   </StackPane>
                </children>
             </HBox>

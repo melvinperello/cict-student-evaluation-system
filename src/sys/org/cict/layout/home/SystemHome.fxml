@@ -94,7 +94,7 @@
                      <children>
                         <Label fx:id="lbl_hi" graphicTextGap="10.0" text="Hi, Jhon Melvin!">
                            <font>
-                              <Font name="Open Sans" size="20.0" />
+                              <Font name="System Bold" size="20.0" />
                            </font>
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -113,7 +113,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="System ID">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -128,7 +128,7 @@
                               </Label>
                               <Label fx:id="lbl_system_id" graphicTextGap="10.0" text="EMS-01">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -137,7 +137,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="BSU ID">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -152,7 +152,7 @@
                               </Label>
                               <Label fx:id="lbl_bsu_id" graphicTextGap="10.0" text="BULSU2017-a">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -161,7 +161,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="Last">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -176,7 +176,7 @@
                               </Label>
                               <Label fx:id="lbl_lastname" graphicTextGap="10.0" text="Perello">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -185,7 +185,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="First">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -200,7 +200,7 @@
                               </Label>
                               <Label fx:id="lbl_frstname" graphicTextGap="10.0" text="Jhon Melvin">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -209,7 +209,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="Middle">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -224,7 +224,7 @@
                               </Label>
                               <Label fx:id="lbl_middlename" graphicTextGap="10.0" text="Nieto">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -233,7 +233,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="Gender">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -248,7 +248,7 @@
                               </Label>
                               <Label fx:id="lbl_gender" graphicTextGap="10.0" text="Male">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -261,7 +261,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="Access">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -276,7 +276,7 @@
                               </Label>
                               <Label fx:id="lbl_access" graphicTextGap="10.0" text="Local Registrar">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -285,7 +285,7 @@
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="Post">
                                  <font>
-                                    <Font name="System Bold" size="15.0" />
+                                    <Font size="15.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -300,7 +300,7 @@
                               </Label>
                               <Label fx:id="lbl_desgination" graphicTextGap="10.0" text="Local Registrar">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="15.0" />
                                  </font>
                               </Label>
                            </children>
@@ -489,7 +489,7 @@
                                     </Label>
                                     <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <JFXButton fx:id="btn_system_values" text="System Values" textFill="WHITE">
+                                          <JFXButton fx:id="btn_system_values" text="System Values" textFill="WHITE" visible="false">
                                              <graphic>
                                                 <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>

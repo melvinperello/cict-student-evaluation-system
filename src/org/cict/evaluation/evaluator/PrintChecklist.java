@@ -32,11 +32,14 @@ import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
+import artifacts.FTPManager;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import org.apache.commons.io.FileUtils;
 import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.SystemProperties;
@@ -65,8 +68,8 @@ public class PrintChecklist extends Transaction {
     private AcademicProgramMapping acadProg;
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
-    private String DEFAULT_IMAGE_LOC = "src/org/cict/reports/checklist/images/default.png";
-
+    private StudentProfileMapping spMap;
+    
     @Override
     protected boolean transaction() {
         //----------------------------------------------------------------------
@@ -103,7 +106,7 @@ public class PrintChecklist extends Transaction {
         if (student.getHas_profile().equals(1)) {
             //------------------------------------------------------------------
             // search the latest profile order desc
-            StudentProfileMapping spMap = Mono.orm()
+            spMap = Mono.orm()
                     .newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, student.getCict_id())
                     .active(Order.desc(DB.student_profile().id))
@@ -314,7 +317,7 @@ public class PrintChecklist extends Transaction {
             bsit1112.STUDENT_NAME = fullName;
             bsit1112.STUDENT_ADDRESS = address;
             bsit1112.STUDENT_HS = highSchool;
-            bsit1112.IMAGE_LOCATION = DEFAULT_IMAGE_LOC;
+            bsit1112.IMAGE_LOCATION = this.getImageLocation();
 
             for (Object[] detail : details) {
                 String key = (String) detail[4];
@@ -365,7 +368,7 @@ public class PrintChecklist extends Transaction {
             bitct.STUDENT_NAME = fullName;
             bitct.STUDENT_ADDRESS = address;
             bitct.STUDENT_HS = highSchool;
-            bitct.IMAGE_LOCATION = DEFAULT_IMAGE_LOC;
+            bitct.IMAGE_LOCATION = this.getImageLocation();
 
             for (Object[] detail : details) {
                 String key = (String) detail[4];
@@ -556,5 +559,27 @@ public class PrintChecklist extends Transaction {
 
     private void store(ArrayList<Object[]> subjectDetails, Object[] detail) {
         subjectDetails.add(detail);
+    }
+    
+    private String DEFAULT_IMAGE_LOC = "src/org/cict/reports/checklist/images/default.png";
+    private String getImageLocation() {
+        String studentImage = (spMap==null? DEFAULT_IMAGE_LOC: spMap.getProfile_picture());
+        if (studentImage == null
+            || studentImage.isEmpty()
+            || studentImage.equalsIgnoreCase("NONE")) {
+            return DEFAULT_IMAGE_LOC;
+        } else {
+            String tempProfilePath = "temp/images/profile";
+            String tempProfileImagePath = tempProfilePath + "/" + studentImage;
+            File tempProfileDir = new File(tempProfilePath);
+            File tempProfileImage = new File(tempProfileImagePath);
+            try {
+                FileUtils.forceMkdir(tempProfileDir);
+                FTPManager.download("student_avatar", studentImage, tempProfileImage.getAbsolutePath());
+                return (tempProfileImage.getAbsolutePath());
+            } catch (Exception e) {
+                return DEFAULT_IMAGE_LOC;
+            }
+        }
     }
 }

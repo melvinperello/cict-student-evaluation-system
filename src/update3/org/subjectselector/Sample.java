@@ -40,8 +40,8 @@ public class Sample extends MonoApplication {
     public void start() {
         SubjectSelector ss = M.load(SubjectSelector.class);
         ss.onDelayedStart();
-        ss.createStageApplication().show();
-
+        ss.createStageApplication().showAndWait();
+        System.out.println(ss.getSubjectSelected().getCode());
     }
 
 }

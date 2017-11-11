@@ -185,7 +185,7 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
     private void searchSection(SubjectMapping subject) {
         changeView(hbox_search);
         SearchSection search = new SearchSection();
-        search.subjectCode = subject.getCode();
+        search.subjectCode = subject.getId();
         search.CURRICULUM_id = CURRICULUM_id;
         
         search.setOnSuccess(onSuccess -> {
@@ -267,11 +267,14 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
                 Label lbl_code = searchAccessibilityText(sectionRow, "code");
                 Label lbl_descriptive_title = searchAccessibilityText(sectionRow, "descript");
                 Label lbl_count = searchAccessibilityText(sectionRow, "count");
-        
+                Label lbl_curriculum = searchAccessibilityText(sectionRow, "curriculum");
+
                 lbl_section.setText(subInfos.getFullSectionName());
                 lbl_code.setText(subInfos.getSubjectMap().getCode());
                 lbl_descriptive_title.setText(subInfos.getSubjectMap().getDescriptive_title());
                 lbl_count.setText(studentCount);
+                lbl_curriculum.setText(subInfos.getCurriculum()==null? "No Curriculum": subInfos.getCurriculum().getName());
+                
                 
                 SimpleTableCell cellParent = new SimpleTableCell();
                 cellParent.setResizePriority(Priority.ALWAYS);

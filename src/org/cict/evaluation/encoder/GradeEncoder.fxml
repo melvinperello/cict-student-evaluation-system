@@ -7,6 +7,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -33,7 +34,7 @@
                      <children>
                         <VBox alignment="CENTER" prefHeight="202.0" prefWidth="180.0" style="-fx-background-color: white;">
                            <children>
-                              <ImageView fitHeight="154.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="img_profile" fitHeight="154.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@src/img/user.png" />
                                  </image>
@@ -124,42 +125,77 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox fx:id="pnl_spreadsheet" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <StackPane VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox fx:id="hbox_search" alignment="CENTER" prefHeight="342.0" prefWidth="661.0" style="-fx-background-color: #Fff;" HBox.hgrow="ALWAYS">
+                        <HBox fx:id="pnl_spreadsheet" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
+                        <HBox fx:id="pnl_loading" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" visible="false">
                            <children>
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../../res/gif/firefox.gif" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="20.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
+                              <HBox fx:id="hbox_search" alignment="CENTER" prefHeight="342.0" prefWidth="661.0" style="-fx-background-color: #Fff;" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label text="Loading Subjects for Encoding" wrapText="true">
-                                       <font>
-                                          <Font name="System Bold" size="28.0" />
-                                       </font>
-                                    </Label>
-                                    <Line endX="340.0" startX="-100.0" />
-                                    <Label text="Note: You can double click the table of grades on your left for faster encoding process." wrapText="true">
-                                       <font>
-                                          <Font size="19.0" />
-                                       </font>
-                                       <padding>
-                                          <Insets top="10.0" />
-                                       </padding>
-                                    </Label>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../res/gif/firefox.gif" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets right="20.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
+                                       <children>
+                                          <Label text="Loading Subjects for Encoding" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="28.0" />
+                                             </font>
+                                          </Label>
+                                          <Line endX="340.0" startX="-100.0" />
+                                          <Label text="Note: You can double click the table of grades on your left for faster encoding process." wrapText="true">
+                                             <font>
+                                                <Font size="19.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets top="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
                                  </children>
-                              </VBox>
+                                 <HBox.margin>
+                                    <Insets bottom="150.0" top="160.0" />
+                                 </HBox.margin>
+                              </HBox>
                            </children>
-                           <HBox.margin>
-                              <Insets bottom="150.0" top="180.0" />
-                           </HBox.margin>
                         </HBox>
-                     </children></HBox>
+                        <HBox fx:id="pnl_error" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" visible="false">
+                           <children>
+                              <HBox fx:id="hbox_search1" alignment="CENTER" prefHeight="342.0" prefWidth="661.0" style="-fx-background-color: #Fff;" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="480.0">
+                                       <children>
+                                          <Label text="Subjects Not Loaded" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="28.0" />
+                                             </font>
+                                          </Label>
+                                          <Line endX="340.0" startX="-100.0" />
+                                          <Label text="Sorry for the inconvinience." wrapText="true">
+                                             <font>
+                                                <Font size="19.0" />
+                                             </font>
+                                             <padding>
+                                                <Insets top="10.0" />
+                                             </padding>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets bottom="150.0" top="160.0" />
+                                 </HBox.margin>
+                              </HBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                   <HBox prefHeight="46.0" prefWidth="966.0" style="-fx-background-color: #FFFFFF;">
                      <children>
                         <HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="935.0" spacing="10.0" HBox.hgrow="ALWAYS">

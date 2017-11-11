@@ -248,7 +248,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
         this.addClickEvent(btn_nav, () -> {
             String nav = btn_nav.getText();
-            if (nav.equalsIgnoreCase("activate account")) {
+            if (nav.equalsIgnoreCase("restore faculty")) {
                 setAcc(true);
             } else {
                 setAcc(false);
@@ -322,17 +322,24 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
     private void setAcc(boolean active) {
         String title, btn, status;
         if (active) {
-            afMap.setActive(1);
-            title = "Activated Successfully";
-            btn = "Deactivate Account";
+            faculty.setActive(1);
+            title = "Restored Successfully";
+            btn = "Remove Faculty";
             status = "Active";
+            if(afMap!=null) 
+                afMap.setActive(1);
         } else {
-            afMap.setActive(0);
-            title = "Deactivated Successfully";
-            btn = "Activate Account";
+            faculty.setActive(0);
+            title = "Removed Successfully";
+            btn = "Restore Faculty";
             status = "Inactive";
+            if(afMap!=null) 
+                afMap.setActive(0);
         }
-        if (Database.connect().account_faculty().update(afMap)) {
+        if (Database.connect().faculty().update(faculty)) {
+            if(afMap!=null) {
+                Database.connect().account_faculty().update(afMap);
+            }
             Notifications.create().darkStyle()
                     .title(title)
                     .text("Faculty: " + faculty.getBulsu_id().toUpperCase())
@@ -438,11 +445,13 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
         this.setBasicInfo(); // set values in the label for basic  info
         this.setValues(); // set values in the editting fields
+        lbl_status.setText(faculty.getActive().equals(0) ? "Inactive" : "Active");
+        btn_nav.setText(faculty.getActive().equals(0) ? "Restore Faculty" : "Remove Faculty");
+
         // if no account
         if (afMap == null) {
-            System.out.println("NO ACCOUNT");
-            btn_nav.setDisable(true);
-            return;
+            System.out.println("NO ACCOUNT"); 
+           return;
         }
         // set username
         lbl_username.setText(afMap.getUsername().toUpperCase());
@@ -452,7 +461,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
         // set status and button text
         lbl_status.setText(afMap.getActive().equals(0) ? "Inactive" : "Active");
-        btn_nav.setText(afMap.getActive().equals(0) ? "Activate Account" : "Deactivate Account");
+        btn_nav.setText(afMap.getActive().equals(0) ? "Restore Faculty" : "Remove Faculty");
 
         // check if the account is blocked
         try {
@@ -487,9 +496,10 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         txt_fname.setText(faculty.getFirst_name());
         txtmname.setText(faculty.getMiddle_name() == null ? "" : faculty.getMiddle_name());
 
-        if (faculty.getGender().equalsIgnoreCase("MALE")) {
+        
+        if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("MALE")) {
             rbtn_male.setSelected(true);
-        } else if (faculty.getGender().equalsIgnoreCase("FEMALE")) {
+        } else if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("FEMALE")) {
             rbtn_female.setSelected(true);
         } else {
             // if none was set in the database

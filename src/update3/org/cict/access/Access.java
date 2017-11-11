@@ -186,7 +186,7 @@ public class Access {
      * @param giveAccess
      * @return
      */
-    public static boolean isEvaluationOverride(boolean giveAccess) {
+    public static Object[] isEvaluationOverride(boolean giveAccess) {
         EvaluationOverride controller = new EvaluationOverride(giveAccess);
         Mono.fx().create()
                 .setPackageName("update3.org.cict.access")
@@ -200,7 +200,9 @@ public class Access {
                 .stageTitle("System Override")
                 .stageCenter()
                 .stageShowAndWait();
-
-        return controller.isAuthorized();
+        Object[] result = new Object[2];
+        result[0] = controller.isAuthorized();
+        result[1] = controller.getAttachedFile();
+        return result;
     }
 }

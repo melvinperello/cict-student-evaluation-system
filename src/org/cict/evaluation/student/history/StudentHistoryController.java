@@ -74,12 +74,8 @@ public class StudentHistoryController implements ControllerFX{
     }
     
     private void setValues() {
-        String middleName = "";
-        try{
-            middleName = this.STUDENT.getMiddle_name();
-        }catch(NullPointerException s){}
         String fullName = this.STUDENT.getLast_name() + ", " +
-                this.STUDENT.getFirst_name() + " " + middleName;
+                this.STUDENT.getFirst_name() + " " + (this.STUDENT.getMiddle_name()==null? "" :  this.STUDENT.getMiddle_name());
         this.lblName.setText(fullName);
         this.lblCourse.setText(this.COURSE);
     }

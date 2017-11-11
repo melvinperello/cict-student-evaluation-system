@@ -1,6 +1,7 @@
 package update.org.cict.controller.adding;
 
 import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.LoadGroupMapping;
@@ -23,6 +24,26 @@ public class SubjectInformationHolder {
     private LoadGroupMapping loadGroup;
     private LoadGroupMapping loadGroup_changed;
 
+    //------------------------------------------------
+    private CurriculumMapping curriculum;
+    public CurriculumMapping getCurriculum() {
+        return curriculum;
+    }
+    public void setCurriculum(CurriculumMapping curriculum) {
+        this.curriculum =  curriculum;
+    }
+    
+    private Integer studentCount;
+    public void setStudentCount(Integer count) {
+        this.studentCount = count;
+    }
+    
+    public Integer getStudentCount() {
+        return this.studentCount;
+    }
+    
+    //---------------------------------------------
+    
     public LoadGroupMapping getLoadGroup_changed() {
         return loadGroup_changed;
     }

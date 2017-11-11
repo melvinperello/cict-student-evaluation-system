@@ -33,6 +33,7 @@ import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.utils.FacultyUtility;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
@@ -74,6 +75,7 @@ import update3.org.cict.layout.sectionmain.RowSectionSubject;
 import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.scheduling.ScheduleChecker;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
+import update3.org.collegechooser.ChooserHome;
 import update3.org.excelprinter.StudentMasterListPrinter;
 import update3.org.facultychooser.FacultyChooser;
 import update3.org.facultychooser.FacultyNamer;
@@ -415,12 +417,20 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         this.displayCollege();
         // default values
         txt_irregular_section_name.setText(sectionName);
-        TextInputFilters.string()
-                .setMaxCharacters(50)
-                .setNoLeadingTrailingSpaces(false)
-                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
-                .setTextSource(txt_irregular_section_name)
-                .applyFilter();
+//        TextInputFilters.string()
+//                .setMaxCharacters(50)
+//                .setNoLeadingTrailingSpaces(false)
+//                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+//                .setTextSource(txt_irregular_section_name)
+//                .applyFilter();
+        LoadGroupMapping lgMap = Mono.orm().newSearch(Database.connect().load_group())
+                .eq(DB.load_group().LOADSEC_id, sectionMap.getId()).active(Order.desc(DB.load_group().id)).first();
+        try {
+           lbl_irregular_instructor.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(lgMap.getFaculty()))); 
+        } catch (Exception e) {
+            lbl_irregular_instructor.setText("NONE");
+        }
+            
 
     }
 
@@ -480,13 +490,16 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             openScheduleViewer();
         });
 
-        // save changes from section information
-        super.addClickEvent(btn_save_changes, () -> {
-
-        });
-
+        // save changes from section information for irreg section
         super.addClickEvent(btn_irregular_save, () -> {
+            int c = Mono.fx().alert().createConfirmation().setTitle("Confirmation")
+                    .setHeader("Update Section?")
+                    .setMessage("Are you sure you want to update this section ?")
+                    .confirmYesNo();
 
+            if (c == 1) {
+                this.updateIrregSectionInfo();
+            }
         });
 
         // delete section
@@ -707,6 +720,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
      * Change College.
      */
     private void onChangeCollege() {
+        ChooserHome.showCICT(false);
         String selected = update3.org.collegechooser.ChooserHome.open();
         if (selected.equalsIgnoreCase("CANCEL")) {
             return;
@@ -1338,5 +1352,62 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         protected void after() {
 
         }
+    }
+    
+    private String sectionType;
+    public void setSectionType(String type) {
+        this.sectionType = type;
+    }
+    
+    private void updateIrregSectionInfo() {
+        String name = MonoText.getFormatted(txt_irregular_section_name);
+        //----------------------------------------------------------------------
+        // before updating check if it exists.
+        LoadSectionMapping a = null;
+        if(sectionType.equalsIgnoreCase("CONJUNCTION")) {
+            System.out.println(lbl_college_owner.getText().replace(" ", ""));
+            a = Mono.orm().newSearch(Database.connect().load_section())
+                    .eq(DB.load_section().section_name, name)
+                    .eq(DB.load_section().type, sectionType)
+                    .eq(DB.load_section().college, lbl_college_owner.getText().replace(" ", ""))
+                    .eq(DB.load_section().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
+                    .isNull(DB.load_section().ACADPROG_id)
+                    .isNull(DB.load_section().CURRICULUM_id)
+                    .isNull(DB.load_section().adviser)
+                    .active(Order.desc(DB.load_section().id))
+                    .first();
+        } else {
+            a = Mono.orm().newSearch(Database.connect().load_section())
+                    .eq(DB.load_section().section_name, name)
+                    .eq(DB.load_section().type, sectionType)
+                    .eq(DB.load_section().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
+                    .isNull(DB.load_section().ACADPROG_id)
+                    .isNull(DB.load_section().CURRICULUM_id)
+                    .isNull(DB.load_section().adviser)
+                    .active(Order.desc(DB.load_section().id))
+                    .first();
+        }
+
+        if (a != null) {
+            // check if its the same.
+            if (a.getId().equals(this.sectionMap.getId())) {
+                // allow self update
+            } else {
+                Mono.fx().snackbar().showError(application_root, "Cannot update section, Another section has the same information.");
+                return;
+            }
+        }
+        //----------------------------------------------------------------------
+
+        LoadSectionMapping sMap = Database.connect().load_section().getPrimary(this.sectionMap.getId());
+        sMap.setSection_name(name);
+        
+        boolean updatedSec = Database.connect().load_section().update(sMap);
+        if (updatedSec) {
+            Mono.fx().snackbar().showSuccess(application_root, "Section Updated Successfully.");
+        } else {
+            Mono.fx().snackbar().showError(application_root, "Cannot update section.");
+        }
+
     }
 }

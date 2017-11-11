@@ -27,6 +27,7 @@ import app.lazy.models.AccountFacultyAttemptMapping;
 import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.SystemOverrideLogsMapping;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextGroup;
 import com.izum.fx.textinputfilters.TextInputFilters;
@@ -42,9 +43,14 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -54,10 +60,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeComputer;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.reports.ReportsUtility;
+import org.cict.reports.result.PrintResult;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
+import update3.org.cict.ChoiceRange;
+import update3.org.cict.access.management.OverrideLogs;
 import update3.org.cict.layout.default_loader.LoaderView;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 import update3.org.cict.window_prompts.fail_prompt.FailView;
@@ -157,6 +171,18 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_cs_change;
+    
+    @FXML
+    private JFXButton btn_print;
+    
+    @FXML
+    private ComboBox<String> cmb_from;
+
+    @FXML
+    private ComboBox<String> cmb_to;
+    
+    @FXML
+    private JFXButton btn_filter;
 
     public MyAccountHome() {
         //
@@ -214,6 +240,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         this.cmb_cs_security_question.getItems().addAll(LIST_SECURITY_QUESTIONS);
         this.cmb_cs_security_question.setPromptText("Select Security Question For Account Recovery Purposes");
 
+        //---------------------------------
+        this.setComboBoxLimit(cmb_from, cmb_to, 0);
+        this.setCmbValues();
     }
     // create text group
     private TextGroup tgrp_change_pass;
@@ -296,7 +325,6 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_voew_access_history, () -> {
             this.changeView(this.vbox_access);
-            this.showAccessHistory();
         });
         super.addClickEvent(btn_view_change_password, () -> {
             this.changeView(this.vbox_change_password);
@@ -320,8 +348,202 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_cs_change, () -> {
             changeSecurity();
         });
+        
+        super.addClickEvent(btn_print, ()->{
+            this.printResult();
+        });
+        
+        super.addClickEvent(btn_filter, ()->{
+            this.filterResult();
+        });
+        
+        cmb_from.valueProperty().addListener((a)->{
+            cmbChanged = true;
+            btn_filter.setDisable(false);
+        });
+        cmb_to.valueProperty().addListener((a)->{
+            cmbChanged = true;
+            btn_filter.setDisable(false);
+        });
     }
 
+    //----------------------------------------------
+    //--------------------------- 
+    private SimpleDateFormat formatter_sql = new SimpleDateFormat(PublicConstants.SQL_DATETIME_FORMAT);
+    private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
+    private SimpleDateFormat formatter_plain = new SimpleDateFormat("yyyy-MM-dd");
+    
+    private ArrayList<String> dateList = new ArrayList<>();
+    private void setComboBoxLimit(ComboBox<String> source, ComboBox<String> self, int extra, ComboBox<String>... padding) {
+        ChoiceRange.setComboBoxLimit(dateList, source, self, 0, padding);
+    }
+    
+    private ArrayList<HashMap<String,Date>> dateStorage = new ArrayList<>();
+    private void setCmbValues(){
+        List<Date> dates = new ArrayList<Date>();
+        try {
+            AccountFacultyAttemptMapping start = Mono.orm()
+                    .newSearch(Database.connect().account_faculty_attempt())
+                    .eq(DB.account_faculty_attempt().account_id, CollegeFaculty.instance().getACCOUNT_ID())
+                    .active(Order.asc(DB.account_faculty_attempt().try_id))
+                    .first();
+            AccountFacultyAttemptMapping end = Mono.orm()
+                    .newSearch(Database.connect().account_faculty_attempt())
+                    .eq(DB.account_faculty_attempt().account_id, CollegeFaculty.instance().getACCOUNT_ID())
+                    .active(Order.desc(DB.account_faculty_attempt().try_id))
+                    .first();  
+            Date endDate = formatter_plain.parse(end.getTime().toString());
+            Date startDate = DateUtils.addDays(formatter_plain.parse(start.getTime().toString()), 1);
+        
+            long interval = 24*1000 * 60 * 60; // 1 hour in millis
+            long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
+            long curTime = startDate.getTime();
+            while (curTime <= endTime) {
+                dates.add(new Date(curTime));
+                curTime += interval;
+            }
+            for(int i=0;i<dates.size();i++){
+                Date lDate = dates.get(i);
+                String ds = formatter_display.format(lDate); 
+                dateList.add(ds);
+                HashMap<String,Date> nameDate = new HashMap<>();
+                nameDate.put(ds, dates.get(i));
+                System.out.println("'"+ds + "' - " + nameDate.get(ds));
+                dateStorage.add(nameDate);
+            }
+            cmb_from.getItems().addAll(dateList); 
+            cmb_to.getItems().addAll(dateList);
+            cmb_from.getSelectionModel().selectFirst();
+            cmb_to.getSelectionModel().selectLast();
+            cmbChanged = true;
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(OverrideLogs.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    private void filterResult(){
+        cmbChanged = false;
+        String from_str = cmb_from.getSelectionModel().getSelectedItem();
+        String to_str =cmb_to.getSelectionModel().getSelectedItem();
+        vbox_access_history.getChildren().clear();
+        Date from = null, to = null;
+        try {  
+            int count = 0;
+            for(int i=0; i<dateList.size(); i++) {
+                String each = dateList.get(i);
+                if(from_str.equalsIgnoreCase(each)) {
+                    from = dateStorage.get(i).get(from_str);
+                    count++;
+                }
+                if(to_str.equalsIgnoreCase(each)) {
+                    to = dateStorage.get(i).get(to_str);
+                    to = DateUtils.addDays(to,1);
+                    count++;
+                }
+                if(count==2) {
+                    break;
+                }
+            }
+            
+            System.out.println("FROM: " + from + " | " + from_str);
+            System.out.println("TO: " + to + " | " + to_str);
+        } catch (Exception e) {
+        }
+        
+        if(from==null || to==null) {
+            return;
+        }
+        btn_filter.setDisable(true);
+        this.fetchAccessHistory(from, to);
+    }
+    
+    private boolean cmbChanged = true;
+    private void printResult() {
+        if(cmbChanged) {
+            int res =  Mono.fx().alert()
+                    .createConfirmation().setHeader("Not Yet Filtered")
+                    .setMessage("The result to be printed are not yet filtered with the given dates above. Do you still want to print?")
+                    .confirmYesNo();
+            if(res==-1)
+                return;
+        }
+        String[] colNames = new String[]{"Date and Time","PC Name","PC Username", "OS Version", "IP Address", "Result"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        if(preview==null) {
+            Notifications.create()
+                    .title("No Access History Found")
+                    .text("No data to print.")
+                    .showWarning();
+            return;
+        }
+        AccountFacultyAttemptMapping ref = null;
+        for (int i = 0; i < preview.size(); i++) {
+            AccountFacultyAttemptMapping result = preview.get(i);
+            ref = result;
+            String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter2.format(result.getTime()),
+                WordUtils.capitalizeFully(result.getPc_name()), 
+                (result.getPc_username()), 
+                (result.getOs_version()),
+                result.getIp_address(),
+                WordUtils.capitalizeFully(result.getResult().replace("_", " "))};
+            rowData.add(row);
+        }
+        PrintResult print = new PrintResult();
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        String username = CollegeFaculty.instance().getUSERNAME();
+        print.fileName = "log_attempts_" + username.toLowerCase();
+        String fr = cmb_from.getSelectionModel().getSelectedItem();
+        String to = cmb_to.getSelectionModel().getSelectedItem();
+        SimpleDateFormat month = new SimpleDateFormat("MMMMM");
+        print.reportDescription = WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
+        if(cmbChanged) {
+            print.reportDescription = "";
+        } else if(fr==null || to==null || ref==null || ref.getTime()==null) {
+            print.reportDescription += "\nAs of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+        } else if(fr.equalsIgnoreCase(to)) {
+            print.reportDescription += "\n"+ formatter_display.format(ref.getTime());
+         } else
+            print.reportDescription += "\nFrom " + fr + " to " + to;
+        
+        print.reportTitle = "Account Log And Attempts";
+        print.whenStarted(() -> {
+            btn_print.setDisable(true);
+            btn_filter.setDisable(true);
+            super.cursorWait();
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_print.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print.setDisable(false);
+            super.cursorDefault();
+        });
+        //----------------------------------------------------------------------
+        print.transact();
+    }
+    
+    //------------------------------------------------------
+    
+    
     /**
      * Change Security Question and answer.
      */
@@ -543,8 +765,17 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         lbl_history_terminal.setText(cc.getPC_NAME());
         lbl_history_user.setText(cc.getPC_USERNAME());
 
+        this.fetchAccessHistory(null, null);
+
+        //--
+    }
+    
+    private void fetchAccessHistory(Date FROM, Date TO) {
         FetchAccessHistory accessTx = new FetchAccessHistory();
+        accessTx.setFiltereDates(FROM, TO);
         accessTx.whenStarted(() -> {
+            this.btn_print.setDisable(true);
+            this.btn_filter.setDisable(true);
             this.vbox_access.setVisible(true);
             this.detachAll();
             this.loaderView.setMessage("Loading History");
@@ -562,18 +793,17 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             this.emptyView.setMessage("No History");
             this.emptyView.getButton().setVisible(false);
             this.emptyView.attach();
-
         });
         accessTx.whenSuccess(() -> {
             renderHistory(accessTx);
+            this.btn_print.setDisable(false);
+            this.btn_filter.setDisable(!(FROM==null));
         });
         accessTx.whenFinished(() -> {
             this.loaderView.detach();
         });
 
         accessTx.transact();
-
-        //--
     }
 
     /**
@@ -581,10 +811,12 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
      *
      * @param accessTx
      */
+    private ArrayList<AccountFacultyAttemptMapping> preview;
     private void renderHistory(FetchAccessHistory accessTx) {
         SimpleTask renderTask = new SimpleTask("render-history");
         renderTask.setTask(() -> {
-            displayAccessTable(accessTx.getAttempts());
+            preview = accessTx.getAttempts();
+            displayAccessTable(preview);
         });
         renderTask.whenStarted(() -> {
             this.loaderView.setMessage("Preparing History");
@@ -595,7 +827,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         renderTask.whenCancelled(() -> {
         });
         renderTask.whenSuccess(() -> {
-            displayAccessTable(accessTx.getAttempts());
+//            displayAccessTable(accessTx.getAttempts());
         });
         renderTask.whenFinished(() -> {
             this.loaderView.detach();
@@ -624,7 +856,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             RowAccessHistory accessRow = new RowAccessHistory();
 
             accessRow.lbl_time.setText(dateFormat.format(attempt.getTime()));
-            accessRow.lbl_state.setText(attempt.getResult());
+            accessRow.lbl_state.setText(attempt.getResult().replace("_", " "));
 
             //
             String displayIP = "";
@@ -709,6 +941,13 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
         private ArrayList<AccountFacultyAttemptMapping> attempts;
 
+        //---------------------
+        private Date from = null, to=null;
+        public void setFiltereDates(Date FROM, Date TO) {
+            from = FROM;
+            to = TO;
+        }
+        
         public ArrayList<AccountFacultyAttemptMapping> getAttempts() {
             return attempts;
         }
@@ -717,6 +956,19 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         protected boolean transaction() {
             Integer logged_account = CollegeFaculty.instance().getACCOUNT_ID();
 
+            if(from != null && to != null) {
+                attempts = Mono.orm().newSearch(Database.connect().account_faculty_attempt())
+        //                .between(DB.system_override_logs().executed_date, from, to)
+                        .gte(DB.account_faculty_attempt().time, from)
+                        .lte(DB.account_faculty_attempt().time, to)
+                        .eq(DB.account_faculty_attempt().account_id, logged_account)
+                        .active(Order.asc(DB.account_faculty_attempt().time)).all();
+                if(attempts==null) {
+                    return false;
+                }
+                return true;
+            }
+            
             attempts = Mono.orm()
                     .newSearch(Database.connect().account_faculty_attempt())
                     .eq(DB.account_faculty_attempt().account_id, logged_account)

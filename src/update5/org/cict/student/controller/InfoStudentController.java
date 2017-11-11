@@ -24,6 +24,7 @@
 package update5.org.cict.student.controller;
 
 import app.lazy.models.AcademicProgramMapping;
+import app.lazy.models.AccountStudentMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.CurriculumPreMapping;
 import app.lazy.models.CurriculumSubjectMapping;
@@ -32,13 +33,17 @@ import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentCourseHistoryMapping;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.utils.DateString;
 import app.lazy.models.utils.FacultyUtility;
+import artifacts.FTPManager;
+import artifacts.ImageUtility;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
@@ -49,6 +54,7 @@ import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 import javafx.collections.ObservableList;
@@ -58,6 +64,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -65,8 +73,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.commons.io.FileUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
-import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.reports.deficiency.PrintDeficiency;
@@ -113,7 +121,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     private JFXButton btn_change_college;
 
     @FXML
-    private JFXButton btn_change_residency;
+    private JFXButton btn_remove_student;
 
     @FXML
     private JFXButton btn_view_profile;
@@ -192,6 +200,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_shown;
+    
+    @FXML
+    private VBox vbox_removed;
+    
+    @FXML
+    private ImageView img_icon;
 
     private StudentValues studentValues = new StudentValues();
     private CurriculumMapping curriculum;
@@ -221,7 +235,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         ToggleGroup group2 = new ToggleGroup();
         rbtn_male.setToggleGroup(group2);
         rbtn_female.setToggleGroup(group2);
-
+        
         this.isVerified(false);
         this.setCmbYearLevel();
         this.setCmbCampus();
@@ -230,6 +244,25 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
         vbox_shown.setVisible(false);
         hbox_home.setVisible(true);
+        
+        //-------------------------------
+        // set image
+        SimpleTask set_profile = new SimpleTask("set_profile");
+        set_profile.setTask(()->{
+            this.setImageView();
+        });
+        set_profile.whenCancelled(()->{
+            Notifications.create().text("Loading of image is cancelled")
+                    .showInformation();
+        });
+        set_profile.whenFailed(()->{
+            Notifications.create().text("Failed to load image.")
+                    .showInformation();
+        });
+        set_profile.whenSuccess(()->{
+        });
+        set_profile.start();
+        //-------------------------------
     }
 
     private void addTextFieldFilters() {
@@ -313,6 +346,55 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 hbox_home.setVisible(true);
             }, hbox_home);
         });
+        
+        super.addClickEvent(btn_remove_student, ()->{
+            this.onRemove();
+        });
+    }
+    
+    private void onRemove() {
+        String btn = btn_remove_student.getText(),
+                title, message, header;
+        Integer activeness = 0;
+        if(btn.equalsIgnoreCase("Remove Student")){
+            activeness = 0;
+            title = "Removed Successfully";
+            message = "Student " + this.CURRENT_STUDENT.getId()
+                                + " is successfully removed.";
+            btn = "Restore Student";
+            header = "Remove Student";
+        } else {
+            activeness = 1;
+            title = "Restored Successfully";
+            message = "Student " + this.CURRENT_STUDENT.getId()
+                                + " is successfully restored.";
+            btn = "Remove Student";
+            header = "Restore Student";
+        }
+        int res = Mono.fx().alert()
+            .createConfirmation()
+            .setHeader(header)
+            .setMessage("Are you sure you want to " + header.toLowerCase() + " "
+                    + CURRENT_STUDENT.getId() + "?")
+            .confirmYesNo();
+        if(res==-1)
+            return;
+        this.CURRENT_STUDENT.setActive(activeness);
+        if(Database.connect().student().update(this.CURRENT_STUDENT)) {
+            if(asMap!=null) {
+                this.asMap.setActive(activeness);
+                Database.connect().student().update(this.asMap);
+            }
+            Notifications.create().darkStyle()
+                    .title(title)
+                    .text(message).showInformation();
+            btn_remove_student.setText(btn);
+            this.setValues();
+        } else {
+            Notifications.create().darkStyle()
+                    .title("Nothing Happened")
+                    .text("Can't remove student at this moment.").showWarning();
+        }
     }
 
     private void loadHistory() {
@@ -330,6 +412,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
      * Changes the current college of the student.
      */
     private void showCollegeChanger() {
+        ChooserHome.showCICT(true);
         String selectedCollege = ChooserHome.open();
         if (selectedCollege == null || selectedCollege.equalsIgnoreCase("cancel")) {
             // operation was cancelled
@@ -365,11 +448,16 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             Label lbl_name_prev = rowFX.getLbl_prevoius_curriculum();
             Label lbl_name_prev_date = rowFX.getLbl_prevoius_curriculum_date();
 
-            lbl_name_current.setText(getCurriculumName(each.getCurriculum_id()));
+            String current = getCurriculumName(each.getCurriculum_id());
+            lbl_name_current.setText((current==null? "NONE" : current));
             lbl_name_current_date.setText(each.getCurriculum_assigment() == null ? "NOT SET" : "" + each.getCurriculum_assigment());
-            lbl_name_prev.setText(getCurriculumName(each.getPrep_id()));
-            lbl_name_prev_date.setText(each.getPrep_assignment() == null ? "NOT SET" : "" + each.getPrep_assignment());
-
+            String prep = getCurriculumName(each.getPrep_id());
+            if(prep==null) {
+                rowFX.getVbox_prep().setVisible(false);
+            } else {
+                lbl_name_prev.setText(prep);
+                lbl_name_prev_date.setText(each.getPrep_assignment() == null ? "NOT SET" : "" + each.getPrep_assignment());
+            }
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
             cellParent.setContentAsPane(rowFX.getApplicationRoot());
@@ -389,10 +477,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     private String getCurriculumName(Integer id) {
         if(id==null)
-            return "NONE";
+            return null;
         CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(id);
         if (curriculum == null) {
-            return "NONE";
+            return null;
         } else {
             return curriculum.getName();
         }
@@ -901,8 +989,11 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
     }
 
+    private AccountStudentMapping asMap;
+    private String buttonStyle;
     private void setValues() {
         try {
+            buttonStyle = btn_remove_student.getStyle();
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
             lbl_lastname.setText(CURRENT_STUDENT.getLast_name());
             lbl_middlename.setText(CURRENT_STUDENT.getMiddle_name() == null ? "" : CURRENT_STUDENT.getMiddle_name());
@@ -936,6 +1027,15 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             // -----------------------------------------------------
             lbl_acad_prog.setText((acadProg == null ? "NONE" : acadProg.getName()));
             lbl_currriculum.setText((curriculum == null ? "NONE" : curriculum.getName()));
+            
+            if(this.CURRENT_STUDENT.getActive().equals(0)) {
+                btn_remove_student.setText("Restore Student");
+                vbox_removed.setVisible(true);
+            } else {
+                btn_remove_student.setText("Remove Student");
+                vbox_removed.setVisible(false);
+            }
+            asMap = Database.connect().account_student().getPrimary(this.CURRENT_STUDENT.getCict_id());
         } catch (NullPointerException f) {
         }
     }
@@ -954,25 +1054,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
     }
 
-    private void onRemove() {
-        int res = Mono.fx().alert()
-                .createConfirmation()
-                .setHeader("Remove Student")
-                .setMessage("Are you sure you want to remove "
-                        + CURRENT_STUDENT.getId() + " from the list?")
-                .confirmYesNo();
-
-        if (res == 1) {
-            this.CURRENT_STUDENT.setActive(0);
-            if (Database.connect().student().update(this.CURRENT_STUDENT)) {
-                Notifications.create()
-                        .title("Removed Successfully")
-                        .text("Student number " + this.CURRENT_STUDENT.getId()
-                                + " is successfully removed.")
-                        .showInformation();
-            }
-        }
-    }
 
     public void back() {
         StudentHomeController controller = homeFX.getController();
@@ -1226,4 +1307,21 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         cmb_gender.getSelectionModel().selectFirst();
     }
 
+    private void setImageView() {
+        StudentProfileMapping spMap = null;
+        if(this.CURRENT_STUDENT.getHas_profile().equals(1)) {
+            spMap = Mono.orm().newSearch(Database.connect().student_profile())
+                    .eq(DB.student_profile().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
+                    .active(Order.desc(DB.student_profile().id)).first();
+        }
+        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        if (studentImage == null
+            || studentImage.isEmpty()
+            || studentImage.equalsIgnoreCase("NONE")) {
+            ImageUtility.addDefaultImageToFx(img_icon, 1);
+        } else {
+            ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_icon, 1);
+        }
+    }
+    
 }

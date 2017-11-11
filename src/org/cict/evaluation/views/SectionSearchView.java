@@ -23,6 +23,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import org.cict.PublicConstants;
+import org.cict.evaluation.EvaluateController;
 
 /**
  *
@@ -44,6 +46,7 @@ public class SectionSearchView extends HBox {
     //
     public Label lbl_curname;
 
+    
     public SectionSearchView() {
         this.constructFX();
     }
@@ -70,6 +73,23 @@ public class SectionSearchView extends HBox {
 
         this.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
             this.getScene().setCursor(Cursor.DEFAULT);
+            try {
+                Integer count = Integer.valueOf(labelCurrent.getText());
+                String sectionName = labelSection.getText();
+                
+                System.out.println(sectionName);
+                System.out.println(EvaluateController.getSection());
+
+                if(!sectionName.equalsIgnoreCase(EvaluateController.getSection())) {
+                    if(count >= PublicConstants.getMaxPopulation()) {
+                        Evaluator.instance().maxPopulationReached = true;
+                    } else {
+                        Evaluator.instance().maxPopulationReached = false;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             System.out.println("@SectionSearchView: Mouse Realeased Recieved.");
             Evaluator.instance().sectionViewReleased = true;
         });

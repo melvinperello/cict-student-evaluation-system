@@ -242,7 +242,7 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
          * Load Divider FX.
          */
         DividerRow dividerRow = new DividerRow();
-        dividerRow.lbl_types.setText("Regular Sections");
+        dividerRow.lbl_types.setText("Regular Sections".toUpperCase());
         /**
          * Add divider to cell.
          */
@@ -366,7 +366,7 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
         divRow.setRowHeight(50.0);
         // create divider
         DividerRow dividerRow = new DividerRow();
-        dividerRow.lbl_types.setText("Irregular Sections");
+        dividerRow.lbl_types.setText("Irregular Sections".toUpperCase());
         // create cell
         SimpleTableCell divCell = new SimpleTableCell();
         divCell.setResizePriority(Priority.ALWAYS);

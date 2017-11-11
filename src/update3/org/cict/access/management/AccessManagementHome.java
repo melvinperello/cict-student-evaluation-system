@@ -27,8 +27,12 @@ import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
+import app.lazy.models.SystemOverrideLogsMapping;
+import app.lazy.models.utils.FacultyUtility;
+import artifacts.FTPManager;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
@@ -38,14 +42,20 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import com.melvin.mono.fx.events.MonoClick;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.ThreadMill;
@@ -55,6 +65,7 @@ import org.cict.accountmanager.faculty.FacultyInformation;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
+import sys.org.cict.layout.home.system_variables.SystemValues;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.access.Access;
 import update3.org.facultychooser.FacultyChooser;
@@ -157,7 +168,13 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_evaluator_no_found;
-
+    
+    @FXML
+    private JFXButton btn_system_values;
+    
+    @FXML
+    private JFXButton btn_show_override_logs;
+    
     public AccessManagementHome() {
         //
     }
@@ -167,6 +184,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         super.bindScene(application_root);
 
         this.changeView(vbox_system);
+        
     }
 
     /**
@@ -227,7 +245,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 
         this.localRegistrarEvents();
     }
-
+    
     private void systemAccountEvents() {
         super.addClickEvent(btn_create_system_admin, () -> {
             if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
@@ -270,6 +288,10 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                 }
             }
         });
+        
+        super.addClickEvent(btn_system_values, ()->{
+            this.onShowSystemVariables();
+        });
     }
 
     private void localRegistrarEvents() {
@@ -298,6 +320,22 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                 }
             }
         });
+        
+        super.addClickEvent(btn_show_override_logs, ()->{
+            this.onShowOverrideLogs();
+        });
+    }
+    
+    private void onShowOverrideLogs() {
+        OverrideLogs overrideLogs = M.load(OverrideLogs.class);
+        overrideLogs.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            overrideLogs.getCurrentStage().show();
+        } catch (NullPointerException e) {
+            Stage a = overrideLogs.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.show();
+        }
     }
 
     private boolean isSameAccount(Integer facultyID) {
@@ -604,7 +642,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         FacultyInformation infoNewAdmin = new FacultyInformation(selectedFaculty);
         AccountFacultyMapping afMapNewAdmin = infoNewAdmin.getAccountFacultyMapping();
         
-        if (!afMapNewAdmin.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
+        if (afMapNewAdmin.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
                     .text("Faculty selected is already"
@@ -651,7 +689,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             return;
         }
         
-        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
+        if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
                     .text("Faculty selected is already"
@@ -679,7 +717,8 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             if (!Database.connect().account_faculty().update(userAFMap)) {
                 System.out.println("User not set into Faculty.");
             } else {
-                this.onLogout();
+//                this.onLogout();
+                MainApplication.die(0);
             }
         } else {
             Notifications.create().darkStyle()
@@ -701,7 +740,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return false;
         }
-        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
+        if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_ASST_ADMIN)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
                     .text("Faculty selected is already"
@@ -783,7 +822,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             return false;
         }
         
-        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
+        if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
                     .text("Faculty selected is already"
@@ -823,7 +862,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             return false;
         }
         
-        if (!afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
+        if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
                     .text("Faculty selected is already"
@@ -928,4 +967,19 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     private void relaunchLogin() {
         MainApplication.launchLogin();
     }
+    
+    //-----------------------------------
+    
+    private void onShowSystemVariables() {
+        SystemValues systemValues = M.load(SystemValues.class);
+        systemValues.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            systemValues.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = systemValues.createChildStage(this.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+    }
+
 }

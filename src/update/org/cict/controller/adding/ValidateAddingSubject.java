@@ -76,6 +76,16 @@ public class ValidateAddingSubject extends Transaction {
 
     private StudentMapping studentMap;
 
+    private String status;
+    public String getStatus() {
+        return status;
+    }
+    
+    private String rating;
+    public String getRating() {
+        return rating;
+    }
+    
     @Override
     protected boolean transaction() {
 
@@ -115,7 +125,12 @@ public class ValidateAddingSubject extends Transaction {
         } else {
             logs("ALREADY TAKEN, SUBJECT " + subjectToAdd.getCode());
             this.isAlreadyTaken = true;
-            return false;
+            if(grade.getRemarks().equalsIgnoreCase("FAILED") || grade.getRemarks().equalsIgnoreCase("INCOMPLETE")) {
+                this.status = grade.getRemarks();
+                this.rating = grade.getRating();
+                return true;
+            } else
+                return false;
         }
 
         /**

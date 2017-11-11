@@ -52,9 +52,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update3.org.cict.SectionConstants;
 import update3.org.cict.layout.default_loader.LoaderView;
+import update3.org.cict.layout.sectionmain.CreateIrregularSection;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 
 /**
@@ -140,6 +142,7 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
 
     }
 
+    private final String SECTION_BASE_COLOR = "#414852";
     @Override
     public void onEventHandling() {
         MonoClick.addClickEvent(btn_back, () -> {
@@ -159,6 +162,34 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
 
         MonoClick.addClickEvent(btn_create_class, () -> {
             sout(this.sectionType);
+            if(sectionType.equalsIgnoreCase("MIDYEAR")) {
+                String termType = SystemProperties.instance().getCurrentAcademicTerm().getType();
+                if(!termType.equalsIgnoreCase(sectionType) || SystemProperties.instance().getCurrentAcademicTerm().getSemester_regular().equals(0)) {
+                    Notifications.create().darkStyle()
+                            .title("Invalid Academic Term")
+                            .text("Creation of Midyear Classes\n"
+                                    + "during regular semester is not allowed.").showError();
+                    btn_create_class.setDisable(true);
+                    return;
+                }
+            }
+            CreateIrregularSection controller = new CreateIrregularSection();
+            LayoutDataFX homeFx = new LayoutDataFX(application_root, this);
+            controller.setHomeFx(homeFx);
+            controller.setSectionType(sectionType);
+            controller.setTerm(lbl_current_term.getText());
+            Pane next_root = Mono.fx().create()
+                    .setPackageName("update3.org.cict.layout.sectionmain")
+                    .setFxmlDocument("CreateIrregularSection")
+                    .makeFX()
+                    .setController(controller)
+                    .pullOutLayout();
+
+            super.setSceneColor(SECTION_BASE_COLOR); // call once on entire scene lifecyclez
+
+            Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+                super.replaceRoot(next_root);
+            }, next_root);
         });
     }
 
@@ -167,7 +198,7 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
         getSectionsTx.sectionType = this.sectionType;
 
         getSectionsTx.whenCancelled(() -> {
-            sout("No Special Classes");
+            sout("No " + sectionType + " Classes");
             this.emptySections.attach();
 
         });
@@ -262,7 +293,8 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
                 controller.setCurrentTermString(SystemProperties.instance().getCurrentTermString());
                 controller.setCurriculumType(lbl_curriculum_type.getText());/*?*/
                 controller.setSectionName(isd.loadSection.getSection_name());
-
+                controller.setSectionType(sectionType);
+                
                 Pane pane = Mono.fx()
                         .create()
                         .setPackageName("update3.org.cict.layout.sectionmain")
@@ -366,7 +398,8 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
                 LoadGroupMapping loadGroup = Mono.orm()
                         .newSearch(Database.connect().load_group())
                         .eq(DB.load_group().LOADSEC_id, results.getId())
-                        .eq(DB.load_group().group_type, "REGULAR")
+//                        .eq(DB.load_group().group_type, "REGULAR")
+                        .eq(DB.load_group().group_type, (sectionType.equalsIgnoreCase("TUTORIAL")? sectionType : "REGULAR"))
                         .active(Order.desc(DB.load_group().id))
                         .first();
 

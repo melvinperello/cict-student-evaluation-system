@@ -36,6 +36,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -45,9 +46,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.cict.PublicConstants;
+import org.controlsfx.control.Notifications;
 import update.org.cict.controller.adding.AddSubjectSuggestion;
 import update.org.cict.controller.adding.SearchSection;
 import update.org.cict.controller.adding.SubjectInformationHolder;
+import update3.org.cict.access.SystemOverriding;
 
 /**
  *
@@ -250,7 +254,7 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
      */
     private void searchSection(SubjectMapping subject) {
         SearchSection search = new SearchSection();
-        search.subjectCode = subject.getCode();
+        search.subjectCode = subject.getId();
         search.CURRICULUM_id = CURRICULUM_id;
         changeView(hbox_search);
         search.setOnSuccess(onSuccess -> {
@@ -296,7 +300,10 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
                 ArrayList<Object> currentSection = sectionsToDisplay.get(i);
                 String studentCount = (String) currentSection.get(0);
                 SubjectInformationHolder subInfos = (SubjectInformationHolder) currentSection.get(1);
-  
+                try {
+                    subInfos.setStudentCount(Integer.valueOf(studentCount));
+                } catch (Exception e) {
+                }
                 SimpleTableRow row = new SimpleTableRow();
                 row.setRowHeight(70.0);
 
@@ -310,11 +317,14 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
                 Label lbl_code = searchAccessibilityText(sectionRow, "code");
                 Label lbl_descriptive_title = searchAccessibilityText(sectionRow, "descript");
                 Label lbl_count = searchAccessibilityText(sectionRow, "count");
+                Label lbl_curriculum = searchAccessibilityText(sectionRow, "curriculum");
+        
         
                 lbl_section.setText(subInfos.getFullSectionName());
                 lbl_code.setText(subInfos.getSubjectMap().getCode());
                 lbl_descriptive_title.setText(subInfos.getSubjectMap().getDescriptive_title());
                 lbl_count.setText(studentCount);
+                lbl_curriculum.setText(subInfos.getCurriculum()==null? "No Curriculum": subInfos.getCurriculum().getName());
                 
                 SimpleTableCell cellParent = new SimpleTableCell();
                 cellParent.setResizePriority(Priority.ALWAYS);
@@ -328,6 +338,21 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
                 // now we have a complete subject information holder here
                 // we can now add an event that will pass this value to the parent window.
                 row.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    // check if max population reached before adding
+                    SubjectInformationHolder info = (SubjectInformationHolder) row.getRowMetaData().get(KEY_MORE_INFO);
+                    
+                    
+                    
+                    System.out.println("STUDENT COUNT: " + (info.getStudentCount()==null? 0: info.getStudentCount()));
+                    System.out.println(PublicConstants.getMaxPopulation());
+                    
+                    
+                    
+                    
+                    if((info.getStudentCount()==null? 0: info.getStudentCount()) >= PublicConstants.getMaxPopulation()) {
+                        AddingDataPipe.instance().isMaxPopulationReached = true;
+                    }
+                    
                     // check if this window was open thru change request
                     // use the adding data pipe
 

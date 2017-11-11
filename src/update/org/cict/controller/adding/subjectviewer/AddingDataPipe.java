@@ -45,6 +45,7 @@ public class AddingDataPipe {
      */
     public boolean isChanged;
     public boolean isChangedValueRecieved;
+    public boolean isMaxPopulationReached;
     public SubjectInformationHolder isChangedValue;
 
     private AddingDataPipe() {
@@ -54,13 +55,18 @@ public class AddingDataPipe {
         isChangedValueRecieved = false;
         // we do not need to assign default value for isChangedValue
         // we need to test if the value is null
-
+        
+        //0---------------
+        isMaxPopulationReached = false;
     }
 
     public void resetIsChanged() {
         this.isChanged = false;
         this.isChangedValueRecieved = false;
         this.isChangedValue = null;
+        
+        //0---------------
+        isMaxPopulationReached = false;
     }
 
 }

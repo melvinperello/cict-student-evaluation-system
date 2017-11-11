@@ -32,10 +32,12 @@ import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.utils.FacultyUtility;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
 import org.cict.SubjectClassification;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
@@ -145,14 +147,7 @@ public class PrintDeficiency extends Transaction {
         //----------------------------------------------------------------------
         return true;
     }
-
-    //--------------------------------------------------------------------------
-    // Why unused ?
-    private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_1;
-    private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_2;
-    private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_3;
-    private ArrayList<SubjectAssessmentDetials> subjectAssessment_UNACQUIRED_4;
-    //--------------------------------------------------------------------------
+    
     private ArrayList<Object[]> details = new ArrayList<>();
 
     private void getResult(CurricularLevelAssesor cla, int year, boolean hasPrepData) {
@@ -318,6 +313,8 @@ public class PrintDeficiency extends Transaction {
         def.SUBJECTS_PER_SEM.put("32", tyrssem);
         def.SUBJECTS_PER_SEM.put("41", fryrfsem);
         def.SUBJECTS_PER_SEM.put("42", fryrssem);
+        def.DATETIME = Mono.orm().getServerTime().getDateWithFormat().toString();
+        def.USER = CollegeFaculty.instance().getFirstLastName();
         def.print();
     }
 

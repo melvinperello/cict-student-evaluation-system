@@ -31,6 +31,9 @@
 <property name="conforme_id" type="java.lang.Integer">
 <column name="conforme_id" length="10"/>
 </property>
+<property name="attachment_file" type="java.lang.String">
+<column name="attachment_file" length="60"/>
+</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

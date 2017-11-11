@@ -374,7 +374,7 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Label graphicTextGap="10.0" prefWidth="150.0" styleClass="metro-label-18" text="Instructor" textFill="WHITE" wrapText="true">
+                              <Label graphicTextGap="10.0" prefHeight="27.0" prefWidth="141.0" styleClass="metro-label-18" text="Instructor" textFill="WHITE" wrapText="true">
                                  <font>
                                     <Font size="18.0" />
                                  </font>

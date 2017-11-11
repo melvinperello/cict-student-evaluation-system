@@ -2,7 +2,7 @@
 // SQL_table: system_override_logs
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 04, 2017 10:55:07 PM
+// Created: Nov 08, 2017 05:40:39 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -36,6 +36,7 @@ private java.lang.Integer academic_term;
 private java.lang.String conforme;
 private java.lang.String conforme_type;
 private java.lang.Integer conforme_id;
+private java.lang.String attachment_file;
 private java.lang.Integer active;
 
 @Id
@@ -120,6 +121,15 @@ public java.lang.Integer getConforme_id() {
 
 public void setConforme_id(java.lang.Integer fieldConformeId) {
 	this.conforme_id = fieldConformeId;
+}
+
+@Column(name = "attachment_file", nullable = true, length = 60)
+public java.lang.String getAttachment_file() {
+	return this.attachment_file;
+}
+
+public void setAttachment_file(java.lang.String fieldAttachmentFile) {
+	this.attachment_file = fieldAttachmentFile;
 }
 
 @Column(name = "active", nullable = true, length = 10)

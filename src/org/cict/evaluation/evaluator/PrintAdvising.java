@@ -258,7 +258,11 @@ public class PrintAdvising extends Transaction {
             String sectionName = "";
             try {
                 if (section.getYear_level() != 0) {
-                    sectionName = section.getYear_level().toString()
+                    AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(section.getACADPROG_id());
+                    if(apMap!=null){
+                        sectionName = apMap.getCode() + " ";
+                    }
+                    sectionName += section.getYear_level().toString()
                             + section.getSection_name()
                             + " - G" + (section.get_group()==null? "":section.get_group().toString());
                 } else {

@@ -451,7 +451,7 @@ public class WinRegularSectionsController extends SceneFX implements ControllerF
                 controller.setCurrentTermString(currentTermString);
                 controller.setCurriculumType(lbl_curriculum_type.getText());/*?*/
                 controller.setSectionName(sectionName);
-
+                controller.setSectionType("REGULAR");
                 Pane pane = Mono.fx()
                         .create()
                         .setPackageName("update3.org.cict.layout.sectionmain")

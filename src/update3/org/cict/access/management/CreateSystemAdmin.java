@@ -119,11 +119,26 @@ public class CreateSystemAdmin extends MonoLauncher {
     @FXML
     private JFXButton btn_close2;
     
+    @FXML
+    private VBox vbox_form5;
+    
+    @FXML
+    private JFXButton btn_previous5;
+
+    @FXML
+    private JFXButton btn_next5;
+    
+    @FXML
+    private CustomPasswordField txt_transaction_pin;
+    
+    @FXML
+    private CustomPasswordField txt_transaction_pin_confirm;
+    
     private Boolean saved = false;
     public Boolean isCreationSuccess() {
         return saved;
     }
-    private String bulsu_id, last_name, first_name, middle_name, username, password, question, answer;
+    private String bulsu_id, last_name, first_name, middle_name, username, password, pin, question, answer;
     
     @Override
     public void onStartUp() {
@@ -179,10 +194,27 @@ public class CreateSystemAdmin extends MonoLauncher {
             password = this.validate(txt_password, txt_password_confirm, "password", true);
             if(password==null)
                 return;
-            this.changeView(vbox_form3);
+            this.changeView(vbox_form5);
         });
         MonoClick.addClickEvent(btn_previous2, ()->{
             this.changeView(vbox_form1);
+        });
+        
+        // FORM 5
+        MonoClick.addClickEvent(btn_next5, ()->{
+            pin = this.validate(txt_transaction_pin, txt_transaction_pin_confirm, "transaction pin", false);
+            if(pin==null)
+                return;
+            if(pin.length()!=6) {
+                Mono.fx().alert().createWarning()
+                        .setMessage("Transaction pin requires 6 characters.")
+                        .show();
+                return;
+            }
+            this.changeView(vbox_form3);
+        });
+        MonoClick.addClickEvent(btn_previous5, ()->{
+            this.changeView(vbox_form2);
         });
         
         // FORM 3
@@ -197,13 +229,14 @@ public class CreateSystemAdmin extends MonoLauncher {
                 this.changeView(vbox_form4);
         });
         MonoClick.addClickEvent(btn_previous3, ()->{
-            this.changeView(vbox_form2);
+            this.changeView(vbox_form5);
         });
         
         // FORM 4
         MonoClick.addClickEvent(btn_close2, ()->{
             this.onClose(true);
         });
+        
         
         this.addTextFieldFilters();
     }
@@ -251,6 +284,7 @@ public class CreateSystemAdmin extends MonoLauncher {
         afMap.setRecovery_answer(Mono.security().hashFactory().hash_sha512(answer));
         afMap.setRecovery_question(question);
         afMap.setUsername(username);
+        afMap.setTransaction_pin(Mono.security().hashFactory().hash_sha512(pin));
         Integer id = Database.connect().account_faculty().insert(afMap);
         if(id==null) {
             Notifications.create().darkStyle()
@@ -420,7 +454,8 @@ public class CreateSystemAdmin extends MonoLauncher {
             vbox_form2.setVisible(false);
             vbox_form3.setVisible(false);
             vbox_form4.setVisible(false);
+            vbox_form5.setVisible(false);
             node.setVisible(true);
-        }, vbox_form1, vbox_form2, vbox_form3, vbox_form4);
+        }, vbox_form1, vbox_form2, vbox_form3, vbox_form4, vbox_form5);
     }
 }

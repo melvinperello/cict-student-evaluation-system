@@ -98,6 +98,14 @@
                               <Insets top="10.0" />
                            </HBox.margin>
                         </VBox>
+                        <JFXButton fx:id="btn_print" prefHeight="44.0" prefWidth="130.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </JFXButton>
                      </children>
                      <VBox.margin>
                         <Insets bottom="20.0" top="10.0" />
@@ -131,9 +139,12 @@
                   <Insets left="20.0" right="28.0" />
                </padding>
             </VBox>
-            <VBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="1031.0" style="-fx-background-color: #656D79;">
+            <VBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="1031.0" style="-fx-background-color: #2E333F;">
                <children>
-                  <Label fx:id="lbl_status1" text="Done" />
+                  <Label fx:id="lbl_status1" text="Done">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
                </children>
                <padding>
                   <Insets left="10.0" />

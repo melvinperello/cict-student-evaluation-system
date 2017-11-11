@@ -36,6 +36,7 @@ import com.jhmvin.propertymanager.FormFormat;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.StringUtils;
 
@@ -91,6 +92,11 @@ public class ReEvaluationAccess extends SceneFX implements ControllerFX {
 
     @Override
     public void onEventHandling() {
+        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
+            //
+            onVerification();
+        });
+        
         super.addClickEvent(btn_grant, () -> {
             //
             onVerification();

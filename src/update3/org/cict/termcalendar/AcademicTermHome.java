@@ -83,6 +83,9 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
     @FXML
     private Label lbl_eval_service_updater;
+    
+    @FXML
+    private Label lbl_encoding_service_updater;
 
     @FXML
     private Label lbl_eval_service_date;
@@ -180,25 +183,25 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_evaluation_service, () -> {
             if (lbl_evaluation_status.getText().equalsIgnoreCase("OFFLINE")) {
-                changeStatus(Boolean.TRUE, null, null);
+                changeStatus(Boolean.TRUE, null, null, Boolean.FALSE);
             } else {
-                changeStatus(Boolean.FALSE, null, null);
+                changeStatus(Boolean.FALSE, null, null, Boolean.FALSE);
             }
         });
 
         super.addClickEvent(btn_adding_service, () -> {
             if (lbl_adding_status.getText().equalsIgnoreCase("OFFLINE")) {
-                changeStatus(null, Boolean.TRUE, null);
+                changeStatus(null, Boolean.TRUE, null, Boolean.FALSE);
             } else {
-                changeStatus(null, Boolean.FALSE, null);
+                changeStatus(null, Boolean.FALSE, null, Boolean.FALSE);
             }
         });
 
         super.addClickEvent(btn_encoding_service, () -> {
             if (lbl_encoding_status.getText().equalsIgnoreCase("OFFLINE")) {
-                changeStatus(null, null, Boolean.TRUE);
+                changeStatus(null, null, Boolean.TRUE, Boolean.FALSE);
             } else {
-                changeStatus(null, null, Boolean.FALSE);
+                changeStatus(null, null, Boolean.FALSE, Boolean.FALSE);
             }
         });
 
@@ -264,12 +267,13 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 btn_decline.setDisable(true);
                 reset.whenStarted(()->{
                     GenericLoadingShow.instance().show();
+                    throw new RuntimeException("IM AN ERROR!");
                 });
                 reset.whenFailed(()->{
                     GenericLoadingShow.instance().hide();
                     Notifications.create().darkStyle()
-                            .title("Oh no!")
-                            .text("Something went wrong.").showError();
+                            .title("Oh no! Something went wrong.")
+                            .text("Change of Academic Term declined.").showError();
                 });
                 reset.whenCancelled(()->{
                     GenericLoadingShow.instance().hide();
@@ -326,6 +330,9 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 .active(Order.desc(DB.academic_term().id)).first();
         if(pending==null) {
             this.changeAcadTermView(vbox_home_term);
+            btn_adding_service.setDisable(false);
+            btn_encoding_service.setDisable(false);
+            btn_evaluation_service.setDisable(false);
         } else {
             if(Access.isGranted(Access.ACCESS_ADMIN)) {
                 lbl_school_year1.setText(pending.getSchool_year());
@@ -336,6 +343,10 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 lbl_semester.setText(WordUtils.capitalizeFully(pending.getSemester()));
                 this.changeAcadTermView(vbox_request_term);
             }
+            btn_adding_service.setDisable(true);
+            btn_encoding_service.setDisable(true);
+            btn_evaluation_service.setDisable(true);
+            changeStatus(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE);
         }
     }
     
@@ -363,6 +374,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             return;
         
         pending.setActive(0);
+        pending.setApproval_state("CANCELLED");
         if(Database.connect().academic_term().update(pending)) {
             Mono.fx().alert().createInfo()
                     .setHeader("Successfully Cancelled")
@@ -379,10 +391,15 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     private void onLogout() {
         Logout logout = AccountManager.instance().createLogout();
         logout.whenStarted(() -> {
+            throw new RuntimeException("IM AN ERROR!");
         });
         logout.whenCancelled(() -> {
         });
         logout.whenFailed(() -> {
+            Notifications.create().darkStyle()
+                    .title("Logout Failed")
+                    .text("Account not properly logged out.")
+                    .showWarning();
         });
         logout.whenSuccess(() -> {
         });
@@ -531,21 +548,24 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             // never mind
         }
 
-        btn_adding_service.setDisable(disabled);
-        btn_evaluation_service.setDisable(disabled);
-        btn_encoding_service.setDisable(disabled);
+        if(pending==null) {
+            btn_adding_service.setDisable(disabled);
+            btn_evaluation_service.setDisable(disabled);
+            btn_encoding_service.setDisable(disabled);
+        }
     }
 
     private void changeStatus(
             Boolean evaluationService,
             Boolean addingService,
-            Boolean encodingService) {
+            Boolean encodingService, Boolean forceProcess) {
 
         ServiceStateChanger changeState = new ServiceStateChanger();
         changeState.setEvaluationService(evaluationService);
         changeState.setAddingService(addingService);
         changeState.setEncodingService(encodingService);
-
+        changeState.forceProcess = forceProcess;
+        
         changeState.whenStarted(() -> {
             this.setDisableSwitchButtons(true);
         });
@@ -559,7 +579,8 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         });
 
         changeState.whenSuccess(() -> {
-            Mono.fx().snackbar().showSuccess(application_root, "State Successfully Changed.");
+            if((!forceProcess))
+                Mono.fx().snackbar().showSuccess(application_root, "State Successfully Changed.");
         });
 
         changeState.whenFinished(() -> {
@@ -644,7 +665,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
         lbl_adding_service_updater.setText(as_updater);
         lbl_eval_service_updater.setText(es_updater);
-        lbl_encoding_service_date.setText(ens_updater);
+        lbl_encoding_service_updater.setText(ens_updater);
 
         lbl_adding_service_date.setText(DateString.formatDate(term.getAs_update_date()));
         lbl_eval_service_date.setText(DateString.formatDate(term.getEs_update_date()));
@@ -674,6 +695,11 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         public void setEncodingService(Boolean encodingService) {
             this.encodingService = encodingService;
         }
+        
+        private Boolean forceProcess = false;
+        public void forceProcess(Boolean forceProcess) {
+            this.forceProcess = forceProcess;
+        }
 
         @Override
         protected boolean transaction() {
@@ -687,7 +713,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 // get proposed value to change
                 Integer proposedValue = evaluationService ? 1 : 0;
                 // if already equal cancel the transaction.
-                if (this.currentTerm.getEvaluation_service().equals(proposedValue)) {
+                if (this.currentTerm.getEvaluation_service().equals(proposedValue) && (!forceProcess)) {
                     return false;
                 } else {
                     // if not equal change the value to the proposed state
@@ -701,7 +727,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 // get proposed value to change
                 Integer proposedValue = addingService ? 1 : 0;
                 // if already equal cancel the transaction.
-                if (this.currentTerm.getAdding_service().equals(proposedValue)) {
+                if (this.currentTerm.getAdding_service().equals(proposedValue) && (!forceProcess)) {
                     return false;
                 } else {
                     this.currentTerm.setAdding_service(proposedValue);
@@ -715,7 +741,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 // get proposed value to change
                 Integer proposedValue = encodingService ? 1 : 0;
                 // if already equal cancel the transaction.
-                if (this.currentTerm.getEncoding_service().equals(proposedValue)) {
+                if (this.currentTerm.getEncoding_service().equals(proposedValue) && (!forceProcess)) {
                     return false;
                 } else {
                     this.currentTerm.setEncoding_service(proposedValue);

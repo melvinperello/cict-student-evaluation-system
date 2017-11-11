@@ -310,7 +310,7 @@ public class AdvisingSlip {
                     t = getShortenedDetail(table_data.get(i).subj_title, 40);
                 }
                 if (!table_data.get(i).section.isEmpty()) {
-                    s = getShortenedDetail(table_data.get(i).section, 11);
+                    s = table_data.get(i).section;//getShortenedDetail(table_data.get(i).section, 11);
                 }
                 if (!table_data.get(i).schedule.isEmpty()) {
                     scd = getShortenedDetail(table_data.get(i).schedule, 11);

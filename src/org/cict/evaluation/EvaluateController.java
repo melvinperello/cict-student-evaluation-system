@@ -36,7 +36,10 @@ import app.lazy.models.EvaluationMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
+import artifacts.FTPManager;
+import artifacts.ImageUtility;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -44,8 +47,12 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.SceneFX;
+import java.io.File;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
+import org.apache.commons.io.FileUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
@@ -63,6 +70,7 @@ import org.cict.management.registrar.Registrar;
 import org.cict.management.registrar.RevokeEvaluation;
 import org.cict.reports.advisingslip.ChooseTypeController;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.CurriculumConstants;
 import update3.org.cict.access.Access;
@@ -160,6 +168,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_list;
+    
+    @FXML
+    private ImageView img_profile;
 
     public EvaluateController() {
         //
@@ -1192,7 +1203,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private void showPreview() {
         SimpleTask previewTk = new SimpleTask("show-preview");
         previewTk.setTask(() -> {
-            loadPreview();
+            this.loadPreview();
+            this.setImageView();
         });
         previewTk.whenStarted(() -> {
             btnFind.setDisable(true);
@@ -1239,11 +1251,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             try {
                 // students section
                 String section = this.currentStudent.getYear_level()
-                        + ""
+                        + " "
                         + this.currentStudent.getSection()
                         + " - G"
                         + this.currentStudent.get_group();
-
+                currentSection = studentProgram.getCode() + " " + section;
                 this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section + " | " + this.studentCurriculum.getName());
             } catch (Exception e) {
                 this.lblCourseSection.setText("No Data");
@@ -1251,6 +1263,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
             btn_encoding.setDisable((this.currentStudent.getPREP_id() != null));
         });
+    }
+    
+    private static String currentSection;
+    public static String getSection() {
+        return currentSection;
     }
 
     private void loadPreview() {
@@ -1663,5 +1680,22 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         row.addCell(cellParent);
 
         studentTable.addRow(row);
+    }
+    
+    private void setImageView() {
+        StudentProfileMapping spMap = null;
+        if(this.currentStudent.getHas_profile().equals(1)) {
+            spMap = Mono.orm().newSearch(Database.connect().student_profile())
+                    .eq(DB.student_profile().STUDENT_id, this.currentStudent.getCict_id())
+                    .active(Order.desc(DB.student_profile().id)).first();
+        }
+        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        if (studentImage == null
+            || studentImage.isEmpty()
+            || studentImage.equalsIgnoreCase("NONE")) {
+            ImageUtility.addDefaultImageToFx(img_profile, 1);
+        } else {
+            ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 1);
+        }
     }
 }

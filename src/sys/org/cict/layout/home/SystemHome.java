@@ -103,8 +103,8 @@ public class SystemHome extends MonoLauncher {
     @FXML
     private JFXButton btn_logout;
 
-    @FXML
-    private JFXButton btn_system_values;
+//    @FXML
+//    private JFXButton btn_system_values;
 
     @FXML
     private JFXButton btn_academic_term;
@@ -188,25 +188,25 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
         });
 
-        MonoClick.addClickEvent(btn_system_values, () -> {
-            this.onShowSystemVariables();
-        });
+//        MonoClick.addClickEvent(btn_system_values, () -> {
+//            this.onShowSystemVariables();
+//        });
 
         //----------------------------------------------------------------------
         this.displayLabels();
     }
-    
-    private void onShowSystemVariables() {
-        SystemValues systemValues = M.load(SystemValues.class);
-        systemValues.onDelayedStart(); // do not put database transactions on startUp
-        try {
-            systemValues.getCurrentStage().showAndWait();
-        } catch (NullPointerException e) {
-            Stage a = systemValues.createChildStage(this.getCurrentStage());
-            a.initStyle(StageStyle.UNDECORATED);
-            a.showAndWait();
-        }
-    }
+//    
+//    private void onShowSystemVariables() {
+//        SystemValues systemValues = M.load(SystemValues.class);
+//        systemValues.onDelayedStart(); // do not put database transactions on startUp
+//        try {
+//            systemValues.getCurrentStage().showAndWait();
+//        } catch (NullPointerException e) {
+//            Stage a = systemValues.createChildStage(this.getCurrentStage());
+//            a.initStyle(StageStyle.UNDECORATED);
+//            a.showAndWait();
+//        }
+//    }
 
     /**
      * Display Information labels on the left side.

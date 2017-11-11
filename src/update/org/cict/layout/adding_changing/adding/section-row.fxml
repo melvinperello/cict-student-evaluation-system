@@ -22,41 +22,19 @@
             <Insets bottom="10.0" top="10.0" />
          </HBox.margin>
       </VBox>
-      <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" minWidth="-Infinity" HBox.hgrow="ALWAYS">
          <children>
             <Label accessibleText="section" maxWidth="1.7976931348623157E308" text="BSIT 1A-G1" textFill="#088830">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label accessibleText="code" text="SOCSCI 113" textFill="#088830" />
+            <Label accessibleText="curriculum" text="BSIT OLD" textFill="#088830" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="350.0">
+      <VBox alignment="CENTER_RIGHT" prefHeight="57.0" prefWidth="220.0">
          <children>
-            <HBox alignment="CENTER_RIGHT" spacing="5.0">
-               <children>
-                  <VBox alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="325.0">
-                     <children>
-                        <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../img/Flag%20Filled%20_64px.png" />
-                           </image>
-                        </ImageView>
-                        <Label text="MEAN" textFill="#088830">
-                           <font>
-                              <Font name="System Bold" size="7.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </VBox>
-                  <Label accessibleText="count" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="20.0" text="1" textFill="#088830" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
+            <Label accessibleText="code" text="SOCSCI 113" textFill="#088830" />
             <Label accessibleText="descript" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="PHILIPPINE HISTORY AND GOVERNEMNT" textFill="#088830" VBox.vgrow="ALWAYS">
                <font>
                   <Font name="System Bold" size="8.0" />
@@ -67,6 +45,32 @@
             <Insets right="10.0" />
          </HBox.margin>
       </VBox>
+      <HBox alignment="CENTER_RIGHT" spacing="5.0">
+         <children>
+            <VBox alignment="CENTER_RIGHT" prefHeight="57.0" prefWidth="0.0">
+               <children>
+                  <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/Flag%20Filled%20_64px.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="MEAN" textFill="#088830">
+                     <font>
+                        <Font name="System Bold" size="7.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Label accessibleText="count" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="32.0" text="1" textFill="#088830">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+         </children>
+         <HBox.margin>
+            <Insets right="20.0" />
+         </HBox.margin>
+      </HBox>
    </children>
    <padding>
       <Insets left="10.0" />

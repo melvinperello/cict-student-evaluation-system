@@ -105,6 +105,9 @@ public class Evaluator implements Process {
     public Integer pressedSubjectID;
     public Integer pressedSectionID;
     public boolean sectionViewReleased;
+    
+    //--------------------------------------
+    public boolean maxPopulationReached;
 
     //
     //-------------------------------------------------------------------------
@@ -163,6 +166,8 @@ public class Evaluator implements Process {
         private final String BYPASSED_PRE_REQUISITES = SystemOverriding.EVAL_BYPASSED_PRE_REQUISITES;
         private final String INTERN_GRADE_REQUIREMENT = SystemOverriding.EVAL_INTERN_GRADE_REQUIREMENT;
 
+        private final String EXCEED_MAX_POPULATION = SystemOverriding.EVAL_EXCEED_MAX_POPULATION;
+        
         /**
          * Retrieves section information of subjects that are forcibly added.
          *
@@ -268,7 +273,9 @@ public class Evaluator implements Process {
         }
 
         private void goLang(String type) {
-            boolean ok = Access.isEvaluationOverride(allowOverride);
+            Object[] result = Access.isEvaluationOverride(allowOverride);
+            boolean ok = (boolean) result[0];
+            String fileName = (String) result[1];
             if (ok) {
                 SystemOverrideLogsMapping map = MapFactory.map().system_override_logs();
                 map.setCategory(SystemOverriding.CATEGORY_EVALUATION);
@@ -287,6 +294,10 @@ public class Evaluator implements Process {
                 map.setConforme_type("STUDENT");
                 map.setConforme_id(currentStudent.getCict_id());
 
+                //-----------------
+                map.setAttachment_file(fileName);
+                //------------
+                
                 int id = Database.connect().system_override_logs().insert(map);
                 if (id <= 0) {
                     Mono.fx().snackbar().showError(anchor_right, "Something went wrong please try again.");
@@ -403,7 +414,8 @@ public class Evaluator implements Process {
         public void analyze() {
             // if local registrar allow override.
             allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
-
+            System.out.println(allowOverride);
+            
             System.out.println("@EvaluateController: Mouse Entered Drop Zone.");
             // check input
             if (!Evaluator.instance().sectionViewReleased) {
@@ -463,6 +475,21 @@ public class Evaluator implements Process {
                             .position(Pos.BOTTOM_RIGHT).showWarning();
                     return;
                 }
+            }
+            
+            // checks if the section of the subject already
+            // reached the max population
+            if(maxPopulationReached) {
+                Notifications.create()
+                        .title("Max Population Reached")
+                        .text("Section reached the maximum population."
+                                + "\nClick This notification for more details.")
+                        .onAction(a -> {
+                            this.goLang(EXCEED_MAX_POPULATION);
+                        })
+                        .position(Pos.BOTTOM_RIGHT).showWarning();
+                Evaluator.instance().maxPopulationReached = false;
+                return;
             }
 
             // if passed the filter continue

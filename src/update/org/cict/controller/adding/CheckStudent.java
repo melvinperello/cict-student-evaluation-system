@@ -74,10 +74,12 @@ public class CheckStudent extends Transaction {
         
         // student course name
         AcademicProgramMapping aMap = TransactionHelperFunctions.getAcademicProgram(studentMap.getCURRICULUM_id());
+        CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(studentMap.getCURRICULUM_id());
         studentSection = aMap.getName() + " | " +
                 (studentMap.getYear_level()==null? "NO YEAR LEVEL ": studentMap.getYear_level()) 
                 + (studentMap.getSection()==null? "NO SECTION ": (studentMap.getSection()+"-")) +
-                (studentMap.get_group()==null? "NO GROUP":"G" + studentMap.get_group());
+                (studentMap.get_group()==null? "NO GROUP":"G" + studentMap.get_group())
+                + (curriculum==null? "": (" | " + curriculum.getName()));
 
         evaluationMap = Mono.orm()
                 .newSearch(Database.connect().evaluation())

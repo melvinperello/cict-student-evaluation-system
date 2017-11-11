@@ -21,7 +21,7 @@
                   <Font size="40.0" />
                </font>
             </Label>
-            <JFXButton fx:id="btn_home" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-nav-button" text="Home" textFill="WHITE">
+            <JFXButton fx:id="btn_home" contentDisplay="CENTER" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-nav-button" text="Home" textFill="WHITE">
                <font>
                   <Font size="19.0" />
                </font>
@@ -448,6 +448,42 @@
                                     <Insets bottom="10.0" top="10.0" />
                                  </padding>
                               </HBox>
+                              <HBox layoutX="40.0" layoutY="294.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="System Values consist of information that could be edited by the administrator itself only." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="40.0" layoutY="354.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton fx:id="btn_system_values" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="System Values" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/settings.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
                            </children>
                            <padding>
                               <Insets left="30.0" top="20.0" />
@@ -515,7 +551,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_local_registrar" prefHeight="200.0" prefWidth="100.0" visible="false">
+                  <VBox fx:id="vbox_local_registrar" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -596,6 +632,42 @@
                                           <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@images/evaluator.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox layoutX="40.0" layoutY="187.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="The Local Registrar have the authority to override different transactions in the system. Every overridden processes are documented with an attachment file and stored in the database. Each attached files must be in RAR file, ZIP file or 7Z file only. You can download and view them if needed." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" layoutX="40.0" layoutY="247.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton fx:id="btn_show_override_logs" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Show System Override Logs" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/Warning%20Shield_32px.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>

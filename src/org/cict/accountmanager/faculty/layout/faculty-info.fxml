@@ -36,7 +36,7 @@
             <Label alignment="BASELINE_LEFT" maxWidth="1.7976931348623157E308" styleClass="metro-subtitle-1" text="Manage Faculty Information" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <HBox>
+      <HBox VBox.vgrow="ALWAYS">
          <children>
             <VBox HBox.hgrow="ALWAYS">
                <children>
@@ -154,7 +154,7 @@
                         <Insets left="10.0" />
                      </VBox.margin>
                   </VBox>
-                  <VBox maxWidth="450.0" spacing="5.0">
+                  <VBox alignment="CENTER_LEFT" maxWidth="450.0" prefHeight="50.0" prefWidth="397.0" spacing="5.0" VBox.vgrow="ALWAYS">
                      <children>
                         <Label text="Account Information">
                            <font>
@@ -198,9 +198,16 @@
                               <Insets left="10.0" />
                            </VBox.margin>
                         </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <VBox alignment="BOTTOM_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
                         <HBox spacing="10.0">
                            <children>
-                              <Label minWidth="-Infinity" prefWidth="100.0" text="Status" textFill="#656d79">
+                              <Label minWidth="-Infinity" prefHeight="21.0" prefWidth="111.0" text="Status" textFill="#656d79">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>
@@ -216,16 +223,10 @@
                                  </HBox.margin>
                               </JFXCheckBox>
                            </children>
-                           <VBox.margin>
-                              <Insets left="10.0" />
-                           </VBox.margin>
                         </HBox>
                         <HBox alignment="CENTER_LEFT">
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
                            <children>
-                              <JFXButton fx:id="btn_nav" prefHeight="41.0" prefWidth="237.0" style="-fx-border-color: #fff;" styleClass="label" text="Deactivate Account">
+                              <JFXButton fx:id="btn_nav" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="237.0" style="-fx-border-color: #fff;" styleClass="label" text="Remove Faculty" HBox.hgrow="ALWAYS">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -233,6 +234,9 @@
                            </children>
                         </HBox>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
                   </VBox>
                </children>
                <HBox.margin>
@@ -364,7 +368,7 @@
                   </HBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <JFXButton fx:id="btn_save" accessibleText="btn_save_changes" maxHeight="-Infinity" prefHeight="42.0" prefWidth="200.0" style="-fx-border-color: #DEDEDE;" styleClass="label" text="Save Changes">
+                        <JFXButton fx:id="btn_save" accessibleText="btn_save_changes" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="200.0" style="-fx-border-color: #DEDEDE;" styleClass="label" text="Save Changes" VBox.vgrow="ALWAYS">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -572,7 +576,7 @@
                         </HBox>
                      </children>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
                      </padding>
                   </VBox>
                </children>

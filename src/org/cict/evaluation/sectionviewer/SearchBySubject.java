@@ -195,7 +195,7 @@ public class SearchBySubject extends Transaction {
             String sectionName = "";
             if (loadSections.get(x).getYear_level() != null
                     && loadSections.get(x).getYear_level() != 0) {
-                sectionName = loadSections.get(x).getYear_level() + " "
+                sectionName = loadSections.get(x).getYear_level() + ""
                         + loadSections.get(x).getSection_name()
                         + " - G"
                         + loadSections.get(x).get_group();

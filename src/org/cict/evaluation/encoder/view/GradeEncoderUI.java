@@ -1,5 +1,6 @@
 package org.cict.evaluation.encoder.view;
 
+import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
@@ -15,6 +16,7 @@ import com.jhmvin.Mono;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -45,6 +47,7 @@ import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
 import org.controlsfx.control.spreadsheet.SpreadsheetView;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.adding.ValidateAddingSubject;
+import update3.org.cict.access.Access;
 
 public class GradeEncoderUI {
 
@@ -565,16 +568,17 @@ public class GradeEncoderUI {
      * @return returns string array [GRADE,REMARKS]
      */
     private String[] validateGrade(Object grade, int row) {
-
+        openRestrictedAccess= false;
         String[] cellValue = {"", ""};
         try {
             if (grade.equals("")) {
+                System.out.println("IT's EMPTY");
                 this.rowPainter(row, this.colorBlanked);
                 return cellValue;
             }
-
             if (grade instanceof String) {
                 String rating = (String) grade;
+                
                 if (rating.equalsIgnoreCase("INC")) {
                     cellValue[0] = "INC";
                     cellValue[1] = "Incomplete";
@@ -617,6 +621,7 @@ public class GradeEncoderUI {
         }
         return cellValue;
     }
+    
 
 //    private boolean willShow = false;
 //    private void checkForPreReq(Object grade, String cellValue[], int row) {
@@ -810,7 +815,11 @@ public class GradeEncoderUI {
      * @param rating
      */
     private SubjectMapping subject = null;
-
+    
+    //-----------------------------
+    private boolean openRestrictedAccess = false;
+    //---------------------
+    
     private void enterGrade(String rating) {
         this.isKeyEvent = false;
         subject = null;
@@ -966,9 +975,37 @@ public class GradeEncoderUI {
         if (res != 0) {
             int result = Mono.fx().alert().createConfirmation()
                     .setHeader("Empty Row Found")
-                    .setMessage("There are [" + res + "] subjects with no grade found. Are you sure you want to post now?")
+                    .setMessage("There are " + res + " subjects with no grade found. Do you still want to post it?")
                     .confirmYesNo();
             if (result != 1) {
+                return;
+            }
+        }
+        
+        if(openRestrictedAccess) {
+            
+            /**
+             * Only Local Registrar and Co-Registrars are allowed to re-evaluate.
+             */
+            boolean isAllowed = false;
+            AccountFacultyMapping allowedUser = null;
+            if (Access.isDeniedIfNotFrom(
+                    Access.ACCESS_LOCAL_REGISTRAR,
+                    Access.ACCESS_CO_REGISTRAR)) {
+                /**
+                 * Check if the user was granted permission by the registrar.
+                 */
+                allowedUser = Access.isAllowedToRevoke();
+                if (allowedUser != null) {
+                    isAllowed = true;
+                }
+            } else {
+                // allowed user
+                isAllowed = true;
+            }
+
+            if (!isAllowed) {
+                this.showWarningNotification("Access Denied", "Cannot update grade with INC and Failed.");
                 return;
             }
         }
@@ -1065,6 +1102,42 @@ public class GradeEncoderUI {
                     Thread.sleep(200);
                     String cellText = spreadSheetGrid.getRows().get(x).get(finalCol).getText();
                     String cellRemark = spreadSheetGrid.getRows().get(x).get(remarkCol).getText();
+                    
+                    //----------------------------
+                    // verify if grade is already posted with failed/inc
+                    String cellCode = spreadSheetGrid.getRows().get(x).get(codeCol).getText();
+                    ArrayList<SubjectMapping> subjects = Mono.orm().newSearch(Database.connect().subject())
+                            .eq(DB.subject().code, cellCode)
+                            .active()
+                            .all();
+                    SubjectMapping temp_subject = null;
+                    for (SubjectMapping temp : subjects) {
+                        CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                                .eq(DB.curriculum_subject().SUBJECT_id, temp.getId())
+                                .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
+                                .active()
+                                .first();
+                        if (csMap != null) {
+                            temp_subject = temp;
+                            break;
+                        }
+                    }
+                    if(temp_subject!=null) {
+                        GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
+                                .eq(DB.grade().STUDENT_id, CICT_id)
+                                .eq(DB.grade().SUBJECT_id, temp_subject.getId())
+                                .active(Order.desc(DB.grade().id)).first();
+                        if(grade!=null) {
+                            if(grade.getRemarks().equalsIgnoreCase("FAILED") || grade.getRemarks().equalsIgnoreCase("INCOMPLETE")) {
+                                if(!cellRemark.equalsIgnoreCase(grade.getRemarks()))
+                                    openRestrictedAccess = true;
+                            }
+                        } else
+                            System.out.println("GRADE IS NULL");
+                    } else
+                        System.out.println("TEMP SUBJECT IS NULL");
+                    
+                    //-----------------------------
                     if (cellText.isEmpty()) {
                         // if empty paint it white
                         rowPaint(x, "#FFFFFF");
@@ -1136,5 +1209,11 @@ public class GradeEncoderUI {
      */
     private void verficationResult(int count) {
         this.verficationResult = count;
+    }
+    
+    //-------------------------------------------
+    private ArrayList<HashMap<String, String>> restrictedSubjects = new ArrayList<>();
+    public void addRestrictedSubject(HashMap<String, String> detail) {
+        restrictedSubjects.add(detail);
     }
 }

@@ -27,6 +27,7 @@ import app.lazy.models.AccountStudentMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
+import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
@@ -34,21 +35,26 @@ import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
-import com.jhmvin.fx.display.ControllerFX;
-import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.orm.SQL;
+import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 
 /**
  *
@@ -58,10 +64,16 @@ public class StudentChooser extends MonoLauncher {
 
     @FXML
     private VBox application_root;
-    
+
+    @FXML
+    private TextField txt_search;
+
+    @FXML
+    private JFXButton btn_search;
+
     @FXML
     private VBox vbox_list;
-    
+
     @FXML
     private VBox vbox_no_found;
 
@@ -78,17 +90,105 @@ public class StudentChooser extends MonoLauncher {
         MonoClick.addClickEvent(btn_cancel, ()->{
             Mono.fx().getParentStage(application_root).close();
         });
-        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
-            this.loadMarshalls();
-        });
     }
      
     @Override
     public void onDelayedStart() {
         super.onDelayedStart(); //To change body of generated methods, choose Tools | Templates.
         this.account = null;
-//        this.txt_search.setText("");
+        this.txt_search.setText("");
         this.loadMarshalls();
+        
+        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
+            this.onSearch();
+        });
+        
+        MonoClick.addClickEvent(btn_search, ()->{
+            this.onSearch();
+        });
+    }
+    
+    private void onSearch() {
+        String value = MonoString.removeExtraSpace(txt_search.getText());
+        if(value.isEmpty()) {
+            this.loadMarshalls();
+            return;
+        }
+        FindStudent searchTx = new FindStudent();
+        searchTx.setSearchValue(value);
+        searchTx.whenStarted(() -> {
+            this.btn_search.setDisable(true);
+            this.setCursor(Cursor.WAIT);
+        });
+        searchTx.whenCancelled(() -> {
+            Notifications.create().darkStyle()
+                    .title("No Result")
+                    .text("No student found.").showWarning();
+            this.loadMarshalls();
+        });
+        searchTx.whenFailed(() -> {
+            Notifications.create().darkStyle()
+                    .title("Search Failed")
+                    .text("Sorry for the inconvinince. ").showError();
+        });
+        searchTx.whenSuccess(() -> {
+            this.createTable(searchTx.getStudentList());
+        });
+        searchTx.whenFinished(() -> {
+            this.btn_search.setDisable(false);
+            this.setCursor(Cursor.DEFAULT);
+        });
+        
+        searchTx.transact();
+    }
+    
+    class FindStudent extends Transaction {
+
+        private String searchValue;
+        public void setSearchValue(String searchValue) {
+            this.searchValue = searchValue;
+        }
+        
+        private ArrayList<StudentAccountInfo> list = new ArrayList<>();
+        public ArrayList<StudentAccountInfo> getStudentList() {
+            return list;
+        }
+        @Override
+        protected boolean transaction() {
+            Searcher searchStudent = Mono.orm()
+                    .newSearch(Database.connect().student())
+                    .pull();
+            ArrayList<StudentMapping> studentList = this.recursiveQuery(searchStudent)
+                    .active()
+                    .all();
+            if(studentList==null)
+                return false;
+            for(StudentMapping each: studentList) {
+                StudentAccountInfo info = new StudentAccountInfo(each);
+                if(info.getAccountMapping()==null)
+                    continue;
+                list.add(info);
+            }
+            return true;
+        }
+        
+        private Searcher recursiveQuery(Searcher searchQuery) {
+            for (String textPart : this.searchValue.split(" ")) {
+                if (textPart.isEmpty()) {
+                    continue;
+                }
+                searchQuery.put(forAllNames(textPart));
+            }
+            return searchQuery.pull();
+        }
+        
+        private Criterion forAllNames(String textPart) {
+            return SQL.or(
+                    Restrictions.ilike(DB.student().first_name, textPart, MatchMode.ANYWHERE),
+                    Restrictions.ilike(DB.student().middle_name, textPart, MatchMode.ANYWHERE),
+                    Restrictions.ilike(DB.student().last_name, textPart, MatchMode.ANYWHERE)
+            );
+        }
     }
     
     private void loadMarshalls() {
@@ -276,8 +376,24 @@ public class StudentChooser extends MonoLauncher {
             this.account = account;
             this.run();
         }
+        
+        public StudentAccountInfo(StudentMapping student) {
+            this.student = student;
+            if(student==null) {
+                this.account = null;
+                return;
+            }
+            this.run2();
+        }
+        
         private void run() {
             student = Database.connect().student().getPrimary(this.account.getSTUDENT_id());
+        }
+        
+        private void run2() {
+            account = Mono.orm().newSearch(Database.connect().account_student())
+                    .eq(DB.account_student().STUDENT_id, student.getCict_id())
+                    .active().first();
         }
     }
 }

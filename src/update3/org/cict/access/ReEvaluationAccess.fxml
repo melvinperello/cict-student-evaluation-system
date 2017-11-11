@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #F690A6;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="421.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #F690A6;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="20.0">
          <children>
@@ -20,7 +20,7 @@
                   <Image url="@images/re-evaluate.png" />
                </image>
             </ImageView>
-            <Label text="Rstricted Access" textFill="WHITE">
+            <Label text="Restricted Access" textFill="WHITE">
                <font>
                   <Font size="40.0" />
                </font>
@@ -55,6 +55,23 @@
                </image>
             </ImageView>
             <Label maxWidth="1.7976931348623157E308" text="Only the local registrar and assigned co-registrars are allowed to revoke evaluation including adding/changing transactions of every student" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </HBox>
+      <HBox layoutX="20.0" layoutY="142.0" spacing="20.0">
+         <children>
+            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/right.png" />
+               </image>
+            </ImageView>
+            <Label maxWidth="1.7976931348623157E308" text="Only the local registrar and assigned co-registrars are allowed to update grade with failed and incomplete remarks." textFill="WHITE" wrapText="true">
                <font>
                   <Font size="15.0" />
                </font>

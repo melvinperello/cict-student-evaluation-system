@@ -8,7 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.text.Font?>
 
 <VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0" styleClass="metro-base-color" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -24,7 +24,10 @@
                   <Image url="@images/search.png" />
                </image>
             </ImageView>
-            <TextField fx:id="txt_search" prefHeight="25.0" prefWidth="241.0" promptText="Search Faculty Name" />
+            <TextField fx:id="txt_search" prefHeight="25.0" prefWidth="241.0" promptText="Search Faculty Name">
+               <font>
+                  <Font size="15.0" />
+               </font></TextField>
             <JFXButton fx:id="btn_search" prefHeight="27.0" prefWidth="101.0" style="-fx-border-color: white;" text="Search" textFill="WHITE" />
             <JFXButton fx:id="btn_cancel" prefHeight="27.0" prefWidth="101.0" style="-fx-border-color: white;" text="Cancel" textFill="WHITE" />
          </children>

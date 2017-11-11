@@ -49,6 +49,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
@@ -128,6 +129,17 @@ public class SystemValues extends MonoLauncher {
             return;
         String name = MonoString.removeExtraSpace(txt_name.getText());
         String value = MonoString.removeExtraSpace(txt_value.getText());
+        if(name.equalsIgnoreCase(PublicConstants.MAX_POPULATION_NAME.replace("_", " "))
+                || name.equalsIgnoreCase(PublicConstants.FTP_PORT.replace("_", " "))) {
+            try {
+                Integer check = Integer.valueOf(value);
+            } catch (NumberFormatException e) {
+                Mono.fx().alert().createWarning()
+                        .setMessage("Field Value requires only numeric characters.")
+                        .show();
+                return;
+            }
+        }
         SystemVariablesMapping addedVar = new SystemVariablesMapping();
         addedVar.setActive(1);
         addedVar.setCreated_by(FACULTY_ID);
@@ -169,7 +181,7 @@ public class SystemValues extends MonoLauncher {
     
     private void fetchAndLoad() {
         ArrayList<SystemVariablesMapping> variables = Mono.orm().newSearch(Database.connect().system_variables())
-                .active(Order.asc(DB.system_variables().name)).all();
+                .active(Order.asc(DB.system_variables().id)).all();
         if(variables==null) {
             System.out.println("NO VALUES FOUND");
             return;
@@ -220,8 +232,11 @@ public class SystemValues extends MonoLauncher {
         
         txt_name1.setText(each.getName().replace("_", " "));
         txt_value1.setText(each.getValue());
+        
         txt_name1.setDisable(true);
         txt_value1.setDisable(!isGranted);
+        btn_add_new1.setDisable(!isGranted);
+        
         MonoClick.addClickEvent(btn_add_new1, ()->{
             if(this.checkIfEmpty(txt_name1, txt_value1))
                 return;
@@ -299,6 +314,17 @@ public class SystemValues extends MonoLauncher {
     }
     
     private void update(SimpleTableRow row, String name, String value) {
+        if(name.equalsIgnoreCase(PublicConstants.MAX_POPULATION_NAME.replace("_", " "))
+                || name.equalsIgnoreCase(PublicConstants.FTP_PORT.replace("_", " "))) {
+            try {
+                Integer check = Integer.valueOf(value);
+            } catch (NumberFormatException e) {
+                Mono.fx().alert().createWarning()
+                        .setMessage("Field Value requires only numeric characters.")
+                        .show();
+                return;
+            }
+        }
         SystemVariablesMapping updateThis = (SystemVariablesMapping) row.getRowMetaData().get("MAP");
         updateThis.setName(name.toUpperCase().replace(" ", "_"));
         updateThis.setValue(value.toUpperCase());

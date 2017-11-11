@@ -79,6 +79,11 @@ public class ChooserHome extends SceneFX implements ControllerFX {
     public String getSelected() {
         return selected;
     }
+    
+    private static boolean showCICT = false;
+    public static void showCICT(boolean show) {
+        showCICT = show;
+    }
 
     @Override
     public void onInitialization() {
@@ -90,7 +95,8 @@ public class ChooserHome extends SceneFX implements ControllerFX {
             //------------------------------------------------------------------
             // Do not include cict
             if (strings[0].equalsIgnoreCase("CICT")) {
-                continue;
+                if(!showCICT)
+                    continue;
             }
             //------------------------------------------------------------------
             SimpleTableRow row = new SimpleTableRow();

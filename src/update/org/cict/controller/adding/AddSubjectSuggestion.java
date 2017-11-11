@@ -25,8 +25,10 @@ package update.org.cict.controller.adding;
 
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
+import static app.lazy.models.DB.curriculum;
 import app.lazy.models.Database;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
@@ -35,6 +37,7 @@ import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -92,8 +95,8 @@ public class AddSubjectSuggestion extends Transaction {
          */
         subjects = Mono.orm()
                 .newSearch(Database.connect().curriculum_subject())
-                .eq(DB.curriculum_subject().CURRICULUM_id, student.getCURRICULUM_id())
-//                .eq(DB.curriculum_subject().semester, semester)
+//                .eq(DB.curriculum_subject().CURRICULUM_id, student.getCURRICULUM_id())
+                .eq(DB.curriculum_subject().semester, semester)
                 .active()
                 .all();
 
@@ -102,10 +105,14 @@ public class AddSubjectSuggestion extends Transaction {
             return false;
         }
         
-        ArrayList<SubjectMapping> subjectWithNoGrades = new ArrayList<>();
+        ArrayList<Object[]> subjectWithNoGrades = new ArrayList<>();
          for (CurriculumSubjectMapping subject : subjects) {
             SubjectMapping sub = (SubjectMapping) Database.connect().subject().getBy(DB.subject().id, subject.getSUBJECT_id());
-            subjectWithNoGrades.add(sub);
+            CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(subject.getCURRICULUM_id());
+            Object[] obj = new Object[2];
+            obj[0] = sub;
+            obj[1] = curriculum;
+            subjectWithNoGrades.add(obj);
         }
 
         // all subjects are taken
@@ -113,8 +120,10 @@ public class AddSubjectSuggestion extends Transaction {
             log("No subject with no grade found");
             return false;
         }
-
-        for (SubjectMapping subjectWithNoGrade : subjectWithNoGrades) {
+        for (int i=0; i<subjectWithNoGrades.size(); i++) {
+            SubjectMapping subjectWithNoGrade = (SubjectMapping) subjectWithNoGrades.get(i)[0];
+            CurriculumMapping curriculum = (CurriculumMapping) subjectWithNoGrades.get(i)[1];
+            
             LoadSectionMapping loadSection = null;
             loadSection = getLoadSection(subjectWithNoGrade);
             if (loadSection != null) {
@@ -123,7 +132,7 @@ public class AddSubjectSuggestion extends Transaction {
                         + subjectWithNoGrade.getCode() + " ADDED TO THE LIST");
                 LoadGroupMapping loadGroup = this.getLoadGroupMapping(loadSection.getId(),
                         subjectWithNoGrade.getId());
-                addNewSubjectInformationHolder(subjectWithNoGrade, loadSection, loadGroup);
+                addNewSubjectInformationHolder(subjectWithNoGrade, loadSection, loadGroup, curriculum);
             }
         }
         return !this.suggestedSubjects.isEmpty();
@@ -147,7 +156,7 @@ public class AddSubjectSuggestion extends Transaction {
 
     private void addNewSubjectInformationHolder(SubjectMapping subject,
             LoadSectionMapping loadSection,
-            LoadGroupMapping loadGroup) {
+            LoadGroupMapping loadGroup, CurriculumMapping curriculum) {
         SubjectInformationHolder suggested = new SubjectInformationHolder();
         suggested.setSubjectMap(subject);
         suggested.setSectionMap(loadSection);
@@ -167,6 +176,9 @@ public class AddSubjectSuggestion extends Transaction {
                 .active()
                 .first();
 
+        //-----------------------------
+        suggested.setCurriculum(curriculum);
+        
         suggested.setAcademicProgramMapping(acadProg);
         suggestedSubjects.add(suggested);
     }

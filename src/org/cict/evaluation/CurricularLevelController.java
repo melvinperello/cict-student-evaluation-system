@@ -145,10 +145,20 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
+        assessTx.setOnStart(onStart->{
+            btn_1st.setDisable(true);
+            btn_2nd.setDisable(true);
+            btn_3rd.setDisable(true);
+            btn_4th.setDisable(true);
+        });
 
         assessTx.setOnSuccess(onSuccess -> {
             assessmentResults = cla;
             showValues(assessmentResults);
+            btn_1st.setDisable(false);
+            btn_2nd.setDisable(false);
+            btn_3rd.setDisable(false);
+            btn_4th.setDisable(false);
         });
         assessTx.setOnFailure(onFailure -> {
             /**

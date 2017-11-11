@@ -2,7 +2,7 @@
 // SQL_table: system_override_logs
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 04, 2017 10:55:10 PM
+// Created: Nov 08, 2017 05:40:40 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -26,5 +26,6 @@ public final String academic_term = "academic_term";
 public final String conforme = "conforme";
 public final String conforme_type = "conforme_type";
 public final String conforme_id = "conforme_id";
+public final String attachment_file = "attachment_file";
 public final String active = "active";
 }
