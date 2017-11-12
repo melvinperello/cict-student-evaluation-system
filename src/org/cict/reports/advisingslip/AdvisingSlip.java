@@ -1,5 +1,6 @@
 package org.cict.reports.advisingslip;
 
+import artifacts.ResourceManager;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.cict.reports.ReportsDirectory;
+import org.cict.reports.ReportsUtility;
 
 public class AdvisingSlip {
 
@@ -425,7 +427,7 @@ public class AdvisingSlip {
         BaseFont base;
         Font font = null;
         try {
-            base = BaseFont.createFont("src/org/cict/reports/advisingslip/wingding_0.ttf", BaseFont.IDENTITY_H, false);
+            base = BaseFont.createFont(ResourceManager.fetchFromResource(AdvisingSlip.class, ReportsDirectory.REPORTS_DIR_MAIN + "advisingslip/wingding_0.ttf").toString(), BaseFont.IDENTITY_H, false);
             font = new Font(base, 16f, Font.BOLD);
         } catch (IOException ex) {
             Logger.getLogger(AdvisingSlip.class.getName()).log(Level.SEVERE, null, ex);

@@ -392,8 +392,8 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     .eq(DB.account_faculty_attempt().account_id, CollegeFaculty.instance().getACCOUNT_ID())
                     .active(Order.desc(DB.account_faculty_attempt().try_id))
                     .first();  
-            Date endDate = formatter_plain.parse(end.getTime().toString());
-            Date startDate = DateUtils.addDays(formatter_plain.parse(start.getTime().toString()), 1);
+            Date endDate = DateUtils.addDays(formatter_plain.parse(end.getTime().toString()), 1);
+            Date startDate = formatter_plain.parse(start.getTime().toString());
         
             long interval = 24*1000 * 60 * 60; // 1 hour in millis
             long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
@@ -446,9 +446,6 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     break;
                 }
             }
-            
-            System.out.println("FROM: " + from + " | " + from_str);
-            System.out.println("TO: " + to + " | " + to_str);
         } catch (Exception e) {
         }
         

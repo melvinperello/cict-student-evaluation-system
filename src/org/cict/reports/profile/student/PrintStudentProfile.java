@@ -47,7 +47,7 @@ public class PrintStudentProfile extends Transaction {
     public Integer CICT_id;
 
     private StudentMapping student;
-    private String address = "", studentContact = "", emailAdd = "", guardianName = "", guardianAddr = "", guardianContact = "", imageLoc = "";
+    private String address = "", studentContact = "", emailAdd = "", guardianName = "", guardianAddr = "", guardianContact = "";
 
     //--------------------------------------------------------------------------
     // store image here
@@ -118,8 +118,7 @@ public class PrintStudentProfile extends Transaction {
             guardianName = (spMap.getIce_name() == null ? "" : spMap.getIce_name());
             guardianAddr = (spMap.getIce_address() == null ? "" : spMap.getIce_address());
             guardianContact = (spMap.getIce_contact() == null ? "" : spMap.getIce_contact());
-            imageLoc = (spMap.getProfile_picture() == null ? "" : spMap.getProfile_picture());
-
+            
             //------------------------------------------------------------------
             // assign picture
             studentImage = spMap.getProfile_picture();
@@ -159,7 +158,6 @@ public class PrintStudentProfile extends Transaction {
         AcademicTermMapping acadTerm = SystemProperties.instance().getCurrentAcademicTerm();
         studentProfile.SEMESTER = acadTerm.getSemester_regular() == 1 ? "1st" : "2nd";
         studentProfile.SCHOOL_YEAR = acadTerm.getSchool_year();
-        studentProfile.IMAGE_LOCATION = imageLoc;
         studentProfile.STUDENT_NAME = WordUtils.capitalizeFully(fullName);
         studentProfile.STUDENT_ADDRESS = WordUtils.capitalizeFully(address);
         studentProfile.STUDENT_CONTACT_NO = WordUtils.capitalizeFully(studentContact);

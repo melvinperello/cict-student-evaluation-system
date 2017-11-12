@@ -444,7 +444,24 @@
                                           <String fx:value="btn-account" />
                                        </styleClass>
                                     </JFXButton>
-                                    <JFXButton fx:id="btn_logout" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Logout" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                    <JFXButton fx:id="btn_reports" contentDisplay="TOP" layoutX="478.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="150.0" text="Reports" textFill="WHITE">
+                                       <graphic>
+                                          <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/reports.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                       <styleClass>
+                                          <String fx:value="home-buttons" />
+                                          <String fx:value="btn-account" />
+                                          <String fx:value="btn-reports" />
+                                       </styleClass>
+                                    </JFXButton>
+                                    <JFXButton fx:id="btn_logout" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="127.0" prefWidth="70.0" text="Logout" textFill="WHITE" HBox.hgrow="ALWAYS">
                                        <graphic>
                                           <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                                              <image>

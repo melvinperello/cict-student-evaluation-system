@@ -1,6 +1,7 @@
 package org.cict.reports.checklist;
 
 import app.lazy.models.SubjectMapping;
+import artifacts.ResourceManager;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
@@ -27,6 +28,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.cict.SubjectClassification;
+import org.cict.reports.ReportsDirectory;
+import org.cict.reports.profile.student.StudentProfile;
 
 public class ACT {
 
@@ -113,13 +116,13 @@ public class ACT {
             return 1;
         }
         document.open();
-        String location_logo1 = "src/org/cict/reports/checklist/images/BULSU.png",
-        location_logo2 = "src/org/cict/reports/checklist/images/CICT.png";
-        Image img = Image.getInstance(location_logo1);
+        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(ACT.class, location_logo1));
         img.setAbsolutePosition(100, 815); //position
         img.scaleAbsolute(50, 50); //size
         document.add(img);
-        Image img2 = Image.getInstance(location_logo2);
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(StudentProfile.class, location_logo2));
         img2.setAbsolutePosition(455, 815); //position
         img2.scaleAbsolute(50, 50); //size
         document.add(img2);

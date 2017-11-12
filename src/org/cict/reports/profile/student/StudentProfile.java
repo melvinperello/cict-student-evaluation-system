@@ -1,5 +1,6 @@
 package org.cict.reports.profile.student;
 
+import artifacts.ResourceManager;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,10 +19,14 @@ import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.jhmvin.Mono;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.Collections;
+import javafx.application.Platform;
+import org.cict.reports.ReportsDirectory;
 
 public class StudentProfile {
 
@@ -48,7 +53,16 @@ public class StudentProfile {
         // for this instance this report was create at PrintStudentProfile.java
         // see this class for more information on how this setter was used.
     }
+
     //--------------------------------------------------------------------------
+    public void debugger(Object message) {
+        Platform.runLater(() -> {
+            Mono.fx().alert().createWarning().setTitle("DEBUGGER")
+                    .setHeader("DEBUGGING MESSAGE")
+                    .setMessage(String.valueOf(message))
+                    .show();
+        });
+    }
 
     public int print() {
         try {
@@ -65,12 +79,14 @@ public class StudentProfile {
                     Desktop.getDesktop().open(myFile);
                 } catch (IOException ex) {
                     // no application registered for PDFs
+
                 }
             }
             /**
              * ****************** end run
              */
         } catch (Exception e) {
+
             e.printStackTrace();
         }
         return 0;
@@ -86,8 +102,7 @@ public class StudentProfile {
             STUDENT_EMAIL_ADD = "joemardc98@gmail.com",
             GUARDIAN_NAME = "MARILYN D. DE JESUS",
             GUARDIAN_CONTACT_NO = "09123456789",
-            GUARDIAN_ADDRESS = "SUCAD APALIT, PAMPANGA",
-            IMAGE_LOCATION = "src/images/me.jpg";
+            GUARDIAN_ADDRESS = "SUCAD APALIT, PAMPANGA";
     /**
      * FONTS
      */
@@ -111,8 +126,7 @@ public class StudentProfile {
             emailAdd,
             guardianName,
             guardianContacNo,
-            guardianAddress,
-            image1x1;
+            guardianAddress;
 
     public void init() {
         this.semester = this.SEMESTER;
@@ -124,7 +138,6 @@ public class StudentProfile {
         this.guardianName = this.GUARDIAN_NAME;
         this.guardianContacNo = this.GUARDIAN_CONTACT_NO;
         this.guardianAddress = this.GUARDIAN_ADDRESS;
-        this.image1x1 = IMAGE_LOCATION;
     }
 
     private static PdfWriter writer;
@@ -136,37 +149,34 @@ public class StudentProfile {
      * @throws DocumentException
      * @throws IOException
      */
-    public int createPdf(String filename)
-            throws DocumentException, IOException {
+    public int createPdf(String filename) throws DocumentException, IOException {
         Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.27f),
                 Utilities.inchesToPoints(5.845f)), 100, 100, 30, 50); //lrtb
         try {
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
         } catch (FileNotFoundException es) {
+            debugger("File not found exception: " + es.getMessage());
             return 1;
         }
         document.open();
-        String location_logo1 = "src/org/cict/reports/checklist/images/BULSU.png",
-                location_logo2 = "src/org/cict/reports/checklist/images/CICT.png";
+
+        //----------------------------------------------------------------------
+       
+        //----------------------------------------------------------------------
         // add bulsu logo
-        Image img = Image.getInstance(location_logo1);
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(StudentProfile.class, ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png"));
         img.setAbsolutePosition(85, 335); //position
         img.scaleAbsolute(52, 52); //size
         document.add(img);
         // add cict logo
-        Image img2 = Image.getInstance(location_logo2);
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(StudentProfile.class, ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png"));
         img2.setAbsolutePosition(465, 335); //position
         img2.scaleAbsolute(52, 52); //size
         document.add(img2);
 
         document.add(createHeader());
         String standard = this.profileImage;
-        Image image1X1;
-        try {
-            image1X1 = Image.getInstance(image1x1);
-        } catch (Exception e) {
-            image1X1 = Image.getInstance(standard);
-        }
+        Image image1X1 = Image.getInstance(standard);
         image1X1.setAbsolutePosition(430f, 245f); //position
         image1X1.scaleAbsolute(Utilities.inchesToPoints(1), Utilities.inchesToPoints(1)); //size
         document.add(image1X1);

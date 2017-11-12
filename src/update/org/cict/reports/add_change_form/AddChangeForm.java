@@ -1,5 +1,6 @@
 package update.org.cict.reports.add_change_form;
 
+import artifacts.ResourceManager;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -145,8 +146,8 @@ public class AddChangeForm {
             return 1;
         }
         document.open();
-        String location_logo1 = "src/update/org/cict/reports/images/BULSU.png";
-        Image img = Image.getInstance(location_logo1);
+        String location_logo1 = "update/org/cict/reports/images/BULSU.png";
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(AddChangeForm.class, location_logo1));
         img.setAbsolutePosition(287, 865); //position
         img.scaleAbsolute(55, 55); //size
         document.add(img);
@@ -210,7 +211,7 @@ public class AddChangeForm {
         BaseFont base;
         Font font = null;
         try {
-            base = BaseFont.createFont("src/org/cict/reports/advisingslip/wingding_0.ttf", BaseFont.IDENTITY_H, false);
+            base = BaseFont.createFont(ResourceManager.fetchFromResource(AdvisingSlip.class, ReportsDirectory.REPORTS_DIR_MAIN + "advisingslip/wingding_0.ttf").toString(), BaseFont.IDENTITY_H, false);
             font = new Font(base, 12f, Font.BOLD);
         } catch (IOException ex) {
             System.out.println("IOException");

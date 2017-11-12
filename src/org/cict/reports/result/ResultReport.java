@@ -93,7 +93,7 @@ public class ResultReport {
     public int createPdf(String filename)
             throws DocumentException, IOException {
         Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
-                Utilities.inchesToPoints(13f)), 55, 55, 50, 70); //lrtb
+                Utilities.inchesToPoints(13f)), 55, 55, 50, 50); //lrtb
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
             PageFooter event = new PageFooter((DATETIME==null? "NOT FOUND" : DATETIME), (USER==null? "NOT FOUND" : USER), (TERMINAL==null? "NOT FOUND" : TERMINAL));

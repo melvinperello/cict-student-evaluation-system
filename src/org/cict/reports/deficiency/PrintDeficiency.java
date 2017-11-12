@@ -35,7 +35,9 @@ import app.lazy.models.SubjectMapping;
 import app.lazy.models.utils.FacultyUtility;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.assessment.AssessmentResults;
@@ -313,8 +315,11 @@ public class PrintDeficiency extends Transaction {
         def.SUBJECTS_PER_SEM.put("32", tyrssem);
         def.SUBJECTS_PER_SEM.put("41", fryrfsem);
         def.SUBJECTS_PER_SEM.put("42", fryrssem);
-        def.DATETIME = Mono.orm().getServerTime().getDateWithFormat().toString();
-        def.USER = CollegeFaculty.instance().getFirstLastName();
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMMM-yyyy hh:mm: aa");
+        def.DATETIME = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
+        def.USER = WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
+        def.TERMINAL = Mono.sys().getTerminal();
         def.print();
     }
 

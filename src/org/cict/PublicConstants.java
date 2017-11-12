@@ -27,8 +27,12 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SystemVariablesMapping;
+import artifacts.ResourceManager;
 import com.jhmvin.Mono;
 import com.jhmvin.orm.SQL;
+import java.io.File;
+import java.util.Properties;
+import javax.annotation.Resource;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import sys.org.cict.enumerations.GradeValues;
@@ -52,7 +56,14 @@ public class PublicConstants {
      * @return
      */
     public final static String getServer() {
-        return com.melvin.java.properties.PropertyFile.getPropertyFile("src/evaluation.properties").getProperty("hostIP");
+        try {
+            java.net.URL url = ResourceManager.fetchFromResource(PublicConstants.class, "/evaluation.properties");
+            File propertyFileLocation = new File(url.toURI());
+            Properties propertyFile = com.melvin.java.properties.PropertyFile.getPropertyFile(propertyFileLocation.getAbsolutePath());
+            return propertyFile.getProperty("hostIP");
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public final static String FACULTY_REGISTRATION_LINK = "http://" + getServer() + "/laravel/cictwebportal/public/home/hello";
@@ -142,24 +153,25 @@ public class PublicConstants {
             return "";
         }
     }
-    
+
     //--------------------------------------
     // SYSTEM VARIABLES NAME
     //----------------------------------
     public final static String MAX_POPULATION_NAME = "MAXIMUM_POPULATION";
     public final static String FTP_PORT = "FTP_PORT";
     //----------------------------------------------
-    
+
     public static Integer getMaxPopulation() {
         SystemVariablesMapping map = Mono.orm().newSearch(Database.connect().system_variables())
                 .eq(DB.system_variables().name, MAX_POPULATION_NAME)
                 .active().first();
-        if(map==null)
+        if (map == null) {
             return MAX_POPULATION;
-        else
+        } else {
             return Integer.valueOf(map.getValue());
+        }
     }
-    
+
     //----------------------------------------------
     public static String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     //--------------------------------

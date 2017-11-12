@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" stylesheets="@../../../update3/org/cict/my_account/metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Label maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="Reports" textFill="WHITE" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="btn_home" prefWidth="200.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-nav-button" text="Home" textFill="WHITE">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </JFXButton>
+         </children>
+         <padding>
+            <Insets left="10.0" right="20.0" />
+         </padding>
+      </HBox>
+      <HBox prefWidth="200.0" spacing="30.0">
+         <children>
+            <Label graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Print the reports needed." textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/New%20Resume%20Template_96px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox prefHeight="565.0" prefWidth="266.0" spacing="10.0">
+               <children>
+                  <JFXButton fx:id="btn_evaluation" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Evaluation" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/eval.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-100.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_adding_changing" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Adding &amp; Changing" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/addchange.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="-30.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_encoding" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Encoding" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/encode.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-90.0" />
+                     </padding>
+                  </JFXButton>
+               </children>
+            </VBox>
+            <StackPane HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox fx:id="vbox_eval_main" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/eval.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="lbl_title_eval" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="375.0" text="Successful Evaluation Summary" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="193.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Status:" wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="cmb_sort_status_eval" prefHeight="33.0" prefWidth="143.0" promptText="- Select Status -" styleClass="metro-combo-box" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <VBox prefHeight="107.0" prefWidth="874.0" spacing="10.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../update3/org/cict/my_account/images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="List of every evaluation transaction." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <HBox prefHeight="50.0" prefWidth="541.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="230.0" spacing="2.0" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label text="Term:" wrapText="true">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <ComboBox fx:id="cmb_term_eval" prefHeight="33.0" prefWidth="343.0" promptText="- Select Term -" styleClass="metro-combo-box" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="790.0" spacing="10.0">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                       <children>
+                                          <Label text="From:" wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_from_eval_main" prefHeight="33.0" prefWidth="159.0" promptText="No Values Available" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                       <children>
+                                          <Label text="To:" wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_to_eval_main" prefHeight="33.0" prefWidth="159.0" promptText="No Values Available" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                       <children>
+                                          <Label text="Type:" wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_type_eval_main" prefHeight="33.0" prefWidth="130.0" promptText="- Student Type -" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <JFXButton fx:id="btn_filter_eval_main" prefHeight="21.0" prefWidth="77.0" style="-fx-border-color: #fff;" text="Filter" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXButton>
+                                    <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <JFXButton fx:id="btn_print_eval_main" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                        <AnchorPane prefHeight="412.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="65.0" top="20.0" />
+                           </VBox.margin>
+                           <children>
+                              <StackPane fx:id="stack_eval_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@../../../update3/org/cict/my_account/metro-ui-table.css" />
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets right="20.0" />
+               </padding>
+            </StackPane>
+         </children>
+         <padding>
+            <Insets top="30.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

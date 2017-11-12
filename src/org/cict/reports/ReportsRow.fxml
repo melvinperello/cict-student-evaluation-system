@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="50.0" prefWidth="900.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="lbl_date" accessibleText="lbl_time" text="10/11/2017 06:45 PM" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/Schedule_32px.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+      <Label fx:id="lbl_student_name" accessibleText="lbl_state" alignment="CENTER" prefHeight="21.0" prefWidth="221.0" text="Perello, Jhon Melvin" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/Read%20Online_32px.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+      <Label fx:id="lbl_faculty" accessibleText="lbl_ip" maxWidth="1.7976931348623157E308" prefHeight="19.0" prefWidth="257.0" text="De La Cruz, Joemar" textFill="WHITE" HBox.hgrow="ALWAYS">
+         <font>
+            <Font size="15.0" />
+         </font>
+         <graphic>
+            <ImageView fitHeight="26.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/Training_32px.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
+      <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="lbl_year_level" accessibleText="lbl_os" maxWidth="1.7976931348623157E308" text="First Year" textFill="WHITE" />
+            <Label fx:id="lbl_type" accessibleText="lbl_terminal" maxWidth="1.7976931348623157E308" text="NEW" textFill="WHITE" />
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="20.0" right="20.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@metro-ui-table.css" />
+      <URL value="@metro-ui.css" />
+   </stylesheets>
+   <styleClass>
+      <String fx:value="metro-row" />
+      <String fx:value="metro-base-color" />
+   </styleClass>
+</HBox>

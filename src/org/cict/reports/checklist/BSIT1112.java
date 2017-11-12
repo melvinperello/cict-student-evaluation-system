@@ -1,6 +1,7 @@
 package org.cict.reports.checklist;
 
 import app.lazy.models.SubjectMapping;
+import artifacts.ResourceManager;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
@@ -28,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.cict.SubjectClassification;
+import org.cict.reports.ReportsDirectory;
 
 public class BSIT1112 {
 
@@ -91,7 +93,7 @@ public class BSIT1112 {
             name,
             address,
             highSchool,
-            image1x1;
+            image2x2_location;
     private Integer admissionYear; 
     private HashMap<String,ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
     
@@ -103,7 +105,7 @@ public class BSIT1112 {
         this.highSchool = this.STUDENT_HS;
         this.subjectsPerSem = this.SUBJECTS_PER_SEM;
         this.admissionYear = this.ADMISSION_YEAR;
-        this.image1x1 = IMAGE_LOCATION;
+        this.image2x2_location = IMAGE_LOCATION;
     }
     
     private static PdfWriter writer;
@@ -124,26 +126,32 @@ public class BSIT1112 {
             return 1;
         }
         document.open();
-        String location_logo1 = "src/org/cict/reports/checklist/images/BULSU.png",
-        location_logo2 = "src/org/cict/reports/checklist/images/CICT.png";
+        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
         // add bulsu logo
-        Image img = Image.getInstance(location_logo1);
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class,location_logo1));
         img.setAbsolutePosition(32, 815); //position
         img.scaleAbsolute(52, 52); //size
         document.add(img);
         // add cict logo
-        Image img2 = Image.getInstance(location_logo2);
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class,location_logo2));
         img2.setAbsolutePosition(85, 815); //position
         img2.scaleAbsolute(52, 52); //size
         document.add(img2);
         
         document.add(createHeader());
-        
-        if(image1x1 != null) {
-            Image image1X1 = Image.getInstance(image1x1);
-            image1X1.setAbsolutePosition(450f,750f); //position
-            image1X1.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
-            document.add(image1X1);
+        try {
+            if(image2x2_location != null) {
+                Image image2x2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, image2x2_location));
+                image2x2.setAbsolutePosition(450f,750f); //position
+                image2x2.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
+                document.add(image2x2);
+            }
+        } catch (Exception e) {
+            Image image2x2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, ReportsDirectory.DEFAULT_IMAGE2x2));
+            image2x2.setAbsolutePosition(450f,750f); //position
+            image2x2.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
+            document.add(image2x2);
         }
         create2x2Box(writer);
         document.add(createStudentInfo());

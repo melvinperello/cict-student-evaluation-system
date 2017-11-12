@@ -1212,6 +1212,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // before displaying the subject.
         });
         previewTk.whenSuccess(() -> {
+            btnFind.setDisable(false);
+            btnEvaluate.setDisable(false);
             log("EvaluateController: Success Loading Preview.");
         });
         previewTk.whenFailed(() -> {
@@ -1220,8 +1222,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         previewTk.whenFinished(() -> {
             // done
-            btnFind.setDisable(false);
-            btnEvaluate.setDisable(false);
             log("EvaluateController: Finished Loading Preview.");
         });
         previewTk.start();

@@ -1,6 +1,7 @@
 package org.cict.reports.deficiency;
 
 import app.lazy.models.SubjectMapping;
+import artifacts.ResourceManager;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
@@ -28,6 +29,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.cict.SubjectClassification;
+import org.cict.reports.ReportsDirectory;
+import org.cict.reports.ReportsUtility;
 
 public class Deficiency {
 
@@ -71,8 +74,9 @@ public class Deficiency {
             STUDENT_ADDRESS = "8-152 SUCAD APALIT, PAMPANGA",
             STUDENT_NUMBER = "09123456789",
             CURRICULUM_NAME = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
-            DATETIME = "DATE NOT FOUND",
-            USER = "USER NOT FOUND"; 
+            DATETIME = null,
+            USER = null,
+            TERMINAL = null; 
     public HashMap<String,ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
     
     /**
@@ -117,22 +121,22 @@ public class Deficiency {
     public int createPdf(String filename)
             throws DocumentException, IOException {
         Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
-                Utilities.inchesToPoints(13f)), 55, 55, 50, 20); //lrtb
+                Utilities.inchesToPoints(13f)), 55, 55, 50, 50); //lrtb
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
-            PageNumeration event = new PageNumeration(DATETIME, USER);
+            PageFooter event = new PageFooter((DATETIME==null? "NOT FOUND" : DATETIME), (USER==null? "NOT FOUND" : USER), (TERMINAL==null? "NOT FOUND" : TERMINAL));
             writer.setPageEvent(event);
         }catch(FileNotFoundException es){
             return 1;
         }
         document.open();
-        String location_logo1 = "src/org/cict/reports/checklist/images/BULSU.png",
-        location_logo2 = "src/org/cict/reports/checklist/images/CICT.png";
-        Image img = Image.getInstance(location_logo1);
+        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(Deficiency.class, location_logo1));
         img.setAbsolutePosition(100, 825); //position
         img.scaleAbsolute(70, 70); //size
         document.add(img);
-        Image img2 = Image.getInstance(location_logo2);
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(Deficiency.class, location_logo2));
         img2.setAbsolutePosition(445, 825); //position
         img2.scaleAbsolute(70, 70); //size
         document.add(img2);
@@ -433,18 +437,18 @@ public class Deficiency {
 }
 
 
-
-class PageNumeration extends PdfPageEventHelper {
+class PageFooter extends PdfPageEventHelper {
     /** The template with the total number of pages. */
     PdfTemplate total;
 
     private Font font_footer, font_footer2;
-    private String dateTime, user;
+    private String dateTime, user, terminal;
 
-    public PageNumeration (String dateTime, String user){
+    public PageFooter (String dateTime, String user, String terminal){
         try{
             this.dateTime = dateTime;
             this.user = user;
+            this.terminal = terminal;
             font_footer = new Font(FontFamily.HELVETICA, 9, Font.NORMAL);
             font_footer2 = new Font(FontFamily.HELVETICA, 7, Font.NORMAL);
         }
@@ -470,14 +474,15 @@ class PageNumeration extends PdfPageEventHelper {
     public void onEndPage(PdfWriter writer, Document document) {
         PdfPTable table = new PdfPTable(3);
         try {
-            table.setWidths(new int[]{24, 24, 2});
+            table.setWidths(new int[]{150, 24, 2});
             table.getDefaultCell().setFixedHeight(10);
             table.getDefaultCell().setBorder(Rectangle.TOP);
             PdfPCell cell = new PdfPCell();
             cell.setBorder (0);
             cell.setBorderWidthTop (1);
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell.setPhrase(new Phrase(dateTime + " | " + user +"\nPowered by Monosync", font_footer2));
+            cell.setPhrase(new Phrase("Printed By:  " + user + "  |   Date Printed:  " + dateTime + "  |  Terminal:  " + terminal
+                    +"\nPowered by Monosync", font_footer2));
             table.addCell(cell);
 
             cell = new PdfPCell();
@@ -511,4 +516,4 @@ class PageNumeration extends PdfPageEventHelper {
                 new Phrase(String.valueOf(writer.getPageNumber()), font_footer),
                 2, 1, 0);
     }
-}  
+}

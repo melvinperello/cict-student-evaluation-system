@@ -45,6 +45,7 @@ import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyMainController;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.EvaluateController;
+import org.cict.reports.ReportsMain;
 import update.org.cict.controller.adding.AddingHome;
 import update2.org.cict.controller.academicprogram.AcademicHome;
 import update3.org.cict.access.Access;
@@ -102,6 +103,9 @@ public class SystemHome extends MonoLauncher {
 
     @FXML
     private JFXButton btn_logout;
+    
+    @FXML
+    private JFXButton btn_reports;
 
 //    @FXML
 //    private JFXButton btn_system_values;
@@ -194,6 +198,11 @@ public class SystemHome extends MonoLauncher {
 
         //----------------------------------------------------------------------
         this.displayLabels();
+        
+        //----------------------------
+        MonoClick.addClickEvent(btn_reports, ()->{
+            this.onShowReports();
+        });
     }
 //    
 //    private void onShowSystemVariables() {
@@ -699,4 +708,22 @@ public class SystemHome extends MonoLauncher {
 
     }
 
+    //--------------------------------------------------------------------------
+    /**
+     * Show Reports Options.
+     */
+    private void onShowReports() {
+
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+
+        ControllerFX controller = new ReportsMain();
+        this.changeRoot(controller,
+                "org.cict.reports",
+                "ReportsMain");
+
+    }
 }

@@ -6,6 +6,7 @@
 package org.cict;
 
 import app.lazy.models.Database;
+import artifacts.StackTraceDialog;
 import com.jhmvin.Mono;
 import com.melvin.java.properties.PropertyFile;
 import com.melvin.mono.fx.bootstrap.M;
@@ -27,6 +28,9 @@ public class MainApplication extends Application {
     public static HostServicesDelegate HOST_SERVICE;
 
     public static void main(String[] args) {
+//        Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e)->{
+//            StackTraceDialog.show(e);
+//        });
         launch(args);
     }
 

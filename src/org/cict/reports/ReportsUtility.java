@@ -23,6 +23,7 @@
  */
 package org.cict.reports;
 
+import artifacts.ResourceManager;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -39,6 +40,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import org.cict.reports.profile.student.StudentProfile;
 
 /**
  *
@@ -67,13 +69,13 @@ public class ReportsUtility {
     
     private static String reportTitle_, reportDescription_;
     public static void createHeader(Document document, String reportTitle, String reportDescription) throws DocumentException, BadElementException, IOException {
-        String location_logo1 = "src/org/cict/reports/checklist/images/BULSU.png",
-        location_logo2 = "src/org/cict/reports/checklist/images/CICT.png";
-        Image img = Image.getInstance(location_logo1);
+        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(ReportsUtility.class, location_logo1));
         img.setAbsolutePosition(100, 825); //position
         img.scaleAbsolute(70, 70); //size
         document.add(img);
-        Image img2 = Image.getInstance(location_logo2);
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(ReportsUtility.class, location_logo2));
         img2.setAbsolutePosition(445, 825); //position
         img2.scaleAbsolute(70, 70); //size
         document.add(img2);

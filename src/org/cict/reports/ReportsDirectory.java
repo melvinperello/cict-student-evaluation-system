@@ -32,6 +32,13 @@ import static org.cict.reports.advisingslip.AdvisingSlip.SAVE_DIRECTORY;
  */
 public class ReportsDirectory {
 
+    //------------------------
+    public static String REPORTS_DIR_IMAGES = "org/cict/reports/images/";
+    public static String REPORTS_DIR_MAIN = "org/cict/reports/";
+    public static String DEFAULT_IMAGE2x2 = REPORTS_DIR_IMAGES + "checklist/default2x2.png";
+    public static String DEFAULT_IMAGE1x1 = REPORTS_DIR_IMAGES + "profile/default1x1.png";
+    
+    
     public static boolean check(String reportPath) {
         try {
             File directory = new File(reportPath);

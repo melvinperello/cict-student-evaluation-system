@@ -1,6 +1,7 @@
 package org.cict.reports.checklist;
 
 import app.lazy.models.SubjectMapping;
+import artifacts.ResourceManager;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
@@ -28,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.cict.SubjectClassification;
+import org.cict.reports.ReportsDirectory;
 
 public class BSIT1516 {
 
@@ -132,13 +134,13 @@ public class BSIT1516 {
             return 1;
         }
         document.open();
-        String location_logo1 = "src/org/cict/reports/checklist/images/BULSU.png",
-        location_logo2 = "src/org/cict/reports/checklist/images/CICT.png";
-        Image img = Image.getInstance(location_logo1);
+        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(BSIT1516.class, location_logo1));
         img.setAbsolutePosition(100, 825); //position
         img.scaleAbsolute(70, 70); //size
         document.add(img);
-        Image img2 = Image.getInstance(location_logo2);
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, location_logo2));
         img2.setAbsolutePosition(445, 825); //position
         img2.scaleAbsolute(70, 70); //size
         document.add(img2);

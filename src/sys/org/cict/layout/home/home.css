@@ -45,7 +45,7 @@
 }
 
 .btn-adding {
-    -fx-background-color: #52D49F;
+    -fx-background-color: #27AE60;
 }
 
 .btn-faculty-hub {
@@ -53,7 +53,7 @@
 }
 
 .btn-account {
-    -fx-background-color: #9E7AC2;
+    -fx-background-color: #773CBD;
 }
 
 .btn-logout {
@@ -69,11 +69,11 @@
 }
 
 .btn-student {
-    -fx-background-color: #1ABC9C;
+    -fx-background-color: #0ADA9C;
 }
 
 .btn-section {
-    -fx-background-color: #FF7659;
+    -fx-background-color: #FF7F00;
 }
 
 .btn-faculty {
@@ -88,6 +88,9 @@
     -fx-background-color: #2980B9;
 }
 
+.btn-reports {
+    -fx-background-color: #F9A11F;
+}
 
 
 

@@ -1,6 +1,7 @@
 package org.cict.reports.checklist;
 
 import app.lazy.models.SubjectMapping;
+import artifacts.ResourceManager;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
@@ -27,6 +28,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.cict.reports.ReportsDirectory;
+import org.cict.reports.profile.student.StudentProfile;
 
 public class BITCT {
 
@@ -68,7 +71,7 @@ public class BITCT {
             STUDENT_NAME = "",
             STUDENT_ADDRESS = "",
             STUDENT_HS = "",
-            IMAGE_LOCATION = "src/images/me.jpg";
+            IMAGE_LOCATION = ReportsDirectory.DEFAULT_IMAGE2x2;
     public Integer ADMISSION_YEAR = 2014;
     public HashMap<String,ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
     /**
@@ -121,26 +124,31 @@ public class BITCT {
             return 1;
         }
         document.open();
-        String location_logo1 = "src/org/cict/reports/checklist/images/BULSU.png",
-        location_logo2 = "src/org/cict/reports/checklist/images/CICT.png";
+        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
         // add bulsu logo
-        Image img = Image.getInstance(location_logo1);
+        Image img = Image.getInstance(ResourceManager.fetchFromResource(BITCT.class, location_logo1));
         img.setAbsolutePosition(32, 815); //position
         img.scaleAbsolute(52, 52); //size
         document.add(img);
         // add cict logo
-        Image img2 = Image.getInstance(location_logo2);
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(BITCT.class, location_logo2));
         img2.setAbsolutePosition(85, 815); //position
         img2.scaleAbsolute(52, 52); //size
         document.add(img2);
         
         document.add(createHeader());
-        
-        Image image1X1 = Image.getInstance(image1x1);
-        image1X1.setAbsolutePosition(450f,750); //position
-        image1X1.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
-        document.add(image1X1);
-        create2x2Box(writer);
+        try {
+            Image image1X1 = Image.getInstance(image1x1);
+            image1X1.setAbsolutePosition(450f,750); //position
+            image1X1.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
+            document.add(image1X1);
+        } catch (Exception e) {
+            Image image1X1 = Image.getInstance(ReportsDirectory.DEFAULT_IMAGE2x2);
+            image1X1.setAbsolutePosition(450f,750); //position
+            image1X1.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
+            document.add(image1X1);
+        }create2x2Box(writer);
         document.add(createStudentInfo());
         document.add(createBody(0,2));
         Paragraph p = new Paragraph(0);
