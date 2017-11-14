@@ -39,7 +39,7 @@ public class StudentProfile {
     //--------------------------------------------------------------------------
     // Downloading Profile Picture From Server
     // STEP 1 - Create Default Image Path if no image was loaded or assigned to a student.
-    public final static String DEFAULT_IMAGE = "src/org/cict/reports/profile/student/images/default-1x1.png";
+    public final static String DEFAULT_IMAGE = ResourceManager.fetchFromResource(StudentProfile.class, ReportsDirectory.DEFAULT_IMAGE1x1).toString(); //"profile/student/images/default-1x1.png";
     // STEP 2 - Create a class variable for the image path
     // STEP 2.1 - For assurance assign default values
     // event when setter is not called there will be a default value

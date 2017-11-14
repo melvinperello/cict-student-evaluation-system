@@ -2,7 +2,7 @@
 // SQL_table: faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 08, 2017 05:40:37 PM
+// Created: Nov 14, 2017 12:02:27 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -33,6 +33,7 @@ private java.lang.String last_name;
 private java.lang.String first_name;
 private java.lang.String middle_name;
 private java.lang.String name_extension;
+private java.lang.String mobile_number;
 private java.lang.String gender;
 private java.lang.String rank;
 private java.lang.String designation;
@@ -93,6 +94,15 @@ public java.lang.String getName_extension() {
 
 public void setName_extension(java.lang.String fieldNameExtension) {
 	this.name_extension = fieldNameExtension;
+}
+
+@Column(name = "mobile_number", nullable = true, length = 20)
+public java.lang.String getMobile_number() {
+	return this.mobile_number;
+}
+
+public void setMobile_number(java.lang.String fieldMobileNumber) {
+	this.mobile_number = fieldMobileNumber;
 }
 
 @Column(name = "gender", nullable = true, length = 100)

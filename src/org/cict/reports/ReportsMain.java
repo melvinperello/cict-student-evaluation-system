@@ -120,7 +120,12 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
     @FXML
     private ComboBox<String> cmb_term_eval;
+    
+    @FXML
+    private Label lbl_result;
             
+    @FXML
+    private Label lbl_subtitle;
             
     private LoaderView loaderView;
     private FailView failView;
@@ -153,6 +158,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_type_eval_main.getItems().add("Irregular");
         cmb_type_eval_main.getSelectionModel().selectFirst();
         
+        lbl_result.setText("");
     }
 
     @Override
@@ -168,6 +174,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         
         super.addClickEvent(btn_adding_changing, ()->{
+            this.setViewTask(btn_adding_changing, SystemProperties.instance().getCurrentAcademicTerm().getId());
             this.changeView(vbox_eval_main);
         });
         
@@ -182,8 +189,13 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
     private ArrayList<HashMap<String,AcademicTermMapping>> termDetails = new ArrayList<>();
     private void setViewTask(JFXButton button, Integer ACADTERM_id) {
-        String mode = button.getText();
+        vbox_eval_main_table.getChildren().clear();
+        MODE = button.getText();
+        lbl_subtitle.setText(MODE.equalsIgnoreCase(EVALUATION)? "List of every evaluation transaction." : "List of every adding and changing transaction.");
+        lbl_title_eval.setText(MODE.equalsIgnoreCase(EVALUATION)? "Successful Evaluation Summary" : "Successful Adding & Changing Summary");
         cmb_term_eval.getItems().clear();
+        cmb_sort_status_eval.getSelectionModel().selectFirst();
+        cmb_type_eval_main.getSelectionModel().selectFirst();
         SimpleTask set = new SimpleTask("set_reports_value");
         set.setTask(()->{
             ArrayList<AcademicTermMapping> atMaps = Mono.orm().newSearch(Database.connect().academic_term())
@@ -222,7 +234,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         set.whenStarted(()->{
             System.out.println("STARTED");
-            if(mode.equalsIgnoreCase("evaluation")) {
+            if(MODE.equalsIgnoreCase("evaluation")) {
                 vbox_eval_main.setDisable(true);
             }
         });
@@ -287,21 +299,25 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     }
     
     private boolean cmbChanged = false;
+    private String MODE;
     private void evaluationEvents() {
         cmb_term_eval.valueProperty().addListener((a)->{
             String termName = cmb_term_eval.getSelectionModel().getSelectedItem();
             int index = cmb_term_eval.getSelectionModel().getSelectedIndex();
-            AcademicTermMapping selected = termDetails.get(index).get(termName);
-            this.setCmbValues(selected.getId());
-            this.setComboBoxLimit(cmb_from_eval_main, cmb_to_eval_main, 0);
+            try {
+                AcademicTermMapping selected = termDetails.get(index).get(termName);
+                this.setCmbValues(selected.getId());
+                this.setComboBoxLimit(cmb_from_eval_main, cmb_to_eval_main, 0);
+            } catch (Exception e) {
+            }
         });
         cmb_sort_status_eval.valueProperty().addListener((a)->{
             
             if(cmb_sort_status_eval.getSelectionModel().getSelectedIndex()==1) {
-                lbl_title_eval.setText("Evaluation Misstatement Summary");
+                lbl_title_eval.setText(MODE.equalsIgnoreCase(EVALUATION)? "Evaluation Misstatement Summary" : "Adding & Changing Misstatement Summary");
                 // change vbox_table values
             } else {
-                lbl_title_eval.setText("Successful Evaluation Summary");
+                lbl_title_eval.setText(MODE.equalsIgnoreCase(EVALUATION)? "Successful Evaluation Summary" : "Successful Adding & Changing Summary");
                 // change vbox_table values
             }
             System.out.println("FILTER DETAILS********************");
@@ -317,12 +333,13 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             System.out.println("FROM: " + from_str);
             System.out.println("TO: " + to_str);
             System.out.println("TYPE: " + type);
+            System.out.println("MODE: " + MODE);
             System.out.println("***************************");
-            this.fetchResult(btn_evaluation);
+            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing);
         });
         super.addClickEvent(btn_filter_eval_main, ()->{
             cmbChanged = false;
-            this.fetchResult(btn_evaluation);
+            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing);
         });
         super.addClickEvent(btn_print_eval_main, ()->{
             this.printResult(lbl_title_eval.getText());
@@ -351,7 +368,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 return;
         }
         
-        String[] colNames = new String[]{"Date and Time","Evaluator", "Student Number","Student Name", "Year Level"};
+        String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
+        String[] colNames = new String[]{status.equalsIgnoreCase("REVOKED")? "Date Evaluated" : "Date and Time","Evaluator", "Student Number", status.equalsIgnoreCase("REVOKED")? "Revoked Date" : "Student Name", status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Year Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
         if(results==null) {
             Notifications.create()
@@ -360,16 +378,15 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                     .showWarning();
             btn_print_eval_main.setDisable(true);
             return;
-        }
-        EvaluationMapping ref = null;
+        }EvaluationMapping ref = null;
         for (int i = 0; i < results.size(); i++) {
             EvaluationMapping result = results.get(i);
             ref = result;
             String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter2.format(result.getEvaluation_date()),
                 WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getFACULTY_id()))), 
                 WordUtils.capitalizeFully(this.getStudentNumber(result.getSTUDENT_id())), 
-                WordUtils.capitalizeFully(this.getStudentName(result.getSTUDENT_id())), 
-                (this.getYearLevel(result.getYear_level()))};
+                status.equalsIgnoreCase("REVOKED")? ReportsUtility.formatter2.format(result.getCancelled_date()) : WordUtils.capitalizeFully(this.getStudentName(result.getSTUDENT_id())), 
+                status.equalsIgnoreCase("REVOKED")? WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getCancelled_by()))) :(this.getYearLevel(result.getYear_level()))};
             rowData.add(row);
         }
         
@@ -426,6 +443,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", ENCODING = " ENCODING";
     private ArrayList<EvaluationMapping> results;
     private void fetchResult(JFXButton button) {
+        System.out.println(MODE);
         btn_print_eval_main.setDisable(false);
         cmbChanged = false;
         FetchEvaluationResult fetch = new FetchEvaluationResult();
@@ -477,12 +495,14 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             System.out.println(fetch.getLog());
             results = fetch.getResults();
             if(results==null) {
+                lbl_result.setText("");
                 this.emptyView.setMessage("No Result Found");
                 this.emptyView.getButton().setVisible(false);
                 this.emptyView.attach();
             }
-            if(button.getText().equalsIgnoreCase(EVALUATION))
-                this.createTable(results, vbox_eval_main_table);
+            lbl_result.setText(results==null? "" : "Total result found: " + results.size());
+//            if(button.getText().equalsIgnoreCase(EVALUATION))
+            this.createTable(results, vbox_eval_main_table);
         });
         fetch.whenFinished(()->{
             this.loaderView.detach();
@@ -497,14 +517,15 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             return;
         SimpleTable curriculumTable = new SimpleTable();
         curriculumTable.getChildren().clear();
+        String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
         for(EvaluationMapping each: results) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(70.0);
             ReportsRow rowFX = M.load(ReportsRow.class);
-            rowFX.getLbl_date().setText(dateFormat.format(each.getEvaluation_date()));
-            rowFX.getLbl_faculty().setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(each.getFACULTY_id())));
+            rowFX.getLbl_date().setText(status.equalsIgnoreCase("REVOKED")? dateFormat.format(each.getCancelled_date()) : dateFormat.format(each.getEvaluation_date()));
+            rowFX.getLbl_faculty().setText(WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(status.equalsIgnoreCase("REVOKED")? each.getCancelled_by() : each.getFACULTY_id()))));
             rowFX.getLbl_student_name().setText(WordUtils.capitalizeFully(this.getStudentName(each.getSTUDENT_id())));
-            rowFX.getLbl_type().setText(each.getPrint_type());
+            rowFX.getLbl_type().setText(each.getPrint_type().replace("_", " "));
             rowFX.getLbl_year_level().setText(this.getYearLevel(each.getYear_level()));
             
             row.getRowMetaData().put("MORE_INFO", each);
@@ -590,17 +611,36 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                         results = Mono.orm().newSearch(Database.connect().evaluation())
                                 .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
                                 .eq(DB.evaluation().remarks, status)
-                                .between(DB.evaluation().evaluation_date, from, to)
+                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
                                 .isNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
                     } else {
                         results = Mono.orm().newSearch(Database.connect().evaluation())
                                 .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
                                 .eq(DB.evaluation().print_type, type)
                                 .eq(DB.evaluation().remarks, status)
-                                .between(DB.evaluation().evaluation_date, from, to)
+                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
                                 .isNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
+                    }
+                } else if(mode.equalsIgnoreCase(ADD_CHANGE)) {
+                    if(type.equalsIgnoreCase("ALL")) {
+                        results = Mono.orm().newSearch(Database.connect().evaluation())
+                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+                                .eq(DB.evaluation().type, "ADDING_CHANGING")
+                                .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
+                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
+                                .notNull(DB.evaluation().adding_reference_id)
+                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
+                    } else {
+                        results = Mono.orm().newSearch(Database.connect().evaluation())
+                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+                                .eq(DB.evaluation().print_type, type)
+                                .eq(DB.evaluation().type, "ADDING_CHANGING")
+                                .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
+                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
+                                .notNull(DB.evaluation().adding_reference_id)
+                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
                     }
                 }
 //            }

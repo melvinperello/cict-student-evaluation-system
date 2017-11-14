@@ -772,7 +772,6 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         accessTx.setFiltereDates(FROM, TO);
         accessTx.whenStarted(() -> {
             this.btn_print.setDisable(true);
-            this.btn_filter.setDisable(true);
             this.vbox_access.setVisible(true);
             this.detachAll();
             this.loaderView.setMessage("Loading History");
@@ -794,7 +793,6 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         accessTx.whenSuccess(() -> {
             renderHistory(accessTx);
             this.btn_print.setDisable(false);
-            this.btn_filter.setDisable(!(FROM==null));
         });
         accessTx.whenFinished(() -> {
             this.loaderView.detach();

@@ -22,6 +22,9 @@
 <property name="name_extension" type="java.lang.String">
 <column name="name_extension" length="100"/>
 </property>
+<property name="mobile_number" type="java.lang.String">
+<column name="mobile_number" length="20"/>
+</property>
 <property name="gender" type="java.lang.String">
 <column name="gender" length="100"/>
 </property>

@@ -2,7 +2,7 @@
 // SQL_table: student
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 08, 2017 05:40:39 PM
+// Created: Nov 14, 2017 12:02:28 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -49,6 +49,8 @@ private java.lang.String residency;
 private java.lang.String university;
 private java.lang.String created_by;
 private java.util.Date created_date;
+private java.lang.String updated_by;
+private java.util.Date updated_date;
 private java.lang.Integer verified;
 private java.util.Date verification_date;
 private java.lang.Integer verfied_by;
@@ -256,6 +258,25 @@ public java.util.Date getCreated_date() {
 
 public void setCreated_date(java.util.Date fieldCreatedDate) {
 	this.created_date = fieldCreatedDate;
+}
+
+@Column(name = "updated_by", nullable = true, length = 100)
+public java.lang.String getUpdated_by() {
+	return this.updated_by;
+}
+
+public void setUpdated_by(java.lang.String fieldUpdatedBy) {
+	this.updated_by = fieldUpdatedBy;
+}
+
+@Column(name = "updated_date", nullable = true, length = 19)
+@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+public java.util.Date getUpdated_date() {
+	return this.updated_date;
+}
+
+public void setUpdated_date(java.util.Date fieldUpdatedDate) {
+	this.updated_date = fieldUpdatedDate;
 }
 
 @Column(name = "verified", nullable = true, length = 10)

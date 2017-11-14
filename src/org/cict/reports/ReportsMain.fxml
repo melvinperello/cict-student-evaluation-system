@@ -130,14 +130,14 @@
                                     <Font size="30.0" />
                                  </font>
                               </Label>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="193.0" spacing="2.0">
+                              <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="225.0" spacing="2.0">
                                  <children>
-                                    <Label text="Status:" wrapText="true">
+                                    <Label text="Remarks: " wrapText="true">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="cmb_sort_status_eval" prefHeight="33.0" prefWidth="143.0" promptText="- Select Status -" styleClass="metro-combo-box" />
+                                    <ComboBox fx:id="cmb_sort_status_eval" prefHeight="33.0" prefWidth="143.0" promptText="- Select Remarks -" styleClass="metro-combo-box" />
                                  </children>
                               </HBox>
                            </children>
@@ -154,7 +154,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label text="List of every evaluation transaction." wrapText="true">
+                                    <Label fx:id="lbl_subtitle" text="List of every evaluation transaction." wrapText="true">
                                        <font>
                                           <Font size="16.0" />
                                        </font>
@@ -179,27 +179,27 @@
                                  <children>
                                     <HBox alignment="CENTER_LEFT" spacing="2.0">
                                        <children>
-                                          <Label text="From:" wrapText="true">
+                                          <Label text="From: " wrapText="true">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="cmb_from_eval_main" prefHeight="33.0" prefWidth="159.0" promptText="No Values Available" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_from_eval_main" prefHeight="33.0" prefWidth="159.0" promptText="No Date Available" styleClass="metro-combo-box" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" spacing="2.0">
                                        <children>
-                                          <Label text="To:" wrapText="true">
+                                          <Label text="To: " wrapText="true">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="cmb_to_eval_main" prefHeight="33.0" prefWidth="159.0" promptText="No Values Available" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_to_eval_main" prefHeight="33.0" prefWidth="159.0" promptText="No Date Available" styleClass="metro-combo-box" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" spacing="2.0">
                                        <children>
-                                          <Label text="Type:" wrapText="true">
+                                          <Label text="Type: " wrapText="true">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
@@ -214,7 +214,7 @@
                                     </JFXButton>
                                     <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <JFXButton fx:id="btn_print_eval_main" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
+                                          <JFXButton fx:id="btn_print_eval_main" prefHeight="33.0" prefWidth="126.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>
@@ -231,9 +231,17 @@
                               <Insets left="30.0" top="5.0" />
                            </padding>
                         </VBox>
-                        <AnchorPane prefHeight="412.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="874.0">
+                           <children>
+                              <Label fx:id="lbl_result" text="Total Result Found: 1" />
+                           </children>
                            <VBox.margin>
-                              <Insets left="65.0" top="20.0" />
+                              <Insets left="40.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="393.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="40.0" top="5.0" />
                            </VBox.margin>
                            <children>
                               <StackPane fx:id="stack_eval_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

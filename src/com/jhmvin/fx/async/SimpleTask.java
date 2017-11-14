@@ -69,7 +69,7 @@ public class SimpleTask {
                 } catch (Exception e) {
                     taskException = e;
                     System.err.println("SimpleTask-Call-Error");
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     throw new RuntimeException("SimpleTask-Call-Error");
                 }
                 return null;

@@ -318,5 +318,4 @@ public class MonoHibernate {
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
-
 }

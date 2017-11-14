@@ -39,7 +39,7 @@ import org.cict.PublicConstants;
 public class ProfileImage {
 
     // IP Address of server
-    private final static String server = PublicConstants.getServer();
+    private final static String server = PublicConstants.getServerIP();
     // API to get the image
     private final static String serverApi = "/laravel/linked/public/linked/photo/";
     // saving directory

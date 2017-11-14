@@ -6,7 +6,6 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -15,8 +14,6 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Utilities;
-import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -30,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.cict.SubjectClassification;
 import org.cict.reports.ReportsDirectory;
+import org.cict.reports.ReportsUtility;
 
 public class BSIT1516 {
 
@@ -126,8 +124,7 @@ public class BSIT1516 {
      */
     public int createPdf(String filename)
             throws DocumentException, IOException {
-        Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
-                Utilities.inchesToPoints(13f)), 55, 55, 50, 20); //lrtb
+        Document document = ReportsUtility.createLongDocument();
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
         }catch(FileNotFoundException es){

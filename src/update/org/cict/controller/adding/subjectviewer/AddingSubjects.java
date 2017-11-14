@@ -344,12 +344,15 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
                     
                     
                     System.out.println("STUDENT COUNT: " + (info.getStudentCount()==null? 0: info.getStudentCount()));
-                    System.out.println(PublicConstants.getMaxPopulation());
+                    System.out.println(PublicConstants.getServerValues(PublicConstants.MAX_POPULATION_NAME));
                     
-                    
-                    
-                    
-                    if((info.getStudentCount()==null? 0: info.getStudentCount()) >= PublicConstants.getMaxPopulation()) {
+                    Integer MAX_VALUE = 1;
+                    try {
+                        MAX_VALUE = Integer.valueOf(PublicConstants.getServerValues(PublicConstants.MAX_POPULATION_NAME));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if((info.getStudentCount()==null? 0: info.getStudentCount()) >= MAX_VALUE) {
                         AddingDataPipe.instance().isMaxPopulationReached = true;
                     }
                     

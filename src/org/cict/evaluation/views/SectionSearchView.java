@@ -80,8 +80,14 @@ public class SectionSearchView extends HBox {
                 System.out.println(sectionName);
                 System.out.println(EvaluateController.getSection());
 
+                Integer MAX_VALUE = 1;
+                try {
+                    MAX_VALUE = Integer.valueOf(PublicConstants.getServerValues(PublicConstants.MAX_POPULATION_NAME));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if(!sectionName.equalsIgnoreCase(EvaluateController.getSection())) {
-                    if(count >= PublicConstants.getMaxPopulation()) {
+                    if(count >= MAX_VALUE) {
                         Evaluator.instance().maxPopulationReached = true;
                     } else {
                         Evaluator.instance().maxPopulationReached = false;

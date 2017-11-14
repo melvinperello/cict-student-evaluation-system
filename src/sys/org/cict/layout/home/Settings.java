@@ -23,15 +23,19 @@
  */
 package sys.org.cict.layout.home;
 
+import artifacts.ConfigurationManager;
 import artifacts.MonoString;
+import artifacts.ResourceManager;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.melvin.java.properties.PropertyFile;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.events.MonoClick;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.cict.MainApplication;
+import org.cict.PublicConstants;
 
 /**
  *
@@ -53,30 +57,50 @@ public class Settings extends MonoLauncher {
 
     @Override
     public void onStartUp() {
-        txt_ip.setText(com.melvin.java.properties.PropertyFile.getPropertyFile("src/evaluation.properties").getProperty("hostIP"));
-        
-        MonoClick.addClickEvent(btn_cancel, ()->{
+        //----------------------------------------------------------------------
+        txt_ip.setText(PublicConstants.getServerIP());
+        //----------------------------------------------------------------------
+        MonoClick.addClickEvent(btn_cancel, () -> {
             Mono.fx().getParentStage(txt_ip).close();
         });
-        
-        MonoClick.addClickEvent(btn_save, ()->{
-            String newIP = MonoString.removeAll(txt_ip.getText(), " ");
-            if(newIP.isEmpty()) {
-                Mono.fx().alert().createWarning()
-                        .setMessage("Field must not be empty.")
-                        .show();
-                return;
-            }
-            int res = Mono.fx().alert().createConfirmation()
-                    .setMessage("This transaction will automatically close the application, do you still want to continue?")
-                    .confirmOkCancel();
-            if(res==-1)
-                return;
-            
-            com.melvin.java.properties.PropertyFile.writePropertyFile("src/evaluation.properties", "hostIP", newIP, "-----------------------");
-            System.out.println("NEW IP SET " + com.melvin.java.properties.PropertyFile.getPropertyFile("src/evaluation.properties").getProperty("hostIP"));
-            MainApplication.die(0);
+        //----------------------------------------------------------------------
+        MonoClick.addClickEvent(btn_save, () -> {
+            onSaveNewValues();
         });
     }
-    
+
+    private void onSaveNewValues() {
+        String newIP = MonoString.removeAll(txt_ip.getText(), " ");
+        if (newIP.isEmpty()) {
+            Mono.fx().alert().createWarning()
+                    .setMessage("Field must not be empty.")
+                    .show();
+            return;
+        }
+        int res = Mono.fx().alert().createConfirmation()
+                .setMessage("This transaction will automatically close the application, do you still want to continue?")
+                .confirmOkCancel();
+        if (res == -1) {
+            return;
+        }
+
+        boolean changed = PropertyFile.writePropertyFile(ConfigurationManager.EVALUATION_PROP.getAbsolutePath(), ConfigurationManager.PROP_HOST_IP, newIP);
+
+        if (changed) {
+            Mono.fx().alert().createInfo()
+                    .setTitle("Property Changed")
+                    .setHeader("Changes Saved")
+                    .setMessage("The Application needs to be closed.")
+                    .showAndWait();
+            // upon ok exit app
+            MainApplication.die(0);
+        } else {
+            Mono.fx().alert().createError()
+                    .setTitle("Property Changed")
+                    .setHeader("Changes Not Saved")
+                    .setMessage("The following configuration was not saved.")
+                    .show();
+        }
+
+    }
 }

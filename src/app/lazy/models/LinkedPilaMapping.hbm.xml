@@ -19,6 +19,9 @@
 <property name="SETTINGS_id" type="java.lang.Integer">
 <column name="SETTINGS_id" length="10"/>
 </property>
+<property name="NOTIFIED" type="java.lang.Integer">
+<column name="NOTIFIED" length="10"/>
+</property>
 <property name="conforme" type="java.lang.String">
 <column name="conforme" length="50"/>
 </property>
@@ -42,6 +45,9 @@
 </property>
 <property name="floor_number" type="java.lang.Integer">
 <column name="floor_number" length="10"/>
+</property>
+<property name="cluster_name" type="java.lang.String">
+<column name="cluster_name" length="50"/>
 </property>
 <property name="status" type="java.lang.String">
 <column name="status" length="50"/>

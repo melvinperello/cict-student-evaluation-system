@@ -2,7 +2,7 @@
 // SQL_table: linked_pila
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 08, 2017 05:40:38 PM
+// Created: Nov 14, 2017 12:02:27 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -32,6 +32,7 @@ private java.lang.Integer ACADTERM_id;
 private java.lang.Integer STUDENT_id;
 private java.lang.Integer ACCOUNT_id;
 private java.lang.Integer SETTINGS_id;
+private java.lang.Integer NOTIFIED;
 private java.lang.String conforme;
 private java.lang.String course;
 private java.lang.String imei;
@@ -40,6 +41,7 @@ private java.util.Date request_called;
 private java.util.Date request_validity;
 private java.lang.Integer floor_assignment;
 private java.lang.Integer floor_number;
+private java.lang.String cluster_name;
 private java.lang.String status;
 private java.lang.String remarks;
 private java.lang.Integer active;
@@ -89,6 +91,15 @@ public java.lang.Integer getSETTINGS_id() {
 
 public void setSETTINGS_id(java.lang.Integer fieldSettingsId) {
 	this.SETTINGS_id = fieldSettingsId;
+}
+
+@Column(name = "NOTIFIED", nullable = true, length = 10)
+public java.lang.Integer getNOTIFIED() {
+	return this.NOTIFIED;
+}
+
+public void setNOTIFIED(java.lang.Integer fieldNotified) {
+	this.NOTIFIED = fieldNotified;
 }
 
 @Column(name = "conforme", nullable = true, length = 50)
@@ -164,6 +175,15 @@ public java.lang.Integer getFloor_number() {
 
 public void setFloor_number(java.lang.Integer fieldFloorNumber) {
 	this.floor_number = fieldFloorNumber;
+}
+
+@Column(name = "cluster_name", nullable = true, length = 50)
+public java.lang.String getCluster_name() {
+	return this.cluster_name;
+}
+
+public void setCluster_name(java.lang.String fieldClusterName) {
+	this.cluster_name = fieldClusterName;
 }
 
 @Column(name = "status", nullable = false, length = 50)

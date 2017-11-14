@@ -2,7 +2,7 @@
 // SQL_table: linked_pila
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 08, 2017 05:40:40 PM
+// Created: Nov 14, 2017 12:02:29 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -22,6 +22,7 @@ public final String ACADTERM_id = "ACADTERM_id";
 public final String STUDENT_id = "STUDENT_id";
 public final String ACCOUNT_id = "ACCOUNT_id";
 public final String SETTINGS_id = "SETTINGS_id";
+public final String NOTIFIED = "NOTIFIED";
 public final String conforme = "conforme";
 public final String course = "course";
 public final String imei = "imei";
@@ -30,6 +31,7 @@ public final String request_called = "request_called";
 public final String request_validity = "request_validity";
 public final String floor_assignment = "floor_assignment";
 public final String floor_number = "floor_number";
+public final String cluster_name = "cluster_name";
 public final String status = "status";
 public final String remarks = "remarks";
 public final String active = "active";

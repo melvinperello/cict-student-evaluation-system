@@ -35,6 +35,8 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.Utilities;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import java.io.IOException;
@@ -66,6 +68,11 @@ public class ReportsUtility {
     
     public static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy hh:mm aa");
     public static final SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss aa");
+    
+    public static Document createLongDocument(){
+        return new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
+                Utilities.inchesToPoints(13f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50, 50); //lrtb
+    }
     
     private static String reportTitle_, reportDescription_;
     public static void createHeader(Document document, String reportTitle, String reportDescription) throws DocumentException, BadElementException, IOException {

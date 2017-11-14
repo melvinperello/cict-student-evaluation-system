@@ -91,6 +91,9 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_load_subject load_subject = new Tbl_load_subject();
     public static Tbl_load_subject load_subject() {
         return load_subject;
+    }private final static Tbl_otp_generator otp_generator = new Tbl_otp_generator();
+    public static Tbl_otp_generator otp_generator() {
+        return otp_generator;
     }private final static Tbl_student student = new Tbl_student();
     public static Tbl_student student() {
         return student;

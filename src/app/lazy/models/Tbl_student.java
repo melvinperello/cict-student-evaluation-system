@@ -2,7 +2,7 @@
 // SQL_table: student
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 08, 2017 05:40:40 PM
+// Created: Nov 14, 2017 12:02:29 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -39,6 +39,8 @@ public final String residency = "residency";
 public final String university = "university";
 public final String created_by = "created_by";
 public final String created_date = "created_date";
+public final String updated_by = "updated_by";
+public final String updated_date = "updated_date";
 public final String verified = "verified";
 public final String verification_date = "verification_date";
 public final String verfied_by = "verfied_by";

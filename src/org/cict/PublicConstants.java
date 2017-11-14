@@ -27,9 +27,11 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SystemVariablesMapping;
+import artifacts.ConfigurationManager;
 import artifacts.ResourceManager;
 import com.jhmvin.Mono;
 import com.jhmvin.orm.SQL;
+import com.melvin.java.properties.PropertyFile;
 import java.io.File;
 import java.util.Properties;
 import javax.annotation.Resource;
@@ -51,23 +53,18 @@ public class PublicConstants {
 
     //--------------------------------------------------------------------------
     /**
-     * Server IP
+     * Get IP From Configuration File.
      *
      * @return
      */
-    public final static String getServer() {
-        try {
-            java.net.URL url = ResourceManager.fetchFromResource(PublicConstants.class, "/evaluation.properties");
-            File propertyFileLocation = new File(url.toURI());
-            Properties propertyFile = com.melvin.java.properties.PropertyFile.getPropertyFile(propertyFileLocation.getAbsolutePath());
-            return propertyFile.getProperty("hostIP");
-        } catch (Exception e) {
-            return null;
-        }
+    public final static String getServerIP() {
+        ConfigurationManager.checkConfiguration();
+        Properties evaluation_property = PropertyFile.getPropertyFile(ConfigurationManager.EVALUATION_PROP.getAbsolutePath());
+        return evaluation_property.getProperty(ConfigurationManager.PROP_HOST_IP);
     }
 
-    public final static String FACULTY_REGISTRATION_LINK = "http://" + getServer() + "/laravel/cictwebportal/public/home/hello";
-    public final static String FACULTY_FORGOT_LINK = "http://" + getServer() + "/laravel/cictwebportal/public/home/hello";
+    public final static String FACULTY_REGISTRATION_LINK = "http://" + getServerIP() + "/laravel/cictwebportal/public/home/hello";
+    public final static String FACULTY_FORGOT_LINK = "http://" + getServerIP() + "/laravel/cictwebportal/public/home/hello";
 
     //--------------------------------------------------------------------------
     // INC expiration in months
@@ -161,17 +158,16 @@ public class PublicConstants {
     public final static String FTP_PORT = "FTP_PORT";
     //----------------------------------------------
 
-    public static Integer getMaxPopulation() {
-        SystemVariablesMapping map = Mono.orm().newSearch(Database.connect().system_variables())
-                .eq(DB.system_variables().name, MAX_POPULATION_NAME)
-                .active().first();
-        if (map == null) {
-            return MAX_POPULATION;
-        } else {
-            return Integer.valueOf(map.getValue());
-        }
-    }
-
+//    public static Integer getMaxPopulation() {
+//        SystemVariablesMapping map = Mono.orm().newSearch(Database.connect().system_variables())
+//                .eq(DB.system_variables().name, MAX_POPULATION_NAME)
+//                .active().first();
+//        if (map == null) {
+//            return MAX_POPULATION;
+//        } else {
+//            return Integer.valueOf(map.getValue());
+//        }
+//    }
     //----------------------------------------------
     public static String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     //--------------------------------

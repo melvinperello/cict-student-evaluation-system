@@ -115,7 +115,7 @@ public class SystemLogin extends MonoLauncher {
             if (Mono.orm().getSessionFactory() == null) {
                 // no connection
                 Mono.fx().alert().createError().setTitle("No Connection")
-                        .setHeader("Server " + PublicConstants.getServer() + " Unreachable")
+                        .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
                         .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
                         .showAndWait();
 //                MainApplication.die(0);
