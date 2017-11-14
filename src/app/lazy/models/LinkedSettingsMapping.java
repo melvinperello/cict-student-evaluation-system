@@ -2,7 +2,7 @@
 // SQL_table: linked_settings
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 14, 2017 12:02:27 PM
+// Created: Nov 14, 2017 06:36:01 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -38,6 +38,7 @@ private java.lang.Integer floor_3_cut;
 private java.lang.Integer floor_4_cut;
 private java.lang.Integer created_by;
 private java.util.Date created_date;
+private java.lang.String mark;
 private java.lang.Integer active;
 
 @Id
@@ -140,6 +141,15 @@ public java.util.Date getCreated_date() {
 
 public void setCreated_date(java.util.Date fieldCreatedDate) {
 	this.created_date = fieldCreatedDate;
+}
+
+@Column(name = "mark", nullable = true, length = 50)
+public java.lang.String getMark() {
+	return this.mark;
+}
+
+public void setMark(java.lang.String fieldMark) {
+	this.mark = fieldMark;
 }
 
 @Column(name = "active", nullable = true, length = 10)

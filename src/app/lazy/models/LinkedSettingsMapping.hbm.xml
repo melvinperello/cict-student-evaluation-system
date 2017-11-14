@@ -37,6 +37,9 @@
 <property name="created_date" type="java.util.Date">
 <column name="created_date" length="19"/>
 </property>
+<property name="mark" type="java.lang.String">
+<column name="mark" length="50"/>
+</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

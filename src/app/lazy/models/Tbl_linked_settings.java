@@ -2,7 +2,7 @@
 // SQL_table: linked_settings
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 14, 2017 12:02:29 PM
+// Created: Nov 14, 2017 06:36:02 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -28,5 +28,6 @@ public final String floor_3_cut = "floor_3_cut";
 public final String floor_4_cut = "floor_4_cut";
 public final String created_by = "created_by";
 public final String created_date = "created_date";
+public final String mark = "mark";
 public final String active = "active";
 }
