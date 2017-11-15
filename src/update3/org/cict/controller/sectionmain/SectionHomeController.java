@@ -512,7 +512,7 @@ public class SectionHomeController extends SceneFX implements ControllerFX {
     private class FetchCurriculums extends Transaction {
 
         public ArrayList<StoreCurriculumInfo> storeCurriculums = new ArrayList<>();
-        private final Integer implemented = 0;
+        private final Integer implemented = 1;
 
         @Override
         protected boolean transaction() {
