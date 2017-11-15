@@ -219,7 +219,7 @@ public class CreateIrregularSection extends SceneFX implements ControllerFX {
             this.createSection(sectionName, txt_conjuction.getText(), "REGULAR", "CONJUNCTION");
         } else if(sectionType.equalsIgnoreCase("TUTORIAL CLASS")) {
             this.createSection(sectionName, "CICT", "TUTORIAL", "TUTORIAL");
-        } if(sectionType.equalsIgnoreCase("MIDYEAR CLASS")) {
+        } else if(sectionType.equalsIgnoreCase("MIDYEAR CLASS")) {
             this.createSection(sectionName, "CICT", "REGULAR", "MIDYEAR");
         } else {
             this.createSection(sectionName, "CICT", "REGULAR", "SPECIAL");
