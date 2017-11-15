@@ -90,8 +90,9 @@ public class AdvisingSlip {
     //                          INITIALIZATION                                 #
     //##########################################################################
     /* private all class variables that is not allowed to be accessed outside the class */
-    private static String university, campus, course, title, school_year, semester, date,
+    private static String university, campus, title, school_year, semester, date,
             stud_num, stud_name, adviser,
+            course = "_____________________________________________",
             major = "_____________________________________________",
             remarks = " _______________________________________________\n"
             + "                  _______________________________________________\n"
@@ -109,7 +110,8 @@ public class AdvisingSlip {
     private final SimpleDateFormat formatter = new SimpleDateFormat("MMddyyyyhhmmss");
     private static boolean old, new_, regular, irregular,
             underline_remarks = false,
-            underline_major = false;
+            underline_major = false,
+            underline_course= false;
 
     public ArrayList<AdvisingSlipData> INFO_SUBJECTS = new ArrayList<>();
     public String INFO_STUD_NUM = "NOTHING TO DISPLAY";
@@ -136,7 +138,10 @@ public class AdvisingSlip {
         school_year = this.INFO_ACAD_YEAR;
         semester = this.INFO_TERM;
         campus = this.INFO_CAMPUS;
-        course = this.INFO_COURSE;
+        if (!this.INFO_COURSE.isEmpty()) {
+            course = this.INFO_COURSE;
+            underline_course = true;
+        }
         if (!this.INFO_MAJOR.isEmpty()) {
             major = this.INFO_MAJOR;
             underline_major = true;
@@ -261,7 +266,7 @@ public class AdvisingSlip {
         PdfPCell cell3 = new PdfPCell();
         cell3.setBorder(PdfPCell.NO_BORDER);
         Phrase phr_details3 = new Phrase();
-        putTitleContent(phr_details3, "Course: ", FONT_PAGE_DETAILS, getShortenedDetail(course, 83), FONT_PAGE_DETAILS, "\n\n", true);
+        putTitleContent(phr_details3, "Course: ", FONT_PAGE_DETAILS, getShortenedDetail(course, 83), FONT_PAGE_DETAILS, "\n\n", underline_course);
         Paragraph p3 = new Paragraph(8);
         p3.add(phr_details3);
         cell3.addElement(p3);

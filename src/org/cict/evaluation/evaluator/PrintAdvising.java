@@ -105,22 +105,21 @@ public class PrintAdvising extends Transaction {
                 .first();
         if(curriculum==null) {
             System.out.println(this.getClass().getSimpleName() + ": NO CURRICULUM FOUND");
-            return false;
-        }
-        
-        if (curriculum.getMajor() != null) {
-            if (!curriculum.getMajor().isEmpty()) {
-                if (!curriculum.getMajor().equalsIgnoreCase("none")) {
-                    major = curriculum.getMajor();
+        } else {
+            if (curriculum.getMajor() != null) {
+                if (!curriculum.getMajor().isEmpty()) {
+                    if (!curriculum.getMajor().equalsIgnoreCase("none")) {
+                        major = curriculum.getMajor();
+                    }
                 }
             }
+
+            course = Mono.orm().newSearch(Database.connect().academic_program())
+                    .eq(DB.academic_program().id, curriculum.getACADPROG_id())
+                    .execute()
+                    .first();
         }
-
-        course = Mono.orm().newSearch(Database.connect().academic_program())
-                .eq(DB.academic_program().id, curriculum.getACADPROG_id())
-                .execute()
-                .first();
-
+        
         evaluation = Mono.orm()
                 .newSearch(Database.connect().evaluation())
                 .eq(DB.evaluation().STUDENT_id, student.getCict_id())
@@ -244,7 +243,7 @@ public class PrintAdvising extends Transaction {
         // student
         slip.INFO_STUD_NUM = student.getId();
         slip.INFO_STUD_NAME = (student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "": student.getMiddle_name())).toUpperCase(Locale.ENGLISH);
-        slip.INFO_COURSE = (course.getName()==null? "":course.getName());
+        slip.INFO_COURSE = course==null? "":course.getName();
         slip.INFO_MAJOR = (major==null? "": major);
         
         ArrayList<AdvisingSlipData> table = new ArrayList<>();

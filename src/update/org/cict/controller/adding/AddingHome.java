@@ -519,6 +519,16 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 this.currentStudentEvaluationDetails = checkStudentTx.getEvaluationMap();
                 this.newEvaluationID = checkStudentTx.getEvaluationMap().getId();
             } else {
+                FLAG_CROSS_ENROLLEE = checkStudentTx.isCrossEnrollee();
+                //----------------------------
+                // if cross enrollee, must not continue adding and changing process
+                if(FLAG_CROSS_ENROLLEE) {
+                    Mono.fx().alert().createWarning()
+                            .setMessage("Cross enrollee students are not allowed to take adding and changing transactions.")
+                            .show();
+                    return;
+                }
+                //-------------------------
                 /**
                  * Show preview panel
                  */
@@ -526,7 +536,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 this.currentStudentEvaluationDetails = checkStudentTx.getEvaluationMap();
                 this.studentSearched = checkStudentTx.getStudentMap();
 
-                FLAG_CROSS_ENROLLEE = checkStudentTx.isCrossEnrollee();
                 if (show) {
                     showFirstAssistant();
                 }
