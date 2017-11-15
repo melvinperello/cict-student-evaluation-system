@@ -212,8 +212,12 @@ public class SearchBySubject extends Transaction {
             ssv.sectionID = this.loadSections.get(x).getId();
 
             //------------------------------------------------------------------
-            CurriculumMapping c = getStoredCurriculum(this.loadSections.get(x).getCURRICULUM_id());
-            ssv.lbl_curname.setText(c==null? "" : c.getName());
+            if(this.loadSections.get(x).getCURRICULUM_id()==null) {
+                ssv.lbl_curname.setText("");
+            } else {
+                CurriculumMapping c = getStoredCurriculum(this.loadSections.get(x).getCURRICULUM_id());
+                ssv.lbl_curname.setText(c==null? "" : c.getName());
+            }
             //------------------------------------------------------------------
 
             searchResults.add(ssv);
