@@ -3,11 +3,13 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -15,9 +17,9 @@
    <children>
       <AnchorPane layoutX="139.0" layoutY="77.0" prefHeight="70.0" prefWidth="200.0" style="-fx-background-color: #3AADD9; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER_LEFT" layoutX="65.0" layoutY="22.0" prefHeight="60.0" prefWidth="344.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox alignment="CENTER_LEFT" layoutX="65.0" layoutY="22.0" prefHeight="60.0" prefWidth="344.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label prefHeight="53.0" prefWidth="381.0" text="Curricular Level" textFill="WHITE">
+                  <Label maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="381.0" text="Curricular Level" textFill="WHITE" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="36.0" />
                      </font>
@@ -29,6 +31,40 @@
                         </ImageView>
                      </graphic>
                   </Label>
+                  <StackPane prefHeight="70.0" prefWidth="288.0">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                     <children>
+                        <HBox fx:id="hbox_main_update" alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="247.0">
+                           <children>
+                              <Label fx:id="lbl_year_level" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="104.0" text="Fourth Year" textFill="WHITE" wrapText="true" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <JFXButton fx:id="btn_change_yr" layoutX="425.0" layoutY="12.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="Change Year Level" textFill="#3aadd9">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="hbox_update" alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="70.0" prefWidth="247.0" spacing="5.0" visible="false">
+                           <children>
+                              <ComboBox fx:id="cmb_year_level" prefHeight="25.0" prefWidth="160.0" />
+                              <JFXButton fx:id="btn_save_changes" layoutX="425.0" layoutY="12.0" prefHeight="29.0" prefWidth="124.0" style="-fx-background-color: #fff; -fx-background-radius: 10;" text="Save Changes" textFill="#3aadd9">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                </children>
                <padding>
                   <Insets left="10.0" />

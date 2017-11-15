@@ -23,36 +23,66 @@
  */
 package org.cict.evaluation;
 
-import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.Database;
+import app.lazy.models.MapFactory;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.SystemOverrideLogsMapping;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.transitions.Animate;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.cict.PublicConstants;
+import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
 import org.cict.evaluation.encoder.MissingRecordController;
-import org.cict.evaluation.evaluator.Evaluator;
+import org.controlsfx.control.Notifications;
+import update3.org.cict.access.Access;
+import update3.org.cict.access.SystemOverriding;
 
 /**
  *
  * @author Jhon Melvin
  */
 public class CurricularLevelController extends SceneFX implements ControllerFX {
+
+    @FXML
+    private AnchorPane application_pane;
+
+    @FXML
+    private HBox hbox_main_update;
+
+    @FXML
+    private Label lbl_year_level;
+
+    @FXML
+    private JFXButton btn_change_yr;
+
+    @FXML
+    private HBox hbox_update;
+
+    @FXML
+    private ComboBox<String> cmb_year_level;
+
+    @FXML
+    private JFXButton btn_save_changes;
 
     @FXML
     private Label lbl_curriculum;
@@ -94,6 +124,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
     private Label lbl_4_subjects;
 
     @FXML
+    private JFXCheckBox chkbx_disable_ai;
+
+    @FXML
     private JFXButton btn_1st;
 
     @FXML
@@ -104,12 +137,6 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_4th;
-
-    @FXML
-    private AnchorPane application_pane;
-    
-    @FXML
-    private JFXCheckBox chkbx_disable_ai;
 
     public CurricularLevelController(StudentMapping studentMap) {
         STUDENT_current = studentMap;
@@ -123,6 +150,18 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         bindScene(application_pane);
         chkbx_disable_ai.setSelected(!PublicConstants.DISABLE_ASSISTANCE);
         this.showAssessment();
+        
+        //---------------------------------------
+        cmb_year_level.getItems().add("First Year");
+        cmb_year_level.getItems().add("Second Year");
+        cmb_year_level.getItems().add("Third Year");
+        cmb_year_level.getItems().add("Fourth Year");
+        cmb_year_level.getSelectionModel().select((STUDENT_current.getYear_level()-1));
+    
+        lbl_year_level.setText(cmb_year_level.getSelectionModel().getSelectedItem());
+        
+        hbox_main_update.setVisible(true);
+        hbox_update.setVisible(false);
     }
 
     private CurricularLevelAssesor assessmentResults;
@@ -394,8 +433,121 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         chkbx_disable_ai.selectedProperty().addListener((a)->{
             PublicConstants.DISABLE_ASSISTANCE = !chkbx_disable_ai.isSelected();
         });
+        
+        this.changeYearLevelEvents();
+    }
+    
+    //--------------------------------------
+    private Integer index;
+    private void changeYearLevelEvents() {
+        
+        this.addClickEvent(btn_change_yr, ()-> {
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
+            Animate.fade(hbox_main_update, 150, ()->{
+                hbox_main_update.setVisible(false);
+                hbox_update.setVisible(true);
+            }, hbox_update);
+        });
+        
+        this.addClickEvent(btn_save_changes, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
+            index = cmb_year_level.getSelectionModel().getSelectedIndex();
+            Integer studentYrLvl = STUDENT_current.getYear_level();
+            String message = "";
+            boolean invalid = false;
+            index+=1;
+            if(index < studentYrLvl) {
+                invalid = true;
+                message = "We prohibit changing the year level of\n"
+                        + "the student backward. Please ask your local\n"
+                        + "registrar for assistance.";
+            } else if(index.equals(studentYrLvl+1)) {
+                // valid
+            }else if(index > studentYrLvl) {
+                invalid = true;
+                message = "Changing the year level twice or more\n"
+                        + "is not allowed, just one step at a time.\n"
+                        + "If that so, please ask your local registrar for assistance.";
+            }
+            if(invalid) {
+                Notifications.create().title("Warning")
+                        .position(Pos.BOTTOM_RIGHT)
+                        .text(message
+                                + "\nClick This notification for more details.")
+                        .onAction(onAction -> {
+                            this.systemOverride(SystemOverriding.EVAL_CHANGED_YEAR_LEVEL_BACKWARD);
+                        })
+                        .showWarning();
+//                Mono.fx().alert()
+//                        .createWarning()
+//                        .setHeader("Ops, Invalid Move")
+//                        .setMessage(message)
+//                        .show();
+                return;
+            }
+            updatedYearLevel();
+        });
     }
 
+    private boolean allowOverride = false;
+    private void systemOverride(String type) {
+        Object[] result = Access.isEvaluationOverride(allowOverride);
+        boolean ok = (boolean) result[0];
+        String fileName = (String) result[1];
+        if (ok) {
+            SystemOverrideLogsMapping map = MapFactory.map().system_override_logs();
+            map.setCategory(SystemOverriding.CATEGORY_EVALUATION);
+            map.setDescription(type);
+            map.setExecuted_by(CollegeFaculty.instance().getFACULTY_ID());
+            map.setExecuted_date(Mono.orm().getServerTime().getDateWithFormat());
+            map.setAcademic_term(SystemProperties.instance().getCurrentAcademicTerm().getId());
+            String conforme = STUDENT_current.getLast_name() + ", ";
+
+            conforme += STUDENT_current.getFirst_name();
+            if (STUDENT_current.getMiddle_name() != null) {
+                conforme += " ";
+                conforme += STUDENT_current.getMiddle_name();
+            }
+            map.setConforme(conforme);
+            map.setConforme_type("STUDENT");
+            map.setConforme_id(STUDENT_current.getCict_id());
+
+            //-----------------
+            map.setAttachment_file(fileName);
+            //------------
+                
+            int id = Database.connect().system_override_logs().insert(map);
+            if (id <= 0) {
+                Mono.fx().snackbar().showError(application_pane, "Something went wrong please try again.");
+            } else {
+                this.updatedYearLevel();
+            }
+        }
+    }
+    
+    private boolean updatedYearLevel() {
+        String yearLevel = cmb_year_level.getSelectionModel().getSelectedItem();
+        Animate.fade(hbox_update, 150, ()->{
+            hbox_update.setVisible(false);
+            hbox_main_update.setVisible(true);
+        }, hbox_main_update);
+
+        if(Objects.equals(index, STUDENT_current.getYear_level())) {
+            return false;
+        }
+        lbl_year_level.setText(yearLevel);
+        STUDENT_current.setYear_level(index);
+        if(!Database.connect().student().update(STUDENT_current)) {
+            System.out.println("NOT SAVED");
+            Notifications.create().title("Failed")
+                    .text("Please check your connection to the server.").showError();
+            return false;
+        }
+        return true;
+    }
+    
+    
+    //------------------------------------------------
     private void logs(String str) {
         if (false) {
             System.out.println("@CurricularLevelController: " + str);
