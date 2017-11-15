@@ -39,5 +39,6 @@ public class SystemOverriding {
     public static final String EVAL_BYPASSED_PRE_REQUISITES = "BYPASSED_PRE_REQUISITES";
     public static final String EVAL_INTERN_GRADE_REQUIREMENT = "INTERN_GRADE_REQUIREMENT";
     public static final String EVAL_GRADE_REQUIREMENT_FOR_MOVING_UP = "GRADE_REQUIREMENT_FOR_MOVING_UP";
-    public static final String EVAL_EXCEED_MAX_POPULATION= "EXCEED_MAX_POPULATION";
+    public static final String EVAL_EXCEED_MAX_POPULATION = "EXCEED_MAX_POPULATION";
+    public static final String EVAL_CHANGED_YEAR_LEVEL_BACKWARD = "CHANGE_YEAR_LEVEL_BACKWARD";
 }

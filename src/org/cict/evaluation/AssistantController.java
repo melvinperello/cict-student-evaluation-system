@@ -28,8 +28,10 @@ import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
+import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.SystemOverrideLogsMapping;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
@@ -42,6 +44,7 @@ import com.jhmvin.fx.display.SceneFX;
 import java.util.ArrayList;
 import java.util.Objects;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -50,10 +53,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.PublicConstants;
+import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.evaluator.Evaluator;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
+import update.org.cict.controller.adding.SubjectInformationHolder;
+import update3.org.cict.access.Access;
+import update3.org.cict.access.SystemOverriding;
 
 /**
  *
@@ -124,10 +133,10 @@ public class AssistantController extends SceneFX implements ControllerFX {
     @FXML
     private JFXCheckBox chkbx_disable_ai;
     
-    private StudentMapping STUDENT;
+    private StudentMapping studentSearched;
     
     public AssistantController(StudentMapping student) {
-        this.STUDENT = student;
+        this.studentSearched = student;
     }
     
     @Override
@@ -141,18 +150,21 @@ public class AssistantController extends SceneFX implements ControllerFX {
             vbox_list.setVisible(true);
             createTable(subjects, false);
         }
-        String fullName = WordUtils.capitalizeFully(STUDENT.getFirst_name() + " " + STUDENT.getLast_name());
-        label_student_id.setText(STUDENT.getId());
+        String fullName = WordUtils.capitalizeFully(studentSearched.getFirst_name() + " " + studentSearched.getLast_name());
+        label_student_id.setText(studentSearched.getId());
         lbl_name.setText(fullName);
         
         cmb_year_level.getItems().add("First Year");
         cmb_year_level.getItems().add("Second Year");
         cmb_year_level.getItems().add("Third Year");
         cmb_year_level.getItems().add("Fourth Year");
-        cmb_year_level.getSelectionModel().select((STUDENT.getYear_level()-1));
+        cmb_year_level.getSelectionModel().select((studentSearched.getYear_level()-1));
     
         lbl_year_level.setText(cmb_year_level.getSelectionModel().getSelectedItem());
         
+        //-------------------------
+        // if local registrar allow override.
+        allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
     }
 
     private Integer index;
@@ -167,41 +179,41 @@ public class AssistantController extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_save_changes, ()->{
             PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             index = cmb_year_level.getSelectionModel().getSelectedIndex();
-            Integer studentYrLvl = STUDENT.getYear_level();
+            Integer studentYrLvl = studentSearched.getYear_level();
             String message = "";
             boolean invalid = false;
             index+=1;
             if(index < studentYrLvl) {
                 invalid = true;
-                message = "We prohibit changing the year level of the student backward. Please ask your local registrar for assistance.";
+                message = "We prohibit changing the year level of\n"
+                        + "the student backward. Please ask your local\n"
+                        + "registrar for assistance.";
             } else if(index.equals(studentYrLvl+1)) {
                 // valid
             }else if(index > studentYrLvl) {
                 invalid = true;
-                message = "Changing the year level twice or more is not allowed, just one step at a time. If that so, please ask your local registrar for assistance.";
+                message = "Changing the year level twice or more\n"
+                        + "is not allowed, just one step at a time.\n"
+                        + "If that so, please ask your local registrar for assistance.";
             }
             if(invalid) {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Ops, Invalid Move")
-                        .setMessage(message)
-                        .show();
+                Notifications.create().title("Warning")
+                        .position(Pos.BOTTOM_RIGHT)
+                        .text(message
+                                + "\nClick This notification for more details.")
+                        .onAction(onAction -> {
+                            this.systemOverride(SystemOverriding.EVAL_CHANGED_YEAR_LEVEL_BACKWARD);
+                        })
+                        .showWarning();
+//                Mono.fx().alert()
+//                        .createWarning()
+//                        .setHeader("Ops, Invalid Move")
+//                        .setMessage(message)
+//                        .show();
                 return;
             }
-            String yearLevel = cmb_year_level.getSelectionModel().getSelectedItem();
-            anchor_change_yr.setVisible(false);
-            
-            if(Objects.equals(index, STUDENT.getYear_level())) {
-                return;
-            }
-            btn_change_yr.setDisable(true);
-            lbl_year_level.setText(yearLevel);
-            STUDENT.setYear_level(index);
-            if(!Database.connect().student().update(STUDENT)) {
-                System.out.println("NOT SAVED");
-            } else 
-                isSaved = true;
-            lbl_message.setText("If we're done with it, lets proceed! Click next.");
+            if(updatedYearLevel())
+                lbl_message.setText("If we're done with it, lets proceed! Click next.");
         });
         
         this.addClickEvent(btn_next, ()->{
@@ -236,7 +248,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_close, ()->{
             PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             if(index == null)
-                index = STUDENT.getYear_level();
+                index = studentSearched.getYear_level();
             Mono.fx().getParentStage(btn_close).close();
         });
         
@@ -280,10 +292,74 @@ public class AssistantController extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_closee, ()->{
             PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             if(index == null)
-                index = STUDENT.getYear_level();
+                index = studentSearched.getYear_level();
             Mono.fx().getParentStage(btn_close).close();
         });
     }
+    
+    private boolean updatedYearLevel() {
+        String yearLevel = cmb_year_level.getSelectionModel().getSelectedItem();
+        anchor_change_yr.setVisible(false);
+
+        if(Objects.equals(index, studentSearched.getYear_level())) {
+            return false;
+        }
+//            btn_change_yr.setDisable(true);
+        lbl_year_level.setText(yearLevel);
+        studentSearched.setYear_level(index);
+        if(!Database.connect().student().update(studentSearched)) {
+            System.out.println("NOT SAVED");
+            Notifications.create().title("Failed")
+                    .text("Please check your connection to the server.").showError();
+            return false;
+        } else 
+            isSaved = true;
+        return true;
+    }
+    
+    //------------------------------------------
+    // override in change of year level
+    
+    /**
+     * Override filters.
+     */
+    private boolean allowOverride = false;
+    private void systemOverride(String type) {
+        Object[] result = Access.isEvaluationOverride(allowOverride);
+        boolean ok = (boolean) result[0];
+        String fileName = (String) result[1];
+        if (ok) {
+            SystemOverrideLogsMapping map = MapFactory.map().system_override_logs();
+            map.setCategory(SystemOverriding.CATEGORY_EVALUATION);
+            map.setDescription(type);
+            map.setExecuted_by(CollegeFaculty.instance().getFACULTY_ID());
+            map.setExecuted_date(Mono.orm().getServerTime().getDateWithFormat());
+            map.setAcademic_term(SystemProperties.instance().getCurrentAcademicTerm().getId());
+            String conforme = studentSearched.getLast_name() + ", ";
+
+            conforme += studentSearched.getFirst_name();
+            if (studentSearched.getMiddle_name() != null) {
+                conforme += " ";
+                conforme += studentSearched.getMiddle_name();
+            }
+            map.setConforme(conforme);
+            map.setConforme_type("STUDENT");
+            map.setConforme_id(studentSearched.getCict_id());
+
+            //-----------------
+            map.setAttachment_file(fileName);
+            //------------
+                
+            int id = Database.connect().system_override_logs().insert(map);
+            if (id <= 0) {
+                Mono.fx().snackbar().showError(anchor_main, "Something went wrong please try again.");
+            } else {
+                this.updatedYearLevel();
+            }
+        }
+    }
+    
+    //------------------------------------------
     
     private void createTable(ArrayList<SubjectMapping> subjects, boolean canTake) {
         recordTable.getChildren().clear();
@@ -331,9 +407,9 @@ public class AssistantController extends SceneFX implements ControllerFX {
         if(sem != null) {
             if(!sem.equals(0)) {
                 if(index == null)
-                    index = STUDENT.getYear_level();
+                    index = studentSearched.getYear_level();
                 ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                        .eq(DB.curriculum_subject().CURRICULUM_id, STUDENT.getCURRICULUM_id())
+                        .eq(DB.curriculum_subject().CURRICULUM_id, studentSearched.getCURRICULUM_id())
                         .eq(DB.curriculum_subject().semester, sem)
                         .eq(DB.curriculum_subject().year, index)
                         .active()
@@ -341,9 +417,9 @@ public class AssistantController extends SceneFX implements ControllerFX {
                 if(csMaps != null) {
                     boolean canBeTaken = true;
                     allSubjects = new ArrayList<>();
-                    CurricularLevelAssesor assessor = new CurricularLevelAssesor(STUDENT);
+                    CurricularLevelAssesor assessor = new CurricularLevelAssesor(studentSearched);
                     assessor.assess();
-                    AssessmentResults annualAsses = assessor.getAnnualAssessment(STUDENT.getYear_level());
+                    AssessmentResults annualAsses = assessor.getAnnualAssessment(studentSearched.getYear_level());
                     for(CurriculumSubjectMapping csMap: csMaps) {
                         SubjectMapping subjectToBeAdded = Mono.orm().newSearch(Database.connect().subject())
                                 .eq(DB.subject().id, csMap.getSUBJECT_id())
@@ -384,7 +460,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
 
                     for (int q = 0; q < preqid.length; q++) {
                         GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
-                                .eq(DB.grade().STUDENT_id, STUDENT.getCict_id())
+                                .eq(DB.grade().STUDENT_id, studentSearched.getCict_id())
                                 .eq(DB.grade().SUBJECT_id, preqid[q])
                                 .active(Order.desc(DB.grade().id))
                                 .first();
@@ -426,7 +502,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
     
     private boolean isAlreadyTaken(SubjectMapping subject) {
         GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
-                .eq(DB.grade().STUDENT_id, STUDENT.getCict_id())
+                .eq(DB.grade().STUDENT_id, studentSearched.getCict_id())
                 .eq(DB.grade().SUBJECT_id, subject.getId())
                 .active(Order.desc(DB.grade().id))
                 .first();
