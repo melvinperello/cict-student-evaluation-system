@@ -50,17 +50,94 @@ public class FTPManager {
         SystemVariablesMapping ftpServer = Mono.orm().newSearch(Database.connect().system_variables())
                 .eq(DB.system_variables().name, "FTP_SERVER").active().first();
         //-----------------------------------
-        
+
         FTPClient ftpClient = new FTPClient();
-        ftpClient.connect((ftpServer.getValue()==null? FTP_SERVER: ftpServer.getValue()), (ftpPort.getValue()==null? FTP_PORT : Integer.parseInt(ftpPort.getValue())));
-        ftpClient.login((ftpUser.getValue()==null? FTP_USER : ftpUser.getValue()), (ftpPass.getValue()==null? FTP_PASS : ftpPass.getValue()));
+        ftpClient.connect((ftpServer.getValue() == null ? FTP_SERVER : ftpServer.getValue()), (ftpPort.getValue() == null ? FTP_PORT : Integer.parseInt(ftpPort.getValue())));
+        ftpClient.login((ftpUser.getValue() == null ? FTP_USER : ftpUser.getValue()), (ftpPass.getValue() == null ? FTP_PASS : ftpPass.getValue()));
         ftpClient.enterLocalPassiveMode();
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         return ftpClient;
     }
 
+    //--------------------------------------------------------------------------
+    public interface OnTransfer {
+
+        void transferResult(boolean result, Exception exception);
+    };
+
     /**
-     * Upload File to the FTP Server.
+     * NON-BLOCKING Upload. Runs the upload method on a separate thread so that
+     * when the file is large and network is slow the program won't hang.
+     *
+     * @param uploadAbsolutePath
+     * @param ftpFolder
+     * @param ftpFileName
+     * @param transferResults
+     */
+    public final static void upload(String uploadAbsolutePath, String ftpFolder, String ftpFileName, OnTransfer transferResults) {
+        Thread uploadThread = new Thread(() -> {
+            try {
+                boolean result = FTPManager.upload(uploadAbsolutePath, ftpFolder, ftpFileName);
+                transferResults.transferResult(result, null);
+            } catch (Exception e) {
+                transferResults.transferResult(false, e);
+            }
+        });
+        uploadThread.setName("FTP-Upload-Thread");
+        uploadThread.setDaemon(true);
+        uploadThread.start();
+    }
+
+    /**
+     * NON-BLOCKING Download.Runs the download method on a separate thread so
+     * that when the file is large and network is slow the program won't hang.
+     *
+     * @param ftpFolder
+     * @param ftpFileName
+     * @param downloadPath
+     * @param transferResults
+     */
+    public final static void download(String ftpFolder, String ftpFileName, String downloadPath, OnTransfer transferResults) {
+        Thread downloadThread = new Thread(() -> {
+            try {
+                boolean results = FTPManager.download(ftpFolder, ftpFileName, downloadPath);
+                transferResults.transferResult(results, null);
+            } catch (Exception e) {
+                transferResults.transferResult(false, e);
+            }
+        });
+
+        downloadThread.setName("FTP-Download-Thread");
+        downloadThread.setDaemon(true);
+        downloadThread.start();
+    }
+
+    /**
+     * This is a sample code ignore this one.
+     */
+    public void sampleUsage() {
+        //----------------------------------------------------------------------
+        // Do Some Preparations here
+        // add loading or disable buttons + loading cursor
+        //----------------------------------------------------------------------
+        // start the transfer on another thread
+        FTPManager.download("FTP FOLDER", "FILE NAME", "DOWNLOAD PATH", (boolean result, Exception e) -> {
+            // do something after the operation
+            // result is the result of the transfer true or false
+            if (result) {
+                // success
+                // when success exception is null
+            } else {
+                // when failed
+                // there may be an exception or not
+            }
+        });
+        // do not add any codes after because the above method is non blocking
+    }
+
+    //--------------------------------------------------------------------------
+    /**
+     * Upload File to the FTP Server. (BLOCKING)
      *
      * @param uploadAbsolutePath The location of the file in the user's
      * computer.
@@ -86,7 +163,7 @@ public class FTPManager {
     }
 
     /**
-     * Downloads a file from the server
+     * Downloads a file from the server (BLOCKING)
      *
      * @param ftpFolder FTP server Folder
      * @param ftpFileName The File Name from FTP
