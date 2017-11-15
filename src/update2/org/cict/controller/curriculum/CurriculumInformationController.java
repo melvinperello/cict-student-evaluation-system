@@ -272,7 +272,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
         addClickEvent(btn_implement, () -> {
             btn_implement.setDisable(isImplemented);
             boolean isComplete = true;
-            for (int yrCtr = 1; yrCtr <= CURRICULUM.getStudy_years(); yrCtr++) {
+            for (int yrCtr = (CURRICULUM.getLadderization_type().equalsIgnoreCase("CONSEQUENT")? 3 : 1); yrCtr <= CURRICULUM.getStudy_years(); yrCtr++) {
                 for (int semCtr = 1; semCtr <= 2; semCtr++) {
                     Object exist = Mono.orm().newSearch(Database.connect().curriculum_subject())
                             .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM.getId())
