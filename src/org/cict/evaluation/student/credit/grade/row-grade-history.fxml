@@ -14,7 +14,7 @@
             <Font name="System Bold" size="25.0" />
          </font>
       </Label>
-      <VBox alignment="CENTER" spacing="3.0">
+      <VBox alignment="CENTER_LEFT" spacing="3.0">
          <children>
             <Label accessibleText="lbl_remarks" alignment="CENTER" maxWidth="200.0" prefWidth="200.0" style="-fx-border-color: white; -fx-border-style: dashed;" text="CONDITIONALLY PASSED" textAlignment="CENTER" textFill="WHITE">
                <font>
