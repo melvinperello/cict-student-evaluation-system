@@ -175,8 +175,8 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                         .showInformation();
             }
         });
-        
-        super.addClickEvent(btn_new_announcement, ()->{
+
+        super.addClickEvent(btn_new_announcement, () -> {
             this.showCreateAnnouncement();
         });
     }
@@ -310,18 +310,27 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                         .showInformation();
             }
         });
-        
-        //----------------------------------
+
+        //----------------------------------------------------------------------
         LinkedMarshallSessionMapping session = accountInfo.getLatestSession();
-        if(session !=null) {
-            rowFX.getBtn_force_logout().setDisable(!session.getStatus().equalsIgnoreCase("ONLINE"));
+        if (session == null) {
+            System.out.println("NO ACTIVE SESSION");
+
+            // when there is no active session.
+            rowFX.getBtn_force_logout().setDisable(true);
+        } else {
+            System.out.println("HAS ACTIVE SESSION");
         }
-        super.addClickEvent(rowFX.getBtn_force_logout(), ()->{
+        //----------------------------------------------------------------------
+
+        super.addClickEvent(rowFX.getBtn_force_logout(), () -> {
             StudentAccountInfo info = (StudentAccountInfo) row.getRowMetaData().get("MORE_INFO");
+            // update session
             LinkedMarshallSessionMapping lmsMap = info.getLatestSession();
             lmsMap.setSession_end(Mono.orm().getServerTime().getDateWithFormat());
             lmsMap.setStatus("OFFLINE");
-            if(Database.connect().linked_marshall_session().update(lmsMap)){
+            //
+            if (Database.connect().linked_marshall_session().update(lmsMap)) {
                 Notifications.create().darkStyle()
                         .title("Logout Successfully")
                         .text("Student marshall is logout from"
@@ -337,7 +346,7 @@ public class LinkedHome extends SceneFX implements ControllerFX {
             rowFX.getBtn_force_logout().setDisable(true);
         });
         //---------------------------
-        
+
         row.getRowMetaData().put("MORE_INFO", accountInfo);
 
         SimpleTableCell cellParent = new SimpleTableCell();
@@ -422,30 +431,46 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         private void run() {
             student = Database.connect().student().getPrimary(this.account.getSTUDENT_id());
         }
-        
+
+        /**
+         * Get Latest ACTIVE Session.
+         *
+         * @return
+         */
         public LinkedMarshallSessionMapping getLatestSession() {
-            if(this.account==null)
+            if (this.account == null) {
+                System.out.println("NO ACCOUNT");
                 return null;
-            return Mono.orm().newSearch(Database.connect().linked_marshall_session()).eq(DB.linked_marshall_session().account_id, this.account.getId()).active().first();
+            }
+            System.out.println("ACC ID: " + this.account.getSTUDENT_id());
+            return Mono.orm()
+                    .newSearch(Database.connect().linked_marshall_session())
+                    .eq(DB.linked_marshall_session().cict_id, this.account.getSTUDENT_id())
+                    .isNull(DB.linked_marshall_session().session_end)
+                    .eq(DB.linked_marshall_session().status, "ONLINE")
+                    // important in getting the latest must be oder by desc
+                    .active(Order.desc(DB.linked_marshall_session().ses_id))
+                    .first();
         }
     }
-    
+
     //-----------------------------------------------------
     //----------------------------------------
     private void loadAnnouncements() {
         ArrayList<AnnouncementsMapping> collection = Mono.orm().newSearch(Database.connect().announcements())
                 .active(Order.desc(DB.announcements().date)).all();
-        if(collection==null) {
+        if (collection == null) {
             this.changeAnnouncementView(vbox_no_announcements);
             return;
         }
         this.createTableAnnouncement(collection);
     }
-    
+
     private SimpleTable systemVarTable = new SimpleTable();
+
     private void createTableAnnouncement(ArrayList<AnnouncementsMapping> collection) {
         systemVarTable.getChildren().clear();
-        for(AnnouncementsMapping each: collection) {
+        for (AnnouncementsMapping each : collection) {
             this.createAnnouncementRow(each);
         }
         SimpleTableView simpleTableView = new SimpleTableView();
@@ -453,9 +478,9 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         simpleTableView.setFixedWidth(true);
         simpleTableView.setParentOnScene(vbox_announce_list);
         this.changeAnnouncementView(vbox_announce_list);
-        
+
     }
-    
+
     private void createAnnouncementRow(AnnouncementsMapping each) {
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
@@ -463,28 +488,28 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         ImageView img_extension = rowFX.getImg_extension();
         Label lbl_name = rowFX.getTxt_name();
         Label lbl_date = rowFX.getLbl_datetime();
-        
+
         lbl_name.setText(WordUtils.capitalizeFully(each.getTitle()));
-        
+
         SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyy");
         lbl_date.setText(formatter.format(each.getDate()));
-        
+
         img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
-        
+
         row.getRowMetaData().put("MAP", each);
         row.getRowMetaData().put("FX", rowFX);
-        
+
         this.createExtension(systemVarTable, row, img_extension, each);
-        
+
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(rowFX.getApplicationRoot());
-        
+
         // add cell to row
         row.addCell(cellParent);
         systemVarTable.addRow(row);
     }
-    
+
     private void showCreateAnnouncement() {
         AddAnnouncement systemValues = M.load(AddAnnouncement.class);
         systemValues.onDelayedStart(); // do not put database transactions on startUp
@@ -497,47 +522,48 @@ public class LinkedHome extends SceneFX implements ControllerFX {
             this.loadAnnouncements();
         }
     }
-     
+
     private void createExtension(SimpleTable programsTable, SimpleTableRow row, ImageView img_extension, AnnouncementsMapping each) {
         SystemValuesRowExtension ext = M.load(SystemValuesRowExtension.class);
         TextField txt_name1 = ext.getTxt_name();
-        TextField txt_value1 = ext.getTxt_value(); 
+        TextField txt_value1 = ext.getTxt_value();
         TextArea txt_area = ext.getTxtarea_message();
-        JFXButton btn_add_new1 = ext.getBtn_add_new(); 
-        JFXButton btn_remove = ext.getBtn_remove(); 
+        JFXButton btn_add_new1 = ext.getBtn_add_new();
+        JFXButton btn_remove = ext.getBtn_remove();
         Label lbl_name = ext.getLbl_name();
         Label lbl_value = ext.getLbl_value();
         Label lbl_count = ext.getLbl_count();
-        
+
         lbl_name.setText("Title");
         lbl_value.setText("Message");
         txt_name1.setText(each.getTitle());
         txt_value1.setVisible(false);
         txt_area.setVisible(true);
         txt_area.setText(WordUtils.capitalizeFully(each.getMessage()));
-        lbl_count.setText(String.valueOf(300-(txt_area.getText().length())));
-        
-        txt_area.textProperty().addListener((a)->{
-            lbl_count.setText(String.valueOf(300-(txt_area.getText().length())));
+        lbl_count.setText(String.valueOf(300 - (txt_area.getText().length())));
+
+        txt_area.textProperty().addListener((a) -> {
+            lbl_count.setText(String.valueOf(300 - (txt_area.getText().length())));
         });
-        
-        MonoClick.addClickEvent(btn_add_new1, ()->{
-            if(this.checkIfEmpty(txt_name1, txt_area))
+
+        MonoClick.addClickEvent(btn_add_new1, () -> {
+            if (this.checkIfEmpty(txt_name1, txt_area)) {
                 return;
+            }
             String name = MonoString.removeExtraSpace(txt_name1.getText());
             String value = MonoString.removeExtraSpace(txt_area.getText());
             this.update(row, name, value);
         });
-        
-        MonoClick.addClickEvent(btn_remove, ()->{
+
+        MonoClick.addClickEvent(btn_remove, () -> {
             AnnouncementsMapping sys = (AnnouncementsMapping) row.getRowMetaData().get("MAP");
             int res = Mono.fx().alert().createConfirmation()
-                    .setMessage("Are you sure you want to remove the announcement with a title of \"" + sys.getTitle() +
-                            "\" from the list?")
+                    .setMessage("Are you sure you want to remove the announcement with a title of \"" + sys.getTitle()
+                            + "\" from the list?")
                     .confirmYesNo();
-            if(res==1) {
+            if (res == 1) {
                 sys.setActive(0);
-                if(Database.connect().announcements().update(sys)) {
+                if (Database.connect().announcements().update(sys)) {
                     Notifications.create().darkStyle()
                             .text("Removed successfully.")
                             .showInformation();
@@ -545,8 +571,8 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                 }
             }
         });
-        
-        MonoClick.addClickEvent(img_extension, ()->{
+
+        MonoClick.addClickEvent(img_extension, () -> {
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
                 row.hideExtension();
@@ -557,7 +583,7 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                     SimpleTableCell simplecell = simplerow.getCell(0);
                     SystemValuesRow rowFX_ = (SystemValuesRow) simplerow.getRowMetaData().get("FX");
                     ImageView simplerowimage = rowFX_.getImg_extension(); //findByAccessibilityText(simplerowcontent, "img_row_extension");
-                    
+
                     simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
                     simplerow.hideExtension();
                 }
@@ -568,8 +594,8 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                 row.showExtension();
             }
         });
-        
-        MonoClick.addDoubleClickEvent(row, ()->{
+
+        MonoClick.addDoubleClickEvent(row, () -> {
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
                 row.hideExtension();
@@ -580,7 +606,7 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                     SimpleTableCell simplecell = simplerow.getCell(0);
                     SystemValuesRow rowFX_ = (SystemValuesRow) simplerow.getRowMetaData().get("FX");
                     ImageView simplerowimage = rowFX_.getImg_extension(); //findByAccessibilityText(simplerowcontent, "img_row_extension");
-                    
+
                     simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
                     simplerow.hideExtension();
                 }
@@ -592,29 +618,29 @@ public class LinkedHome extends SceneFX implements ControllerFX {
             }
         });
     }
-     
+
     private void update(SimpleTableRow row, String name, String value) {
         AnnouncementsMapping updateThis = (AnnouncementsMapping) row.getRowMetaData().get("MAP");
         updateThis.setTitle(name.toUpperCase());
         updateThis.setMessage(value.toUpperCase());
-        if(Database.connect().announcements().update(updateThis)) {
+        if (Database.connect().announcements().update(updateThis)) {
             Notifications.create().darkStyle()
                     .text("Updated Successfully.")
                     .showInformation();
         }
         this.loadAnnouncements();
     }
-    
+
     private boolean checkIfEmpty(TextField txt_name, TextArea txt_value) {
         String name = MonoString.removeExtraSpace(txt_name.getText());
-        if(name.isEmpty()) {
+        if (name.isEmpty()) {
             Mono.fx().alert().createWarning()
                     .setMessage("Name cannot be empty.")
                     .show();
             return true;
         }
         String value = MonoString.removeExtraSpace(txt_value.getText());
-        if(value.isEmpty()) {
+        if (value.isEmpty()) {
             Mono.fx().alert().createWarning()
                     .setMessage("Value cannot be empty.")
                     .show();
@@ -622,9 +648,9 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         }
         return false;
     }
-    
+
     private void changeAnnouncementView(Node node) {
-        Animate.fade(node, 150, ()->{
+        Animate.fade(node, 150, () -> {
             vbox_announce_list.setVisible(false);
             vbox_no_announcements.setVisible(false);
             node.setVisible(true);
