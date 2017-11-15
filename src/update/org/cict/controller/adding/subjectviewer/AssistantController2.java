@@ -31,6 +31,7 @@ import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
@@ -48,6 +49,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.PublicConstants;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
@@ -94,6 +96,9 @@ public class AssistantController2 extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_next1;
+    
+    @FXML
+    private JFXCheckBox chkbx_disable_ai;
 
 
     private EvaluationMapping EVALUATION;
@@ -171,6 +176,11 @@ public class AssistantController2 extends SceneFX implements ControllerFX {
             Mono.fx().getParentStage(btn_close).close();
         });
         
+        //----------------------------------------
+        // disable sitti
+        chkbx_disable_ai.selectedProperty().addListener((a)->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
+        });
     }
     
     private SimpleTable recordTable = new SimpleTable();

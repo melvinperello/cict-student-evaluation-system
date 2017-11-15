@@ -24,6 +24,7 @@
 package org.cict.evaluation;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
@@ -31,6 +32,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import org.cict.PublicConstants;
 
 /**
  *
@@ -47,6 +49,9 @@ public class FirstAssistantController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_closee;
     
+    @FXML
+    private JFXCheckBox chkbx_disable_ai;
+    
     @Override
     public void onInitialization() {
     
@@ -55,12 +60,15 @@ public class FirstAssistantController extends SceneFX implements ControllerFX {
     @Override
     public void onEventHandling() {
         this.addClickEvent(btn_close, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             Mono.fx().getParentStage(anchor_main).close();
         });
         this.addClickEvent(btn_closee, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             Mono.fx().getParentStage(anchor_main).close();
         });
         Mono.fx().key(KeyCode.SHIFT).release(anchor_main, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             Mono.fx().getParentStage(anchor_main).close();
         });
     }

@@ -472,24 +472,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private EvaluationMapping currentStudentEvaluationDetails;
-    private Integer countSearch = 0;
-    private boolean show;
 
     private void onSearchStudent() {
-
-        show = true;
-        if (studentSearched != null) {
-            if (txtStudentNumber.getText().equalsIgnoreCase(studentSearched.getId())) {
-                countSearch = 1;
-                if (countSearch == 1) {
-                    show = false;
-                }
-            } else {
-                countSearch = 0;
-            }
-        } else {
-            countSearch = 0;
-        }
 
         currentStudentEvaluationDetails = null;
 
@@ -536,13 +520,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 this.currentStudentEvaluationDetails = checkStudentTx.getEvaluationMap();
                 this.studentSearched = checkStudentTx.getStudentMap();
 
-                if (show) {
+                if(!PublicConstants.DISABLE_ASSISTANCE ) {
                     showFirstAssistant();
                 }
                 onShowCurricularLevel();
-                if (show) {
+                if(!PublicConstants.DISABLE_ASSISTANCE ) {
                     showAssistant();
                 }
+                
                 setView("preview");
                 onShowStudent(checkStudentTx.getStudentMap(), checkStudentTx.getStudentSection());
 

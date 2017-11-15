@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -170,6 +171,7 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                      <children>
+                        <JFXCheckBox fx:id="chkbx_disable_ai" checkedColor="#3aadd9" text="Show assistance" textFill="#f44336" unCheckedColor="#f44336" />
                         <JFXButton fx:id="btn_1st" accessibleText="btn_1st" prefWidth="150.0" style="-fx-background-color: #4FC0E8;" text="1st Year" textFill="WHITE">
                            <font>
                               <Font size="19.0" />

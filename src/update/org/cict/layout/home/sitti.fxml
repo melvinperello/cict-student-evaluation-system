@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -111,5 +112,6 @@
             </ImageView>
          </children>
       </AnchorPane>
+      <JFXCheckBox fx:id="chkbx_disable_ai" checkedColor="#f44336" layoutX="10.0" layoutY="406.0" text="Don't show again" textFill="#00ade1" unCheckedColor="#00ade1" />
    </children>
 </AnchorPane>

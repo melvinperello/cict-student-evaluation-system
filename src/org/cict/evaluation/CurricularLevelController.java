@@ -30,6 +30,7 @@ import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.display.ControllerFX;
@@ -41,6 +42,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import org.cict.PublicConstants;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
 import org.cict.evaluation.encoder.MissingRecordController;
@@ -105,6 +107,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
 
     @FXML
     private AnchorPane application_pane;
+    
+    @FXML
+    private JFXCheckBox chkbx_disable_ai;
 
     public CurricularLevelController(StudentMapping studentMap) {
         STUDENT_current = studentMap;
@@ -116,6 +121,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
     @Override
     public void onInitialization() {
         bindScene(application_pane);
+        chkbx_disable_ai.setSelected(!PublicConstants.DISABLE_ASSISTANCE);
         this.showAssessment();
     }
 
@@ -384,6 +390,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         Mono.fx().key(KeyCode.ENTER).release(application_pane, () -> {
             Mono.fx().getParentStage(application_pane).close();
+        });
+        chkbx_disable_ai.selectedProperty().addListener((a)->{
+            PublicConstants.DISABLE_ASSISTANCE = !chkbx_disable_ai.isSelected();
         });
     }
 

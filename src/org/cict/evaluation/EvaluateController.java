@@ -652,11 +652,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         // run this if not a cross enrollee student
         if (!FLAG_CROSS_ENROLLEE) {
-            if (FLAG_ASSISTANT_SHOW) {
-                showFirstAssistant();
+            if(!PublicConstants.DISABLE_ASSISTANCE ) {
+                if (FLAG_ASSISTANT_SHOW) {
+                    showFirstAssistant();
+                }
             }
             onShowCurricularLevel();
-            showAssistant();
+            if(!PublicConstants.DISABLE_ASSISTANCE ) {
+                showAssistant();
+            }
         }
 
         //----------------------------------------------------------------------

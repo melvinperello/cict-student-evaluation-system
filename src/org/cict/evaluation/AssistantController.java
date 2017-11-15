@@ -24,7 +24,6 @@
 package org.cict.evaluation;
 
 import app.lazy.models.AcademicTermMapping;
-import app.lazy.models.CurriculumRequisiteLineMapping;
 import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
@@ -32,6 +31,7 @@ import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
@@ -41,7 +41,6 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import java.util.ArrayList;
 import java.util.Objects;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -50,10 +49,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.PublicConstants;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.evaluator.Evaluator;
-import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.hibernate.criterion.Order;
 
 /**
@@ -122,6 +121,9 @@ public class AssistantController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_previous;
     
+    @FXML
+    private JFXCheckBox chkbx_disable_ai;
+    
     private StudentMapping STUDENT;
     
     public AssistantController(StudentMapping student) {
@@ -158,10 +160,12 @@ public class AssistantController extends SceneFX implements ControllerFX {
     @Override
     public void onEventHandling() {
         this.addClickEvent(btn_change_yr, ()-> {
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             anchor_change_yr.setVisible(true);
         });
         
         this.addClickEvent(btn_save_changes, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             index = cmb_year_level.getSelectionModel().getSelectedIndex();
             Integer studentYrLvl = STUDENT.getYear_level();
             String message = "";
@@ -201,6 +205,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
         });
         
         this.addClickEvent(btn_next, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             if(isSaved) {
                 ArrayList<SubjectMapping> subjects = getSubjects(false);
                 if(subjects == null || subjects.isEmpty()) {
@@ -222,18 +227,21 @@ public class AssistantController extends SceneFX implements ControllerFX {
         });
         
         this.addClickEvent(btn_previous, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             btn_previous.setVisible(false);
             anchor_start.setVisible(true);
             anchor_subjects.setVisible(false);
         });
         
         this.addClickEvent(btn_close, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             if(index == null)
                 index = STUDENT.getYear_level();
             Mono.fx().getParentStage(btn_close).close();
         });
         
         this.addClickEvent(btn_previous1, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             btn_closee.setVisible(false);
             btn_previous.setVisible(true);
             //change table values
@@ -251,6 +259,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
         });
         
         this.addClickEvent(btn_next1, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             btn_closee.setVisible(true);
             ArrayList<SubjectMapping> subjects = getSubjects(true);
             btn_previous.setVisible(false);
@@ -269,6 +278,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
         });
         
         this.addClickEvent(btn_closee, ()->{
+            PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             if(index == null)
                 index = STUDENT.getYear_level();
             Mono.fx().getParentStage(btn_close).close();
