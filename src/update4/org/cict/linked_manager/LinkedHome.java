@@ -27,8 +27,8 @@ import app.lazy.models.AccountStudentMapping;
 import app.lazy.models.AnnouncementsMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.LinkedMarshallSessionMapping;
 import app.lazy.models.StudentMapping;
-import app.lazy.models.SystemVariablesMapping;
 import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
@@ -63,7 +63,6 @@ import org.hibernate.criterion.Order;
 import sys.org.cict.layout.home.system_variables.SystemValuesRow;
 import sys.org.cict.layout.home.system_variables.SystemValuesRowExtension;
 import update.org.cict.controller.home.Home;
-import static update3.org.cict.access.Access.isGranted;
 
 /**
  *
@@ -311,7 +310,34 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                         .showInformation();
             }
         });
-
+        
+        //----------------------------------
+        LinkedMarshallSessionMapping session = accountInfo.getLatestSession();
+        if(session !=null) {
+            rowFX.getBtn_force_logout().setDisable(!session.getStatus().equalsIgnoreCase("ONLINE"));
+        }
+        super.addClickEvent(rowFX.getBtn_force_logout(), ()->{
+            StudentAccountInfo info = (StudentAccountInfo) row.getRowMetaData().get("MORE_INFO");
+            LinkedMarshallSessionMapping lmsMap = info.getLatestSession();
+            lmsMap.setSession_end(Mono.orm().getServerTime().getDateWithFormat());
+            lmsMap.setStatus("OFFLINE");
+            if(Database.connect().linked_marshall_session().update(lmsMap)){
+                Notifications.create().darkStyle()
+                        .title("Logout Successfully")
+                        .text("Student marshall is logout from"
+                                + "\nhis/her previous login.")
+                        .showInformation();
+            } else {
+                Notifications.create().darkStyle()
+                        .title("Logout Failed")
+                        .text("Please check your connection\n"
+                                + "to the server.")
+                        .showError();
+            }
+            rowFX.getBtn_force_logout().setDisable(true);
+        });
+        //---------------------------
+        
         row.getRowMetaData().put("MORE_INFO", accountInfo);
 
         SimpleTableCell cellParent = new SimpleTableCell();
@@ -395,6 +421,12 @@ public class LinkedHome extends SceneFX implements ControllerFX {
 
         private void run() {
             student = Database.connect().student().getPrimary(this.account.getSTUDENT_id());
+        }
+        
+        public LinkedMarshallSessionMapping getLatestSession() {
+            if(this.account==null)
+                return null;
+            return Mono.orm().newSearch(Database.connect().linked_marshall_session()).eq(DB.linked_marshall_session().account_id, this.account.getId()).active().first();
         }
     }
     

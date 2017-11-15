@@ -63,6 +63,9 @@ public class MarshallRow extends MonoLauncher {
     @FXML
     private JFXButton btn_remove;
     
+    @FXML
+    private JFXButton btn_force_logout;
+    
     @Override
     public void onStartUp() {
     }
@@ -101,6 +104,10 @@ public class MarshallRow extends MonoLauncher {
 
     public ComboBox<String> getCmb_org() {
         return cmb_org;
+    }
+
+    public JFXButton getBtn_force_logout() {
+        return btn_force_logout;
     }
     
 }

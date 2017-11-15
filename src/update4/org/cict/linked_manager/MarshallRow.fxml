@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="80.0" prefWidth="600.0" styleClass="metro-row" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="80.0" prefWidth="600.0" spacing="10.0" styleClass="metro-row" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="394.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="lbl_name" text="Joemar De La Cruz">
                <font>
@@ -49,11 +49,20 @@
             </StackPane>
          </children>
       </VBox>
-      <JFXButton fx:id="btn_remove" style="-fx-border-color: #fff;" styleClass="label" text="Remove">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </JFXButton>
+      <VBox alignment="CENTER_RIGHT" spacing="7.0">
+         <children>
+            <JFXButton fx:id="btn_remove" style="-fx-border-color: #fff;" styleClass="label" text="Remove">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="btn_force_logout" style="-fx-border-color: #fff;" styleClass="label" text="Force Logout">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </VBox>
    </children>
    <padding>
       <Insets bottom="5.0" left="15.0" right="15.0" top="5.0" />
