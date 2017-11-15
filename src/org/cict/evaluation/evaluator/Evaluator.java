@@ -109,6 +109,8 @@ public class Evaluator implements Process {
     //--------------------------------------
     public boolean maxPopulationReached;
 
+    //--------------------------------------
+    public boolean invalidStudentCount;
     //
     //-------------------------------------------------------------------------
     /**
@@ -488,7 +490,21 @@ public class Evaluator implements Process {
                             this.goLang(EXCEED_MAX_POPULATION);
                         })
                         .position(Pos.BOTTOM_RIGHT).showWarning();
-                Evaluator.instance().maxPopulationReached = false;
+                maxPopulationReached = false;
+                return;
+            }
+            
+            //check if section selected is a tutorial section
+            if(invalidStudentCount) {
+                Notifications.create()
+                        .title("Max Population Reached")
+                        .text("Tutorial Section requires only one student per section."
+                                + "\nClick This notification for more details.")
+                        .onAction(a -> {
+                            this.goLang(EXCEED_MAX_POPULATION);
+                        })
+                        .position(Pos.BOTTOM_RIGHT).showWarning();
+                invalidStudentCount = false;
                 return;
             }
 

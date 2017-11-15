@@ -8,6 +8,8 @@
  */
 package org.cict.evaluation.views;
 
+import app.lazy.models.Database;
+import app.lazy.models.LoadSectionMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.SceneFX;
 import com.melvin.mono.fx.bootstrap.M;
@@ -92,6 +94,16 @@ public class SectionSearchView extends HBox {
                     } else {
                         Evaluator.instance().maxPopulationReached = false;
                     }
+                }
+                
+                //---------------------------
+                //check if tutorial, must only have 1 student but overridable
+                LoadSectionMapping section = Database.connect().load_section().getPrimary(Evaluator.instance().pressedSectionID);
+                if(section != null) {
+                    if(section.getType().equalsIgnoreCase("TUTORIAL") && count>=1)
+                        Evaluator.instance().invalidStudentCount = true;
+                    else
+                        Evaluator.instance().invalidStudentCount = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
