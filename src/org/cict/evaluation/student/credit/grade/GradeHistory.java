@@ -29,7 +29,7 @@ import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.SubjectMapping;
-import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -40,19 +40,19 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.apache.commons.lang3.text.WordUtils;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 
 /**
@@ -217,20 +217,49 @@ public class GradeHistory extends SceneFX implements ControllerFX {
 
         for (GradeMapping grade : gradeList) {
             SimpleTableRow row = new SimpleTableRow();
-            row.setRowHeight(50.0);
-
+            row.setRowHeight(55.0);
+            row.getRowMetaData().put("MAP", grade);
             HBox fxRow = (HBox) Mono.fx().create()
                     .setPackageName("org.cict.evaluation.student.credit.grade")
                     .setFxmlDocument("row-grade-history")
                     .makeFX()
                     .pullOutLayout();
-
+            
             Label lbl_rating = searchAccessibilityText(fxRow, "lbl_rating");
             Label lbl_remarks = searchAccessibilityText(fxRow, "lbl_remarks");
             Label lbl_reason = searchAccessibilityText(fxRow, "lbl_reason");
             Label lbl_editor = searchAccessibilityText(fxRow, "lbl_editor");
             Label lbl_date = searchAccessibilityText(fxRow, "lbl_date");
+            
+            //--------------------------
+            JFXCheckBox chkbx_correction = searchAccessibilityText(fxRow, "chkbx_correction");
+            chkbx_correction.setTooltip(new Tooltip("This will mark the grade inputted as correction."));
+            chkbx_correction.setSelected(grade.getGrade_state().equalsIgnoreCase("CORRECTION"));
+            super.addClickEvent(chkbx_correction, ()->{
+                    GradeMapping map = (GradeMapping) row.getRowMetaData().get("MAP");
+                if(chkbx_correction.isSelected()) {
+                    map.setGrade_state("CORRECTION");
+                    if(Database.connect().grade().update(map)) {
+                        Notifications.create().text("Grade is marked as correction.")
+                                .title("Successfully Marked").showInformation();
+                    } else {
+                        Notifications.create().text("Please check your connection to server.")
+                                .title("Failed").showError();
+                    }
+                } else {
+                    map.setGrade_state("ACCEPTED");
+                    if(Database.connect().grade().update(map)) {
+                        Notifications.create().text("Grade is unmarked as correction.")
+                                .title("Successfully Unmarked").showInformation();
+                    } else {
+                        Notifications.create().text("Please check your connection to server.")
+                                .title("Failed").showError();
+                    }
+                }
+            });
 
+            //-----------------------------
+            
             //------------------------------------------------------------------
             lbl_rating.setText(grade.getRating());
             lbl_remarks.setText(grade.getRemarks());

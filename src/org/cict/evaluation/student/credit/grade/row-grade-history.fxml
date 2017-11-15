@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="50.0" prefWidth="800.0" style="-fx-background-color: #5E9CE9;" styleClass="metro-row" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="55.0" prefWidth="800.0" spacing="3.0" style="-fx-background-color: #5E9CE9;" styleClass="metro-row" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label accessibleText="lbl_rating" maxWidth="150.0" minWidth="-Infinity" prefWidth="60.0" text="CANCELLED" textFill="WHITE" HBox.hgrow="ALWAYS">
          <font>
             <Font name="System Bold" size="25.0" />
          </font>
       </Label>
-      <Label accessibleText="lbl_remarks" alignment="CENTER" maxWidth="200.0" prefWidth="200.0" style="-fx-border-color: white; -fx-border-style: dashed;" text="CONDITIONALLY PASSED" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS">
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font>
+      <VBox alignment="CENTER" spacing="3.0">
+         <children>
+            <Label accessibleText="lbl_remarks" alignment="CENTER" maxWidth="200.0" prefWidth="200.0" style="-fx-border-color: white; -fx-border-style: dashed;" text="CONDITIONALLY PASSED" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+               <padding>
+                  <Insets bottom="3.0" top="3.0" />
+               </padding>
+            </Label>
+            <JFXCheckBox accessibleText="chkbx_correction" checkedColor="#001b72" prefHeight="25.0" prefWidth="135.0" text="Mark as correction" textFill="WHITE" unCheckedColor="WHITE">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </JFXCheckBox>
+         </children>
          <HBox.margin>
-            <Insets />
+            <Insets bottom="5.0" top="5.0" />
          </HBox.margin>
-         <padding>
-            <Insets bottom="3.0" top="3.0" />
-         </padding>
-      </Label>
-      <Label accessibleText="lbl_reason" alignment="CENTER" maxWidth="300.0" prefWidth="200.0" text="Added Grade Using Credit Tree" textAlignment="CENTER" textFill="WHITE" wrapText="true" HBox.hgrow="ALWAYS">
+      </VBox>
+      <Label accessibleText="lbl_reason" alignment="CENTER" maxWidth="300.0" prefWidth="200.0" text="Added Grade Using Credit Tree" textAlignment="CENTER" textFill="WHITE" wrapText="true">
          <padding>
             <Insets left="20.0" />
          </padding>
