@@ -546,6 +546,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     }
     
     private String getYearLevel(Integer a) {
+        if(a==null)
+            return "No Year Level";
         if(a.equals(1))
             return "First Year";
         else if(a.equals(2))
