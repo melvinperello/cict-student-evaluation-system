@@ -336,6 +336,16 @@
                         </RadioButton>
                      </children>
                   </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="50.0" layoutY="203.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                     <children>
+                        <Label prefWidth="100.0" text="Contact No." textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txt_contact" accessibleText="middlename" maxWidth="-Infinity" prefHeight="27.0" prefWidth="270.0" style="-fx-border-color: #E4E4E4; -fx-text-fill: #434A55;" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="109.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
                         <Label prefWidth="100.0" text="Rank" textFill="#656d79">

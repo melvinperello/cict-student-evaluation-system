@@ -61,6 +61,9 @@
 <property name="course_reference" type="java.lang.Integer">
 <column name="course_reference" length="10"/>
 </property>
+<property name="grade_state" type="java.lang.String">
+<column name="grade_state" length="50"/>
+</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

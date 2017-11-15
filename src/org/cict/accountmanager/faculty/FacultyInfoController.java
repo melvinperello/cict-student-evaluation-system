@@ -112,6 +112,9 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
     @FXML
     private TextField txtmname;
+    
+    @FXML
+    private TextField txt_contact;
 
     @FXML
     private RadioButton rbtn_male;
@@ -228,6 +231,15 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         textName.clone().setTextSource(txt_lastname).applyFilter();
         textName.clone().setTextSource(txt_fname).applyFilter();
         textName.clone().setTextSource(txtmname).applyFilter();
+        
+        StringFilter textContact = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(20)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager -> {
+                });
+
+        textContact.clone().setTextSource(txt_contact).applyFilter();
     }
 
     @Override
@@ -390,6 +402,21 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         if (MonoString.removeExtraSpace(txtmname.getText().toUpperCase()) != null) {
             middlename = MonoString.removeExtraSpace(txtmname.getText().toUpperCase());
         }
+        
+        String contactNumber = txt_contact.getText();
+        if(contactNumber==null || contactNumber.isEmpty()) {
+            showWarning("Invalid Contact Number", "Contact number must have a value.");
+            return;
+        } else if(contactNumber.length()<11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
+            showWarning("Invalid Contact Number", "Must start with \"09\" with a length\n"
+                    + "of 11 digits.");
+            return;
+        } else if(contactNumber.length() != 11) {
+            showWarning("Invalid Contact Number", "Must have a length of 11 digits\n"
+                    + "and starts with \"09\"");
+            return;
+        }
+        
         if (MonoString.removeExtraSpace(cmb_rank.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {
             rank = MonoString.removeExtraSpace(cmb_rank.getSelectionModel().getSelectedItem().toString().toUpperCase());
         }
@@ -407,6 +434,9 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         faculty.setDesignation(designation);
         faculty.setGender(gender);
         faculty.setDepartment(dept);
+        //------------------
+        faculty.setMobile_number("+639"+contactNumber.substring(2, 11));
+        //------------------
         if (Database.connect().faculty().update(faculty)) {
             Notifications.create().darkStyle()
                     .title("Updated Successfully")
@@ -519,6 +549,9 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
             cmb_dept.getSelectionModel().selectFirst();
         else
             cmb_dept.getSelectionModel().select(faculty.getDepartment());
+        
+        //--------------
+        txt_contact.setText(faculty.getMobile_number()==null? "" : "09"+faculty.getMobile_number().substring(4, 13));
     }
 
 }
