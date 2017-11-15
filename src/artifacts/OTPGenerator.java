@@ -23,19 +23,59 @@
  */
 package artifacts;
 
-import java.util.UUID;
+import java.util.Random;
 
 /**
  *
  * @author Joemar
  */
 public class OTPGenerator {
+
     public static void main(String[] args) {
         System.out.println(generateOTP());
     }
-    // 6 chars number and letter
+
+    /**
+     * Default method for 6 characters
+     *
+     * @return
+     */
     public static String generateOTP() {
-        String code = UUID.randomUUID().toString();
-        return code.replace("-", "").substring(0, 6).toUpperCase();
+        return generateOTP(6);
+    }
+
+    /**
+     * Create a random String with high entropy.
+     *
+     * @param charLength number of characters (MAX 36 Characters)
+     * @return
+     */
+    public static String generateOTP(int charLength) {
+//        String code = UUID.randomUUID().toString();
+//        return code.replace("-", "").substring(0, 6).toUpperCase();
+        int RANDOM_LENGTH = charLength;
+        // Create A Random String
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        int SALTCHAR_LENGTH = SALTCHARS.length();
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < SALTCHAR_LENGTH) {
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        // Sttore the random string
+        String randomString = salt.toString();
+        // From the random string pick a random number
+        int min = 0;
+        int max = randomString.length() - 1;
+
+        int random_int = rnd.nextInt(max - min + 1) + 1;
+
+        if ((random_int + RANDOM_LENGTH) > max) {
+            random_int = max;
+            random_int = random_int - RANDOM_LENGTH;
+        }
+
+        return randomString.substring(random_int, random_int + RANDOM_LENGTH);
     }
 }
