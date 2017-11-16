@@ -120,6 +120,13 @@ public class ReportsUtility {
         
         // insertion of row data
         for (int i = 0; i < rowData.size(); i++) {
+            try {
+                String lastCol = rowData.get(i)[numColumns];
+                if(lastCol != null) {
+                    tbl_stud.addCell(createSimpleCell(lastCol, font6Plain, numColumns, true, true, 4f, false));
+                }
+            } catch (IndexOutOfBoundsException e) {
+            }
             for (int j = 0; j < numColumns; j++) {
                 tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
             }

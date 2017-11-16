@@ -24,26 +24,36 @@
 package org.cict.evaluation.student.credit;
 
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.CurriculumSubjectMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.SubjectMapping;
+import app.lazy.models.utils.FacultyUtility;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.FXThread;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.display.ControllerFX;
+import com.melvin.mono.fx.events.MonoClick;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.student.credit.credittree.CreditTree;
 import org.cict.evaluation.student.credit.credittree.CreditTreeColumn;
 import org.cict.evaluation.student.credit.credittree.CreditTreeRow;
 import org.cict.evaluation.student.credit.credittree.CreditTreeView;
+import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.StatusBar;
 
@@ -77,6 +87,9 @@ public class CreditController implements ControllerFX {
 
     @FXML
     private JFXButton btn_save;
+    
+    @FXML
+    private JFXButton btn_print_history;
 
     @FXML
     private StatusBar status_bar;
@@ -256,6 +269,206 @@ public class CreditController implements ControllerFX {
             readContents();
             // }
         });
+        MonoClick.addClickEvent(btn_print_history, ()->{
+            this.fetchData();
+        });
+    }
+    private ArrayList<GradeHistory> first_1 = new ArrayList<>();
+    private ArrayList<GradeHistory> first_2 = new ArrayList<>();
+    private ArrayList<GradeHistory> second_1 = new ArrayList<>();
+    private ArrayList<GradeHistory> second_2 = new ArrayList<>();
+    private ArrayList<GradeHistory> third_1 = new ArrayList<>();
+    private ArrayList<GradeHistory> third_2 = new ArrayList<>();
+    private ArrayList<GradeHistory> fourth_1 = new ArrayList<>();
+    private ArrayList<GradeHistory> fourth_2 = new ArrayList<>();
+    private SimpleDateFormat formatter_filename = new SimpleDateFormat("MMddyyyhhmmss");
+    private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
+    
+    private void print(boolean is4Yrs) {
+        String[] colNames = new String[]{"Date and Time","Subject Code", "Rating", "Updated By", "Reason For\nUpdate", "State"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        this.addToRow(first_1, rowData, "FIRST YEAR - First Semester");
+        this.addToRow(first_2, rowData, "FIRST YEAR - Second Semester");
+        this.addToRow(second_1, rowData, "SECOND YEAR - First Semester");
+        this.addToRow(second_2, rowData, "SECOND YEAR - Second Semester");
+        if(is4Yrs) {
+            this.addToRow(third_1, rowData, "THIRD YEAR - First Semester");
+            this.addToRow(third_2, rowData, "THIRD YEAR - Second Semester");
+            this.addToRow(fourth_1, rowData, "FOURTH YEAR - First Semester");
+            this.addToRow(fourth_2, rowData, "FOURTH YEAR - Second Semester");
+        }
+        
+        PrintResult print = new PrintResult();
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
+        print.fileName = "grade_history_" + this.STUDENT_MAP.getId() + "_" + dateToday;
+        print.reportDescription = WordUtils.capitalizeFully(lbl_STUDENT_name.getText()) + "\n"
+                + lbl_CURRICULUM_name.getText() + "\n"
+                        + "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+        print.reportTitle = "Grade History";
+        
+        print.whenStarted(() -> {
+            btn_print_history.setDisable(true);
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_print_history.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print_history.setDisable(false);
+        });
+        print.transact();
+    }
+    
+    private void addToRow(ArrayList<GradeHistory> storage, ArrayList<String[]> rowData, String title){
+        for (int i = 0; i < storage.size(); i++) {
+            GradeHistory history = storage.get(i);
+            String lastCol = null;
+            if(i == 0){
+                lastCol = title;
+            }
+            String[] row = new String[]{(i+1)+".  "+ history.getCreated(),
+                (history.getSubjectCode()), 
+                history.getRating(), 
+                WordUtils.capitalizeFully(history.getUpdatedBy()), 
+                WordUtils.capitalizeFully(history.getReason().replace("_", " ")), 
+                WordUtils.capitalizeFully(history.getGradeState()), lastCol};
+            rowData.add(row);
+        }
+    }
+    
+    private boolean is4Yrs = false;
+    private void fetchData() {
+        SimpleTask fetch_history = new SimpleTask("fetch_history");
+        fetch_history.setTask(()->{
+            Integer CICT_id = this.STUDENT_MAP.getCict_id();
+            Integer CURRICULUM_id = this.STUDENT_MAP.getCURRICULUM_id();
+            Integer PREP_id = this.STUDENT_MAP.getPREP_id();
+            CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(CURRICULUM_id);
+            is4Yrs = curriculum != null? (curriculum.getStudy_years().equals(4)) : false;
+            ArrayList<GradeMapping> grades = Mono.orm().newSearch(Database.connect().grade())
+                    .eq(DB.grade().STUDENT_id, CICT_id).execute().all();
+            for(GradeMapping grade: grades) {
+                CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                        .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
+                        .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
+                CurriculumSubjectMapping csMap_prep = null;
+                if(PREP_id != null) {
+                    csMap_prep = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                            .eq(DB.curriculum_subject().CURRICULUM_id, PREP_id)
+                            .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
+                 }
+                SubjectMapping subject = Database.connect().subject().getPrimary(csMap.getSUBJECT_id());
+                GradeHistory history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getGrade_state());
+                if(csMap != null) {
+                    this.store(csMap, history);
+                } else if(csMap_prep != null) {
+                    this.store(csMap_prep, history);
+                }
+            }
+        });
+        fetch_history.whenStarted(()->{
+            btn_print_history.setDisable(true);
+        });
+        fetch_history.whenCancelled(()->{
+            System.out.println("CANCELLEDs");
+        });
+        fetch_history.whenFailed(()->{
+            System.out.println("CANCELLEDs");
+        });
+        fetch_history.whenSuccess(()->{
+            this.print(is4Yrs);
+            btn_print_history.setDisable(false);
+        });
+        fetch_history.start();
+    }
+    
+    private void store(CurriculumSubjectMapping csMap, GradeHistory history) {
+        switch(csMap.getYear()) {
+                    case 1:
+                        if(csMap.getSemester().equals(1))
+                            first_1.add(history);
+                        else if(csMap.getSemester().equals(2))
+                            first_2.add(history);
+                        break;
+                    case 2:
+                        if(csMap.getSemester().equals(1))
+                            second_1.add(history);
+                        else if(csMap.getSemester().equals(2))
+                            second_2.add(history);
+                        break;
+                    case 3:
+                        if(csMap.getSemester().equals(1))
+                            third_1.add(history);
+                        else if(csMap.getSemester().equals(2))
+                            third_2.add(history);
+                        break;
+                    case 4:
+                        if(csMap.getSemester().equals(1))
+                            fourth_1.add(history);
+                        else if(csMap.getSemester().equals(2))
+                            fourth_2.add(history);
+                        break;
+                }
+    }
+    
+    class GradeHistory {
+        private String created;
+        private String subjectCode, rating, updatedBy, reason, gradeState;
+        private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss aa");
+        GradeHistory(Date created, String subjectCode, String rating, String updatedBy, String reason, String gradeState) {
+            this.created = format.format(created);
+            this.gradeState = gradeState;
+            this.rating = rating;
+            this.reason = reason;
+            this.subjectCode = subjectCode;
+            this.updatedBy = updatedBy;
+        }
+
+        public String getCreated() {
+            return created;
+        }
+
+        public String getSubjectCode() {
+            return subjectCode;
+        }
+
+        public String getRating() {
+            return rating;
+        }
+
+        public String getUpdatedBy() {
+            return updatedBy;
+        }
+
+        public String getReason() {
+            return reason;
+        }
+
+        public String getGradeState() {
+            return gradeState;
+        }
+
+        public SimpleDateFormat getFormat() {
+            return format;
+        }
+        
     }
 
     /**

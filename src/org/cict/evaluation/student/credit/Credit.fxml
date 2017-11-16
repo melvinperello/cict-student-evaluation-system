@@ -18,7 +18,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="58.0" prefHeight="46.0" prefWidth="1024.0" style="-fx-background-color: #03A9F5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0">
+      <AnchorPane layoutY="58.0" prefHeight="46.0" prefWidth="1003.0" style="-fx-background-color: #03A9F5;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="356.0">
          <children>
             <Label fx:id="lbl_STUDENT_id" layoutX="14.0" layoutY="8.0" prefHeight="32.0" prefWidth="149.0" style="-fx-text-fill: #fff;" text="2014113844 " AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="561.0" AnchorPane.topAnchor="8.0">
                <font>
@@ -37,9 +37,9 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="879.0" layoutY="46.0" AnchorPane.bottomAnchor="620.0" AnchorPane.leftAnchor="1230.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="55.0">
+      <AnchorPane layoutX="831.0" layoutY="58.0" prefHeight="52.0" prefWidth="114.0" AnchorPane.rightAnchor="79.0">
          <children>
-            <JFXButton fx:id="btn_save" layoutY="6.0" maxHeight="46.0" minHeight="46.0" prefHeight="46.0" prefWidth="114.0" stylesheets="@src/css/button.css" text="Save" textFill="#f8f1f1">
+            <JFXButton fx:id="btn_save" layoutY="6.0" maxHeight="46.0" minHeight="46.0" prefHeight="46.0" prefWidth="114.0" stylesheets="@src/css/button.css" text="Save" textFill="#f8f1f1" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="16.0" />
                </font>
@@ -48,5 +48,10 @@
       </AnchorPane>
       <HBox fx:id="hbox_main" layoutX="14.0" layoutY="119.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="120.0" />
       <StatusBar fx:id="status_bar" layoutX="55.0" layoutY="691.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <JFXButton fx:id="btn_print_history" layoutX="1021.0" layoutY="58.0" minHeight="46.0" stylesheets="@src/css/button.css" text="Print Grade History" textFill="WHITE" AnchorPane.rightAnchor="210.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </JFXButton>
    </children>
 </AnchorPane>
