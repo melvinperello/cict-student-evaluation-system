@@ -239,7 +239,7 @@ public class OverrideLogs extends MonoLauncher {
             SystemOverrideLogsMapping end = Mono.orm().newSearch(Database.connect().system_override_logs())
                     .active(Order.desc(DB.system_override_logs().executed_date)).first();
             Date startDate = formatter_plain.parse(start.getExecuted_date().toString());
-            Date endDate = DateUtils.addDays(formatter_plain.parse(end.getExecuted_date().toString()), 1);
+            Date endDate = formatter_plain.parse(end.getExecuted_date().toString()); //DateUtils.addDays(formatter_plain.parse(end.getExecuted_date().toString()), 1);
         
             long interval = 24*1000 * 60 * 60; // 1 hour in millis
             long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
@@ -333,35 +333,47 @@ public class OverrideLogs extends MonoLauncher {
         SystemOverrideLogsMapping selected = (SystemOverrideLogsMapping) row.getRowMetaData().get(KEY_MORE_INFO);
         if(selectedDirectory == null){
             System.out.println("No Directory selected");
-        }else{
-            try {
-                String dateTimeToday = formatter_file_name.format(Mono.orm().getServerTime().getDateWithFormat());
-                String fileDownloadPath = selectedDirectory.getAbsolutePath() + "\\downloaded_attachment_file_" + dateTimeToday + ".rar";
-                if(selected.getAttachment_file()==null || selected.getAttachment_file().isEmpty()) {
-                    Notifications.create().darkStyle()
-                            .title("Nothing to Download")
-                            .text("No attachment found.")
-                            .showError();
-                    return;
-                }
-                boolean downloaded = FTPManager.download("override_attachment", selected.getAttachment_file(), fileDownloadPath);
-                if(downloaded) {
-                    Notifications.create().darkStyle()
-                            .title("Downloaded Successfully")
-                            .text("Attachment file is downloaded.")
-                            .showInformation();
-                } else {
-                    Notifications.create().darkStyle()
-                            .title("Failed to Download")
-                            .text("Attachment not found.")
-                            .showError();
-                }
-            } catch (IOException ex) {
+        } else{
+            String dateTimeToday = formatter_file_name.format(Mono.orm().getServerTime().getDateWithFormat());
+            String fileDownloadPath = selectedDirectory.getAbsolutePath() + "\\downloaded_attachment_file_" + dateTimeToday + ".rar";
+            if(selected.getAttachment_file()== null || selected.getAttachment_file().isEmpty()) {
                 Notifications.create().darkStyle()
-                        .title("Failed to Download")
-                        .text("Please check your connection to the server.")
+                        .title("Nothing to Download")
+                        .text("No attachment found.")
                         .showError();
+                return;
             }
+            //-----------------------------
+            // NON BLOCKING DOWNLOAD
+            FTPManager.download("override_attachment", selected.getAttachment_file(), fileDownloadPath, (boolean result, Exception e) -> {
+                if(result) {
+                    Mono.fx().thread().wrap(()->{
+                        Notifications.create().darkStyle()
+                                .title("Downloaded Successfully")
+                                .text("Attachment file is downloaded.")
+                                .showInformation();
+                    });
+                } else {
+                    Mono.fx().thread().wrap(()->{
+                        Notifications.create().darkStyle()
+                                .title("Failed to Download")
+                                .text("Attachment not found.")
+                                .showError();
+                    });
+                }
+            });
+//                boolean downloaded = FTPManager.download("override_attachment", selected.getAttachment_file(), fileDownloadPath);
+//                if(downloaded) {
+//                    Notifications.create().darkStyle()
+//                            .title("Downloaded Successfully")
+//                            .text("Attachment file is downloaded.")
+//                            .showInformation();
+//                } else {
+//                    Notifications.create().darkStyle()
+//                            .title("Failed to Download")
+//                            .text("Attachment not found.")
+//                            .showError();
+//                }
         }
     }
     

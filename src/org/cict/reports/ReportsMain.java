@@ -265,7 +265,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         EvaluationMapping end = Mono.orm().newSearch(Database.connect().evaluation())
                         .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).active(Order.asc(DB.evaluation().evaluation_date)).last();
         try {
-            Date endDate = DateUtils.addDays(formatter_plain.parse(end.getEvaluation_date().toString()), 1);
+            Date endDate = formatter_plain.parse(end.getEvaluation_date().toString()); //DateUtils.addDays(formatter_plain.parse(end.getEvaluation_date().toString()), 1);
             Date startDate = formatter_plain.parse(start.getEvaluation_date().toString());
         
             long interval = 24*1000 * 60 * 60; // 1 hour in millis

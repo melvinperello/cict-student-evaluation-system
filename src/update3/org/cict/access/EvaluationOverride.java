@@ -114,11 +114,8 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
             }
             
             //---------------------------
-            if(!this.upload()) 
-                return;
+            this.upload();
             //--------------------
-            this.changeView(vbox_continue);
-        
         });
     }
 
@@ -137,7 +134,7 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
         }
     }
     
-    private boolean upload() {
+    private void upload() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
                        
@@ -148,24 +145,40 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
         );
         File file = fileChooser.showOpenDialog(this.getStage());
         btn_upload.setDisable(true);
-        try {
-            boolean uploaded = FTPManager.upload(file.getAbsolutePath(),
-                    "override_attachment", file.getName());
-            if(uploaded) {
+        //----------------------------------------------
+        // NON BLOCKING UPLOAD
+        FTPManager.upload(file.getAbsolutePath(), "override_attachment", file.getName(), (boolean result, Exception e) -> {
+            if(result) {
                 attachmentFile = file.getName();
-                return true;
+                Mono.fx().thread().wrap(()->{
+                    this.changeView(vbox_continue);
+                });
             } else {
-                System.err.println("Error");
-                Notifications.create().text("Failed to save attachment file.")
-                        .title("Attachment Not Saved").showWarning();
-                return false;
+                Mono.fx().thread().wrap(()->{
+                    System.err.println("Error");
+                    Notifications.create().text("Failed to save attachment file.")
+                            .title("Attachment Not Saved").showWarning();
+                });
             }
-        } catch (IOException ex) {
-            System.err.println("Error");
-            Notifications.create().text("Failed to save attachment file.")
-                    .title(ex.getMessage()).showError();
-            return false;
-        }
+        });
+//        try {
+//            boolean uploaded = FTPManager.upload(file.getAbsolutePath(),
+//                    "override_attachment", file.getName());
+//            if(uploaded) {
+//                attachmentFile = file.getName();
+//                return true;
+//            } else {
+//                System.err.println("Error");
+//                Notifications.create().text("Failed to save attachment file.")
+//                        .title("Attachment Not Saved").showWarning();
+//                return false;
+//            }
+//        } catch (IOException ex) {
+//            System.err.println("Error");
+//            Notifications.create().text("Failed to save attachment file.")
+//                    .title(ex.getMessage()).showError();
+//            return false;
+//        }
     }
     
     private String attachmentFile;
