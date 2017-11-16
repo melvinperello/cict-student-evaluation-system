@@ -34,11 +34,11 @@ public class SystemOverriding {
     /**
      * Evaluation Related System Overriding.
      */
-    public static final String EVAL_EXCEED_MAX_UNITS = "EXCEED_MAX_UNITS";
+    public static final String EVAL_EXCEED_MAX_UNITS = "EXCEEDED_MAX_UNITS";
     public static final String EVAL_INTERNSHIP_WITH_OTHERS = "INTERNSHIP_WITH_OTHERS";
     public static final String EVAL_BYPASSED_PRE_REQUISITES = "BYPASSED_PRE_REQUISITES";
     public static final String EVAL_INTERN_GRADE_REQUIREMENT = "INTERN_GRADE_REQUIREMENT";
     public static final String EVAL_GRADE_REQUIREMENT_FOR_MOVING_UP = "GRADE_REQUIREMENT_FOR_MOVING_UP";
-    public static final String EVAL_EXCEED_MAX_POPULATION = "EXCEED_MAX_POPULATION";
-    public static final String EVAL_CHANGED_YEAR_LEVEL_BACKWARD = "CHANGE_YEAR_LEVEL_BACKWARD";
+    public static final String EVAL_EXCEED_MAX_POPULATION = "EXCEEDED_MAX_POPULATION";
+    public static final String EVAL_CHANGED_YEAR_LEVEL_BACKWARD = "CHANGED_YEAR_LEVEL_BACKWARD";
 }
