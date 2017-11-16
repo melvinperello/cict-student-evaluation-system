@@ -387,15 +387,25 @@ public class CreditController implements ControllerFX {
             btn_print_history.setDisable(true);
         });
         fetch_history.whenCancelled(()->{
-            System.out.println("CANCELLEDs");
+            System.out.println("CANCELLED");
         });
         fetch_history.whenFailed(()->{
-            System.out.println("CANCELLEDs");
+            System.out.println("FAILED");
+            Notifications.create().darkStyle()
+                    .title("Failed")
+                    .text("No result found.").showError();
         });
         fetch_history.whenSuccess(()->{
             this.print(is4Yrs);
             btn_print_history.setDisable(false);
         });
+        
+        if(this.STUDENT_MAP.getCURRICULUM_id()==null) {
+            Notifications.create().darkStyle()
+                    .title("Cancelled")
+                    .text("No curriculum found.").showError();
+            return;
+        }
         fetch_history.start();
     }
     
