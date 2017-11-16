@@ -68,6 +68,14 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
     public EvaluationOverride(boolean hasAccess) {
         this.access = hasAccess;
     }
+    
+    //----------------------------------
+    // allow assistant registrar to override
+    // but must enter OTP given to the local registrar
+    //----------------------------------
+    
+    
+    //----------------------------------
 
     private boolean authorized;
     private final boolean access;

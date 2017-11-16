@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="303.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #F690A6;" stylesheets="@management/metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label styleClass="metro-title-33" text="Assistant Registrar Override" />
+      <VBox prefHeight="65.0" prefWidth="580.0">
+         <children>
+            <Label text="The local registrar will recieve a 6 character One-Time Password (OTP) via text message to his/her registered mobile number with last 4 digits: " textFill="WHITE" wrapText="true">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <VBox alignment="CENTER">
+               <children>
+                  <Label text="*******1234">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label text="Reference Number:" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label text="1" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label text="Enter the OTP:" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="160.0" />
+               </children>
+            </HBox>
+            <VBox alignment="CENTER" spacing="10.0">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+               <children>
+                  <Label text="Didn't receive the message? Click here to resend." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="380.0" spacing="10.0">
+                     <children>
+                        <JFXButton prefHeight="39.0" prefWidth="165.0" style="-fx-border-color: #fff;" text="Proceed" textFill="WHITE">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="165.0" style="-fx-border-color: #fff;" text="Cancel" textFill="WHITE">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets left="100.0" right="100.0" />
+         </VBox.margin>
+      </VBox>
+      <VBox alignment="CENTER">
+         <children>
+            <Label prefHeight="57.0" prefWidth="580.0" text="Every request of an Assistant Registrar for an override action, the system will provide unique OTPs. Please refer from the reference number." textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
