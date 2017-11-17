@@ -98,6 +98,10 @@ public class AssistantRegistrarOverride extends MonoLauncher {
                                 + "a file with a format of RAR, ZIP or 7Z. Then click Continue")
                         .setHeader("Authorization Accepted").showAndWait();
                 Mono.fx().getParentStage(application_root).close();
+            } else {
+                Mono.fx().alert().createWarning()
+                        .setMessage("The entered One-Time Password (OTP) is not matched.")
+                        .setHeader("Access Denied").showAndWait();
             }
         } else {
             Notifications.create().darkStyle().title("Failed")

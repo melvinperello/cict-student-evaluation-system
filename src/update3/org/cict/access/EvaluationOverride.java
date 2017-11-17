@@ -154,6 +154,7 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
                         Mono.fx().snackbar().showError(application_root, "You are not Authorized.");
                     }
                 }
+                btn_upload.setDisable(false);
             });
         });
     }
@@ -236,6 +237,10 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
         );
         File file = fileChooser.showOpenDialog(this.getStage());
         btn_upload.setDisable(true);
+        if(file == null) {
+            btn_upload.setDisable(false);
+            return;
+        }
         //----------------------------------------------
         // NON BLOCKING UPLOAD
         FTPManager.upload(file.getAbsolutePath(), "override_attachment", file.getName(), (boolean result, Exception e) -> {
