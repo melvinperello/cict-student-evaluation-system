@@ -369,7 +369,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
         
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
-        String[] colNames = new String[]{status.equalsIgnoreCase("REVOKED")? "Date Evaluated" : "Date and Time","Evaluator", "Student Number", status.equalsIgnoreCase("REVOKED")? "Revoked Date" : "Student Name", status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Year Level"};
+        String[] colNames = new String[]{"Date and Time",status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Evaluator", "Student Number", "Student Name", "Year Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
         if(results==null) {
             Notifications.create()
@@ -382,11 +382,11 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         for (int i = 0; i < results.size(); i++) {
             EvaluationMapping result = results.get(i);
             ref = result;
-            String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter2.format(result.getEvaluation_date()),
-                WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getFACULTY_id()))), 
-                WordUtils.capitalizeFully(this.getStudentNumber(result.getSTUDENT_id())), 
-                status.equalsIgnoreCase("REVOKED")? ReportsUtility.formatter2.format(result.getCancelled_date()) : WordUtils.capitalizeFully(this.getStudentName(result.getSTUDENT_id())), 
-                status.equalsIgnoreCase("REVOKED")? WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getCancelled_by()))) :(this.getYearLevel(result.getYear_level()))};
+            String[] row = new String[]{(i+1)+".  "+  (status.equalsIgnoreCase("REVOKED")? ReportsUtility.formatter2.format(result.getCancelled_date()) : ReportsUtility.formatter2.format(result.getEvaluation_date())),
+                WordUtils.capitalizeFully(status.equalsIgnoreCase("REVOKED")? (FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getCancelled_by()))) : (FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getFACULTY_id())))), 
+                this.getStudentNumber(result.getSTUDENT_id()), 
+                WordUtils.capitalizeFully(this.getStudentName(result.getSTUDENT_id())), 
+                (this.getYearLevel(result.getYear_level()))};
             rowData.add(row);
         }
         
