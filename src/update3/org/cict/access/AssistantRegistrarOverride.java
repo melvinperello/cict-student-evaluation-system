@@ -23,7 +23,10 @@
  */
 package update3.org.cict.access;
 
+import app.lazy.models.AccountFacultyMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.FacultyMapping;
 import app.lazy.models.OtpGeneratorMapping;
 import artifacts.OTPGenerator;
 import artifacts.SMSWrapper;
@@ -35,6 +38,7 @@ import com.melvin.mono.fx.events.MonoClick;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -69,6 +73,73 @@ public class AssistantRegistrarOverride extends MonoLauncher {
     @FXML
     private JFXButton btn_cancel;
     
+    private static String contactNumber = "";
+    public static boolean isAuthorized(Stage stage) {
+        if(!Access.isGranted(Access.ACCESS_CO_REGISTRAR))
+            return false;
+        AccountFacultyMapping localRegistrarAcc = Mono.orm().newSearch(Database.connect().account_faculty())
+                .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR).active().first();
+        if(localRegistrarAcc != null) {
+            FacultyMapping localRegistrar = Database.connect().faculty().getPrimary(localRegistrarAcc.getFACULTY_id());
+            contactNumber = localRegistrar==null? "" : localRegistrar.getMobile_number();
+        }
+        if(contactNumber==null || contactNumber.isEmpty()) {
+            Notifications.create().darkStyle().title("Sending of OTP failed")
+                    .text("No mobile number found. Please update the\n"
+                            + "Local Registrar's account.").showWarning();
+            return false;
+        }
+        int res = Mono.fx().alert().createConfirmation()
+                .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the override transaction. Continue?")
+                .setHeader("Send OTP To Authorize").confirmYesNo();
+        if(res==-1)
+            return false;
+        OtpGeneratorMapping map = new OtpGeneratorMapping();
+        String OTP_raw = OTPGenerator.generateOTP();
+        map.setActive(1);
+        map.setCode(Mono.security().hashFactory().hash_sha512(OTP_raw));
+        map.setDate_created(Mono.orm().getServerTime().getDateWithFormat());
+        Integer refID = Database.connect().otp_generator().insert(map);
+        if(refID.equals(-1)) {
+            Notifications.create().darkStyle().title("Failed")
+                    .text("Please check your connectivity to\n"
+                            + "the server.").showWarning();
+            return false;
+        }
+        System.out.println("Reference Number: " + refID);
+        System.out.println("Your One-Time Password (OTP) is " + OTP_raw);
+        SMSWrapper.send(contactNumber,"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
+                + "\n\nSent by Monosync", WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
+            System.out.println("RESPONSE: " + response);
+            if(response.equalsIgnoreCase("FAILED")) {
+                Mono.fx().thread().wrap(()->{
+                    Notifications.create().darkStyle().title("Failed")
+                            .text("Sending of OTP to the Local Registrar\nfailed.").showError();
+                });
+            } else if(response.equalsIgnoreCase("NO_REPLY")) {
+                Mono.fx().thread().wrap(()->{
+                    Notifications.create().darkStyle().title("No Response")
+                            .text("Please try again later.").showError();
+                });
+            }
+        });
+        
+        AssistantRegistrarOverride asstRegistrar =  M.load(AssistantRegistrarOverride.class);
+        asstRegistrar.onDelayedStart();
+        asstRegistrar.setDetails(contactNumber, refID);
+        boolean authorized = false;
+        try {
+            asstRegistrar.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = asstRegistrar.createChildStage(stage);
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+            authorized = asstRegistrar.isAuthorized();
+        }
+        System.out.println(authorized);
+        return authorized;
+    }
+    
     @Override
     public void onStartUp() {
         MonoClick.addClickEvent(btn_cancel, () -> {
@@ -81,6 +152,11 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         MonoClick.addClickEvent(btn_proceed, ()->{
             this.checkIfMatches();
         });
+        
+        Mono.fx().key(KeyCode.ENTER).release(application_root, ()->{
+            this.checkIfMatches();
+        });
+        
         MonoClick.addClickEvent(lbl_resend, ()->{
             this.resendOTP();
         });
@@ -111,7 +187,6 @@ public class AssistantRegistrarOverride extends MonoLauncher {
     }
     
     private Integer REF_id;
-    private String contactNumber;
     public void setDetails(String mobileNo, Integer referenceNo) {
         contactNumber = mobileNo;
         REF_id = referenceNo;

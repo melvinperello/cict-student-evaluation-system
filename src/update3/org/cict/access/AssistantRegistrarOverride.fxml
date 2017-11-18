@@ -20,7 +20,7 @@
             </Label>
             <VBox alignment="CENTER">
                <children>
-                  <Label fx:id="lbl_mobile_number" text="*******1234">
+                  <Label fx:id="lbl_mobile_number" text="Loading...">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
@@ -38,7 +38,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lbl_ref_number" text="1" textFill="WHITE" wrapText="true">
+                  <Label fx:id="lbl_ref_number" text="Loading..." textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
