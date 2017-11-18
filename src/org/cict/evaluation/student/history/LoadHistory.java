@@ -35,6 +35,7 @@ import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.jhmvin.Mono;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,13 +64,13 @@ public class LoadHistory {
         col_sy.setPrefWidth(100);
         col_sy.setCellValueFactory((TreeTableColumn.CellDataFeatures<History, String> param) -> param.getValue().getValue().schoolYear);
 
-        JFXTreeTableColumn<History, String> col_yearlvl = new JFXTreeTableColumn<>("Year Level");
-        col_yearlvl.setPrefWidth(130);
-        col_yearlvl.setCellValueFactory((TreeTableColumn.CellDataFeatures<History, String> param) -> param.getValue().getValue().year);
-
         JFXTreeTableColumn<History, String> col_semester = new JFXTreeTableColumn<>("Semester");
         col_semester.setPrefWidth(130);
         col_semester.setCellValueFactory((TreeTableColumn.CellDataFeatures<History, String> param) -> param.getValue().getValue().semester);
+
+        JFXTreeTableColumn<History, String> col_yearlvl = new JFXTreeTableColumn<>("Year Level");
+        col_yearlvl.setPrefWidth(130);
+        col_yearlvl.setCellValueFactory((TreeTableColumn.CellDataFeatures<History, String> param) -> param.getValue().getValue().year);
 
         JFXTreeTableColumn<History, String> col_type = new JFXTreeTableColumn<>("Type");
         col_type.setPrefWidth(120);
@@ -99,7 +100,7 @@ public class LoadHistory {
         //store data on list
         this.loadData();
         final TreeItem<History> root = new RecursiveTreeItem<>(lstData, RecursiveTreeObject::getChildren);
-        tblSubjects.getColumns().setAll(col_sy, col_yearlvl, col_semester, 
+        tblSubjects.getColumns().setAll(col_sy, col_semester, col_yearlvl, 
                 col_type, col_evalBy, col_evaldate, col_remarks, 
                 col_canceledBy, col_canceledDate);
         
@@ -121,7 +122,7 @@ public class LoadHistory {
                 EvaluationMapping currentEvaluation = (EvaluationMapping) evaluationList.get(x);
                 this.setAcademicTerm(currentEvaluation.getACADTERM_id());
                 String canceledBy = "", canceledDate = "";
-                SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
+                SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy hh:mm a");
                 try{
                     canceledBy = (currentEvaluation.getCancelled_by()==null? "NAME NOT FOUND":this.getFacultyName(currentEvaluation.getCancelled_by()));
                     canceledDate = (currentEvaluation.getCancelled_date()==null? "DATE NOT FOUND": formatter.format(currentEvaluation.getCancelled_date()).toString());
@@ -175,4 +176,9 @@ public class LoadHistory {
                 faculty.getFirst_name() + " " +
                 (faculty.getMiddle_name()==null? "" : faculty.getMiddle_name());
     }
+
+    public ObservableList<History> getResults() {
+        return holder;
+    }
+
 }

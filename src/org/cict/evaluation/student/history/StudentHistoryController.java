@@ -24,13 +24,19 @@
 package org.cict.evaluation.student.history;
 
 import app.lazy.models.StudentMapping;
+import artifacts.MonoString;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
+import com.melvin.mono.fx.events.MonoClick;
+import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import org.cict.reports.result.PrintResult;
+import org.controlsfx.control.Notifications;
 
 /**
  *
@@ -50,6 +56,9 @@ public class StudentHistoryController implements ControllerFX{
     @FXML
     private Button btnBack;
     
+    @FXML
+    private Button btn_print;
+            
     private StudentMapping STUDENT;
     private String COURSE;
     
@@ -71,6 +80,9 @@ public class StudentHistoryController implements ControllerFX{
         btnBack.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent e) -> {
             Mono.fx().getParentStage(lblName).close();
         });
+        MonoClick.addClickEvent(btn_print, ()->{
+            this.printResult();
+        });
     }
     
     private void setValues() {
@@ -78,6 +90,61 @@ public class StudentHistoryController implements ControllerFX{
                 this.STUDENT.getFirst_name() + " " + (this.STUDENT.getMiddle_name()==null? "" :  this.STUDENT.getMiddle_name());
         this.lblName.setText(fullName);
         this.lblCourse.setText(this.COURSE);
+    }
+    
+    private ObservableList<History> results;
+    private void printResult() {
+        results = load.getResults();
+        if(results==null || results.isEmpty()) {
+            Notifications.create()
+                    .title("No Result")
+                    .text("No result found to print.")
+                    .showWarning();
+            return;
+        }
+        String[] colNames = new String[]{"S.Y & Semester", "Year Level", "Evaluator", "Evaluated Date", "Cancelled By", "Cancelled Date"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            History result = results.get(i);
+            String[] row = new String[]{(i + 1) + ".  " + result.schoolYear.get() + " " + result.semester.get(),
+                result.year.get(), result.evaluatedBy.get(), result.evaluationDate.get(),
+            result.canceledBy.get(), result.canceledDate.get()};
+            rowData.add(row);
+        }
+        
+        PrintResult print = new PrintResult();
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        print.fileName = "student_history_" + MonoString.removeAll(this.STUDENT.getId(), " ").toLowerCase();
+        print.reportDescription = this.lblName.getText() + "\n" + this.lblCourse.getText();
+
+        print.reportTitle = "Student Evalutaion History";
+        print.whenStarted(() -> {
+            btn_print.setDisable(true);
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print.setDisable(false);
+        });
+        //----------------------------------------------------------------------
+        print.transact();
     }
     
 }
