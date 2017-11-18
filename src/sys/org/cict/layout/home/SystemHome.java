@@ -234,8 +234,8 @@ public class SystemHome extends MonoLauncher {
         this.setLabelText(this.lbl_lastname, loggedUser.getLAST_NAME());
         this.setLabelText(this.lbl_middlename, loggedUser.getMIDDLE_NAME());
         this.setLabelText(lbl_gender, loggedUser.getGENDER());
-        this.setLabelText(lbl_access, loggedUser.getACCESS_LEVEL());
-        this.setLabelText(lbl_desgination, loggedUser.getDESIGNATION());
+        this.setLabelText(lbl_access, loggedUser.getACCESS_LEVEL().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "Assistant Registrar" : loggedUser.getACCESS_LEVEL());
+        this.setLabelText(lbl_desgination, loggedUser.getDESIGNATION().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "Assistant Registrar" : loggedUser.getDESIGNATION());
 
     }
 

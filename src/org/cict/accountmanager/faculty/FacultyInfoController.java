@@ -50,6 +50,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update3.org.cict.SectionConstants;
+import update3.org.cict.access.Access;
 
 /**
  * Faculty Information Controller Class.
@@ -486,7 +487,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         // set username
         lbl_username.setText(afMap.getUsername().toUpperCase());
         // set account access level
-        String access = afMap.getAccess_level().replace("_", " ");
+        String access = afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "ASSISTANT REGISTRAR" : afMap.getAccess_level().replace("_", " ");
         lbl_access.setText(access);
 
         // set status and button text
@@ -514,7 +515,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         lbl_gender.setText(faculty.getGender()==null || faculty.getGender().isEmpty()  ? "NOT SPECIFIED" : WordUtils.capitalizeFully(faculty.getGender()));
         lbl_rank.setText(faculty.getRank()==null || faculty.getRank().isEmpty()  ? "UNRANKED" : faculty.getRank());
         lbl_department.setText(faculty.getDepartment()==null || faculty.getDepartment().isEmpty()  ? "NONE" : (faculty.getDepartment()));
-        lbl_designation.setText(faculty.getDesignation()==null || faculty.getDesignation().isEmpty()  ? "NONE" : (faculty.getDesignation().replace("_", " ")));
+        lbl_designation.setText(faculty.getDesignation()==null || faculty.getDesignation().isEmpty()  ? "NONE" : (faculty.getDesignation().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "ASSISTANT REGISTRAR" : faculty.getDesignation().replace("_", " ")));
     }
 
     /**

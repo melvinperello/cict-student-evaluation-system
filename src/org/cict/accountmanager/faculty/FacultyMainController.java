@@ -28,7 +28,6 @@ import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
-import app.lazy.models.StudentMapping;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
@@ -50,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -75,6 +73,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.SectionConstants;
+import update3.org.cict.access.Access;
 import update5.org.cict.student.controller.StudentInformation;
 
 /**
@@ -264,6 +263,8 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 //            vbox_no_found.setVisible(false);
 //            vbox_no_found1.setVisible(false);
 //            anchor_new_faculty.setVisible(true);
+            this.cmb_sort.setDisable(true);
+            this.btn_print.setDisable(true);
             changeView(anchor_new_faculty);
         });
 
@@ -281,6 +282,8 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 //            vbox_list.setVisible(false);
             //
             this.hbox_tools.setDisable(false);
+            this.cmb_sort.setDisable(false);
+            this.btn_print.setDisable(false);
             this.onSortChanged();
         });
 
@@ -314,7 +317,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 WordUtils.capitalizeFully(result.getFullName()), 
                 (result.getDepartment()==null || result.getDepartment().isEmpty()? "NONE": result.getDepartment()), 
                 (result.getAccountFacultyMapping()==null? "NO ACCOUNT" : result.getAccountFacultyMapping().getUsername().toUpperCase()),
-                WordUtils.capitalizeFully(result.getAccessLevel().replace("_", " "))};
+                WordUtils.capitalizeFully(result.getAccessLevel().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "Assistant Registrar" : result.getAccessLevel().replace("_", " "))};
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
@@ -458,7 +461,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
 
         lbl_id.setText(faculty.getBulsu_id().toUpperCase());
         lbl_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name() + " " + faculty.getLast_name()));
-        lbl_access.setText(currentFacultyInfo.getAccessLevel() == null || currentFacultyInfo.getAccessLevel().isEmpty() ? "NO ACCESS" : currentFacultyInfo.getAccessLevel().replace("_", " "));
+        lbl_access.setText(currentFacultyInfo.getAccessLevel() == null || currentFacultyInfo.getAccessLevel().isEmpty() ? "NO ACCESS" : (currentFacultyInfo.getAccessLevel().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "Assistant Registrar".toUpperCase() : currentFacultyInfo.getAccessLevel().replace("_", " ")));
         lbl_rank.setText((faculty.getRank() == null || faculty.getRank().isEmpty()) ? "UNRANKED" : faculty.getRank());
         lbl_dept.setText((faculty.getDepartment() == null
                 || faculty.getDepartment().isEmpty()
