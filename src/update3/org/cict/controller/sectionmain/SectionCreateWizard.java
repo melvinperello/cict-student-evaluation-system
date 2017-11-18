@@ -290,8 +290,8 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
         } else if (type.equalsIgnoreCase("PREPARATORY")) {
             // 1 and 2 only
             this.chk_third.setDisable(true);
-            chk_fourth.setDisable(true);
-        } else if (type.equalsIgnoreCase("PREPARATORY")) {
+            this.chk_fourth.setDisable(true);
+        } else if (type.equalsIgnoreCase("CONSEQUENT")) {
             //3 and 4 only
             this.chk_first.setDisable(true);
             this.chk_second.setDisable(true);
