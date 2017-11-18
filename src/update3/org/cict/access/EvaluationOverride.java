@@ -192,6 +192,10 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_upload, ()->{
             //--------------------------------
             if(AssistantRegistrarOverride.isAuthorized(this.getStage())) {
+                Mono.fx().alert().createInfo()
+                        .setMessage("You can now override this transaction by uploading first "
+                                + "a file with a format of RAR, ZIP or 7Z. Then click Continue")
+                        .setHeader("Authorization Accepted").showAndWait();
                 Mono.fx().snackbar().showSuccess(application_root, "Access Granted.");
             }
             //--------------------------------

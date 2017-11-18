@@ -10,8 +10,8 @@
 
 <VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #F76C83;" stylesheets="@management/metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label styleClass="metro-title-33" text="Assistant Registrar Override" />
-      <VBox prefHeight="95.0" prefWidth="555.0">
+      <Label styleClass="metro-title-33" text="Access Local Registrar's Override" />
+      <VBox prefHeight="114.0" prefWidth="560.0">
          <children>
             <Label text="The local registrar will recieve a 6 character One-Time Password (OTP) via text message to his/her registered mobile number with last 4 digits: " textFill="WHITE" wrapText="true">
                <font>
@@ -87,11 +87,15 @@
          </VBox.margin>
       </VBox>
       <VBox alignment="CENTER" />
-      <Label prefHeight="123.0" prefWidth="560.0" text="Every request of an Assistant Registrar for an override action, the system will provide unique OTPs. Please refer from the reference number." textAlignment="CENTER" textFill="WHITE" wrapText="true">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
+      <VBox alignment="BOTTOM_CENTER" prefHeight="110.0" prefWidth="560.0">
+         <children>
+            <Label prefHeight="57.0" prefWidth="560.0" text="Every request of a Local Registrar's Override, the system will provide unique OTPs. Please refer from the reference number." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
    </children>
    <padding>
       <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />

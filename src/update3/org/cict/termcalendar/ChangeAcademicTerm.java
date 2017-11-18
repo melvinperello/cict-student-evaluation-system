@@ -108,24 +108,24 @@ public class ChangeAcademicTerm extends MonoLauncher {
             semesterRegular = 0;
         }
         
-        AcademicTermMapping exist = Mono.orm().newSearch(Database.connect().academic_term())
-                .eq(DB.academic_term().school_year, schoolYear)
-                .eq(DB.academic_term().semester, semester)
-                .active().first();
-        int res;
-        if(exist!=null) {
-            res = Mono.fx().alert().createConfirmation()
-                    .setMessage("The details entered are already existing. Do you still want to send the request?")
-                    .confirmYesNo();
-            if(res==-1)
-                return;
-        } else {
-            res = Mono.fx().alert().createConfirmation()
-                    .setMessage("This request may take time to be approved and implemented. Do you still want to continue?")
-                    .confirmYesNo();
-            if(res==-1)
-                return;
-        }
+//        AcademicTermMapping exist = Mono.orm().newSearch(Database.connect().academic_term())
+//                .eq(DB.academic_term().school_year, schoolYear)
+//                .eq(DB.academic_term().semester, semester)
+//                .active().first();
+//        int res;
+//        if(exist!=null) {
+//            res = Mono.fx().alert().createConfirmation()
+//                    .setMessage("The details entered are already existing. Do you still want to send the request?")
+//                    .confirmYesNo();
+//            if(res==-1)
+//                return;
+//        } else {
+//            res = Mono.fx().alert().createConfirmation()
+//                    .setMessage("This request may take time to be approved and implemented. Do you still want to continue?")
+//                    .confirmYesNo();
+//            if(res==-1)
+//                return;
+//        }
         
         AcademicTermMapping atMap = new AcademicTermMapping();
         atMap.setActive(1);
@@ -140,12 +140,12 @@ public class ChangeAcademicTerm extends MonoLauncher {
                     .setHeader("Request Failed")
                     .setMessage("Please try again later.")
                     .show();
-        } else {
+        } /*else {
             Mono.fx().alert().createInfo()
                     .setHeader("Request Sent")
                     .setMessage("Wait until the Local Registrar take action on your request.")
                     .show();
-        }
+        }*/
         Mono.fx().getParentStage(btn_send).close();
     }
 }

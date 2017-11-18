@@ -65,6 +65,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.access.Access;
+import update3.org.cict.access.AssistantRegistrarOverride;
 
 /**
  *
@@ -225,13 +226,13 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     //------------------------------------------------------------
     //------------------------------------
     private void declineRequest() {
-        if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
+//        if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
             
-            int res = Mono.fx().alert().createConfirmation()
-                    .setMessage("Are you sure you want to decline the request?")
-                    .confirmYesNo();
-            if(res==-1)
-                return;
+//            int res = Mono.fx().alert().createConfirmation()
+//                    .setMessage("Are you sure you want to decline the request?")
+//                    .confirmYesNo();
+//            if(res==-1)
+//                return;
             
             pending.setApproval_state("DECLINED");
             pending.setActive(0);
@@ -245,20 +246,21 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                         .showInformation();
                 this.checkTermRequest();
             }
-        } else
-            Mono.fx().snackbar().showError(application_root, "Request Denied. No access for this process.");
+//        } else
+//            Mono.fx().snackbar().showError(application_root, "Request Denied. No access for this process.");
     }
     
     private void acceptRequest() {
-        if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
+//        if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
             if(pending==null)
                 return;
             else {
                 int res = Mono.fx().alert().createConfirmation()
                         .setMessage("This will change the current Academic Term and will automatically logout the account. Do you still want to continue?")
                         .confirmYesNo();
-                if(res==-1)
-                    return;
+                if(res==-1) {
+                    this.declineRequest();
+                }
                 
                 ChangeCurrentTerm reset = new ChangeCurrentTerm();
                 reset.current_term = current;
@@ -267,7 +269,6 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 btn_decline.setDisable(true);
                 reset.whenStarted(()->{
                     GenericLoadingShow.instance().show();
-                    throw new RuntimeException("IM AN ERROR!");
                 });
                 reset.whenFailed(()->{
                     GenericLoadingShow.instance().hide();
@@ -277,6 +278,8 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 });
                 reset.whenCancelled(()->{
                     GenericLoadingShow.instance().hide();
+                    if(reset.getLog()==null)
+                        return;
                     Notifications.create().darkStyle()
                             .text(reset.getLog()).showError();
                 });
@@ -291,8 +294,8 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
                 });
                 reset.transact();
             }
-        } else 
-            Mono.fx().snackbar().showError(application_root, "Request Denied. No access for this process.");
+//        } else 
+//            Mono.fx().snackbar().showError(application_root, "Request Denied. No access for this process.");
     }
     
     private AcademicTermMapping current;
@@ -347,6 +350,16 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             btn_encoding_service.setDisable(true);
             btn_evaluation_service.setDisable(true);
             changeStatus(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE);
+            
+            if(AssistantRegistrarOverride.isAuthorized(
+                    this.getStage(), 
+                    Access.ACCESS_ADMIN)) {
+                Mono.fx().snackbar().showSuccess(application_root, "Request Granted");
+                this.acceptRequest();
+            } else {
+                Mono.fx().snackbar().showError(application_root, "Request Denied");
+                this.cancelRequest();
+            }
         }
     }
     
@@ -367,11 +380,11 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     }
     
     private void cancelRequest() {
-        int res = Mono.fx().alert().createConfirmation()
-                .setMessage("Are you sure you want to cancel the request?")
-                .confirmYesNo();
-        if(res==-1)
-            return;
+//        int res = Mono.fx().alert().createConfirmation()
+//                .setMessage("Are you sure you want to cancel the request?")
+//                .confirmYesNo();
+//        if(res==-1)
+//            return;
         
         pending.setActive(0);
         pending.setApproval_state("CANCELLED");
@@ -430,7 +443,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             // start your transaction
             org.hibernate.Transaction dataTransaction = currentSession.beginTransaction();
             if(request==null) {
-                log = "No requested Academic Term found";
+                log = null;
                 System.out.println("NO REQUESTED ACAD TERM FOUND");
                 return false;
             }
