@@ -65,7 +65,7 @@
                      <children>
                         <ImageView fitHeight="108.0" fitWidth="714.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../res/gif/initloading.gif" />
+                              <Image url="@../../../../../update3/org/cict/window_prompts/default_loader/default_loader128.gif" />
                            </image>
                            <HBox.margin>
                               <Insets right="20.0" />

@@ -47,7 +47,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.CheckComboBox;
 import org.hibernate.criterion.Order;
@@ -124,15 +123,10 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX 
          */
         allCurriculums = Mono.orm()
                 .newSearch(Database.connect().curriculum())
+                .eq(DB.curriculum().ladderization_type, "PREPARATORY")
                 .active()
                 .all();
-        if (allCurriculums != null) {
-            cmb_prereq.getItems().clear();
-            for (CurriculumMapping currentCurriculum : allCurriculums) {
-                cmb_prereq.getItems().add(currentCurriculum.getName());
-                cmb_preparatory.getItems().add(currentCurriculum.getName());
-            }
-        }
+        this.refreshCmbCurriculums(true);
 
         /**
          * by default
@@ -143,6 +137,18 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX 
         setViewCheckCmbBoxPreReq("NO");
 
         addTextFieldFilters();
+    }
+    
+    private void refreshCmbCurriculums(boolean all) {
+        if (allCurriculums != null) {
+            cmb_prereq.getItems().clear();
+            cmb_prereq.getItems().add(NONE);
+            for (CurriculumMapping currentCurriculum : allCurriculums) {
+                cmb_prereq.getItems().add(currentCurriculum.getName());
+                if(all)
+                    cmb_preparatory.getItems().add(currentCurriculum.getName());
+            }
+        }
     }
 
     private void addTextFieldFilters() {
@@ -196,16 +202,23 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX 
         Mono.fx().key(KeyCode.ENTER).release(application_root, () -> {
             addNew();
         });
+        
+        cmb_preparatory.valueProperty().addListener((a)->{
+            this.refreshCmbCurriculums(false);
+            cmb_prereq.getItems().remove(cmb_preparatory.getSelectionModel().getSelectedItem());
+        });
     }
 
     private void setViewCheckCmbBoxPreReq(String mode) {
         if (mode.equalsIgnoreCase(PREPARATORY)
                 || mode.equalsIgnoreCase("NO")) {
             cmb_prereq.getCheckModel().clearChecks();
-            cmb_prereq.getItems().remove(NONE);
+            cmb_prereq.getItems().clear();
+//            cmb_prereq.getItems().remove(NONE);
             cmb_prereq.getItems().add(NONE);
             cmb_prereq.getCheckModel().check(NONE);
             cmb_prereq.setDisable(true);
+            cmb_preparatory.getItems().remove(NONE);
             cmb_preparatory.getItems().add(NONE);
             cmb_preparatory.getSelectionModel().select(NONE);
             cmb_preparatory.setDisable(true);

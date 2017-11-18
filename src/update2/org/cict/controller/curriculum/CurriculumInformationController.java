@@ -195,13 +195,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
 
         allCurriculums = Mono.orm()
                 .newSearch(Database.connect().curriculum())
+                .eq(DB.curriculum().ladderization_type, "PREPARATORY")
+                .ne(DB.curriculum().id, this.CURRICULUM.getId())
                 .active()
                 .all();
-        cmb_prereq.getItems().clear();
-        for (CurriculumMapping currentCurriculum : allCurriculums) {
-            cmb_prereq.getItems().add(currentCurriculum.getName());
-            cmb_preparatory.getItems().add(currentCurriculum.getName());
-        }
+        this.refreshCmbCurriculums(true);
 
         /**
          * by default
@@ -226,6 +224,18 @@ public class CurriculumInformationController extends SceneFX implements Controll
         addTextFieldFilters();
     }
 
+    private void refreshCmbCurriculums(boolean all) {
+        if (allCurriculums != null) {
+            cmb_prereq.getItems().clear();
+            cmb_prereq.getItems().add(NONE);
+            for (CurriculumMapping currentCurriculum : allCurriculums) {
+                cmb_prereq.getItems().add(currentCurriculum.getName());
+                if(all)
+                    cmb_preparatory.getItems().add(currentCurriculum.getName());
+            }
+        }
+    }
+    
     private void addTextFieldFilters() {
         StringFilter textField = TextInputFilters.string()
                 .setMaxCharacters(50)
@@ -270,74 +280,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
         });
 
         addClickEvent(btn_implement, () -> {
-            btn_implement.setDisable(isImplemented);
-            boolean isComplete = true;
-            for (int yrCtr = (CURRICULUM.getLadderization_type().equalsIgnoreCase("CONSEQUENT")? 3 : 1); yrCtr <= CURRICULUM.getStudy_years(); yrCtr++) {
-                for (int semCtr = 1; semCtr <= 2; semCtr++) {
-                    Object exist = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                            .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM.getId())
-                            .eq(DB.curriculum_subject().year, yrCtr)
-                            .eq(DB.curriculum_subject().semester, semCtr)
-                            .active()
-                            .first();
-                    if (exist == null) {
-                        isComplete = false;
-                    }
-                }
-            }
-            if (!isComplete) {
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Incomplete Curriculum Subject")
-                        .setMessage("Please provide the complete subject of this curriculum before the implementation process.")
-                        .show();
-                return;
-            }
-            if (CURRICULUM.getImplemented() == 1) {
-                btn_implement.setDisable(true);
-            }
-            int res = Mono.fx().alert().createConfirmation()
-                    .setHeader("Implement Curriculum")
-                    .setMessage("Implementing this curriculum will prohibit modifying any form, even its subjects. Do you still want to implement this curriculum?")
-                    .confirmYesNo();
-            if (res == 1) {
-                CURRICULUM.setImplementation_date(IMPLEMENTED_DATE);
-                CURRICULUM.setImplemented(1);
-                CURRICULUM.setImplemented_by(IMPLEMENTED_BY);
-                if (!Database.connect().curriculum().update(CURRICULUM)) {
-                    logs("NOT IMPLEMENTED, CURRICULUM NAME: " + CURRICULUM.getName());
-                } else {
-                    isUpdated = true;
-                    AcademicProgramMapping apMap = Mono.orm().newSearch(Database.connect().academic_program())
-                            .eq(DB.academic_program().id, CURRICULUM.getACADPROG_id())
-                            .active()
-                            .first();
-                    if (apMap == null) {
-                        logs("NO ACADEMIC PROGRAM FOUND");
-                    } else {
-                        if (apMap.getImplemented() != 1) {
-                            apMap.setImplementation_date(IMPLEMENTED_DATE);
-                            apMap.setImplemented(1);
-                            apMap.setImplemented_by(IMPLEMENTED_BY);
-                            if (Database.connect().academic_program().update(apMap)) {
-                                isUpdated = true;
-                            } else {
-                                logs("NOT SAVED, ACADPROG CODE: " + apMap.getCode());
-                            }
-                        } else {
-                            logs("ACADEMIC PROGRAM ALREADY SAVED");
-                        }
-                    }
-                    if (isUpdated) {
-                        Mono.fx().alert()
-                                .createInfo()
-                                .setHeader("Implemented Successfully")
-                                .setMessage("This curriculum is successfully implemented.")
-                                .showAndWait();
-                        onBack();
-                    }
-                }
-            }
+            this.onImplement();
         });
 
         this.addClickEvent(btn_history, () -> {
@@ -349,22 +292,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
         });
 
         chkbx_obsolete.selectedProperty().addListener((a) -> {
-            if (run) {
-                run = false;
-                return;
-            }
-            CURRICULUM.setObsolete_term((chkbx_obsolete.isSelected() ? 1 : 0));
-            if (Database.connect().curriculum().update(CURRICULUM)) {
-                Notifications.create().title("Updated Successfully")
-                        .text("Obsolete of the curriculum is updated.")
-                        .showInformation();
-            } else {
-                Notifications.create().title("Process Failed")
-                        .text("Something went wrong in removing\n"
-                                + "the term.")
-                        .showInformation();
-            }
-
+            this.onObsolete();
         });
 
         super.addClickEvent(rbtn_no, () -> {
@@ -377,6 +305,100 @@ public class CurriculumInformationController extends SceneFX implements Controll
             ladderType = cmb_type.getSelectionModel().getSelectedItem();
             setViewCheckCmbBoxPreReq(ladderType);
         });
+
+        cmb_preparatory.valueProperty().addListener((a)->{
+            this.refreshCmbCurriculums(false);
+            cmb_prereq.getItems().remove(cmb_preparatory.getSelectionModel().getSelectedItem());
+        });
+    }
+    
+    private void onObsolete() {
+        if (run) {
+            run = false;
+            return;
+        }
+        CURRICULUM.setObsolete_term((chkbx_obsolete.isSelected() ? 1 : 0));
+        if (Database.connect().curriculum().update(CURRICULUM)) {
+            Notifications.create().title("Updated Successfully")
+                    .text("Obsolete of the curriculum is updated.")
+                    .showInformation();
+        } else {
+            Notifications.create().title("Process Failed")
+                    .text("Something went wrong in removing\n"
+                            + "the term.")
+                    .showInformation();
+        }
+    }
+    
+    private void onImplement() {
+        btn_implement.setDisable(isImplemented);
+        boolean isComplete = true;
+        for (int yrCtr = (CURRICULUM.getLadderization_type().equalsIgnoreCase("CONSEQUENT")? 3 : 1); yrCtr <= CURRICULUM.getStudy_years(); yrCtr++) {
+            for (int semCtr = 1; semCtr <= 2; semCtr++) {
+                Object exist = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                        .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM.getId())
+                        .eq(DB.curriculum_subject().year, yrCtr)
+                        .eq(DB.curriculum_subject().semester, semCtr)
+                        .active()
+                        .first();
+                if (exist == null) {
+                    isComplete = false;
+                }
+            }
+        }
+        if (!isComplete) {
+            Mono.fx().alert()
+                    .createInfo()
+                    .setHeader("Incomplete Curriculum Subject")
+                    .setMessage("Please provide the complete subject of this curriculum before the implementation process.")
+                    .show();
+            return;
+        }
+        if (CURRICULUM.getImplemented() == 1) {
+            btn_implement.setDisable(true);
+        }
+        int res = Mono.fx().alert().createConfirmation()
+                .setHeader("Implement Curriculum")
+                .setMessage("Implementing this curriculum will prohibit modifying any form, even its subjects. Do you still want to implement this curriculum?")
+                .confirmYesNo();
+        if (res == 1) {
+            CURRICULUM.setImplementation_date(IMPLEMENTED_DATE);
+            CURRICULUM.setImplemented(1);
+            CURRICULUM.setImplemented_by(IMPLEMENTED_BY);
+            if (!Database.connect().curriculum().update(CURRICULUM)) {
+                logs("NOT IMPLEMENTED, CURRICULUM NAME: " + CURRICULUM.getName());
+            } else {
+                isUpdated = true;
+                AcademicProgramMapping apMap = Mono.orm().newSearch(Database.connect().academic_program())
+                        .eq(DB.academic_program().id, CURRICULUM.getACADPROG_id())
+                        .active()
+                        .first();
+                if (apMap == null) {
+                    logs("NO ACADEMIC PROGRAM FOUND");
+                } else {
+                    if (apMap.getImplemented() != 1) {
+                        apMap.setImplementation_date(IMPLEMENTED_DATE);
+                        apMap.setImplemented(1);
+                        apMap.setImplemented_by(IMPLEMENTED_BY);
+                        if (Database.connect().academic_program().update(apMap)) {
+                            isUpdated = true;
+                        } else {
+                            logs("NOT SAVED, ACADPROG CODE: " + apMap.getCode());
+                        }
+                    } else {
+                        logs("ACADEMIC PROGRAM ALREADY SAVED");
+                    }
+                }
+                if (isUpdated) {
+                    Mono.fx().alert()
+                            .createInfo()
+                            .setHeader("Implemented Successfully")
+                            .setMessage("This curriculum is successfully implemented.")
+                            .showAndWait();
+                    onBack();
+                }
+            }
+        }
     }
 
     private Boolean run = true;
@@ -433,26 +455,26 @@ public class CurriculumInformationController extends SceneFX implements Controll
         }, pane);
     }
 
+    
     private void setViewCheckCmbBoxPreReq(String mode) {
         if (mode.equalsIgnoreCase(PREPARATORY)
                 || mode.equalsIgnoreCase("NO")) {
             cmb_prereq.getCheckModel().clearChecks();
-            if (!cmb_prereq.getItems().contains(NONE)) {
-                cmb_prereq.getItems().add(NONE);
-            }
+            cmb_prereq.getItems().clear();
+//            cmb_prereq.getItems().remove(NONE);
+            cmb_prereq.getItems().add(NONE);
             cmb_prereq.getCheckModel().check(NONE);
             cmb_prereq.setDisable(true);
-            if (!cmb_preparatory.getItems().contains(NONE)) {
-                cmb_preparatory.getItems().add(NONE);
-            }
+            cmb_preparatory.getItems().remove(NONE);
+            cmb_preparatory.getItems().add(NONE);
             cmb_preparatory.getSelectionModel().select(NONE);
             cmb_preparatory.setDisable(true);
         } else if (mode.equalsIgnoreCase(CONSEQUENT)
                 || mode.equalsIgnoreCase("YES")) {
             cmb_prereq.getCheckModel().clearChecks();
-            cmb_prereq.getItems().remove(NONE);
-            cmb_prereq.getCheckModel().check(0);
+//            cmb_prereq.getItems().remove(NONE);
             cmb_prereq.setDisable(false);
+            cmb_prereq.getCheckModel().check(NONE);
             cmb_preparatory.getItems().remove(NONE);
             cmb_preparatory.getSelectionModel().selectFirst();
             cmb_preparatory.setDisable(false);
@@ -1243,7 +1265,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     break;
                 }
             }
-            if (clearAllPrimaryExcept(prep.getId(), true)) {
+            if (prep !=null && clearAllPrimaryExcept(prep.getId(), true)) {
                 changedCol.add("CURRICULUM PRIMARY");
             }
 
