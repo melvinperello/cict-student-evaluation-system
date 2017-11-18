@@ -37,7 +37,7 @@
                         <Label accessibleText="id" prefWidth="100.0" text="BULSU ID" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="227.0" spacing="10.0">
                      <children>
                         <Label maxWidth="1.7976931348623157E308" prefWidth="80.0" text="Access Level">
                            <font>
@@ -85,7 +85,7 @@
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" spacing="5.0">
+            <HBox alignment="CENTER_RIGHT" spacing="5.0" visible="false">
                <children>
                   <Label accessibleText="designation" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="170.0" text="DEAN" textAlignment="RIGHT" HBox.hgrow="ALWAYS" />
                </children>

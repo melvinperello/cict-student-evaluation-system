@@ -779,14 +779,14 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return;
         }
-        if (!selectedFaculty.getDesignation().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
-            Notifications.create().darkStyle()
-                    .title("Request Cancelled")
-                    .text("The faculty is not designated"
-                            + "\n as a Local Registrar.")
-                    .showWarning();
-            return;
-        }
+//        if (!selectedFaculty.getDesignation().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
+//            Notifications.create().darkStyle()
+//                    .title("Request Cancelled")
+//                    .text("The faculty is not designated"
+//                            + "\n as a Local Registrar.")
+//                    .showWarning();
+//            return;
+//        }
         if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")

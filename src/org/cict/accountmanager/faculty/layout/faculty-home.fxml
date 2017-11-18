@@ -176,16 +176,6 @@
                         <ComboBox fx:id="cmb_rank" prefHeight="25.0" prefWidth="275.0" styleClass="metro-combo-box" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="175.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
-                     <children>
-                        <Label minWidth="-Infinity" prefWidth="120.0" text="Designation" textFill="#656d79">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <ComboBox fx:id="cmb_des" prefHeight="25.0" prefWidth="275.0" styleClass="metro-combo-box" />
-                     </children>
-                  </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="238.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
                      <children>
                         <Label minWidth="-Infinity" prefWidth="120.0" text="Department" textFill="#656d79">
@@ -226,6 +216,16 @@
                      <padding>
                         <Insets top="20.0" />
                      </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="175.0" prefHeight="33.0" prefWidth="320.0" spacing="10.0" visible="false">
+                     <children>
+                        <Label minWidth="-Infinity" prefWidth="120.0" text="Designation" textFill="#656d79">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="cmb_des" prefHeight="25.0" prefWidth="275.0" styleClass="metro-combo-box" />
+                     </children>
                   </HBox>
                </children>
             </VBox>
