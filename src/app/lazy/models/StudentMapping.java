@@ -2,7 +2,7 @@
 // SQL_table: student
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 15, 2017 01:44:45 PM
+// Created: Nov 18, 2017 02:34:41 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -46,6 +46,7 @@ private java.lang.String admission_year;
 private java.lang.String college;
 private java.lang.String campus;
 private java.lang.String residency;
+private java.lang.String class_type;
 private java.lang.String university;
 private java.lang.String created_by;
 private java.util.Date created_date;
@@ -230,6 +231,15 @@ public java.lang.String getResidency() {
 
 public void setResidency(java.lang.String fieldResidency) {
 	this.residency = fieldResidency;
+}
+
+@Column(name = "class_type", nullable = true, length = 50)
+public java.lang.String getClass_type() {
+	return this.class_type;
+}
+
+public void setClass_type(java.lang.String fieldClassType) {
+	this.class_type = fieldClassType;
 }
 
 @Column(name = "university", nullable = true, length = 50)

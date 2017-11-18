@@ -37,8 +37,6 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import java.util.ArrayList;
 import java.util.Objects;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -68,10 +66,10 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
     private TextField txt_section;
 
     @FXML
-    private TextField txt_group;
-
+    private TextField txt_type;
+            
     @FXML
-    private JFXCheckBox chk_cross;
+    private TextField txt_group;
 
     @FXML
     private JFXButton btn_proceed;
@@ -91,21 +89,23 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
         super.bindScene(application_root);
         this.loadComboBoxValues();
         this.loadDefaultValues();
-        this.chk_cross.setSelected(false);
         this.checkEvent();
 
         /**
          * Add Filters in group and section same with create wizard.
          */
         SectionCreateWizard.sectionGroupFilter(txt_section, txt_group);
+        txt_type.setText(type);
     }
 
     private void checkEvent() {
-        this.chk_cross.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            cmb_curriculum.setDisable(newValue);
-            cmb_year_level.setDisable(newValue);
-            txt_section.setDisable(newValue);
-            txt_group.setDisable(newValue);
+        this.txt_type.textProperty().addListener((a) -> {
+            if(type==null)
+                return;
+            cmb_curriculum.setDisable(type.equalsIgnoreCase(StudentType.CROSS_ENROLLEE.replace("_", "-")));
+            cmb_year_level.setDisable(type.equalsIgnoreCase(StudentType.CROSS_ENROLLEE.replace("_", "-")));
+            txt_section.setDisable(type.equalsIgnoreCase(StudentType.CROSS_ENROLLEE.replace("_", "-")));
+            txt_group.setDisable(type.equalsIgnoreCase(StudentType.CROSS_ENROLLEE.replace("_", "-")));
         });
     }
 
@@ -181,17 +181,23 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
         } catch (NullPointerException e) {
         }
     }
-
+    
+    private String type = "Regular";
     @Override
     public void onEventHandling() {
         addClickEvent(btn_proceed, () -> {
             validateInput();
         });
+        addClickEvent(txt_type, ()->{
+            type = StudentType.showStudentTypeChooser(this.getStage());
+            txt_type.setText(type==null? txt_type.getText() : type);
+        });
 
     }
 
     private void validateInput() {
-        if (this.chk_cross.isSelected()) {
+        type = type==null? txt_type.getText() : type;
+        if (type.equalsIgnoreCase(StudentType.CROSS_ENROLLEE.replace("_", "-"))) {
             this.crossEnrollee();
             return;
         }
@@ -237,31 +243,6 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
                     .show();
             return;
         }
-//        Integer validYear = null;
-//        if (adyear == null) {
-//            Mono.fx().alert().createWarning()
-//                    .setHeader("No Admission Year Found")
-//                    .setMessage("Please enter the admission year.")
-//                    .show();
-//            return;
-//        } else {
-//            boolean valid = false;
-//            try {
-//                validYear = Integer.valueOf(adyear);
-//                if (adyear.length() == 4) {
-//                    valid = true;
-//                }
-//            } catch (NumberFormatException e) {
-//            }
-//            if (!valid) {
-//                Mono.fx().alert().createWarning()
-//                        .setHeader("Invalid Admission Year")
-//                        .setMessage("Please enter a valid admission year.")
-//                        .show();
-//                return;
-//            }
-//        }
-
         //----------------------------------------------------------------------
         try {
             Integer CURRICULUM_id = curriculumIDs.get(cmb_curriculum.getSelectionModel().getSelectedIndex());
@@ -278,7 +259,7 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
         STUDENT.setYear_level((cmb_year_level.getSelectionModel().getSelectedIndex() + 1));
         STUDENT.setSection(section.toUpperCase());
         STUDENT.set_group(groupInt);
-//        STUDENT.setAdmission_year(adyear);
+        STUDENT.setClass_type(type.replace("-", "_").toUpperCase());
 
         if (Database.connect().student().update(STUDENT)) {
             isSaved = true;
@@ -312,8 +293,8 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
         STUDENT.setYear_level(null);
         STUDENT.setSection(null);
         STUDENT.set_group(null);
-        STUDENT.setResidency("CROSS_ENROLLEE");
-
+        STUDENT.setResidency(StudentType.CROSS_ENROLLEE);
+        STUDENT.setClass_type(StudentType.CROSS_ENROLLEE);
         if (Database.connect().student().update(STUDENT)) {
             isSaved = true;
             Mono.fx().alert().createInfo()

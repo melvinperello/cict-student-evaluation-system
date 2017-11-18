@@ -61,6 +61,9 @@
 <property name="residency" type="java.lang.String">
 <column name="residency" length="50"/>
 </property>
+<property name="class_type" type="java.lang.String">
+<column name="class_type" length="50"/>
+</property>
 <property name="university" type="java.lang.String">
 <column name="university" length="50"/>
 </property>

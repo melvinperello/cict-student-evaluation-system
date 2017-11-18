@@ -2,7 +2,7 @@
 // SQL_table: faculty_profile
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 15, 2017 01:44:44 PM
+// Created: Nov 18, 2017 02:34:40 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello

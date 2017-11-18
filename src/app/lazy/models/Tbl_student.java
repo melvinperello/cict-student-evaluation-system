@@ -2,7 +2,7 @@
 // SQL_table: student
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 15, 2017 01:44:47 PM
+// Created: Nov 18, 2017 02:34:43 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -36,6 +36,7 @@ public final String admission_year = "admission_year";
 public final String college = "college";
 public final String campus = "campus";
 public final String residency = "residency";
+public final String class_type = "class_type";
 public final String university = "university";
 public final String created_by = "created_by";
 public final String created_date = "created_date";
