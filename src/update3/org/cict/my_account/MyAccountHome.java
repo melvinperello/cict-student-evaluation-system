@@ -27,7 +27,9 @@ import app.lazy.models.AccountFacultyAttemptMapping;
 import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
-import app.lazy.models.SystemOverrideLogsMapping;
+import app.lazy.models.FacultyMapping;
+import app.lazy.models.utils.FacultyUtility;
+import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextGroup;
 import com.izum.fx.textinputfilters.TextInputFilters;
@@ -56,6 +58,9 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -89,6 +94,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     private JFXButton btn_home;
 
     @FXML
+    private JFXButton btn_view_update_profile;
+
+    @FXML
     private JFXButton btn_voew_access_history;
 
     @FXML
@@ -117,6 +125,18 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
     @FXML
     private Label lbl_history_user;
+
+    @FXML
+    private ComboBox<String> cmb_from;
+
+    @FXML
+    private ComboBox<String> cmb_to;
+
+    @FXML
+    private JFXButton btn_filter;
+
+    @FXML
+    private JFXButton btn_print;
 
     @FXML
     private StackPane stack_history;
@@ -171,19 +191,32 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_cs_change;
-    
-    @FXML
-    private JFXButton btn_print;
-    
-    @FXML
-    private ComboBox<String> cmb_from;
 
     @FXML
-    private ComboBox<String> cmb_to;
-    
-    @FXML
-    private JFXButton btn_filter;
+    private VBox vbox_update_profile;
 
+    @FXML
+    private TextField txt_last;
+
+    @FXML
+    private TextField txt_first;
+
+    @FXML
+    private TextField txt_middle;
+
+    @FXML
+    private TextField txt_mobile;
+
+    @FXML
+    private JFXButton btn_update_info;
+
+    @FXML
+    private RadioButton rbtn_male;
+
+    @FXML
+    private RadioButton rbtn_female;
+    
+    
     public MyAccountHome() {
         //
     }
@@ -231,8 +264,11 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         this.emptyView = new EmptyView(stack_history);
 
         //
-        this.changeView(this.vbox_access);
-        this.showAccessHistory();
+        ToggleGroup group2 = new ToggleGroup();
+        rbtn_male.setToggleGroup(group2);
+        rbtn_female.setToggleGroup(group2);
+        this.changeView(this.vbox_update_profile);
+        this.showProfile();
 
         /**
          * Load Security Questions.
@@ -293,6 +329,32 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         answerPattern.clone().setTextSource(txt_cs_answer).applyFilter();
         answerPattern.clone().setTextSource(txt_cs_confirm_answer).applyFilter();
         passwordPattern.clone().setTextSource(txt_cs_currnet_password).applyFilter();
+    
+    
+        StringFilter textName = TextInputFilters.string()
+                .setFilterMode(StringFilter.LETTER_SPACE)
+                .setMaxCharacters(100)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+
+        textName.clone().setTextSource(txt_first).applyFilter();
+        textName.clone().setTextSource(txt_last).applyFilter();
+        textName.clone().setTextSource(txt_middle).applyFilter();
+        
+        StringFilter textContact = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(20)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager -> {
+                });
+
+        textContact.clone().setTextSource(txt_mobile).applyFilter();
     }
 
     /**
@@ -312,8 +374,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             vbox_change_password.setVisible(false);
             vbox_change_pin.setVisible(false);
             vbox_change_question.setVisible(false);
+            vbox_update_profile.setVisible(false);
             whatView.setVisible(true);
-        }, vbox_change_password, vbox_access, vbox_change_pin, vbox_change_question);
+        }, vbox_change_password, vbox_access, vbox_change_pin, vbox_change_question, vbox_update_profile);
     }
 
     @Override
@@ -323,8 +386,13 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             this.detachAll();
         });
 
+        super.addClickEvent(btn_view_update_profile, ()->{
+            this.showProfile();
+            this.changeView(this.vbox_update_profile);
+        });
         super.addClickEvent(btn_voew_access_history, () -> {
             this.changeView(this.vbox_access);
+            this.showAccessHistory();
         });
         super.addClickEvent(btn_view_change_password, () -> {
             this.changeView(this.vbox_change_password);
@@ -364,6 +432,10 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         cmb_to.valueProperty().addListener((a)->{
             cmbChanged = true;
             btn_filter.setDisable(false);
+        });
+        
+        super.addClickEvent(btn_update_info, ()->{
+            this.updateProfile();
         });
     }
 
@@ -1133,5 +1205,118 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
         }
     }
+    
+    private FacultyMapping faculty;
+    private void showProfile() {
+        faculty = FacultyUtility.getFaculty(CollegeFaculty.instance().getFACULTY_ID());
+        txt_first.setText(faculty.getFirst_name());
+        txt_last.setText(faculty.getLast_name());
+        txt_middle.setText(faculty.getMiddle_name()==null? "" : faculty.getMiddle_name());
+        txt_mobile.setText(faculty.getMobile_number()==null? "" : "09"+faculty.getMobile_number().substring(4, 13));
+        
+        if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("MALE")) {
+            rbtn_male.setSelected(true);
+        } else if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("FEMALE")) {
+            rbtn_female.setSelected(true);
+        } else {
+            // if none was set in the database
+            rbtn_male.setSelected(true);
+        }
+    }
+    
+    private void updateProfile() {
+        if(txt_last.getText()==null || txt_last.getText().isEmpty()) {
+            showWarning("Last Name", "Last name cannot be empty.");
+            return;
+        } 
+        if(txt_first.getText()==null || txt_first.getText().isEmpty()) {
+            showWarning("First Name", "First name cannot be empty.");
+            return;
+        } 
+        String contactNumber = txt_mobile.getText();
+        if(contactNumber==null || contactNumber.isEmpty()) {
+            showWarning("Invalid Contact Number", "Contact number must have a value.");
+            return;
+        } else if(contactNumber.length()<11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
+            showWarning("Invalid Contact Number", "Must start with \"09\" with a length\n"
+                    + "of 11 digits.");
+            return;
+        } else if(contactNumber.length() != 11) {
+            showWarning("Invalid Contact Number", "Must have a length of 11 digits\n"
+                    + "and starts with \"09\"");
+            return;
+        }
+        UpdateProfile updateProfile = new UpdateProfile();
+        updateProfile.setFirstName(MonoString.removeExtraSpace(txt_first.getText()).toUpperCase());
+        updateProfile.setLastName(MonoString.removeExtraSpace(txt_last.getText()).toUpperCase());
+        updateProfile.setMiddleName(txt_middle.getText()==null? "" : MonoString.removeExtraSpace(txt_middle.getText()).toUpperCase());
+        updateProfile.setMobileNumber("+639"+contactNumber.substring(2, 11));
+        updateProfile.setUser(faculty);
+        updateProfile.whenStarted(() -> {
+            super.cursorWait();
+            btn_ct_change_pin.setDisable(true);
+        });
+        updateProfile.whenFailed(() -> {
+            // cannot update
+            Mono.fx().snackbar().showError(application_root, "Connection problem encountered.");
+        });
+        updateProfile.whenCancelled(() -> {
+            Mono.fx().snackbar().showError(application_root, "Authentication Failed!");
+        });
+        updateProfile.whenSuccess(() -> {
+            // successfully updated
+            Mono.fx().snackbar().showSuccess(application_root, "Successfully Updated");
+        });
+        updateProfile.whenFinished(() -> {
+            super.cursorDefault();
+        });
 
+        updateProfile.transact();
+    }
+
+    private void showWarning(String title, String text) {
+        Notifications.create().darkStyle()
+                .title(title)
+                .text(text)
+                .showWarning();
+    }
+    
+    private class UpdateProfile extends Transaction {
+        private FacultyMapping user;
+        private String lastName;
+        private String firstName;
+        private String middleName;
+        private String mobileNumber;
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public void setMiddleName(String middleName) {
+            this.middleName = middleName;
+        }
+
+        public void setMobileNumber(String mobileNumber) {
+            this.mobileNumber = mobileNumber;
+        }
+
+        public void setUser(FacultyMapping user) {
+            this.user = user;
+        }
+        
+        
+        @Override
+        protected boolean transaction() {
+            user.setFirst_name(firstName);
+            user.setLast_name(lastName);
+            user.setMiddle_name(middleName);
+            user.setMobile_number(mobileNumber);
+            return Database.connect().faculty().update(user);
+        }
+        
+    }
 }

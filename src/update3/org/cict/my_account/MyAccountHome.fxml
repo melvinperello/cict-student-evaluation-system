@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -56,6 +58,24 @@
          <children>
             <VBox prefHeight="565.0" prefWidth="266.0" spacing="10.0">
                <children>
+                  <JFXButton fx:id="btn_view_update_profile" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Update Profile" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../access/images/user.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-90.0" />
+                     </padding>
+                  </JFXButton>
                   <JFXButton fx:id="btn_voew_access_history" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Access History" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
@@ -135,7 +155,7 @@
             </VBox>
             <StackPane HBox.hgrow="ALWAYS">
                <children>
-                  <VBox fx:id="vbox_access" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_access" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -667,6 +687,171 @@
                               <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
                                  <children>
                                     <JFXButton fx:id="btn_cs_change" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Save Changes" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_update_profile" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../access/images/user.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Update Profile">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox spacing="20.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Last Name">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="txt_last" prefHeight="32.0" prefWidth="335.0" promptText="Last Name">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="First Name">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="txt_first" prefHeight="32.0" prefWidth="335.0" promptText="First Name">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Middle Name">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="txt_middle" prefHeight="32.0" prefWidth="335.0" promptText="Middle Name">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="183.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
+                                       <children>
+                                          <Label prefHeight="26.0" prefWidth="140.0" text="Gender" textFill="#656d79">
+                                             <font>
+                                                <Font size="17.0" />
+                                             </font>
+                                          </Label>
+                                          <RadioButton fx:id="rbtn_male" accessibleText="rbtn_male" mnemonicParsing="false" styleClass="label" text="Male">
+                                             <padding>
+                                                <Insets left="10.0" />
+                                             </padding>
+                                          </RadioButton>
+                                          <RadioButton fx:id="rbtn_female" accessibleText="rbtn_female" mnemonicParsing="false" styleClass="label" text="Female">
+                                             <padding>
+                                                <Insets left="30.0" />
+                                             </padding>
+                                          </RadioButton>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="132.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label prefWidth="150.0" text="Mobile Number">
+                                       <font>
+                                          <Font size="17.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="txt_mobile" prefHeight="32.0" prefWidth="209.0" promptText="Mobile Number">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton fx:id="btn_update_info" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Update" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
