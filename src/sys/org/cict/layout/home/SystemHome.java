@@ -270,7 +270,7 @@ public class SystemHome extends MonoLauncher {
      */
     public static void launchHome(boolean systemLaunch) {
         SystemHome homeFx = M.load(SystemHome.class);
-        Stage mainStage = homeFx.createStageApplication();
+        Stage mainStage = homeFx.createStage();
         mainStage.setMinWidth(1024);
         mainStage.setMinHeight(700);
         mainStage.setMaximized(true);

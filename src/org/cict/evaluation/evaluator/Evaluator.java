@@ -437,61 +437,6 @@ public class Evaluator implements Process {
                 return;
             }
             
-            
-            //----------------------------------
-            // this filters are placed on top of the
-            // cross enrollee checker becoz they do not allow
-            // the said type to bypass this filters.
-            
-            // checks if the section of the subject already
-            // reached the max population
-            if(maxPopulationReached) {
-                Notifications.create()
-                        .title("Max Population Reached")
-                        .text("Section reached the maximum population."
-                                + "\nClick This notification for more details.")
-                        .onAction(a -> {
-                            this.goLang(EXCEED_MAX_POPULATION);
-                        })
-                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                maxPopulationReached = false;
-                return;
-            }
-            
-            // check if section selected is a tutorial section with a
-            // single student evaluated to it.
-            if(invalidStudentCount) {
-                Notifications.create()
-                        .title("Max Population Reached")
-                        .text("Tutorial Section requires only one student per section."
-                                + "\nClick This notification for more details.")
-                        .onAction(a -> {
-                            this.goLang(EXCEED_MAX_POPULATION);
-                        })
-                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                invalidStudentCount = false;
-                return;
-            }
-            
-            //--------------------------------
-            
-            
-            
-            
-            //------------------------------------------------------------------
-            // CROSS-ENROLLEE FILTER SHOULD BE ADDED HERE
-            boolean isCrossEnrollee = currentStudent.getResidency().equalsIgnoreCase("CROSS_ENROLLEE");
-            if (isCrossEnrollee) {
-                // this is a cross enrollment force add
-                forceAdd(true);
-            }
-            //------------------------------------------------------------------
-            // check for ojt if can take with other subject on the same time
-            if (!this.isOJTVerified()) {
-                // if ojt not verified
-                return;
-            }
-
             // get the subject information if no subject info return
             Integer subjectID = Evaluator.instance().pressedSubjectID;
             if (subjectID == null) {
@@ -506,8 +451,23 @@ public class Evaluator implements Process {
                 return;
             }
 
+            //------------------------------------------------------------------
+            // CROSS-ENROLLEE FILTER SHOULD BE ADDED HERE
+            boolean isCrossEnrollee = currentStudent.getResidency().equalsIgnoreCase("CROSS_ENROLLEE");
+            if (isCrossEnrollee && !maxPopulationReached && !invalidStudentCount) {
+                // this is a cross enrollment force add
+                forceAdd(true);
+                return;
+            }
+            //------------------------------------------------------------------
+            // check for ojt if can take with other subject on the same time
+            if (!this.isOJTVerified() && !isCrossEnrollee) {
+                // if ojt not verified
+                return;
+            }
+
             // if the subject is an internship subject
-            if (sub.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+            if (sub.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)  && !isCrossEnrollee) {
                 // if internship
                 if (!this.isInternshipAllowed()) {
                     Notifications.create()
@@ -558,6 +518,39 @@ public class Evaluator implements Process {
         private void onValidateSuccess() {
             // check eligibility
             if (validationTask.isEligibleToTake()) {
+                
+                // checks if the section of the subject already
+                // reached the max population
+                if(maxPopulationReached) {
+                    Notifications.create()
+                            .title("Max Population Reached")
+                            .text("Section reached the maximum population."
+                                    + "\nClick This notification for more details.")
+                            .onAction(a -> {
+                                this.goLang(EXCEED_MAX_POPULATION);
+                            })
+                            .position(Pos.BOTTOM_RIGHT).showWarning();
+                    maxPopulationReached = false;
+                    return;
+                }
+
+                // check if section selected is a tutorial section with a
+                // single student evaluated to it.
+                if(invalidStudentCount) {
+                    Notifications.create()
+                            .title("Max Population Reached")
+                            .text("Tutorial Section requires only one student per section."
+                                    + "\nClick This notification for more details.")
+                            .onAction(a -> {
+                                this.goLang(EXCEED_MAX_POPULATION);
+                            })
+                            .position(Pos.BOTTOM_RIGHT).showWarning();
+                    invalidStudentCount = false;
+                    return;
+                }
+
+                //--------------------------------
+
                 if (this.isOverMaxUnits()) {
                     return;
                 }
@@ -761,4 +754,5 @@ public class Evaluator implements Process {
 
     } // inner clas end
 
+    
 }

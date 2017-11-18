@@ -1173,7 +1173,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
 
         group = (removeExtraSpace(txt_group.getText()) == null || removeExtraSpace(txt_group.getText()).isEmpty() ? null : 1);
-        if (group.equals(1)) {
+        if (group != null && group.equals(1)) {
             boolean invalidGroup = false;
             try {
                 group = (Integer.valueOf(removeExtraSpace(txt_group.getText())));
