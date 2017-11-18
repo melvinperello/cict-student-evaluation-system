@@ -28,7 +28,9 @@ import app.lazy.models.AnnouncementsMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.LinkedMarshallSessionMapping;
+import app.lazy.models.LinkedSettingsMapping;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.utils.FacultyUtility;
 import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
@@ -58,6 +60,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import sys.org.cict.layout.home.system_variables.SystemValuesRow;
@@ -92,7 +95,52 @@ public class LinkedHome extends SceneFX implements ControllerFX {
     private VBox vbox_home;
 
     @FXML
+    private Label lbl_session_started;
+
+    @FXML
+    private Label lbl_started_by;
+
+    @FXML
+    private Label lbl_cluster1;
+
+    @FXML
+    private Label lbl_cluster1_max;
+
+    @FXML
+    private Label lbl_cluster1_served;
+
+    @FXML
+    private Label lbl_cluster2;
+
+    @FXML
+    private Label lbl_cluster2_max;
+
+    @FXML
+    private Label lbl_cluster2_served;
+
+    @FXML
+    private JFXButton btn_pause_1;
+
+    @FXML
+    private JFXButton btn_pause_2;
+
+    @FXML
     private VBox vbox_new_session;
+
+    @FXML
+    private TextField txt_cluster1;
+
+    @FXML
+    private TextField txt_cluster1_max;
+
+    @FXML
+    private TextField txt_cluster2;
+
+    @FXML
+    private TextField txt_cluster2_max;
+
+    @FXML
+    private JFXButton btn_create_new_session;
 
     @FXML
     private VBox vbox_marshalls;
@@ -122,6 +170,7 @@ public class LinkedHome extends SceneFX implements ControllerFX {
     public void onInitialization() {
         super.bindScene(application_root);
         // default view.
+        this.loadSessionDetails();
         this.changeView(vbox_home);
     }
 
@@ -147,6 +196,7 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         });
 
         super.addClickEvent(btn_linked_session, () -> {
+            this.loadSessionDetails();
             this.changeView(vbox_home);
         });
         super.addClickEvent(btn_new_session, () -> {
@@ -179,6 +229,49 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_new_announcement, () -> {
             this.showCreateAnnouncement();
         });
+        
+        this.newSessionEvents();
+        
+        super.addClickEvent(btn_pause_1, ()->{
+            this.pausedClicked(btn_pause_1, "One");
+        });
+        super.addClickEvent(btn_pause_2, ()->{
+            this.pausedClicked(btn_pause_2, "Two");
+        });
+    }
+    
+    private void pausedClicked(JFXButton button, String number) {
+        String buttonName;
+        if((number.equalsIgnoreCase("One"))) {
+            if(lsMap.getFloor_3_cut().equals(0)) {
+                lsMap.setFloor_3_cut(1);
+                buttonName = "Resume Cluster " + number;
+            } else {
+                lsMap.setFloor_3_cut(0);
+                buttonName = "Pause Cluster " + number;
+            }
+        } else {
+            if(lsMap.getFloor_4_cut().equals(0)) {
+                lsMap.setFloor_4_cut(1);
+                buttonName = "Resume Cluster " + number;
+            } else {
+                lsMap.setFloor_4_cut(0);
+                buttonName = "Pause Cluster " + number;
+            }
+        }
+        if(Database.connect().linked_settings().update(lsMap)) {
+            Notifications.create().darkStyle()
+                .title("Successfully " + (number.equalsIgnoreCase("One")? (lsMap.getFloor_3_cut().equals(0)? "Resumed" : "Paused") : (lsMap.getFloor_4_cut().equals(0)? "Resumed" : "Paused")))
+                .text("State of the transaction for the queue\nprocess is changed.")
+                .showInformation();
+            button.setText(buttonName);
+        } else {
+            Notifications.create().darkStyle()
+                .title("Failed")
+                .text("Please check your connectivity to the server.")
+                .showError();
+            button.setDisable(true);
+        }
     }
 
     private void loadMarshalls() {
@@ -655,5 +748,158 @@ public class LinkedHome extends SceneFX implements ControllerFX {
             vbox_no_announcements.setVisible(false);
             node.setVisible(true);
         }, vbox_announce_list, vbox_no_announcements);
+    }
+    
+    private LinkedSettingsMapping lsMap;
+    private void loadSessionDetails() {
+        lsMap = Mono.orm().newSearch(Database.connect().linked_settings())
+                .active(Order.asc(DB.linked_settings().id)).last();
+        
+        SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy hh:mm aa");
+        lbl_session_started.setText(lsMap==null? "NONE" : format.format(lsMap.getCreated_date()));
+        lbl_started_by.setText(lsMap==null? "NONE" : WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(lsMap.getCreated_by()))));
+
+        lbl_cluster1.setText(lsMap==null? "NONE" : lsMap.getFloor_3_name());
+        lbl_cluster1_max.setText(lsMap==null? "NONE" : lsMap.getFloor_3_max() + "");
+        lbl_cluster1_served.setText(lsMap==null? "NONE" : lsMap.getFloor_3_last() + "");
+        lbl_cluster2.setText(lsMap==null? "NONE" : (lsMap.getFloor_4_name()==null? "NONE" : lsMap.getFloor_4_name()));
+        lbl_cluster2_max.setText(lsMap==null? "NONE" : lsMap.getFloor_4_max() + "");
+        lbl_cluster2_served.setText(lsMap==null? "NONE" : lsMap.getFloor_4_last()+"");
+
+        btn_pause_1.setDisable(lsMap==null && lsMap.getFloor_3_name()==null);
+        btn_pause_2.setDisable(lsMap==null? true : lsMap.getFloor_4_name()==null);
+        
+        if(lsMap != null && lsMap.getFloor_3_cut().equals(0)) {
+            btn_pause_1.setText("Pause Cluster One");
+        } else 
+            btn_pause_1.setText("Resume Cluster One");
+        if(lsMap != null && lsMap.getFloor_4_cut().equals(0)) {
+            btn_pause_2.setText("Pause Cluster Two");
+        } else 
+            btn_pause_2.setText("Resume Cluster Two");
+    }
+    
+    private void newSessionEvents() {
+        txt_cluster1.textProperty().addListener((a)->{
+            String cluster1 = MonoString.removeExtraSpace(txt_cluster1.getText());
+            if(cluster1==null || cluster1.isEmpty()) {
+                txt_cluster1_max.setDisable(true);
+                txt_cluster1_max.setText("");
+            } else {
+                txt_cluster1_max.setDisable(false);
+            }
+        });
+        txt_cluster1_max.textProperty().addListener((a)->{
+            String cluster1_max = MonoString.removeExtraSpace(txt_cluster1_max.getText());
+            if(cluster1_max==null || cluster1_max.isEmpty()) {
+                txt_cluster2.setDisable(true);
+                txt_cluster2.setText("");
+                txt_cluster2_max.setDisable(true);
+                txt_cluster2_max.setText("");
+            } else {
+                txt_cluster2.setDisable(false);
+            }
+        });
+        txt_cluster2.textProperty().addListener((a)->{
+            String cluster2 = MonoString.removeExtraSpace(txt_cluster2.getText());
+            if(cluster2==null || cluster2.isEmpty()) {
+                txt_cluster2_max.setDisable(true);
+                txt_cluster2_max.setText("");
+            } else {
+                txt_cluster2_max.setDisable(false);
+            }
+        });
+        super.addClickEvent(btn_create_new_session, ()->{
+            this.createNewSession();
+        });
+    }
+    
+    private void createNewSession() {
+        String cluster1 = MonoString.removeExtraSpace(txt_cluster1.getText());
+        String cluster1_max = MonoString.removeAll(txt_cluster1_max.getText(), " ");
+        if(cluster1==null || cluster1.isEmpty() || cluster1_max==null || cluster1_max.isEmpty()) {
+            Mono.fx().alert().createWarning()
+                    .setHeader("Empty Field")
+                    .setMessage("Please supply the fields given to proceed.")
+                    .show();
+            return;
+        }
+        Integer max1 = null, max2 = null;
+        try {
+            max1 = Integer.valueOf(cluster1_max);
+        } catch (Exception e) {
+            Mono.fx().alert().createWarning()
+                    .setHeader("Invalid Maximum Count")
+                    .setMessage("Please supply a valid count for Cluster 1.")
+                    .show();
+            return;
+        }
+        
+        
+        String cluster2 = MonoString.removeExtraSpace(txt_cluster2.getText());
+        String cluster2_max = MonoString.removeAll(txt_cluster2_max.getText(), " ");
+        if(cluster2==null || cluster2.isEmpty()) {
+            cluster2 = null;
+            cluster2_max = null;
+            txt_cluster2_max.setText("");
+            txt_cluster2.setDisable(true);
+            txt_cluster2_max.setDisable(true);
+        } else {
+            try {
+                max2 = Integer.valueOf(cluster2_max);
+            } catch (Exception e) {
+                Mono.fx().alert().createWarning()
+                        .setHeader("Invalid Maximum Count")
+                        .setMessage("Please supply a valid count for Cluster 2.")
+                        .show();
+                return;
+            }
+        }
+        
+        if(lsMap!=null) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setHeader("New Session")
+                    .setMessage("This will remove the previous session. Do you still want to continue?")
+                    .confirmYesNo();
+            if(res==-1)
+                return;
+        }
+        CreateNewSessionTransaction newSess = new CreateNewSessionTransaction();
+        newSess.setCreatedBy(CollegeFaculty.instance().getFACULTY_ID());
+        newSess.setFloor3Max(max1);
+        newSess.setFloor3Name(cluster1.toUpperCase());
+        newSess.setFloor4Max(max2);
+        newSess.setFloor4Name(cluster2==null? null : cluster2.toUpperCase());
+        newSess.whenCancelled(()->{
+            Notifications.create().darkStyle()
+                    .title("Cancelled")
+                    .text("Please check your connectivity to the server.")
+                    .showWarning();
+        });
+        newSess.whenFailed(()->{
+            Notifications.create().darkStyle()
+                    .title("Failed")
+                    .text("Please check your connectivity to the server.")
+                    .showError();
+        });
+        newSess.whenStarted(()->{
+            btn_create_new_session.setDisable(true);
+        });
+        newSess.whenSuccess(()->{
+            Notifications.create().darkStyle()
+                    .title("Created New Session")
+                    .text("Success! New Session is created.")
+                    .showInformation();
+            this.loadSessionDetails();
+            this.changeView(vbox_home);
+        });
+        newSess.whenFinished(()->{
+            btn_create_new_session.setDisable(false);
+        });
+        newSess.transact();
+        txt_cluster1.setText("");
+        txt_cluster1_max.setText("");
+        txt_cluster2.setText("");
+        txt_cluster2_max.setText("");
     }
 }
