@@ -139,7 +139,7 @@ public class ActualDataHistory extends SceneFX implements ControllerFX {
     
     private void createRow(CurriculumHistoryMapping chsMap) {
         SimpleTableRow row = new SimpleTableRow();
-        row.setRowHeight(594.0);
+        row.setRowHeight(255.0);
         
         HBox historyRow = (HBox) Mono.fx().create()
                 .setPackageName("update2.org.cict.layout.curriculum")
@@ -157,16 +157,6 @@ public class ActualDataHistory extends SceneFX implements ControllerFX {
         Label lbl_major = searchAccessibilityText(historyRow, "major");
         Label lbl_ladder = searchAccessibilityText(historyRow, "ladder");
         Label lbl_type = searchAccessibilityText(historyRow, "type");
-        
-        //PRIMARY
-        Label lbl_p_id = searchAccessibilityText(historyRow, "p_id");
-        Label lbl_p_name = searchAccessibilityText(historyRow, "p_name");
-        Label lbl_p_description = searchAccessibilityText(historyRow, "p_description");
-        Label lbl_p_major = searchAccessibilityText(historyRow, "p_major");
-        
-        //VBOX FOR EQUIVALENT
-        Label lbl_eq = searchAccessibilityText(historyRow, "eq");
-        VBox vbox_eq = searchAccessibilityText(historyRow, "vbox_eq");
         
         //UPDATED BY
         Label lbl_updated_by = searchAccessibilityText(historyRow, "updated_by");
@@ -188,43 +178,6 @@ public class ActualDataHistory extends SceneFX implements ControllerFX {
         else
             lbl_description.setText("NONE");
         lbl_type.setText(chsMap.getLadderization_type());
-        
-        //SET PRIMARY
-        CurriculumPreMapping cpMap = Mono.orm().newSearch(Database.connect().curriculum_pre())
-                .eq(DB.curriculum_pre().curriculum_id_get, CURRICULUM.getId())
-                .eq(DB.curriculum_pre().cur_type, "PRIMARY")
-                .active()
-                .first();
-        if(cpMap != null) {
-            CurriculumMapping curriculumPrimary = Mono.orm().newSearch(Database.connect().curriculum())
-                    .eq(DB.curriculum().id, cpMap.getCurriculum_id_req())
-                    .active()
-                    .first();
-            if(curriculumPrimary != null) {
-                lbl_p_id.setText(curriculumPrimary.getId() + "");
-                if(curriculumPrimary.getDescription() != null)
-                    lbl_p_description.setText(curriculumPrimary.getDescription());
-                else
-                    lbl_p_description.setText("NONE");
-                if(curriculumPrimary.getMajor() != null)
-                    lbl_p_major.setText(curriculumPrimary.getMajor());
-                else
-                    lbl_p_major.setText("NONE");
-                lbl_p_name.setText(curriculumPrimary.getName());
-            }
-        }
-         
-        //SET EQUIVALENT
-        ArrayList<CurriculumPreMapping> cpMapEq = Mono.orm().newSearch(Database.connect().curriculum_pre())
-                .eq(DB.curriculum_pre().curriculum_id_get, CURRICULUM.getId())
-                .eq(DB.curriculum_pre().cur_type, "EQUIVALENT")
-                .active()
-                .all();
-        if(cpMapEq != null) {
-            lbl_eq.setText("Equivalent (" + cpMapEq.size() + ")");
-            createEqTable(vbox_eq, cpMapEq);
-        }
-        
         
         SimpleDateFormat formatter = new SimpleDateFormat("EEEEE MMMMM dd, yyyy HH:mm:ss aa");
         
@@ -270,57 +223,4 @@ public class ActualDataHistory extends SceneFX implements ControllerFX {
         
         historyTable.addRow(row);
     }
-    
-    private void createEqTable(VBox vbox, ArrayList<CurriculumPreMapping> cpMapEqs) {
-        SimpleTable eqTable = new SimpleTable();
-        
-        for(CurriculumPreMapping cpMapEq: cpMapEqs) {
-            SimpleTableRow row = new SimpleTableRow();
-            row.setRowHeight(70.0);
-            CurriculumMapping curriculum = Mono.orm().newSearch(Database.connect().curriculum())
-                    .eq(DB.curriculum().id, cpMapEq.getCurriculum_id_req())
-                    .active()
-                    .first();
-            if(curriculum == null) {
-                System.out.println("NO CURRICULUM");
-            }
-            
-            HBox eqRow = (HBox) Mono.fx().create()
-                    .setPackageName("update2.org.cict.layout.curriculum")
-                    .setFxmlDocument("eq-row")
-                    .makeFX()
-                    .pullOutLayout();
-
-            //CREATED
-            Label lbl_id = searchAccessibilityText(eqRow, "id");
-            Label lbl_name = searchAccessibilityText(eqRow, "name");
-            Label lbl_descriptionEq = searchAccessibilityText(eqRow, "description");
-            Label lbl_major = searchAccessibilityText(eqRow, "major");
-            
-            lbl_id.setText(curriculum.getId() + "");
-            if(curriculum.getDescription() != null)
-                lbl_descriptionEq.setText(curriculum.getDescription());
-            else
-                lbl_descriptionEq.setText("NO DESCRIPTION");
-            lbl_name.setText(curriculum.getName());
-            if(curriculum.getMajor() != null)
-                lbl_major.setText(curriculum.getMajor());
-            else
-                lbl_major.setText("NONE");
-            
-            SimpleTableCell cellParent = new SimpleTableCell();
-            cellParent.setResizePriority(Priority.ALWAYS);
-            cellParent.setContent(eqRow);
-
-            row.addCell(cellParent);
-            
-            eqTable.addRow(row);
-        }
-        
-        SimpleTableView simpleTableView = new SimpleTableView();
-        simpleTableView.setTable(eqTable);
-        simpleTableView.setFixedWidth(true);
-        simpleTableView.setParentOnScene(vbox);
-    }
-    
 }
