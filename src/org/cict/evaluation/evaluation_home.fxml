@@ -375,10 +375,13 @@
       </AnchorPane>
       <AnchorPane fx:id="anchor_main1" layoutX="10.0" layoutY="77.0" prefHeight="633.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="67.0">
          <children>
-            <StackPane layoutY="40.0" prefHeight="550.0" prefWidth="295.0" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0">
+            <StackPane layoutY="40.0" prefHeight="558.0" prefWidth="295.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0">
                <children>
-                  <VBox fx:id="vbox_list" prefHeight="623.0" prefWidth="290.0" spacing="3.0" />
-                  <VBox fx:id="vbox_waiting_queue" alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_list" prefHeight="623.0" prefWidth="290.0" spacing="3.0">
+                     <StackPane.margin>
+                        <Insets bottom="10.0" />
+                     </StackPane.margin></VBox>
+                  <VBox fx:id="vbox_waiting_queue" alignment="BOTTOM_LEFT" prefHeight="544.0" prefWidth="280.0">
                      <children>
                         <Label text="Waiting..." textFill="#37474f">
                            <font>
@@ -388,7 +391,7 @@
                         <Line endX="100.0" startX="-100.0" />
                      </children>
                      <StackPane.margin>
-                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="15.0" top="10.0" />
                      </StackPane.margin>
                   </VBox>
                </children>
@@ -398,8 +401,8 @@
                   <Font size="19.0" />
                </font>
             </Label>
-            <Label layoutX="8.0" layoutY="602.0" text="Total Enrollee On Queue:" />
-            <Label fx:id="lbl_total_queue" layoutX="144.0" layoutY="602.0" text="10" />
+            <Label layoutX="17.0" layoutY="599.0" text="Total Enrollee On Queue:" />
+            <Label fx:id="lbl_total_queue" layoutX="153.0" layoutY="599.0" text="10" />
          </children>
       </AnchorPane>
    </children>

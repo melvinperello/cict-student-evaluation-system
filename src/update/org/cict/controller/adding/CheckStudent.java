@@ -5,7 +5,6 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import update.org.cict.TransactionHelperFunctions;
 
-import java.util.ArrayList;
 
 public class CheckStudent extends Transaction {
 
@@ -73,6 +72,10 @@ public class CheckStudent extends Transaction {
         }
         
         // student course name
+        if(studentMap.getCURRICULUM_id()==null) {
+            txResult = "NO_CURRICULUM";
+            return false;
+        }
         AcademicProgramMapping aMap = TransactionHelperFunctions.getAcademicProgram(studentMap.getCURRICULUM_id());
         CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(studentMap.getCURRICULUM_id());
         studentSection = aMap.getName() + " | " +

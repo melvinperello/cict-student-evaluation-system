@@ -2,7 +2,7 @@
 // SQL_table: account_faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 18, 2017 02:34:39 PM
+// Created: Nov 19, 2017 02:01:21 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -29,6 +29,7 @@ public class AccountFacultyMapping implements java.io.Serializable {
 
 private java.lang.Integer id;
 private java.lang.Integer FACULTY_id;
+private java.lang.Integer assigned_cluster;
 private java.lang.String username;
 private java.lang.String password;
 private java.lang.String transaction_pin;
@@ -59,6 +60,15 @@ public java.lang.Integer getFACULTY_id() {
 
 public void setFACULTY_id(java.lang.Integer fieldFacultyId) {
 	this.FACULTY_id = fieldFacultyId;
+}
+
+@Column(name = "assigned_cluster", nullable = true, length = 10)
+public java.lang.Integer getAssigned_cluster() {
+	return this.assigned_cluster;
+}
+
+public void setAssigned_cluster(java.lang.Integer fieldAssignedCluster) {
+	this.assigned_cluster = fieldAssignedCluster;
 }
 
 @Column(name = "username", nullable = true, length = 50)

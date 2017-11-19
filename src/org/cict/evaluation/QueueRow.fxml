@@ -9,14 +9,14 @@
 
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="296.0" style="-fx-background-color: #384B65; -fx-border-color: #CDD1D7;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label accessibleText="number" text="1" textFill="#cbd0eb">
+      <Label fx:id="lbl_number" accessibleText="number" text="1" textFill="#cbd0eb">
          <font>
             <Font name="System Bold" size="33.0" />
          </font>
       </Label>
       <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="234.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label accessibleText="id" text="2014112478" textFill="#cde0ff">
+            <Label fx:id="lbl_id" accessibleText="id" text="2014112478" textFill="#cde0ff">
                <font>
                   <Font size="15.0" />
                </font>
@@ -27,7 +27,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Label>
-            <Label accessibleText="name" text="De La Cruz, Joemar" textFill="#c9e3ff">
+            <Label fx:id="lbl_name" accessibleText="name" text="De La Cruz, Joemar" textFill="#c9e3ff">
                <font>
                   <Font size="11.0" />
                </font>

@@ -21,9 +21,8 @@
  * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
  *
  */
-package update3.org.cict.access.management;
+package org.cict.evaluation;
 
-import com.jfoenix.controls.JFXButton;
 import com.melvin.mono.fx.MonoLauncher;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -32,53 +31,32 @@ import javafx.scene.control.Label;
  *
  * @author Joemar
  */
-public class FacultyRow extends MonoLauncher {
+public class QueueRow extends MonoLauncher {
+    
+    @FXML
+    private Label lbl_number;
 
     @FXML
-    private Label lbl_bulsu_id;
-
-    @FXML
-    private Label lbl_department;
+    private Label lbl_id;
 
     @FXML
     private Label lbl_name;
 
-    @FXML
-    private Label lbl_cluster_name;
-
-    @FXML
-    private JFXButton btn_change_cluster;
-
-    @FXML
-    private JFXButton btn_remove;
-    
     @Override
     public void onStartUp() {
     
     }
 
-    public Label getLbl_bulsu_id() {
-        return lbl_bulsu_id;
+    public Label getLbl_number() {
+        return lbl_number;
     }
 
-    public Label getLbl_department() {
-        return lbl_department;
+    public Label getLbl_id() {
+        return lbl_id;
     }
 
     public Label getLbl_name() {
         return lbl_name;
     }
 
-    public JFXButton getBtn_remove() {
-        return btn_remove;
-    }
-
-    public Label getLbl_cluster_name() {
-        return lbl_cluster_name;
-    }
-
-    public JFXButton getBtn_change_cluster() {
-        return btn_change_cluster;
-    }
-    
 }

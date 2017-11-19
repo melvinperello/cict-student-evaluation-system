@@ -56,14 +56,27 @@
             </Label>
          </children>
       </HBox>
-      <VBox alignment="CENTER_RIGHT" prefHeight="69.0" prefWidth="197.0">
+      <VBox alignment="CENTER_LEFT" spacing="5.0">
          <children>
-            <JFXButton fx:id="btn_remove" prefHeight="34.0" prefWidth="115.0" style="-fx-border-color: #fff;" styleClass="label" text="Remove">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </JFXButton>
+            <Label fx:id="lbl_cluster_name" prefHeight="19.0" prefWidth="113.0" text="Cluster Name" />
+            <HBox spacing="10.0">
+               <children>
+                  <JFXButton fx:id="btn_change_cluster" prefHeight="26.0" prefWidth="96.0" style="-fx-border-color: #fff;" styleClass="label" text="Change Cluster">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_remove" prefHeight="10.0" prefWidth="96.0" style="-fx-border-color: #fff;" styleClass="label" text="Remove">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </HBox>
          </children>
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
       </VBox>
    </children>
    <styleClass>

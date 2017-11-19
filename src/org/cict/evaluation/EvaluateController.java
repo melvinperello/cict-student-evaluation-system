@@ -55,6 +55,7 @@ import javafx.scene.layout.Priority;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
+import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.encoder.GradeEncoderController;
@@ -587,6 +588,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         FLAG_ALREADY_EVALUATED = false;
         FLAG_CROSS_ENROLLEE = false;
         btn_encoding.setDisable(false);
+        ThreadMill.searching = false;
     }
 
     /**
@@ -1657,105 +1659,35 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * Queue of student.
      */
     private SimpleTable studentTable = new SimpleTable();
-    private ArrayList<StudentMapping> lst_student;
-
     private CronThread cronThreadQueue;
-    private void createQueueTable() {
+    private void createQueueTable() {        
+        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        Integer clusterNumber = afMap.getAssigned_cluster();
         cronThreadQueue = new CronThread("evaluation_queue");
         cronThreadQueue.setInterval(5000);
         cronThreadQueue.setTask(()->{
-            ArrayList<LinkedEntranceMapping> leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
-                    .eq(DB.linked_entrance().status, "NONE")
-                    .active(Order.asc(DB.linked_entrance().reference_id)).all();
-            if(leMaps==null || leMaps.isEmpty()) {
+            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
+            if(result) {
+                Mono.fx().thread().wrap(()->{
+                    Animate.fade(vbox_list, 150, ()->{
+                        vbox_waiting_queue.setVisible(false);
+                        vbox_list.setVisible(true);
+                    }, vbox_waiting_queue, vbox_list);
+                });
+            } else {
                 Mono.fx().thread().wrap(()->{
                     Animate.fade(vbox_waiting_queue, 150, ()->{
                         lbl_total_queue.setText("0");
                         vbox_list.setVisible(false);
                         vbox_waiting_queue.setVisible(true);
                     }, vbox_waiting_queue, vbox_list);
-                    });
-                return;
+                });
             }
-            System.out.println("PASSED");
-            Mono.fx().thread().wrap(()->{
-                studentTable.getChildren().clear();
-                lbl_total_queue.setText(leMaps.size() + "");
-            });
-            for (int i = 0; i < leMaps.size(); i++) {
-                LinkedEntranceMapping leMap = leMaps.get(i);
-                createRow(leMap);
+            if(ThreadMill.searching) {
+                this.searchStudent();
             }
-            SimpleTableView simpleTableView = new SimpleTableView();
-            simpleTableView.setFixedWidth(true);
-
-            Mono.fx().thread().wrap(()->{
-                Animate.fade(vbox_list, 150, ()->{
-                    simpleTableView.setTable(studentTable);
-                    simpleTableView.setParentOnScene(vbox_list);
-                    vbox_waiting_queue.setVisible(false);
-                    vbox_list.setVisible(true);
-                }, vbox_waiting_queue, vbox_list);
-            });
         });
         cronThreadQueue.start();
-    }
-
-    private void createRow(LinkedEntranceMapping leMap) {
-
-        SimpleTableRow row = new SimpleTableRow();
-        row.setRowHeight(70.0);
-        row.getRowMetaData().put("MAP", leMap);
-        HBox programRow = (HBox) Mono.fx().create()
-                .setPackageName("org.cict.evaluation")
-                .setFxmlDocument("eval-row")
-                .makeFX()
-                .pullOutLayout();
-        Label lbl_number = searchAccessibilityText(programRow, "number");
-        Label lbl_id = searchAccessibilityText(programRow, "id");
-        Label lbl_name = searchAccessibilityText(programRow, "name");
-
-        lbl_number.setText(leMap.getReference_id() + "");
-        lbl_id.setText(leMap.getStudent_number());
-        lbl_name.setText(WordUtils.capitalizeFully(this.getStudentName(leMap.getStudent_number())));
-
-        SimpleTableCell cellParent = new SimpleTableCell();
-        cellParent.setResizePriority(Priority.ALWAYS);
-        cellParent.setContent(programRow);
-        
-        row.addCell(cellParent);
-        Mono.fx().thread().wrap(()->{
-            super.addClickEvent(row, ()->{
-                LinkedEntranceMapping selected = (LinkedEntranceMapping) row.getRowMetaData().get("MAP");
-                if(selected==null) {
-                    Notifications.create().darkStyle().title("Done")
-                            .text("Selected student is already serving.")
-                            .showInformation();
-                    return;
-                }
-                selected.setStatus("DONE");
-                boolean res = Database.connect().linked_entrance().update(selected);
-                if(!res) {
-                    Notifications.create().darkStyle().title("Failed")
-                            .text("Please check your connectivity to the server.")
-                            .showError();
-                    return;
-                }
-                txtStudentNumber.setText(selected.getStudent_number());
-                this.searchStudent();
-            });
-            row.setDisable(!studentTable.getChildren().isEmpty());
-            studentTable.addRow(row);
-        });
-    }
-    
-    private String getStudentName(String studentNumber) {
-        StudentMapping student = Mono.orm().newSearch(Database.connect().student())
-                .eq(DB.student().id, studentNumber).active(Order.desc(DB.student().cict_id)).first();
-        if(student==null) {
-            return "";
-        }
-        return student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "" : student.getMiddle_name());
     }
     
     private void setImageView() {

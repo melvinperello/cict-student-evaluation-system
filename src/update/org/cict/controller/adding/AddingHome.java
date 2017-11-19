@@ -5,16 +5,15 @@ import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
-import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.SystemOverrideLogsMapping;
-import artifacts.FTPManager;
 import artifacts.ImageUtility;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.CronThread;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.controls.SimpleImage;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -24,13 +23,11 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
-import java.io.File;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -46,15 +43,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
+import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.CurricularLevelController;
 import org.cict.evaluation.FirstAssistantController;
-import org.cict.evaluation.evaluator.Evaluator;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
@@ -72,17 +67,11 @@ import update3.org.cict.access.SystemOverriding;
 
 public class AddingHome extends SceneFX implements ControllerFX {
 
-    private double max_units = 27.0;
+//    private double max_units = 27.0;
     @FXML
     private AnchorPane anchor_add_change;
     @FXML
     private JFXButton btn_home;
-//    @FXML
-//    private JFXButton btn_home1;
-    @FXML
-    private AnchorPane anchor_main;
-    @FXML
-    private JFXButton btn_logout;
     @FXML
     private TextField txtStudentNumber;
     @FXML
@@ -133,6 +122,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private JFXButton btn_checklist;
     @FXML
     private ImageView img_profile;
+    @FXML
+    private AnchorPane anchor_main1;
+    @FXML
+    private VBox vbox_list;
+    @FXML
+    private Label lbl_total_queue;
+    @FXML
+    private VBox vbox_waiting_queue;
 
     private StudentMapping studentSearched;
 
@@ -158,9 +155,52 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
         vbox_studentOptions.setVisible(false);
         anchor_preview.setVisible(false);
-
+         
+        Animate.fade(vbox_waiting_queue, 150, ()->{
+            vbox_waiting_queue.setVisible(false);
+            vbox_list.setVisible(false);
+            vbox_waiting_queue.setVisible(true);
+        }, vbox_waiting_queue, vbox_list);
+        createQueueTable();
     }
 
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    /**
+     * Queue of student.
+     */
+    private SimpleTable studentTable = new SimpleTable();
+    private CronThread cronThreadQueue;
+    private void createQueueTable() {
+        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        Integer clusterNumber = afMap.getAssigned_cluster();
+        cronThreadQueue = new CronThread("adding_changing_queue");
+        cronThreadQueue.setInterval(5000);
+        cronThreadQueue.setTask(()->{
+            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
+            if(result) {
+                Mono.fx().thread().wrap(()->{
+                    Animate.fade(vbox_list, 150, ()->{
+                        vbox_waiting_queue.setVisible(false);
+                        vbox_list.setVisible(true);
+                    }, vbox_waiting_queue, vbox_list);
+                });
+            } else {
+                Mono.fx().thread().wrap(()->{
+                    Animate.fade(vbox_waiting_queue, 150, ()->{
+                        lbl_total_queue.setText("0");
+                        vbox_list.setVisible(false);
+                        vbox_waiting_queue.setVisible(true);
+                    }, vbox_waiting_queue, vbox_list);
+                });
+            }
+            if(ThreadMill.searching) {
+                this.onSearchStudent();
+            }
+        });
+        cronThreadQueue.start();
+    }
+    
     @Override
     public void onEventHandling() {
         btnFind.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -468,13 +508,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void onBackToHome() {
+        cronThreadQueue.stop();
         Home.callHome(this);
     }
 
     private EvaluationMapping currentStudentEvaluationDetails;
 
     private void onSearchStudent() {
-
+        ThreadMill.searching = false;
         currentStudentEvaluationDetails = null;
 
         this.table.getChildren().clear();
@@ -537,7 +578,13 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 onLoadEvaluatedSubjects(checkStudentTx.getEvaluationMap(), checkStudentTx.getStudentMap());
             }
         });
-
+        checkStudentTx.setOnCancel(onCancel->{
+            if(checkStudentTx.getTxResult().equalsIgnoreCase("NO_CURRICULUM")) {
+                Mono.fx().alert().createWarning()
+                        .setMessage("Student must have a curriculum to enter adding and changing transaction.")
+                        .show();
+            }
+        });
         checkStudentTx.transact();
     }
 
@@ -1713,7 +1760,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 boolean isAdd = false;
                 if(mode.equalsIgnoreCase("add"))
                     isAdd = true;
-                boolean stopTransaction = isOverMaxUnits(subinfo, totalUnitsAll, subjectToBeValidated.getLab_units() + subjectToBeValidated.getLec_units(), max_units, isAdd, mode, row);
+                boolean stopTransaction = isOverMaxUnits(subinfo, totalUnitsAll, subjectToBeValidated.getLab_units() + subjectToBeValidated.getLec_units(), PublicConstants.MAX_UNITS, isAdd, mode, row);
                 if(stopTransaction)
                     return;
                 
@@ -2294,7 +2341,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 
             int id = Database.connect().system_override_logs().insert(map);
             if (id <= 0) {
-                Mono.fx().snackbar().showError(anchor_main, "Something went wrong please try again.");
+                Mono.fx().snackbar().showError(anchor_add_change, "Something went wrong please try again.");
             } else {
                 forceTransact(subinfo, mode, row, subinfo_CHANGE_SUBJECT);
             }

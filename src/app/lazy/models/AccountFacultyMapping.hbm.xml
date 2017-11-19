@@ -10,6 +10,9 @@
 <property name="FACULTY_id" type="java.lang.Integer">
 <column name="FACULTY_id" length="10"/>
 </property>
+<property name="assigned_cluster" type="java.lang.Integer">
+<column name="assigned_cluster" length="10"/>
+</property>
 <property name="username" type="java.lang.String">
 <column name="username" length="50"/>
 </property>
