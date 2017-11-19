@@ -73,6 +73,10 @@ public class CheckStudent extends Transaction {
         }
         
         // student course name
+        if(studentMap.getCURRICULUM_id()==null) {
+            txResult = "NO_CURRICULUM";
+            return false;
+        }
         AcademicProgramMapping aMap = TransactionHelperFunctions.getAcademicProgram(studentMap.getCURRICULUM_id());
         CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(studentMap.getCURRICULUM_id());
         studentSection = aMap.getName() + " | " +
