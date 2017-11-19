@@ -45,6 +45,8 @@ public class SearcherList extends ArrayList {
             return this.<T>take(1).get(0);
         } catch (IndexOutOfBoundsException e) {
             return null;
+        } catch (NullPointerException a) {
+            return null;
         }
     }
 
@@ -69,6 +71,11 @@ public class SearcherList extends ArrayList {
 
         ArrayList<T> formatted = new ArrayList<>();
         List result = this.staticModels.search(this.criteria, count, this.arrangement);
+        // no results
+        if (result == null) {
+            return null;
+        }
+        // fix results
         for (int x = 0; x < result.size(); x++) {
             formatted.add((T) result.get(x));
         }

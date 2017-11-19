@@ -276,6 +276,7 @@ public class Searcher extends ArrayList<Criterion> {
      * @param arrangment
      * @return
      */
+    @Deprecated
     private SearcherList executeInterface1(Order... arrangment) {
         //return this.STATIC_MODEL.search(this, arrangment);
         SearcherList format_result = new SearcherList();
@@ -291,7 +292,7 @@ public class Searcher extends ArrayList<Criterion> {
     }
 
     private SearcherList executeInterface(Order... arrangment) {
-        return new SearcherList(STATIC_MODEL, this);
+        return new SearcherList(STATIC_MODEL, this, arrangment);
     }
 
     /**
