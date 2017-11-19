@@ -2,7 +2,7 @@
 // SQL_table: account_faculty
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 18, 2017 02:34:42 PM
+// Created: Nov 19, 2017 02:01:24 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -19,6 +19,7 @@ package app.lazy.models;
 public class Tbl_account_faculty {
 public final String id = "id";
 public final String FACULTY_id = "FACULTY_id";
+public final String assigned_cluster = "assigned_cluster";
 public final String username = "username";
 public final String password = "password";
 public final String transaction_pin = "transaction_pin";
