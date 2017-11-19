@@ -33,13 +33,14 @@ import app.lazy.models.CurriculumPreMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
+import app.lazy.models.LinkedEntranceMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
-import artifacts.FTPManager;
 import artifacts.ImageUtility;
+import com.jhmvin.fx.async.CronThread;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -47,12 +48,11 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.SceneFX;
-import java.io.File;
+import com.jhmvin.transitions.Animate;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
@@ -172,6 +172,13 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     @FXML
     private ImageView img_profile;
 
+    @FXML
+    private Label lbl_total_queue;
+            
+    @FXML
+    private VBox vbox_waiting_queue;
+            
+            
     public EvaluateController() {
         //
     }
@@ -220,7 +227,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         scroll_subjects.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             Evaluator.mouseDropSubject(currentStudent, MAX_UNITS, unitCount, vbox_subjects, anchor_right);
         });
-
+        
+        Animate.fade(vbox_waiting_queue, 150, ()->{
+            vbox_waiting_queue.setVisible(false);
+            vbox_list.setVisible(false);
+            vbox_waiting_queue.setVisible(true);
+        }, vbox_waiting_queue, vbox_list);
         createQueueTable();
     }
 
@@ -287,6 +299,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.hideDropDownEvents();
 
         super.addClickEvent(btn_home, () -> {
+            cronThreadQueue.stop();
             Home.callHome(this);
         });
 
@@ -1646,26 +1659,53 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private SimpleTable studentTable = new SimpleTable();
     private ArrayList<StudentMapping> lst_student;
 
+    private CronThread cronThreadQueue;
     private void createQueueTable() {
-//        for(StudentMapping student: lst_student) {
-//            createRow(student);
-//        }
-        for (int i = 0; i < 5; i++) {
-            createRow(i);
-        }
+        cronThreadQueue = new CronThread("evaluation_queue");
+        cronThreadQueue.setInterval(5000);
+        cronThreadQueue.setTask(()->{
+            ArrayList<LinkedEntranceMapping> leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
+                    .eq(DB.linked_entrance().status, "NONE")
+                    .active(Order.asc(DB.linked_entrance().reference_id)).all();
+            if(leMaps==null || leMaps.isEmpty()) {
+                Mono.fx().thread().wrap(()->{
+                    Animate.fade(vbox_waiting_queue, 150, ()->{
+                        lbl_total_queue.setText("0");
+                        vbox_list.setVisible(false);
+                        vbox_waiting_queue.setVisible(true);
+                    }, vbox_waiting_queue, vbox_list);
+                    });
+                return;
+            }
+            System.out.println("PASSED");
+            Mono.fx().thread().wrap(()->{
+                studentTable.getChildren().clear();
+                lbl_total_queue.setText(leMaps.size() + "");
+            });
+            for (int i = 0; i < leMaps.size(); i++) {
+                LinkedEntranceMapping leMap = leMaps.get(i);
+                createRow(leMap);
+            }
+            SimpleTableView simpleTableView = new SimpleTableView();
+            simpleTableView.setFixedWidth(true);
 
-        SimpleTableView simpleTableView = new SimpleTableView();
-        simpleTableView.setTable(studentTable);
-        simpleTableView.setFixedWidth(true);
-
-        simpleTableView.setParentOnScene(vbox_list);
+            Mono.fx().thread().wrap(()->{
+                Animate.fade(vbox_list, 150, ()->{
+                    simpleTableView.setTable(studentTable);
+                    simpleTableView.setParentOnScene(vbox_list);
+                    vbox_waiting_queue.setVisible(false);
+                    vbox_list.setVisible(true);
+                }, vbox_waiting_queue, vbox_list);
+            });
+        });
+        cronThreadQueue.start();
     }
 
-    private void createRow(int num/*StudentMapping subject*/) {
+    private void createRow(LinkedEntranceMapping leMap) {
 
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
-
+        row.getRowMetaData().put("MAP", leMap);
         HBox programRow = (HBox) Mono.fx().create()
                 .setPackageName("org.cict.evaluation")
                 .setFxmlDocument("eval-row")
@@ -1675,15 +1715,47 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         Label lbl_id = searchAccessibilityText(programRow, "id");
         Label lbl_name = searchAccessibilityText(programRow, "name");
 
-        lbl_number.setText(num + "");
+        lbl_number.setText(leMap.getReference_id() + "");
+        lbl_id.setText(leMap.getStudent_number());
+        lbl_name.setText(WordUtils.capitalizeFully(this.getStudentName(leMap.getStudent_number())));
 
         SimpleTableCell cellParent = new SimpleTableCell();
         cellParent.setResizePriority(Priority.ALWAYS);
         cellParent.setContent(programRow);
-
+        
         row.addCell(cellParent);
-
-        studentTable.addRow(row);
+        Mono.fx().thread().wrap(()->{
+            super.addClickEvent(row, ()->{
+                LinkedEntranceMapping selected = (LinkedEntranceMapping) row.getRowMetaData().get("MAP");
+                if(selected==null) {
+                    Notifications.create().darkStyle().title("Done")
+                            .text("Selected student is already serving.")
+                            .showInformation();
+                    return;
+                }
+                selected.setStatus("DONE");
+                boolean res = Database.connect().linked_entrance().update(selected);
+                if(!res) {
+                    Notifications.create().darkStyle().title("Failed")
+                            .text("Please check your connectivity to the server.")
+                            .showError();
+                    return;
+                }
+                txtStudentNumber.setText(selected.getStudent_number());
+                this.searchStudent();
+            });
+            row.setDisable(!studentTable.getChildren().isEmpty());
+            studentTable.addRow(row);
+        });
+    }
+    
+    private String getStudentName(String studentNumber) {
+        StudentMapping student = Mono.orm().newSearch(Database.connect().student())
+                .eq(DB.student().id, studentNumber).active(Order.desc(DB.student().cict_id)).first();
+        if(student==null) {
+            return "";
+        }
+        return student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "" : student.getMiddle_name());
     }
     
     private void setImageView() {
