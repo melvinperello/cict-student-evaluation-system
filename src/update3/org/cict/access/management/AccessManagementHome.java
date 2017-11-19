@@ -27,6 +27,7 @@ import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
+import app.lazy.models.LinkedSettingsMapping;
 import app.lazy.models.SystemOverrideLogsMapping;
 import app.lazy.models.utils.FacultyUtility;
 import artifacts.FTPManager;
@@ -179,12 +180,16 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         //
     }
 
+    private LinkedSettingsMapping currentLinkedSettings;
+    
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
 
         this.changeView(vbox_system);
         
+        currentLinkedSettings = Mono.orm().newSearch(Database.connect().linked_settings())
+                .eq(DB.linked_settings().mark, "ALIVE").active(Order.desc(DB.linked_settings().id)).first();
     }
 
     /**
@@ -483,12 +488,25 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             lbl_bulsu_id.setText(each.getBulsuID());
             lbl_dept.setText((each.getDepartment().isEmpty() ? "NOT SET" : each.getDepartment()));
             lbl_name.setText(each.getFullName());
-
+            
+            super.addClickEvent(rowFX.getBtn_change_cluster(), ()->{
+                FacultyInformation info = (FacultyInformation) row.getRowMetaData().get(KEY_MORE_INFO);
+                FacultyRow fx = (FacultyRow) row.getRowMetaData().get("FX");
+                int res = this.getCluster(true, info.getAccountFacultyMapping());
+                if(res==1) {
+                    fx.getLbl_cluster_name().setText(info.getAccountFacultyMapping().getAssigned_cluster()==null? "No Cluster Assigned" : (info.getAccountFacultyMapping().getAssigned_cluster().equals(1)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+                }
+            });
+            
+            AccountFacultyMapping afMap = each.getAccountFacultyMapping();
+            rowFX.getLbl_cluster_name().setText(afMap.getAssigned_cluster()==null? "No Cluster Assigned" : (afMap.getAssigned_cluster().equals(1)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+            
             super.addClickEvent(btn_remove, () -> {
                 this.onRemove(row, accessLevelShown, tblFaculty);
             });
 
             row.getRowMetaData().put(KEY_MORE_INFO, each);
+            row.getRowMetaData().put("FX", rowFX);
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
             cellParent.setContentAsPane(rowFX.getApplicationRoot());
@@ -787,6 +805,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 //                    .showWarning();
 //            return;
 //        }
+        
         if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
@@ -809,6 +828,30 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         }
     }
 
+    private Integer getCluster(boolean save, AccountFacultyMapping afMap) {
+        if(currentLinkedSettings==null) 
+            return null;
+        boolean cluster2Closed = currentLinkedSettings.getFloor_4_name()==null;
+        boolean invalid = true;
+        Integer choosen = null;
+        while(invalid) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setHeader("Assign Cluster")
+                    .setMessage("Please choose a cluster for the faculty selected.")
+                    .confirmCustom("Cluster 1: "+ currentLinkedSettings.getFloor_3_name(), "Cluster 2: " + (cluster2Closed? "CLOSED" : currentLinkedSettings.getFloor_4_name()));
+            if(cluster2Closed && res==-1) {
+            } else
+                invalid = false;
+            choosen = res==-1? 2 : 1;
+        }
+        if(save) {
+            afMap.setAssigned_cluster(choosen);
+            boolean res = Database.connect().account_faculty().update(afMap);
+            return (res? 1: -1);
+        }
+        return choosen;
+    }
+    
     private boolean assignAsstRegistrar() {
         FacultyMapping selectedFaculty = selectFaculty(null);
         if (selectedFaculty == null) {
@@ -862,7 +905,8 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             return false;
         }
         
-        if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_EVALUATOR)) {
+        Integer clusterNumber = this.getCluster(false, afMap);
+        if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_EVALUATOR) && afMap.getAssigned_cluster().equals(clusterNumber)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
                     .text("Faculty selected is already"
@@ -872,6 +916,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         }
         
         afMap.setAccess_level(Access.ACCESS_EVALUATOR);
+        afMap.setAssigned_cluster(clusterNumber);
         selectedFaculty.setDesignation(Access.ACCESS_EVALUATOR);
         if (Database.connect().account_faculty().update(afMap)
                 && Database.connect().faculty().update(selectedFaculty)) {

@@ -44,8 +44,14 @@ public class FacultyRow extends MonoLauncher {
     private Label lbl_name;
 
     @FXML
-    private JFXButton btn_remove;
+    private Label lbl_cluster_name;
 
+    @FXML
+    private JFXButton btn_change_cluster;
+
+    @FXML
+    private JFXButton btn_remove;
+    
     @Override
     public void onStartUp() {
     
@@ -65,6 +71,14 @@ public class FacultyRow extends MonoLauncher {
 
     public JFXButton getBtn_remove() {
         return btn_remove;
+    }
+
+    public Label getLbl_cluster_name() {
+        return lbl_cluster_name;
+    }
+
+    public JFXButton getBtn_change_cluster() {
+        return btn_change_cluster;
     }
     
 }
