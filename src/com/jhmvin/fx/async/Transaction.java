@@ -74,6 +74,7 @@ public abstract class Transaction {
                 } catch (Exception e) {
                     //this.cancel(true);
                     exceptionHandling(e);
+                    getWhenException().whenException(e);
                     throw new java.lang.RuntimeException("Transaction Error -> FIX YOUR TRANSACTION FLOW !");
                 }
                 return null;
@@ -164,6 +165,38 @@ public abstract class Transaction {
             this.onFinished.call();
         };
     }
+
+    //--------------------------------------------------------------------------
+    private onException whenException;
+
+    private onException getWhenException() {
+        // if no when exception events was set
+        if (this.whenException == null) {
+            return (e) -> {
+                //
+                System.out.println("No Exception Handler");
+            };
+        }
+        // if there is an exception event
+        return whenException;
+    }
+
+    /**
+     * Set what will happen when a transaction encounters an exception. when
+     * failed will be called after this segment.
+     *
+     * @param whenException
+     */
+    public void whenException(onException whenException) {
+        this.whenException = whenException;
+    }
+
+    @FunctionalInterface
+    public interface onException {
+
+        void whenException(Exception e);
+    }
+    //--------------------------------------------------------------------------
 
     /**
      * This will be called whether the transaction was canceled, had failed, or
