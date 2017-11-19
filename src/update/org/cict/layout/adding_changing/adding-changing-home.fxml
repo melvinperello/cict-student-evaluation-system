@@ -420,7 +420,10 @@
          <children>
             <StackPane layoutY="40.0" prefHeight="573.0" prefWidth="304.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0">
                <children>
-                  <VBox fx:id="vbox_list" prefHeight="623.0" prefWidth="290.0" spacing="3.0" />
+                  <VBox fx:id="vbox_list" prefHeight="623.0" prefWidth="290.0" spacing="3.0">
+                     <StackPane.margin>
+                        <Insets bottom="5.0" />
+                     </StackPane.margin></VBox>
                   <VBox fx:id="vbox_waiting_queue" alignment="BOTTOM_LEFT" prefHeight="532.0" prefWidth="285.0">
                      <children>
                         <Label text="Waiting..." textFill="#37474f">
