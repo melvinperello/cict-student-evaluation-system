@@ -262,8 +262,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         List<Date> dates = new ArrayList<Date>();
         EvaluationMapping start = Mono.orm().newSearch(Database.connect().evaluation())
                         .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).active(Order.asc(DB.evaluation().evaluation_date)).first();
+        // Affected by the ORM Update - Changed the order -> desc to get last then use first()
         EvaluationMapping end = Mono.orm().newSearch(Database.connect().evaluation())
-                        .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).active(Order.asc(DB.evaluation().evaluation_date)).last();
+                        .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).active(Order.desc(DB.evaluation().evaluation_date)).first();
         try {
             Date endDate = DateUtils.addDays(formatter_plain.parse(end.getEvaluation_date().toString()), 1);
             Date startDate = formatter_plain.parse(start.getEvaluation_date().toString());

@@ -752,8 +752,9 @@ public class LinkedHome extends SceneFX implements ControllerFX {
     
     private LinkedSettingsMapping lsMap;
     private void loadSessionDetails() {
+        // Affected by the orm update
         lsMap = Mono.orm().newSearch(Database.connect().linked_settings())
-                .active(Order.asc(DB.linked_settings().id)).last();
+                .active(Order.desc(DB.linked_settings().id)).first();
         
         SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy hh:mm aa");
         lbl_session_started.setText(lsMap==null? "NONE" : format.format(lsMap.getCreated_date()));
