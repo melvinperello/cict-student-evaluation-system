@@ -82,12 +82,24 @@ public class MonoModels {
     /* <CHANGE OBJECT TYPE> */
  /* Search */
     public List search(ArrayList<Criterion> conditions) {
-        return DatabaseOperations.search(conditions, this.class_type);
+        return DatabaseOperations.search(conditions, 0, this.class_type);
     }
 
     /* <CHANGE OBJECT TYPE> */
     public List search(ArrayList<Criterion> conditions, Order... arrangement) {
-        return DatabaseOperations.search(conditions, this.class_type, arrangement);
+        return DatabaseOperations.search(conditions, 0, this.class_type, arrangement);
+    }
+
+    /**
+     * Select query with limit constraint.
+     *
+     * @param conditions
+     * @param limit
+     * @param arrangement
+     * @return
+     */
+    public List search(ArrayList<Criterion> conditions, int limit, Order... arrangement) {
+        return DatabaseOperations.search(conditions, limit, this.class_type, arrangement);
     }
 
 

@@ -258,12 +258,15 @@ public class Searcher extends ArrayList<Criterion> {
      * @return
      */
     public SearcherList execute(Order... arrangement) {
-        SearcherList res = this.executeInterface(arrangement);
-        if (res == null || res.isEmpty()) {
-            return new SearcherList();
-        } else {
-            return res;
-        }
+//        SearcherList res = this.executeInterface(arrangement);
+//        if (res == null || res.isEmpty()) {
+//            System.out.println("no res");
+//            return new SearcherList();
+//        } else {
+//            System.out.println("res");
+//            return res;
+//        }
+        return executeInterface(arrangement);
     }
 
     /**
@@ -273,7 +276,7 @@ public class Searcher extends ArrayList<Criterion> {
      * @param arrangment
      * @return
      */
-    private SearcherList executeInterface(Order... arrangment) {
+    private SearcherList executeInterface1(Order... arrangment) {
         //return this.STATIC_MODEL.search(this, arrangment);
         SearcherList format_result = new SearcherList();
         List res = this.STATIC_MODEL.search(this, arrangment);
@@ -285,6 +288,10 @@ public class Searcher extends ArrayList<Criterion> {
             });
         }
         return format_result;
+    }
+
+    private SearcherList executeInterface(Order... arrangment) {
+        return new SearcherList(STATIC_MODEL, this);
     }
 
     /**

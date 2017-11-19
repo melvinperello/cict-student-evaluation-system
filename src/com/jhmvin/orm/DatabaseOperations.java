@@ -91,7 +91,7 @@ public class DatabaseOperations {
     /* End of Update */
 
  /* Search */
-    public static List search(ArrayList<Criterion> conditions, Class mapping, Order... arrangement) {
+    public static List search(ArrayList<Criterion> conditions, int limit, Class mapping, Order... arrangement) {
         Session session = null;
         try {
             session = Mono.orm().session();
@@ -106,7 +106,9 @@ public class DatabaseOperations {
                     criteria.addOrder(order);
                 }
             }
-
+            if (limit > 0) {
+                criteria.setMaxResults(limit);
+            }
             return criteria.list();
         } catch (Exception he) {
             errorHelper(he, "SEARCH");
