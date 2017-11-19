@@ -5,7 +5,6 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import update.org.cict.TransactionHelperFunctions;
 
-import java.util.ArrayList;
 
 public class CheckStudent extends Transaction {
 

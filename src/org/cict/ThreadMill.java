@@ -95,7 +95,7 @@ public class ThreadMill {
         KEEP_ALIVE_THREAD = null;
     }
     
-    private static SimpleTable studentTable = new SimpleTable();
+    private static SimpleTable studentTable = null;
     public static boolean searching = false;
     public static boolean resfresh(VBox holder, TextField txtfieldSearch, Label labelTotal, Integer clusterNumber) {
         ArrayList<LinkedEntranceMapping> leMaps;
@@ -112,9 +112,10 @@ public class ThreadMill {
         if(leMaps==null || leMaps.isEmpty()) {
             return false;
         }
+        
         Mono.fx().thread().wrap(()->{
-            studentTable.getChildren().clear();
-            labelTotal.setText(leMaps.size() + "");
+            studentTable = new SimpleTable();
+            labelTotal.setText("Loading...");
         });
         for (int i = 0; i < leMaps.size(); i++) {
             LinkedEntranceMapping leMap = leMaps.get(i);
@@ -126,6 +127,7 @@ public class ThreadMill {
         Mono.fx().thread().wrap(()->{
             simpleTableView.setTable(studentTable);
             simpleTableView.setParentOnScene(holder);
+            labelTotal.setText(leMaps.size() + "");
         });
         return true;
     }

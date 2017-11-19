@@ -172,10 +172,12 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private SimpleTable studentTable = new SimpleTable();
     private CronThread cronThreadQueue;
     private void createQueueTable() {
-        cronThreadQueue = new CronThread("evaluation_queue");
+        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        Integer clusterNumber = afMap.getAssigned_cluster();
+        cronThreadQueue = new CronThread("adding_changing_queue");
         cronThreadQueue.setInterval(5000);
         cronThreadQueue.setTask(()->{
-            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, null);
+            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
             if(result) {
                 Mono.fx().thread().wrap(()->{
                     Animate.fade(vbox_list, 150, ()->{
@@ -506,6 +508,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void onBackToHome() {
+        cronThreadQueue.stop();
         Home.callHome(this);
     }
 
