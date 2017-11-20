@@ -281,7 +281,7 @@
                               </Label>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefWidth="280.0">
+                        <HBox alignment="CENTER_LEFT" prefWidth="280.0" visible="false">
                            <children>
                               <Label graphicTextGap="10.0" prefWidth="120.0" text="Post">
                                  <font>
