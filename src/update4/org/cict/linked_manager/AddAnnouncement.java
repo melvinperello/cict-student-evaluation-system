@@ -120,8 +120,8 @@ public class AddAnnouncement extends MonoLauncher {
         announce.setActive(1);
         announce.setAnnounced_by(CollegeFaculty.instance().getFACULTY_ID());
         announce.setDate(Mono.orm().getServerTime().getDateWithFormat());
-        announce.setMessage(message.toUpperCase());
-        announce.setTitle(title.toUpperCase());
+        announce.setMessage(message);
+        announce.setTitle(title);
         Integer id = Database.connect().announcements().insert(announce);
         if(id.equals(-1)){
             Notifications.create().darkStyle()

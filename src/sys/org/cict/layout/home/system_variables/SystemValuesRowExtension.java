@@ -64,6 +64,9 @@ public class SystemValuesRowExtension extends MonoLauncher {
     @FXML
     private JFXButton btn_remove;
     
+    @FXML
+    private Label lbl_announced_by;
+            
     @Override
     public void onStartUp() {
     }
@@ -102,6 +105,10 @@ public class SystemValuesRowExtension extends MonoLauncher {
 
     public Label getLbl_count() {
         return lbl_count;
+    }
+
+    public Label getLbl_announced_by() {
+        return lbl_announced_by;
     }
 
 }

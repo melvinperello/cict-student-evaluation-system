@@ -632,9 +632,11 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         txt_name1.setText(each.getTitle());
         txt_value1.setVisible(false);
         txt_area.setVisible(true);
-        txt_area.setText(WordUtils.capitalizeFully(each.getMessage()));
+        txt_area.setText((each.getMessage()));
         lbl_count.setText(String.valueOf(300 - (txt_area.getText().length())));
-
+        
+        ext.getLbl_announced_by().setText(each.getAnnounced_by()==null? "" : WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(each.getAnnounced_by()))));
+        
         txt_area.textProperty().addListener((a) -> {
             lbl_count.setText(String.valueOf(300 - (txt_area.getText().length())));
         });
@@ -716,6 +718,7 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         AnnouncementsMapping updateThis = (AnnouncementsMapping) row.getRowMetaData().get("MAP");
         updateThis.setTitle(name.toUpperCase());
         updateThis.setMessage(value.toUpperCase());
+        updateThis.setAnnounced_by(CollegeFaculty.instance().getFACULTY_ID());
         if (Database.connect().announcements().update(updateThis)) {
             Notifications.create().darkStyle()
                     .text("Updated Successfully.")
@@ -728,14 +731,14 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         String name = MonoString.removeExtraSpace(txt_name.getText());
         if (name.isEmpty()) {
             Mono.fx().alert().createWarning()
-                    .setMessage("Name cannot be empty.")
+                    .setMessage("Title cannot be empty.")
                     .show();
             return true;
         }
         String value = MonoString.removeExtraSpace(txt_value.getText());
         if (value.isEmpty()) {
             Mono.fx().alert().createWarning()
-                    .setMessage("Value cannot be empty.")
+                    .setMessage("Message cannot be empty.")
                     .show();
             return true;
         }

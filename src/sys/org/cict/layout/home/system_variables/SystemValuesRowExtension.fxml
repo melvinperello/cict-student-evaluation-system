@@ -67,6 +67,7 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" spacing="15.0">
                      <children>
+                        <Label fx:id="lbl_announced_by" />
                         <Label fx:id="lbl_count" textFill="#545454">
                            <font>
                               <Font name="System Bold" size="15.0" />
