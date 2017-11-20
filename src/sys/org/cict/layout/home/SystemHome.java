@@ -23,7 +23,6 @@
  */
 package sys.org.cict.layout.home;
 
-import sys.org.cict.layout.home.system_variables.SystemValues;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
@@ -36,7 +35,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.MainApplication;
 import org.cict.ThreadMill;
@@ -54,6 +52,7 @@ import update3.org.cict.controller.sectionmain.SectionHomeController;
 import update3.org.cict.my_account.MyAccountHome;
 import update3.org.cict.termcalendar.AcademicTermHome;
 import update4.org.cict.linked_manager.LinkedHome;
+import update5.org.cict.facultyhub.FacultyHub;
 import update5.org.cict.student.controller.StudentHomeController;
 
 /**
@@ -189,7 +188,8 @@ public class SystemHome extends MonoLauncher {
         });
 
         MonoClick.addClickEvent(btn_faculty_center, () -> {
-            Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
+            this.onShowFacultyHub();
+//            Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
         });
 
 //        MonoClick.addClickEvent(btn_system_values, () -> {
@@ -725,6 +725,25 @@ public class SystemHome extends MonoLauncher {
         this.changeRoot(controller,
                 "org.cict.reports",
                 "ReportsMain");
+
+    }
+    
+    //--------------------------------------------------------------------------
+    /**
+     * Show Faculty Hub.
+     */
+    private void onShowFacultyHub() {
+
+        //----------------------------------------------------------------------
+        if (this.sysWarning()) {
+            return;
+        }
+        //----------------------------------------------------------------------
+
+        ControllerFX controller = new FacultyHub();
+        this.changeRoot(controller,
+                "update5.org.cict.facultyhub",
+                "FacultyHub");
 
     }
 }

@@ -44,6 +44,7 @@ public class StudentMasterListPrinter {
     public final static int COL_STUDENT_NUMBER = 0;
     public final static int COL_STUDENT_NAME = 1;
     public final static int COL_GRADE = 2;
+    public final static int COL_CLEARANCE = 3;
 
     public void logs(Object message) {
         System.out.println(message.toString());
@@ -93,6 +94,8 @@ public class StudentMasterListPrinter {
         Cell section = row.createCell(COL_GRADE);
         section.setCellValue("GRADE");
         //
+        Cell clearance = row.createCell(COL_CLEARANCE);
+        clearance.setCellValue("CLEARANCE");
     }
 
     private void printData(ArrayList<StudentMasterListData> data) {
@@ -109,6 +112,8 @@ public class StudentMasterListPrinter {
             Cell section = row.createCell(COL_GRADE);
             section.setCellValue("");
 
+            Cell clearance = row.createCell(COL_CLEARANCE);
+            clearance.setCellValue("");
             //
             rowPointer++;
         }

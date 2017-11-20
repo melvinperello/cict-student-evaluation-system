@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="20.0">
          <children>
-            <Label maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="My Account" textFill="WHITE" HBox.hgrow="ALWAYS">
+            <Label maxWidth="1.7976931348623157E308" styleClass="metro-title-1" text="Faculty Hub" textFill="WHITE" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="40.0" />
                </font>
@@ -37,14 +33,14 @@
       </HBox>
       <HBox prefWidth="200.0" spacing="30.0">
          <children>
-            <Label graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Manage Your Account Settings" textFill="WHITE">
+            <Label graphicTextGap="10.0" styleClass="metro-subtitle-1" text="Manage Your Current Load" textFill="WHITE">
                <font>
                   <Font size="18.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/account_settings.png" />
+                        <Image url="@images/icons8-load-50.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -58,14 +54,14 @@
          <children>
             <VBox prefHeight="565.0" prefWidth="266.0" spacing="10.0">
                <children>
-                  <JFXButton fx:id="btn_view_update_profile" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Update Profile" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_sections" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Section" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../access/images/user.png" />
+                              <Image url="@images/icons8-classroom-filled-50.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -76,14 +72,14 @@
                         <Insets left="-90.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton fx:id="btn_voew_access_history" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Access History" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_subjects" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Subject" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@images/access_history.png" />
+                              <Image url="@images/icons8-class-50.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -92,260 +88,90 @@
                      </cursor>
                      <padding>
                         <Insets left="-90.0" />
-                     </padding>
-                  </JFXButton>
-                  <JFXButton fx:id="btn_view_change_password" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Password" textFill="WHITE">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/change_password.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="-70.0" />
-                     </padding>
-                  </JFXButton>
-                  <JFXButton fx:id="btn_view_change_pin" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Transaction Pin" textFill="WHITE">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/change_pin.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <padding>
-                        <Insets left="-30.0" />
-                     </padding>
-                  </JFXButton>
-                  <JFXButton fx:id="btn_view_change_question" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Change Security Question" textFill="WHITE">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/security_question.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                     <padding>
-                        <Insets left="-15.0" />
                      </padding>
                   </JFXButton>
                </children>
             </VBox>
             <StackPane HBox.hgrow="ALWAYS">
                <children>
-                  <VBox fx:id="vbox_access" prefHeight="200.0" prefWidth="100.0" visible="false">
+                  <VBox fx:id="vbox_section" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/access_history.png" />
+                                    <Image url="@images/icons8-classroom-filled-50.png" />
                                  </image>
                               </ImageView>
-                              <Label text="Access History">
+                              <Label text="Section">
                                  <font>
                                     <Font size="30.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
-                        <VBox prefHeight="274.0" prefWidth="874.0" spacing="10.0">
+                        <VBox spacing="20.0">
                            <children>
-                              <HBox prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label text="Current Active Session" wrapText="true">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
                               <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/computer.png" />
-                                       </image>
-                                    </ImageView>
-                                    <VBox alignment="CENTER" prefHeight="49.0" spacing="10.0" HBox.hgrow="ALWAYS">
-                                       <children>
-                                          <HBox spacing="10.0">
-                                             <children>
-                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@images/ip_address.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <Label text="IP ADDRESS">
-                                                   <font>
-                                                      <Font name="System Bold" size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="lbl_history_ip" text="IP">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="MAC ADDRESS">
-                                                   <font>
-                                                      <Font name="System Bold" size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="lbl_history_mac" text="MAC">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <HBox spacing="10.0">
-                                             <children>
-                                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@images/os.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <Label text="OS">
-                                                   <font>
-                                                      <Font name="System Bold" size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="lbl_history_os" text="Operating System">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="TERMINAL">
-                                                   <font>
-                                                      <Font name="System Bold" size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="lbl_history_terminal" text="Terminal">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="USER">
-                                                   <font>
-                                                      <Font name="System Bold" size="15.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="lbl_history_user" text="User">
-                                                   <font>
-                                                      <Font size="15.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="5.0" left="100.0" top="5.0" />
-                                 </padding>
-                              </HBox>
-                              <HBox prefWidth="200.0" spacing="10.0">
-                                 <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@images/right_bullet.png" />
+                                          <Image url="@images/icons8-about-50.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label text="The system records everytime you try to login into your account. if you see suspicious login attempts and you think your account is compromised, change your password immediately" wrapText="true">
+                                    <Label prefHeight="26.0" prefWidth="354.0" text="The following are the sections handled by you.">
                                        <font>
-                                          <Font size="16.0" />
+                                          <Font size="17.0" />
                                        </font>
                                     </Label>
                                  </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="790.0" spacing="10.0">
-                                 <children>
-                                    <ComboBox fx:id="cmb_from" prefHeight="96.0" prefWidth="156.0" promptText="- Select From -" styleClass="metro-combo-box" />
-                                    <ComboBox fx:id="cmb_to" layoutX="92.0" layoutY="12.0" prefHeight="58.0" prefWidth="154.0" promptText="- Select To -" styleClass="metro-combo-box" />
-                                    <JFXButton fx:id="btn_filter" prefHeight="21.0" prefWidth="77.0" style="-fx-border-color: #fff;" text="Filter" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </JFXButton>
-                                    <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-                                       <children>
-                                          <JFXButton fx:id="btn_print" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                          </JFXButton>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets left="30.0" />
-                                 </VBox.margin>
                               </HBox>
                            </children>
                            <padding>
-                              <Insets left="30.0" top="5.0" />
+                              <Insets left="30.0" top="10.0" />
                            </padding>
                         </VBox>
-                        <AnchorPane VBox.vgrow="ALWAYS">
+                        <StackPane fx:id="stack_section" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets left="65.0" top="20.0" />
+                              <Insets bottom="10.0" left="20.0" top="10.0" />
                            </VBox.margin>
                            <children>
-                              <StackPane fx:id="stack_history" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <VBox fx:id="vbox_section_table" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" />
+                              <VBox fx:id="vbox_section_no_found" prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <VBox fx:id="vbox_access_history" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
+                                    <Label text="No section found.">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                    </Label>
                                  </children>
-                              </StackPane>
+                                 <StackPane.margin>
+                                    <Insets left="20.0" top="20.0" />
+                                 </StackPane.margin>
+                              </VBox>
                            </children>
-                        </AnchorPane>
+                        </StackPane>
                      </children>
                      <padding>
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_change_password" prefHeight="200.0" prefWidth="100.0" visible="false">
+                  <VBox fx:id="vbox_subject" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/change_password.png" />
+                                    <Image url="@images/icons8-class-50.png" />
                                  </image>
                               </ImageView>
-                              <Label text="Change Password">
+                              <Label text="Subject">
                                  <font>
                                     <Font size="30.0" />
                                  </font>
@@ -358,518 +184,45 @@
                                  <children>
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@images/right_bullet.png" />
+                                          <Image url="@images/icons8-about-50.png" />
                                        </image>
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label prefWidth="150.0" text="Current Password">
+                                    <Label prefHeight="26.0" prefWidth="354.0" text="The following are the subjects handled by you.">
                                        <font>
                                           <Font size="17.0" />
                                        </font>
                                     </Label>
-                                    <PasswordField fx:id="txt_cp_current" accessibleHelp="Current Password" prefWidth="200.0" promptText="Current Password">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="New Password">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_cp_new" accessibleHelp="New Password" prefWidth="200.0" promptText="New Password">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Confirm Password">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_cp_confirm" accessibleHelp="Confirm Password" prefWidth="200.0" promptText="Confirm Password">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
-                                 <children>
-                                    <JFXButton fx:id="btn_cp_change" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change Password" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </JFXButton>
                                  </children>
                               </HBox>
                            </children>
                            <padding>
-                              <Insets left="30.0" top="20.0" />
+                              <Insets left="30.0" top="10.0" />
                            </padding>
                         </VBox>
+                        <StackPane fx:id="stack_subject" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="20.0" top="10.0" />
+                           </VBox.margin>
+                           <children>
+                              <VBox fx:id="vbox_subject_table" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" />
+                              <VBox fx:id="vbox_subject_no_found" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="No subject found.">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <StackPane.margin>
+                                    <Insets left="20.0" top="20.0" />
+                                 </StackPane.margin>
+                              </VBox>
+                           </children>
+                        </StackPane>
                      </children>
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
-                  </VBox>
-                  <VBox fx:id="vbox_change_pin" prefHeight="200.0" prefWidth="100.0" visible="false">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/change_password.png" />
-                                 </image>
-                              </ImageView>
-                              <Label text="Change Transaction Pin">
-                                 <font>
-                                    <Font size="30.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <VBox spacing="20.0">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/reminder.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefHeight="26.0" text="Changing transaction PIN requires your current password not your current PIN.">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="New PIN">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_ct_new" prefWidth="200.0" promptText="New PIN">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Confirm PIN">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_ct_confirm" prefWidth="200.0" promptText="Confirm PIN">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Current Password">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_ct_password" prefWidth="200.0" promptText="Current Password">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
-                                 <children>
-                                    <JFXButton fx:id="btn_ct_change_pin" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Change PIN" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </JFXButton>
-                                 </children>
-                              </HBox>
-                           </children>
-                           <padding>
-                              <Insets left="30.0" top="20.0" />
-                           </padding>
-                        </VBox>
-                     </children>
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
-                  </VBox>
-                  <VBox fx:id="vbox_change_question" prefHeight="200.0" prefWidth="100.0" visible="false">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/security_question.png" />
-                                 </image>
-                              </ImageView>
-                              <Label text="Change Security Question">
-                                 <font>
-                                    <Font size="30.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <VBox spacing="20.0">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/reminder.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefHeight="26.0" text="Changing your Security Question requires your current password.">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Security Question">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <ComboBox fx:id="cmb_cs_security_question" prefWidth="555.0" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Security Answer">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_cs_answer" prefWidth="200.0" promptText="Security Answer">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Confirm Answer">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_cs_confirm_answer" prefWidth="200.0" promptText="Confirm Answer">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Current Password">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <PasswordField fx:id="txt_cs_currnet_password" prefWidth="200.0" promptText="Current Password">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
-                                 <children>
-                                    <JFXButton fx:id="btn_cs_change" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Save Changes" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </JFXButton>
-                                 </children>
-                              </HBox>
-                           </children>
-                           <padding>
-                              <Insets left="30.0" top="20.0" />
-                           </padding>
-                        </VBox>
-                     </children>
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
-                  </VBox>
-                  <VBox fx:id="vbox_update_profile" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../access/images/user.png" />
-                                 </image>
-                              </ImageView>
-                              <Label text="Update Profile">
-                                 <font>
-                                    <Font size="30.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <VBox spacing="20.0">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Last Name">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="txt_last" prefHeight="32.0" prefWidth="335.0" promptText="Last Name">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </TextField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="First Name">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="txt_first" prefHeight="32.0" prefWidth="335.0" promptText="First Name">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </TextField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Middle Name">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="txt_middle" prefHeight="32.0" prefWidth="335.0" promptText="Middle Name">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </TextField>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="183.0" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="320.0" spacing="10.0">
-                                       <children>
-                                          <Label prefHeight="26.0" prefWidth="140.0" text="Gender" textFill="#656d79">
-                                             <font>
-                                                <Font size="17.0" />
-                                             </font>
-                                          </Label>
-                                          <RadioButton fx:id="rbtn_male" accessibleText="rbtn_male" mnemonicParsing="false" styleClass="label" text="Male">
-                                             <padding>
-                                                <Insets left="10.0" />
-                                             </padding>
-                                          </RadioButton>
-                                          <RadioButton fx:id="rbtn_female" accessibleText="rbtn_female" mnemonicParsing="false" styleClass="label" text="Female">
-                                             <padding>
-                                                <Insets left="30.0" />
-                                             </padding>
-                                          </RadioButton>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" top="10.0" />
-                                 </VBox.margin>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" layoutX="40.0" layoutY="132.0" prefWidth="200.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/right_bullet.png" />
-                                       </image>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </ImageView>
-                                    <Label prefWidth="150.0" text="Mobile Number">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField fx:id="txt_mobile" prefHeight="32.0" prefWidth="209.0" promptText="Mobile Number">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </TextField>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" />
-                                 </VBox.margin>
-                              </HBox>
-                              <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" prefHeight="33.0" prefWidth="399.0" spacing="10.0">
-                                 <children>
-                                    <JFXButton fx:id="btn_update_info" prefHeight="33.0" prefWidth="201.0" style="-fx-border-color: #FFFFFF;" text="Update" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </JFXButton>
-                                 </children>
-                              </HBox>
-                           </children>
-                           <padding>
-                              <Insets left="30.0" top="20.0" />
-                           </padding>
-                        </VBox>
-                     </children>
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
                   </VBox>
                </children>
                <padding>
@@ -885,4 +238,8 @@
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
+   <stylesheets>
+      <URL value="@metro-ui.css" />
+      <URL value="@metro-ui-table.css" />
+   </stylesheets>
 </VBox>

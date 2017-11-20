@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="586.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="img_extension" fitHeight="25.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/plus.png" />
+         </image>
+      </ImageView>
+      <VBox alignment="CENTER_LEFT" spacing="10.0" HBox.hgrow="ALWAYS">
+         <children>
+            <HBox>
+               <children>
+                  <Label fx:id="lbl_section_name" maxWidth="1.7976931348623157E308" text="BSIT 1A-G1" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbl_student_count" maxWidth="1.7976931348623157E308" text="20">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/icons8-customer-filled-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets left="15.0" right="15.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@metro-ui.css" />
+      <URL value="@metro-ui-table.css" />
+   </stylesheets>
+   <styleClass>
+      <String fx:value="metro-base-color" />
+      <String fx:value="metro-row" />
+   </styleClass>
+</HBox>
