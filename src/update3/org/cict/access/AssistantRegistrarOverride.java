@@ -32,6 +32,7 @@ import artifacts.OTPGenerator;
 import artifacts.SMSWrapper;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.CronThread;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
@@ -213,6 +214,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         MonoClick.addClickEvent(btn_cancel, () -> {
             this.getCurrentStage().close();
         });
+        this.setTimer();
     }
 
     @Override
@@ -263,6 +265,8 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         return authorized;
     }
     
+    private boolean canResend = true;
+    private int time = 60;
     private void resendOTP() {
         int res = Mono.fx().alert().createConfirmation()
                 .setHeader("Resend OTP")
@@ -307,11 +311,35 @@ public class AssistantRegistrarOverride extends MonoLauncher {
                     Notifications.create().darkStyle().title("Sending")
                             .text("Processing your request.").showInformation();
                 });
+                this.setTimer();
+                timer.start();
             }
             
             Mono.fx().thread().wrap(()->{
                 this.setDetails(contactNumber, refID);
             });
+        });
+    }
+    
+    private CronThread timer;
+    private void setTimer() {
+        timer = new CronThread("timer_for_resend");
+        timer.setInterval(1000);
+        timer.setTask(()->{
+            this.time--;
+            if(this.time==0){
+                this.time = 60;
+                Mono.fx().thread().wrap(()->{
+                    lbl_resend.setText("Didn't receive the code? Click here to resend.");
+                    lbl_resend.setDisable(false);
+                });
+                timer.stop();
+            } else {
+                Mono.fx().thread().wrap(()->{
+                    lbl_resend.setText("Resend is disabled. " + this.time + " second" + ((time>1)? "s" : "") + " left.");
+                    lbl_resend.setDisable(true);
+                });
+            }
         });
     }
 }
