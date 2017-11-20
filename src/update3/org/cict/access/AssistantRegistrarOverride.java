@@ -141,11 +141,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
     }
     
     public static boolean isAuthorized(Stage stage, String...authorizedAccessLevels) {
-        boolean access = false;
-        for(String authorizedAccessLevel : authorizedAccessLevels) {
-            if(Access.isGranted(authorizedAccessLevel))
-                access = true;
-        }
+        boolean access = Access.isGrantedIf(authorizedAccessLevels);
         if(!access) {
             return false;
         }

@@ -172,8 +172,10 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         this.setCurrentTerm();
         
         // check request for acad term change
-        if(Access.isGrantedIf(Access.ACCESS_ADMIN, Access.ACCESS_LOCAL_REGISTRAR))
+        if(Access.isGrantedIf(Access.ACCESS_CO_REGISTRAR, Access.ACCESS_LOCAL_REGISTRAR))
             this.checkTermRequest();
+        else
+            this.changeAcadTermView(vbox_home_term);
     }
 
     @Override
@@ -310,7 +312,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     }
     
     private void changeTerm() {
-        if(Access.isGranted(Access.ACCESS_ADMIN)) {
+        if(Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR)) {
            ChangeAcademicTerm change = M.load(ChangeAcademicTerm.class);
            change.onDelayedStart();
             try {
@@ -337,23 +339,22 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             btn_encoding_service.setDisable(false);
             btn_evaluation_service.setDisable(false);
         } else {
-            if(Access.isGranted(Access.ACCESS_ADMIN)) {
+            if(Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR)) {
                 lbl_school_year1.setText(pending.getSchool_year());
                 lbl_semester1.setText(WordUtils.capitalizeFully(pending.getSemester()));
                 this.changeAcadTermView(vbox_change_term);
-            } else if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
+            }/* else if(Access.isGranted(Access.ACCESS_LOCAL_REGISTRAR)) {
                 lbl_school_year.setText(pending.getSchool_year());
                 lbl_semester.setText(WordUtils.capitalizeFully(pending.getSemester()));
                 this.changeAcadTermView(vbox_request_term);
-            }
+            }*/
             btn_adding_service.setDisable(true);
             btn_encoding_service.setDisable(true);
             btn_evaluation_service.setDisable(true);
             changeStatus(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE);
             
-            if(AssistantRegistrarOverride.isAuthorized(
-                    this.getStage(), 
-                    Access.ACCESS_ADMIN)) {
+            if(AssistantRegistrarOverride.isAuthorized(this.getStage(), 
+                    Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR)) {
                 Mono.fx().snackbar().showSuccess(application_root, "Request Granted");
                 this.acceptRequest();
             } else {
