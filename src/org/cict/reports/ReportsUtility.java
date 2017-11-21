@@ -131,6 +131,7 @@ public class ReportsUtility {
                 tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
             }
         }
+        tbl_stud.addCell(createSimpleCell("*** Nothing Follows ***", font8Plain, numColumns, true, false, 4f, false));
         return tbl_stud;
     }
     
