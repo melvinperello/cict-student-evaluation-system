@@ -147,7 +147,8 @@ public class ThreadMill {
         Mono.fx().thread().wrap(()->{
             MonoClick.addClickEvent(row, ()->{
                 LinkedEntranceMapping selected = (LinkedEntranceMapping) row.getRowMetaData().get("MAP");
-                if(selected==null) {
+                LinkedEntranceMapping selectedleMap = Database.connect().linked_entrance().getPrimary(selected.getReference_id());
+                if(selectedleMap==null || selectedleMap.getStatus().equalsIgnoreCase("DONE")) {
                     Notifications.create().darkStyle().title("Done")
                             .text("Selected student is already serving.")
                             .showInformation();
