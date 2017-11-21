@@ -73,9 +73,9 @@ CREATE TABLE IF NOT EXISTS `academic_term` (
   CONSTRAINT `academic_term_as_updater` FOREIGN KEY (`as_updater`) REFERENCES `faculty` (`id`),
   CONSTRAINT `academic_term_es_updater` FOREIGN KEY (`es_updater`) REFERENCES `faculty` (`id`),
   CONSTRAINT `acadenuc_term_encs_updater` FOREIGN KEY (`ens_updater`) REFERENCES `faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.academic_term: ~20 rows (approximately)
+-- Dumping data for table cictems.academic_term: ~22 rows (approximately)
 /*!40000 ALTER TABLE `academic_term` DISABLE KEYS */;
 INSERT INTO `academic_term` (`id`, `school_year`, `semester`, `semester_regular`, `current`, `evaluation_service`, `es_updater`, `es_update_date`, `adding_service`, `as_updater`, `as_update_date`, `encoding_service`, `ens_updater`, `ens_update_date`, `type`, `approval_state`, `active`) VALUES
 	(1, '2014-2015', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'ACCEPTED', 1),
@@ -90,10 +90,16 @@ INSERT INTO `academic_term` (`id`, `school_year`, `semester`, `semester_regular`
 	(10, '2016-2017', 'MIDYEAR', 0, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'MIDYEAR', 'ACCEPTED', 1),
 	(11, '2017-2018', 'FIRST SEMESTER', 1, 0, 0, 3, '2017-11-18 15:34:49', 0, 3, '2017-11-18 15:34:49', 0, 3, '2017-11-18 15:34:49', 'REGULAR', 'ACCEPTED', 1),
 	(12, '2017-2018', 'SECOND SEMESTER', 2, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'ACCEPTED', 1),
-	(19, '2017-2018', 'FIRST SEMESTER', 1, 1, 1, 2, '2017-11-19 10:05:59', 1, 2, '2017-11-19 10:06:00', 0, 3, '2017-11-18 15:57:19', 'REGULAR', 'ACCEPTED', 1),
+	(19, '2017-2018', 'FIRST SEMESTER', 1, 1, 1, 3, '2017-11-20 20:34:18', 0, 1, '2017-11-20 13:25:19', 0, 1, '2017-11-20 13:25:19', 'REGULAR', 'ACCEPTED', 1),
 	(20, 'SDASXA', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
 	(21, 'ASXAX', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
-	(22, 'FBFCB', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0);
+	(22, 'FBFCB', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
+	(23, '2017-2018', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
+	(24, '1312312', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
+	(25, 'GDFGFDG', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
+	(26, 'DFFG', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
+	(27, 'SVDVD', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0),
+	(28, 'FDVGDF', 'FIRST SEMESTER', 1, 0, 0, NULL, NULL, 0, NULL, NULL, 0, NULL, NULL, 'REGULAR', 'CANCELLED', 0);
 /*!40000 ALTER TABLE `academic_term` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty
@@ -120,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `account_faculty` (
 -- Dumping data for table cictems.account_faculty: ~5 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty` DISABLE KEYS */;
 INSERT INTO `account_faculty` (`id`, `FACULTY_id`, `assigned_cluster`, `username`, `password`, `transaction_pin`, `recovery_question`, `recovery_answer`, `access_level`, `blocked_count`, `disabled_since`, `wrong_count`, `blocked_until`, `active`) VALUES
-	(1, 1, 1, 'jhmvin', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', '263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62', 'What Is your favorite book?', '12fbe8ac39c5d5060777290378e424d778d4b18fb3ddc2254bf14c91a912e810b8c8d5d85c9ad4540b0b7ded25b27224571043350a9f69538f587a2fff10c2a0', 'ASSISTANT_ADMINISTRATOR', 0, NULL, 0, NULL, 1),
+	(1, 1, 1, 'jhmvin', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', '263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62', 'What Is your favorite book?', '12fbe8ac39c5d5060777290378e424d778d4b18fb3ddc2254bf14c91a912e810b8c8d5d85c9ad4540b0b7ded25b27224571043350a9f69538f587a2fff10c2a0', 'CO_REGISTRAR', 0, NULL, 0, NULL, 1),
 	(2, 2, NULL, 'evelyn', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', NULL, NULL, 'LOCAL_REGISTRAR', 0, NULL, 0, NULL, 1),
 	(13, 3, NULL, 'JOEMARDC', 'b0412597dcea813655574dc54a5b74967cf85317f0332a2591be7953a016f8de56200eb37d5ba593b1e4aa27cea5ca27100f94dccd5b04bae5cadd4454dba67d', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', 'WHAT IS YOUR FAVORITE MOVIE?', '0159d8667999bcc9e752655a43359c1eaf8958c519faa57b859f91894f150ac40000311e027ab32440ef5a21c00174575b93040a901fb26f71aca4f521bf0c50', 'ADMINISTRATOR', 0, NULL, 0, NULL, 1),
 	(15, 4, 1, 'JM', '3627909a29c31381a071ec27f7c9ca97726182aed29a7ddd2e54353322cfb30abb9e3a6df2ac2c20fe23436311d678564d0c8d305930575f60e2d3d048184d79', 'ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413', 'IN WHAT CITY WERE YOU BORN?', '9b8d967dcace7ad62f9b3dd14dceb10c3f420938efd75e9ecf4edcc2102ac0c8ca9dd1ec3519e8d02c71ea325c4b8d6f498a6c697da5f54c97b9f020a2f83408', 'EVALUATOR', 0, NULL, 0, NULL, 1),
@@ -142,9 +148,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2649 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2694 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~861 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~906 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1788, 1, '2017-10-12 00:07:10', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -1007,7 +1013,52 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(2645, 13, '2017-11-19 15:09:57', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2646, 13, '2017-11-19 15:15:55', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2647, 13, '2017-11-19 15:31:15', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(2648, 13, '2017-11-19 20:40:25', '%192.168.0.104@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(2648, 13, '2017-11-19 20:40:25', '%192.168.0.104@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2649, 13, '2017-11-20 11:43:26', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2650, 2, '2017-11-20 11:48:25', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2651, 2, '2017-11-20 11:52:42', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2652, 1, '2017-11-20 11:55:07', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2653, 1, '2017-11-20 12:26:24', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2654, 2, '2017-11-20 12:28:59', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2655, 13, '2017-11-20 12:30:55', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2656, 1, '2017-11-20 12:31:43', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2657, 1, '2017-11-20 12:33:22', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2658, 1, '2017-11-20 12:40:25', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2659, 13, '2017-11-20 12:51:13', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2660, 1, '2017-11-20 13:15:53', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2661, 1, '2017-11-20 13:21:17', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2662, 1, '2017-11-20 13:25:06', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2663, 13, '2017-11-20 14:14:29', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2664, 13, '2017-11-20 16:39:22', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2665, 13, '2017-11-20 16:42:34', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2666, 13, '2017-11-20 16:46:15', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2667, 13, '2017-11-20 16:49:08', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2668, 13, '2017-11-20 16:52:12', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2669, 13, '2017-11-20 17:03:23', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2670, 13, '2017-11-20 17:06:49', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2671, 13, '2017-11-20 17:40:38', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2672, 13, '2017-11-20 17:46:41', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2673, 13, '2017-11-20 17:52:30', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2674, 13, '2017-11-20 17:54:45', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2675, 13, '2017-11-20 19:05:42', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2676, 13, '2017-11-20 19:29:23', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2677, 13, '2017-11-20 19:33:15', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2678, 13, '2017-11-20 19:52:26', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2679, 13, '2017-11-20 19:58:27', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2680, 13, '2017-11-20 20:01:04', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2681, 13, '2017-11-20 20:06:11', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2682, 13, '2017-11-20 20:32:24', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2683, 13, '2017-11-20 20:37:04', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2684, 1, '2017-11-20 20:45:55', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2685, 13, '2017-11-20 20:49:49', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2686, 13, '2017-11-21 17:11:58', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2687, 13, '2017-11-21 21:26:26', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2688, 13, '2017-11-21 21:31:00', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2689, 13, '2017-11-21 21:43:11', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2690, 13, '2017-11-21 21:46:32', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2691, 13, '2017-11-21 22:01:32', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2692, 13, '2017-11-21 22:23:22', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2693, 13, '2017-11-21 22:25:24', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -1026,9 +1077,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2473 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2518 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~878 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~923 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
 	(1595, 1, '2017-10-11 18:39:01', '2017-10-11 18:40:31', '%192.168.254.151@40-2C-F4-04-E9-6E%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 18:39:58', 'EVALUATION_SYSTEM', 1),
@@ -1908,7 +1959,52 @@ INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `sess
 	(2469, 13, '2017-11-19 15:09:58', '2017-11-19 15:15:58', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-19 15:15:06', 'EVALUATION_SYSTEM', 1),
 	(2470, 13, '2017-11-19 15:15:56', '2017-11-19 15:24:26', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-19 15:23:43', 'EVALUATION_SYSTEM', 1),
 	(2471, 13, '2017-11-19 15:31:15', '2017-11-19 15:33:16', '%192.168.0.103@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-19 15:32:41', 'EVALUATION_SYSTEM', 1),
-	(2472, 13, '2017-11-19 20:40:25', '2017-11-19 22:36:55', '%192.168.0.104@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-19 22:36:10', 'EVALUATION_SYSTEM', 1);
+	(2472, 13, '2017-11-19 20:40:25', '2017-11-19 22:36:55', '%192.168.0.104@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-19 22:36:10', 'EVALUATION_SYSTEM', 1),
+	(2473, 13, '2017-11-20 11:43:26', '2017-11-20 11:48:26', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 11:47:26', 'EVALUATION_SYSTEM', 1),
+	(2474, 2, '2017-11-20 11:48:25', '2017-11-20 11:52:26', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 11:51:56', 'EVALUATION_SYSTEM', 1),
+	(2475, 2, '2017-11-20 11:52:42', '2017-11-20 11:55:13', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 11:54:18', 'EVALUATION_SYSTEM', 1),
+	(2476, 1, '2017-11-20 11:55:08', '2017-11-20 12:25:38', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:24:55', 'EVALUATION_SYSTEM', 1),
+	(2477, 1, '2017-11-20 12:26:24', '2017-11-20 12:28:54', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:28:12', 'EVALUATION_SYSTEM', 1),
+	(2478, 2, '2017-11-20 12:28:59', '2017-11-20 12:30:59', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:30:13', 'EVALUATION_SYSTEM', 1),
+	(2479, 13, '2017-11-20 12:30:56', '2017-11-20 12:31:56', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:31:04', 'EVALUATION_SYSTEM', 1),
+	(2480, 1, '2017-11-20 12:31:43', '2017-11-20 12:33:14', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:32:43', 'EVALUATION_SYSTEM', 1),
+	(2481, 1, '2017-11-20 12:33:22', '2017-11-20 12:35:23', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:34:36', 'EVALUATION_SYSTEM', 1),
+	(2482, 1, '2017-11-20 12:40:26', '2017-11-20 12:41:26', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:40:50', 'EVALUATION_SYSTEM', 1),
+	(2483, 13, '2017-11-20 12:51:13', '2017-11-20 12:56:13', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 12:55:15', 'EVALUATION_SYSTEM', 1),
+	(2484, 1, '2017-11-20 13:15:53', '2017-11-20 13:18:54', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 13:17:59', 'EVALUATION_SYSTEM', 1),
+	(2485, 1, '2017-11-20 13:21:17', '2017-11-20 13:24:47', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 13:24:02', 'EVALUATION_SYSTEM', 1),
+	(2486, 1, '2017-11-20 13:25:06', '2017-11-20 13:28:37', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 13:27:58', 'EVALUATION_SYSTEM', 1),
+	(2487, 13, '2017-11-20 14:14:29', '2017-11-20 16:35:59', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 16:35:19', 'EVALUATION_SYSTEM', 1),
+	(2488, 13, '2017-11-20 16:39:22', '2017-11-20 16:41:22', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 16:40:51', 'EVALUATION_SYSTEM', 1),
+	(2489, 13, '2017-11-20 16:42:34', '2017-11-20 16:46:04', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 16:45:12', 'EVALUATION_SYSTEM', 1),
+	(2490, 13, '2017-11-20 16:46:15', '2017-11-20 16:47:45', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 16:47:10', 'EVALUATION_SYSTEM', 1),
+	(2491, 13, '2017-11-20 16:49:08', '2017-11-20 16:51:39', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 16:50:48', 'EVALUATION_SYSTEM', 1),
+	(2492, 13, '2017-11-20 16:52:12', '2017-11-20 17:03:13', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 17:02:26', 'EVALUATION_SYSTEM', 1),
+	(2493, 13, '2017-11-20 17:03:23', '2017-11-20 17:05:54', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 17:05:04', 'EVALUATION_SYSTEM', 1),
+	(2494, 13, '2017-11-20 17:06:49', '2017-11-20 17:34:50', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 17:34:09', 'EVALUATION_SYSTEM', 1),
+	(2495, 13, '2017-11-20 17:40:38', '2017-11-20 17:45:39', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 17:44:57', 'EVALUATION_SYSTEM', 1),
+	(2496, 13, '2017-11-20 17:46:41', '2017-11-20 17:51:42', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 17:50:51', 'EVALUATION_SYSTEM', 1),
+	(2497, 13, '2017-11-20 17:52:31', '2017-11-20 17:53:31', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 17:53:00', 'EVALUATION_SYSTEM', 1),
+	(2498, 13, '2017-11-20 17:54:46', '2017-11-20 18:13:16', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 18:12:42', 'EVALUATION_SYSTEM', 1),
+	(2499, 13, '2017-11-20 19:05:42', '2017-11-20 19:10:12', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 19:09:42', 'EVALUATION_SYSTEM', 1),
+	(2500, 13, '2017-11-20 19:29:24', '2017-11-20 19:32:54', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 19:32:16', 'EVALUATION_SYSTEM', 1),
+	(2501, 13, '2017-11-20 19:33:16', '2017-11-20 19:51:16', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 19:50:26', 'EVALUATION_SYSTEM', 1),
+	(2502, 13, '2017-11-20 19:52:27', '2017-11-20 19:57:28', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 19:56:57', 'EVALUATION_SYSTEM', 1),
+	(2503, 13, '2017-11-20 19:58:27', '2017-11-20 20:00:58', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 20:01:03', 'EVALUATION_SYSTEM', 1),
+	(2504, 13, '2017-11-20 20:01:04', '2017-11-20 20:05:34', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 20:05:00', 'EVALUATION_SYSTEM', 1),
+	(2505, 13, '2017-11-20 20:06:11', '2017-11-20 20:31:42', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 20:31:09', 'EVALUATION_SYSTEM', 1),
+	(2506, 13, '2017-11-20 20:32:24', '2017-11-20 20:35:55', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 20:35:07', 'EVALUATION_SYSTEM', 1),
+	(2507, 13, '2017-11-20 20:37:04', '2017-11-20 20:45:05', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 20:44:30', 'EVALUATION_SYSTEM', 1),
+	(2508, 1, '2017-11-20 20:45:55', '2017-11-20 20:49:56', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 20:48:57', 'EVALUATION_SYSTEM', 1),
+	(2509, 13, '2017-11-20 20:49:49', '2017-11-20 20:54:50', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-20 20:54:14', 'EVALUATION_SYSTEM', 1),
+	(2510, 13, '2017-11-21 17:11:58', '2017-11-21 21:24:58', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-21 21:24:28', 'EVALUATION_SYSTEM', 1),
+	(2511, 13, '2017-11-21 21:26:26', '2017-11-21 21:30:27', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-21 21:29:38', 'EVALUATION_SYSTEM', 1),
+	(2512, 13, '2017-11-21 21:31:01', '2017-11-21 21:41:01', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-21 21:40:18', 'EVALUATION_SYSTEM', 1),
+	(2513, 13, '2017-11-21 21:43:11', '2017-11-21 21:46:42', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-21 21:45:42', 'EVALUATION_SYSTEM', 1),
+	(2514, 13, '2017-11-21 21:46:32', '2017-11-21 22:00:32', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-21 21:59:50', 'EVALUATION_SYSTEM', 1),
+	(2515, 13, '2017-11-21 22:01:32', '2017-11-21 22:06:32', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-21 22:06:01', 'EVALUATION_SYSTEM', 1),
+	(2516, 13, '2017-11-21 22:23:22', '2017-11-21 22:25:23', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-21 22:24:35', 'EVALUATION_SYSTEM', 1),
+	(2517, 13, '2017-11-21 22:25:24', '2017-11-21 22:32:55', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -1956,7 +2052,7 @@ CREATE TABLE IF NOT EXISTS `announcements` (
 -- Dumping data for table cictems.announcements: ~5 rows (approximately)
 /*!40000 ALTER TABLE `announcements` DISABLE KEYS */;
 INSERT INTO `announcements` (`id`, `title`, `message`, `date`, `announced_by`, `active`) VALUES
-	(1, 'HELLO', 'ASDWASDWADAWDADAWDAWDAWDAWDAWD', '2017-11-04 18:52:51', 1, 1),
+	(1, 'HELLO', 'VHGGGJGHJ', '2017-11-04 18:52:51', 3, 1),
 	(2, 'Greetings', 'Goodmorning CICT Students', '2017-11-13 08:59:47', NULL, 1),
 	(3, 'Evaluation Cut OFF', 'Please be reminded that the evaluation period is only until 1 PM', '2017-11-13 09:00:55', NULL, 1),
 	(4, 'XIAOXIANGHAO', 'Laoshi', '2017-11-13 09:01:11', NULL, 1),
@@ -1997,7 +2093,7 @@ CREATE TABLE IF NOT EXISTS `curriculum` (
   CONSTRAINT `curriculum_fk_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `faculty` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum: ~6 rows (approximately)
+-- Dumping data for table cictems.curriculum: ~5 rows (approximately)
 /*!40000 ALTER TABLE `curriculum` DISABLE KEYS */;
 INSERT INTO `curriculum` (`id`, `ACADPROG_id`, `major`, `name`, `description`, `ladderization`, `ladderization_type`, `study_years`, `created_date`, `created_by`, `updated_date`, `updated_by`, `removed_date`, `removed_by`, `implemented`, `implementation_date`, `implemented_by`, `obsolete_term`, `active`) VALUES
 	(6, 4, 'NONE', 'ACT (15-16)', 'NO DESCRIPTION', 'YES', 'PREPARATORY', 2, '2017-09-06 14:19:06', 4, NULL, NULL, NULL, NULL, 1, '2017-11-15 19:49:41', 2, 0, 1),
@@ -2030,7 +2126,7 @@ CREATE TABLE IF NOT EXISTS `curriculum_history` (
   PRIMARY KEY (`history_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_history: ~11 rows (approximately)
+-- Dumping data for table cictems.curriculum_history: ~1 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_history` DISABLE KEYS */;
 INSERT INTO `curriculum_history` (`history_id`, `CURRICULUM_id`, `major`, `name`, `description`, `ladderization`, `ladderization_type`, `study_years`, `created_date`, `created_by`, `updated_date`, `updated_by`, `removed_date`, `removed_by`, `implemented`, `implementation_date`, `implemented_by`, `active`) VALUES
 	(1, 11, 'NONE', 'BSIT (16-17)', 'NO DESCRIPTION', 'YES', 'CONSEQUENT', 2, '2017-10-18 04:58:42', 1, NULL, NULL, NULL, NULL, 0, NULL, NULL, 1);
@@ -2051,7 +2147,7 @@ CREATE TABLE IF NOT EXISTS `curriculum_history_summary` (
   CONSTRAINT `cur_history_fk_faculty` FOREIGN KEY (`created_by`) REFERENCES `faculty` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_history_summary: ~11 rows (approximately)
+-- Dumping data for table cictems.curriculum_history_summary: ~2 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_history_summary` DISABLE KEYS */;
 INSERT INTO `curriculum_history_summary` (`history_id`, `curriculum_id`, `description`, `created_by`, `created_date`, `active`) VALUES
 	(189, 11, 'ADDED CO-REQUISITE [ID:177] IT 333 FOR [ID:157] IT 373 FROM THIRD YEAR-FIRST SEMESTER', 1, '2017-10-18 05:16:48', 1),
@@ -2080,7 +2176,7 @@ CREATE TABLE IF NOT EXISTS `curriculum_pre` (
   CONSTRAINT `req_fk` FOREIGN KEY (`curriculum_id_req`) REFERENCES `curriculum` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_pre: ~8 rows (approximately)
+-- Dumping data for table cictems.curriculum_pre: ~2 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_pre` DISABLE KEYS */;
 INSERT INTO `curriculum_pre` (`id`, `curriculum_id_get`, `curriculum_id_req`, `cur_type`, `created_date`, `created_by`, `removed_date`, `removed_by`, `active`) VALUES
 	(1, 11, 7, 'PRIMARY', '2017-10-26 21:00:44', 1, NULL, NULL, 1),
@@ -2508,9 +2604,9 @@ CREATE TABLE IF NOT EXISTS `evaluation` (
   CONSTRAINT `evaluation_fk_from_faculty_id` FOREIGN KEY (`FACULTY_id`) REFERENCES `faculty` (`id`),
   CONSTRAINT `evaluation_fk_from_student_cict_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`),
   CONSTRAINT `evaluation_fk_self` FOREIGN KEY (`adding_reference_id`) REFERENCES `evaluation` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='has a duplication of student_id in the load_subjects';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='has a duplication of student_id in the load_subjects';
 
--- Dumping data for table cictems.evaluation: ~6 rows (approximately)
+-- Dumping data for table cictems.evaluation: ~8 rows (approximately)
 /*!40000 ALTER TABLE `evaluation` DISABLE KEYS */;
 INSERT INTO `evaluation` (`id`, `STUDENT_id`, `ACADTERM_id`, `FACULTY_id`, `adding_reference_id`, `evaluation_date`, `year_level`, `type`, `remarks`, `print_type`, `cancelled_by`, `cancelled_date`, `active`) VALUES
 	(17, 57, 11, 2, NULL, '2017-11-15 19:57:40', 4, 'REGULAR', 'REVOKED', 'OLD', 1, '2017-11-18 09:03:22', 0),
@@ -2518,7 +2614,9 @@ INSERT INTO `evaluation` (`id`, `STUDENT_id`, `ACADTERM_id`, `FACULTY_id`, `addi
 	(19, 96, 11, 1, NULL, '2017-11-16 14:07:58', 2, 'REGULAR', 'REVOKED', 'OLD', 2, '2017-11-16 14:09:44', 0),
 	(20, 59, 11, 1, NULL, '2017-11-18 08:46:50', 3, 'REGULAR', 'REVOKED', 'OLD', 1, '2017-11-18 08:47:55', 0),
 	(21, 57, 11, 1, NULL, '2017-11-18 09:05:17', 4, 'REGULAR', 'ACCEPTED', 'OLD', NULL, NULL, 1),
-	(22, 98, 11, 1, NULL, '2017-11-18 09:15:20', 1, 'REGULAR', 'REVOKED', 'IRREGULAR', 2, '2017-11-18 12:59:07', 0);
+	(22, 98, 11, 1, NULL, '2017-11-18 09:15:20', 1, 'REGULAR', 'REVOKED', 'IRREGULAR', 2, '2017-11-18 12:59:07', 0),
+	(23, 57, 19, 3, NULL, '2017-11-20 20:38:19', 4, 'REGULAR', 'ACCEPTED', 'OLD', NULL, NULL, 1),
+	(24, 99, 19, 3, NULL, '2017-11-20 20:40:11', 2, 'REGULAR', 'ACCEPTED', 'OLD', NULL, NULL, 1);
 /*!40000 ALTER TABLE `evaluation` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.faculty
@@ -2541,7 +2639,7 @@ CREATE TABLE IF NOT EXISTS `faculty` (
 -- Dumping data for table cictems.faculty: ~7 rows (approximately)
 /*!40000 ALTER TABLE `faculty` DISABLE KEYS */;
 INSERT INTO `faculty` (`id`, `bulsu_id`, `last_name`, `first_name`, `middle_name`, `name_extension`, `mobile_number`, `gender`, `rank`, `designation`, `department`, `active`) VALUES
-	(1, '2017-A', 'PERELLO', 'JHON MELVIN', 'NIETO', NULL, '+639123456789', 'MALE', 'PART TIME', 'ASSISTANT_ADMINISTRATOR', 'NONE', 1),
+	(1, '2017-A', 'PERELLO', 'JHON MELVIN', 'NIETO', NULL, '+639123456789', 'MALE', 'PART TIME', 'CO_REGISTRAR', 'NONE', 1),
 	(2, '2017-E', 'SAMSON', 'EVELYN', 'MARTINEZ', NULL, '+639050763508', 'FEMALE', 'ASSOCIATE PROFESSOR III', 'LOCAL_REGISTRAR', 'BSIT', 1),
 	(3, '2017-B', 'DE LA CRUZ', 'JOEMAR', 'NUCOM', NULL, '+639123456789', 'MALE', 'ASSOCIATE PROFESSOR III', 'ADMINISTRATOR', 'NONE', 1),
 	(4, '2017-C', 'CALIZON', 'JOHN MICHAEL', 'EWAN', NULL, NULL, 'MALE', 'INSTRUCTOR', 'EVALUATOR', NULL, 1),
@@ -2649,9 +2747,9 @@ CREATE TABLE IF NOT EXISTS `grade` (
   CONSTRAINT `grade_fk_from_student_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`),
   CONSTRAINT `grade_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`),
   CONSTRAINT `grade_fk_ref_cur` FOREIGN KEY (`referrence_curriculum`) REFERENCES `curriculum` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=609 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
+) ENGINE=InnoDB AUTO_INCREMENT=616 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='evaluation id will be null until evaluated';
 
--- Dumping data for table cictems.grade: ~93 rows (approximately)
+-- Dumping data for table cictems.grade: ~100 rows (approximately)
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
 INSERT INTO `grade` (`id`, `STUDENT_id`, `SUBJECT_id`, `ACADTERM_id`, `rating`, `remarks`, `credit`, `credit_method`, `created_by`, `created_date`, `posted`, `posted_by`, `posting_date`, `inc_expire`, `updated_by`, `updated_date`, `reason_for_update`, `referrence_curriculum`, `course_reference`, `grade_state`, `active`) VALUES
 	(516, 57, 243, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 3, '2017-11-15 18:21:02', 0, NULL, NULL, NULL, 1, '2017-11-18 09:03:22.000000', 'REVOKED_EVALUATION', NULL, NULL, 'ACCEPTED', 0),
@@ -2746,7 +2844,14 @@ INSERT INTO `grade` (`id`, `STUDENT_id`, `SUBJECT_id`, `ACADTERM_id`, `rating`, 
 	(605, 57, 243, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-11-18 09:05:17', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
 	(606, 57, 244, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-11-18 09:05:17', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
 	(607, 57, 191, 11, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 1, '2017-11-18 09:05:17', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
-	(608, 98, 191, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 1, '2017-11-18 09:15:20', 0, NULL, NULL, NULL, 2, '2017-11-18 12:59:07.000000', 'REVOKED_EVALUATION', NULL, NULL, 'ACCEPTED', 0);
+	(608, 98, 191, 11, 'CANCELLED', 'CANCELLED', 0, 'REGULAR', 1, '2017-11-18 09:15:20', 0, NULL, NULL, NULL, 2, '2017-11-18 12:59:07.000000', 'REVOKED_EVALUATION', NULL, NULL, 'ACCEPTED', 0),
+	(609, 57, 243, 19, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 3, '2017-11-20 20:38:19', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
+	(610, 57, 244, 19, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 3, '2017-11-20 20:38:19', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
+	(611, 57, 174, 19, '1', 'Passed', 3, 'REGULAR', 3, '2017-11-20 20:38:19', 1, 3, '2017-11-21 22:25:58', NULL, 3, '2017-11-21 22:25:58.000000', 'Posted by Faculty-in-charge', NULL, NULL, 'ACCEPTED', 1),
+	(612, 99, 213, 19, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 3, '2017-11-20 20:40:11', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
+	(613, 99, 214, 19, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 3, '2017-11-20 20:40:11', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
+	(614, 99, 215, 19, 'UNPOSTED', 'UNPOSTED', 2, 'REGULAR', 3, '2017-11-20 20:40:11', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1),
+	(615, 99, 174, 19, 'UNPOSTED', 'UNPOSTED', 3, 'REGULAR', 3, '2017-11-20 20:40:11', 0, NULL, NULL, NULL, NULL, NULL, 'Created by Evaluation', NULL, NULL, 'ACCEPTED', 1);
 /*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_entrance
@@ -2764,8 +2869,8 @@ CREATE TABLE IF NOT EXISTS `linked_entrance` (
 -- Dumping data for table cictems.linked_entrance: ~2 rows (approximately)
 /*!40000 ALTER TABLE `linked_entrance` DISABLE KEYS */;
 INSERT INTO `linked_entrance` (`reference_id`, `student_number`, `name`, `status`, `faculty_name`, `floor_assignment`, `active`) VALUES
-	(1, '2014113844', NULL, 'NONE', 'NONE', 1, 1),
-	(2, '1', NULL, 'NONE', 'NONE', 2, 1);
+	(1, '2014113844', NULL, 'DONE', 'NONE', 1, 1),
+	(2, '1', NULL, 'DONE', 'NONE', 2, 1);
 /*!40000 ALTER TABLE `linked_entrance` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.linked_marshall_session
@@ -2885,7 +2990,7 @@ CREATE TABLE IF NOT EXISTS `linked_settings` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_settings: ~10 rows (approximately)
+-- Dumping data for table cictems.linked_settings: ~3 rows (approximately)
 /*!40000 ALTER TABLE `linked_settings` DISABLE KEYS */;
 INSERT INTO `linked_settings` (`id`, `floor_3_max`, `floor_4_max`, `floor_3_name`, `floor_4_name`, `floor_3_last`, `floor_4_last`, `floor_3_cut`, `floor_4_cut`, `created_by`, `created_date`, `mark`, `active`) VALUES
 	(1, 1000, 1000, '3FLR/IT8', '4FLR/CT6', 6, 0, 0, 1, 1, '2017-09-10 08:25:36', 'ALIVE', 0),
@@ -3036,7 +3141,7 @@ INSERT INTO `load_group` (`id`, `SUBJECT_id`, `LOADSEC_id`, `faculty`, `group_ty
 	(34094, 203, 4898, NULL, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
 	(34095, 114, 4898, NULL, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
 	(34096, 196, 4898, NULL, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
-	(34097, 119, 4898, NULL, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
+	(34097, 119, 4898, 1, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
 	(34098, 190, 4899, NULL, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
 	(34099, 191, 4899, NULL, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
 	(34100, 192, 4899, NULL, 'REGULAR', '2017-11-18 17:29:56', 3, NULL, NULL, 1, 0),
@@ -3095,7 +3200,7 @@ INSERT INTO `load_group` (`id`, `SUBJECT_id`, `LOADSEC_id`, `faculty`, `group_ty
 	(34153, 242, 4907, NULL, 'REGULAR', '2017-11-18 17:29:57', 3, NULL, NULL, 1, 0),
 	(34154, 171, 4908, NULL, 'REGULAR', '2017-11-18 17:29:57', 3, NULL, NULL, 1, 0),
 	(34155, 171, 4909, NULL, 'REGULAR', '2017-11-18 17:29:57', 3, NULL, NULL, 1, 0),
-	(34156, 174, 4910, NULL, 'REGULAR', '2017-11-19 20:46:29', 3, NULL, NULL, 1, 0),
+	(34156, 174, 4910, 3, 'REGULAR', '2017-11-19 20:46:29', 3, NULL, NULL, 1, 0),
 	(34157, 152, 4910, NULL, 'REGULAR', '2017-11-19 20:46:29', 3, NULL, NULL, 1, 0),
 	(34158, 176, 4910, NULL, 'REGULAR', '2017-11-19 20:46:29', 3, NULL, NULL, 1, 0),
 	(34159, 154, 4910, NULL, 'REGULAR', '2017-11-19 20:46:29', 3, NULL, NULL, 1, 0),
@@ -3146,10 +3251,13 @@ CREATE TABLE IF NOT EXISTS `load_group_schedule` (
   PRIMARY KEY (`id`),
   KEY `schedule_group_fk` (`load_group_id`),
   CONSTRAINT `schedule_group_fk` FOREIGN KEY (`load_group_id`) REFERENCES `load_group` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.load_group_schedule: ~0 rows (approximately)
+-- Dumping data for table cictems.load_group_schedule: ~2 rows (approximately)
 /*!40000 ALTER TABLE `load_group_schedule` DISABLE KEYS */;
+INSERT INTO `load_group_schedule` (`id`, `load_group_id`, `class_day`, `class_start`, `class_end`, `class_room`, `created_date`, `created_by`, `updated_date`, `updated_by`, `active`, `archived`) VALUES
+	(1, 34156, 'SUNDAY', '07:00', '08:00', '', '2017-11-20 15:42:22', 3, NULL, NULL, 1, 0),
+	(2, 34156, 'TUESDAY', '07:45', '10:15', 'IT 3', '2017-11-20 17:16:45', 3, NULL, NULL, 1, 0);
 /*!40000 ALTER TABLE `load_group_schedule` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.load_section
@@ -3189,7 +3297,7 @@ CREATE TABLE IF NOT EXISTS `load_section` (
 -- Dumping data for table cictems.load_section: ~39 rows (approximately)
 /*!40000 ALTER TABLE `load_section` DISABLE KEYS */;
 INSERT INTO `load_section` (`id`, `ACADTERM_id`, `ACADPROG_id`, `CURRICULUM_id`, `section_name`, `section_description`, `year_level`, `_group`, `type`, `college`, `created_date`, `created_by`, `updated_date`, `updated_by`, `adviser`, `active`, `archived`) VALUES
-	(4879, 11, 5, 9, 'A', NULL, 1, 1, 'REGULAR', 'CICT', '2017-11-15 19:51:09', 3, NULL, NULL, NULL, 0, 1),
+	(4879, 11, 5, 9, 'A', NULL, 1, 1, 'REGULAR', 'CICT', '2017-11-15 19:51:09', 3, NULL, NULL, 3, 0, 1),
 	(4880, 11, 5, 9, 'A', NULL, 1, 2, 'REGULAR', 'CICT', '2017-11-15 19:51:10', 3, NULL, NULL, NULL, 0, 1),
 	(4881, 11, 5, 9, 'A', NULL, 2, 1, 'REGULAR', 'CICT', '2017-11-15 19:51:10', 3, NULL, NULL, NULL, 0, 1),
 	(4882, 11, 5, 9, 'A', NULL, 2, 2, 'REGULAR', 'CICT', '2017-11-15 19:51:10', 3, NULL, NULL, NULL, 0, 1),
@@ -3209,19 +3317,19 @@ INSERT INTO `load_section` (`id`, `ACADTERM_id`, `ACADPROG_id`, `CURRICULUM_id`,
 	(4896, 11, 5, 9, 'D', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-15 19:51:10', 3, NULL, NULL, NULL, 0, 1),
 	(4897, 11, NULL, NULL, 'TC-IT 113', NULL, NULL, NULL, 'TUTORIAL', 'CICT', '2017-11-15 19:57:10', 3, NULL, NULL, NULL, 0, 1),
 	(4898, 19, 5, 9, 'A', NULL, 1, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:56', 3, NULL, NULL, NULL, 1, 0),
-	(4899, 19, 5, 9, 'A', NULL, 1, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:56', 3, NULL, NULL, NULL, 1, 0),
-	(4900, 19, 5, 9, 'A', NULL, 2, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
+	(4899, 19, 5, 9, 'A', NULL, 1, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:56', 3, NULL, NULL, 3, 1, 0),
+	(4900, 19, 5, 9, 'A', NULL, 2, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, 3, 1, 0),
 	(4901, 19, 5, 9, 'A', NULL, 2, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
-	(4902, 19, 5, 9, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
+	(4902, 19, 5, 9, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, 3, 1, 0),
 	(4903, 19, 5, 9, 'A', NULL, 3, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
-	(4904, 19, 5, 9, 'A', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
+	(4904, 19, 5, 9, 'A', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, 3, 1, 0),
 	(4905, 19, 5, 9, 'A', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4906, 19, 5, 9, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4907, 19, 5, 9, 'B', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4908, 19, 5, 9, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4909, 19, 5, 9, 'B', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
-	(4910, 19, 5, 11, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
-	(4911, 19, 5, 11, 'A', NULL, 3, 2, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
+	(4910, 19, 5, 11, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, 3, 1, 0),
+	(4911, 19, 5, 11, 'A', NULL, 3, 2, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, 3, 1, 0),
 	(4912, 19, 5, 11, 'A', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
 	(4913, 19, 5, 11, 'A', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
 	(4914, 19, 5, 11, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
@@ -3245,6 +3353,7 @@ CREATE TABLE IF NOT EXISTS `load_subject` (
   `changing_reference` int(11) DEFAULT NULL COMMENT 'load_group',
   `active` int(11) DEFAULT '1',
   `arhived` int(11) DEFAULT '0',
+  `cleared` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `load_subject_fk_from_load_group_id` (`LOADGRP_id`),
   KEY `load_subject_fk_from_student_id` (`STUDENT_id`),
@@ -3260,30 +3369,37 @@ CREATE TABLE IF NOT EXISTS `load_subject` (
   CONSTRAINT `load_subject_fk_from_load_group_id` FOREIGN KEY (`LOADGRP_id`) REFERENCES `load_group` (`id`),
   CONSTRAINT `load_subject_fk_from_student_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`),
   CONSTRAINT `load_subject_fk_from_subject_id` FOREIGN KEY (`SUBJECT_id`) REFERENCES `subject` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all students enrolled in that subject in a particular section';
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all students enrolled in that subject in a particular section';
 
--- Dumping data for table cictems.load_subject: ~19 rows (approximately)
+-- Dumping data for table cictems.load_subject: ~26 rows (approximately)
 /*!40000 ALTER TABLE `load_subject` DISABLE KEYS */;
-INSERT INTO `load_subject` (`id`, `SUBJECT_id`, `LOADGRP_id`, `STUDENT_id`, `EVALUATION_id`, `added_date`, `added_by`, `remarks`, `removed_date`, `removed_by`, `changing_reference`, `active`, `arhived`) VALUES
-	(59, 243, 34059, 57, 17, '2017-11-15 19:57:40', 2, 'REVOKED_EVALUATION', '2017-11-18 09:03:22', 1, NULL, 0, 0),
-	(60, 244, 34060, 57, 17, '2017-11-15 19:57:40', 2, 'REVOKED_EVALUATION', '2017-11-18 09:03:22', 1, NULL, 0, 0),
-	(61, 191, 34087, 57, 17, '2017-11-15 19:57:40', 2, 'REVOKED_EVALUATION', '2017-11-18 09:03:22', 1, NULL, 0, 0),
-	(62, 213, 34031, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0),
-	(63, 214, 34032, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0),
-	(64, 215, 34033, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0),
-	(65, 191, 34087, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0),
-	(66, 213, 34031, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0),
-	(67, 214, 34032, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0),
-	(68, 215, 34033, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0),
-	(69, 191, 34087, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0),
-	(70, 228, 34045, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0),
-	(71, 231, 34048, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0),
-	(72, 232, 34049, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0),
-	(73, 233, 34050, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0),
-	(74, 243, 34059, 57, 21, '2017-11-18 09:05:17', 1, 'ACCEPTED', NULL, NULL, NULL, 0, 1),
-	(75, 244, 34060, 57, 21, '2017-11-18 09:05:17', 1, 'ACCEPTED', NULL, NULL, NULL, 0, 1),
-	(76, 191, 34087, 57, 21, '2017-11-18 09:05:17', 1, 'ACCEPTED', NULL, NULL, NULL, 0, 1),
-	(77, 191, 34016, 98, 22, '2017-11-18 09:15:20', 1, 'REVOKED_EVALUATION', '2017-11-18 12:59:07', 2, NULL, 0, 0);
+INSERT INTO `load_subject` (`id`, `SUBJECT_id`, `LOADGRP_id`, `STUDENT_id`, `EVALUATION_id`, `added_date`, `added_by`, `remarks`, `removed_date`, `removed_by`, `changing_reference`, `active`, `arhived`, `cleared`) VALUES
+	(59, 243, 34059, 57, 17, '2017-11-15 19:57:40', 2, 'REVOKED_EVALUATION', '2017-11-18 09:03:22', 1, NULL, 0, 0, 0),
+	(60, 244, 34060, 57, 17, '2017-11-15 19:57:40', 2, 'REVOKED_EVALUATION', '2017-11-18 09:03:22', 1, NULL, 0, 0, 0),
+	(61, 191, 34087, 57, 17, '2017-11-15 19:57:40', 2, 'REVOKED_EVALUATION', '2017-11-18 09:03:22', 1, NULL, 0, 0, 0),
+	(62, 213, 34031, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0, 0),
+	(63, 214, 34032, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0, 0),
+	(64, 215, 34033, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0, 0),
+	(65, 191, 34087, 96, 18, '2017-11-16 10:54:03', 2, 'REVOKED_EVALUATION', '2017-11-16 13:07:23', 1, NULL, 0, 0, 0),
+	(66, 213, 34031, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0, 0),
+	(67, 214, 34032, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0, 0),
+	(68, 215, 34033, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0, 0),
+	(69, 191, 34087, 96, 19, '2017-11-16 14:07:58', 1, 'REVOKED_EVALUATION', '2017-11-16 14:09:44', 2, NULL, 0, 0, 0),
+	(70, 228, 34045, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0, 0),
+	(71, 231, 34048, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0, 0),
+	(72, 232, 34049, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0, 0),
+	(73, 233, 34050, 59, 20, '2017-11-18 08:46:50', 1, 'REVOKED_EVALUATION', '2017-11-18 08:47:55', 1, NULL, 0, 0, 0),
+	(74, 243, 34059, 57, 21, '2017-11-18 09:05:17', 1, 'ACCEPTED', NULL, NULL, NULL, 0, 1, 0),
+	(75, 244, 34060, 57, 21, '2017-11-18 09:05:17', 1, 'ACCEPTED', NULL, NULL, NULL, 0, 1, 0),
+	(76, 191, 34087, 57, 21, '2017-11-18 09:05:17', 1, 'ACCEPTED', NULL, NULL, NULL, 0, 1, 0),
+	(77, 191, 34016, 98, 22, '2017-11-18 09:15:20', 1, 'REVOKED_EVALUATION', '2017-11-18 12:59:07', 2, NULL, 0, 0, 0),
+	(78, 243, 34142, 57, 23, '2017-11-20 20:38:19', 3, 'ACCEPTED', NULL, NULL, NULL, 1, 0, 0),
+	(79, 244, 34143, 57, 23, '2017-11-20 20:38:19', 3, 'ACCEPTED', NULL, NULL, NULL, 1, 0, 0),
+	(80, 174, 34156, 57, 23, '2017-11-20 20:38:19', 3, 'ACCEPTED', NULL, NULL, NULL, 1, 0, 0),
+	(81, 213, 34114, 99, 24, '2017-11-20 20:40:11', 3, 'ACCEPTED', NULL, NULL, NULL, 1, 0, 0),
+	(82, 214, 34115, 99, 24, '2017-11-20 20:40:11', 3, 'ACCEPTED', NULL, NULL, NULL, 1, 0, 0),
+	(83, 215, 34116, 99, 24, '2017-11-20 20:40:12', 3, 'ACCEPTED', NULL, NULL, NULL, 1, 0, 0),
+	(84, 174, 34156, 99, 24, '2017-11-20 20:40:12', 3, 'ACCEPTED', NULL, NULL, NULL, 1, 0, 0);
 /*!40000 ALTER TABLE `load_subject` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.otp_generator
@@ -3293,10 +3409,24 @@ CREATE TABLE IF NOT EXISTS `otp_generator` (
   `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `active` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.otp_generator: ~31 rows (approximately)
+-- Dumping data for table cictems.otp_generator: ~13 rows (approximately)
 /*!40000 ALTER TABLE `otp_generator` DISABLE KEYS */;
+INSERT INTO `otp_generator` (`id`, `code`, `date_created`, `active`) VALUES
+	(32, '0c453968718045526a6e3e8e01746057bda93cf0fc61486cde6a96affa8f0fca96e0acf4d69f53d6fc67880ee27542a6310276f7776021e442569ab0baab161d', '2017-11-20 12:29:32', 1),
+	(33, 'da7e799e8dec758426e19efbc84a4977b45065203e5c17f81033162589db6a830ef9ca85c5cd68fc0ca6356d970327e15323b39981fc27af0f736bb2c88a8c0a', '2017-11-20 12:33:41', 1),
+	(34, '4ae19400d39373fbe2667ed9a94eb2d79d538c2da48e70011025c1acd705d3bbaef637f7200d02ba03a5bbf23d427a6308e17ee632a4340be0b6fbd195c76c4c', '2017-11-20 12:34:16', 1),
+	(35, 'b1442c96031278a783bb9f4dd76878b2ff12101d8fcf5ef662d5e06f1311180a0a2385a4c957e5d38c3f14683e54741fb7ed0a17309922d9870b5ef0e4a536a1', '2017-11-20 13:16:02', 1),
+	(36, 'eb5bb49434a5791333d5815d7ebb6bfe8301c32c56deef8c807065502775e488dc90f086a7de8f24e1debf070218330cfd6679508324699b04ee0eae424e52b7', '2017-11-20 13:16:08', 1),
+	(37, '6caae5dfcfaed0ef3a5bbe53f19665a717d797f8acd9eb1393b656b22d0fa3290fd424061d372b9750e35eec52aab9058ec2bad8618f8887d2fe8897f49aae51', '2017-11-20 13:17:11', 1),
+	(38, 'ebffd25157610b18f34867d83667a374da9d8c30892cae8d3ddb97c2da4c20519efdf8295bd7c28b59e803ab28ec769c18920af085b797bcdb4e504352707359', '2017-11-20 13:17:36', 1),
+	(39, '767b7b86983f20ffd971cc7e914bfa771cac42774161a3670ec1385225450e34b3e3a9fede58b60adda31dbe97f88f0b2953b947214d0d0c606984b23c4a317f', '2017-11-20 13:21:26', 1),
+	(40, '3befb8281dd4f121e65f02a1be800934040437f0d86e97d31d2953141ad072c84408201f3c8df0db2fc2a590fb4c08c46fcf086a82498693d940c740b50725c8', '2017-11-20 13:21:37', 1),
+	(41, '75aa61e8404db312d4fe615404bd097564d6f306add32ba83b65d583b4c50f0743da2855b5dc0619b166228e7fb1bd98714bd088895c902152887fb1a35ef170', '2017-11-20 13:25:20', 1),
+	(42, 'ea7131e68a66812c29b23425913f59e80e1b2b0e0dcf2732dc4e5f769c1716394c7814ee85fde6a8f61f9da97d62af2f1abea6ea3a18e13b83fc3555151cb4b6', '2017-11-20 13:25:25', 1),
+	(43, '2d5467a642a5e4693812f0d03ae2b109a5d14c53e635f42233390e8cfd7fb334c43d4800316a31ff033d85ce1c81680ae3bb81cfa7d20d886f35062ff5eab3e8', '2017-11-20 13:26:49', 1),
+	(44, '7533daaeeaa41a895075fd3045ca62d97e58a6e89257cb8e1d0eca686625bbe3202bcbeae4d1e3fa7577a19d1c4298c01b80b8158ee9878679947a87420ce5f7', '2017-11-20 13:27:52', 1);
 /*!40000 ALTER TABLE `otp_generator` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.student
@@ -3344,12 +3474,12 @@ CREATE TABLE IF NOT EXISTS `student` (
 -- Dumping data for table cictems.student: ~6 rows (approximately)
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
 INSERT INTO `student` (`cict_id`, `id`, `CURRICULUM_id`, `curriculum_assignment`, `PREP_id`, `prep_assignment`, `last_name`, `first_name`, `middle_name`, `gender`, `year_level`, `section`, `_group`, `has_profile`, `enrollment_type`, `admission_year`, `college`, `campus`, `residency`, `class_type`, `university`, `created_by`, `created_date`, `updated_by`, `updated_date`, `verified`, `verification_date`, `verfied_by`, `last_evaluation_term`, `active`) VALUES
-	(57, '2014113844', 9, '2017-10-28 15:29:38', NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', 4, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CIT', 'Main', 'REGULAR', NULL, 'HOME', 'FACULTY', '2017-09-09 17:53:54', NULL, '2017-11-12 20:55:14', 1, '2017-11-01 12:19:55', 1, 11, 1),
+	(57, '2014113844', 9, '2017-10-28 15:29:38', NULL, NULL, 'PERELLO', 'JHON MELVIN', 'NIETO', 'MALE', 4, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CIT', 'Main', 'REGULAR', NULL, 'HOME', 'FACULTY', '2017-09-09 17:53:54', NULL, '2017-11-12 20:55:14', 1, '2017-11-01 12:19:55', 1, 19, 1),
 	(59, '2014112470', 9, '2017-11-08 12:03:00', NULL, NULL, 'MERCADO', 'JELYN', 'CARLOS', 'FEMALE', 3, 'A', 1, 1, 'REGULAR', 'NOT_SET', 'CICT', 'Main', 'REGULAR', NULL, 'HOME', 'FACULTY', '2017-09-10 06:57:02', NULL, '2017-11-12 20:55:14', 1, '2017-10-26 03:10:26', 1, 0, 1),
 	(91, '2014113847', 9, NULL, NULL, NULL, 'PIZZA', 'BURGER', 'FRIES', 'MALE', 1, 'A', 1, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', NULL, 'HOME', 'FACULTY', '2017-11-03 02:48:17', NULL, '2017-11-12 20:55:14', 1, '2017-11-08 17:46:17', 3, 11, 1),
 	(96, '2014113846', 9, NULL, NULL, NULL, 'PERELLO', 'JHON', 'NIETO', 'MALE', 2, 'A', 1, 1, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'REGULAR', NULL, 'HOME', 'melvin', '2017-11-12 21:02:31', 'melvin', '2017-11-12 21:06:14', 1, '2017-11-16 10:54:03', 2, 0, 1),
 	(98, 'CE', NULL, NULL, NULL, NULL, 'DELA CRUZ', 'FIRST', 'MIDDLE', 'MALE', 1, '', 1, 0, 'NOT_SET', 'NOT_SET', 'CICT', 'Main', 'CROSS_ENROLLEE', NULL, 'HOME', 'MELVIN', '2017-11-13 05:06:57', NULL, '2017-11-13 05:06:57', 1, '2017-11-16 14:27:57', 3, 0, 1),
-	(99, '1', NULL, NULL, NULL, NULL, 'PERELLO', 'JHON MELVIN', NULL, NULL, NULL, NULL, NULL, 0, 'NOT_SET', 'NOT_SET', 'CICT', 'MAIN', 'NOT_SET', '', 'HOME', 'LINKED_ACC_24_USER_2014112470_MERCADO', '2017-11-13 09:09:35', NULL, '2017-11-13 09:09:35', 1, '2017-11-14 06:28:06', 1, NULL, 1);
+	(99, '1', 9, NULL, NULL, NULL, 'PERELLO', 'JHON MELVIN', '', 'MALE', 2, 'A', 1, 0, 'NOT_SET', 'NOT_SET', 'CICT', 'Main', 'NOT_SET', 'REGULAR', 'HOME', 'LINKED_ACC_24_USER_2014112470_MERCADO', '2017-11-13 09:09:35', NULL, '2017-11-13 09:09:35', 1, '2017-11-14 06:28:06', 1, 19, 1);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.student_course_history
@@ -3396,7 +3526,7 @@ CREATE TABLE IF NOT EXISTS `student_profile` (
   CONSTRAINT `profile_fk_from_student_cict_id` FOREIGN KEY (`STUDENT_id`) REFERENCES `student` (`cict_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.student_profile: ~27 rows (approximately)
+-- Dumping data for table cictems.student_profile: ~21 rows (approximately)
 /*!40000 ALTER TABLE `student_profile` DISABLE KEYS */;
 INSERT INTO `student_profile` (`id`, `STUDENT_id`, `floor_assignment`, `profile_picture`, `mobile`, `house_no`, `street`, `brgy`, `city`, `province`, `zipcode`, `email`, `ice_name`, `ice_address`, `ice_contact`, `created_date`, `active`) VALUES
 	(16, 59, 3, 'NONE', '09368955866', '123', 'ASDASDASDASD', 'ASDASDASD', 'ASDASDASD', 'ASDASDASDASD', '3018', 'jhmvinperello@gmail.com', 'ASDASDASDASD', 'ADDREESS', '09368955866', '2017-09-10 06:58:21', 1),
@@ -3668,7 +3798,7 @@ INSERT INTO `system_variables` (`id`, `name`, `value`, `created_by`, `created_da
 	(1, 'REGISTRAR', 'LEILANIE M. LIZARDO', NULL, '2017-10-03 17:33:32', NULL, NULL, 1),
 	(2, 'RECOMMENDING_APPROVAL', 'ENGR. NOEMI P. REYES', NULL, '2017-10-03 17:33:51', 5, '2017-11-07 21:39:01', 1),
 	(3, 'MAXIMUM_POPULATION', '2', 3, '2017-11-08 12:54:08', 3, '2017-11-15 18:22:19', 1),
-	(4, 'FTP_USERNAME', 'ftp-cict', 3, '2017-11-09 21:17:36', NULL, NULL, 1),
+	(4, 'FTP_USERNAME', 'FTP-CICT', 3, '2017-11-09 21:17:36', 3, '2017-11-20 12:53:45', 1),
 	(5, 'FTP_PASSWORD', '123456', NULL, '2017-11-09 21:18:20', 3, '2017-11-10 10:43:04', 1),
 	(6, 'FTP_PORT', '21', NULL, '2017-11-09 21:24:41', 3, '2017-11-09 21:40:54', 1),
 	(7, 'FTP_SERVER', '127.0.0.1', NULL, '2017-11-09 21:30:20', NULL, NULL, 1);

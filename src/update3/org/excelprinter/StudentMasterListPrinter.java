@@ -50,7 +50,11 @@ public class StudentMasterListPrinter {
         System.out.println(message.toString());
     }
 
-    private String excelPath = "reports/excel";
+    private static String excelPath;
+    public static void setExcelPath(String excelPath_) {
+        excelPath = excelPath_;
+    }
+    
     private String excelName = "";
     private XSSFSheet excelSheet;
     private XSSFWorkbook excelWorkBook;
@@ -68,18 +72,19 @@ public class StudentMasterListPrinter {
         this.excelWorkBook = new XSSFWorkbook();
         this.excelSheet = this.excelWorkBook.createSheet("Students");
 
-        if (!ReportsDirectory.check(excelPath)) {
-            System.err.println("Cannot Create Directory.");
-            return false;
-        } else {
-            System.out.println("Directory Created");
+//        if (!ReportsDirectory.check(excelPath)) {
+//            System.err.println("Cannot Create Directory.");
+//            return false;
+//        } else {
+//            System.out.println("Directory Created");
             this.excelPath = new File(excelPath).getAbsolutePath()
                     + "/"
                     + this.excelName + " "
                     + String.valueOf(Calendar.getInstance().getTimeInMillis())
                     + ".xlsx";
-            return true;
-        }
+//            return true;
+//        }
+        return true;
     }
 
     private void printHeader() {

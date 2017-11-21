@@ -46,6 +46,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javafx.fxml.FXML;
@@ -54,6 +55,7 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
@@ -627,6 +629,16 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             super.getScene().setCursor(Cursor.DEFAULT);
             btn_export.setDisable(false);
         });
+        
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(this.getStage());
+        if(selectedDirectory==null) {
+            Notifications.create().darkStyle()
+                    .title("Nothing Happened")
+                    .text("No Location Selected").showWarning();
+            return;
+        }
+        StudentMasterListPrinter.setExcelPath(selectedDirectory.getAbsolutePath());
         exportTx.transact();
     }
     
@@ -805,7 +817,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 
         for (int i = 0; i < preview.size(); i++) {
             ReadData result = preview.get(i);
-            String[] row = new String[]{(i+1)+".  "+ result.getSTUDENT_NUMBER(),
+            String[] row = new String[]{(i+1)+".  "+ result.getSTUDENT_NUMBER().toUpperCase(),
                 WordUtils.capitalizeFully(result.getSTUDENT_NAME()),
             result.getSTUDENT_GRADE().isEmpty()? "NONE": result.getSTUDENT_GRADE(), result.getSTUDENT_CLEARANCE().isEmpty()? "UNCLEARED": (result.getSTUDENT_CLEARANCE().equalsIgnoreCase("1") || result.getSTUDENT_CLEARANCE().equalsIgnoreCase("CLEARED")? "CLEARED": "UNCLEARED"),
             result.getSTATUS()};
