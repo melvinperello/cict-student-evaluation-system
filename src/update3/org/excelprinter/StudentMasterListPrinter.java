@@ -100,7 +100,7 @@ public class StudentMasterListPrinter {
         section.setCellValue("GRADE");
         //
         Cell clearance = row.createCell(COL_CLEARANCE);
-        clearance.setCellValue("CLEARANCE");
+        clearance.setCellValue("CLEARED");
     }
 
     private void printData(ArrayList<StudentMasterListData> data) {

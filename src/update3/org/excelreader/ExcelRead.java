@@ -85,7 +85,7 @@ public class ExcelRead {
             return false;
         }
         
-        if (!headerClearance.equalsIgnoreCase("CLEARANCE")) {
+        if (!headerClearance.equalsIgnoreCase("CLEARED")) {
             return false;
         }
         return true;

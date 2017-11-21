@@ -811,7 +811,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"Student Number","Full Name", "Grade", "Clearance", "Status"};
+        String[] colNames = new String[]{"Student Number","Full Name", "Grade", "Cleared", "Status"};
         ArrayList<String[]> rowData = new ArrayList<>();
         PrintResult print = new PrintResult();
 
@@ -819,7 +819,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             ReadData result = preview.get(i);
             String[] row = new String[]{(i+1)+".  "+ result.getSTUDENT_NUMBER().toUpperCase(),
                 WordUtils.capitalizeFully(result.getSTUDENT_NAME()),
-            result.getSTUDENT_GRADE().isEmpty()? "NONE": result.getSTUDENT_GRADE(), result.getSTUDENT_CLEARANCE().isEmpty()? "UNCLEARED": (result.getSTUDENT_CLEARANCE().equalsIgnoreCase("1") || result.getSTUDENT_CLEARANCE().equalsIgnoreCase("CLEARED")? "CLEARED": "UNCLEARED"),
+            result.getSTUDENT_GRADE().isEmpty()? "NONE": result.getSTUDENT_GRADE(), result.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES") || result.getSTUDENT_CLEARANCE().equals(1)? "YES": "NO",
             result.getSTATUS()};
             rowData.add(row);
         }

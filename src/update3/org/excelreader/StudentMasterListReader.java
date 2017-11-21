@@ -58,7 +58,7 @@ public class StudentMasterListReader {
         if(!headersChecked) {
             LOG = "Wrong header. You can use the exported file to upload\n"
                     + "or use the following as header format.\n"
-                    + "(Student Number, Full Name, Grade, Clearance)";
+                    + "   (Student Number, Full Name, Grade, Cleared)";
             return null;
         }
         ArrayList<ReadData> receivedData =  reader.readData(); // this should return an array list of objects that was read

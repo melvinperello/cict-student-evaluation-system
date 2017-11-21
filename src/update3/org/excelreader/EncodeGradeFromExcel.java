@@ -97,7 +97,17 @@ public class EncodeGradeFromExcel extends Transaction{
                 log("student not enrolled ...");
                 continue;
             }
-            
+            Integer cleared = data.getSTUDENT_CLEARANCE().equals(1) || data.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES")? 1 : 0;
+            if(!loadSubject.getCleared().equals(cleared)) {
+                loadSubject.setCleared(cleared);
+                boolean res = Database.connect().load_subject().transactionalSingleUpdate(currentSession, loadSubject);
+                if(!res) {
+                    dataTransaction.rollback();
+                    log("ROLLBACK ...");
+                    return false;
+                } else 
+                    log("load subject updated ...");
+            }
             String remarks = this.getRemarks(data.getSTUDENT_GRADE());
             if(remarks.equalsIgnoreCase("Unrecognized Grade")) {
                 data.setSTATUS(remarks.toUpperCase());
