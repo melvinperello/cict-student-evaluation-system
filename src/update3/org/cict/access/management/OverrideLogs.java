@@ -294,6 +294,7 @@ public class OverrideLogs extends MonoLauncher {
             row.setRowHeight(90.0);
             OverrideLogsRow rowFX = M.load(OverrideLogsRow.class);
             rowFX.getBtn_download().setDisable(!Access.isGrantedIf(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR));
+            rowFX.getBtn_download().setDisable(log.getAttachment_file()==null || log.getAttachment_file().isEmpty());
             MonoClick.addClickEvent(rowFX.getBtn_download(), ()->{
                this.downloadAttachment(row);
             });
