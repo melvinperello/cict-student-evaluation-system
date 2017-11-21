@@ -67,7 +67,8 @@ public class EncodeGradeFromExcel extends Transaction{
     }
     
     private void log(String str) {
-        System.out.println("@EncodeGradeFromExcel: " + str);
+        if(true)
+            System.out.println("@EncodeGradeFromExcel: " + str);
     }
 
     @Override
@@ -97,7 +98,8 @@ public class EncodeGradeFromExcel extends Transaction{
                 log("student not enrolled ...");
                 continue;
             }
-            Integer cleared = data.getSTUDENT_CLEARANCE().equals(1) || data.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES")? 1 : 0;
+            Integer cleared = data.getSTUDENT_CLEARANCE().equals("1") || data.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES")? 1 : 0;
+            log("CLEARED: "+cleared);
             if(!loadSubject.getCleared().equals(cleared)) {
                 loadSubject.setCleared(cleared);
                 boolean res = Database.connect().load_subject().transactionalSingleUpdate(currentSession, loadSubject);
