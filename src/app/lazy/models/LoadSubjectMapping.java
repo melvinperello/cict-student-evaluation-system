@@ -2,7 +2,7 @@
 // SQL_table: load_subject
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 19, 2017 02:01:23 PM
+// Created: Nov 21, 2017 10:36:17 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -40,6 +40,7 @@ private java.lang.Integer removed_by;
 private java.lang.Integer changing_reference;
 private java.lang.Integer active;
 private java.lang.Integer arhived;
+private java.lang.Integer cleared;
 
 @Id
 @GeneratedValue(strategy = IDENTITY)
@@ -160,6 +161,15 @@ public java.lang.Integer getArhived() {
 
 public void setArhived(java.lang.Integer fieldArhived) {
 	this.arhived = fieldArhived;
+}
+
+@Column(name = "cleared", nullable = true, length = 10)
+public java.lang.Integer getCleared() {
+	return this.cleared;
+}
+
+public void setCleared(java.lang.Integer fieldCleared) {
+	this.cleared = fieldCleared;
 }
 
 }

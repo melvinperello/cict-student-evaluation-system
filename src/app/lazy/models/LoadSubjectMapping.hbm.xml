@@ -43,5 +43,8 @@
 <property name="arhived" type="java.lang.Integer">
 <column name="arhived" length="10"/>
 </property>
+<property name="cleared" type="java.lang.Integer">
+<column name="cleared" length="10"/>
+</property>
 </class>
 </hibernate-mapping>

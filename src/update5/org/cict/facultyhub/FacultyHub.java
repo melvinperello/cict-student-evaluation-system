@@ -790,7 +790,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         encode.whenSuccess(()->{
             button.setDisable(false);
             Notifications.create().darkStyle()
-                    .title("Successfully Posted")
+                    .title("Successful")
                     .text("A status report will be printed.\n"
                             + "Please wait just a moment.").showInformation();
             // print here.
