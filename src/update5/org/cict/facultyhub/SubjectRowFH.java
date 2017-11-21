@@ -50,6 +50,9 @@ public class SubjectRowFH extends MonoLauncher{
     private JFXButton print_export;
 
     @FXML
+    private JFXButton print_import;
+            
+    @FXML
     private Label lbl_student_count;
     
     @Override
@@ -78,6 +81,10 @@ public class SubjectRowFH extends MonoLauncher{
     
     public Label getLbl_student_count() {
         return lbl_student_count;
+    }
+
+    public JFXButton getPrint_import() {
+        return print_import;
     }
 
 }

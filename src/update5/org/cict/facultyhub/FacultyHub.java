@@ -64,6 +64,9 @@ import update3.org.cict.controller.sectionmain.SubjectMasterListTransaction;
 import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
 import update3.org.excelprinter.StudentMasterListPrinter;
+import update3.org.excelreader.EncodeGradeFromExcel;
+import update3.org.excelreader.ReadData;
+import update3.org.excelreader.StudentMasterListReader;
 
 /**
  *
@@ -176,6 +179,12 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                 this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf());
             });
             
+            super.addClickEvent(rowFX.getPrint_import(), ()->{
+                SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
+                this.readExcel(info.loadGroup, rowFX.getPrint_import());
+            });
+            
+            
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
             cellParent.setContent(rowFX.getApplicationRoot());
@@ -271,6 +280,13 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf());
             });
+            
+            super.addClickEvent(rowFX.getPrint_import(), ()->{
+                SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
+                this.readExcel(info.loadGroup, rowFX.getPrint_import());
+            });
+            
+            
             
             /**
              * Row Extension Image Event.
@@ -737,5 +753,98 @@ public class FacultyHub extends SceneFX implements ControllerFX{
     private class MasterListPdfStudent {
         private String studentNumber;
         private String studentFullName;
+    }
+    
+    //-------------------------------------------
+    // IMPORT EXCEL
+    private void readExcel(LoadGroupMapping loadGroup, JFXButton button) {
+        button.setDisable(true);
+        ArrayList<ReadData> readData = StudentMasterListReader.readStudentGrade(this.getStage(), loadGroup.getSUBJECT_id());
+        if(readData==null) {
+            Mono.fx().alert().createWarning()
+                    .setMessage(StudentMasterListReader.LOG).show();
+            button.setDisable(false);
+            return;
+        }
+        EncodeGradeFromExcel encode = new EncodeGradeFromExcel();
+        encode.setLDGRP_id(loadGroup.getId());
+        encode.setFACULTY_id(CollegeFaculty.instance().getFACULTY_ID());
+        encode.setSUBJECT_id(loadGroup.getSUBJECT_id());
+        encode.setImportedData(readData);
+        encode.whenCancelled(()->{
+            Mono.fx().alert().createWarning()
+                    .setMessage("Please check your connection to the server. Try again later.").show();
+        });
+        encode.whenSuccess(()->{
+            button.setDisable(false);
+            Notifications.create().darkStyle()
+                    .title("Successfully Posted")
+                    .text("A status report will be printed.\n"
+                            + "Please wait just a moment.").showInformation();
+            // print here.
+            this.printStatusReport(loadGroup, readData, button);
+        });
+        encode.whenFailed(()->{
+            Mono.fx().alert().createWarning()
+                    .setMessage("Please check your connection to the server. Try again later.").show();
+        });
+        encode.transact();
+    }
+    
+    private void printStatusReport(LoadGroupMapping loadGroup, ArrayList<ReadData> preview, JFXButton btn_print) {
+        if(preview==null || preview.isEmpty()) {
+            Notifications.create()
+                    .title("No Student Found")
+                    .text("No data to print.")
+                    .showWarning();
+            return;
+        }
+        String[] colNames = new String[]{"Student Number","Full Name", "Grade", "Clearance", "Status"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        PrintResult print = new PrintResult();
+
+        for (int i = 0; i < preview.size(); i++) {
+            ReadData result = preview.get(i);
+            String[] row = new String[]{(i+1)+".  "+ result.getSTUDENT_NUMBER(),
+                WordUtils.capitalizeFully(result.getSTUDENT_NAME()),
+            result.getSTUDENT_GRADE().isEmpty()? "NONE": result.getSTUDENT_GRADE(), result.getSTUDENT_CLEARANCE().isEmpty()? "UNCLEARED": (result.getSTUDENT_CLEARANCE().equalsIgnoreCase("1") || result.getSTUDENT_CLEARANCE().equalsIgnoreCase("CLEARED")? "CLEARED": "UNCLEARED"),
+            result.getSTATUS()};
+            rowData.add(row);
+        }
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
+        print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Encode Status Report " + String.valueOf(Calendar.getInstance().getTimeInMillis());
+        print.reportDescription = subject.getCode() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
+
+        print.reportTitle = "Encode Status Report";
+        print.whenStarted(() -> {
+            btn_print.setDisable(true);
+            super.cursorWait();
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_print.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print.setDisable(false);
+            super.cursorDefault();
+        });
+        print.transact();
     }
 }

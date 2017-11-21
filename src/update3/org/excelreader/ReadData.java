@@ -1,0 +1,77 @@
+/**
+ * CAPSTONE PROJECT.
+ * BSIT 4A-G1.
+ * MONOSYNC TECHNOLOGIES.
+ * MONOSYNC FRAMEWORK VERSION 1.0.0 TEACUP RICE ROLL.
+ * THIS PROJECT IS PROPRIETARY AND CONFIDENTIAL ANY PART THEREOF.
+ * COPYING AND DISTRIBUTION WITHOUT PERMISSION ARE NOT ALLOWED.
+ *
+ * COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY.
+ * LINKED SYSTEM.
+ *
+ * PROJECT MANAGER: JHON MELVIN N. PERELLO
+ * DEVELOPERS:
+ * JOEMAR N. DE LA CRUZ
+ * GRETHEL EINSTEIN BERNARDINO
+ *
+ * OTHER LIBRARIES THAT ARE USED BELONGS TO THEIR RESPECTFUL OWNERS AND AUTHORS.
+ * NO COPYRIGHT ARE INTENTIONAL OR INTENDED.
+ * THIS PROJECT IS NOT PROFITABLE HENCE FOR EDUCATIONAL PURPOSES ONLY.
+ * THIS PROJECT IS ONLY FOR COMPLIANCE TO OUR REQUIREMENTS.
+ * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
+ *
+ */
+package update3.org.excelreader;
+
+/**
+ *
+ * @author Joemar
+ */
+public class ReadData {
+    private String STUDENT_NUMBER;
+    private String STUDENT_NAME;
+    private String STUDENT_GRADE;
+    private String STUDENT_CLEARANCE;
+    private String STATUS;
+
+    public String getSTUDENT_NUMBER() {
+        return STUDENT_NUMBER;
+    }
+
+    public void setSTUDENT_NUMBER(String STUDENT_NUMBER) {
+        this.STUDENT_NUMBER = STUDENT_NUMBER;
+    }
+
+    public String getSTUDENT_NAME() {
+        return STUDENT_NAME;
+    }
+
+    public void setSTUDENT_NAME(String STUDENT_NAME) {
+        this.STUDENT_NAME = STUDENT_NAME;
+    }
+
+    public String getSTUDENT_GRADE() {
+        return STUDENT_GRADE;
+    }
+
+    public void setSTUDENT_GRADE(String STUDENT_GRADE) {
+        this.STUDENT_GRADE = STUDENT_GRADE;
+    }
+
+    public String getSTUDENT_CLEARANCE() {
+        return STUDENT_CLEARANCE;
+    }
+
+    public void setSTUDENT_CLEARANCE(String STUDENT_CLEARANCE) {
+        this.STUDENT_CLEARANCE = STUDENT_CLEARANCE;
+    }
+
+    public String getSTATUS() {
+        return STATUS;
+    }
+
+    public void setSTATUS(String STATUS) {
+        this.STATUS = STATUS;
+    }
+    
+}

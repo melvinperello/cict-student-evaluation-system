@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="65.0" prefWidth="809.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <stylesheets>
       <URL value="@metro-ui.css" />
@@ -47,6 +46,7 @@
       <JFXButton fx:id="btn_schedule" prefHeight="27.0" prefWidth="82.0" style="-fx-border-color: white;" text="Schedule" textFill="WHITE" />
       <JFXButton fx:id="btn_print_pdf" layoutX="518.0" layoutY="28.0" prefHeight="27.0" prefWidth="82.0" style="-fx-border-color: white;" text="Print PDF" textFill="WHITE" />
       <JFXButton fx:id="print_export" layoutX="518.0" layoutY="28.0" prefHeight="27.0" prefWidth="124.0" style="-fx-border-color: white;" text="Export Master List" textFill="WHITE" />
+      <JFXButton fx:id="print_import" layoutX="685.0" layoutY="29.0" prefHeight="27.0" prefWidth="107.0" style="-fx-border-color: white;" text="Import Grade" textFill="WHITE" />
    </children>
    <padding>
       <Insets left="50.0" right="10.0" />
