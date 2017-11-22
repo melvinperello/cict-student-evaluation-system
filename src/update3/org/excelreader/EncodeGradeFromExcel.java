@@ -30,6 +30,7 @@ import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.StudentMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import org.cict.authentication.authenticator.SystemProperties;
@@ -99,7 +100,7 @@ public class EncodeGradeFromExcel extends Transaction{
                 continue;
             }
             Integer cleared = data.getSTUDENT_CLEARANCE().equals("1") || data.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES")? 1 : 0;
-            log("CLEARED: "+cleared);
+
             if(!loadSubject.getCleared().equals(cleared)) {
                 loadSubject.setCleared(cleared);
                 boolean res = Database.connect().load_subject().transactionalSingleUpdate(currentSession, loadSubject);
@@ -110,16 +111,17 @@ public class EncodeGradeFromExcel extends Transaction{
                 } else 
                     log("load subject updated ...");
             }
-            String remarks = this.getRemarks(data.getSTUDENT_GRADE());
-            if(remarks.equalsIgnoreCase("Unrecognized Grade")) {
-                data.setSTATUS(remarks.toUpperCase());
-                log(remarks);
+            String[] gradeInfo = this.getRemarks(data.getSTUDENT_GRADE());
+            if(gradeInfo[0].equalsIgnoreCase("Unrecognized Grade")) {
+                data.setSTATUS(gradeInfo[0].toUpperCase());
+                log(gradeInfo[0]);
                 continue;
-            } else if(remarks.equalsIgnoreCase("No Grade Found")) {
-                data.setSTATUS(remarks.toUpperCase());
-                log(remarks);
+            } else if(gradeInfo[0].equalsIgnoreCase("No Grade Found")) {
+                data.setSTATUS(gradeInfo[0].toUpperCase());
+                log(gradeInfo[0]);
                 continue;
             }
+            data.setSTUDENT_GRADE(gradeInfo[0]);
             Date CURRENT_DATE = Mono.orm().getServerTime().getDateWithFormat();
             GradeMapping gradeExist = Mono.orm().newSearch(Database.connect().grade())
                     .eq(DB.grade().ACADTERM_id, ACADTERM_id)
@@ -127,12 +129,13 @@ public class EncodeGradeFromExcel extends Transaction{
                     .eq(DB.grade().SUBJECT_id, SUBJECT_id).active(Order.desc(DB.grade().id)).first();
             if(gradeExist!=null) {
                 if(gradeExist.getPosted()!=null && gradeExist.getPosted().equals(1)) {
+                    data.setSTUDENT_GRADE(gradeExist.getRating());
                     data.setSTATUS("Already posted".toUpperCase());
                     log("already posted...");
                     continue;
                 }
-                gradeExist.setRating(data.getSTUDENT_GRADE());
-                gradeExist.setRemarks(remarks);
+                gradeExist.setRating(gradeInfo[0]);
+                gradeExist.setRemarks(gradeInfo[1].toUpperCase());
                 gradeExist.setReason_for_update("Posted by Faculty-in-charge");
                 gradeExist.setUpdated_by(FACULTY_id);
                 gradeExist.setUpdated_date(CURRENT_DATE);
@@ -158,8 +161,8 @@ public class EncodeGradeFromExcel extends Transaction{
             encodeGrade.setPosted(1);
             encodeGrade.setPosted_by(FACULTY_id);
             encodeGrade.setPosting_date(CURRENT_DATE);
-            encodeGrade.setRating(data.getSTUDENT_GRADE());
-            encodeGrade.setRemarks(remarks);
+            encodeGrade.setRating(gradeInfo[0]);
+            encodeGrade.setRemarks(gradeInfo[1].toUpperCase());
             encodeGrade.setCreated_by(FACULTY_id);
             encodeGrade.setCreated_date(CURRENT_DATE);
             // insert here
@@ -177,29 +180,34 @@ public class EncodeGradeFromExcel extends Transaction{
         return true;
     }
     
-    private String getRemarks(String grade) {
+    private String[] getRemarks(String grade) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        df.setMaximumFractionDigits(2);
         if(grade==null || grade.isEmpty()) {
-            return "NO GRADE FOUND";
+            return new String[]{"NO GRADE FOUND", ""};
         }
         if (grade instanceof String) {
             String rating = (String) grade;
             if (rating.equalsIgnoreCase("INC") || rating.equalsIgnoreCase("Incomplete")) {
-                return "Incomplete";
+                return new String[]{"INC", "Incomplete"};
             } else if (rating.equalsIgnoreCase("DRP") || rating.equalsIgnoreCase("Dropped")) {
-                return "Dropped";
+                return new String[]{"DRP", "Dropped"};
             } else if (rating.equalsIgnoreCase("UD") || rating.equalsIgnoreCase("Unofficially Dropped")) {
-                return "Unofficially Dropped";
+                return new String[]{"UD", "Unofficially Dropped"};
             }
         }
         try {
-            double g = Double.parseDouble(grade);
-            if(g == 1.00 || g == 1.25 || g == 1.50 || g == 1.75 
-                    || g == 2.00 || g == 2.25 || g == 2.50 || g == 2.75 || g == 3.00) {
-                return "Passed";
+            Double g = Double.valueOf(grade);
+            if(g.equals(1.00) || g.equals(1.25) || g.equals(1.50) || g.equals(1.75) 
+                    || g.equals(2.00) || g.equals(2.25) || g.equals(2.50) || g.equals(2.75) || g.equals(3.00)) {
+                return new String[]{df.format(g), "Passed"};
+            } else if(g.equals(4.00)) {
+                return new String[]{df.format(g), "Conditionally Passed"};
+            }else if(g.equals(5.00)) {
+                return new String[]{df.format(g), "Failed"};
             }
         } catch (NumberFormatException e) {
         }
-        
-        return "Unrecognized Grade";
+        return new String[]{"Unrecognized Grade", ""};
     }
 }
