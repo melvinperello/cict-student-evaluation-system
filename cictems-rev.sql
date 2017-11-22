@@ -148,9 +148,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2723 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2725 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~935 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~937 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1788, 1, '2017-10-12 00:07:10', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -1088,7 +1088,8 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(2720, 13, '2017-11-22 13:29:28', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2721, 13, '2017-11-22 13:32:54', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2722, 13, '2017-11-22 13:39:24', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(2723, 13, '2017-11-22 20:48:06', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@x86', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(2723, 13, '2017-11-22 20:48:06', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@x86', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2724, 13, '2017-11-22 20:58:35', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@x86', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -1107,9 +1108,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2547 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2549 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~952 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~954 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
 	(1595, 1, '2017-10-11 18:39:01', '2017-10-11 18:40:31', '%192.168.254.151@40-2C-F4-04-E9-6E%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 18:39:58', 'EVALUATION_SYSTEM', 1),
@@ -2064,7 +2065,8 @@ INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `sess
 	(2544, 13, '2017-11-22 13:29:29', '2017-11-22 13:30:59', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-22 13:30:28', 'EVALUATION_SYSTEM', 1),
 	(2545, 13, '2017-11-22 13:32:55', '2017-11-22 13:38:25', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-22 13:37:35', 'EVALUATION_SYSTEM', 1),
 	(2546, 13, '2017-11-22 13:39:25', '2017-11-22 13:40:55', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-11-22 13:39:55', 'EVALUATION_SYSTEM', 1),
-	(2547, 13, '2017-11-22 20:48:06', '2017-11-22 20:49:07', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@x86', '2017-11-22 20:48:10', 'EVALUATION_SYSTEM', 1);
+	(2547, 13, '2017-11-22 20:48:06', '2017-11-22 20:49:07', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@x86', '2017-11-22 20:48:10', 'EVALUATION_SYSTEM', 1),
+	(2548, 13, '2017-11-22 20:58:36', '2017-11-22 21:07:06', '%192.168.0.106@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@x86', '2017-11-22 21:06:08', 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -2268,7 +2270,7 @@ CREATE TABLE IF NOT EXISTS `curriculum_requisite_ext` (
   CONSTRAINT `req_ext_updated_by` FOREIGN KEY (`removed_by`) REFERENCES `faculty` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.curriculum_requisite_ext: ~1 rows (approximately)
+-- Dumping data for table cictems.curriculum_requisite_ext: ~0 rows (approximately)
 /*!40000 ALTER TABLE `curriculum_requisite_ext` DISABLE KEYS */;
 INSERT INTO `curriculum_requisite_ext` (`id`, `SUBJECT_id_get`, `SUBJECT_id_req`, `CURRICULUM_id`, `type`, `added_by`, `added_date`, `removed_by`, `removed_date`, `active`) VALUES
 	(7, 157, 177, 11, 'COREQUISITE', 1, '2017-10-18 05:16:48', NULL, '2017-10-18 05:17:00', 1);
@@ -2952,7 +2954,7 @@ CREATE TABLE IF NOT EXISTS `linked_marshall_session` (
   CONSTRAINT `marshall_session_fk_from_student_cict_id` FOREIGN KEY (`cict_id`) REFERENCES `student` (`cict_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.linked_marshall_session: ~1 rows (approximately)
+-- Dumping data for table cictems.linked_marshall_session: ~0 rows (approximately)
 /*!40000 ALTER TABLE `linked_marshall_session` DISABLE KEYS */;
 INSERT INTO `linked_marshall_session` (`ses_id`, `cict_id`, `account_id`, `name`, `org`, `imei`, `session_start`, `session_end`, `status`, `active`) VALUES
 	(10, 59, 24, 'MERCADO JELYN CARLOS', 'LSC', '867542024313101', '2017-11-14 14:49:01', '2017-11-19 14:45:18', 'OFFLINE', 1);
@@ -3379,24 +3381,24 @@ INSERT INTO `load_section` (`id`, `ACADTERM_id`, `ACADPROG_id`, `CURRICULUM_id`,
 	(4896, 11, 5, 9, 'D', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-15 19:51:10', 3, NULL, NULL, NULL, 0, 1),
 	(4897, 11, NULL, NULL, 'TC-IT 113', NULL, NULL, NULL, 'TUTORIAL', 'CICT', '2017-11-15 19:57:10', 3, NULL, NULL, NULL, 0, 1),
 	(4898, 19, 5, 9, 'A', NULL, 1, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:56', 3, NULL, NULL, 3, 1, 0),
-	(4899, 19, 5, 9, 'A', NULL, 1, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:56', 3, NULL, NULL, NULL, 1, 0),
-	(4900, 19, 5, 9, 'A', NULL, 2, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
+	(4899, 19, 5, 9, 'A', NULL, 1, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:56', 3, NULL, NULL, 3, 1, 0),
+	(4900, 19, 5, 9, 'A', NULL, 2, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, 3, 1, 0),
 	(4901, 19, 5, 9, 'A', NULL, 2, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
-	(4902, 19, 5, 9, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
+	(4902, 19, 5, 9, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, 3, 1, 0),
 	(4903, 19, 5, 9, 'A', NULL, 3, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
-	(4904, 19, 5, 9, 'A', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
+	(4904, 19, 5, 9, 'A', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, 3, 1, 0),
 	(4905, 19, 5, 9, 'A', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4906, 19, 5, 9, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4907, 19, 5, 9, 'B', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4908, 19, 5, 9, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
 	(4909, 19, 5, 9, 'B', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-18 17:29:57', 3, NULL, NULL, NULL, 1, 0),
-	(4910, 19, 5, 11, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
+	(4910, 19, 5, 11, 'A', NULL, 3, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, 3, 1, 0),
 	(4911, 19, 5, 11, 'A', NULL, 3, 2, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
-	(4912, 19, 5, 11, 'A', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
+	(4912, 19, 5, 11, 'A', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, 3, 1, 0),
 	(4913, 19, 5, 11, 'A', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
 	(4914, 19, 5, 11, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
 	(4915, 19, 5, 11, 'B', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
-	(4916, 19, 5, 11, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
+	(4916, 19, 5, 11, 'B', NULL, 4, 1, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, 3, 1, 0),
 	(4917, 19, 5, 11, 'B', NULL, 4, 2, 'REGULAR', 'CICT', '2017-11-19 20:46:29', 3, NULL, NULL, NULL, 1, 0),
 	(4918, 19, NULL, NULL, 'A', NULL, NULL, NULL, 'SPECIAL', 'CICT', '2017-11-22 12:51:36', 3, NULL, NULL, NULL, 1, 0);
 /*!40000 ALTER TABLE `load_section` ENABLE KEYS */;
@@ -3820,7 +3822,7 @@ CREATE TABLE IF NOT EXISTS `system_override_logs` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.system_override_logs: ~16 rows (approximately)
+-- Dumping data for table cictems.system_override_logs: ~15 rows (approximately)
 /*!40000 ALTER TABLE `system_override_logs` DISABLE KEYS */;
 INSERT INTO `system_override_logs` (`id`, `category`, `description`, `executed_by`, `executed_date`, `academic_term`, `conforme`, `conforme_type`, `conforme_id`, `attachment_file`, `active`) VALUES
 	(4, 'EVALUATION', 'INTERNSHIP_WITH_OTHERS', 2, '2017-10-04 20:21:42', 11, 'PERELLO, JHON MELVIN NIETO', 'STUDENT', 57, NULL, 1),
