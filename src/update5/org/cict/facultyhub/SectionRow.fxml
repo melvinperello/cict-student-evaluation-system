@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,11 +13,18 @@
 
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="586.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="img_extension" fitHeight="25.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@images/plus.png" />
-         </image>
-      </ImageView>
+      <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0">
+         <children>
+            <ImageView fx:id="img_extension" fitHeight="25.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/plus.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </HBox>
       <VBox alignment="CENTER_LEFT" spacing="10.0" HBox.hgrow="ALWAYS">
          <children>
             <HBox>

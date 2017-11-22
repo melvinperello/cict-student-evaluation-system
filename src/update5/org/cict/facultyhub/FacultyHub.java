@@ -77,7 +77,7 @@ import update3.org.excelreader.StudentMasterListReader;
  *
  * @author Joemar
  */
-public class FacultyHub extends SceneFX implements ControllerFX{
+public class FacultyHub extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox application_root;
@@ -102,7 +102,6 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 
 //    @FXML
 //    private VBox vbox_section_no_found;
-
     @FXML
     private VBox vbox_subject;
 
@@ -114,37 +113,36 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 
 //    @FXML
 //    private VBox vbox_subject_no_found;
-    
     private LoaderView loaderView;
     private FailView failView;
     private EmptyView emptyView;
-    
+
     private LoaderView loaderView2;
     private FailView failView2;
     private EmptyView emptyView2;
-    
+
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
-        
+
         this.loaderView = new LoaderView(stack_section);
         this.failView = new FailView(stack_section);
         this.emptyView = new EmptyView(stack_section);
-        
+
         this.loaderView2 = new LoaderView(stack_subject);
         this.failView2 = new FailView(stack_subject);
         this.emptyView2 = new EmptyView(stack_subject);
-        
+
         this.changeMainView(vbox_section);
         this.showLoadSection();
         this.showSubjectLoad();
     }
-    
+
     private void detachAll() {
         this.loaderView.detach();
         this.failView.detach();
         this.emptyView.detach();
-        
+
         this.loaderView2.detach();
         this.failView2.detach();
         this.emptyView2.detach();
@@ -155,27 +153,27 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         super.addClickEvent(btn_home, () -> {
             Home.callHome(this);
         });
-        super.addClickEvent(btn_view_sections, ()->{
+        super.addClickEvent(btn_view_sections, () -> {
             this.changeMainView(vbox_section);
         });
-        super.addClickEvent(btn_view_subjects, ()->{
+        super.addClickEvent(btn_view_subjects, () -> {
             this.changeMainView(vbox_subject);
         });
     }
-    
+
     private void changeMainView(Node node) {
-        Animate.fade(node, 150, ()->{
+        Animate.fade(node, 150, () -> {
             vbox_section.setVisible(false);
             vbox_subject.setVisible(false);
             node.setVisible(true);
         }, vbox_section, vbox_subject);
     }
-    
+
     private void showSubjectLoad() {
         FetchSubjects subjectsTx = new FetchSubjects();
         subjectsTx.sectionMap = null;
         subjectsTx.facultyID = CollegeFaculty.instance().getFACULTY_ID();
-        subjectsTx.whenStarted(()->{
+        subjectsTx.whenStarted(() -> {
             this.detachAll();
             this.loaderView2.setMessage("Loading Subject");
             this.loaderView2.attach();
@@ -185,7 +183,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             this.emptyView2.getButton().setVisible(false);
             this.emptyView2.attach();
         });
-        subjectsTx.whenFailed(()->{
+        subjectsTx.whenFailed(() -> {
             this.failView2.setMessage("Failed to Load Subject");
             this.failView2.attach();
         });
@@ -197,50 +195,50 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         });
         subjectsTx.transact();
     }
-    
+
     private EmptyView scheduleEmpty;
+
     private void createSubjectTable(ArrayList<SubjectData> subjectData) {
         SimpleTable subjectTable = new SimpleTable();
-        
-        if(subjectData==null) {
+
+        if (subjectData == null) {
 //            this.changeViewSubject(vbox_subject_no_found);
             return;
-        } 
-        
+        }
+
 //        this.changeViewSubject(vbox_subject_table);
-        for(SubjectData data: subjectData) {
+        for (SubjectData data : subjectData) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(65.0);
             SubjectRowFH rowFX = M.load(SubjectRowFH.class);
             rowFX.getLbl_code().setText(data.subject.getCode());
             rowFX.getLbl_description().setText(data.subject.getDescriptive_title());
             rowFX.getLbl_student_count().setText(data.studentCount);
-            
+
             rowFX.getLbl_section().setText(data.getSectionName() + " - ");
-            
+
             row.getRowMetaData().put("MORE_INFO", data);
 
-            super.addClickEvent(rowFX.getPrint_export(), ()->{
+            super.addClickEvent(rowFX.getPrint_export(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.exportToExcel(info.loadGroup, rowFX.getPrint_export(), "", info.subject.getCode());
             });
-            
-            super.addClickEvent(rowFX.getBtn_schedule(), ()->{
+
+            super.addClickEvent(rowFX.getBtn_schedule(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 openScheduleViewer(info.sectionDetails);
             });
-            
-            super.addClickEvent(rowFX.getBtn_print_pdf(), ()->{
+
+            super.addClickEvent(rowFX.getBtn_print_pdf(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf());
             });
-            
-            super.addClickEvent(rowFX.getPrint_import(), ()->{
+
+            super.addClickEvent(rowFX.getPrint_import(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.readExcel(info.loadGroup, rowFX.getPrint_import());
             });
-            
-            
+
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
             cellParent.setContent(rowFX.getApplicationRoot());
@@ -254,7 +252,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 
         simpleTableView.setParentOnScene(vbox_subject_table);
     }
-    
+
 //    private void changeViewSubject(Node node) {
 //        Animate.fade(node, 150, ()->{
 //            vbox_subject_table.setVisible(false);
@@ -262,10 +260,9 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 //            node.setVisible(true);
 //        }, vbox_subject_table, vbox_subject_no_found);
 //    }
-    
     private void showLoadSection() {
         FetchSection fetch = new FetchSection();
-        fetch.whenStarted(()->{
+        fetch.whenStarted(() -> {
             this.detachAll();
             this.loaderView.setMessage("Loading Section");
             this.loaderView.attach();
@@ -275,13 +272,13 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             this.emptyView.getButton().setVisible(false);
             this.emptyView.attach();
         });
-        fetch.whenFailed(()->{
+        fetch.whenFailed(() -> {
             this.failView.setMessage("Failed to Load Section");
             this.failView.attach();
         });
-        fetch.whenSuccess(()->{
+        fetch.whenSuccess(() -> {
             ArrayList<SectionData> loads = fetch.getSectionInformation();
-            if(loads==null) {
+            if (loads == null) {
 //                this.changeSectionView(vbox_section_no_found);
                 return;
             }
@@ -293,20 +290,22 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         });
         fetch.transact();
     }
-    
+
     private SimpleTable marshallTable = new SimpleTable();
+
     private void createSectionTable(ArrayList<SectionData> sectionInformation) {
         marshallTable.getChildren().clear();
-        for(SectionData load: sectionInformation) {
+        for (SectionData load : sectionInformation) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(55.0);
             SectionRow rowFX = M.load(SectionRow.class);
             rowFX.getLbl_section_name().setText(load.getSectionName());
             rowFX.getLbl_student_count().setText(load.studentCount);
             row.getRowMetaData().put("FX", rowFX);
-            
+
+            // Extension button was send to this function
             fetchSectionSubject(marshallTable, load.sectionDetails, load.getSectionName(), rowFX.getImg_extension(), row);
-            
+
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
             cellParent.setContent(rowFX.getApplicationRoot());
@@ -320,114 +319,121 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 
         simpleTableView.setParentOnScene(vbox_section_table);
     }
-    
+
     private void createLoadTable(SimpleTable tableHolder, ArrayList<SubjectData> subjectData, String sectionName, ImageView img_extension, SimpleTableRow row_) {
+        // img_extension was passed in this method
+        // functionality of that button will be added here
+
         ExtensionHolder holder = M.load(ExtensionHolder.class);
         SimpleTable subjectTable = new SimpleTable();
-        
-        if(subjectData==null) {
+
+        if (subjectData == null) {
             return;
-        } 
-        
-        for(SubjectData data: subjectData) {
+        }
+
+        for (SubjectData data : subjectData) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(65.0);
             SubjectRowFH rowFX = M.load(SubjectRowFH.class);
             rowFX.getLbl_code().setText(data.subject.getCode());
             rowFX.getLbl_description().setText(data.subject.getDescriptive_title());
             rowFX.getLbl_student_count().setText(data.studentCount);
-            
+
             row.getRowMetaData().put("MORE_INFO", data);
 
-            super.addClickEvent(rowFX.getPrint_export(), ()->{
+            super.addClickEvent(rowFX.getPrint_export(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.exportToExcel(info.loadGroup, rowFX.getPrint_export(), sectionName, info.subject.getCode());
             });
-            
-            super.addClickEvent(rowFX.getBtn_schedule(), ()->{
+
+            super.addClickEvent(rowFX.getBtn_schedule(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.openScheduleViewer(info.sectionDetails);
             });
-            
-            super.addClickEvent(rowFX.getBtn_print_pdf(), ()->{
+
+            super.addClickEvent(rowFX.getBtn_print_pdf(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf());
             });
-            
+
             rowFX.getPrint_import().setDisable(true);
-            super.addClickEvent(rowFX.getPrint_import(), ()->{
+            super.addClickEvent(rowFX.getPrint_import(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.readExcel(info.loadGroup, rowFX.getPrint_import());
             });
-            
-            
-            
-            /**
-             * Row Extension Image Event.
-             */
-            super.addClickEvent(img_extension, () -> {
-                if (row_.isExtensionShown()) {
-                    img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
-                    row_.hideExtension();
-                } else {
-                    // close all row extension
-                    for (Node tableRows : tableHolder.getRows()) {
-                        SimpleTableRow simplerow = (SimpleTableRow) tableRows;
-                        SectionRow rowFX_ = (SectionRow) simplerow.getRowMetaData().get("FX");
-                        
-                        ImageView simplerowimage = rowFX_.getImg_extension();//findByAccessibilityText(simplerowcontent, "img_row_extension");
 
-                        simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
-                        simplerow.hideExtension();
-                    }
-
-                    // show row extension
-                    img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "hide_extension.png"));
-                    row_.setRowExtension(holder.getApplicationRoot());
-                    row_.showExtension();
-                }
-            });
-
-            super.addDoubleClickEvent(row_, () -> {
-                if (row_.isExtensionShown()) {
-                    img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
-                    row_.hideExtension();
-                } else {
-                    // close all row extension
-                    for (Node tableRows : tableHolder.getRows()) {
-                        SimpleTableRow simplerow = (SimpleTableRow) tableRows;
-                        SectionRow rowFX_ = (SectionRow) simplerow.getRowMetaData().get("FX");
-                        
-                        ImageView simplerowimage = rowFX_.getImg_extension();//findByAccessibilityText(simplerowcontent, "img_row_extension");
-
-                        simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
-                        simplerow.hideExtension();
-                    }
-
-                    // show row extension
-                    img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "hide_extension.png"));
-                    row_.setRowExtension(holder.getApplicationRoot());
-                    row_.showExtension();
-                }
-            });
             SimpleTableCell cellParent = new SimpleTableCell();
             cellParent.setResizePriority(Priority.ALWAYS);
             cellParent.setContent(rowFX.getApplicationRoot());
 
             row.addCell(cellParent);
             subjectTable.addRow(row);
-        }
+        } // end loop for inner contents
+
+        //----------------------------------------------------------------------
+        /**
+         * Row Extension Image Event.
+         */
+        super.addClickEvent(img_extension, () -> {
+            System.out.println("IM CLICKED");
+
+            if (row_.isExtensionShown()) {
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                row_.hideExtension();
+            } else {
+                // close all row extension
+                for (Node tableRows : tableHolder.getRows()) {
+                    SimpleTableRow simplerow = (SimpleTableRow) tableRows;
+                    SectionRow rowFX_ = (SectionRow) simplerow.getRowMetaData().get("FX");
+
+                    ImageView simplerowimage = rowFX_.getImg_extension();//findByAccessibilityText(simplerowcontent, "img_row_extension");
+
+                    simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                    simplerow.hideExtension();
+                }
+
+                // show row extension
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "hide_extension.png"));
+                row_.setRowExtension(holder.getApplicationRoot());
+                row_.showExtension();
+            }
+        });
+
+        super.addDoubleClickEvent(row_, () -> {
+            if (row_.isExtensionShown()) {
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                row_.hideExtension();
+            } else {
+                // close all row extension
+                for (Node tableRows : tableHolder.getRows()) {
+                    SimpleTableRow simplerow = (SimpleTableRow) tableRows;
+                    SectionRow rowFX_ = (SectionRow) simplerow.getRowMetaData().get("FX");
+
+                    ImageView simplerowimage = rowFX_.getImg_extension();//findByAccessibilityText(simplerowcontent, "img_row_extension");
+
+                    simplerowimage.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "show_extension.png"));
+                    simplerow.hideExtension();
+                }
+
+                // show row extension
+                img_extension.setImage(SimpleImage.make("update2.org.cict.layout.academicprogram.images", "hide_extension.png"));
+                row_.setRowExtension(holder.getApplicationRoot());
+                row_.showExtension();
+            }
+        });
+        
+        //----------------------------------------------------------------------
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(subjectTable);
         simpleTableView.setFixedWidth(true);
 
         simpleTableView.setParentOnScene(holder.getVbox_subject_table());
     }
-    
+
     private SubjectMapping getSubject(Integer id) {
         return (SubjectMapping) Database.connect().subject().getPrimary(id);
     }
-    
+
     private void fetchSectionSubject(SimpleTable holder, LoadSectionMapping sectionMap, String sectionName, ImageView img_extension, SimpleTableRow row) {
         FetchSubjects subjectsTx = new FetchSubjects();
         subjectsTx.sectionMap = sectionMap;
@@ -461,21 +467,22 @@ public class FacultyHub extends SceneFX implements ControllerFX{
              */
 
             ArrayList<LoadGroupMapping> loadGroups = null;
-            if(sectionMap!=null) {
+            if (sectionMap != null) {
                 loadGroups = Mono.orm()
                         .newSearch(Database.connect().load_group())
                         .eq(DB.load_group().LOADSEC_id, sectionMap.getId())
                         .active()
                         .all();
-            } else if(facultyID!=null) {
+            } else if (facultyID != null) {
                 loadGroups = Mono.orm()
                         .newSearch(Database.connect().load_group())
                         .eq(DB.load_group().faculty, facultyID)
                         .active()
                         .all();
             }
-            if(loadGroups==null || loadGroups.isEmpty())
+            if (loadGroups == null || loadGroups.isEmpty()) {
                 return false;
+            }
             /**
              * Get Subject Name.
              */
@@ -525,8 +532,8 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                     }
                 }
 
-                subjectData.sectionDetails = sectionMap==null? Database.connect().load_section().getPrimary(loadGroup.getLOADSEC_id()) : sectionMap;
-                
+                subjectData.sectionDetails = sectionMap == null ? Database.connect().load_section().getPrimary(loadGroup.getLOADSEC_id()) : sectionMap;
+
                 sectionSubjects.add(subjectData);
             }
 
@@ -538,48 +545,53 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 
         }
     }
-    
+
     private class SubjectData {
+
         private LoadGroupMapping loadGroup;
         private SubjectMapping subject;
         private String studentCount;
         private String instructorName;
         private LoadSectionMapping sectionDetails;
+
         public String getSectionName() {
             String sectionName = "";
-            if(sectionDetails.getACADPROG_id()!=null) {
+            if (sectionDetails.getACADPROG_id() != null) {
                 AcademicProgramMapping programDetails = Database.connect().academic_program().getPrimary(sectionDetails.getACADPROG_id());
-                if(programDetails!=null) {
+                if (programDetails != null) {
                     sectionName += programDetails.getCode() + " ";
                 }
             }
-            
-            if(sectionDetails.getYear_level()!=null)
+
+            if (sectionDetails.getYear_level() != null) {
                 sectionName += sectionDetails.getYear_level();
+            }
             sectionName += sectionDetails.getSection_name();
-            if(sectionDetails.get_group()!=null)
+            if (sectionDetails.get_group() != null) {
                 sectionName += "-G" + sectionDetails.get_group();
+            }
             return sectionName;
         }
     }
 
-    private class FetchSection extends Transaction{
+    private class FetchSection extends Transaction {
+
         private ArrayList<SectionData> sectionInformation;
 
         public ArrayList<SectionData> getSectionInformation() {
             return sectionInformation;
         }
-        
+
         @Override
         protected boolean transaction() {
             ArrayList<LoadSectionMapping> loads = Mono.orm().newSearch(Database.connect().load_section())
-                .eq(DB.load_section().adviser, CollegeFaculty.instance().getFACULTY_ID())
+                    .eq(DB.load_section().adviser, CollegeFaculty.instance().getFACULTY_ID())
                     .eq(DB.load_section().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId()).active().all();
-            if(loads==null || loads.isEmpty()) {
+            if (loads == null || loads.isEmpty()) {
                 return false;
             }
             sectionInformation = new ArrayList<>();
-            for(LoadSectionMapping sectionMap: loads) {
+            for (LoadSectionMapping sectionMap : loads) {
                 SectionData sectionWithAdviser = new SectionData();
                 sectionWithAdviser.sectionDetails = sectionMap;
 
@@ -616,19 +628,19 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                         .projection(studentCountSearch)
                         .count(DB.student().cict_id);
                 sectionWithAdviser.studentCount = studentCount;
-                
+
                 sectionWithAdviser.loadGroups = Mono.orm().newSearch(Database.connect().load_group())
                         .eq(DB.load_group().LOADSEC_id, sectionMap.getId()).active().all();
-                
-                sectionWithAdviser.programDetails = sectionMap.getACADPROG_id()==null? null : Database.connect().academic_program().getPrimary(sectionMap.getACADPROG_id());
-                
+
+                sectionWithAdviser.programDetails = sectionMap.getACADPROG_id() == null ? null : Database.connect().academic_program().getPrimary(sectionMap.getACADPROG_id());
+
                 sectionInformation.add(sectionWithAdviser);
             }
             return true;
         }
-        
+
     }
-    
+
     private String getAdviserFullname(FacultyMapping adviserDetails) {
         String advsierName = "";
         String lName = adviserDetails.getLast_name();
@@ -645,7 +657,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         }
         return advsierName;
     }
-    
+
     private class SectionData {
 
         private AcademicProgramMapping programDetails;
@@ -653,22 +665,24 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         private String adviserName;
         private String studentCount;
         private ArrayList<LoadGroupMapping> loadGroups;
-        
+
         public String getSectionName() {
             String sectionName = "";
-            if(programDetails!=null) {
+            if (programDetails != null) {
                 sectionName += programDetails.getCode() + " ";
             }
-            
-            if(sectionDetails.getYear_level()!=null)
+
+            if (sectionDetails.getYear_level() != null) {
                 sectionName += sectionDetails.getYear_level();
+            }
             sectionName += sectionDetails.getSection_name();
-            if(sectionDetails.get_group()!=null)
+            if (sectionDetails.get_group() != null) {
                 sectionName += "-G" + sectionDetails.get_group();
+            }
             return sectionName;
         }
     }
-    
+
 //    private void changeSectionView(Node node) {
 //        Animate.fade(node, 150, ()->{
 //            vbox_section_table.setVisible(false);
@@ -676,7 +690,6 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 //            node.setVisible(true);
 //        }, vbox_section_table, vbox_section_no_found);
 //    }
-    
     //-------------------------------------------------
     // EXPORT EXCEL
     private void exportToExcel(LoadGroupMapping selected_load_group_in_sections, JFXButton btn_export, String sectionName, String subjectCode) {
@@ -691,7 +704,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         exportTx.whenSuccess(() -> {
             SimpleTask openTask = new SimpleTask("open-excel");
             openTask.setTask(() -> {
-                String fileName =  SystemProperties.instance().getCurrentTermString() + " "
+                String fileName = SystemProperties.instance().getCurrentTermString() + " "
                         + sectionName
                         + " "
                         + subjectCode;
@@ -717,10 +730,10 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             super.getScene().setCursor(Cursor.DEFAULT);
             btn_export.setDisable(false);
         });
-        
+
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(this.getStage());
-        if(selectedDirectory==null) {
+        if (selectedDirectory == null) {
             Notifications.create().darkStyle()
                     .title("Nothing Happened")
                     .text("No Location Selected").showWarning();
@@ -729,8 +742,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         StudentMasterListPrinter.setExcelPath(selectedDirectory.getAbsolutePath());
         exportTx.transact();
     }
-    
-    
+
     //-------------------------------------------
     // SCHEDULE
     private void openScheduleViewer(LoadSectionMapping sectionMap) {
@@ -758,28 +770,28 @@ public class FacultyHub extends SceneFX implements ControllerFX{
 
         OpenScheduleViewer.openScheduleViewer(sectionMap, SystemProperties.instance().getCurrentTermString(), sectionString);
     }
-    
+
     //-----------------------------------------
     // Print PDF
     private void printMasterListInPDF(LoadGroupMapping loadGroup, JFXButton btn_print) {
         FetchStudents fetch = new FetchStudents();
         fetch.loadGroup = loadGroup;
-        fetch.whenSuccess(()->{
+        fetch.whenSuccess(() -> {
             ArrayList<MasterListPdfStudent> preview = fetch.getResults();
-            if(preview==null || preview.isEmpty()) {
+            if (preview == null || preview.isEmpty()) {
                 Notifications.create()
                         .title("No Student Found")
                         .text("No data to print.")
                         .showWarning();
                 return;
             }
-            String[] colNames = new String[]{"Student Number","Student Name"};
+            String[] colNames = new String[]{"Student Number", "Student Name"};
             ArrayList<String[]> rowData = new ArrayList<>();
             PrintResult print = new PrintResult();
-            
+
             for (int i = 0; i < preview.size(); i++) {
                 MasterListPdfStudent result = preview.get(i);
-                String[] row = new String[]{(i+1)+".  "+ result.studentNumber,
+                String[] row = new String[]{(i + 1) + ".  " + result.studentNumber,
                     WordUtils.capitalizeFully(result.studentFullName)};
                 rowData.add(row);
             }
@@ -788,7 +800,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
             print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Master List " + String.valueOf(Calendar.getInstance().getTimeInMillis());
             print.reportDescription = subject.getCode() + " Student List";
-            
+
             print.reportTitle = "Master List";
             print.whenStarted(() -> {
                 btn_print.setDisable(true);
@@ -818,49 +830,52 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                 super.cursorDefault();
             });
             print.transact();
-            
+
         });
         fetch.transact();
     }
-    
-    private class FetchStudents extends Transaction{
+
+    private class FetchStudents extends Transaction {
+
         private LoadGroupMapping loadGroup;
         private ArrayList<MasterListPdfStudent> results;
 
         public ArrayList<MasterListPdfStudent> getResults() {
             return results;
         }
-        
+
         @Override
         protected boolean transaction() {
             ArrayList<LoadSubjectMapping> loadSubjects = Mono.orm().newSearch(Database.connect().load_subject())
                     .eq(DB.load_subject().LOADGRP_id, loadGroup.getId()).active().all();
-            if(loadSubjects==null)
+            if (loadSubjects == null) {
                 return true;
+            }
             results = new ArrayList<>();
-            for(LoadSubjectMapping loadSubject: loadSubjects) {
+            for (LoadSubjectMapping loadSubject : loadSubjects) {
                 MasterListPdfStudent info = new MasterListPdfStudent();
                 StudentMapping student = Database.connect().student().getPrimary(loadSubject.getSTUDENT_id());
                 info.studentNumber = student.getId();
-                info.studentFullName = student.getLast_name() + ", " + student.getFirst_name() + (student.getMiddle_name()==null? "" : (" " + student.getMiddle_name()));
+                info.studentFullName = student.getLast_name() + ", " + student.getFirst_name() + (student.getMiddle_name() == null ? "" : (" " + student.getMiddle_name()));
                 results.add(info);
             }
             return true;
         }
-        
+
     }
-    
+
     private class MasterListPdfStudent {
+
         private String studentNumber;
         private String studentFullName;
     }
-    
+
     //-------------------------------------------
     // IMPORT EXCEL
     private void readExcel(LoadGroupMapping loadGroup, JFXButton button) {
         button.setDisable(true);
         ArrayList<ReadData> readData = StudentMasterListReader.readStudentGrade(this.getStage(), loadGroup.getSUBJECT_id());
-        if(readData==null) {
+        if (readData == null) {
             Mono.fx().alert().createWarning()
                     .setMessage(StudentMasterListReader.LOG).show();
             button.setDisable(false);
@@ -871,11 +886,11 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         encode.setFACULTY_id(CollegeFaculty.instance().getFACULTY_ID());
         encode.setSUBJECT_id(loadGroup.getSUBJECT_id());
         encode.setImportedData(readData);
-        encode.whenCancelled(()->{
+        encode.whenCancelled(() -> {
             Mono.fx().alert().createWarning()
                     .setMessage("Please check your connection to the server. Try again later.").show();
         });
-        encode.whenSuccess(()->{
+        encode.whenSuccess(() -> {
             button.setDisable(false);
             Notifications.create().darkStyle()
                     .title("Successful")
@@ -884,31 +899,31 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             // print here.
             this.printStatusReport(loadGroup, readData, button);
         });
-        encode.whenFailed(()->{
+        encode.whenFailed(() -> {
             Mono.fx().alert().createWarning()
                     .setMessage("Please check your connection to the server. Try again later.").show();
         });
         encode.transact();
     }
-    
+
     private void printStatusReport(LoadGroupMapping loadGroup, ArrayList<ReadData> preview, JFXButton btn_print) {
-        if(preview==null || preview.isEmpty()) {
+        if (preview == null || preview.isEmpty()) {
             Notifications.create()
                     .title("No Student Found")
                     .text("No data to print.")
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"Student Number","Full Name", "Grade", "Cleared", "Status"};
+        String[] colNames = new String[]{"Student Number", "Full Name", "Grade", "Cleared", "Status"};
         ArrayList<String[]> rowData = new ArrayList<>();
         PrintResult print = new PrintResult();
 
         for (int i = 0; i < preview.size(); i++) {
             ReadData result = preview.get(i);
-            String[] row = new String[]{(i+1)+".  "+ result.getSTUDENT_NUMBER().toUpperCase(),
+            String[] row = new String[]{(i + 1) + ".  " + result.getSTUDENT_NUMBER().toUpperCase(),
                 WordUtils.capitalizeFully(result.getSTUDENT_NAME()),
-            result.getSTUDENT_GRADE().isEmpty()? "NONE": result.getSTUDENT_GRADE(), result.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES") || result.getSTUDENT_CLEARANCE().equals("1")? "YES": "NO",
-            result.getSTATUS()};
+                result.getSTUDENT_GRADE().isEmpty() ? "NONE" : result.getSTUDENT_GRADE(), result.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES") || result.getSTUDENT_CLEARANCE().equals("1") ? "YES" : "NO",
+                result.getSTATUS()};
             rowData.add(row);
         }
         print.columnNames = colNames;
