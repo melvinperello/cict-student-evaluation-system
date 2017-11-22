@@ -27,6 +27,8 @@ import app.lazy.models.AccountFacultyMapping;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
@@ -34,9 +36,7 @@ import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -52,18 +52,24 @@ public class RecoveryController extends SceneFX implements ControllerFX{
 
     @FXML
     private VBox application_root;
-    
+
+    @FXML
+    private VBox vbox_login;
+
     @FXML
     private ComboBox cmb_questions;
 
     @FXML
-    private PasswordField txt_answer;
+    private JFXPasswordField txt_answer;
 
     @FXML
-    private PasswordField txt_reenter;
+    private JFXPasswordField txt_reenter;
 
     @FXML
-    private Button btn_Register;
+    private JFXButton btn_Register;
+
+    @FXML
+    private JFXButton btn_settings;
 
     private final AccountFacultyMapping accountFaculty;
     private final String bulsu_id;

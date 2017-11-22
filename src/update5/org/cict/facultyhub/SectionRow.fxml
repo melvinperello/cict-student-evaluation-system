@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="55.0" prefWidth="586.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="img_extension" fitHeight="25.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
@@ -22,7 +21,7 @@
          <children>
             <HBox>
                <children>
-                  <Label fx:id="lbl_section_name" maxWidth="1.7976931348623157E308" text="BSIT 1A-G1" HBox.hgrow="ALWAYS">
+                  <Label fx:id="lbl_section_name" maxWidth="1.7976931348623157E308" text="Sample" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="20.0" />
                      </font>

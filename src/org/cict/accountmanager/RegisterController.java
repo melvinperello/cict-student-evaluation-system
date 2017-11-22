@@ -27,15 +27,15 @@ import app.lazy.models.AccountFacultyMapping;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -51,24 +51,30 @@ public class RegisterController extends SceneFX implements ControllerFX{
 
     @FXML
     private VBox application_root;
-    
-    @FXML
-    private TextField txt_bulsuId;
 
     @FXML
-    private TextField txt_username;
+    private VBox vbox_login;
 
     @FXML
-    private PasswordField txt_password;
+    private JFXTextField txt_bulsuId;
 
     @FXML
-    private PasswordField txt_reenterPass;
+    private JFXTextField txt_username;
 
     @FXML
-    private Button btn_Register;
+    private JFXPasswordField txt_password;
 
     @FXML
-    private Button btn_Cancel;
+    private JFXPasswordField txt_reenterPass;
+
+    @FXML
+    private JFXButton btn_Register;
+
+    @FXML
+    private JFXButton btn_Cancel;
+
+    @FXML
+    private JFXButton btn_settings;
 
     @Override
     public void onInitialization() {
