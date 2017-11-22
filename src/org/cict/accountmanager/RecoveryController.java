@@ -239,18 +239,19 @@ public class RecoveryController extends SceneFX implements ControllerFX{
     }
     
     public void onShowLogin() {
-        LoginController controller = new LoginController();
-        Pane pane = Mono.fx().create()
-                .setPackageName("org.cict.authentication")
-                .setFxmlDocument("Login")
-                .makeFX()
-                .setController(controller)
-                .pullOutLayout();
-
-        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
-
-        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
-            super.replaceRoot(pane);
-        }, pane);
+//        LoginController controller = new LoginController();
+//        Pane pane = Mono.fx().create()
+//                .setPackageName("org.cict.authentication")
+//                .setFxmlDocument("Login")
+//                .makeFX()
+//                .setController(controller)
+//                .pullOutLayout();
+//
+//        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
+//
+//        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
+//            super.replaceRoot(pane);
+//        }, pane);
+        Mono.fx().getParentStage(application_root).close();
     }
 }

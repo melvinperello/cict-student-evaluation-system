@@ -110,7 +110,7 @@
                               </HBox>
                               <HBox alignment="CENTER" layoutX="10.0" layoutY="79.0" style="-fx-text-fill: white;">
                                  <children>
-                                    <JFXPasswordField fx:id="txt_answer" alignment="CENTER" focusColor="WHITE" labelFloat="true" prefHeight="25.0" prefWidth="311.0" promptText="Answer" unFocusColor="WHITE">
+                                    <JFXPasswordField fx:id="txt_answer" alignment="CENTER" focusColor="WHITE" labelFloat="true" prefHeight="25.0" prefWidth="311.0" promptText="Answer" style="-fx-text-fill: white;" unFocusColor="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -119,7 +119,7 @@
                               </HBox>
                               <HBox alignment="CENTER" layoutX="10.0" layoutY="108.0" style="-fx-text-fill: white;">
                                  <children>
-                                    <JFXPasswordField fx:id="txt_reenter" alignment="CENTER" focusColor="WHITE" labelFloat="true" prefHeight="25.0" prefWidth="311.0" promptText="Confirm Answer" unFocusColor="WHITE">
+                                    <JFXPasswordField fx:id="txt_reenter" alignment="CENTER" focusColor="WHITE" labelFloat="true" prefHeight="25.0" prefWidth="311.0" promptText="Confirm Answer" style="-fx-text-fill: white;" unFocusColor="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>

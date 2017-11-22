@@ -34,13 +34,14 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.cict.authentication.LoginController;
+import sys.org.cict.layout.home.SystemLogin;
 import update3.org.cict.SectionConstants;
 
 /**
@@ -187,6 +188,7 @@ public class RegisterController extends SceneFX implements ControllerFX{
             this.requestFocus(this.txt_bulsuId);
             return false;
         }
+        
         if (username.isEmpty()) {
             Mono.fx()
                     .alert()
@@ -245,32 +247,28 @@ public class RegisterController extends SceneFX implements ControllerFX{
         
         Pane pane = Mono.fx().create()
                 .setPackageName("org.cict.accountmanager")
-                .setFxmlDocument("Recovery")
+                .setFxmlDocument("SystemRecovery")
                 .makeFX()
                 .setController(controller)
                 .pullOutLayout();
 
-        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
+        super.setSceneColor("#393D4B"); // call once on entire scene lifecycle
 
         Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
             super.replaceRoot(pane);
         }, pane);
     }
     
+    
     public void onShowLogin() {
-        LoginController controller = new LoginController();
-        Pane pane = Mono.fx().create()
-                .setPackageName("org.cict.authentication")
-                .setFxmlDocument("Login")
-                .makeFX()
-                .setController(controller)
-                .pullOutLayout();
-
-        super.setSceneColor("#2983D5"); // call once on entire scene lifecycle
-
-        Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
-            super.replaceRoot(pane);
-        }, pane);
+//        SystemLogin loginFx = M.load(SystemLogin.class);
+//        Stage loginStage = loginFx.createStageApplication();
+//        loginStage.setResizable(false);
+//        loginStage.setTitle("CICT | Evaluation System");
+//
+//        loginFx.onDelayedStart();
+//        loginStage.show();
+        Mono.fx().getParentStage(btn_Cancel).close();
     }
     
     private void onRegisterError() {

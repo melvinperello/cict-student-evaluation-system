@@ -37,6 +37,7 @@ import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -50,6 +51,7 @@ import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
+import update3.org.cict.SectionConstants;
 import update3.org.cict.access.Access;
 
 /**
@@ -58,6 +60,9 @@ import update3.org.cict.access.Access;
  */
 public class SystemLogin extends MonoLauncher {
 
+    @FXML
+    private VBox application_root;
+    
     @FXML
     private VBox vbox_login;
 
@@ -125,6 +130,13 @@ public class SystemLogin extends MonoLauncher {
 
         startHibernate.transact();
     }
+    
+    public void recall() {
+        Animate.fade(vbox_loading, 150, () -> {
+            this.vbox_loading.setVisible(false);
+            this.vbox_login.setVisible(true);
+        }, vbox_login);
+    }
 
     //--------------------------------------------------------------------------
     @Override
@@ -157,8 +169,8 @@ public class SystemLogin extends MonoLauncher {
 //            this.onDestroyApplication();
 //        });
         MonoClick.addClickEvent(btn_register, () -> {
-            MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_REGISTRATION_LINK);
-            //this.onShowRegister();
+//            MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_REGISTRATION_LINK);
+            this.onShowRegister();
         });
         MonoClick.addClickEvent(btn_forgot, () -> {
             MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_FORGOT_LINK);
@@ -378,5 +390,17 @@ public class SystemLogin extends MonoLauncher {
         Stage stage = Mono.fx().getParentStage(control);
         stage.requestFocus();
         control.requestFocus();
+    }
+    
+    public void onShowRegister() {
+        Mono.fx().create()
+                .setPackageName("org.cict.accountmanager")
+                .setFxmlDocument("SystemRegister")
+                .makeFX()
+                .makeScene()
+                .makeStageApplication()
+                .stageResizeable(false)
+                .stageTitle("CICT | Enrollment Evaluation Management System | Register")
+                .stageShowAndWait();
     }
 }
