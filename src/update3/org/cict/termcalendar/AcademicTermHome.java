@@ -186,7 +186,15 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_evaluation_service, () -> {
             if (lbl_evaluation_status.getText().equalsIgnoreCase("OFFLINE")) {
-                changeStatus(Boolean.TRUE, null, null, Boolean.FALSE);
+                Boolean checked = this.checkIfTransactionIsOn(1);
+                if(checked) {
+                    int res = Mono.fx().alert().createConfirmation()
+                            .setMessage("Adding & Changing service is currently online, this request will turn it as offline. Do you still want to continue?")
+                            .confirmYesNo();
+                    if(res==-1)
+                        return;
+                }
+                changeStatus(Boolean.TRUE, checked?Boolean.FALSE:null, null, Boolean.FALSE);
             } else {
                 changeStatus(Boolean.FALSE, null, null, Boolean.FALSE);
             }
@@ -194,7 +202,15 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_adding_service, () -> {
             if (lbl_adding_status.getText().equalsIgnoreCase("OFFLINE")) {
-                changeStatus(null, Boolean.TRUE, null, Boolean.FALSE);
+                Boolean checked = this.checkIfTransactionIsOn(0);
+                if(checked) {
+                    int res = Mono.fx().alert().createConfirmation()
+                            .setMessage("Evaluation service is currently online, this request will turn it as offline. Do you still want to continue?")
+                            .confirmYesNo();
+                    if(res==-1)
+                        return;
+                }
+                changeStatus(checked?Boolean.FALSE:null, Boolean.TRUE, null, Boolean.FALSE);
             } else {
                 changeStatus(null, Boolean.FALSE, null, Boolean.FALSE);
             }
@@ -841,6 +857,23 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         @Override
         protected void after() {
 
+        }
+    }
+    
+    /**
+     * 
+     * @param transaction 0 if evaluation, 1 if adding & changing
+     * @return 
+     */
+    private Boolean checkIfTransactionIsOn(int transaction) {
+        AcademicTermMapping acadTerm = SystemProperties.instance().getCurrentAcademicTerm();
+        if(transaction==0) {
+            return acadTerm.getEvaluation_service().equals(1);
+        } else if(transaction==1) {
+            return acadTerm.getAdding_service().equals(1);
+        } else {
+            System.out.println("TRANSACTION NOT FOUND");
+            return false;
         }
     }
 
