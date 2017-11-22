@@ -54,6 +54,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.lang3.text.WordUtils;
@@ -63,8 +64,10 @@ import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.controller.sectionmain.SubjectMasterListTransaction;
+import update3.org.cict.layout.default_loader.LoaderView;
 import update3.org.cict.scheduling.OpenScheduleViewer;
 import update3.org.cict.window_prompts.empty_prompt.EmptyView;
+import update3.org.cict.window_prompts.fail_prompt.FailView;
 import update3.org.excelprinter.StudentMasterListPrinter;
 import update3.org.excelreader.EncodeGradeFromExcel;
 import update3.org.excelreader.ReadData;
@@ -92,26 +95,59 @@ public class FacultyHub extends SceneFX implements ControllerFX{
     private VBox vbox_section;
 
     @FXML
-    private VBox vbox_section_table;
+    private StackPane stack_section;
 
     @FXML
-    private VBox vbox_section_no_found;
+    private VBox vbox_section_table;
+
+//    @FXML
+//    private VBox vbox_section_no_found;
 
     @FXML
     private VBox vbox_subject;
 
     @FXML
-    private VBox vbox_subject_table;
+    private StackPane stack_subject;
 
     @FXML
-    private VBox vbox_subject_no_found;
+    private VBox vbox_subject_table;
+
+//    @FXML
+//    private VBox vbox_subject_no_found;
+    
+    private LoaderView loaderView;
+    private FailView failView;
+    private EmptyView emptyView;
+    
+    private LoaderView loaderView2;
+    private FailView failView2;
+    private EmptyView emptyView2;
     
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+        
+        this.loaderView = new LoaderView(stack_section);
+        this.failView = new FailView(stack_section);
+        this.emptyView = new EmptyView(stack_section);
+        
+        this.loaderView2 = new LoaderView(stack_subject);
+        this.failView2 = new FailView(stack_subject);
+        this.emptyView2 = new EmptyView(stack_subject);
+        
         this.changeMainView(vbox_section);
         this.showLoadSection();
         this.showSubjectLoad();
+    }
+    
+    private void detachAll() {
+        this.loaderView.detach();
+        this.failView.detach();
+        this.emptyView.detach();
+        
+        this.loaderView2.detach();
+        this.failView2.detach();
+        this.emptyView2.detach();
     }
 
     @Override
@@ -139,9 +175,25 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         FetchSubjects subjectsTx = new FetchSubjects();
         subjectsTx.sectionMap = null;
         subjectsTx.facultyID = CollegeFaculty.instance().getFACULTY_ID();
-
+        subjectsTx.whenStarted(()->{
+            this.detachAll();
+            this.loaderView2.setMessage("Loading Subject");
+            this.loaderView2.attach();
+        });
+        subjectsTx.whenCancelled(() -> {
+            this.emptyView2.setMessage("No Subject");
+            this.emptyView2.getButton().setVisible(false);
+            this.emptyView2.attach();
+        });
+        subjectsTx.whenFailed(()->{
+            this.failView2.setMessage("Failed to Load Subject");
+            this.failView2.attach();
+        });
         subjectsTx.whenSuccess(() -> {
             this.createSubjectTable(subjectsTx.sectionSubjects);
+        });
+        subjectsTx.whenFinished(() -> {
+            this.loaderView2.detach();
         });
         subjectsTx.transact();
     }
@@ -151,11 +203,11 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         SimpleTable subjectTable = new SimpleTable();
         
         if(subjectData==null) {
-            this.changeViewSubject(vbox_subject_no_found);
+//            this.changeViewSubject(vbox_subject_no_found);
             return;
         } 
         
-        this.changeViewSubject(vbox_subject_table);
+//        this.changeViewSubject(vbox_subject_table);
         for(SubjectData data: subjectData) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(65.0);
@@ -163,6 +215,8 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             rowFX.getLbl_code().setText(data.subject.getCode());
             rowFX.getLbl_description().setText(data.subject.getDescriptive_title());
             rowFX.getLbl_student_count().setText(data.studentCount);
+            
+            rowFX.getLbl_section().setText(data.getSectionName() + " - ");
             
             row.getRowMetaData().put("MORE_INFO", data);
 
@@ -201,24 +255,41 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         simpleTableView.setParentOnScene(vbox_subject_table);
     }
     
-    private void changeViewSubject(Node node) {
-        Animate.fade(node, 150, ()->{
-            vbox_subject_table.setVisible(false);
-            vbox_subject_no_found.setVisible(false);
-            node.setVisible(true);
-        }, vbox_subject_table, vbox_subject_no_found);
-    }
+//    private void changeViewSubject(Node node) {
+//        Animate.fade(node, 150, ()->{
+//            vbox_subject_table.setVisible(false);
+////            vbox_subject_no_found.setVisible(false);
+//            node.setVisible(true);
+//        }, vbox_subject_table, vbox_subject_no_found);
+//    }
     
     private void showLoadSection() {
         FetchSection fetch = new FetchSection();
+        fetch.whenStarted(()->{
+            this.detachAll();
+            this.loaderView.setMessage("Loading Section");
+            this.loaderView.attach();
+        });
+        fetch.whenCancelled(() -> {
+            this.emptyView.setMessage("No Section");
+            this.emptyView.getButton().setVisible(false);
+            this.emptyView.attach();
+        });
+        fetch.whenFailed(()->{
+            this.failView.setMessage("Failed to Load Section");
+            this.failView.attach();
+        });
         fetch.whenSuccess(()->{
             ArrayList<SectionData> loads = fetch.getSectionInformation();
             if(loads==null) {
-                this.changeSectionView(vbox_section_no_found);
+//                this.changeSectionView(vbox_section_no_found);
                 return;
             }
-            this.changeSectionView(vbox_section_table);
+//            this.changeSectionView(vbox_section_table);
             this.createSectionTable(loads);
+        });
+        fetch.whenFinished(() -> {
+            this.loaderView.detach();
         });
         fetch.transact();
     }
@@ -403,8 +474,8 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                         .active()
                         .all();
             }
-            if(loadGroups==null)
-                return true;
+            if(loadGroups==null || loadGroups.isEmpty())
+                return false;
             /**
              * Get Subject Name.
              */
@@ -474,6 +545,22 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         private String studentCount;
         private String instructorName;
         private LoadSectionMapping sectionDetails;
+        public String getSectionName() {
+            String sectionName = "";
+            if(sectionDetails.getACADPROG_id()!=null) {
+                AcademicProgramMapping programDetails = Database.connect().academic_program().getPrimary(sectionDetails.getACADPROG_id());
+                if(programDetails!=null) {
+                    sectionName += programDetails.getCode() + " ";
+                }
+            }
+            
+            if(sectionDetails.getYear_level()!=null)
+                sectionName += sectionDetails.getYear_level();
+            sectionName += sectionDetails.getSection_name();
+            if(sectionDetails.get_group()!=null)
+                sectionName += "-G" + sectionDetails.get_group();
+            return sectionName;
+        }
     }
 
     private class FetchSection extends Transaction{
@@ -488,8 +575,8 @@ public class FacultyHub extends SceneFX implements ControllerFX{
             ArrayList<LoadSectionMapping> loads = Mono.orm().newSearch(Database.connect().load_section())
                 .eq(DB.load_section().adviser, CollegeFaculty.instance().getFACULTY_ID())
                     .eq(DB.load_section().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId()).active().all();
-            if(loads==null) {
-                return true;
+            if(loads==null || loads.isEmpty()) {
+                return false;
             }
             sectionInformation = new ArrayList<>();
             for(LoadSectionMapping sectionMap: loads) {
@@ -582,13 +669,13 @@ public class FacultyHub extends SceneFX implements ControllerFX{
         }
     }
     
-    private void changeSectionView(Node node) {
-        Animate.fade(node, 150, ()->{
-            vbox_section_table.setVisible(false);
-            vbox_section_no_found.setVisible(false);
-            node.setVisible(true);
-        }, vbox_section_table, vbox_section_no_found);
-    }
+//    private void changeSectionView(Node node) {
+//        Animate.fade(node, 150, ()->{
+//            vbox_section_table.setVisible(false);
+//            vbox_section_no_found.setVisible(false);
+//            node.setVisible(true);
+//        }, vbox_section_table, vbox_section_no_found);
+//    }
     
     //-------------------------------------------------
     // EXPORT EXCEL

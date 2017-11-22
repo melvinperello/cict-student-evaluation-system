@@ -35,6 +35,9 @@ import javafx.scene.control.Label;
 public class SubjectRowFH extends MonoLauncher{
 
     @FXML
+    private Label lbl_section;
+    
+    @FXML
     private Label lbl_code;
 
     @FXML
@@ -54,6 +57,10 @@ public class SubjectRowFH extends MonoLauncher{
             
     @FXML
     private Label lbl_student_count;
+
+    public Label getLbl_section() {
+        return lbl_section;
+    }
     
     @Override
     public void onStartUp() {

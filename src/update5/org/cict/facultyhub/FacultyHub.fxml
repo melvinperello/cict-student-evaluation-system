@@ -140,18 +140,6 @@
                            </VBox.margin>
                            <children>
                               <VBox fx:id="vbox_section_table" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" />
-                              <VBox fx:id="vbox_section_no_found" prefHeight="200.0" prefWidth="100.0">
-                                 <children>
-                                    <Label text="No section found.">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <StackPane.margin>
-                                    <Insets left="20.0" top="20.0" />
-                                 </StackPane.margin>
-                              </VBox>
                            </children>
                         </StackPane>
                      </children>
@@ -208,18 +196,6 @@
                            </VBox.margin>
                            <children>
                               <VBox fx:id="vbox_subject_table" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" />
-                              <VBox fx:id="vbox_subject_no_found" prefHeight="200.0" prefWidth="100.0">
-                                 <children>
-                                    <Label text="No subject found.">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <StackPane.margin>
-                                    <Insets left="20.0" top="20.0" />
-                                 </StackPane.margin>
-                              </VBox>
                            </children>
                         </StackPane>
                      </children>
