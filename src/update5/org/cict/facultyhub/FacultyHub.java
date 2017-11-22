@@ -283,6 +283,7 @@ public class FacultyHub extends SceneFX implements ControllerFX{
                 this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf());
             });
             
+            rowFX.getPrint_import().setDisable(true);
             super.addClickEvent(rowFX.getPrint_import(), ()->{
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
                 this.readExcel(info.loadGroup, rowFX.getPrint_import());
