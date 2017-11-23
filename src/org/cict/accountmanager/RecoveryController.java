@@ -295,7 +295,7 @@ public class RecoveryController extends SceneFX implements ControllerFX{
     
     public void setComboBoxQuestions(ComboBox cmb_questions){
         ArrayList<String> questions = new ArrayList<>();
-        questions.add("What was your favorite place to visit as a child?");
+        questions.add("Where was your favorite place to visit as a child?");
         questions.add("Who is your favorite actor, musician, or artist?");
         questions.add("What is the name of your favorite pet?");
         questions.add("In what city were you born?");

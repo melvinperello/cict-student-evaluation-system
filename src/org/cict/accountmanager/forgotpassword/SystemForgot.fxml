@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -74,6 +75,64 @@
                   <Insets left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
                <children>
+                  <VBox fx:id="vbox_home" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="458.0" prefWidth="392.0" spacing="5.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Label alignment="CENTER" text="Forgot Password">
+                                 <font>
+                                    <Font name="Open Sans" size="29.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="7.0" top="7.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label fx:id="lbl_question1" text="Please enter your BulSU ID" textFill="#404e5d">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <JFXTextField fx:id="txt_bulsu_id" alignment="CENTER" focusColor="WHITE" promptText="BulSU ID" style="-fx-text-fill: white;" unFocusColor="WHITE">
+                                 <VBox.margin>
+                                    <Insets left="100.0" right="100.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </JFXTextField>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox spacing="20.0">
+                           <VBox.margin>
+                              <Insets left="50.0" right="50.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <JFXButton fx:id="btn_reset_home" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #3AADD9;" text="Recover Account" textFill="WHITE">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_close" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #D84452;" text="Close" textFill="WHITE">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </JFXButton>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="90.0" right="90.0" top="10.0" />
+                           </VBox.margin>
+                        </VBox>
+                     </children>
+                  </VBox>
                   <VBox fx:id="vbox_forgot" alignment="CENTER" prefHeight="458.0" prefWidth="392.0" spacing="5.0" visible="false">
                      <children>
                         <HBox alignment="CENTER">
@@ -90,7 +149,7 @@
                         </HBox>
                         <VBox alignment="CENTER">
                            <children>
-                              <Label text="Question" textFill="#404e5d">
+                              <Label text="Please answer the security question:" textFill="#404e5d">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -104,7 +163,7 @@
                            <children>
                               <Label fx:id="lbl_question" text="What was your favorite place to visit as a child?" textFill="#404e5d">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
                            </children>
@@ -130,7 +189,7 @@
                         </VBox>
                         <VBox spacing="10.0">
                            <children>
-                              <JFXButton fx:id="btn_reset" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #3AADD9;" text="Reset Password" textFill="WHITE">
+                              <JFXButton fx:id="btn_reset_forgot" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #3AADD9;" text="Reset Password" textFill="WHITE">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -161,29 +220,27 @@
                               <Insets top="7.0" />
                            </VBox.margin>
                         </HBox>
-                        <VBox alignment="CENTER" prefHeight="72.0" prefWidth="511.0">
+                        <VBox>
                            <children>
-                              <Label prefHeight="77.0" prefWidth="338.0" text="       This action will send a 6 character One-Time Password (OTP) to your mobile number with last four digit:" textFill="#404e5d" wrapText="true">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
+                              <VBox alignment="CENTER" prefHeight="72.0" prefWidth="511.0">
+                                 <children>
+                                    <Label prefHeight="77.0" prefWidth="338.0" text="       This action will send a 6 character One-Time Password (OTP) to your mobile number with last four digit:" textFill="#404e5d" wrapText="true">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <Label fx:id="lbl_mobile_no" text="Loading..." textFill="#404e5d">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </VBox>
                            </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </VBox>
-                        <VBox alignment="CENTER" layoutX="10.0" layoutY="164.0">
-                           <children>
-                              <Label fx:id="lbl_mobile_no" text="Loading..." textFill="#404e5d">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="7.0" />
-                           </VBox.margin>
                         </VBox>
                         <VBox alignment="CENTER" layoutX="10.0" layoutY="206.0">
                            <children>
@@ -215,11 +272,17 @@
                                           <Font name="System Bold" size="15.0" />
                                        </font>
                                     </Label>
-                                    <JFXPasswordField fx:id="txt_otp" alignment="CENTER" focusColor="WHITE" prefHeight="29.0" prefWidth="152.0" promptText="One-Time Password" style="-fx-text-fill: white;" unFocusColor="WHITE">
+                                    <JFXTextField fx:id="txt_otp" focusColor="WHITE" style="-fx-text-fill: white;" unFocusColor="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
-                                    </JFXPasswordField>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                    </JFXTextField>
                                  </children>
                                  <VBox.margin>
                                     <Insets />
@@ -230,14 +293,26 @@
                               <Insets left="90.0" right="50.0" />
                            </VBox.margin>
                         </VBox>
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Label fx:id="lbl_resend" text="Didn't receive the code? Click here to resend" textFill="#404e5d">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </VBox>
                         <VBox spacing="10.0">
                            <children>
-                              <JFXButton fx:id="btn_reset2" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #3AADD9;" text="Reset Password" textFill="WHITE">
+                              <JFXButton fx:id="btn_reset_otp" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #3AADD9;" text="Reset Password" textFill="WHITE">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </JFXButton>
-                              <JFXButton fx:id="btn_back" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #D84452;" text="Back" textFill="WHITE">
+                              <JFXButton fx:id="btn_back_otp" maxWidth="1.7976931348623157E308" style="-fx-border-color: white; -fx-background-color: #D84452;" text="Back" textFill="WHITE">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -249,11 +324,11 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="vbox_reset" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="458.0" prefWidth="392.0" spacing="5.0">
+                  <VBox fx:id="vbox_reset" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="458.0" prefWidth="392.0" spacing="5.0" visible="false">
                      <children>
                         <HBox alignment="CENTER">
                            <children>
-                              <Label alignment="CENTER" text="Reset Password">
+                              <Label alignment="CENTER" text="Create New Password">
                                  <font>
                                     <Font name="Open Sans" size="29.0" />
                                  </font>

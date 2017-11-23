@@ -37,7 +37,6 @@ import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -45,13 +44,13 @@ import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.PublicConstants;
 import org.cict.ThreadMill;
+import org.cict.accountmanager.forgotpassword.SystemForgot;
 import org.cict.authentication.authenticator.Authenticator;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
-import update3.org.cict.SectionConstants;
 import update3.org.cict.access.Access;
 
 /**
@@ -130,13 +129,6 @@ public class SystemLogin extends MonoLauncher {
 
         startHibernate.transact();
     }
-    
-    public void recall() {
-        Animate.fade(vbox_loading, 150, () -> {
-            this.vbox_loading.setVisible(false);
-            this.vbox_login.setVisible(true);
-        }, vbox_login);
-    }
 
     //--------------------------------------------------------------------------
     @Override
@@ -173,8 +165,8 @@ public class SystemLogin extends MonoLauncher {
             this.onShowRegister();
         });
         MonoClick.addClickEvent(btn_forgot, () -> {
-            MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_FORGOT_LINK);
-            // this.onShowForgotPassword();
+//            MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_FORGOT_LINK);
+             this.onShowForgotPassword();
         });
         MonoClick.addClickEvent(btn_settings, (()->{
             Settings set = M.load(Settings.class);
@@ -392,7 +384,7 @@ public class SystemLogin extends MonoLauncher {
         control.requestFocus();
     }
     
-    public void onShowRegister() {
+    private void onShowRegister() {
         Mono.fx().create()
                 .setPackageName("org.cict.accountmanager")
                 .setFxmlDocument("SystemRegister")
@@ -402,5 +394,14 @@ public class SystemLogin extends MonoLauncher {
                 .stageResizeable(false)
                 .stageTitle("CICT | Enrollment Evaluation Management System | Register")
                 .stageShowAndWait();
+    }
+    
+    private void onShowForgotPassword() {
+        SystemForgot forgotFx = M.load(SystemForgot.class);
+        Stage forgotStage = forgotFx.createStageApplication();
+        forgotStage.setResizable(false);
+        forgotStage.setTitle("CICT | Enrollment Evaluation Management System | Recover Account");
+        forgotFx.onDelayedStart();
+        forgotStage.show();
     }
 }
