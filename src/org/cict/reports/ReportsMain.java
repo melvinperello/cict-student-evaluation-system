@@ -242,7 +242,12 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 this.cmb_term_eval.getItems().addAll(atMaps);
                 this.cmb_term_eval.setCellFactory(factory);
                 this.cmb_term_eval.setButtonCell(factory.call(null));
-                this.cmb_term_eval.getSelectionModel().select(currentATMap);
+                for(AcademicTermMapping atMap: atMaps) {
+                    if(atMap.getId().equals(currentATMap.getId())) {
+                        this.cmb_term_eval.getSelectionModel().select(atMap);
+                        break;
+                    }
+                }
             });
         });
         set.whenCancelled(()->{
