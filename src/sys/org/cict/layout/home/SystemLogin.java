@@ -34,6 +34,7 @@ import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -88,7 +89,7 @@ public class SystemLogin extends MonoLauncher {
 
     @Override
     public void onStartUp() {
-
+        sleepEvent.set(true);
         //----------------------------------------------------------------------
     }
 
@@ -124,7 +125,7 @@ public class SystemLogin extends MonoLauncher {
                         .showAndWait();
 //                MainApplication.die(0);
             }
-
+            sleepEvent.set(false);
         });
 
         startHibernate.transact();
@@ -200,8 +201,12 @@ public class SystemLogin extends MonoLauncher {
         });
     }
 
+    private AtomicBoolean sleepEvent = new AtomicBoolean(true);
     //--------------------------------------------------------------------------
     private void onLogin() {
+        System.out.println("SLEEP: " + sleepEvent);
+        if(sleepEvent.get())
+            return;
         String user = this.txt_username.getText().trim();
         String pass = this.txt_password.getText().trim();
         if (this.checkEmpty(user, pass)) {
@@ -222,11 +227,12 @@ public class SystemLogin extends MonoLauncher {
             validateLogin.username = user;
             validateLogin.password = pass;
 
-            validateLogin.setOnStart(start -> {
+            validateLogin.whenStarted(() -> {
+                sleepEvent.set(true);
                 GenericLoadingShow.instance().show();
             });
 
-            validateLogin.setOnSuccess(onSuccess -> {
+            validateLogin.whenSuccess(() -> {
                 GenericLoadingShow.instance().hide();
                 if (validateLogin.isAuthenticated()) {
                     checkAccess(validateLogin.getCreatedSessionID());
@@ -238,17 +244,22 @@ public class SystemLogin extends MonoLauncher {
                             .setHeader("Authentication Failed")
                             .setMessage(validateLogin.getAuthenticatorMessage())
                             .showAndWait();
+                    System.out.println(sleepEvent.get());
+                    sleepEvent.set(true);
+                    System.out.println(sleepEvent.get());
+                    sleepEvent.set(false);
+                    System.out.println(sleepEvent.get());
                 }
             });
 
-            validateLogin.setOnCancel(cancel -> {
+            validateLogin.whenCancelled(() -> {
                 onLoginError();
             });
 
-            validateLogin.setOnFailure(onFailure -> {
+            validateLogin.whenFailed(() -> {
                 onLoginError();
             });
-
+            
             validateLogin.setRestTime(500);
             validateLogin.transact();
         }
