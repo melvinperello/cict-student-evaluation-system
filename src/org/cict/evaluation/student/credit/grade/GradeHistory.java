@@ -224,22 +224,22 @@ public class GradeHistory extends SceneFX implements ControllerFX {
                     .setFxmlDocument("row-grade-history")
                     .makeFX()
                     .pullOutLayout();
-            
+
             Label lbl_rating = searchAccessibilityText(fxRow, "lbl_rating");
             Label lbl_remarks = searchAccessibilityText(fxRow, "lbl_remarks");
             Label lbl_reason = searchAccessibilityText(fxRow, "lbl_reason");
             Label lbl_editor = searchAccessibilityText(fxRow, "lbl_editor");
             Label lbl_date = searchAccessibilityText(fxRow, "lbl_date");
-            
+
             //--------------------------
             JFXCheckBox chkbx_correction = searchAccessibilityText(fxRow, "chkbx_correction");
             chkbx_correction.setTooltip(new Tooltip("This will mark the grade inputted as correction."));
             chkbx_correction.setSelected(grade.getGrade_state().equalsIgnoreCase("CORRECTION"));
-            super.addClickEvent(chkbx_correction, ()->{
-                    GradeMapping map = (GradeMapping) row.getRowMetaData().get("MAP");
-                if(chkbx_correction.isSelected()) {
+            super.addClickEvent(chkbx_correction, () -> {
+                GradeMapping map = (GradeMapping) row.getRowMetaData().get("MAP");
+                if (chkbx_correction.isSelected()) {
                     map.setGrade_state("CORRECTION");
-                    if(Database.connect().grade().update(map)) {
+                    if (Database.connect().grade().update(map)) {
                         Notifications.create().text("Grade is marked as correction.")
                                 .title("Successfully Marked").showInformation();
                     } else {
@@ -248,7 +248,7 @@ public class GradeHistory extends SceneFX implements ControllerFX {
                     }
                 } else {
                     map.setGrade_state("ACCEPTED");
-                    if(Database.connect().grade().update(map)) {
+                    if (Database.connect().grade().update(map)) {
                         Notifications.create().text("Grade is unmarked as correction.")
                                 .title("Successfully Unmarked").showInformation();
                     } else {
@@ -259,7 +259,6 @@ public class GradeHistory extends SceneFX implements ControllerFX {
             });
 
             //-----------------------------
-            
             //------------------------------------------------------------------
             lbl_rating.setText(grade.getRating());
             lbl_remarks.setText(grade.getRemarks());
@@ -348,6 +347,20 @@ public class GradeHistory extends SceneFX implements ControllerFX {
             if (gradeHistory == null) {
                 return false;
             }
+
+            //------------------------------------------------------------------
+            // For some unknown reason the gradeHistory variable was not null but empty
+            // this code prevents this from throwing unexpected index out of bound error
+            try {
+                if (gradeHistory.isEmpty()) {
+                    return false;
+                }
+                // try this
+                gradeHistory.get(0);
+            } catch (IndexOutOfBoundsException e) {
+                return false;
+            }
+            //------------------------------------------------------------------
 
             this.academicTerm = Mono.orm()
                     .newSearch(Database.connect().academic_term())
