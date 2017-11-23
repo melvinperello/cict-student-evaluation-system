@@ -108,6 +108,7 @@ public class TransactionPin extends MonoLauncher{
                 Mono.fx().alert().createWarning().setHeader("Wrong Pin")
                         .setMessage("Please enter your transaction pin correctly.")
                         .show();
+                txt_pin.setText("");
             } else
                 Mono.fx().getParentStage(btn_close).close();
         } 

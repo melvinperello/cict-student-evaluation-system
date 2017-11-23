@@ -216,6 +216,10 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //        });
 
         btnSaveChanges.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
+            if(!Access.enterTransactionPin(super.getStage())){
+                Mono.fx().snackbar().showError(application_root, "Transaction Denied");
+                return;
+            }
             onSaveChanges(); // -> save the adding to database.
         });
 
