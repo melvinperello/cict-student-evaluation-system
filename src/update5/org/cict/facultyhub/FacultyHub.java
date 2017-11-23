@@ -226,7 +226,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
             super.addClickEvent(rowFX.getBtn_schedule(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                openScheduleViewer(info.sectionDetails);
+                openScheduleViewer(info.sectionDetails, info.subject);
             });
 
             super.addClickEvent(rowFX.getBtn_print_pdf(), () -> {
@@ -348,7 +348,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
             super.addClickEvent(rowFX.getBtn_schedule(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                this.openScheduleViewer(info.sectionDetails);
+                this.openScheduleViewer(info.sectionDetails, info.subject);
             });
 
             super.addClickEvent(rowFX.getBtn_print_pdf(), () -> {
@@ -745,7 +745,8 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
     //-------------------------------------------
     // SCHEDULE
-    private void openScheduleViewer(LoadSectionMapping sectionMap) {
+    private void openScheduleViewer(LoadSectionMapping sectionMap, SubjectMapping subject) {
+        
         String sectionString = "";
         AcademicProgramMapping coursecode = null;
         try {
@@ -767,7 +768,14 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         } else {
             sectionString = sectionMap.getSection_name();
         }
-
+        int res = Mono.fx().alert().createConfirmation()
+                        .setHeader("Schedule Format")
+                        .setMessage("Please choose if show the section's schedule or the specified subject's schedule only.")
+                        .confirmCustom("Section Schedule", "Subject Schedule");
+        if(res==-1) {
+            sectionString = subject.getCode().toUpperCase();
+            OpenScheduleViewer.setSpecificSubject(subject.getId());
+        }
         OpenScheduleViewer.openScheduleViewer(sectionMap, SystemProperties.instance().getCurrentTermString(), sectionString);
     }
 

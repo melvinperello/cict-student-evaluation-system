@@ -31,19 +31,10 @@ import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Scene;
-import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
-import javax.imageio.ImageIO;
-import org.cict.authentication.authenticator.SystemProperties;
 
 /**
  *
@@ -53,9 +44,14 @@ public class OpenScheduleViewer {
 
     class ScheduleViewerStartUp extends Transaction {
 
+        private Integer subjectID;
+        public void setSubjectID(Integer subjectID) {
+            this.subjectID = subjectID;
+        }
+        
         HashMap<String, ArrayList<ScheduleData>> data = new HashMap<>();
         private LoadSectionMapping load_sec;
-
+        
         public void setLoad_sec(LoadSectionMapping load_sec) {
             this.load_sec = load_sec;
         }
@@ -65,11 +61,21 @@ public class OpenScheduleViewer {
             /**
              * Get all load groups from that section.
              */
-            ArrayList<LoadGroupMapping> loadGroups = Mono.orm()
+            ArrayList<LoadGroupMapping> loadGroups;
+            if(subjectID == null) {
+                loadGroups = Mono.orm()
                     .newSearch(Database.connect().load_group())
                     .eq(DB.load_group().LOADSEC_id, load_sec.getId())
                     .active()
                     .all();
+            } else {
+                loadGroups = Mono.orm()
+                    .newSearch(Database.connect().load_group())
+                    .eq(DB.load_group().LOADSEC_id, load_sec.getId())
+                    .eq(DB.load_group().SUBJECT_id, subjectID)
+                    .active()
+                    .all();
+            }
 
             if (loadGroups == null) {
                 return true;
@@ -131,6 +137,12 @@ public class OpenScheduleViewer {
 
         }
     }
+    
+    private static Integer specificSubject;
+    public static void setSpecificSubject(Integer specificSubject_) {
+        specificSubject = specificSubject_;
+    }
+    
 
     public static void openScheduleViewer(LoadSectionMapping load_sec, String term, String sectionName) {
 
@@ -138,6 +150,9 @@ public class OpenScheduleViewer {
          * Transaction.
          */
         OpenScheduleViewer.ScheduleViewerStartUp schedViewTx = new OpenScheduleViewer().new ScheduleViewerStartUp();
+        // added subject id if only the subject's schedule is needed
+        schedViewTx.setSubjectID(specificSubject);
+        //
         schedViewTx.setLoad_sec(load_sec);
         schedViewTx.whenSuccess(() -> {
 
@@ -168,9 +183,9 @@ public class OpenScheduleViewer {
             });
             s.showAndWait();
         });
-
+        
         schedViewTx.transact();
-
+        specificSubject = null;
     }
 
     private static ArrayList<ScheduleData> buildSchedule(ArrayList<LoadGroupScheduleMapping> schedules) {
