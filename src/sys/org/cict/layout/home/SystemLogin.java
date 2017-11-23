@@ -35,9 +35,11 @@ import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -62,7 +64,7 @@ public class SystemLogin extends MonoLauncher {
 
     @FXML
     private VBox application_root;
-    
+
     @FXML
     private VBox vbox_login;
 
@@ -83,7 +85,7 @@ public class SystemLogin extends MonoLauncher {
 
     @FXML
     private JFXButton btn_settings;
-    
+
     @FXML
     private VBox vbox_loading;
 
@@ -132,7 +134,27 @@ public class SystemLogin extends MonoLauncher {
     }
 
     //--------------------------------------------------------------------------
+    /**
+     * Event handler variable for Login when enter.
+     */
+    private final EventHandler<KeyEvent> loginKeyEvent = (e) -> {
+        if (e.getCode().equals(KeyCode.ENTER)) {
+            this.onLogin();
+        }
+    };
+
+    private void addEnterEvent() {
+        this.getApplicationRoot().addEventHandler(KeyEvent.KEY_PRESSED, this.loginKeyEvent);
+    }
+
+    private void removeEnterEvent() {
+        this.getApplicationRoot().removeEventHandler(KeyEvent.KEY_PRESSED, this.loginKeyEvent);
+    }
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
     @Override
+
     public void onDelayedStart() {
         if (Mono.orm().isStarted()) {
             System.out.println("Starting ORM");
@@ -150,10 +172,11 @@ public class SystemLogin extends MonoLauncher {
         onStageClosing();
 
         //----------------------------------------------------------------------
-        Mono.fx().key(KeyCode.ENTER).release(this.getApplicationRoot(), () -> {
-            this.onLogin();
-        });
+//        Mono.fx().key(KeyCode.ENTER).release(this.getApplicationRoot(), () -> {
+//            this.onLogin();
+//        });
 
+        this.addEnterEvent();
         MonoClick.addClickEvent(btn_login, () -> {
             this.onLogin();
         });
@@ -167,9 +190,9 @@ public class SystemLogin extends MonoLauncher {
         });
         MonoClick.addClickEvent(btn_forgot, () -> {
 //            MainApplication.HOST_SERVICE.showDocument(PublicConstants.FACULTY_FORGOT_LINK);
-             this.onShowForgotPassword();
+            this.onShowForgotPassword();
         });
-        MonoClick.addClickEvent(btn_settings, (()->{
+        MonoClick.addClickEvent(btn_settings, (() -> {
             Settings set = M.load(Settings.class);
             set.onDelayedStart();
             try {
@@ -181,7 +204,7 @@ public class SystemLogin extends MonoLauncher {
                 a.showAndWait();
             }
         }));
-        
+
     }
 
     /**
@@ -202,11 +225,13 @@ public class SystemLogin extends MonoLauncher {
     }
 
     private AtomicBoolean sleepEvent = new AtomicBoolean(true);
+
     //--------------------------------------------------------------------------
     private void onLogin() {
         System.out.println("SLEEP: " + sleepEvent);
-        if(sleepEvent.get())
+        if (sleepEvent.get()) {
             return;
+        }
         String user = this.txt_username.getText().trim();
         String pass = this.txt_password.getText().trim();
         if (this.checkEmpty(user, pass)) {
@@ -259,7 +284,7 @@ public class SystemLogin extends MonoLauncher {
             validateLogin.whenFailed(() -> {
                 onLoginError();
             });
-            
+
             validateLogin.setRestTime(500);
             validateLogin.transact();
         }
@@ -320,6 +345,7 @@ public class SystemLogin extends MonoLauncher {
      */
     private boolean checkEmpty(String user, String pass) {
         if (user.isEmpty()) {
+            this.removeEnterEvent();
             Mono.fx()
                     .alert()
                     .createWarning()
@@ -327,6 +353,7 @@ public class SystemLogin extends MonoLauncher {
                     .setHeader("Username Field is Empty!")
                     .setMessage("Please fill up the field with your username. Thank You !")
                     .showAndWait();
+            this.addEnterEvent();
 
             return false;
         }
@@ -394,7 +421,7 @@ public class SystemLogin extends MonoLauncher {
         stage.requestFocus();
         control.requestFocus();
     }
-    
+
     private void onShowRegister() {
         Mono.fx().create()
                 .setPackageName("org.cict.accountmanager")
@@ -406,7 +433,7 @@ public class SystemLogin extends MonoLauncher {
                 .stageTitle("CICT | Enrollment Evaluation Management System | Register")
                 .stageShowAndWait();
     }
-    
+
     private void onShowForgotPassword() {
         SystemForgot forgotFx = M.load(SystemForgot.class);
         Stage forgotStage = forgotFx.createStageApplication();
