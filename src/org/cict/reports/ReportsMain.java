@@ -46,17 +46,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cict.PublicConstants;
-import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
@@ -119,7 +122,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     private VBox vbox_eval_main_table;
     
     @FXML
-    private ComboBox<String> cmb_term_eval;
+    private ComboBox<AcademicTermMapping> cmb_term_eval;
     
     @FXML
     private Label lbl_result;
@@ -138,10 +141,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         this.failView = new FailView(stack_eval_main);
         this.emptyView = new EmptyView(stack_eval_main);
     
-        this.loaderView = new LoaderView(stack_eval_main);
-        this.failView = new FailView(stack_eval_main);
-        this.emptyView = new EmptyView(stack_eval_main);
-        
+//        this.loaderView = new LoaderView(stack_eval_main);
+//        this.failView = new FailView(stack_eval_main);
+//        this.emptyView = new EmptyView(stack_eval_main);
+//        
         this.setViewTask(btn_evaluation, SystemProperties.instance().getCurrentAcademicTerm().getId());
         
         
@@ -187,7 +190,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         ChoiceRange.setComboBoxLimit(dateList, source, self, 0, padding);
     }
     
-    private ArrayList<HashMap<String,AcademicTermMapping>> termDetails = new ArrayList<>();
+//    private ArrayList<HashMap<String,AcademicTermMapping>> termDetails = new ArrayList<>();
     private void setViewTask(JFXButton button, Integer ACADTERM_id) {
         vbox_eval_main_table.getChildren().clear();
         MODE = button.getText();
@@ -207,23 +210,39 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 });
                 return;
             }
-            termDetails.clear();
-            for(AcademicTermMapping each: atMaps) {
-                String termName = (each.getSchool_year()==null? "No School Year" : each.getSchool_year()) + " " + (each.getSemester()==null? "No Semester" : each.getSemester());
-                Mono.fx().thread().wrap(()->{
-                    cmb_term_eval.getItems().add(termName);
-                });
+//            termDetails.clear();
+//            for(AcademicTermMapping each: atMaps) {
+//                String termName = (each.getSchool_year()==null? "No School Year" : each.getSchool_year()) + " " + (each.getSemester()==null? "No Semester" : each.getSemester());
+//                Mono.fx().thread().wrap(()->{
+//                    cmb_term_eval.getItems().add(termName);
+//                });
                 
-                HashMap<String,AcademicTermMapping> hm = new HashMap<>();
-                hm.put(termName, each);
-                termDetails.add(hm);
-            }
+//                HashMap<String,AcademicTermMapping> hm = new HashMap<>();
+//                hm.put(termName, each);
+//                termDetails.add(hm);
+//            }
             
-            AcademicTermMapping currentATMap = SystemProperties.instance().getCurrentAcademicTerm();
-            String termName = (currentATMap.getSchool_year()==null? "No School Year" : currentATMap.getSchool_year()) + " " + (currentATMap.getSemester()==null? "No Semester" : currentATMap.getSemester());
+            AcademicTermMapping currentATMap = Database.connect().academic_term().getPrimary(ACADTERM_id);//SystemProperties.instance().getCurrentAcademicTerm();
+//            String termName = (currentATMap.getSchool_year()==null? "No School Year" : currentATMap.getSchool_year()) + " " + (currentATMap.getSemester()==null? "No Semester" : currentATMap.getSemester());
 
             Mono.fx().thread().wrap(()->{
-                cmb_term_eval.getSelectionModel().select(termName);
+                
+                Callback<ListView<AcademicTermMapping>, ListCell<AcademicTermMapping>> factory = lv -> {
+                    return new ListCell<AcademicTermMapping>() {
+                        @Override
+                        protected void updateItem(AcademicTermMapping item, boolean empty) {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : (item.getSchool_year() + " " + item.getSemester()));
+                        }
+                    };
+                };
+
+            
+                this.cmb_term_eval.getItems().clear();
+                this.cmb_term_eval.getItems().addAll(atMaps);
+                this.cmb_term_eval.setCellFactory(factory);
+                this.cmb_term_eval.setButtonCell(factory.call(null));
+                this.cmb_term_eval.getSelectionModel().select(currentATMap);
             });
         });
         set.whenCancelled(()->{
@@ -234,9 +253,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         set.whenStarted(()->{
             System.out.println("STARTED");
-            if(MODE.equalsIgnoreCase("evaluation")) {
+//            if(MODE.equalsIgnoreCase("evaluation")) {
                 vbox_eval_main.setDisable(true);
-            }
+//            }
         });
         set.whenSuccess(()->{
             System.out.println("SUCCESS");
@@ -261,11 +280,18 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         dateList.clear();
         List<Date> dates = new ArrayList<Date>();
         EvaluationMapping start = Mono.orm().newSearch(Database.connect().evaluation())
-                        .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).active(Order.asc(DB.evaluation().evaluation_date)).first();
+                        .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).execute(Order.asc(DB.evaluation().evaluation_date)).first();
         // Affected by the ORM Update - Changed the order -> desc to get last then use first()
         EvaluationMapping end = Mono.orm().newSearch(Database.connect().evaluation())
-                        .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).active(Order.desc(DB.evaluation().evaluation_date)).first();
+                        .eq(DB.evaluation().ACADTERM_id, ACADTERM_id).execute(Order.desc(DB.evaluation().evaluation_date)).first();
         try {
+            if(end==null && start==null) {
+                cmb_from_eval_main.setDisable(true);
+                cmb_to_eval_main.setDisable(true);
+                return;
+            }
+            cmb_from_eval_main.setDisable(false);
+            cmb_to_eval_main.setDisable(false);
             Date endDate = formatter_plain.parse(end.getEvaluation_date().toString());//DateUtils.addDays(formatter_plain.parse(end.getEvaluation_date().toString()), 1);
             Date startDate = formatter_plain.parse(start.getEvaluation_date().toString());
         
@@ -296,20 +322,25 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             cmb_from_eval_main.getSelectionModel().selectFirst();
             cmb_to_eval_main.getSelectionModel().selectLast();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
     private boolean cmbChanged = false;
     private String MODE;
+    private AcademicTermMapping selected;
     private void evaluationEvents() {
-        cmb_term_eval.valueProperty().addListener((a)->{
-            String termName = cmb_term_eval.getSelectionModel().getSelectedItem();
-            int index = cmb_term_eval.getSelectionModel().getSelectedIndex();
+         this.cmb_term_eval.valueProperty().addListener((ObservableValue<? extends AcademicTermMapping> observable, AcademicTermMapping oldValue, AcademicTermMapping newValue) -> {
+//        cmb_term_eval.valueProperty().addListener((a)->{
+//            String termName = cmb_term_eval.getSelectionModel().getSelectedItem();
+//            int index = cmb_term_eval.getSelectionModel().getSelectedIndex();
             try {
-                AcademicTermMapping selected = termDetails.get(index).get(termName);
+                selected = newValue==null? SystemProperties.instance().getCurrentAcademicTerm() : newValue;
+                System.out.println("SELECTED: " + selected.getId());
                 this.setCmbValues(selected.getId());
                 this.setComboBoxLimit(cmb_from_eval_main, cmb_to_eval_main, 0);
             } catch (Exception e) {
+                e.printStackTrace();
             }
         });
         cmb_sort_status_eval.valueProperty().addListener((a)->{
@@ -321,21 +352,23 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 lbl_title_eval.setText(MODE.equalsIgnoreCase(EVALUATION)? "Successful Evaluation Summary" : "Successful Adding & Changing Summary");
                 // change vbox_table values
             }
-            System.out.println("FILTER DETAILS********************");
-            String termName = cmb_term_eval.getSelectionModel().getSelectedItem();
-            int index = cmb_term_eval.getSelectionModel().getSelectedIndex();
-            String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
-            String from_str = cmb_from_eval_main.getSelectionModel().getSelectedItem();
-            String to_str = cmb_to_eval_main.getSelectionModel().getSelectedItem();
-            String type = cmb_type_eval_main.getSelectionModel().getSelectedItem();
-            
-            System.out.println("TERM: " + termName);
-            System.out.println("STATUS: " + status);
-            System.out.println("FROM: " + from_str);
-            System.out.println("TO: " + to_str);
-            System.out.println("TYPE: " + type);
-            System.out.println("MODE: " + MODE);
-            System.out.println("***************************");
+//            this.setCmbValues(selected==null? SystemProperties.instance().getCurrentAcademicTerm().getId() : selected.getId());
+//            this.setComboBoxLimit(cmb_from_eval_main, cmb_to_eval_main, 0);
+//            System.out.println("FILTER DETAILS********************");
+//            String termName = cmb_term_eval.getSelectionModel().getSelectedItem().getSchool_year();
+////            int index = cmb_term_eval.getSelectionModel().getSelectedIndex();
+//            String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
+//            String from_str = cmb_from_eval_main.getSelectionModel().getSelectedItem();
+//            String to_str = cmb_to_eval_main.getSelectionModel().getSelectedItem();
+//            String type = cmb_type_eval_main.getSelectionModel().getSelectedItem();
+//            
+//            System.out.println("TERM: " + termName);
+//            System.out.println("STATUS: " + status);
+//            System.out.println("FROM: " + from_str);
+//            System.out.println("TO: " + to_str);
+//            System.out.println("TYPE: " + type);
+//            System.out.println("MODE: " + MODE);
+//            System.out.println("***************************");
             this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing);
         });
         super.addClickEvent(btn_filter_eval_main, ()->{
@@ -379,7 +412,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                     .showWarning();
             btn_print_eval_main.setDisable(true);
             return;
-        }EvaluationMapping ref = null;
+        }
+        EvaluationMapping ref = null;
         for (int i = 0; i < results.size(); i++) {
             EvaluationMapping result = results.get(i);
             ref = result;
@@ -399,7 +433,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         String fr = cmb_from_eval_main.getSelectionModel().getSelectedItem();
         String to = cmb_to_eval_main.getSelectionModel().getSelectedItem();
         SimpleDateFormat month = new SimpleDateFormat("MMMMM");
-        print.reportDescription = cmb_term_eval.getSelectionModel().getSelectedItem();
+        AcademicTermMapping selected = cmb_term_eval.getSelectionModel().getSelectedItem();
+        print.reportDescription = selected.getSchool_year() + " " + selected.getSemester();
         if(cmbChanged) {
             print.reportDescription += "";
         } else if(fr==null || to==null || ref==null || ref.getEvaluation_date()==null) {
@@ -448,9 +483,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         btn_print_eval_main.setDisable(false);
         cmbChanged = false;
         FetchEvaluationResult fetch = new FetchEvaluationResult();
-        String termName = cmb_term_eval.getSelectionModel().getSelectedItem();
-        int index = cmb_term_eval.getSelectionModel().getSelectedIndex();
-        AcademicTermMapping selected = termDetails.get(index).get(termName);
+//        String termName = cmb_term_eval.getSelectionModel().getSelectedItem();
+//        int index = cmb_term_eval.getSelectionModel().getSelectedIndex();
+        selected = cmb_term_eval.getSelectionModel().getSelectedItem()==null? SystemProperties.instance().getCurrentAcademicTerm() : cmb_term_eval.getSelectionModel().getSelectedItem();
         fetch.ACADTERM_id = selected.getId();
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
         
@@ -474,7 +509,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             }
         }   
         fetch.from = from;
-        fetch.mode = button.getText();
+        fetch.mode = MODE;//button.getText();
         fetch.to = to;
         fetch.type = cmb_type_eval_main.getSelectionModel().getSelectedItem();
         fetch.status= cmb_sort_status_eval.getSelectionModel().getSelectedItem().toUpperCase();
@@ -665,7 +700,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
     private void changeView(Node node) {
         this.detachAll();
-        cmb_type_eval_main.getSelectionModel().selectFirst();
+//        cmb_type_eval_main.getSelectionModel().selectFirst();
         Animate.fade(node, 150, ()->{
             vbox_eval_main.setVisible(false);
             node.setVisible(true);
