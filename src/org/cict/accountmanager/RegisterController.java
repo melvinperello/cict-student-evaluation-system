@@ -74,9 +74,6 @@ public class RegisterController extends SceneFX implements ControllerFX{
     @FXML
     private JFXButton btn_Cancel;
 
-    @FXML
-    private JFXButton btn_settings;
-
     @Override
     public void onInitialization() {
         bindScene(application_root);

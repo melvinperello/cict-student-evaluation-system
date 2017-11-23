@@ -241,29 +241,6 @@
                   <Insets left="10.0" />
                </padding>
             </VBox>
-            <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-               <padding>
-                  <Insets right="20.0" />
-               </padding>
-               <children>
-                  <VBox alignment="CENTER_RIGHT">
-                     <children>
-                        <JFXButton fx:id="btn_settings" styleClass="label" text="Server's IP">
-                           <graphic>
-                              <ImageView fitHeight="27.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../sys/org/cict/layout/home/images/settings.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </JFXButton>
-                     </children>
-                     <VBox.margin>
-                        <Insets top="7.0" />
-                     </VBox.margin>
-                  </VBox>
-               </children>
-            </VBox>
          </children>
          <padding>
             <Insets left="20.0" />
