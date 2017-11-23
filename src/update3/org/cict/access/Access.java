@@ -24,7 +24,11 @@
 package update3.org.cict.access;
 
 import app.lazy.models.AccountFacultyMapping;
+import app.lazy.models.Database;
 import com.jhmvin.Mono;
+import com.melvin.mono.fx.bootstrap.M;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.cict.authentication.authenticator.CollegeFaculty;
 
 /**
@@ -203,6 +207,23 @@ public class Access {
         Object[] result = new Object[2];
         result[0] = controller.isAuthorized();
         result[1] = controller.getAttachedFile();
+        return result;
+    }
+    
+    public static boolean enterTransactionPin(Stage parentStage) {
+        boolean result = false;
+        AccountFacultyMapping user = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        TransactionPin enterPin = M.load(TransactionPin.class);
+        enterPin.setUser(user);
+        enterPin.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            enterPin.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = enterPin.createChildStage(parentStage);
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+            result = enterPin.canProceed();
+        }
         return result;
     }
 }

@@ -350,7 +350,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         super.addClickEvent(btnEvaluate, () -> {
             this.hideDropDown();
             checkEvaluationService(() -> {
-                saveEvaluation();
+                if(Access.enterTransactionPin(super.getStage()))
+                    saveEvaluation();
+                else {
+                    Mono.fx().snackbar().showError(application_root, "Transaction Denied");
+                }
             });
         });
 
@@ -1106,7 +1110,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .stageCenter()
                     .stageShowAndWait();
 
-            evaluationMap.setPrint_type(controller.getSelected().toUpperCase());
+            evaluationMap.setPrint_type(controller.getSelected()==null? "NOT_SET" : controller.getSelected().toUpperCase());
             Database.connect().evaluation().update(evaluationMap);
         }
 
