@@ -57,6 +57,12 @@ public class RecoveryController extends SceneFX implements ControllerFX{
     private VBox vbox_login;
 
     @FXML
+    private JFXPasswordField txt_pin;
+
+    @FXML
+    private JFXPasswordField txt_confirm_pin;
+
+    @FXML
     private ComboBox cmb_questions;
 
     @FXML
@@ -67,9 +73,6 @@ public class RecoveryController extends SceneFX implements ControllerFX{
 
     @FXML
     private JFXButton btn_Register;
-
-    @FXML
-    private JFXButton btn_settings;
 
     private final AccountFacultyMapping accountFaculty;
     private final String bulsu_id;
@@ -86,6 +89,19 @@ public class RecoveryController extends SceneFX implements ControllerFX{
     }
 
     private void addTextFieldFilters() {
+        StringFilter textPin = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(10)
+                .setNoLeadingTrailingSpaces(true)
+                .setFilterManager(filterManager->{
+                    if(!filterManager.isValid()) {
+                        Mono.fx().alert().createWarning().setHeader("Warning")
+                                .setMessage(filterManager.getMessage())
+                                .show();
+                    }
+                });
+        textPin.clone().setTextSource(txt_pin).applyFilter();
+        textPin.clone().setTextSource(txt_confirm_pin).applyFilter();
         StringFilter textAns = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
@@ -115,8 +131,62 @@ public class RecoveryController extends SceneFX implements ControllerFX{
             this.onSave();
         });
     }
+     
+    private boolean checkIfEmpty(String pin, String confirmPin){
+        if(pin.isEmpty()){
+            Mono.fx()
+                    .alert()
+                    .createWarning()
+                    .setTitle("Credentials")
+                    .setHeader("Transaction Pin Is Empty!")
+                    .setMessage("Please enter your transaction pin. "
+                            + "This will be used in mostly in evaluation and adding ang changing transactions.")
+                    .showAndWait();
+            this.requestFocus(this.txt_pin);
+            return false;
+        }
+        if(pin.length() != 6) {
+            Mono.fx()
+                    .alert()
+                    .createWarning()
+                    .setTitle("Credentials")
+                    .setHeader("Six Digit Transaction Pin")
+                    .setMessage("Please provide a six (6) digit pin.")
+                    .showAndWait();
+            this.requestFocus(this.txt_pin);
+            return false;
+        }
+        if(confirmPin.isEmpty()){
+            Mono.fx()
+                    .alert()
+                    .createWarning()
+                    .setTitle("Credentials")
+                    .setHeader("Confirm Pin Is Empty!")
+                    .setMessage("Please re-enter your pin.")
+                    .showAndWait();
+            this.requestFocus(this.txt_confirm_pin);
+            return false;
+        }
+        if(!pin.equals(confirmPin)){
+            Mono.fx()
+                    .alert()
+                    .createWarning()
+                    .setTitle("Credentials")
+                    .setHeader("Pin Not Matched!")
+                    .setMessage("Please re-enter your pin correctly.")
+                    .showAndWait();
+            this.requestFocus(this.txt_confirm_pin);
+            return false;
+        }
+        return true;
+    }
     
     private void onSave(){
+        String pin = (this.txt_pin.getText());
+        String confirmPin = (this.txt_confirm_pin.getText());
+        if(!checkIfEmpty(pin, confirmPin))
+            return;
+        
         String question = this.cmb_questions.getSelectionModel().getSelectedItem().toString().toUpperCase();
         String answer = MonoString.removeExtraSpace(this.txt_answer.getText().toUpperCase());
         String reenter = MonoString.removeExtraSpace(this.txt_reenter.getText().toUpperCase());
@@ -129,6 +199,7 @@ public class RecoveryController extends SceneFX implements ControllerFX{
             validateRegister.password = this.accountFaculty.getPassword();
             validateRegister.question = question;
             validateRegister.answer = Mono.security().hashFactory().hash_sha512(answer);
+            validateRegister.pin = Mono.security().hashFactory().hash_sha512(pin);
             validateRegister.complete = true;
             
             validateRegister.setOnStart(onStart ->{

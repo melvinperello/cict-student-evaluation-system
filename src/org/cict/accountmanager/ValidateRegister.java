@@ -29,6 +29,7 @@ import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import update3.org.cict.access.Access;
 
 /**
  *
@@ -41,6 +42,7 @@ public class ValidateRegister extends Transaction{
     public String password;
     public String question;
     public String answer;
+    public String pin;
     public boolean complete = false;
     
     private AccountFacultyMapping accountFaculty;
@@ -109,8 +111,10 @@ public class ValidateRegister extends Transaction{
         this.accountFaculty.setPassword(this.password);
         this.accountFaculty.setAccess_level(this.faculty.getDesignation());
         if(this.complete){
+            this.accountFaculty.setTransaction_pin(this.pin);
             this.accountFaculty.setRecovery_question(this.question);
             this.accountFaculty.setRecovery_answer(this.answer);
+            this.accountFaculty.setAccess_level(Access.ACCESS_FACULTY);
             Integer i = Database
                     .connect()
                     .account_faculty()
