@@ -103,7 +103,7 @@ public class RecoveryController extends SceneFX implements ControllerFX{
         textPin.clone().setTextSource(txt_pin).applyFilter();
         textPin.clone().setTextSource(txt_confirm_pin).applyFilter();
         StringFilter textAns = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT)
+//                .setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager->{

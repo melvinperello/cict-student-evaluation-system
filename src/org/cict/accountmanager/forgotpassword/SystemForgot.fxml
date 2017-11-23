@@ -206,7 +206,7 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="vbox_otp" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="458.0" prefWidth="392.0" spacing="5.0" visible="false">
+                  <VBox fx:id="vbox_otp" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="458.0" prefWidth="392.0" spacing="5.0">
                      <children>
                         <HBox alignment="CENTER">
                            <children>
@@ -322,6 +322,7 @@
                               <Insets left="90.0" right="90.0" top="10.0" />
                            </VBox.margin>
                         </VBox>
+                        <Label fx:id="lbl_resend1" prefHeight="42.0" prefWidth="354.0" text="If the mobile number is no longer active, please ask your admin about this matter." textAlignment="CENTER" textFill="#404e5d" wrapText="true" />
                      </children>
                   </VBox>
                   <VBox fx:id="vbox_reset" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="458.0" prefWidth="392.0" spacing="5.0" visible="false">
