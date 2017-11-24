@@ -253,7 +253,7 @@ public class SystemLogin extends MonoLauncher {
             validateLogin.password = pass;
 
             validateLogin.whenStarted(() -> {
-                sleepEvent.set(true);
+//                sleepEvent.set(true);
                 GenericLoadingShow.instance().show();
             });
 
@@ -262,6 +262,7 @@ public class SystemLogin extends MonoLauncher {
                 if (validateLogin.isAuthenticated()) {
                     checkAccess(validateLogin.getCreatedSessionID());
                 } else {
+                    this.removeEnterEvent();
                     Mono.fx()
                             .alert()
                             .createInfo()
@@ -269,11 +270,7 @@ public class SystemLogin extends MonoLauncher {
                             .setHeader("Authentication Failed")
                             .setMessage(validateLogin.getAuthenticatorMessage())
                             .showAndWait();
-                    System.out.println(sleepEvent.get());
-                    sleepEvent.set(true);
-                    System.out.println(sleepEvent.get());
-                    sleepEvent.set(false);
-                    System.out.println(sleepEvent.get());
+                    this.addEnterEvent();
                 }
             });
 
@@ -291,6 +288,7 @@ public class SystemLogin extends MonoLauncher {
     }
 
     private void onLoginError() {
+        this.removeEnterEvent();
         GenericLoadingShow.instance().hide();
         Mono.fx()
                 .alert()
@@ -300,6 +298,7 @@ public class SystemLogin extends MonoLauncher {
                 .setMessage("We cannot process your login request at "
                         + "the moment. Sorry For The Inconvenience, Thank You!")
                 .showAndWait();
+        this.addEnterEvent();
     }
 
     /**
@@ -358,6 +357,7 @@ public class SystemLogin extends MonoLauncher {
             return false;
         }
         if (pass.isEmpty()) {
+            this.removeEnterEvent();
             Mono.fx()
                     .alert()
                     .createWarning()
@@ -365,6 +365,7 @@ public class SystemLogin extends MonoLauncher {
                     .setHeader("Password Field is Empty!")
                     .setMessage("Please fill up the field with your password. Thank You !")
                     .showAndWait();
+            this.addEnterEvent();
 
             return false;
         }
