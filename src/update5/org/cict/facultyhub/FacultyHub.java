@@ -711,7 +711,13 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                         + subjectCode;
                 boolean printed = StudentMasterListPrinter.export(fileName, exportTx.getStudentData());
                 if (!printed) {
-                    Mono.fx().snackbar().showError(application_root, "Unable to open Excel File");
+                    Mono.fx().thread().wrap(()->{
+                        Mono.fx().snackbar().showError(application_root, "Unable to open Excel File");
+                    });
+                } else {
+                    Mono.fx().thread().wrap(()->{
+                        Mono.fx().snackbar().showSuccess(application_root, "Excel File Exported");
+                    });
                 }
             });
             openTask.start();
@@ -735,9 +741,6 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(this.getStage());
         if (selectedDirectory == null) {
-            Notifications.create().darkStyle()
-                    .title("Nothing Happened")
-                    .text("No Location Selected").showWarning();
             return;
         }
         StudentMasterListPrinter.setExcelPath(selectedDirectory.getAbsolutePath());

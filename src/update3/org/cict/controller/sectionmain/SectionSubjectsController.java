@@ -51,6 +51,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.io.File;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -61,11 +62,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update3.org.cict.ChoiceRange;
 import update3.org.cict.scheduling.ScheduleConstants;
@@ -693,8 +696,18 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                         + this.lbl_subject_code_top.getText();
                 boolean printed = StudentMasterListPrinter.export(fileName, exportTx.getStudentData());
                 if (!printed) {
-                    Mono.fx().snackbar().showError(application_root, "Unable to open Excel File");
+                    Mono.fx().thread().wrap(()->{
+                        Mono.fx().snackbar().showError(application_root, "Unable to open Excel File");
+                    });
+                } else {
+                    Mono.fx().thread().wrap(()->{
+                        Mono.fx().snackbar().showSuccess(application_root, "Excel File Exported");
+                    });
                 }
+            });
+            openTask.whenFinished(()->{
+                super.cursorDefault();
+                this.btn_export.setDisable(false);
             });
             openTask.start();
 
@@ -710,9 +723,14 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         });
 
         exportTx.whenFinished(() -> {
-            super.cursorDefault();
-            this.btn_export.setDisable(false);
         });
+        
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(this.getStage());
+        if (selectedDirectory == null) {
+            return;
+        }
+        StudentMasterListPrinter.setExcelPath(selectedDirectory.getAbsolutePath());
         exportTx.transact();
     }
 
