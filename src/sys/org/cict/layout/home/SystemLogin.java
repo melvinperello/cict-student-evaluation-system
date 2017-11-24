@@ -29,12 +29,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.notify.AlertMessage;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -91,7 +91,6 @@ public class SystemLogin extends MonoLauncher {
 
     @Override
     public void onStartUp() {
-        sleepEvent.set(true);
         //----------------------------------------------------------------------
     }
 
@@ -127,7 +126,6 @@ public class SystemLogin extends MonoLauncher {
                         .showAndWait();
 //                MainApplication.die(0);
             }
-            sleepEvent.set(false);
         });
 
         startHibernate.transact();
@@ -149,6 +147,33 @@ public class SystemLogin extends MonoLauncher {
 
     private void removeEnterEvent() {
         this.getApplicationRoot().removeEventHandler(KeyEvent.KEY_PRESSED, this.loginKeyEvent);
+    }
+
+    private void showMessage(String type, String title, String header, String messaages) {
+        this.removeEnterEvent();
+        //----------------------------------------------------------------------
+        AlertMessage message = null;
+        switch (type) {
+            case "warn":
+                message = Mono.fx().alert().createWarning();
+                break;
+            case "error":
+                message = Mono.fx().alert().createError();
+            case "info":
+                message = Mono.fx().alert().createInfo();
+                break;
+            default:
+                message = Mono.fx().alert().createInfo();
+                break;
+        }
+        //----------------------------------------------------------------------
+        message.setTitle(title)
+                .setHeader(header)
+                .setMessage(messaages)
+                .showAndWait();
+        //----------------------------------------------------------------------
+        this.addEnterEvent();
+
     }
     //--------------------------------------------------------------------------
 
@@ -175,7 +200,6 @@ public class SystemLogin extends MonoLauncher {
 //        Mono.fx().key(KeyCode.ENTER).release(this.getApplicationRoot(), () -> {
 //            this.onLogin();
 //        });
-
         this.addEnterEvent();
         MonoClick.addClickEvent(btn_login, () -> {
             this.onLogin();
@@ -224,14 +248,8 @@ public class SystemLogin extends MonoLauncher {
         });
     }
 
-    private AtomicBoolean sleepEvent = new AtomicBoolean(true);
-
     //--------------------------------------------------------------------------
     private void onLogin() {
-        System.out.println("SLEEP: " + sleepEvent);
-        if (sleepEvent.get()) {
-            return;
-        }
         String user = this.txt_username.getText().trim();
         String pass = this.txt_password.getText().trim();
         if (this.checkEmpty(user, pass)) {
@@ -253,7 +271,6 @@ public class SystemLogin extends MonoLauncher {
             validateLogin.password = pass;
 
             validateLogin.whenStarted(() -> {
-//                sleepEvent.set(true);
                 GenericLoadingShow.instance().show();
             });
 
@@ -262,15 +279,15 @@ public class SystemLogin extends MonoLauncher {
                 if (validateLogin.isAuthenticated()) {
                     checkAccess(validateLogin.getCreatedSessionID());
                 } else {
-                    this.removeEnterEvent();
-                    Mono.fx()
-                            .alert()
-                            .createInfo()
-                            .setTitle("Authentication Gateway")
-                            .setHeader("Authentication Failed")
-                            .setMessage(validateLogin.getAuthenticatorMessage())
-                            .showAndWait();
-                    this.addEnterEvent();
+//                    Mono.fx()
+//                            .alert()
+//                            .createInfo()
+//                            .setTitle("Authentication Gateway")
+//                            .setHeader("Authentication Failed")
+//                            .setMessage(validateLogin.getAuthenticatorMessage())
+//                            .showAndWait();
+                    showMessage("info", "Authentication Gateway", "Authentication Failed", validateLogin.getAuthenticatorMessage());
+
                 }
             });
 
@@ -288,17 +305,17 @@ public class SystemLogin extends MonoLauncher {
     }
 
     private void onLoginError() {
-        this.removeEnterEvent();
         GenericLoadingShow.instance().hide();
-        Mono.fx()
-                .alert()
-                .createError()
-                .setTitle("Authentication Gateway")
-                .setHeader("Authentication Error")
-                .setMessage("We cannot process your login request at "
-                        + "the moment. Sorry For The Inconvenience, Thank You!")
-                .showAndWait();
-        this.addEnterEvent();
+//        Mono.fx()
+//                .alert()
+//                .createError()
+//                .setTitle("Authentication Gateway")
+//                .setHeader("Authentication Error")
+//                .setMessage("We cannot process your login request at "
+//                        + "the moment. Sorry For The Inconvenience, Thank You!")
+//                .showAndWait();
+        showMessage("error", "Authentication Gateway", "Authentication Error",
+                "We cannot process your login request at the moment. Sorry For The Inconvenience, Thank You!");
     }
 
     /**
@@ -344,29 +361,29 @@ public class SystemLogin extends MonoLauncher {
      */
     private boolean checkEmpty(String user, String pass) {
         if (user.isEmpty()) {
-            this.removeEnterEvent();
-            Mono.fx()
-                    .alert()
-                    .createWarning()
-                    .setTitle("Credentials")
-                    .setHeader("Username Field is Empty!")
-                    .setMessage("Please fill up the field with your username. Thank You !")
-                    .showAndWait();
-            this.addEnterEvent();
+//            this.removeEnterEvent();
+//            Mono.fx()
+//                    .alert()
+//                    .createWarning()
+//                    .setTitle("Credentials")
+//                    .setHeader("Username Field is Empty!")
+//                    .setMessage("Please fill up the field with your username. Thank You !")
+//                    .showAndWait();
+//            this.addEnterEvent();
+            showMessage("warn", "Credentials", "Username Field is Empty!", "Please fill up the field with your username. Thank You !");
 
             return false;
         }
         if (pass.isEmpty()) {
-            this.removeEnterEvent();
-            Mono.fx()
-                    .alert()
-                    .createWarning()
-                    .setTitle("Credentials")
-                    .setHeader("Password Field is Empty!")
-                    .setMessage("Please fill up the field with your password. Thank You !")
-                    .showAndWait();
-            this.addEnterEvent();
+//            Mono.fx()
+//                    .alert()
+//                    .createWarning()
+//                    .setTitle("Credentials")
+//                    .setHeader("Password Field is Empty!")
+//                    .setMessage("Please fill up the field with your password. Thank You !")
+//                    .showAndWait();
 
+            showMessage("warn", "Credentials", "Password Field is Empty!", "Please fill up the field with your password. Thank You !");
             return false;
         }
         return true;
