@@ -64,8 +64,18 @@ public class ValidateLogin extends Transaction {
      * Flag Values.
      */
     private boolean accountExisting = true;
+
+    public boolean isAccountExisting() {
+        return accountExisting;
+    }
+    
     private String accountStatus = "OK";
     private boolean wrongPassword = false;
+
+    public boolean isWrongPassword() {
+        return wrongPassword;
+    }
+    
     private String blocked_until = "";
     /**
      * Flag Passed Values (Results)

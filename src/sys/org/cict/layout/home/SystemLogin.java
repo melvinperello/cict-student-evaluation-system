@@ -287,7 +287,14 @@ public class SystemLogin extends MonoLauncher {
 //                            .setMessage(validateLogin.getAuthenticatorMessage())
 //                            .showAndWait();
                     showMessage("info", "Authentication Gateway", "Authentication Failed", validateLogin.getAuthenticatorMessage());
-
+                    if(!validateLogin.isAccountExisting()) {
+                        txt_username.setText("");
+                        txt_password.setText("");
+                        this.requestFocus(txt_username);
+                    } else if(validateLogin.isWrongPassword()) {
+                        txt_password.setText("");
+                        this.requestFocus(txt_password);
+                    }
                 }
             });
 
