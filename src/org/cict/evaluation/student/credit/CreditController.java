@@ -303,10 +303,10 @@ public class CreditController implements ControllerFX {
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = "grade_history_" + this.STUDENT_MAP.getId() + "_" + dateToday;
-        print.reportDescription = WordUtils.capitalizeFully(lbl_STUDENT_name.getText()) + "\n"
+        print.reportTitleIntro = WordUtils.capitalizeFully(lbl_STUDENT_name.getText()) + "\n"
                 + lbl_CURRICULUM_name.getText() + "\n"
                         + "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
-        print.reportTitle = "Grade History";
+        print.reportTitleHeader = "Grade History";
         
         print.whenStarted(() -> {
             btn_print_history.setDisable(true);

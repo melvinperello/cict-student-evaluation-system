@@ -560,6 +560,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String username = CollegeFaculty.instance().getUSERNAME();
@@ -567,17 +568,18 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         String fr = cmb_from.getSelectionModel().getSelectedItem();
         String to = cmb_to.getSelectionModel().getSelectedItem();
         SimpleDateFormat month = new SimpleDateFormat("MMMMM");
-        print.reportDescription = WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
+        print.reportTitleIntro = CollegeFaculty.instance().getBULSU_ID().toUpperCase() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
         if(cmbChanged) {
-            print.reportDescription = "";
+            print.reportTitleIntro = null;
+            print.reportOtherDetail = print.reportTitleIntro;//CollegeFaculty.instance().getBULSU_ID().toUpperCase() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
         } else if(fr==null || to==null || ref==null || ref.getTime()==null) {
-            print.reportDescription += "\nAs of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+            print.reportOtherDetail = "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
         } else if(fr.equalsIgnoreCase(to)) {
-            print.reportDescription += "\n"+ formatter_display.format(ref.getTime());
+            print.reportOtherDetail = formatter_display.format(ref.getTime());
          } else
-            print.reportDescription += "\nFrom " + fr + " to " + to;
+            print.reportOtherDetail = "From " + fr + " to " + to;
         
-        print.reportTitle = "Account Log And Attempts";
+        print.reportTitleHeader = "Account Log And Attempts";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
             btn_filter.setDisable(true);
@@ -596,7 +598,8 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     .showInformation();
         });
         print.whenSuccess(() -> {
-            btn_print.setDisable(false);
+//            btn_print.setDisable(false);
+//            btn_filter.setDisable(false);
             Notifications.create()
                     .title("Printing Results")
                     .text("Please wait a moment.")
@@ -604,6 +607,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         });
         print.whenFinished(() -> {
             btn_print.setDisable(false);
+            btn_filter.setDisable(false);
             super.cursorDefault();
         });
         //----------------------------------------------------------------------

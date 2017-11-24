@@ -39,9 +39,12 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.Utilities;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.melvin.mono.fx.bootstrap.M;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.cict.reports.profile.student.StudentProfile;
 
 /**
@@ -200,7 +203,7 @@ public class ReportsUtility {
         p.setSpacingAfter(3);
         p.setAlignment(Element.ALIGN_CENTER);
         if(reportDescription_!=null)
-            p.add(new Chunk(reportDescription_ + "\n",font8Plain));
+            p.add(new Chunk(reportDescription_ + "\n",font7Plain));
         
         p.add(getTextUnderlined((reportTitle_==null? "" : reportTitle_.toUpperCase()) + "\n",font10Bold));
         
@@ -267,4 +270,16 @@ public class ReportsUtility {
         return cell;
     }
     
+    public static Document paperSizeChooser(Stage stage) {
+        PaperSizeChooser sizeChooser = M.load(PaperSizeChooser.class);
+        sizeChooser.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            sizeChooser.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = sizeChooser.createChildStage(stage);
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+        return sizeChooser.getChoosenSize();
+    }
 }

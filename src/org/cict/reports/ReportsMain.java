@@ -434,7 +434,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(this.paperSizeChooser());
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
@@ -443,7 +443,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         String to = cmb_to_eval_main.getSelectionModel().getSelectedItem();
         SimpleDateFormat month = new SimpleDateFormat("MMMMM");
         AcademicTermMapping selected = cmb_term_eval.getSelectionModel().getSelectedItem();
-        print.reportDescription = selected.getSchool_year() + " " + selected.getSemester();
+        print.reportTitleIntro = selected.getSchool_year() + " " + selected.getSemester();
         if(cmbChanged) {
 //            print.reportDescription += "";
         } else if(fr==null || to==null || ref==null || ref.getEvaluation_date()==null) {
@@ -453,7 +453,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
          } else
             print.reportOtherDetail = "From " + fr + " to " + to;
         
-        print.reportTitle = lbl_title_eval.getText();
+        print.reportTitleHeader = lbl_title_eval.getText();
         print.whenStarted(() -> {
             btn_print_eval_main.setDisable(true);
             super.cursorWait();
@@ -483,19 +483,6 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         //----------------------------------------------------------------------
         print.transact();
-    }
-    
-    private Document paperSizeChooser() {
-        PaperSizeChooser sizeChooser = M.load(PaperSizeChooser.class);
-        sizeChooser.onDelayedStart(); // do not put database transactions on startUp
-        try {
-            sizeChooser.getCurrentStage().showAndWait();
-        } catch (NullPointerException e) {
-            Stage a = sizeChooser.createChildStage(super.getStage());
-            a.initStyle(StageStyle.UNDECORATED);
-            a.showAndWait();
-        }
-        return sizeChooser.getChoosenSize();
     }
     
     private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", ENCODING = " ENCODING";

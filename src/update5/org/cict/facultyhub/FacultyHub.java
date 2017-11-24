@@ -60,6 +60,7 @@ import javafx.stage.DirectoryChooser;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.home.Home;
@@ -796,6 +797,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             String[] colNames = new String[]{"Student Number", "Student Name"};
             ArrayList<String[]> rowData = new ArrayList<>();
             PrintResult print = new PrintResult();
+            print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
 
             for (int i = 0; i < preview.size(); i++) {
                 MasterListPdfStudent result = preview.get(i);
@@ -807,9 +809,10 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             print.ROW_DETAILS = rowData;
             SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
             print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Master List " + String.valueOf(Calendar.getInstance().getTimeInMillis());
-            print.reportDescription = subject.getCode() + " Student List";
+            print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
 
-            print.reportTitle = "Master List";
+            print.reportTitleHeader = subject.getCode() + " Master List";
+            print.reportOtherDetail = WordUtils.capitalizeFully(subject.getDescriptive_title());
             print.whenStarted(() -> {
                 btn_print.setDisable(true);
                 super.cursorWait();
@@ -938,9 +941,9 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         print.ROW_DETAILS = rowData;
         SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
         print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Encode Status Report " + String.valueOf(Calendar.getInstance().getTimeInMillis());
-        print.reportDescription = subject.getCode() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
+        print.reportTitleIntro = subject.getCode() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
 
-        print.reportTitle = "Encode Status Report";
+        print.reportTitleHeader = "Encode Status Report";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
             super.cursorWait();

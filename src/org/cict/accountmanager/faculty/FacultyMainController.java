@@ -65,6 +65,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Criterion;
@@ -320,13 +322,15 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "faculty_list_" + cmb_sort.getSelectionModel().getSelectedItem().toLowerCase();
         
-        print.reportDescription = reportDescription;
+        print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
+        print.reportOtherDetail = reportDescription;
         
-        print.reportTitle = "Faculty List";
+        print.reportTitleHeader = "Faculty Result List";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
             super.cursorWait();

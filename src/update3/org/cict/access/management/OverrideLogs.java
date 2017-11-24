@@ -456,14 +456,14 @@ public class OverrideLogs extends MonoLauncher {
         String fr = cmb_from.getSelectionModel().getSelectedItem();
         String to = cmb_to.getSelectionModel().getSelectedItem();
         if(cmbChanged) {
-            print.reportDescription = "";
+            print.reportTitleIntro = null;
         } else if(fr==null || to==null || ref==null || ref.getExecuted_date()==null) {
-            print.reportDescription = "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+            print.reportOtherDetail = "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
         } else if(fr.equalsIgnoreCase(to)) {
-            print.reportDescription = formatter_display.format(ref.getExecuted_date());
+            print.reportOtherDetail = formatter_display.format(ref.getExecuted_date());
          } else
-            print.reportDescription = "From " + fr + " to " + to;
-        print.reportTitle = "System Override Logs";
+            print.reportOtherDetail = "From " + fr + " to " + to;
+        print.reportTitleHeader = "System Override Logs";
         print.whenStarted(() -> {
             btn_print_filtered.setDisable(true);
             super.setCursor(Cursor.WAIT);

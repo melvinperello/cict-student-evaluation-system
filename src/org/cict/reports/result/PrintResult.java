@@ -38,7 +38,7 @@ import org.cict.reports.ReportsDirectory;
  */
 public class PrintResult extends Transaction {
 
-    public String reportTitle = null, reportDescription = null, reportOtherDetail = null;
+    public String reportTitleHeader = null, reportTitleIntro = null, reportOtherDetail = null;
     public String[] columnNames = null;
     public ArrayList<String[]> ROW_DETAILS = null;
     public String fileName = "";
@@ -79,10 +79,10 @@ public class PrintResult extends Transaction {
 
         ResultReport def = new ResultReport(RESULT);
         def.setDocumentFormat(documentFormat);
-        def.REPORT_TITLE = reportTitle;
+        def.REPORT_TITLE = reportTitleHeader;
         def.COLUMN_NAMES = columnNames;
         def.ROW_DETAILS = ROW_DETAILS;
-        def.REPORT_DESCRIPTION = reportDescription;
+        def.REPORT_DESCRIPTION = reportTitleIntro;
         def.REPORT_OTHER_DETAIL = reportOtherDetail;
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMMM-yyyy hh:mm: aa");
         def.DATETIME = formatter.format(Mono.orm().getServerTime().getDateWithFormat());

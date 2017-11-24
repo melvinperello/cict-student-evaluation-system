@@ -60,6 +60,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Criterion;
@@ -208,12 +209,13 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "student_list_" + searchWord.toLowerCase();
-        print.reportDescription = "Student Search Result For " + searchWord.toUpperCase();
-
-        print.reportTitle = "Student List";
+        print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
+        print.reportOtherDetail = "Student Search Result For " + searchWord.toUpperCase() + (chkbx_onlyEnrolled.isSelected()? " (Enrolled Students)" : "");
+        print.reportTitleHeader = "Student Result List";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
             super.cursorWait();

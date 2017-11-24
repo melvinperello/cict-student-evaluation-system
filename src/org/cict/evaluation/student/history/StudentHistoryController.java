@@ -116,9 +116,9 @@ public class StudentHistoryController implements ControllerFX{
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "student_history_" + MonoString.removeAll(this.STUDENT.getId(), " ").toLowerCase();
-        print.reportDescription = this.lblName.getText() + "\n" + this.lblCourse.getText();
+        print.reportTitleIntro = this.lblName.getText() + "\n" + this.lblCourse.getText();
 
-        print.reportTitle = "Student Evalutaion History";
+        print.reportTitleHeader = "Student Evalutaion History";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
         });
