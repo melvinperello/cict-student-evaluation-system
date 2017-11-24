@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" stylesheets="@../../../update3/org/cict/my_account/metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="metro-base-color" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="20.0">
          <children>
@@ -246,7 +246,7 @@
                            <children>
                               <StackPane fx:id="stack_eval_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@../../../update3/org/cict/my_account/metro-ui-table.css" />
+                                    <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
                                  </children>
                               </StackPane>
                            </children>

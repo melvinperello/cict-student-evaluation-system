@@ -56,6 +56,7 @@ public class ReportsUtility {
     private static final Font font17Bold = new Font(FontFamily.UNDEFINED, 17, Font.BOLD);
     private static final Font font13Plain = new Font(FontFamily.HELVETICA, 13);
     private static final Font font10Plain = new Font(FontFamily.HELVETICA, 10);
+    private static final Font font10Bold= new Font(FontFamily.HELVETICA, 10, Font.BOLD);
     private static final Font font8Plain = new Font(FontFamily.HELVETICA, 8);
     private static final Font font9Plain = new Font(FontFamily.HELVETICA, 9);
     private static final Font font7Bold = new Font(FontFamily.HELVETICA, 7, Font.BOLD);
@@ -71,24 +72,48 @@ public class ReportsUtility {
     
     public static Document createLongDocument(){
         return new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
-                Utilities.inchesToPoints(13f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50, 50); //lrtb
+                Utilities.inchesToPoints(13f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50); //lrtb
     }
     
-    private static String reportTitle_, reportDescription_;
-    public static void createHeader(Document document, String reportTitle, String reportDescription) throws DocumentException, BadElementException, IOException {
+    public static Document createShortDocument(){
+        return new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
+                Utilities.inchesToPoints(11f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50); //lrtb
+    }
+    
+    public static Document createA4Document(){
+        return new Document(new Rectangle(Utilities.inchesToPoints(8.26f),
+                Utilities.inchesToPoints(11.69f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50); //lrtb
+    }
+    
+    private static String reportTitle_, reportDescription_, reportsOtherDetails;
+    public static void createHeader(Document document, String reportTitle, String reportDescription, String otherDetails) throws DocumentException, BadElementException, IOException {
+        PdfPTable table = new PdfPTable(3);
+//        table.setWidthPercentage(100);
+        table.setWidths(new int[]{1, 2, 1});
         String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
         location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
         Image img = Image.getInstance(ResourceManager.fetchFromResource(ReportsUtility.class, location_logo1));
-        img.setAbsolutePosition(100, 825); //position
-        img.scaleAbsolute(70, 70); //size
-        document.add(img);
-        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(ReportsUtility.class, location_logo2));
-        img2.setAbsolutePosition(445, 825); //position
-        img2.scaleAbsolute(70, 70); //size
-        document.add(img2);
+//        img.setAbsolutePosition(100, 825); //position
+        img.scaleAbsolute(50, 50); //size
+        table.addCell(createCellWithObject(img, false, true));
+        
         reportTitle_ = reportTitle;
         reportDescription_ = reportDescription;
-        document.add(create());
+        reportsOtherDetails = otherDetails;
+        table.addCell(createCellWithObject(create(), false, true));
+        
+        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(ReportsUtility.class, location_logo2));
+//        img2.setAbsolutePosition(445, 825); //position
+        img2.scaleAbsolute(50, 50); //size
+        table.addCell(createCellWithObject(img2, false, true));
+        document.add(table);
+        
+        Paragraph header = new Paragraph(15);
+        header.setAlignment(Element.ALIGN_CENTER);
+        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n",font19Plain));
+        header.add(new Chunk("_____________________________________________________\n\n",font17Bold));
+        header.add(createTitle());
+        document.add(header);
     }
     
     private static String studentName_, studentNumber_, address_;
@@ -164,17 +189,24 @@ public class ReportsUtility {
         header.add(new Chunk("Bulacan State University\n",font17Bold));
         header.add(new Chunk("City of Malolos, Bulacan\n",font13Plain));
         header.add(new Chunk("Tel/Fax (044) 9197800 local 1101\n\n",font9Plain));
-        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n",font19Plain));
-        header.add(new Chunk("_____________________________________________________\n\n",font17Bold));
-        header.add(createTitle());
+//        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n",font19Plain));
+//        header.add(new Chunk("_____________________________________________________\n\n",font17Bold));
+//        header.add(createTitle());
         return header;
     }
     
     private static Paragraph createTitle() {
         Paragraph p = new Paragraph(10);
+        p.setSpacingAfter(3);
         p.setAlignment(Element.ALIGN_CENTER);
-        p.add(getTextUnderlined((reportTitle_==null? "" : reportTitle_) + "\n",font10Plain));
-        p.add(new Chunk((reportDescription_==null? "" : reportDescription_) + "\n\n\n",font7Plain));
+        if(reportDescription_!=null)
+            p.add(new Chunk(reportDescription_ + "\n",font8Plain));
+        
+        p.add(getTextUnderlined((reportTitle_==null? "" : reportTitle_.toUpperCase()) + "\n",font10Bold));
+        
+        if(reportsOtherDetails!=null)
+            p.add(new Chunk(reportsOtherDetails + "\n",font7Plain));
+        p.add(new Chunk("\n", font7Plain));
         return p;
     }
     
@@ -189,6 +221,8 @@ public class ReportsUtility {
         if(!border)
             cell.setBorder(PdfPCell.NO_BORDER);
         if(center){
+            if(tbl instanceof Image)
+                cell.setImage((Image) tbl);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         }
         cell.addElement((Element)tbl);

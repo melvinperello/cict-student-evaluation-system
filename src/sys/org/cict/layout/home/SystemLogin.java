@@ -102,6 +102,7 @@ public class SystemLogin extends MonoLauncher {
         startHibernate.whenStarted(() -> {
             this.vbox_loading.setVisible(true);
             this.vbox_login.setVisible(false);
+            this.removeEnterEvent();
         });
         startHibernate.whenCancelled(() -> {
             System.out.println("ERROR");
@@ -118,6 +119,7 @@ public class SystemLogin extends MonoLauncher {
             }, vbox_login);
         });
         startHibernate.whenFinished(() -> {
+            this.addEnterEvent();
             if (Mono.orm().getSessionFactory() == null) {
                 // no connection
                 Mono.fx().alert().createError().setTitle("No Connection")

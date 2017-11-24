@@ -23,6 +23,7 @@
  */
 package org.cict.reports.result;
 
+import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.text.SimpleDateFormat;
@@ -37,10 +38,15 @@ import org.cict.reports.ReportsDirectory;
  */
 public class PrintResult extends Transaction {
 
-    public String reportTitle = null, reportDescription = null;
+    public String reportTitle = null, reportDescription = null, reportOtherDetail = null;
     public String[] columnNames = null;
     public ArrayList<String[]> ROW_DETAILS = null;
     public String fileName = "";
+    private Document documentFormat;
+
+    public void setDocumentFormat(Document documentFormat) {
+        this.documentFormat = documentFormat;
+    }
     
     
     @Override
@@ -72,10 +78,12 @@ public class PrintResult extends Transaction {
         //------------------------------------------------------------------
 
         ResultReport def = new ResultReport(RESULT);
+        def.setDocumentFormat(documentFormat);
         def.REPORT_TITLE = reportTitle;
         def.COLUMN_NAMES = columnNames;
         def.ROW_DETAILS = ROW_DETAILS;
         def.REPORT_DESCRIPTION = reportDescription;
+        def.REPORT_OTHER_DETAIL = reportOtherDetail;
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMMM-yyyy hh:mm: aa");
         def.DATETIME = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
         def.USER = WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());

@@ -29,6 +29,7 @@ import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.utils.FacultyUtility;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -56,6 +57,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -406,7 +409,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             if(res==-1)
                 return;
         }
-        
+        // select paper size
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
         String[] colNames = new String[]{"Date and Time",status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Evaluator", "Student Number", "Student Name", "Year Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
@@ -431,6 +434,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
+        print.setDocumentFormat(this.paperSizeChooser());
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
@@ -441,13 +445,13 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         AcademicTermMapping selected = cmb_term_eval.getSelectionModel().getSelectedItem();
         print.reportDescription = selected.getSchool_year() + " " + selected.getSemester();
         if(cmbChanged) {
-            print.reportDescription += "";
+//            print.reportDescription += "";
         } else if(fr==null || to==null || ref==null || ref.getEvaluation_date()==null) {
-            print.reportDescription += "\nAs of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+            print.reportOtherDetail = "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
         } else if(fr.equalsIgnoreCase(to)) {
-            print.reportDescription += "\n"+ formatter_display.format(ref.getEvaluation_date());
+            print.reportOtherDetail = ""+ formatter_display.format(ref.getEvaluation_date());
          } else
-            print.reportDescription += "\nFrom " + fr + " to " + to;
+            print.reportOtherDetail = "From " + fr + " to " + to;
         
         print.reportTitle = lbl_title_eval.getText();
         print.whenStarted(() -> {
@@ -479,6 +483,19 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         //----------------------------------------------------------------------
         print.transact();
+    }
+    
+    private Document paperSizeChooser() {
+        PaperSizeChooser sizeChooser = M.load(PaperSizeChooser.class);
+        sizeChooser.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            sizeChooser.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = sizeChooser.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+        return sizeChooser.getChoosenSize();
     }
     
     private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", ENCODING = " ENCODING";

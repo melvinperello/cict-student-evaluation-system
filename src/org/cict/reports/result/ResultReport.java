@@ -40,6 +40,12 @@ public class ResultReport {
     public ResultReport( String res) {
         RESULT = res;
     }
+    
+    private Document documentFormat;
+
+    public void setDocumentFormat(Document documentFormat) {
+        this.documentFormat = documentFormat;
+    }
 
     public int print() {
         try {
@@ -75,7 +81,8 @@ public class ResultReport {
             DATETIME = "DATE NOT FOUND",
             USER = "USER NOT FOUND",
             REPORT_DESCRIPTION = null,
-            TERMINAL = null; 
+            TERMINAL = null,
+            REPORT_OTHER_DETAIL = null; 
     public String[] COLUMN_NAMES;
     public ArrayList<String[]> ROW_DETAILS;
     public void init() {
@@ -92,7 +99,7 @@ public class ResultReport {
      */
     public int createPdf(String filename)
             throws DocumentException, IOException {
-        Document document = ReportsUtility.createLongDocument();
+        Document document = this.documentFormat==null? ReportsUtility.createLongDocument() : this.documentFormat;
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
             PageFooter event = new PageFooter((DATETIME==null? "NOT FOUND" : DATETIME), (USER==null? "NOT FOUND" : USER), (TERMINAL==null? "NOT FOUND" : TERMINAL));
@@ -101,7 +108,7 @@ public class ResultReport {
             return 1;
         }
         document.open();
-        ReportsUtility.createHeader(document, this.REPORT_TITLE, this.REPORT_DESCRIPTION);
+        ReportsUtility.createHeader(document, this.REPORT_TITLE, this.REPORT_DESCRIPTION, this.REPORT_OTHER_DETAIL);
         if(STUDENT_NAME!=null)
             ReportsUtility.createStudentInfoHeader(document, STUDENT_NAME, STUDENT_NUMBER, this.STUDENT_ADDRESS);
         
