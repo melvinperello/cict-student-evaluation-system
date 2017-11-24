@@ -774,7 +774,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                         .setMessage("Please choose if show the section's schedule or the specified subject's schedule only.")
                         .confirmCustom("Section Schedule", "Subject Schedule");
         if(res==-1) {
-            sectionString = subject.getCode().toUpperCase();
+            sectionString = sectionString + " - " + subject.getCode().toUpperCase();
             OpenScheduleViewer.setSpecificSubject(subject.getId());
         }
         OpenScheduleViewer.openScheduleViewer(sectionMap, SystemProperties.instance().getCurrentTermString(), sectionString);
