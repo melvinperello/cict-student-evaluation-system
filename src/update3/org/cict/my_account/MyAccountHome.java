@@ -279,6 +279,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         //---------------------------------
         this.setComboBoxLimit(cmb_from, cmb_to, 0);
         this.setCmbValues();
+        this.showAccessHistory();
     }
     // create text group
     private TextGroup tgrp_change_pass;
@@ -392,7 +393,6 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         });
         super.addClickEvent(btn_voew_access_history, () -> {
             this.changeView(this.vbox_access);
-            this.showAccessHistory();
         });
         super.addClickEvent(btn_view_change_password, () -> {
             this.changeView(this.vbox_change_password);
@@ -598,8 +598,6 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     .showInformation();
         });
         print.whenSuccess(() -> {
-//            btn_print.setDisable(false);
-//            btn_filter.setDisable(false);
             Notifications.create()
                     .title("Printing Results")
                     .text("Please wait a moment.")
@@ -852,6 +850,15 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             this.detachAll();
             this.loaderView.setMessage("Loading History");
             this.loaderView.attach();
+            
+            this.btn_view_change_password.setDisable(true);
+            this.btn_view_change_pin.setDisable(true);
+            this.btn_view_change_question.setDisable(true);
+            this.btn_view_update_profile.setDisable(true);
+            this.btn_voew_access_history.setDisable(true);
+            this.btn_update_info.setDisable(true);
+            this.cmb_from.setDisable(true);
+            this.cmb_to.setDisable(true);
         });
         accessTx.whenFailed(() -> {
             this.vbox_access_history.getChildren().clear();
@@ -869,6 +876,16 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         accessTx.whenSuccess(() -> {
             renderHistory(accessTx);
             this.btn_print.setDisable(false);
+            
+            this.btn_view_change_password.setDisable(false);
+            this.btn_view_change_pin.setDisable(false);
+            this.btn_view_change_question.setDisable(false);
+            this.btn_view_update_profile.setDisable(false);
+            this.btn_voew_access_history.setDisable(false);
+            this.btn_update_info.setDisable(false);
+            
+            this.cmb_from.setDisable(false);
+            this.cmb_to.setDisable(false);
         });
         accessTx.whenFinished(() -> {
             this.loaderView.detach();
