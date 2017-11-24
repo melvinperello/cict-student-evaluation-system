@@ -46,7 +46,7 @@
                         <Font name="Courier New" size="25.0" />
                      </font>
                   </Label>
-                  <Label style="-fx-font-size: 20;" styleClass="header-text" text="Evaluation Management System">
+                  <Label style="-fx-font-size: 20;" styleClass="header-text" text="Enrollment Evaluation Management System">
                      <font>
                         <Font name="Courier New" size="25.0" />
                      </font>

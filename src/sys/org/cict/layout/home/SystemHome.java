@@ -274,7 +274,7 @@ public class SystemHome extends MonoLauncher {
         mainStage.setMinWidth(1024);
         mainStage.setMinHeight(700);
         mainStage.setMaximized(true);
-        mainStage.setTitle("CICT Evaluation System 2017 | Monosync Studio PH");
+        mainStage.setTitle("CICT Enrollment Evaluation Management System 2017 | Monosync Studio PH");
         mainStage.show();
         homeFx.onDelayedStart();
         homeFx.onStageClosing();
