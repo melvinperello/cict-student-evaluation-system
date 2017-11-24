@@ -160,6 +160,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             } else {
                 isEnrolledSelected = false;
             }
+            isFiltered = false;
             chkbx_onlyEnrolled_main.selectedProperty().setValue(isEnrolledSelected);
         });
         super.addClickEvent(btn_home, () -> {
@@ -191,6 +192,8 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         });
     }
 
+    private boolean isFiltered = false;
+    private String previousReportDetail;
     private void printResult() {
         if (students == null || students.isEmpty()) {
             Notifications.create()
@@ -199,13 +202,16 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"Student Number", "Name", "Section"};
+        String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name", "Section"};
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < students.size(); i++) {
             StudentMapping result = students.get(i);
             StudentInformation info = new StudentInformation(result);
             String[] row = new String[]{(i + 1) + ".  " + result.getId(),
-                WordUtils.capitalizeFully(info.getFullName()), info.getSection()};
+                WordUtils.capitalizeFully(info.getStudentMapping().getLast_name()),
+                WordUtils.capitalizeFully(info.getStudentMapping().getFirst_name()),
+                info.getStudentMapping().getMiddle_name()==null? "" : WordUtils.capitalizeFully(info.getStudentMapping().getMiddle_name()),
+                info.getSection()};
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
@@ -214,7 +220,9 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         print.ROW_DETAILS = rowData;
         print.fileName = "student_list_" + searchWord.toLowerCase();
         print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
-        print.reportOtherDetail = "Student Search Result For " + searchWord.toUpperCase() + (chkbx_onlyEnrolled.isSelected()? " (Enrolled Students)" : "");
+        if(isFiltered)
+            previousReportDetail = "Student Search Result For " + searchWord.toUpperCase() + (chkbx_onlyEnrolled.isSelected() && isFiltered? " (Enrolled Student"+(students.size()>1? "s" : "")+")" : "");
+        print.reportOtherDetail = previousReportDetail==null? "Student Search Result For " + searchWord.toUpperCase() : previousReportDetail;
         print.reportTitleHeader = "Student Result List";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
@@ -250,7 +258,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     private String searchWord = "";
 
     public void onSearch() {
-
+        isFiltered = true;
         if (vbox_result.isVisible()) {
             searchWord = MonoString.removeExtraSpace(txt_search_key.getText()).toUpperCase();
             txt_search_key_main.setText(txt_search_key.getText());

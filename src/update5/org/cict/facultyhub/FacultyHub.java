@@ -794,7 +794,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                         .showWarning();
                 return;
             }
-            String[] colNames = new String[]{"Student Number", "Student Name"};
+            String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
             ArrayList<String[]> rowData = new ArrayList<>();
             PrintResult print = new PrintResult();
             print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
@@ -802,7 +802,9 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             for (int i = 0; i < preview.size(); i++) {
                 MasterListPdfStudent result = preview.get(i);
                 String[] row = new String[]{(i + 1) + ".  " + result.studentNumber,
-                    WordUtils.capitalizeFully(result.studentFullName)};
+                    WordUtils.capitalizeFully(result.lastName),
+                WordUtils.capitalizeFully(result.firstName),
+                WordUtils.capitalizeFully(result.middleName)};
                 rowData.add(row);
             }
             print.columnNames = colNames;
@@ -867,7 +869,9 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                 MasterListPdfStudent info = new MasterListPdfStudent();
                 StudentMapping student = Database.connect().student().getPrimary(loadSubject.getSTUDENT_id());
                 info.studentNumber = student.getId();
-                info.studentFullName = student.getLast_name() + ", " + student.getFirst_name() + (student.getMiddle_name() == null ? "" : (" " + student.getMiddle_name()));
+                info.lastName = student.getLast_name();
+                info.firstName = student.getFirst_name();
+                info.middleName = (student.getMiddle_name()==null? "": student.getMiddle_name());
                 results.add(info);
             }
             return true;
@@ -878,7 +882,9 @@ public class FacultyHub extends SceneFX implements ControllerFX {
     private class MasterListPdfStudent {
 
         private String studentNumber;
-        private String studentFullName;
+        private String lastName;
+        private String firstName;
+        private String middleName;
     }
 
     //-------------------------------------------
