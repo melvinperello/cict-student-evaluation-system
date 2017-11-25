@@ -69,7 +69,7 @@ public class PrintChecklist extends Transaction {
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
     private StudentProfileMapping spMap;
-    
+
     @Override
     protected boolean transaction() {
         //----------------------------------------------------------------------
@@ -560,13 +560,17 @@ public class PrintChecklist extends Transaction {
     private void store(ArrayList<Object[]> subjectDetails, Object[] detail) {
         subjectDetails.add(detail);
     }
-    
-    private String DEFAULT_IMAGE_LOC = "src/org/cict/reports/checklist/images/default.png";
+
+    //--------------------------------------------------------------------------
+    // use this variable as comparison if the image will use the default
+    public final static String DEFAULT_IMAGE_LOC = "src/org/cict/reports/checklist/images/default.png";
+    //--------------------------------------------------------------------------
+
     private String getImageLocation() {
-        String studentImage = (spMap==null? DEFAULT_IMAGE_LOC: spMap.getProfile_picture());
+        String studentImage = (spMap == null ? DEFAULT_IMAGE_LOC : spMap.getProfile_picture());
         if (studentImage == null
-            || studentImage.isEmpty()
-            || studentImage.equalsIgnoreCase("NONE")) {
+                || studentImage.isEmpty()
+                || studentImage.equalsIgnoreCase("NONE")) {
             return DEFAULT_IMAGE_LOC;
         } else {
             String tempProfilePath = "temp/images/profile";
@@ -575,8 +579,17 @@ public class PrintChecklist extends Transaction {
             File tempProfileImage = new File(tempProfileImagePath);
             try {
                 FileUtils.forceMkdir(tempProfileDir);
-                FTPManager.download("student_avatar", studentImage, tempProfileImage.getAbsolutePath());
-                return (tempProfileImage.getAbsolutePath());
+                //--------------------------------------------------------------
+                // Check if the file was downloaded successfully
+                boolean result = FTPManager.download(PublicConstants.FTP_STUDENT_AVATAR, studentImage, tempProfileImage.getAbsolutePath());
+                //--------------------------------------------------------------
+                // Check the results
+                if (result) {
+                    return (tempProfileImage.getAbsolutePath());
+                } else {
+                    return DEFAULT_IMAGE_LOC;
+                }
+                //--------------------------------------------------------------
             } catch (Exception e) {
                 return DEFAULT_IMAGE_LOC;
             }

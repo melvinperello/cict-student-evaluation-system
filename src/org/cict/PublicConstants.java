@@ -45,6 +45,7 @@ import sys.org.cict.enumerations.GradeValues;
  */
 public class PublicConstants {
 
+    public final static String FTP_STUDENT_AVATAR = "student_avatar";
     //--------------------------------------------------------------------------
     /**
      * System Platform Name
@@ -170,7 +171,7 @@ public class PublicConstants {
 //    }
     //----------------------------------------------
     public static String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
+
     //-----------------------------------------------
     public static boolean DISABLE_ASSISTANCE = false;
 }
