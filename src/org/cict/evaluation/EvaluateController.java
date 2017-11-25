@@ -69,6 +69,7 @@ import org.cict.evaluation.student.info.InfoStudentController;
 import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.management.registrar.Registrar;
 import org.cict.management.registrar.RevokeEvaluation;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.advisingslip.ChooseTypeController;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
@@ -807,7 +808,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             if (printLegacy) {
                 printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
             } else {
-                printCheckList(printLegacy, curriculum_prep.getId(), null);
+                printCheckList(printLegacy, curriculum_prep.getId(), curriculum_prep.getId());
             }
         } else {
             printCheckList(printLegacy, curriculum.getId(), null);
@@ -836,6 +837,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
+        if(!printLegacy)
+            printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        
         printCheckList.transact();
     }
 

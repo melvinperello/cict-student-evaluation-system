@@ -74,6 +74,14 @@ public class BSIT1516 {
             COURSE = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
             SCHOOL_YEAR = "2015-2016",
             MAJOR = ""; 
+    
+    //--------------------
+    private Document documentFormat;
+    public void setDocumentFormat(Document documentFormat) {
+        this.documentFormat = documentFormat;
+    }
+    //
+    
     public Boolean IS_LADDERIZED = true, PRINT_ORIGINAL = false;
     public HashMap<String,ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
     
@@ -124,27 +132,44 @@ public class BSIT1516 {
      */
     public int createPdf(String filename)
             throws DocumentException, IOException {
-        Document document = ReportsUtility.createLongDocument();
+        Document document = documentFormat==null? ReportsUtility.createLongDocument() : documentFormat;
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
         }catch(FileNotFoundException es){
             return 1;
         }
         document.open();
-        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
-        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
-        Image img = Image.getInstance(ResourceManager.fetchFromResource(BSIT1516.class, location_logo1));
-        img.setAbsolutePosition(100, 825); //position
-        img.scaleAbsolute(70, 70); //size
-        document.add(img);
-        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, location_logo2));
-        img2.setAbsolutePosition(445, 825); //position
-        img2.scaleAbsolute(70, 70); //size
-        document.add(img2);
+//        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+//        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
+//        Image img = Image.getInstance(ResourceManager.fetchFromResource(BSIT1516.class, location_logo1));
+//        img.setAbsolutePosition(100, 825); //position
+//        img.scaleAbsolute(70, 70); //size
+//        document.add(img);
+//        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, location_logo2));
+//        img2.setAbsolutePosition(445, 825); //position
+//        img2.scaleAbsolute(70, 70); //size
+//        document.add(img2);
+//        document.add(createHeader());
         
-        document.add(createHeader());
+        Paragraph p = new Paragraph(10);
+        p.setAlignment(Element.ALIGN_CENTER);
+        
+        if(!asStandardView || print_ORIGINAL) {
+            ReportsUtility.createHeader(document, null, null, null);
+            p.add(new Chunk("A ladderized curriculum leading to the degree of\n",font6Plain));
+            p.add(getTextUnderlined(course + "\n",font7Bold));
+            if(!major.isEmpty())
+                p.add(getTextUnderlined("MAJOR IN " + major + "\n",font7Bold));
+            p.add(new Chunk("AY " + sy + "\n\n",font6Plain));
+        } else {
+            if(!major.isEmpty())
+                ReportsUtility.createHeader(document, "AY " + sy, course, "MAJOR IN " + major );
+            else
+                ReportsUtility.createHeader(document, course, null, "AY " + sy);
+        }
         document.add(createStudentInfo());
         document.add(createBody());
+//        document.add(createTitle());
         writer.setPageEvent(new MyFooter3());
         document.close();
         return 0;
@@ -167,12 +192,13 @@ public class BSIT1516 {
         Paragraph p = new Paragraph(10);
         p.setAlignment(Element.ALIGN_CENTER);
         
-        if(!asStandardView || print_ORIGINAL)
+        if(!asStandardView || print_ORIGINAL) {
             p.add(new Chunk("A ladderized curriculum leading to the degree of\n",font6Plain));
-        p.add(getTextUnderlined(course + "\n",font7Bold));
-        if(!major.isEmpty())
-            p.add(getTextUnderlined("MAJOR IN " + major + "\n",font7Bold));
-        p.add(new Chunk("AY " + sy + "\n\n",font6Plain));
+            p.add(getTextUnderlined(course + "\n",font7Bold));
+            if(!major.isEmpty())
+                p.add(getTextUnderlined("MAJOR IN " + major + "\n",font7Bold));
+            p.add(new Chunk("AY " + sy + "\n\n",font6Plain));
+        }
         return p;
     }
     
@@ -187,7 +213,12 @@ public class BSIT1516 {
          */
         tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font8Plain, getShortenedDetail(this.name, 40), font8Plain, "", true), false, true));
         tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font8Plain, getShortenedDetail(this.studentNo, 47), font8Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail(this.address.isEmpty()? "______________________________________" : this.address, 39), font8Plain, "", !address.contains("_")), false, false));
+        boolean u = true;
+        if(address==null || address.isEmpty()) {
+            u = false;
+            address = "______________________________________";
+        }
+        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail(this.address, 39), font8Plain, "", u), false, false));
         tbl_stud.addCell(createCellWithObject(new Chunk("") ,false, true));
         
         return tbl_stud;

@@ -34,12 +34,11 @@ import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
 import artifacts.FTPManager;
+import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
@@ -70,6 +69,13 @@ public class PrintChecklist extends Transaction {
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
     private StudentProfileMapping spMap;
+    
+    //-------------------
+    private Document documentFormat;
+
+    public void setDocumentFormat(Document documentFormat) {
+        this.documentFormat = documentFormat;
+    }
 
     @Override
     protected boolean transaction() {
@@ -455,6 +461,8 @@ public class PrintChecklist extends Transaction {
             bsit1516.PRINT_ORIGINAL = true;
             bsit1516.STUDENT_NUMBER = student.getId();
 
+            bsit1516.setDocumentFormat(documentFormat);
+            
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
             String midName = (student.getMiddle_name() == null ? "" : student.getMiddle_name());
             fullName += (midName != null ? (" " + midName) : "");
@@ -536,6 +544,8 @@ public class PrintChecklist extends Transaction {
         standard.STUDENT_NUMBER = student.getId();
         standard.PRINT_ORIGINAL = printOriginal;
 
+        standard.setDocumentFormat(documentFormat);
+        
         String fullName = student.getLast_name() + ", " + student.getFirst_name();
         String midName = (student.getMiddle_name() == null ? "" : student.getMiddle_name());
         fullName += (midName != null ? (" " + midName) : "");
