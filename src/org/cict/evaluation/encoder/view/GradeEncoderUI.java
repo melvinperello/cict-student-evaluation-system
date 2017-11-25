@@ -381,7 +381,7 @@ public class GradeEncoderUI {
                 if (Objects.equals(subject.getId(), sem_details.getSubjectID())) {
                     ArrayList<Integer> pre_ids = new ArrayList<>();
 
-                    if (sem_details.getSubjectRequisites() == null) {
+                    if (sem_details.getSubjectRequisites() == null || sem_details.getSubjectRequisites().isEmpty()) {
                         // do nothing no preq
                         gridRows.add(gridRowFactory(true, // editable
                                 i,
@@ -390,6 +390,7 @@ public class GradeEncoderUI {
                                 String.valueOf(subject.getLec_units() + subject.getLab_units()),
                                 "",
                                 ""));
+                        System.out.println("ADDED HERE");
                         return;
                     }
                     //----------------------------------------------------------
@@ -427,6 +428,7 @@ public class GradeEncoderUI {
                             isIncomplete = grade.getRemarks().equalsIgnoreCase("incomplete");
                         } catch (NullPointerException a) {
                             editable = false;
+                            a.printStackTrace();
                             break;
                         }
 
