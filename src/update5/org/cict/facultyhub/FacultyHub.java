@@ -325,7 +325,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
         for (SubjectData data : subjectData) {
             SimpleTableRow row = new SimpleTableRow();
-            row.setRowHeight(65.0);
+            row.setRowHeight(55.0);
             SubjectRowFH rowFX = M.load(SubjectRowFH.class);
             rowFX.getLbl_code().setText(data.subject.getCode());
             rowFX.getLbl_description().setText(data.subject.getDescriptive_title());
