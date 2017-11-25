@@ -520,7 +520,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             if(res==1) {
                 retain = true;
             }
-            this.processGrades(curriculumSelected.getId(), false, retain, schMap.getId());
+            this.processGrades(curriculumSelected.getId(), retain, false, schMap.getId());
             return;
         }
         
