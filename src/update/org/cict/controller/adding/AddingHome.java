@@ -54,6 +54,7 @@ import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.evaluation.student.info.InfoStudentController;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
@@ -1666,6 +1667,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     .text("Something went wrong. Sorry for the inconviniece.")
                     .showInformation();
         });
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         print.transact();
     }
     

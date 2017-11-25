@@ -52,7 +52,7 @@ import org.hibernate.criterion.Order;
  * @author Joemar
  */
 public class PrintDeficiency extends Transaction {
-
+    
     public Integer CICT_id;
 
     private CurricularLevelAssesor assessmentResults;

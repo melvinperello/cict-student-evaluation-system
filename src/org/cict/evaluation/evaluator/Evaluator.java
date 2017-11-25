@@ -26,10 +26,13 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.sectionviewer.SearchSuggestions;
 import org.cict.evaluation.views.SubjectView;
+import org.cict.reports.ReportsUtility;
+import org.cict.reports.deficiency.PrintDeficiency;
 import org.controlsfx.control.Notifications;
 import update.org.cict.controller.adding.ValidateOJT;
 import update3.org.cict.access.Access;
@@ -369,7 +372,15 @@ public class Evaluator implements Process {
                             this.goLang(INTERNSHIP_WITH_OTHERS);
                         })
                         .showWarning();
-
+                
+                int res = Mono.fx().alert()
+                        .createConfirmation()
+                        .setHeader("Deficieny Report")
+                        .setMessage("Do you want to print the student's subject with missing grade?")
+                        .confirmYesNo();
+                if(res==1) {
+                    printDeficiency(this.currentStudent.getCict_id(), Mono.fx().getParentStage(vbox_subjects));
+                }
                 return false;
             }
         }
@@ -754,5 +765,29 @@ public class Evaluator implements Process {
 
     } // inner clas end
 
-    
+    // print deficiency
+    private void printDeficiency(Integer cict_id, Stage stage) {
+        PrintDeficiency print = new PrintDeficiency();
+        print.CICT_id = cict_id;
+        print.whenSuccess(()->{
+            Notifications.create()
+                    .title("Nearly there.")
+                    .text("Printing the deficiency report.")
+                    .showInformation();
+        });
+        print.whenCancelled(()->{
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(()->{
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(stage));
+        print.transact();
+    }
 }
