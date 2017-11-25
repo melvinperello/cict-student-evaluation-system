@@ -696,6 +696,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                         }
                     }
                     grade.setActive(0);
+                    grade.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
+                    grade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+                    grade.setReason_for_update("Unretained_When_Shifted".toUpperCase());
                     grade.setCourse_reference(course_reference);
                     if (!Database.connect().grade().transactionalSingleUpdate(currentSession, grade)) {
                         // if errors occured during temporary insert
