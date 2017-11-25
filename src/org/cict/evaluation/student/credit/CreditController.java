@@ -53,6 +53,7 @@ import org.cict.evaluation.student.credit.credittree.CreditTree;
 import org.cict.evaluation.student.credit.credittree.CreditTreeColumn;
 import org.cict.evaluation.student.credit.credittree.CreditTreeRow;
 import org.cict.evaluation.student.credit.credittree.CreditTreeView;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.StatusBar;
@@ -303,11 +304,10 @@ public class CreditController implements ControllerFX {
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = "grade_history_" + this.STUDENT_MAP.getId() + "_" + dateToday;
-        print.reportTitleIntro = WordUtils.capitalizeFully(lbl_STUDENT_name.getText()) + "\n"
-                + lbl_CURRICULUM_name.getText() + "\n"
+        print.reportTitleIntro = lbl_CURRICULUM_name.getText();
+        print.reportTitleHeader = "Student Grade History";
+        print.reportOtherDetail = WordUtils.capitalizeFully(lbl_STUDENT_name.getText()) + "\n"
                         + "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
-        print.reportTitleHeader = "Grade History";
-        
         print.whenStarted(() -> {
             btn_print_history.setDisable(true);
         });
@@ -333,6 +333,7 @@ public class CreditController implements ControllerFX {
         print.whenFinished(() -> {
             btn_print_history.setDisable(false);
         });
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(btn_save)));
         print.transact();
     }
     
@@ -355,6 +356,14 @@ public class CreditController implements ControllerFX {
     
     private boolean is4Yrs = false;
     private void fetchData() {
+        first_1.clear();
+        first_2.clear();
+        second_1.clear();
+        second_2.clear();
+        third_1.clear();
+        third_2.clear();
+        fourth_1.clear();
+        fourth_2.clear();
         SimpleTask fetch_history = new SimpleTask("fetch_history");
         fetch_history.setTask(()->{
             Integer CICT_id = this.STUDENT_MAP.getCict_id();
