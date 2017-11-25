@@ -43,6 +43,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.orm.SQL;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -58,6 +59,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.reports.ReportsUtility;
@@ -68,6 +71,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import update.org.cict.controller.home.Home;
+import update5.org.cict.student.layout.CreateNewStudent;
 
 /**
  *
@@ -196,6 +200,25 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_print, () -> {
             this.printResult();
         });
+        super.addClickEvent(btn_new_student, ()->{
+            this.addNewStudent();
+        });
+        super.addClickEvent(btn_new_student1, ()->{
+            this.addNewStudent();
+        });
+    }
+    
+    private void addNewStudent() {
+        CreateNewStudent curriculumChooser = M.load(CreateNewStudent.class);
+        curriculumChooser.onDelayedStart(); // do not put database transactions on startUp
+        //----------------------------------------------------------------------
+        try {
+            curriculumChooser.getCurrentStage().show();
+        } catch (NullPointerException e) {
+            Stage a = curriculumChooser.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.show();
+        }
     }
 
     private boolean isFiltered = false;

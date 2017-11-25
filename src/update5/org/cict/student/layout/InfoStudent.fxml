@@ -104,7 +104,7 @@
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="29.0" prefWidth="367.0" spacing="10.0">
+                        <VBox prefHeight="372.0" prefWidth="335.0" spacing="10.0">
                            <children>
                               <JFXButton fx:id="btn_edit_grades" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text=" Edit Grades      ">
                                  <styleClass>
@@ -201,19 +201,19 @@
                                     </ImageView>
                                  </graphic>
                               </JFXButton>
-                              <JFXButton fx:id="btn_remove_student" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Remove Student">
+                              <JFXButton fx:id="btn_remove_student" prefHeight="0.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Remove Student" visible="false">
                                  <styleClass>
                                     <String fx:value="label" />
                                     <String fx:value="metro-base-color" />
                                  </styleClass>
                                  <font>
-                                    <Font size="18.0" />
+                                    <Font size="1.0" />
                                  </font>
                                  <padding>
                                     <Insets bottom="10.0" top="10.0" />
                                  </padding>
                                  <graphic>
-                                    <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="8.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@images/Marker_52px.png" />
                                        </image>
