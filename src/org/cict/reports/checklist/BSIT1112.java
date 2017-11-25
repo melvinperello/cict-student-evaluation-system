@@ -142,7 +142,7 @@ public class BSIT1112 {
         document.add(createHeader());
         try {
             if(image2x2_location != null) {
-                Image image2x2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, image2x2_location));
+                Image image2x2 = Image.getInstance((image2x2_location));
                 image2x2.setAbsolutePosition(450f,750f); //position
                 image2x2.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
                 document.add(image2x2);
