@@ -88,6 +88,18 @@
          </stylesheets></VBox>
       <HBox alignment="CENTER_RIGHT" spacing="20.0">
          <children>
+            <Button fx:id="btn_pdf" layoutX="602.0" layoutY="10.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="148.0" style="-fx-border-color: #fff;" styleClass="metro-base-color" stylesheets="@../metro-ui.css" text="View Pdf" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="31.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/reminder.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
             <Button fx:id="btn_view" mnemonicParsing="false" style="-fx-border-color: #fff;" styleClass="metro-base-color" stylesheets="@../metro-ui.css" text="View Actual Data" textFill="WHITE">
                <graphic>
                   <ImageView fitHeight="31.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">

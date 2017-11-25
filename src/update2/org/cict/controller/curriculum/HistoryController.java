@@ -28,6 +28,7 @@ import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
+import app.lazy.models.utils.FacultyUtility;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -47,6 +48,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.reports.ReportsUtility;
+import org.cict.reports.result.PrintResult;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update3.org.cict.SectionConstants;
 
@@ -74,11 +78,15 @@ public class HistoryController extends SceneFX implements ControllerFX {
     @FXML
     private Button btn_back;
     
+    @FXML
+    private Button btn_pdf;
+            
     private CurriculumMapping CURRICULUM;
     public HistoryController(CurriculumMapping CURRICULUM) {
         this.CURRICULUM = CURRICULUM;
     }
     
+    private ArrayList<CurriculumHistorySummaryMapping> chsMaps;
     @Override
     public void onInitialization() {
         
@@ -92,7 +100,7 @@ public class HistoryController extends SceneFX implements ControllerFX {
         }
         lbl_description.setText(CURRICULUM.getDescription() + major);
         createTable();
-        ArrayList<CurriculumHistorySummaryMapping> chsMaps = Mono.orm().newSearch(Database.connect().curriculum_history_summary())
+        chsMaps = Mono.orm().newSearch(Database.connect().curriculum_history_summary())
                 .eq(DB.curriculum_history_summary().curriculum_id, this.CURRICULUM.getId())
                 .active(Order.desc(DB.curriculum_history_summary().history_id))
                 .all();
@@ -125,6 +133,69 @@ public class HistoryController extends SceneFX implements ControllerFX {
                 super.replaceRoot(pane);
             }, pane);
         });
+        super.addClickEvent(btn_pdf, ()->{
+            this.printPdf();
+        });
+    }
+    
+    private SimpleDateFormat formatter_filename = new SimpleDateFormat("MMddyyyhhmmss");
+    private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
+    private void printPdf() {
+        if(chsMaps==null || chsMaps.isEmpty()) {
+            Notifications.create()
+                    .title("No Result")
+                    .text("No result found to print.")
+                    .showWarning();
+            return;
+        }
+        String[] colNames = new String[]{"Date & Time", "Faculty", "Description"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        for (int i = 0; i < chsMaps.size(); i++) {
+            CurriculumHistorySummaryMapping result = chsMaps.get(i);
+            String[] row = new String[]{(i + 1) + ".  " + ReportsUtility.formatter2.format(result.getCreated_date()),
+                WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getCreated_by()))),
+                (result.getDescription())};
+            rowData.add(row);
+        }
+        
+        PrintResult print = new PrintResult();
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
+        print.fileName = "curriculum_history" + "_" + dateToday;
+        print.reportTitleIntro = this.CURRICULUM.getName();
+        print.reportTitleHeader = "Curriculum information History";
+        print.reportOtherDetail = "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+        print.whenStarted(() -> {
+                btn_pdf.setDisable(true);
+                super.cursorWait();
+            });
+            print.whenCancelled(() -> {
+                Notifications.create()
+                        .title("Request Cancelled")
+                        .text("Sorry for the inconviniece.")
+                        .showWarning();
+            });
+            print.whenFailed(() -> {
+                Notifications.create()
+                        .title("Request Failed")
+                        .text("Something went wrong. Sorry for the inconviniece.")
+                        .showInformation();
+            });
+            print.whenSuccess(() -> {
+                btn_pdf.setDisable(false);
+                Notifications.create()
+                        .title("Printing Results")
+                        .text("Please wait a moment.")
+                        .showInformation();
+            });
+            print.whenFinished(() -> {
+                btn_pdf.setDisable(false);
+                super.cursorDefault();
+            });
+            //----------------------------------------------------------------------
+            print.transact();
     }
     
      
