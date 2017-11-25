@@ -1461,7 +1461,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         if (studentImage == null
             || studentImage.isEmpty()
             || studentImage.equalsIgnoreCase("NONE")) {
-            ImageUtility.addDefaultImageToFx(img_icon, 1);
+            ImageUtility.addDefaultImageToFx(img_icon, 1, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_icon, 1);
         }

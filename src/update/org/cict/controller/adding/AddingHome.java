@@ -2728,7 +2728,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         if (studentImage == null
             || studentImage.isEmpty()
             || studentImage.equalsIgnoreCase("NONE")) {
-            ImageUtility.addDefaultImageToFx(img_profile, 0);
+            ImageUtility.addDefaultImageToFx(img_profile, 0, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 0);
         }

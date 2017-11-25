@@ -34,17 +34,17 @@ import org.apache.commons.io.FileUtils;
  */
 public class ImageUtility {
     
-    private static String DEFAULT_IMAGE = "src/res/img/image_utility/default_image.png";
-    private static String DEFAULT_IMAGE_BLUE = "src/res/img/image_utility/default_image_blue.png";
+    private static String DEFAULT_IMAGE = "/res/img/image_utility/default_image.png";
+    private static String DEFAULT_IMAGE_BLUE = "/res/img/image_utility/default_image_blue.png";
     
     /**
      * 
      * @param imageView
      * @param view 0 = green background of default image; 1 = blue 
      */
-    public static void addDefaultImageToFx(ImageView imageView, int view) {
+    public static void addDefaultImageToFx(ImageView imageView, int view, Class cl) {
         try {
-            Image image = new Image(new File((view==0? DEFAULT_IMAGE :( view==1? DEFAULT_IMAGE_BLUE : DEFAULT_IMAGE))).toURI().toURL().toString());
+            Image image = new Image(ResourceManager.fetchFromResourceAsStream(cl, (view==0? DEFAULT_IMAGE :( view==1? DEFAULT_IMAGE_BLUE : DEFAULT_IMAGE))));
             imageView.setImage(image);
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class ImageUtility {
                 boolean isDownloaded = FTPManager.download(ftpFolder, imageFilename, tempProfileImage.getAbsolutePath());
                 System.out.println(isDownloaded);
                 if(!isDownloaded) { 
-                    addDefaultImageToFx(imageView, defaultView);
+                    addDefaultImageToFx(imageView, defaultView, imageView.getParent().getClass());
                     return;
                 }
                 try {

@@ -463,7 +463,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         if (studentImage == null
             || studentImage.isEmpty()
             || studentImage.equalsIgnoreCase("NONE")) {
-            ImageUtility.addDefaultImageToFx(img_profile, 1);
+            ImageUtility.addDefaultImageToFx(img_profile, 1, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 1);
         }
