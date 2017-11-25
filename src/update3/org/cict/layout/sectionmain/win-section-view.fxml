@@ -656,7 +656,7 @@
                                           <Font size="16.0" />
                                        </font>
                                        <HBox.margin>
-                                          <Insets left="180.0" right="20.0" />
+                                          <Insets left="20.0" right="20.0" />
                                        </HBox.margin>
                                     </JFXButton>
                                     <JFXButton fx:id="btn_view_class_sched" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Class Schedule" textFill="WHITE">
@@ -668,6 +668,14 @@
                                        </HBox.margin>
                                     </JFXButton>
                                     <JFXButton fx:id="btn_export" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="Excel Master List" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="20.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="btn_pdf" layoutX="550.0" layoutY="10.0" prefWidth="150.0" style="-fx-border-color: #FFFFFF;" text="PDF Master List" textFill="WHITE">
                                        <font>
                                           <Font size="16.0" />
                                        </font>

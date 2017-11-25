@@ -31,7 +31,9 @@ import app.lazy.models.FacultyMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
+import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.MapFactory;
+import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.utils.FacultyUtility;
 import com.izum.fx.textinputfilters.StringFilter;
@@ -53,6 +55,7 @@ import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -68,6 +71,8 @@ import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ReportsUtility;
+import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update3.org.cict.ChoiceRange;
@@ -82,6 +87,7 @@ import update3.org.collegechooser.ChooserHome;
 import update3.org.excelprinter.StudentMasterListPrinter;
 import update3.org.facultychooser.FacultyChooser;
 import update3.org.facultychooser.FacultyNamer;
+import update5.org.cict.facultyhub.FacultyHub;
 
 /**
  * This class is used in both regular and irregular sections.
@@ -235,6 +241,10 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_cancel_sched;
 
+    @FXML
+    private JFXButton btn_pdf;
+            
+            
     public SectionSubjectsController() {
         /**
          * Every code below this constructor was passed from another controller.
@@ -572,7 +582,122 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         }));
         //----------------------------------------------------------------------
 
+        super.addClickEvent(btn_pdf, ()->{
+            this.printMasterListInPDF(selected_load_group_in_sections, btn_pdf);
+        });
     }
+    
+    //-----------------------------------------
+    // Print PDF
+    private void printMasterListInPDF(LoadGroupMapping loadGroup, JFXButton btn_print) {
+        FetchStudents fetch = new FetchStudents();
+        fetch.loadGroup = loadGroup;
+        fetch.whenSuccess(() -> {
+            ArrayList<MasterListPdfStudent> preview = fetch.getResults();
+            if (preview == null || preview.isEmpty()) {
+                Notifications.create()
+                        .title("No Student Found")
+                        .text("No data to print.")
+                        .showWarning();
+                return;
+            }
+            String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
+            ArrayList<String[]> rowData = new ArrayList<>();
+            PrintResult print = new PrintResult();
+            print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+
+            for (int i = 0; i < preview.size(); i++) {
+                MasterListPdfStudent result = preview.get(i);
+                String[] row = new String[]{(i + 1) + ".  " + result.studentNumber,
+                    WordUtils.capitalizeFully(result.lastName),
+                WordUtils.capitalizeFully(result.firstName),
+                WordUtils.capitalizeFully(result.middleName)};
+                rowData.add(row);
+            }
+            print.columnNames = colNames;
+            print.ROW_DETAILS = rowData;
+            SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
+            print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Master List " + String.valueOf(Calendar.getInstance().getTimeInMillis());
+            print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
+
+            print.reportTitleHeader = subject.getCode() + " Master List";
+            print.reportOtherDetail = WordUtils.capitalizeFully(subject.getDescriptive_title());
+            print.whenStarted(() -> {
+                btn_print.setDisable(true);
+                super.cursorWait();
+            });
+            print.whenCancelled(() -> {
+                Notifications.create()
+                        .title("Request Cancelled")
+                        .text("Sorry for the inconviniece.")
+                        .showWarning();
+            });
+            print.whenFailed(() -> {
+                Notifications.create()
+                        .title("Request Failed")
+                        .text("Something went wrong. Sorry for the inconviniece.")
+                        .showInformation();
+            });
+            print.whenSuccess(() -> {
+                btn_print.setDisable(false);
+                Notifications.create()
+                        .title("Printing Results")
+                        .text("Please wait a moment.")
+                        .showInformation();
+            });
+            print.whenFinished(() -> {
+                btn_print.setDisable(false);
+                super.cursorDefault();
+            });
+            print.transact();
+
+        });
+        fetch.transact();
+    }
+    
+    private SubjectMapping getSubject(Integer id) {
+        return (SubjectMapping) Database.connect().subject().getPrimary(id);
+    }
+    
+    private class FetchStudents extends Transaction {
+
+        private LoadGroupMapping loadGroup;
+        private ArrayList<MasterListPdfStudent> results;
+
+        public ArrayList<MasterListPdfStudent> getResults() {
+            return results;
+        }
+
+        @Override
+        protected boolean transaction() {
+            ArrayList<LoadSubjectMapping> loadSubjects = Mono.orm().newSearch(Database.connect().load_subject())
+                    .eq(DB.load_subject().LOADGRP_id, loadGroup.getId()).active().all();
+            if (loadSubjects == null) {
+                return true;
+            }
+            results = new ArrayList<>();
+            for (LoadSubjectMapping loadSubject : loadSubjects) {
+                MasterListPdfStudent info = new MasterListPdfStudent();
+                StudentMapping student = Database.connect().student().getPrimary(loadSubject.getSTUDENT_id());
+                info.studentNumber = student.getId();
+                info.lastName = student.getLast_name();
+                info.firstName = student.getFirst_name();
+                info.middleName = (student.getMiddle_name()==null? "": student.getMiddle_name());
+                results.add(info);
+            }
+            return true;
+        }
+
+    }
+
+    private class MasterListPdfStudent {
+
+        private String studentNumber;
+        private String lastName;
+        private String firstName;
+        private String middleName;
+    }
+    //--------------------------------
 
     private void updateSectionInfo() {
         String yearLevel = MonoText.getFormatted(txt_year_level);
