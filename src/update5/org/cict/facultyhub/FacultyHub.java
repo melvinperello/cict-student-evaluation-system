@@ -928,7 +928,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         String[] colNames = new String[]{"Student Number", "Full Name", "Grade", "Cleared", "Status"};
         ArrayList<String[]> rowData = new ArrayList<>();
         PrintResult print = new PrintResult();
-
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         for (int i = 0; i < preview.size(); i++) {
             ReadData result = preview.get(i);
             String[] row = new String[]{(i + 1) + ".  " + result.getSTUDENT_NUMBER().toUpperCase(),

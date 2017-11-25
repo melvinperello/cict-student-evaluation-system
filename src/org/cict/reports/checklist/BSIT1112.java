@@ -147,6 +147,7 @@ public class BSIT1112 {
 
         document.add(createHeader());
         try {
+
 //            if (image2x2_location != null) {
 //                Image image2x2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, image2x2_location));
 //                image2x2.setAbsolutePosition(450f, 750f); //position
@@ -155,8 +156,7 @@ public class BSIT1112 {
 //            }
             if (!image2x2_location.equals(PrintChecklist.DEFAULT_IMAGE_LOC)) {
                 // check whether the image is not default
-                File imageFile = new File(this.image2x2_location);
-                Image image2x2 = Image.getInstance(imageFile.toURL());
+                Image image2x2 = Image.getInstance(new File(this.image2x2_location).toURL());
                 image2x2.setAbsolutePosition(450f, 750f); //position
                 image2x2.scaleAbsolute(Utilities.inchesToPoints(2), Utilities.inchesToPoints(2)); //size
                 document.add(image2x2);

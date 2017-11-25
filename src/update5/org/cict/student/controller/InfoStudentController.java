@@ -77,6 +77,7 @@ import org.apache.commons.io.FileUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.cict.reports.profile.student.PrintStudentProfile;
 import org.controlsfx.control.Notifications;
@@ -950,6 +951,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             btn_view_deficiency.setDisable(false);
             super.cursorDefault();
         });
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         //----------------------------------------------------------------------
         print.transact();
     }

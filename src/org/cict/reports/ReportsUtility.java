@@ -45,7 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.cict.reports.profile.student.StudentProfile;
 
 /**
  *
@@ -128,7 +127,7 @@ public class ReportsUtility {
     }
     
     /**
-     * NUMBER OF COL AND COLNAMES MUST BE EQUAL IN NUMBER ELSE RETURN NULL
+     * 
      * @param numColumns
      * @param colNames
      * @return
@@ -151,7 +150,7 @@ public class ReportsUtility {
             try {
                 String lastCol = rowData.get(i)[numColumns];
                 if(lastCol != null) {
-                    tbl_stud.addCell(createSimpleCell(lastCol, font6Plain, numColumns, true, true, 4f, false));
+                    tbl_stud.addCell(createSimpleCell(lastCol, font6Plain, numColumns, true, true, 4f, true));
                 }
             } catch (IndexOutOfBoundsException e) {
             }
@@ -169,7 +168,7 @@ public class ReportsUtility {
     //-------------------------------------
     //-----------------------
     private static PdfPTable createStudentInfo() throws DocumentException {
-        PdfPTable tbl_stud = new PdfPTable(2);
+        PdfPTable tbl_stud = new PdfPTable(1);
         tbl_stud.setTotalWidth(500);
         tbl_stud.setLockedWidth(true);
         tbl_stud.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -177,10 +176,10 @@ public class ReportsUtility {
         /**
          * STUDENT INFO
          */
-        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font8Plain, getShortenedDetail((studentName_==null? "" : studentName_), 40), font8Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font8Plain, getShortenedDetail((studentNumber_==null? "" : studentNumber_), 47), font8Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail((address_==null? "" : address_), 39), font8Plain, "", true), false, false));
-        tbl_stud.addCell(createCellWithObject(new Chunk("\n") ,false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("Student No.: ", font8Plain, getShortenedDetail((studentNumber_==null? "" : studentNumber_), 47), font8Plain, "", true), false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("Full Name: ", font8Plain, getShortenedDetail((studentName_==null? "" : studentName_), 40), font8Plain, "", true), false, true));
+//        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail((address_==null? "" : address_), 39), font8Plain, "", true), false, false));
+//        tbl_stud.addCell(createCellWithObject(new Chunk("\n") ,false, true));
         
         return tbl_stud;
     }
