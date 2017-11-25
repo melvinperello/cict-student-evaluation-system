@@ -167,7 +167,9 @@ public class PrintDeficiency extends Transaction {
             ArrayList<SubjectAssessmentDetials> sadetails;
             try {
                 sadetails = result.getUnacquiredSubjects();
+                System.out.println("Unacquired Subjects: " + result.getSubUnacquireCount());
             } catch (Exception e) {
+                e.printStackTrace();
                 continue;
             }
             for (SubjectAssessmentDetials sadetail : sadetails) {
@@ -277,8 +279,8 @@ public class PrintDeficiency extends Transaction {
         def.STUDENT_NUMBER = student.getId() == null ? "NONE" : student.getId();
         def.STUDENT_NAME = fullName == null ? "NONE" : fullName;
         def.STUDENT_ADDRESS = address;
-        def.CURRICULUM_NAME = course;
-        def.setReportsOtherDetail(SystemProperties.instance().getCurrentTermString());
+        def.setReportsOtherDetail(course);
+        def.setReportsIntroTitle(SystemProperties.instance().getCurrentTermString());
         def.setReportsTitleHead("Deficiency Report");
         for (Object[] detail : details) {
             String key = (String) detail[4];
@@ -312,6 +314,13 @@ public class PrintDeficiency extends Transaction {
 
         }
         System.out.println(fyrfsem.size());
+        System.out.println(fyrssem.size());
+        System.out.println(syrfsem.size());
+        System.out.println(syrssem.size());
+        System.out.println(tyrfsem.size());
+        System.out.println(tyrssem.size());
+        System.out.println(fryrfsem.size());
+        System.out.println(fryrssem.size());
         def.SUBJECTS_PER_SEM.put("11", fyrfsem);
         def.SUBJECTS_PER_SEM.put("12", fyrssem);
         def.SUBJECTS_PER_SEM.put("21", syrfsem);
