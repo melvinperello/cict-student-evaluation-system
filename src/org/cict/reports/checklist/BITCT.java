@@ -213,7 +213,7 @@ public class BITCT {
             highSchool = "__________________________________________";
             l = false;
         }
-        tbl_stud.addCell(createCellWithObject(getTitleContent("HIGH SCHOOL: ", font7Plain, getShortenedDetail(this.highSchool, 42), font7Plain, "\n\n", !highSchool.contains("_")), false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("HIGH SCHOOL: ", font7Plain, getShortenedDetail(this.highSchool, 42), font7Plain, "\n\n", l), false, true));
         return tbl_stud;
     }
 
