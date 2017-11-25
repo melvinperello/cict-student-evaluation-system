@@ -71,6 +71,7 @@ import org.cict.management.registrar.Registrar;
 import org.cict.management.registrar.RevokeEvaluation;
 import org.cict.reports.ReportsUtility;
 import org.cict.reports.advisingslip.ChooseTypeController;
+import org.cict.reports.deficiency.PrintDeficiency;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
@@ -135,6 +136,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_encoding;
 
+    @FXML
+    private JFXButton btn_deficiency;
+    
     @FXML
     private JFXButton btnCreditUnits;
 
@@ -375,6 +379,46 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             });
         });
         //----------------------------------------------------------------------
+        
+        super.addClickEvent(btn_deficiency, ()->{
+            this.printDeficiency();
+        });
+    }
+    
+    private void printDeficiency() {
+        PrintDeficiency print = new PrintDeficiency();
+        print.CICT_id = this.currentStudent.getCict_id();
+        //----------------------------------------------------------------------
+        print.whenStarted(() -> {
+            GenericLoadingShow.instance().show();
+            super.cursorWait();
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text(print.getMessage()
+                            + "\nSorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            Notifications.create()
+                    .title("Printing the Deficiency Report.")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            GenericLoadingShow.instance().hide();
+            super.cursorDefault();
+        });
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        //----------------------------------------------------------------------
+        print.transact();
     }
 
     private void onShowMovingUp() {
