@@ -129,6 +129,12 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_print;
 
+    @FXML
+    private JFXButton btn_new_student;
+            
+    @FXML
+    private JFXButton btn_new_student1;
+            
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
