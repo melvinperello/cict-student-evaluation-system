@@ -35,6 +35,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 
@@ -116,9 +117,9 @@ public class StudentHistoryController implements ControllerFX{
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "student_history_" + MonoString.removeAll(this.STUDENT.getId(), " ").toLowerCase();
-        print.reportTitleIntro = this.lblName.getText() + "\n" + this.lblCourse.getText();
-
+        print.reportTitleIntro = this.lblName.getText();
         print.reportTitleHeader = "Student Evalutaion History";
+        print.reportOtherDetail = this.lblCourse.getText();
         print.whenStarted(() -> {
             btn_print.setDisable(true);
         });
@@ -144,6 +145,7 @@ public class StudentHistoryController implements ControllerFX{
             btn_print.setDisable(false);
         });
         //----------------------------------------------------------------------
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(lblName)));
         print.transact();
     }
     

@@ -331,6 +331,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
+        
+        if(!printLegacy)
+            printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         printCheckList.transact();
     }
 
