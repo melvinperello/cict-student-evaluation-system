@@ -253,14 +253,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
         simpleTableView.setParentOnScene(vbox_subject_table);
     }
-
-//    private void changeViewSubject(Node node) {
-//        Animate.fade(node, 150, ()->{
-//            vbox_subject_table.setVisible(false);
-////            vbox_subject_no_found.setVisible(false);
-//            node.setVisible(true);
-//        }, vbox_subject_table, vbox_subject_no_found);
-//    }
+    
     private void showLoadSection() {
         FetchSection fetch = new FetchSection();
         fetch.whenStarted(() -> {
@@ -280,10 +273,8 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         fetch.whenSuccess(() -> {
             ArrayList<SectionData> loads = fetch.getSectionInformation();
             if (loads == null) {
-//                this.changeSectionView(vbox_section_no_found);
                 return;
             }
-//            this.changeSectionView(vbox_section_table);
             this.createSectionTable(loads);
         });
         fetch.whenFinished(() -> {
@@ -298,7 +289,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         marshallTable.getChildren().clear();
         for (SectionData load : sectionInformation) {
             SimpleTableRow row = new SimpleTableRow();
-            row.setRowHeight(55.0);
+            row.setRowHeight(70.0);
             SectionRow rowFX = M.load(SectionRow.class);
             rowFX.getLbl_section_name().setText(load.getSectionName());
             rowFX.getLbl_student_count().setText(load.studentCount);

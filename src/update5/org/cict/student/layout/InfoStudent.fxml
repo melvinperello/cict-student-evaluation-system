@@ -244,6 +244,11 @@
                            <children>
                               <VBox alignment="CENTER" prefHeight="645.0" prefWidth="580.0">
                                  <children>
+                                    <Label fx:id="lbl_college" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" wrapText="true">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="20.0" />
+                                       </VBox.margin>
+                                    </Label>
                                     <GridPane vgap="15.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="10.0" prefWidth="118.0" />
@@ -644,7 +649,7 @@
                               </VBox>
                            </children>
                         </VBox>
-                        <VBox fx:id="vbox_removed" alignment="CENTER" opacity="0.28" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #F60017;">
+                        <VBox fx:id="vbox_removed" alignment="CENTER" opacity="0.28" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #F60017;" visible="false">
                            <StackPane.margin>
                               <Insets bottom="20.0" top="10.0" />
                            </StackPane.margin>

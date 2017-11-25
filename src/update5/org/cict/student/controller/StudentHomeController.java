@@ -325,7 +325,10 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             vbox_list.setVisible(false);
             
             btn_home1.setDisable(true);
-            super.getScene().setCursor(Cursor.WAIT);
+            try {
+                getScene().setCursor(Cursor.WAIT);
+            } catch (NullPointerException e) {
+            }
         });
         fetch.whenRunning(() -> {
             lbl_status.setText("Loading...");
@@ -372,7 +375,10 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                 changeHome(vbox_result);
             }
             btn_home1.setDisable(false);
-            super.getScene().setCursor(Cursor.DEFAULT);
+            try {
+                getScene().setCursor(Cursor.DEFAULT);
+            } catch (NullPointerException e) {
+            }
         });
         fetch.transact();
     }

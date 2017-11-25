@@ -83,6 +83,7 @@ import org.controlsfx.control.Notifications;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import update3.org.cict.CurriculumConstants;
+import update3.org.cict.controller.sectionmain.SectionHomeController;
 import update3.org.collegechooser.ChooserHome;
 import update5.org.cict.student.layout.CourseHistoryRow;
 import update5.org.cict.student.layout.CurriculumChooser;
@@ -207,6 +208,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     @FXML
     private ImageView img_icon;
 
+    @FXML
+    private Label lbl_college;
+            
     private StudentValues studentValues = new StudentValues();
     private CurriculumMapping curriculum;
     private AcademicProgramMapping acadProg;
@@ -428,6 +432,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         this.CURRENT_STUDENT.setCollege(selectedCollege);
         boolean updated = Database.connect().student().update(CURRENT_STUDENT);
         if (updated) {
+            this.setValues();
             Mono.fx().snackbar().showSuccess(application_root, "Information was updated.");
         } else {
             Mono.fx().snackbar().showInfo(application_root, "Cannot Save Changes, Please Try Again.");
@@ -990,10 +995,8 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private AccountStudentMapping asMap;
-    private String buttonStyle;
     private void setValues() {
         try {
-            buttonStyle = btn_remove_student.getStyle();
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
             lbl_lastname.setText(CURRENT_STUDENT.getLast_name());
             lbl_middlename.setText(CURRENT_STUDENT.getMiddle_name() == null ? "" : CURRENT_STUDENT.getMiddle_name());
@@ -1036,7 +1039,14 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 vbox_removed.setVisible(false);
             }
             asMap = Database.connect().account_student().getPrimary(this.CURRENT_STUDENT.getCict_id());
+            
+            for (String[] strings : SectionHomeController.COLLEGE_LIST) {
+                if(this.CURRENT_STUDENT.getCollege()!=null && this.CURRENT_STUDENT.getCollege().equalsIgnoreCase(strings[0])) {
+                    lbl_college.setText(strings[1]);
+                }
+            }
         } catch (NullPointerException f) {
+            f.printStackTrace();
         }
     }
 
