@@ -36,7 +36,6 @@ import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.utils.DateString;
 import app.lazy.models.utils.FacultyUtility;
-import artifacts.FTPManager;
 import artifacts.ImageUtility;
 import artifacts.MonoString;
 import com.izum.fx.textinputfilters.StringFilter;
@@ -54,7 +53,6 @@ import com.jhmvin.fx.display.LayoutDataFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 import javafx.collections.ObservableList;
@@ -64,7 +62,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -73,8 +70,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.apache.commons.io.FileUtils;
+import org.cict.GenericLoadingShow;
+import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.reports.ReportsUtility;
@@ -211,6 +210,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     @FXML
     private Label lbl_college;
+         
+    @FXML
+    private JFXButton btn_view_checklist;
             
     private StudentValues studentValues = new StudentValues();
     private CurriculumMapping curriculum;
@@ -355,7 +357,118 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_remove_student, ()->{
             this.onRemove();
         });
+        
+        super.addClickEvent(btn_view_checklist, ()->{
+            this.printChecklist();
+        });
     }
+    
+    private void printChecklist() {
+        // disallows cross enrollees to print a check list.
+        if (this.CURRENT_STUDENT.getResidency().equalsIgnoreCase("CROSS_ENROLLEE")) {
+            Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
+            return;
+        }
+        //----------------------------------------------------------------------
+        // current curriculum
+        CurriculumMapping curriculum = Database.connect()
+                .curriculum().getPrimary(CURRENT_STUDENT.getCURRICULUM_id());
+
+        if (curriculum == null) {
+            System.err.println("Curriculum Was Not Found !");
+            return;
+        }
+        // check if the curriculum is ladderized and it is consequent before trying to get the prep.
+        CurriculumMapping curriculum_prep = null;
+        if (curriculum.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
+            // get prep curriculum
+            if (CURRENT_STUDENT.getPREP_id() == null) {
+                System.err.println("Student Has No Preparatory. !");
+                return;
+            }
+            curriculum_prep = Database.connect()
+                    .curriculum().getPrimary(CURRENT_STUDENT.getPREP_id());
+            if (curriculum_prep == null) {
+                // since the curriculum was a CONSEQUENT
+                // a preparatory is required and must exist.
+                System.err.println("Preparatory Was Not Found !");
+                return;
+            }
+        }
+        //----------------------------------------------------------------------
+        /*
+        CurriculumMapping curriculum_prep = null;
+        if (currentStudent.getPREP_id() != null) {
+            curriculum_prep = Database.connect().curriculum().getPrimary(currentStudent.getPREP_id());
+        }
+         */
+        //----------------------------------------------------------------------
+        // try to check for legacy curriculum
+        Boolean hasLegacyExisting = false;
+        for (String legacy : PublicConstants.LEGACY_CURRICULUM) {
+            if (legacy.equalsIgnoreCase(curriculum.getName())) {
+                hasLegacyExisting = true;
+                break;
+            }
+            if (curriculum_prep != null) {
+                if (legacy.equalsIgnoreCase(curriculum_prep.getName())) {
+                    hasLegacyExisting = true;
+                    break;
+                }
+            }
+        }
+        //----------------------------------------------------------------------
+        // ask to print if legacy or standard.
+        Boolean printLegacy = false;
+        if (hasLegacyExisting) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setHeader("Checklist Format")
+                    .setMessage("Please choose a format.")
+                    .confirmCustom("Legacy", "Standard");
+            if (res == 1) {
+                printLegacy = true;
+            }
+        }
+        //----------------------------------------------------------------------
+        if (curriculum_prep != null) {
+            if (printLegacy) {
+                printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
+            } else {
+                printCheckList(printLegacy, curriculum_prep.getId(), curriculum_prep.getId());
+            }
+        } else {
+            printCheckList(printLegacy, curriculum.getId(), null);
+        }
+    }
+    
+    private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
+        PrintChecklist printCheckList = new PrintChecklist();
+        printCheckList.printLegacy = printLegacy;
+        printCheckList.CICT_id = CURRENT_STUDENT.getCict_id();
+        printCheckList.CURRICULUM_id = curriculum_ID;
+        printCheckList.setOnStart(onStart -> {
+            GenericLoadingShow.instance().show();
+        });
+        printCheckList.setOnSuccess(onSuccess -> {
+            GenericLoadingShow.instance().hide();
+            if (prep_id == null) {
+                Notifications.create().title("Please wait, we're nearly there.")
+                        .text("Printing the Checklist.").showInformation();
+            } else {
+                printCheckList(printLegacy, prep_id, null);
+            }
+        });
+        printCheckList.setOnCancel(onCancel -> {
+            GenericLoadingShow.instance().hide();
+            Notifications.create().title("Cannot Produce a Checklist")
+                    .text("Something went wrong, sorry for the inconvinience.").showWarning();
+        });
+        if(!printLegacy)
+            printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        
+        printCheckList.transact();
+    }
+
     
     private void onRemove() {
         String btn = btn_remove_student.getText(),

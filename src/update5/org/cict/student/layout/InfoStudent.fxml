@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" prefHeight="713.0" prefWidth="1320.0" styleClass="metro-base-color" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" prefHeight="694.0" prefWidth="1320.0" styleClass="metro-base-color" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox prefHeight="54.0" prefWidth="891.0" styleClass="metro-title-1">
          <children>
@@ -53,11 +53,11 @@
       </VBox>
       <StackPane>
          <children>
-            <HBox fx:id="hbox_main_view" prefHeight="645.0" prefWidth="1320.0">
+            <HBox fx:id="hbox_main_view" prefHeight="618.0" prefWidth="1320.0">
                <children>
-                  <VBox maxWidth="1.7976931348623157E308" prefHeight="635.0" prefWidth="431.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                  <VBox maxWidth="1.7976931348623157E308" prefHeight="635.0" prefWidth="367.0" spacing="10.0" HBox.hgrow="ALWAYS">
                      <HBox.margin>
-                        <Insets left="20.0" top="10.0" />
+                        <Insets bottom="10.0" left="20.0" />
                      </HBox.margin>
                      <children>
                         <HBox prefHeight="147.0" prefWidth="374.0">
@@ -104,9 +104,9 @@
                               </Label>
                            </children>
                         </VBox>
-                        <VBox prefHeight="383.0" prefWidth="396.0" spacing="10.0">
+                        <VBox prefHeight="29.0" prefWidth="367.0" spacing="10.0">
                            <children>
-                              <JFXButton fx:id="btn_edit_grades" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Edit Grades">
+                              <JFXButton fx:id="btn_edit_grades" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text=" Edit Grades      ">
                                  <styleClass>
                                     <String fx:value="label" />
                                     <String fx:value="metro-base-color" />
@@ -125,7 +125,7 @@
                                     </ImageView>
                                  </graphic>
                               </JFXButton>
-                              <JFXButton fx:id="btn_change_college" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Change College">
+                              <JFXButton fx:id="btn_change_college" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text=" Change College">
                                  <styleClass>
                                     <String fx:value="label" />
                                     <String fx:value="metro-base-color" />
@@ -144,7 +144,7 @@
                                     </ImageView>
                                  </graphic>
                               </JFXButton>
-                              <JFXButton fx:id="btn_view_profile" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="View Profile">
+                              <JFXButton fx:id="btn_view_profile" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text=" Profile              ">
                                  <styleClass>
                                     <String fx:value="label" />
                                     <String fx:value="metro-base-color" />
@@ -163,7 +163,7 @@
                                     </ImageView>
                                  </graphic>
                               </JFXButton>
-                              <JFXButton fx:id="btn_view_deficiency" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="View Deficiency">
+                              <JFXButton fx:id="btn_view_deficiency" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text=" Deficiency        ">
                                  <styleClass>
                                     <String fx:value="label" />
                                     <String fx:value="metro-base-color" />
@@ -182,7 +182,26 @@
                                     </ImageView>
                                  </graphic>
                               </JFXButton>
-                              <JFXButton fx:id="btn_remove_student" prefHeight="70.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Remove Student">
+                              <JFXButton fx:id="btn_view_checklist" layoutX="10.0" layoutY="205.0" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text=" Checklist         ">
+                                 <styleClass>
+                                    <String fx:value="label" />
+                                    <String fx:value="metro-base-color" />
+                                 </styleClass>
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                                 <graphic>
+                                    <ImageView fitHeight="33.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Todo%20List_64px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_remove_student" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Remove Student">
                                  <styleClass>
                                     <String fx:value="label" />
                                     <String fx:value="metro-base-color" />
@@ -202,39 +221,6 @@
                                  </graphic>
                               </JFXButton>
                            </children>
-                        </VBox>
-                        <VBox alignment="CENTER_LEFT" prefHeight="94.0" prefWidth="396.0" styleClass="metro-base-color">
-                           <children>
-                              <Label fx:id="lbl_verified_by" maxWidth="1.7976931348623157E308" text="NONE" wrapText="true">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <Label minWidth="-Infinity" prefHeight="21.0" prefWidth="97.0" text="Verified By">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="lbl_verified_date" maxWidth="1.7976931348623157E308" text="NONE">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets top="10.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Label minWidth="-Infinity" text="Verified Date">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <padding>
-                              <Insets bottom="20.0" />
-                           </padding>
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
                         </VBox>
                      </children>
                   </VBox>
@@ -513,7 +499,7 @@
                                     </VBox>
                                  </children>
                               </VBox>
-                              <VBox fx:id="vbox_hidden" alignment="CENTER" prefHeight="635.0" prefWidth="393.0">
+                              <VBox fx:id="vbox_hidden" alignment="BOTTOM_CENTER" prefHeight="635.0" prefWidth="393.0">
                                  <children>
                                     <VBox alignment="BOTTOM_CENTER" prefHeight="232.0" prefWidth="319.0">
                                        <VBox.margin>
@@ -605,6 +591,36 @@
                                           </VBox>
                                        </children>
                                     </VBox>
+                                    <VBox alignment="BOTTOM_RIGHT" prefHeight="170.0" prefWidth="367.0" styleClass="metro-base-color">
+                                       <children>
+                                          <Label fx:id="lbl_verified_by" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="NONE" wrapText="true">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER_RIGHT" contentDisplay="TOP" minWidth="-Infinity" prefHeight="21.0" prefWidth="97.0" text="Verified By" textAlignment="RIGHT">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lbl_verified_date" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="NONE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label alignment="CENTER_RIGHT" minWidth="-Infinity" text="Verified Date">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </VBox>
                                  </children>
                               </VBox>
                            </children>
@@ -667,6 +683,9 @@
                      </HBox.margin>
                   </StackPane>
                </children>
+               <StackPane.margin>
+                  <Insets bottom="10.0" />
+               </StackPane.margin>
             </HBox>
             <VBox fx:id="vbox_verify" prefHeight="200.0" prefWidth="100.0" visible="false">
                <children>
@@ -737,6 +756,9 @@
                </children>
             </VBox>
          </children>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
       </StackPane>
    </children>
    <stylesheets>
