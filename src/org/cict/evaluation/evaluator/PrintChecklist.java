@@ -603,7 +603,7 @@ public class PrintChecklist extends Transaction {
 
     //--------------------------------------------------------------------------
     // use this variable as comparison if the image will use the default
-    public final static String DEFAULT_IMAGE_LOC = "src/org/cict/reports/checklist/images/default.png";
+    public final static String DEFAULT_IMAGE_LOC = "src/org/cict/reports/images/checklist/default2x2.png";
     //--------------------------------------------------------------------------
 
     private String getImageLocation() {

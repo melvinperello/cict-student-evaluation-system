@@ -98,7 +98,7 @@ public class Deficiency {
 //            address,
 //            studentNo;
 //    private static String curriculumName;
-    private HashMap<String,ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
+//    private HashMap<String,ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
     
     public void init() {
 //        this.studentNo = this.STUDENT_NUMBER;
@@ -243,13 +243,11 @@ public class Deficiency {
                 //1-total hrs
                 //2-prereq
                 //3-co-req
-                if(subjects.isEmpty())
-                    return null;
+//                if(subjects.isEmpty())
+//                    continue;
                 tbl_stud.addCell(createSimpleCell(semester, font5Bold, 11, true, false));
-                try{
-                    if(subjects == null)
-                        return null;
-                }catch(NullPointerException a) {
+               
+                if(subjects.isEmpty()){
                     tbl_stud.addCell(createSimpleCell("NO", font5Plain, 0, false, false));
                     tbl_stud.addCell(createSimpleCell("MISSING", font5Plain, 0, true, false));
                     tbl_stud.addCell(createSimpleCell(getShortenedDetail("RECORD"
