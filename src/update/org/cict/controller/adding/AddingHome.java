@@ -249,7 +249,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
         });
 
         btnStudentInfo.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            this.onShowStudentInfo();
+//            this.onShowStudentInfo();
+            this.printDeficiency();
+
         });
 
         btnHistory.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
@@ -264,7 +266,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
             printChecklist();
         });
     }
-
+    
     private Boolean FLAG_CROSS_ENROLLEE;
     private void printChecklist() {
         // disallows cross enrollees to print a check list.
@@ -367,20 +369,20 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 .stageShow();
     }
 
-    private void onShowStudentInfo() {
-        this.vbox_studentOptions.setVisible(false);
-        InfoStudentController controller = new InfoStudentController(this.studentSearched);
-        Mono.fx().create()
-                .setPackageName("org.cict.evaluation.student.info")
-                .setFxmlDocument("InfoStudent")
-                .makeFX()
-                .setController(controller)
-                .makeScene()
-                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
-                .stageResizeable(false)
-                .stageShow();
-        setView("home");
-    }
+//    private void onShowStudentInfo() {
+//        this.vbox_studentOptions.setVisible(false);
+//        InfoStudentController controller = new InfoStudentController(this.studentSearched);
+//        Mono.fx().create()
+//                .setPackageName("org.cict.evaluation.student.info")
+//                .setFxmlDocument("InfoStudent")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
+//                .stageResizeable(false)
+//                .stageShow();
+//        setView("home");
+//    }
 
     private void hideDropDownEvents() {
         txtStudentNumber.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
