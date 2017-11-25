@@ -323,6 +323,9 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             vbox_no_result.setVisible(false);
             tableStudent.getChildren().clear();
             vbox_list.setVisible(false);
+            
+            btn_home1.setDisable(true);
+            super.getScene().setCursor(Cursor.WAIT);
         });
         fetch.whenRunning(() -> {
             lbl_status.setText("Loading...");
@@ -368,8 +371,9 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             if (!vbox_result.isVisible()) {
                 changeHome(vbox_result);
             }
+            btn_home1.setDisable(false);
+            super.getScene().setCursor(Cursor.DEFAULT);
         });
-        fetch.setRestTime(1000);
         fetch.transact();
     }
 
@@ -589,15 +593,12 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                                     }
                                 }
                             }
-                            System.out.println("FETCH FOUND: " + count);
                         } else {
                             students.addAll(students_temp);
-                            System.out.println("FETCH FOUND: " + students_temp.size());
                         }
                     }
                 }
             }
-            System.out.println("FETCH TOTAL SIZE: " + students.size());
             if (!isEnrolledSelected) {
                 return true;
             }
