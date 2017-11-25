@@ -1,7 +1,6 @@
 package org.cict.reports.deficiency;
 
 import app.lazy.models.SubjectMapping;
-import artifacts.ResourceManager;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import java.io.FileOutputStream;
@@ -29,7 +28,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.cict.SubjectClassification;
-import org.cict.reports.ReportsDirectory;
 import org.cict.reports.ReportsUtility;
 
 public class Deficiency {
@@ -96,18 +94,38 @@ public class Deficiency {
     /**
      * PRIVATE VARIABLES
      */
-    private String name,
-            address,
-            studentNo;
-    private static String curriculumName;
+//    private String name,
+//            address,
+//            studentNo;
+//    private static String curriculumName;
     private HashMap<String,ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
     
     public void init() {
-        this.studentNo = this.STUDENT_NUMBER;
-        this.name = this.STUDENT_NAME;
-        this.address = this.STUDENT_ADDRESS;
-        this.subjectsPerSem = this.SUBJECTS_PER_SEM;
-        this.curriculumName = CURRICULUM_NAME;
+//        this.studentNo = this.STUDENT_NUMBER;
+//        this.name = this.STUDENT_NAME;
+//        this.address = this.STUDENT_ADDRESS;
+//        this.subjectsPerSem = this.SUBJECTS_PER_SEM;
+//        this.curriculumName = CURRICULUM_NAME;
+    }
+    
+    //---------------------------
+    private Document documentFormat;
+    public void setDocumentFormat(Document documentFormat) {
+        this.documentFormat = documentFormat;
+    }
+    private String reportsIntroTitle = null, reportsTitleHead = null, reportsOtherDetail = null;
+    //
+
+    public void setReportsIntroTitle(String reportsIntroTitle) {
+        this.reportsIntroTitle = reportsIntroTitle;
+    }
+
+    public void setReportsTitleHead(String reportsTitleHead) {
+        this.reportsTitleHead = reportsTitleHead;
+    }
+
+    public void setReportsOtherDetail(String reportsOtherDetail) {
+        this.reportsOtherDetail = reportsOtherDetail;
     }
     
     private static PdfWriter writer;
@@ -120,8 +138,7 @@ public class Deficiency {
      */
     public int createPdf(String filename)
             throws DocumentException, IOException {
-        Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
-                Utilities.inchesToPoints(13f)), 55, 55, 50, 50); //lrtb
+        Document document = this.documentFormat;
         try{
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
             PageFooter event = new PageFooter((DATETIME==null? "NOT FOUND" : DATETIME), (USER==null? "NOT FOUND" : USER), (TERMINAL==null? "NOT FOUND" : TERMINAL));
@@ -130,62 +147,62 @@ public class Deficiency {
             return 1;
         }
         document.open();
-        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
-        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
-        Image img = Image.getInstance(ResourceManager.fetchFromResource(Deficiency.class, location_logo1));
-        img.setAbsolutePosition(100, 825); //position
-        img.scaleAbsolute(70, 70); //size
-        document.add(img);
-        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(Deficiency.class, location_logo2));
-        img2.setAbsolutePosition(445, 825); //position
-        img2.scaleAbsolute(70, 70); //size
-        document.add(img2);
+//        String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
+//        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
+//        Image img = Image.getInstance(ResourceManager.fetchFromResource(Deficiency.class, location_logo1));
+//        img.setAbsolutePosition(100, 825); //position
+//        img.scaleAbsolute(70, 70); //size
+//        document.add(img);
+//        Image img2 = Image.getInstance(ResourceManager.fetchFromResource(Deficiency.class, location_logo2));
+//        img2.setAbsolutePosition(445, 825); //position
+//        img2.scaleAbsolute(70, 70); //size
+//        document.add(img2);
         
-        document.add(createHeader());
-        document.add(createStudentInfo());
+        ReportsUtility.createHeader(document, this.reportsTitleHead, this.reportsIntroTitle, this.reportsOtherDetail);
+        ReportsUtility.createStudentInfoHeader(document, STUDENT_NAME, STUDENT_NUMBER, STUDENT_ADDRESS);
         document.add(createBody());
 //        writer.setPageEvent(new MyFooter());
         document.close();
         return 0;
     }
     
-    private static Paragraph createHeader() throws DocumentException{
-        Paragraph header = new Paragraph(15);
-        header.setAlignment(Element.ALIGN_CENTER);
-        header.add(new Chunk("Republic of the Philippines\n",font13Plain));
-        header.add(new Chunk("Bulacan State University\n",font17Bold));
-        header.add(new Chunk("City of Malolos, Bulacan\n",font13Plain));
-        header.add(new Chunk("Tel/Fax (044) 9197800 local 1101\n\n",font9Plain));
-        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n",font19Plain));
-        header.add(new Chunk("_____________________________________________________\n\n",font17Bold));
-        header.add(createTitle());
-        return header;
-    }
+//    private static Paragraph createHeader() throws DocumentException{
+//        Paragraph header = new Paragraph(15);
+//        header.setAlignment(Element.ALIGN_CENTER);
+//        header.add(new Chunk("Republic of the Philippines\n",font13Plain));
+//        header.add(new Chunk("Bulacan State University\n",font17Bold));
+//        header.add(new Chunk("City of Malolos, Bulacan\n",font13Plain));
+//        header.add(new Chunk("Tel/Fax (044) 9197800 local 1101\n\n",font9Plain));
+//        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n",font19Plain));
+//        header.add(new Chunk("_____________________________________________________\n\n",font17Bold));
+//        header.add(createTitle());
+//        return header;
+//    }
     
-    private static Paragraph createTitle() {
-        Paragraph p = new Paragraph(10);
-        p.setAlignment(Element.ALIGN_CENTER);
-        p.add(new Chunk("Deficiency Report\n",font13Plain));
-        p.add(getTextUnderlined(curriculumName + "\n",font7Bold));
-        return p;
-    }
+//    private static Paragraph createTitle() {
+//        Paragraph p = new Paragraph(10);
+//        p.setAlignment(Element.ALIGN_CENTER);
+//        p.add(new Chunk("Deficiency Report\n",font13Plain));
+//        p.add(getTextUnderlined(curriculumName + "\n",font7Bold));
+//        return p;
+//    }
     
-    private PdfPTable createStudentInfo() throws DocumentException {
-        PdfPTable tbl_stud = new PdfPTable(2);
-        tbl_stud.setTotalWidth(500);
-        tbl_stud.setLockedWidth(true);
-        tbl_stud.setHorizontalAlignment(Element.ALIGN_CENTER);
-        tbl_stud.setSpacingAfter(7f);
-        /**
-         * STUDENT INFO
-         */
-        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font8Plain, getShortenedDetail(this.name, 40), font8Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font8Plain, getShortenedDetail(this.studentNo, 47), font8Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail(this.address, 39), font8Plain, "", true), false, false));
-        tbl_stud.addCell(createCellWithObject(new Chunk("") ,false, true));
-        
-        return tbl_stud;
-    }
+//    private PdfPTable createStudentInfo() throws DocumentException {
+//        PdfPTable tbl_stud = new PdfPTable(2);
+//        tbl_stud.setTotalWidth(500);
+//        tbl_stud.setLockedWidth(true);
+//        tbl_stud.setHorizontalAlignment(Element.ALIGN_CENTER);
+//        tbl_stud.setSpacingAfter(7f);
+//        /**
+//         * STUDENT INFO
+//         */
+//        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font8Plain, getShortenedDetail(this.name, 40), font8Plain, "", true), false, true));
+//        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font8Plain, getShortenedDetail(this.studentNo, 47), font8Plain, "", true), false, true));
+//        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail(this.address, 39), font8Plain, "", true), false, false));
+//        tbl_stud.addCell(createCellWithObject(new Chunk("") ,false, true));
+//        
+//        return tbl_stud;
+//    }
     
     private PdfPTable createBody() throws DocumentException {
         PdfPTable tbl_stud = new PdfPTable(1);
@@ -221,7 +238,7 @@ public class Deficiency {
             for (int k = 0; k < 2; k++) {
                 this.setTitleHeader();
                 //check if there is a subject in this sem
-                ArrayList<Object[]> subjects = this.subjectsPerSem.get(objectKey);
+                ArrayList<Object[]> subjects = this.SUBJECTS_PER_SEM.get(objectKey);
                 //0-subjectmap
                 //1-total hrs
                 //2-prereq

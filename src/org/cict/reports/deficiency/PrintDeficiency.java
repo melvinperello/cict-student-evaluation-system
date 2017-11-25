@@ -32,7 +32,7 @@ import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
-import app.lazy.models.utils.FacultyUtility;
+import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.text.SimpleDateFormat;
@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.SubjectClassification;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
@@ -272,10 +273,13 @@ public class PrintDeficiency extends Transaction {
                 + (student.getMiddle_name() == null ? "" : (" " + student.getMiddle_name()));
 
         Deficiency def = new Deficiency(RESULT);
+        def.setDocumentFormat(this.documentFormat);
         def.STUDENT_NUMBER = student.getId() == null ? "NONE" : student.getId();
         def.STUDENT_NAME = fullName == null ? "NONE" : fullName;
         def.STUDENT_ADDRESS = address;
         def.CURRICULUM_NAME = course;
+        def.setReportsOtherDetail(SystemProperties.instance().getCurrentTermString());
+        def.setReportsTitleHead("Deficiency Report");
         for (Object[] detail : details) {
             String key = (String) detail[4];
             SubjectMapping subject = (SubjectMapping) detail[0];
@@ -307,6 +311,7 @@ public class PrintDeficiency extends Transaction {
             }
 
         }
+        System.out.println(fyrfsem.size());
         def.SUBJECTS_PER_SEM.put("11", fyrfsem);
         def.SUBJECTS_PER_SEM.put("12", fyrssem);
         def.SUBJECTS_PER_SEM.put("21", syrfsem);
@@ -331,5 +336,11 @@ public class PrintDeficiency extends Transaction {
 
     private void store(ArrayList<Object[]> subjectDetails, Object[] detail) {
         subjectDetails.add(detail);
+    }
+    
+    private Document documentFormat;
+
+    public void setDocumentFormat(Document documentFormat) {
+        this.documentFormat = documentFormat;
     }
 }
