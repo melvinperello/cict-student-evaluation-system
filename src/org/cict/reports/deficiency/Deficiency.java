@@ -160,8 +160,12 @@ public class Deficiency {
         
         ReportsUtility.createHeader(document, this.reportsTitleHead, this.reportsIntroTitle, this.reportsOtherDetail);
         ReportsUtility.createStudentInfoHeader(document, STUDENT_NAME, STUDENT_NUMBER, STUDENT_ADDRESS);
-        document.add(createBody());
+//        document.add(createBody());
 //        writer.setPageEvent(new MyFooter());
+        document.add(createCurriculumTable(0,1));
+        document.add(createCurriculumTable(1,2));
+        document.add(createCurriculumTable(2,3));
+        document.add(createCurriculumTable(3,4));
         document.close();
         return 0;
     }
