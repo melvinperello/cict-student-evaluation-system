@@ -248,15 +248,15 @@ public class Deficiency {
                 tbl_stud.addCell(createSimpleCell(semester, font5Bold, 11, true, false));
                
                 if(subjects.isEmpty()){
-                    tbl_stud.addCell(createSimpleCell("NO", font5Plain, 0, false, false));
-                    tbl_stud.addCell(createSimpleCell("MISSING", font5Plain, 0, true, false));
-                    tbl_stud.addCell(createSimpleCell(getShortenedDetail("RECORD"
-                            , 38), font5Plain, 0, false, false));
-                    tbl_stud.addCell(createSimpleCell("OF", font5Plain, 0, true, false));
-                    tbl_stud.addCell(createSimpleCell("GRADE", font5Plain, 0, true, false));
-                    tbl_stud.addCell(createSimpleCell("IN", font5Plain, 0, true, false));
-                    tbl_stud.addCell(createSimpleCell("THIS", font5Plain, 0, true, false));
-                    tbl_stud.addCell(createSimpleCell("SEMESTER", font5Plain, 0, true, false));
+                    tbl_stud.addCell(createSimpleCell("*** No Missing Grades ***", font5Plain, 8, true, false));
+//                    tbl_stud.addCell(createSimpleCell("MISSING", font5Plain, 0, true, false));
+//                    tbl_stud.addCell(createSimpleCell(getShortenedDetail("RECORD"
+//                            , 38), font5Plain, 0, false, false));
+//                    tbl_stud.addCell(createSimpleCell("OF", font5Plain, 0, true, false));
+//                    tbl_stud.addCell(createSimpleCell("GRADE", font5Plain, 0, true, false));
+//                    tbl_stud.addCell(createSimpleCell("IN", font5Plain, 0, true, false));
+//                    tbl_stud.addCell(createSimpleCell("THIS", font5Plain, 0, true, false));
+//                    tbl_stud.addCell(createSimpleCell("SEMESTER", font5Plain, 0, true, false));
                     //change sem
                     if(sem == 1)
                         sem = 2;
