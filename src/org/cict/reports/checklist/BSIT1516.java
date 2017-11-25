@@ -165,11 +165,15 @@ public class BSIT1516 {
             if(!major.isEmpty())
                 ReportsUtility.createHeader(document, "AY " + sy, course, "MAJOR IN " + major );
             else
-                ReportsUtility.createHeader(document, course, null, "AY " + sy);
+                ReportsUtility.createHeader(document, course, "CHECKLIST IN", "AY " + sy);
         }
         document.add(createStudentInfo());
-        document.add(createBody());
+//        document.add(createBody());
 //        document.add(createTitle());
+        document.add(createCurriculumTable(0,1));
+        document.add(createCurriculumTable(1,2));
+        document.add(createCurriculumTable(2,3));
+        document.add(createCurriculumTable(3,4));
         writer.setPageEvent(new MyFooter3());
         document.close();
         return 0;
@@ -224,18 +228,18 @@ public class BSIT1516 {
         return tbl_stud;
     }
     
-    private PdfPTable createBody() throws DocumentException {
-        PdfPTable tbl_stud = new PdfPTable(1);
-        tbl_stud.setPaddingTop(10f);
-        tbl_stud.setTotalWidth(575);
-        tbl_stud.setLockedWidth(true);
-        try {
-            tbl_stud.addCell(createCellWithObject(createCurriculumTable(0,2),false,true));
-            tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
-        } catch (Exception e) {
-        }
-        return tbl_stud;
-    }
+//    private PdfPTable createBody() throws DocumentException {
+//        PdfPTable tbl_stud = new PdfPTable(1);
+//        tbl_stud.setPaddingTop(10f);
+//        tbl_stud.setTotalWidth(575);
+//        tbl_stud.setLockedWidth(true);
+//        try {
+//            tbl_stud.addCell(createCellWithObject(createCurriculumTable(0,2),false,true));
+//            tbl_stud.addCell(createCellWithObject(createCurriculumTable(2,4),false,true));
+//        } catch (Exception e) {
+//        }
+//        return tbl_stud;
+//    }
      
     private String objectKey, yearLevel, semester;
     private int  year = 1;
