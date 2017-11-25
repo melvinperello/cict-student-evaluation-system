@@ -187,7 +187,7 @@ public class BSIT1516 {
          */
         tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font8Plain, getShortenedDetail(this.name, 40), font8Plain, "", true), false, true));
         tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font8Plain, getShortenedDetail(this.studentNo, 47), font8Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail(this.address, 39), font8Plain, "", true), false, false));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font8Plain, getShortenedDetail(this.address.isEmpty()? "______________________________________" : this.address, 39), font8Plain, "", !address.contains("_")), false, false));
         tbl_stud.addCell(createCellWithObject(new Chunk("") ,false, true));
         
         return tbl_stud;

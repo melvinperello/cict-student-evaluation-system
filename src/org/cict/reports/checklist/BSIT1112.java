@@ -215,9 +215,14 @@ public class BSIT1112 {
          */
         tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Plain, getShortenedDetail(this.name, 40), font7Plain, "", true), false, true));
         tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT NO: ", font7Plain, getShortenedDetail(this.studentNo, 47), font7Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.address, 39), font7Plain, "", true), false, false));
+        boolean undrln = true;
+        if(address==null || address.isEmpty()) {
+            address = "_______________________________________";
+            undrln = false;
+        }
+        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.address, 39), font7Plain, "", undrln), false, false));
         boolean underlined = true;
-        if (highSchool.isEmpty()) {
+        if (highSchool==null || highSchool.isEmpty()) {
             highSchool = "__________________________________________";
             underlined = false;
         }

@@ -200,14 +200,20 @@ public class BITCT {
          */
         tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Plain, getShortenedDetail(this.name, 40), font7Plain, "", true), false, true));
         tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT NO: ", font7Plain, getShortenedDetail(this.studentNo, 47), font7Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.STUDENT_ADDRESS, 39), font7Plain, "", true), false, false));
+        
+        boolean u = true;
+        if (address==null || address.isEmpty()) {
+            address = "_______________________________________";
+            u = false;
+        }
+        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.STUDENT_ADDRESS, 39), font7Plain, "", u), false, false));
 
-        boolean underlined = true;
+        boolean l = true;
         if (highSchool.isEmpty()) {
             highSchool = "__________________________________________";
-            underlined = false;
+            l = false;
         }
-        tbl_stud.addCell(createCellWithObject(getTitleContent("HIGH SCHOOL: ", font7Plain, getShortenedDetail(this.highSchool, 42), font7Plain, "\n\n", underlined), false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("HIGH SCHOOL: ", font7Plain, getShortenedDetail(this.highSchool, 42), font7Plain, "\n\n", !highSchool.contains("_")), false, true));
         return tbl_stud;
     }
 
