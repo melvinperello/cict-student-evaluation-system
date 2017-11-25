@@ -30,6 +30,7 @@ import app.lazy.models.CurriculumPreMapping;
 import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.EvaluationMapping;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentCourseHistoryMapping;
 import app.lazy.models.StudentMapping;
@@ -73,6 +74,7 @@ import javafx.stage.StageStyle;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
@@ -607,6 +609,19 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     //--------------------------------------------------------------------------
     private void onShiftCourse() {
+        // check if evaluated
+        EvaluationMapping eMap = Mono.orm().newSearch(Database.connect().evaluation())
+                .eq(DB.evaluation().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
+                .eq(DB.evaluation().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
+                .active(Order.desc(DB.evaluation().id)).first();
+        if(eMap != null) {
+            Mono.fx().alert().createWarning()
+                    .setHeader("Already Evaluated")
+                    .setMessage("The student is already evaluated in the current semester and cannot proceed to shifting. Please revoke the evaluation first before continuing.")
+                    .show();
+            return;
+        }
+        
         CurriculumMapping selected = selectCurriculum("Are you sure you want to shift the student's course?");
         if (selected == null) {
             return;
