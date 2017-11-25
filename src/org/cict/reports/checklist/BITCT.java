@@ -43,8 +43,9 @@ public class BITCT {
         try {
             init();
             int val = createPdf(RESULT);
-            if(val==1)
+            if (val == 1) {
                 System.out.println("Please close the previous report");
+            }
             /* -------- run the created pdf */
             if (Desktop.isDesktopSupported()) {
                 try {
@@ -72,7 +73,7 @@ public class BITCT {
             STUDENT_HS = "",
             IMAGE_LOCATION = ReportsDirectory.DEFAULT_IMAGE2x2;
     public Integer ADMISSION_YEAR = 2014;
-    public HashMap<String,ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
+    public HashMap<String, ArrayList<Object[]>> SUBJECTS_PER_SEM = new HashMap<String, ArrayList<Object[]>>();
     /**
      * FONTS
      */
@@ -91,10 +92,9 @@ public class BITCT {
             address,
             highSchool,
             image1x1;
-    private Integer admissionYear; 
-    private HashMap<String,ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
-    
-    
+    private Integer admissionYear;
+    private HashMap<String, ArrayList<Object[]>> subjectsPerSem = new HashMap<String, ArrayList<Object[]>>();
+
     public void init() {
         this.studentNo = this.STUDENT_NUMBER;
         this.name = this.STUDENT_NAME;
@@ -104,8 +104,9 @@ public class BITCT {
         this.admissionYear = this.ADMISSION_YEAR;
         this.image1x1 = IMAGE_LOCATION;
     }
-    
+
     private static PdfWriter writer;
+
     /**
      * Creates a PDF document.
      *
@@ -117,14 +118,14 @@ public class BITCT {
             throws DocumentException, IOException {
         Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
                 Utilities.inchesToPoints(13f)), 50, 50, 70, 50); //lrtb
-        try{
+        try {
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
-        }catch(FileNotFoundException es){
+        } catch (FileNotFoundException es) {
             return 1;
         }
         document.open();
         String location_logo1 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/BULSU.png",
-        location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
+                location_logo2 = ReportsDirectory.REPORTS_DIR_IMAGES + "checklist/CICT.png";
         // add bulsu logo
         Image img = Image.getInstance(ResourceManager.fetchFromResource(BITCT.class, location_logo1));
         img.setAbsolutePosition(32, 815); //position
@@ -135,49 +136,50 @@ public class BITCT {
         img2.setAbsolutePosition(85, 815); //position
         img2.scaleAbsolute(52, 52); //size
         document.add(img2);
-        
+
         document.add(createHeader());
         try {
             Image image1X1 = Image.getInstance(image1x1);
-            image1X1.setAbsolutePosition(450f,750); //position
-            image1X1.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
+            image1X1.setAbsolutePosition(450f, 750); //position
+            image1X1.scaleAbsolute(Utilities.inchesToPoints(2), Utilities.inchesToPoints(2)); //size
             document.add(image1X1);
         } catch (Exception e) {
             Image image1X1 = Image.getInstance(ReportsDirectory.DEFAULT_IMAGE2x2);
-            image1X1.setAbsolutePosition(450f,750); //position
-            image1X1.scaleAbsolute(Utilities.inchesToPoints(2),Utilities.inchesToPoints(2)); //size
+            image1X1.setAbsolutePosition(450f, 750); //position
+            image1X1.scaleAbsolute(Utilities.inchesToPoints(2), Utilities.inchesToPoints(2)); //size
             document.add(image1X1);
-        }create2x2Box(writer);
+        }
+        create2x2Box(writer);
         document.add(createStudentInfo());
-        document.add(createBody(0,2));
+        document.add(createBody(0, 2));
         Paragraph p = new Paragraph(0);
         p.setFirstLineIndent(-25f);
         p.setSpacingAfter(7f);
         p.add(new Chunk("(Upon completion of the requirements of the two-year course,"
                 + " a Certificate in Two-Year Industrial Technology will be granted.)", font5BoldItalic));
-        document.add(p); 
-        document.add(createBody(2,4));
+        document.add(p);
+        document.add(createBody(2, 4));
         writer.setPageEvent(new MyFooter());
         document.close();
         return 0;
     }
-    
-    private static Paragraph createHeader() throws DocumentException{
+
+    private static Paragraph createHeader() throws DocumentException {
         Paragraph header = new Paragraph(10);
         header.setAlignment(Element.ALIGN_CENTER);
-        header.add(new Chunk("BULACAN STATE UNIVERSITY\n",font7Plain));
-        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n",font7Bold));
-        header.add(new Chunk("City of Malolos, Bulacan\n",font7Plain));
-        header.add(new Chunk("Tele Fax No. (044) 796-0147\n",font7Plain));
-        header.add(new Chunk("Email: bsuice@pldtdsl.net\n",font7Plain));
-        header.add(new Chunk("http://www.bulsu.edu.ph\n\n\n\n",font7Plain));
-        header.add(new Chunk("CHECKLIST IN\n",font7Bold));
-        header.add(new Chunk("BACHELOR IN INDUSTRIAL TECHNOLOGY\n",font7Bold));
-        header.add(new Chunk("MAJOR IN COMPUTER TECHNOLOGY\n",font7Bold));
-        header.add(new Chunk("\n",font7Plain));
+        header.add(new Chunk("BULACAN STATE UNIVERSITY\n", font7Plain));
+        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n", font7Bold));
+        header.add(new Chunk("City of Malolos, Bulacan\n", font7Plain));
+        header.add(new Chunk("Tele Fax No. (044) 796-0147\n", font7Plain));
+        header.add(new Chunk("Email: bsuice@pldtdsl.net\n", font7Plain));
+        header.add(new Chunk("http://www.bulsu.edu.ph\n\n\n\n", font7Plain));
+        header.add(new Chunk("CHECKLIST IN\n", font7Bold));
+        header.add(new Chunk("BACHELOR IN INDUSTRIAL TECHNOLOGY\n", font7Bold));
+        header.add(new Chunk("MAJOR IN COMPUTER TECHNOLOGY\n", font7Bold));
+        header.add(new Chunk("\n", font7Plain));
         return header;
     }
-    
+
     private PdfPTable createStudentInfo() throws DocumentException {
         PdfPTable tbl_stud = new PdfPTable(2);
         tbl_stud.setTotalWidth(575);
@@ -190,7 +192,7 @@ public class BITCT {
         cell.setColspan(2);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         p_title.setAlignment(Element.ALIGN_CENTER);
-        
+
         cell.addElement(p_title);
         tbl_stud.addCell(cell);
         /**
@@ -199,21 +201,22 @@ public class BITCT {
         tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Plain, getShortenedDetail(this.name, 40), font7Plain, "", true), false, true));
         tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT NO: ", font7Plain, getShortenedDetail(this.studentNo, 47), font7Plain, "", true), false, true));
         tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.STUDENT_ADDRESS, 39), font7Plain, "", true), false, false));
-        
+
         boolean underlined = true;
-        if(highSchool.isEmpty()) {
+        if (highSchool.isEmpty()) {
             highSchool = "__________________________________________";
             underlined = false;
         }
-        tbl_stud.addCell(createCellWithObject(getTitleContent("HIGH SCHOOL: ", font7Plain, getShortenedDetail(this.highSchool,42), font7Plain, "\n\n", underlined) ,false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("HIGH SCHOOL: ", font7Plain, getShortenedDetail(this.highSchool, 42), font7Plain, "\n\n", underlined), false, true));
         return tbl_stud;
     }
-    
+
     private String objectKey;
     private int sem = 1;
+
     private PdfPTable createBody(int start, int end) throws DocumentException {
         PdfPTable tbl_stud = new PdfPTable(3);
-        tbl_stud.setWidths(new float[]{3,0,3}); 
+        tbl_stud.setWidths(new float[]{3, 0, 3});
         tbl_stud.setTotalWidth(575);
         tbl_stud.setLockedWidth(true);
         /**
@@ -221,64 +224,70 @@ public class BITCT {
          */
         for (int i = start; i < end; i++) {
             String t_header = this.getTitleHeader(i);
-            tbl_stud.addCell(createCellWithObject(createSemesterTable(t_header, objectKey),false,true));
-            tbl_stud.addCell(createCellWithObject(new Phrase("",font7Plain), false, true));
-            
+            tbl_stud.addCell(createCellWithObject(createSemesterTable(t_header, objectKey), false, true));
+            tbl_stud.addCell(createCellWithObject(new Phrase("", font7Plain), false, true));
+
             t_header = this.getTitleHeader(i);
-            tbl_stud.addCell(createCellWithObject(createSemesterTable(t_header, objectKey),false,true));   
-            
+            tbl_stud.addCell(createCellWithObject(createSemesterTable(t_header, objectKey), false, true));
+
             admissionYear++;
         }
         return tbl_stud;
     }
-    
+
     private String getTitleHeader(int counter) {
         String t_header = "",
-                sy = admissionYear + "-" + (admissionYear+1);
-        switch (counter+1) {
+                sy = admissionYear + "-" + (admissionYear + 1);
+        switch (counter + 1) {
             case 1:
-                if(sem == 1){
+                if (sem == 1) {
                     t_header = "FIRST YEAR 1st Semester SY ";
-                } else if(sem == 2)
+                } else if (sem == 2) {
                     t_header = "FIRST YEAR 2nd Semester SY ";
+                }
                 objectKey = 1 + String.valueOf(sem);
                 break;
             case 2:
-                if(sem == 1){
+                if (sem == 1) {
                     t_header = "SECOND YEAR 1st Semester SY ";
-                } else if(sem == 2)
+                } else if (sem == 2) {
                     t_header = "SECOND YEAR 2nd Semester SY ";
+                }
                 objectKey = 2 + String.valueOf(sem);
                 break;
             case 3:
-                if(sem == 1){
+                if (sem == 1) {
                     t_header = "THIRD YEAR 1st Semester SY ";
-                } else if(sem == 2)
+                } else if (sem == 2) {
                     t_header = "THIRD YEAR 2nd Semester SY ";
+                }
                 objectKey = 3 + String.valueOf(sem);
                 break;
             case 4:
-                if(sem == 1){
+                if (sem == 1) {
                     t_header = "FOURTH YEAR 1st Semester SY ";
-                } else if(sem == 2)
+                } else if (sem == 2) {
                     t_header = "FOURTH YEAR 2nd Semester SY ";
+                }
                 objectKey = 4 + String.valueOf(sem);
                 break;
             default:
                 break;
         }
         //change sem
-        if(sem == 1)
+        if (sem == 1) {
             sem = 2;
-        else
+        } else {
             sem = 1;
+        }
         return t_header + sy;
     }
-     
+
     private Integer OVERALL_TOTAL = 0;
+
     private PdfPTable createSemesterTable(String titleHeader, String key) throws DocumentException {
         PdfPTable tbl_stud = new PdfPTable(6);
-        tbl_stud.setWidths(new float[]{2, 4, 1, 2, 2, 1}); 
+        tbl_stud.setWidths(new float[]{2, 4, 1, 2, 2, 1});
         tbl_stud.setTotalWidth(280);
         tbl_stud.setLockedWidth(true);
         tbl_stud.setSpacingAfter(10f);
@@ -289,15 +298,16 @@ public class BITCT {
         tbl_stud.addCell(createSimpleCell(titleHeader, font5Bold, 6, true));
         tbl_stud.addCell(createSimpleCell("Subject Code", font5Plain, 0, true));
         tbl_stud.addCell(createSimpleCell("Description", font5Plain, 0, true));
-        
-        if(objectKey.equals("22") || objectKey.equals("42")){
+
+        if (objectKey.equals("22") || objectKey.equals("42")) {
             tbl_stud.addCell(createSimpleCell("Industry Immersion", font5Plain, 2, true));
-        } else 
+        } else {
             tbl_stud.addCell(createSimpleCell("Units", font5Plain, 0, true));
-        
+        }
+
         tbl_stud.addCell(createSimpleCell("Pre-requisite/s", font5Plain, 0, true));
-        
-        if(objectKey.equals("22") || objectKey.equals("42")){
+
+        if (objectKey.equals("22") || objectKey.equals("42")) {
             tbl_stud.addCell(createSimpleCell("Hours", font6Plain, 0, true));
         } else {
             tbl_stud.addCell(createSimpleCell("Co-requisite/s", font5Plain, 0, true));
@@ -316,27 +326,39 @@ public class BITCT {
             SubjectMapping subject = (SubjectMapping) subjects.get(i)[0];
             tbl_stud.addCell(createSimpleCell(subject.getCode(), font5Plain, 0, false));
             tbl_stud.addCell(createSimpleCell(subject.getDescriptive_title(), font5Plain, 0, false));
-   
-            if(objectKey.equals("22") || objectKey.equals("42")){
-                tbl_stud.addCell(createSimpleCell((subject.getLab_units() + subject.getLec_units())+"", font5Plain, 2, true));
+
+            if (objectKey.equals("22") || objectKey.equals("42")) {
+                tbl_stud.addCell(createSimpleCell((subject.getLab_units() + subject.getLec_units()) + "", font5Plain, 2, true));
 
                 String str = "Second Year Standing";
-                if(objectKey.equals("42"))
+                if (objectKey.equals("42")) {
                     str = "Fourth Year Standing";
+                }
                 tbl_stud.addCell(createSimpleCell(str, font5Plain, 0, true));
                 tbl_stud.addCell(createSimpleCell("520", font5Plain, 0, true));
             } else {
-                tbl_stud.addCell(createSimpleCell((subject.getLab_units() + subject.getLec_units())+"", font5Plain, 0, true));
+                tbl_stud.addCell(createSimpleCell((subject.getLab_units() + subject.getLec_units()) + "", font5Plain, 0, true));
 
                 String prereq = "";
-                if(!subjects.get(i)[2].toString().equalsIgnoreCase("NONE"))
-                    prereq = subjects.get(i)[2]+"";
+                if (!subjects.get(i)[2].toString().equalsIgnoreCase("NONE")) {
+                    prereq = subjects.get(i)[2] + "";
+                }
                 tbl_stud.addCell(createSimpleCell(prereq, font5Plain, 0, true));
                 String coreq = "";
-                if(!subjects.get(i)[3].toString().equalsIgnoreCase("NONE"))
-                    coreq = subjects.get(i)[3]+"";
+                if (!subjects.get(i)[3].toString().equalsIgnoreCase("NONE")) {
+                    coreq = subjects.get(i)[3] + "";
+                }
                 tbl_stud.addCell(createSimpleCell(coreq, font5Plain, 0, true));
-                tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true));
+                //--------------------------------------------------------------
+                // Grade Column
+                String grade = "";
+                try {
+                    grade = subjects.get(i)[5].toString();
+                } catch (Exception e) {
+                    //
+                }
+                tbl_stud.addCell(createSimpleCell(grade, font5Plain, 0, true));
+                //--------------------------------------------------------------
             }
             Double total = (subject.getLab_units() + subject.getLec_units());
             totalUnits += total.intValue();
@@ -344,7 +366,7 @@ public class BITCT {
         /**
          * TOTAL
          */
-        if(!objectKey.equals("22") && !objectKey.equals("42")){
+        if (!objectKey.equals("22") && !objectKey.equals("42")) {
             tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true));
             tbl_stud.addCell(createSimpleCell("TOTAL LAB / LEC UNITS", font5Bold, 0, false));
             tbl_stud.addCell(createSimpleCell(String.valueOf(totalUnits), font5Bold, 0, true));
@@ -353,7 +375,7 @@ public class BITCT {
             tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true));
         }
         /**
-         * 
+         *
          */
         tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true));
         tbl_stud.addCell(createSimpleCell("TOTAL UNITS", font5Bold, 0, true));
@@ -361,91 +383,99 @@ public class BITCT {
         tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true));
         tbl_stud.addCell(createSimpleCell("", font5Plain, 0, true));
         OVERALL_TOTAL += totalUnits;
-        if(objectKey.equals("22")){
+        if (objectKey.equals("22")) {
             tbl_stud.addCell(createSimpleCell("TOTAL UNITS FOR Certificate in "
                     + "BIT COMPUTER TECHNOLOGY \n " + OVERALL_TOTAL, font5BoldItalic, 12, true));
-        } else if(objectKey.equals("42")){
+        } else if (objectKey.equals("42")) {
             tbl_stud.addCell(createSimpleCell("TOTAL UNITS FOR BIT major in "
                     + "COMPUTER TECHNOLOGY \n " + OVERALL_TOTAL, font5BoldItalic, 12, true));
         }
         return tbl_stud;
     }
-    
-    private static PdfPCell createCellWithPhrase(Phrase phr, Font font, boolean border, boolean center){
+
+    private static PdfPCell createCellWithPhrase(Phrase phr, Font font, boolean border, boolean center) {
         PdfPCell cell = new PdfPCell();
-        if(!border)
+        if (!border) {
             cell.setBorder(PdfPCell.NO_BORDER);
-        if(center){
+        }
+        if (center) {
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         }
         cell.addElement(phr);
         return cell;
     }
-    
-    private static PdfPCell createCellWithObject(Object tbl, boolean border, boolean center){
+
+    private static PdfPCell createCellWithObject(Object tbl, boolean border, boolean center) {
         PdfPCell cell = new PdfPCell();
-        if(!border)
+        if (!border) {
             cell.setBorder(PdfPCell.NO_BORDER);
-        if(center){
+        }
+        if (center) {
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         }
-        cell.addElement((Element)tbl);
+        cell.addElement((Element) tbl);
         return cell;
     }
-    
+
     private PdfPCell createSimpleCell(String content, Font font, int colspan, boolean center) {
         PdfPCell cell = new PdfPCell();
         Paragraph p = new Paragraph(5);
-        if(center)
+        if (center) {
             p.setAlignment(Element.ALIGN_CENTER);
+        }
         p.add(new Chunk(content, font));
         cell.addElement(p);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_CENTER);
-        if(colspan != 0)
+        if (colspan != 0) {
             cell.setColspan(colspan);
+        }
         return cell;
     }
-    
+
     private PdfPCell createSimpleCell(String content, Font font, int colspan, boolean center, int rowspan) {
         PdfPCell cell = new PdfPCell();
         Paragraph p = new Paragraph(5);
-        if(center)
+        if (center) {
             p.setAlignment(Element.ALIGN_CENTER);
+        }
         p.add(new Chunk(content, font));
         cell.addElement(p);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_CENTER);
-        if(colspan != 0)
+        if (colspan != 0) {
             cell.setColspan(colspan);
+        }
         cell.setRowspan(rowspan);
         return cell;
     }
-    
-    private static Phrase getTitleContent(String title, Font font1, String info, Font font2, String space, boolean underlined){
+
+    private static Phrase getTitleContent(String title, Font font1, String info, Font font2, String space, boolean underlined) {
         Phrase phr = new Phrase(10);
         phr.add(new Chunk(title, font1));
         Chunk chunks = new Chunk(info, font2);
-        if(underlined)
+        if (underlined) {
             chunks.setUnderline(0.1f, -2f);
+        }
         phr.add(chunks);
         phr.add(new Chunk(space, font2));
         return phr;
     }
-    
-    private static String getShortenedDetail(String str, int count){
-        if(str.length()>count){
+
+    private static String getShortenedDetail(String str, int count) {
+        if (str.length() > count) {
             return str.substring(0, count) + "...";
-        } else
+        } else {
             return str;
+        }
     }
-    
+
     private static void create2x2Box(PdfWriter writer) {
 
         PdfContentByte cb = writer.getDirectContent();
         try {
             cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 24);
-            cb.rectangle(450f,750,Utilities.inchesToPoints(2f),Utilities.inchesToPoints(2f));
+            cb.rectangle(450f, 750, Utilities.inchesToPoints(2f), Utilities.inchesToPoints(2f));
             cb.stroke();
         } catch (DocumentException e) {
             // TODO Auto-generated catch block
@@ -458,13 +488,14 @@ public class BITCT {
 }
 
 class MyFooter extends PdfPageEventHelper {
-    
+
     private static final Font font_footer = new Font(FontFamily.HELVETICA, 8);
+
     public void onEndPage(PdfWriter writer, Document document) {
         PdfContentByte cb = writer.getDirectContent();
-        Phrase footer = new Phrase("BulSU-OP-CICT-03F2",font_footer);
-        Phrase footer2 = new Phrase("Revision: 0",font_footer);
-        
+        Phrase footer = new Phrase("BulSU-OP-CICT-03F2", font_footer);
+        Phrase footer2 = new Phrase("Revision: 0", font_footer);
+
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 footer,
                 30, //x
@@ -473,7 +504,7 @@ class MyFooter extends PdfPageEventHelper {
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 footer2,
                 30,
-                (document.bottom() - 30), 
+                (document.bottom() - 30),
                 0);
     }
 }

@@ -341,7 +341,16 @@ public class BSIT1112 {
                 prereq = subjects.get(i)[2] + "";
             }
             tbl_stud.addCell(createSimpleCell(prereq, font6Plain, 0, true));
-            tbl_stud.addCell(createSimpleCell("", font6Plain, 0, true));
+            //------------------------------------------------------------------
+            // Grade Column
+            String grade = "";
+            try {
+                grade = subjects.get(i)[5].toString();
+            } catch (Exception e) {
+                //
+            }
+            tbl_stud.addCell(createSimpleCell(grade, font6Plain, 0, true));
+            //------------------------------------------------------------------
             try {
                 lab += Double.valueOf(subject.getLab_units() + "");
             } catch (Exception e) {

@@ -29,6 +29,7 @@ import app.lazy.models.CurriculumRequisiteExtMapping;
 import app.lazy.models.CurriculumRequisiteLineMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
@@ -169,7 +170,7 @@ public class PrintChecklist extends Transaction {
             }
             for (SubjectAssessmentDetials sadetail : sadetails) {
                 SubjectMapping subject = sadetail.getSubjectDetails();
-                Object[] detail = new Object[5];
+                Object[] detail = new Object[6];
                 if (subject != null) {
                     detail[0] = subject; //code
                     String hrs = "";
@@ -221,10 +222,49 @@ public class PrintChecklist extends Transaction {
                     }
                     detail[3] = coreq;
                     detail[4] = year + "" + semester;
+                    //----------------------------------------------------------
+                    // Add Grade Column
+                    detail[5] = tryToWriteGrade(sadetail);
+                    //----------------------------------------------------------
                     details.add(detail);
                 }
             }
         }
+    }
+
+    /**
+     * try to get the grade of that subject.
+     *
+     * @param sadetail
+     * @return
+     */
+    private String tryToWriteGrade(SubjectAssessmentDetials sadetail) {
+        //----------------------------------------------------------
+        String gradeToWrite = "";
+        // Get Latest Grade even it is not passing
+        //----------------------------------------------------------
+        GradeMapping assessedGrades = Mono.orm()
+                .newSearch(Database.connect().grade())
+                .eq(DB.grade().SUBJECT_id, sadetail.getSubjectDetails().getId())
+                // must be posted
+                .eq(DB.grade().posted, 1)
+                // from this student
+                .eq(DB.grade().STUDENT_id, this.student.getCict_id())
+                .active(Order.desc(DB.grade().id))
+                .first();
+        //----------------------------------------------------------
+        if (assessedGrades == null) {
+            // No Grade
+            gradeToWrite = "";
+        } else {
+            gradeToWrite = assessedGrades.getRating();
+            if (gradeToWrite.length() > 4) {
+                // must be 3 chars max
+                gradeToWrite = gradeToWrite.substring(0, 3);
+            }
+        }
+        //----------------------------------------------------------
+        return gradeToWrite;
     }
 
     public final static String SAVE_DIRECTORY = "reports/checklist";
