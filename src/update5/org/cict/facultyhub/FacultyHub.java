@@ -232,7 +232,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
             super.addClickEvent(rowFX.getBtn_print_pdf(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf());
+                this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf(), info.getSectionName());
             });
 
             super.addClickEvent(rowFX.getPrint_import(), () -> {
@@ -345,7 +345,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
             super.addClickEvent(rowFX.getBtn_print_pdf(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf());
+                this.printMasterListInPDF(info.loadGroup, rowFX.getBtn_print_pdf(), info.getSectionName());
             });
 
             rowFX.getPrint_import().setDisable(true);
@@ -721,6 +721,8 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
         exportTx.whenCancelled(() -> {
             // no results
+            super.getScene().setCursor(Cursor.DEFAULT);
+            btn_export.setDisable(false);
             Mono.fx().snackbar().showError(application_root, "No Data to Export");
         });
 
@@ -778,7 +780,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
     //-----------------------------------------
     // Print PDF
-    private void printMasterListInPDF(LoadGroupMapping loadGroup, JFXButton btn_print) {
+    private void printMasterListInPDF(LoadGroupMapping loadGroup, JFXButton btn_print, String sectionName) {
         FetchStudents fetch = new FetchStudents();
         fetch.loadGroup = loadGroup;
         fetch.whenSuccess(() -> {
@@ -809,7 +811,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Master List " + String.valueOf(Calendar.getInstance().getTimeInMillis());
             print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
 
-            print.reportTitleHeader = subject.getCode() + " Master List";
+            print.reportTitleHeader = sectionName + " - " + subject.getCode() + " Master List";
             print.reportOtherDetail = WordUtils.capitalizeFully(subject.getDescriptive_title());
             print.whenStarted(() -> {
                 btn_print.setDisable(true);
