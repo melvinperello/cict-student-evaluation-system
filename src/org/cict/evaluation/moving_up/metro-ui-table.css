@@ -86,10 +86,10 @@
 }
 */
 .metro-row:hover {
-    -fx-background-color: #90C1F6;
+    -fx-background-color: #009688;
     -fx-text-fill: white;
 }
 
 .button:hover{
-    -fx-background-color: #0087D7;
+    -fx-background-color: #009688;
 }

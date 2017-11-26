@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0087D7;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="544.0" prefWidth="487.0" style="-fx-background-color: #27AE60;" stylesheets="@metro-ui-table.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox>
+      <VBox prefHeight="176.0" prefWidth="447.0">
          <children>
             <Label text="Moving Up" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="22.0" />
+                  <Font size="30.0" />
                </font>
             </Label>
             <Label text="This process will change the student's current curriculum into another curriculum. But it requires all the grades to have a passed remarks before continuing the process itself." textFill="WHITE" wrapText="true">
@@ -24,7 +25,7 @@
                   <Font size="16.0" />
                </font>
                <VBox.margin>
-                  <Insets top="20.0" />
+                  <Insets top="15.0" />
                </VBox.margin>
             </Label>
          </children>
@@ -32,10 +33,21 @@
             <Insets left="20.0" right="20.0" top="20.0" />
          </VBox.margin>
       </VBox>
-      <VBox fx:id="vbox_list" prefHeight="234.0" prefWidth="600.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" VBox.vgrow="ALWAYS">
+      <VBox fx:id="vbox_list" prefHeight="281.0" prefWidth="447.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
          </VBox.margin>
       </VBox>
+      <JFXButton fx:id="btn_cancel" maxWidth="1.7976931348623157E308" style="-fx-border-color: white;" text="Cancel" textFill="WHITE" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" top="10.0" />
+         </VBox.margin>
+         <font>
+            <Font size="15.0" />
+         </font>
+      </JFXButton>
    </children>
+   <padding>
+      <Insets bottom="10.0" />
+   </padding>
 </VBox>

@@ -69,6 +69,9 @@ public class MovingUpController extends SceneFX implements ControllerFX {
     @FXML
     private VBox vbox_list;
 
+    @FXML
+    private JFXButton btn_cancel;
+    
     private StudentMapping student;
     private ArrayList<CurriculumMapping> results;
     public MovingUpController(StudentMapping student, ArrayList<CurriculumMapping> results) {
@@ -83,7 +86,9 @@ public class MovingUpController extends SceneFX implements ControllerFX {
 
     @Override
     public void onEventHandling() {
-    
+        super.addClickEvent(btn_cancel, ()->{
+            Mono.fx().getParentStage(vbox_list).close();
+        });
     }
     
     private final String KEY_MORE_INFO = "MORE_INFO";
@@ -101,6 +106,13 @@ public class MovingUpController extends SceneFX implements ControllerFX {
             lbl_major.setText((each.getMajor().isEmpty()? "NONE": each.getMajor()));
             
             super.addClickEvent(btn_select, ()->{
+                boolean alreadyMovedUp = student.getPREP_id()!=null;
+                if(alreadyMovedUp) {
+                    Notifications.create().title("Already Moved Up")
+                            .text("Student already passed this transaction.")
+                            .showWarning();
+                    return;
+                }
                 this.showAssessment(row);
             });
             
@@ -298,7 +310,7 @@ public class MovingUpController extends SceneFX implements ControllerFX {
             Mono.fx().alert().createInfo()
                 .setHeader("Success!")
                 .setMessage("Student and its curriculum is successfully updated.")
-                    .show();
+                    .showAndWait();
             isSaved = true;
             Mono.fx().getParentStage(application_root).close();
         });
@@ -343,6 +355,12 @@ public class MovingUpController extends SceneFX implements ControllerFX {
                 log("No grade is updated.");
             student.setPREP_id(old_curriculum_id);
             student.setCURRICULUM_id(new_selected);
+            
+            //-----------------------
+            student.setYear_level(3);
+            student.setPrep_assignment(Mono.orm().getServerTime().getDateWithFormat());
+            //
+            
             boolean updated = Database.connect().student().transactionalSingleUpdate(currentSession, this.student);
 
             if (!updated) {

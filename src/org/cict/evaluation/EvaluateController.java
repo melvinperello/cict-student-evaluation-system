@@ -469,9 +469,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .makeScene()
                 .makeStageWithOwner(Mono.fx().getParentStage(lblName))
                 .stageResizeable(false)
+                .stageTitle("Moving Up")
+                .stageUndecorated(true)
                 .stageShowAndWait();
         if (controller.isSaved()) {
             btn_encoding.setDisable(true);
+            this.searchStudent();
         }
     }
 
