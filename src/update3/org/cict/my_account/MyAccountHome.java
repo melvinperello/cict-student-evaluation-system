@@ -1267,12 +1267,14 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     + "and starts with \"09\"");
             return;
         }
+        String gender = rbtn_female.isSelected()? "FEMALE" : "MALE";
         UpdateProfile updateProfile = new UpdateProfile();
         updateProfile.setFirstName(MonoString.removeExtraSpace(txt_first.getText()).toUpperCase());
         updateProfile.setLastName(MonoString.removeExtraSpace(txt_last.getText()).toUpperCase());
         updateProfile.setMiddleName(txt_middle.getText()==null? "" : MonoString.removeExtraSpace(txt_middle.getText()).toUpperCase());
         updateProfile.setMobileNumber("+639"+contactNumber.substring(2, 11));
         updateProfile.setUser(faculty);
+        updateProfile.setGender(gender);
         updateProfile.whenStarted(() -> {
             super.cursorWait();
             btn_ct_change_pin.setDisable(true);
@@ -1308,6 +1310,11 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         private String firstName;
         private String middleName;
         private String mobileNumber;
+        private String gender;
+
+        public void setGender(String gender) {
+            this.gender = gender;
+        }
 
         public void setLastName(String lastName) {
             this.lastName = lastName;
@@ -1336,7 +1343,16 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             user.setLast_name(lastName);
             user.setMiddle_name(middleName);
             user.setMobile_number(mobileNumber);
-            return Database.connect().faculty().update(user);
+            user.setGender(gender);
+            boolean result = Database.connect().faculty().update(user);
+            if(result) {
+                CollegeFaculty.instance().setMIDDLE_NAME(middleName);
+                CollegeFaculty.instance().setLAST_NAME(lastName);
+                CollegeFaculty.instance().setFIRST_NAME(firstName);
+                CollegeFaculty.instance().setGENDER(gender);
+                return true;
+            } else
+                return false;
         }
         
     }
