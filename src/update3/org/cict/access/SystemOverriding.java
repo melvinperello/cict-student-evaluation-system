@@ -41,4 +41,5 @@ public class SystemOverriding {
     public static final String EVAL_GRADE_REQUIREMENT_FOR_MOVING_UP = "GRADE_REQUIREMENT_FOR_MOVING_UP";
     public static final String EVAL_EXCEED_MAX_POPULATION = "EXCEEDED_MAX_POPULATION";
     public static final String EVAL_CHANGED_YEAR_LEVEL_BACKWARD = "CHANGED_YEAR_LEVEL_BACKWARD";
+    public static final String EVAL_STUDENT_OVERSTAY = "OVERSTAYED_STUDENT";
 }

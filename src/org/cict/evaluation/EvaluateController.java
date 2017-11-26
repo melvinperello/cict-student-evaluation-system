@@ -36,10 +36,13 @@ import app.lazy.models.EvaluationMapping;
 import app.lazy.models.LinkedEntranceMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
+import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.SystemOverrideLogsMapping;
 import artifacts.ImageUtility;
+import artifacts.StudentOverStay;
 import com.jhmvin.fx.async.CronThread;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
@@ -50,6 +53,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
 import org.apache.commons.lang3.text.WordUtils;
@@ -77,6 +81,7 @@ import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.CurriculumConstants;
 import update3.org.cict.access.Access;
+import update3.org.cict.access.SystemOverriding;
 
 /**
  * FXML Controller class
@@ -209,6 +214,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     /**
      * Controller Initialization.
      */
+    private boolean allowOverride = false;
     @Override
     public void onInitialization() {
         //----------------------------------------------------------------------
@@ -240,6 +246,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             vbox_waiting_queue.setVisible(true);
         }, vbox_waiting_queue, vbox_list);
         createQueueTable();
+        
+        allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
     }
 
     /**
@@ -712,6 +720,20 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             return;
         }
 
+        //------------------------------
+        // check if overstaying
+        if(StudentOverStay.check(currentStudent) && !allowOverStay) {
+            Notifications.create()
+                        .title("Overstayed Student")
+                        .text("Click here for more information.")
+                        .onAction(pop -> {
+                            this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
+                        })
+                        .position(Pos.BOTTOM_RIGHT).showWarning();
+            return;
+        }
+        //------------------------------
+        
         System.out.println("@EvaluateController: Search Success");
 
         //----------------------------------------------------------------------
@@ -1759,6 +1781,44 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             ImageUtility.addDefaultImageToFx(img_profile, 1, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 1);
+        }
+    }
+    
+    //-----------------------------
+    // override over stay
+    private boolean allowOverStay = false;
+    private void goLang(String type) {
+        Object[] result = Access.isEvaluationOverride(allowOverride);
+        boolean ok = (boolean) result[0];
+        String fileName = (String) result[1];
+        if (ok) {
+            SystemOverrideLogsMapping map = MapFactory.map().system_override_logs();
+            map.setCategory(SystemOverriding.CATEGORY_EVALUATION);
+            map.setDescription(type);
+            map.setExecuted_by(CollegeFaculty.instance().getFACULTY_ID());
+            map.setExecuted_date(Mono.orm().getServerTime().getDateWithFormat());
+            map.setAcademic_term(SystemProperties.instance().getCurrentAcademicTerm().getId());
+            String conforme = currentStudent.getLast_name() + ", ";
+
+            conforme += currentStudent.getFirst_name();
+            if (currentStudent.getMiddle_name() != null) {
+                conforme += " ";
+                conforme += currentStudent.getMiddle_name();
+            }
+            map.setConforme(conforme);
+            map.setConforme_type("STUDENT");
+            map.setConforme_id(currentStudent.getCict_id());
+
+            //-----------------
+            map.setAttachment_file(fileName);
+            //------------
+
+            int id = Database.connect().system_override_logs().insert(map);
+            if (id <= 0) {
+                Mono.fx().snackbar().showError(anchor_right, "Something went wrong please try again.");
+            } else {
+                allowOverStay = true;
+            }
         }
     }
 }
