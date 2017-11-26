@@ -346,10 +346,10 @@ public class CreditController implements ControllerFX {
             }
             String[] row = new String[]{(i+1)+".  "+ history.getCreated(),
                 (history.getSubjectCode()), 
-                history.getRating(), 
+                history.getRating(),
                 WordUtils.capitalizeFully(history.getUpdatedBy()), 
                 WordUtils.capitalizeFully(history.getReason().replace("_", " ")), 
-                WordUtils.capitalizeFully(history.getGradeState()), lastCol};
+                WordUtils.capitalizeFully(history.getState()), lastCol};
             rowData.add(row);
         }
     }
@@ -383,11 +383,14 @@ public class CreditController implements ControllerFX {
                             .eq(DB.curriculum_subject().CURRICULUM_id, PREP_id)
                             .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
                  }
-                SubjectMapping subject = Database.connect().subject().getPrimary(csMap.getSUBJECT_id());
-                GradeHistory history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getGrade_state());
+                GradeHistory history;
                 if(csMap != null) {
+                    SubjectMapping subject = Database.connect().subject().getPrimary(csMap.getSUBJECT_id());
+                    history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
                     this.store(csMap, history);
                 } else if(csMap_prep != null) {
+                    SubjectMapping subject = Database.connect().subject().getPrimary(csMap_prep.getSUBJECT_id());
+                    history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
                     this.store(csMap_prep, history);
                 }
             }
@@ -399,6 +402,7 @@ public class CreditController implements ControllerFX {
             System.out.println("CANCELLED");
         });
         fetch_history.whenFailed(()->{
+            fetch_history.getTaskException().printStackTrace();
             System.out.println("FAILED");
             Notifications.create().darkStyle()
                     .title("Failed")
@@ -449,15 +453,20 @@ public class CreditController implements ControllerFX {
     
     class GradeHistory {
         private String created;
-        private String subjectCode, rating, updatedBy, reason, gradeState;
+        private String subjectCode, rating, remarks, updatedBy, reason, state;
         private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss aa");
-        GradeHistory(Date created, String subjectCode, String rating, String updatedBy, String reason, String gradeState) {
+        GradeHistory(Date created, String subjectCode, String rating, String remarks, String updatedBy, String reason, String state) {
             this.created = format.format(created);
-            this.gradeState = gradeState;
-            this.rating = rating;
             this.reason = reason;
-            this.subjectCode = subjectCode;
+            this.rating = rating;
             this.updatedBy = updatedBy;
+            this.subjectCode = subjectCode;
+            this.remarks = remarks;
+            this.state = state;
+        }
+
+        public String getState() {
+            return state;
         }
 
         public String getCreated() {
@@ -480,8 +489,8 @@ public class CreditController implements ControllerFX {
             return reason;
         }
 
-        public String getGradeState() {
-            return gradeState;
+        public String getRemarks() {
+            return remarks;
         }
 
         public SimpleDateFormat getFormat() {

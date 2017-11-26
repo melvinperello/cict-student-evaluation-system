@@ -47,7 +47,6 @@ public class ImageUtility {
             Image image = new Image(ResourceManager.fetchFromResourceAsStream(cl, (view==0? DEFAULT_IMAGE :( view==1? DEFAULT_IMAGE_BLUE : DEFAULT_IMAGE))));
             imageView.setImage(image);
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
     
