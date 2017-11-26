@@ -70,7 +70,7 @@ public class ExcelRead {
         String headerStudentNumber = SpreadSheetUtils.getCellValue(headerRow.getCell(COL_STUDENT_NUMBER));
         String headerName = SpreadSheetUtils.getCellValue(headerRow.getCell(COL_FULL_NAME));
         String headerGrade = SpreadSheetUtils.getCellValue(headerRow.getCell(COL_GRADE));
-        String headerClearance = SpreadSheetUtils.getCellValue(headerRow.getCell(COL_CLEARANCE));
+//        String headerClearance = SpreadSheetUtils.getCellValue(headerRow.getCell(COL_CLEARANCE));
 
         if (!headerStudentNumber.equalsIgnoreCase("STUDENT NUMBER")) {
             return false;
@@ -85,9 +85,9 @@ public class ExcelRead {
             return false;
         }
         
-        if (!headerClearance.equalsIgnoreCase("CLEARED")) {
-            return false;
-        }
+//        if (!headerClearance.equalsIgnoreCase("CLEARED")) {
+//            return false;
+//        }
         return true;
     }
 
@@ -110,7 +110,7 @@ public class ExcelRead {
             String studentNumber = SpreadSheetUtils.getCellValue(row.getCell(COL_STUDENT_NUMBER));
             String fullName = SpreadSheetUtils.getCellValue(row.getCell(COL_FULL_NAME));
             String grade = SpreadSheetUtils.getCellValue(row.getCell(COL_GRADE));
-            String clearance = SpreadSheetUtils.getCellValue(row.getCell(COL_CLEARANCE));
+//            String clearance = SpreadSheetUtils.getCellValue(row.getCell(COL_CLEARANCE));
 
             System.out.println(studentNumber);
             System.out.println(fullName);
@@ -120,7 +120,7 @@ public class ExcelRead {
             readData.setSTUDENT_NUMBER(studentNumber);
             readData.setSTUDENT_NAME(fullName);
             readData.setSTUDENT_GRADE(grade);
-            readData.setSTUDENT_CLEARANCE(clearance);
+//            readData.setSTUDENT_CLEARANCE(clearance);
             
             readDatas.add(readData);
         }

@@ -237,7 +237,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
             super.addClickEvent(rowFX.getPrint_import(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                this.readExcel(info.loadGroup, rowFX.getPrint_import());
+                this.readExcel(info.loadGroup, rowFX.getPrint_import(), info.getSectionName());
             });
 
             SimpleTableCell cellParent = new SimpleTableCell();
@@ -351,7 +351,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             rowFX.getPrint_import().setDisable(true);
             super.addClickEvent(rowFX.getPrint_import(), () -> {
                 SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                this.readExcel(info.loadGroup, rowFX.getPrint_import());
+                this.readExcel(info.loadGroup, rowFX.getPrint_import(), info.getSectionName());
             });
 
             SimpleTableCell cellParent = new SimpleTableCell();
@@ -711,6 +711,10 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                     });
                 }
             });
+            openTask.whenFinished(()->{
+                super.getScene().setCursor(Cursor.DEFAULT);
+                btn_export.setDisable(false);
+            });
             openTask.start();
 
         });
@@ -725,8 +729,6 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         });
 
         exportTx.whenFinished(() -> {
-            super.getScene().setCursor(Cursor.DEFAULT);
-            btn_export.setDisable(false);
         });
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -883,7 +885,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
     //-------------------------------------------
     // IMPORT EXCEL
-    private void readExcel(LoadGroupMapping loadGroup, JFXButton button) {
+    private void readExcel(LoadGroupMapping loadGroup, JFXButton button, String sectionName) {
         button.setDisable(true);
         ArrayList<ReadData> readData = StudentMasterListReader.readStudentGrade(this.getStage(), loadGroup.getSUBJECT_id());
         if (readData == null) {
@@ -908,7 +910,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                     .text("A status report will be printed.\n"
                             + "Please wait just a moment.").showInformation();
             // print here.
-            this.printStatusReport(loadGroup, readData, button);
+            this.printStatusReport(loadGroup, readData, button, sectionName);
         });
         encode.whenFailed(() -> {
             Mono.fx().alert().createWarning()
@@ -917,7 +919,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         encode.transact();
     }
 
-    private void printStatusReport(LoadGroupMapping loadGroup, ArrayList<ReadData> preview, JFXButton btn_print) {
+    private void printStatusReport(LoadGroupMapping loadGroup, ArrayList<ReadData> preview, JFXButton btn_print, String sectionName) {
         if (preview == null || preview.isEmpty()) {
             Notifications.create()
                     .title("No Student Found")
@@ -925,7 +927,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"Student Number", "Full Name", "Grade", "Cleared", "Status"};
+        String[] colNames = new String[]{"Student Number", "Full Name", "Grade", "Status"};
         ArrayList<String[]> rowData = new ArrayList<>();
         PrintResult print = new PrintResult();
         print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
@@ -933,7 +935,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             ReadData result = preview.get(i);
             String[] row = new String[]{(i + 1) + ".  " + result.getSTUDENT_NUMBER().toUpperCase(),
                 WordUtils.capitalizeFully(result.getSTUDENT_NAME()),
-                result.getSTUDENT_GRADE().isEmpty() ? "NONE" : result.getSTUDENT_GRADE(), result.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES") || result.getSTUDENT_CLEARANCE().equals("1") ? "YES" : "NO",
+                result.getSTUDENT_GRADE().isEmpty() ? "NONE" : result.getSTUDENT_GRADE()/*, result.getSTUDENT_CLEARANCE().equalsIgnoreCase("YES") || result.getSTUDENT_CLEARANCE().equals("1") ? "YES" : "NO"*/,
                 result.getSTATUS()};
             rowData.add(row);
         }
@@ -941,9 +943,9 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         print.ROW_DETAILS = rowData;
         SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
         print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Encode Status Report " + String.valueOf(Calendar.getInstance().getTimeInMillis());
-        print.reportTitleIntro = subject.getCode() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
-
-        print.reportTitleHeader = "Encode Status Report";
+        print.reportOtherDetail = sectionName + " - " + subject.getCode() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
+        print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
+        print.reportTitleHeader = "Encoding Status Report";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
             super.cursorWait();
