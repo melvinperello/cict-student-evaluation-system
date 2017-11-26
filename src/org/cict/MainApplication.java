@@ -5,20 +5,15 @@
  */
 package org.cict;
 
-import app.lazy.models.Database;
 import artifacts.StackTraceDialog;
 import com.jhmvin.Mono;
-import com.melvin.java.properties.PropertyFile;
 import com.melvin.mono.fx.bootstrap.M;
 import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import org.cict.authentication.LoginController;
 import sys.org.cict.layout.home.SystemLogin;
-import update3.org.cict.controller.sectionmain.deltesection.DeleteSectionTransaction;
-import update4.org.cict.linked_manager.CreateNewSessionTransaction;
 
 /**
  *
@@ -29,10 +24,29 @@ public class MainApplication extends Application {
     public static HostServicesDelegate HOST_SERVICE;
 
     public static void main(String[] args) {
-//        Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e)->{
-//            StackTraceDialog.show(e);
-//        });
+        MainApplication.integrateExceptionCatcher();
         launch(args);
+    }
+
+    /**
+     * Catches uncaught errors.
+     */
+    public static void integrateExceptionCatcher() {
+        Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e) -> {
+            try {
+                StackTraceElement se = e.getStackTrace()[0];
+                String spreadsheet_error = se.toString();
+                // Ignorable error
+                if (spreadsheet_error.contains("impl.org.controlsfx.spreadsheet.GridCellEditor.endEdit(GridCellEditor.java:132)")) {
+                    // do nothing this is a known error
+                    System.out.println(e.getCause());
+                } else {
+                    StackTraceDialog.show(e);
+                }
+            } catch (Exception haha) {
+                StackTraceDialog.show(e);
+            }
+        });
     }
 
     @Override

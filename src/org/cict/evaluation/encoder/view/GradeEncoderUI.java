@@ -509,6 +509,9 @@ public class GradeEncoderUI {
         // Final Rating Cell
         SpreadsheetCell ratingCell = this.rowCellFactory(row, this.finalCol, _final, editable);
         ratingCell.itemProperty().addListener(this.ratingCellValueChangeListenerAction(ratingCell.getRow(), editable));
+        //----------------------------------------------------------------------
+        System.out.println("TRY");
+        //----------------------------------------------------------------------
         gridRow.add(ratingCell); // the column that is editable
         gridRow.add(this.rowCellFactory(row, this.remarkCol, remarks, false));
         return gridRow;
@@ -548,6 +551,9 @@ public class GradeEncoderUI {
                         System.out.println("3");
                         this.spreadSheetGrid.setCellValue(row, this.finalCol, cellValue[0]);
                         System.out.println("6");
+                        //------------------------------------------------------
+                        // Error appears in this part
+                        //------------------------------------------------------
                     }
                     //----------------------------------------------------------
                 } else {
@@ -611,9 +617,11 @@ public class GradeEncoderUI {
                         Mono.fx().alert().createWarning()
                                 .setHeader("Invalid Grade")
                                 .setMessage("Please refer from the table on your left for valid range.")
-                                .show();
-
+                                .showAndWait();
+                        //------------------------------------------------------
+                        System.out.println("RETURN");
                         return cellValue;
+                        //------------------------------------------------------
                     }
                 }
             }
