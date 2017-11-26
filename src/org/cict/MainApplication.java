@@ -24,7 +24,7 @@ public class MainApplication extends Application {
     public static HostServicesDelegate HOST_SERVICE;
 
     public static void main(String[] args) {
-        MainApplication.integrateExceptionCatcher();
+        //MainApplication.integrateExceptionCatcher();
         launch(args);
     }
 
