@@ -470,7 +470,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         for (int i = 0; i < results.size(); i++) {
             EvaluationMapping result = results.get(i);
             ref = result;
-            String[] row = new String[]{(i+1)+".  "+  (status.equalsIgnoreCase("REVOKED")? ReportsUtility.formatter2.format(result.getCancelled_date()) : ReportsUtility.formatter2.format(result.getEvaluation_date())),
+            String[] row = new String[]{(i+1)+".  "+  (status.equalsIgnoreCase("REVOKED")? ReportsUtility.formatter_mm.format(result.getCancelled_date()) : ReportsUtility.formatter_mm.format(result.getEvaluation_date())),
                 WordUtils.capitalizeFully(status.equalsIgnoreCase("REVOKED")? (FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getCancelled_by()))) : (FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getFACULTY_id())))), 
                 this.getStudentNumber(result.getSTUDENT_id()), 
                 WordUtils.capitalizeFully(this.getStudentName(result.getSTUDENT_id())), 

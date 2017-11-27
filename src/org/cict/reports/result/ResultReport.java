@@ -165,7 +165,7 @@ class PageFooter extends PdfPageEventHelper {
             cell.setBorder (0);
             cell.setBorderWidthTop (1);
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell.setPhrase(new Phrase("Printed By:  " + user + "  |   Date Printed:  " + dateTime + "  |  Terminal:  " + terminal
+            cell.setPhrase(new Phrase("Printed By: " + user + "  |  Date Printed: " + dateTime + "  |  Terminal: " + terminal
                     +"\nPowered by Monosync", font_footer2));
             table.addCell(cell);
 

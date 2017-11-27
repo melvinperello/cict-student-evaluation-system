@@ -551,7 +551,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         for (int i = 0; i < preview.size(); i++) {
             AccountFacultyAttemptMapping result = preview.get(i);
             ref = result;
-            String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter2.format(result.getTime()),
+            String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter_mm.format(result.getTime()),
                 WordUtils.capitalizeFully(result.getPc_name()), 
                 (result.getPc_username()), 
                 (result.getOs_version()),

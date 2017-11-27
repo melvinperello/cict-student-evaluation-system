@@ -48,6 +48,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javax.imageio.ImageIO;
+import org.cict.reports.ReportsUtility;
 import update3.org.cict.scheduling.printing.ImageToPdf;
 
 /**
@@ -403,6 +404,8 @@ public class TimeTableController extends SceneFX implements ControllerFX {
     private void printSchedule(String imageLocation, String pdfName) {
         ImageToPdf imageViewer = new ImageToPdf(pdfName);
         imageViewer.imageLocation = imageLocation;
+        ReportsUtility.rotate = true;
+        imageViewer.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         imageViewer.print();
     }
 

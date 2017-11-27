@@ -152,7 +152,7 @@ public class HistoryController extends SceneFX implements ControllerFX {
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < chsMaps.size(); i++) {
             CurriculumHistorySummaryMapping result = chsMaps.get(i);
-            String[] row = new String[]{(i + 1) + ".  " + ReportsUtility.formatter2.format(result.getCreated_date()),
+            String[] row = new String[]{(i + 1) + ".  " + ReportsUtility.formatter_mm.format(result.getCreated_date()),
                 WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getCreated_by()))),
                 (result.getDescription())};
             rowData.add(row);

@@ -36,10 +36,10 @@
 .row-filler{
     -fx-border-color: white;
     -fx-border-style: dashed;
-    -fx-background-color: #414852;
+    -fx-background-color: #C0C0C0;
 }
 .row-filler-text{
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
 .fuck{

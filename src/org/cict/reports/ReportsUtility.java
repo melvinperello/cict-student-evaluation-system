@@ -69,21 +69,26 @@ public class ReportsUtility {
     private static final Font font5Bold = new Font(FontFamily.HELVETICA, 5, Font.BOLD);
     private static final Font font5BoldItalic = new Font(FontFamily.HELVETICA, 5, Font.BOLDITALIC);
     
-    public static final SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy hh:mm aa");
-    public static final SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss aa");
+    public static final SimpleDateFormat formatter_mmmm = new SimpleDateFormat("MMMM dd, yyyy hh:mm aa");
+    public static final SimpleDateFormat formatter_mm = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss aa");
     
+    public static boolean rotate = false;
     public static Document createLongDocument(){
-        return new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
+        return new Document(rotate? new Rectangle(Utilities.inchesToPoints(8.5f),
+                Utilities.inchesToPoints(13f)).rotate(): new Rectangle(Utilities.inchesToPoints(8.5f),
                 Utilities.inchesToPoints(13f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50); //lrtb
     }
     
     public static Document createShortDocument(){
-        return new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
+        System.out.println("Rotate: "+rotate);
+        return new Document(rotate? new Rectangle(Utilities.inchesToPoints(8.5f),
+                Utilities.inchesToPoints(11f)).rotate() : new Rectangle(Utilities.inchesToPoints(8.5f),
                 Utilities.inchesToPoints(11f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50); //lrtb
     }
     
     public static Document createA4Document(){
-        return new Document(new Rectangle(Utilities.inchesToPoints(8.26f),
+        return new Document(rotate?new Rectangle(Utilities.inchesToPoints(8.26f),
+                Utilities.inchesToPoints(11.69f)).rotate() : new Rectangle(Utilities.inchesToPoints(8.26f),
                 Utilities.inchesToPoints(11.69f)), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), Utilities.inchesToPoints(0.5f), 50); //lrtb
     }
     
@@ -204,7 +209,7 @@ public class ReportsUtility {
         if(reportDescription_!=null)
             p.add(new Chunk(reportDescription_ + "\n",font7Plain));
         
-        p.add(getTextUnderlined((reportTitle_==null? "" : reportTitle_.toUpperCase()) + "\n",font10Bold));
+        p.add(new Chunk((reportTitle_==null? "" : reportTitle_.toUpperCase()) + "\n",font10Bold));
         
         if(reportsOtherDetails!=null)
             p.add(new Chunk(reportsOtherDetails + "\n",font7Plain));

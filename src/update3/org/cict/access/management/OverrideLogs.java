@@ -443,7 +443,7 @@ public class OverrideLogs extends MonoLauncher {
         for (int i = 0; i < preview.size(); i++) {
             SystemOverrideLogsMapping result = preview.get(i);
             ref = result;
-            String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter.format(result.getExecuted_date()),
+            String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter_mmmm.format(result.getExecuted_date()),
                 WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getExecuted_by()))),
             WordUtils.capitalizeFully(result.getDescription().replace("_", " ")), WordUtils.capitalizeFully(result.getCategory().replace("_", " ")), WordUtils.capitalizeFully(result.getConforme())};
             rowData.add(row);

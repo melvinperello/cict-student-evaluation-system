@@ -51,9 +51,7 @@
     -fx-border-color: #FFFFFF;
 }
 
-/*
-.metro-row:hover{
-    -fx-background-color: #74B1F4;
-}
-*/
 
+.metro-row:hover {
+    -fx-background-color: #FF7659;
+}
