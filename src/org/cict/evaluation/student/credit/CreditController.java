@@ -303,7 +303,7 @@ public class CreditController implements ControllerFX {
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
-        print.fileName = "grade_history_" + this.STUDENT_MAP.getId() + "_" + dateToday;
+        print.fileName = "Student Grade History " + this.STUDENT_MAP.getId() + "_" + dateToday;
         print.reportTitleIntro = lbl_CURRICULUM_name.getText();
         print.reportTitleHeader = "Student Grade History";
         print.reportOtherDetail = WordUtils.capitalizeFully(lbl_STUDENT_name.getText()) + "\n"
@@ -486,7 +486,7 @@ public class CreditController implements ControllerFX {
         }
 
         public String getReason() {
-            return reason;
+            return reason==null || reason.isEmpty()? "NOT SPECIFIED" : reason;
         }
 
         public String getRemarks() {

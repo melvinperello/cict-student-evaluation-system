@@ -42,9 +42,11 @@ public class GradeValues {
             put("1.00", PASSED_REMARKS);
             put("1.25", PASSED_REMARKS);
             put("1.50", PASSED_REMARKS);
+            put("1.75", PASSED_REMARKS);
             put("2.00", PASSED_REMARKS);
             put("2.25", PASSED_REMARKS);
             put("2.50", PASSED_REMARKS);
+            put("2.75", PASSED_REMARKS);
             put("3.00", PASSED_REMARKS);
             put("4.00", GradeValues.Remarks.CONDITIONALLY_PASSED.getString());
             put("INC", GradeValues.Remarks.INCOMPLETE.getString());
