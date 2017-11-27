@@ -1400,6 +1400,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         Mono.fx().thread().wrap(() -> {
             lbl_subjectTotal.setText(subjectCount.toString());
             lbl_unitsTotal.setText(unitCount.toString());
+            if(subjectCount.toString().equalsIgnoreCase("0")) {
+                Notifications.create().title("No Section Available")
+                        .text("No open section for the student's subject load.")
+                        .showInformation();
+            }
         });
 
     }
