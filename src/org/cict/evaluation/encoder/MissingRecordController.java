@@ -340,7 +340,7 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
                         .createWarning()
                         .setTitle("Restricted")
                         .setHeader("Currently For Evaluation")
-                        .setMessage("This semester is reserved for evaluation, encoding for this semester will be allowed in the next academic term.")
+                        .setMessage("This semester is reserved for evaluation, encoding for this semester will be allowed in the next academic term. If student already have grades for this semester, you can change the year level and proceed.")
                         .showAndWait();
                 return false;
             } else if (semester > currentSemester) {
