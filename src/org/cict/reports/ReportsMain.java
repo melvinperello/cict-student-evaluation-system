@@ -25,11 +25,15 @@ package org.cict.reports;
 
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
+import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
+import app.lazy.models.SubjectMapping;
 import app.lazy.models.utils.FacultyUtility;
+import artifacts.ImageUtility;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -42,6 +46,7 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -168,6 +173,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     @FXML
     private VBox vbox_pres_main_table;
     
+    @FXML
+    private ComboBox<String> cmb_year_level_pres;
+            
+            
     private LoaderView loaderView;
     private FailView failView;
     private EmptyView emptyView;
@@ -195,8 +204,16 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_type_eval_main.getItems().add("Irregular");
         cmb_type_eval_main.getSelectionModel().selectFirst();
         
+        cmb_year_level_pres.getItems().clear();
+        cmb_year_level_pres.getItems().add("Second Year");
+        cmb_year_level_pres.getItems().add("Third Year");
+        cmb_year_level_pres.getItems().add("Fourth Year");
+        cmb_year_level_pres.getSelectionModel().selectFirst();
+        
         lbl_result.setText("");
         lbl_result_pres.setText("");
+        
+        this.setViewListers(btn_pres_main);
     }
 
     @Override
@@ -226,6 +243,27 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         
         this.evaluationEvents();
         
+        super.addClickEvent(btn_pres_main, ()->{
+            this.setViewListers(btn_pres_main);
+            this.changeView(vbox_pres_main);
+        });
+        
+        super.addClickEvent(btn_dean_main, ()->{
+            this.setViewListers(btn_dean_main);
+            this.changeView(vbox_pres_main);
+        });
+        
+        super.addClickEvent(btn_filter_pres_main, ()->{
+            this.fetchAchievers();
+        });
+        
+        cmb_curriculum_pres.valueProperty().addListener((a)->{
+            this.fetchAchievers();
+        });
+        
+        cmb_year_level_pres.valueProperty().addListener((a)->{
+            this.fetchAchievers();
+        });
     }
     
     private ArrayList<String> dateList = new ArrayList<>();
@@ -244,6 +282,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         MODE = button.getText();
         lbl_subtitle.setText(MODE.equalsIgnoreCase(EVALUATION)? "List of every evaluation transaction." : "List of every adding and changing transaction.");
         lbl_title_eval.setText(MODE.equalsIgnoreCase(EVALUATION)? "Successful Evaluation Summary" : "Successful Adding & Changing Summary");
+        
         cmb_term_eval.getItems().clear();
         cmb_sort_status_eval.getSelectionModel().selectFirst();
         cmb_type_eval_main.getSelectionModel().selectFirst();
@@ -766,6 +805,211 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     // LISTERS
     private void setViewListers(JFXButton button) {
         this.MODE = button.getText();
+        lbl_subtitle_pres.setText(MODE.equalsIgnoreCase(PRES_LIST)? "List of students who are qualified for President's lister in the current semester." : "List of students who are qualified for Dean's lister in the current semester.");
+        lbl_title_pres.setText(MODE.equalsIgnoreCase(PRES_LIST)? "President's Lister" : "Dean's Lister");
         SimpleTask set = new SimpleTask("set_reports_value_listers");
+        set.setTask(()->{
+            ArrayList<CurriculumMapping> cMaps = Mono.orm().newSearch(Database.connect().curriculum())
+                    .active(Order.asc(DB.curriculum().name)).all();
+            
+            Mono.fx().thread().wrap(()->{
+                Callback<ListView<CurriculumMapping>, ListCell<CurriculumMapping>> factory = lv -> {
+                    return new ListCell<CurriculumMapping>() {
+                        @Override
+                        protected void updateItem(CurriculumMapping item, boolean empty) {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : (item.getName()));
+                        }
+                    };
+                };
+                
+                this.cmb_curriculum_pres.getItems().clear();
+                this.cmb_curriculum_pres.getItems().addAll(cMaps);
+                this.cmb_curriculum_pres.setCellFactory(factory);
+                this.cmb_curriculum_pres.setButtonCell(factory.call(null));
+                this.cmb_curriculum_pres.getSelectionModel().selectFirst();
+            });
+        });
+        set.whenFailed(()->{
+            set.getTaskException().printStackTrace();
+        });
+        set.whenSuccess(()->{
+            this.fetchAchievers();
+        });
+        set.start();
     }
+    
+    private void fetchAchievers() {
+        this.loaderView = new LoaderView(stack_pres_main);
+        this.failView = new FailView(stack_pres_main);
+        this.emptyView = new EmptyView(stack_pres_main);
+        this.detachAll();
+        
+        if(cmb_curriculum_pres.getSelectionModel().getSelectedItem()==null)
+            return;
+        Integer CURRICULUM_id = cmb_curriculum_pres.getSelectionModel().getSelectedItem().getId();
+        FetchAchievers fetch = new FetchAchievers();
+        fetch.CUR_id = CURRICULUM_id;
+        fetch.YEAR_LEVEL = cmb_year_level_pres.getSelectionModel().getSelectedIndex() + 2;
+        fetch.whenStarted(()->{
+            this.detachAll();
+            this.loaderView.setMessage("Loading Result");
+            this.loaderView.attach();
+            vbox_pres_main_table.setDisable(vbox_pres_main.isVisible());
+        });
+        fetch.whenCancelled(()->{
+            this.detachAll();
+            lbl_result_pres.setText("");
+            this.emptyView.setMessage("No Result Found");
+            this.emptyView.getButton().setVisible(false);
+            this.emptyView.attach();
+        });
+        fetch.whenSuccess(()->{
+            this.detachAll();
+            System.out.println(MODE);
+            System.out.println("PRESIDENT'S LISTER TOTAL: " + fetch.getPresListers().size());
+            System.out.println("DEAN'S LISTER TOTAL: " + fetch.getDeansListers().size());
+            if(MODE.equalsIgnoreCase(PRES_LIST)) {
+                if(fetch.getPresListers().isEmpty()) {
+                    lbl_result_pres.setText("");
+                    this.emptyView.setMessage("No Result Found");
+                    this.emptyView.getButton().setVisible(false);
+                    this.emptyView.attach();
+                } else {
+                    //create table here
+                    System.out.println("CREATE TABLE");
+                }
+            } else if(MODE.equalsIgnoreCase(DEANS_LIST)) {
+                if(fetch.getDeansListers().isEmpty()) {
+                    lbl_result_pres.setText("");
+                    this.emptyView.setMessage("No Result Found");
+                    this.emptyView.getButton().setVisible(false);
+                    this.emptyView.attach();
+                } else {
+                    //create table here
+                    System.out.println("CREATE TABLE");
+                }
+            }
+        });
+        fetch.whenFinished(()->{
+            this.loaderView.detach();
+        });
+        fetch.transact();
+    }
+    
+    //-----------------------------------------
+    // TRANSACTION FOR GETTING LISTERS
+    public class FetchAchievers extends Transaction{
+
+        public Integer CUR_id = 9;
+        public Integer YEAR_LEVEL;
+        
+        private ArrayList<AchieversData> presListers;
+        public ArrayList<AchieversData> getPresListers() {
+            return presListers;
+        }
+
+        private ArrayList<AchieversData> deansListers;
+        public ArrayList<AchieversData> getDeansListers() {
+            return deansListers;
+        }
+        @Override
+        protected boolean transaction() {
+            ArrayList<StudentMapping> students;
+            if(YEAR_LEVEL==null) {
+                students = Mono.orm().newSearch(Database.connect().student())
+                        .eq(DB.student().CURRICULUM_id, CUR_id)
+                        .notNull(DB.student().year_level)
+                        // first year students are not yet valid candidate for listers
+                        .ne(DB.student().year_level, 1)
+                        .active(Order.asc(DB.student().last_name)).all();
+            } else {
+                students = Mono.orm().newSearch(Database.connect().student())
+                        .eq(DB.student().CURRICULUM_id, CUR_id)
+                        .eq(DB.student().year_level, YEAR_LEVEL)
+                        .active(Order.asc(DB.student().last_name)).all();
+            }
+            if(students==null) // no student found
+                return false;
+            
+            presListers = new ArrayList<>();
+            deansListers = new ArrayList<>();
+            
+            DecimalFormat df = new DecimalFormat("0.0000");
+            for(StudentMapping student: students) {
+                Integer STUDENT_id = student.getCict_id();
+                Integer STUDENT_yrlvl = student.getYear_level();
+                System.out.println("\nSTUDENT CICT_id: " + student.getCict_id());
+                ArrayList<CurriculumSubjectMapping> csMaps_phase1  = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                        .eq(DB.curriculum_subject().CURRICULUM_id, CUR_id)
+                        .eq(DB.curriculum_subject().year, STUDENT_yrlvl-1)
+                        .eq(DB.curriculum_subject().semester, 2).active().all();
+
+                ArrayList<CurriculumSubjectMapping> csMaps_phase2 = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                        .eq(DB.curriculum_subject().CURRICULUM_id, CUR_id)
+                        .eq(DB.curriculum_subject().year, STUDENT_yrlvl)
+                        .eq(DB.curriculum_subject().semester, 1).active().all();
+            
+                double gwaPhase1 = getGWA(csMaps_phase1, STUDENT_id);
+                System.out.println("GWA1: " + gwaPhase1);
+                double gwaPhase2 = getGWA(csMaps_phase2, STUDENT_id);
+                
+                System.out.println("GWA2: "+gwaPhase2);
+                double overallGWA = (gwaPhase1 + gwaPhase2) / 2;
+                
+                System.out.println("OVERALL: " + df.format(overallGWA)+"\n");
+                if(overallGWA>=1.20) {
+                    presListers.add(new AchieversData(student, df.format(overallGWA)));
+                } else if(overallGWA <= 1.21 && overallGWA >= 1.75) {
+                    deansListers.add(new AchieversData(student, df.format(overallGWA)));
+                }
+            }
+            
+            return true;
+        }
+    
+        private double getGWA(ArrayList<CurriculumSubjectMapping> csMaps, Integer STUDENT_id) {
+            double gwa = 0.0;
+            if(csMaps != null) { 
+                double gradeTotal = 0.0;
+                double totalUnits = 0.0;
+                for(CurriculumSubjectMapping csMap: csMaps) {
+                    Integer SUBJECT_id = csMap.getSUBJECT_id();
+                    SubjectMapping subject = Database.connect().subject().getPrimary(SUBJECT_id);
+                    GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
+                            .eq(DB.grade().STUDENT_id, STUDENT_id)
+                            .eq(DB.grade().SUBJECT_id, SUBJECT_id)
+                            .ne(DB.grade().grade_state, "CORRECTION").active(Order.desc(DB.grade().id)).first();
+                    //
+                    try {
+                        if(grade==null)
+                            continue;
+                        double rating = Double.parseDouble(grade.getRating());
+                        totalUnits += subject.getLab_units() + subject.getLec_units();
+                        gradeTotal += rating * (subject.getLab_units() + subject.getLec_units());
+                    } catch (NumberFormatException e) {
+                    }
+                }
+                gwa = gradeTotal / totalUnits;
+            }
+            return gwa;
+        }
+    }
+    
+    private class AchieversData {
+        private String studentNumber;
+        private String lastName;
+        private String firstName;
+        private String middleName;
+        private String GWA;
+        
+        public AchieversData(StudentMapping student, String GWA) {
+            this.studentNumber = student.getId();
+            this.lastName = student.getLast_name();
+            this.firstName = student.getFirst_name();
+            this.middleName = student.getMiddle_name()==null? "" : student.getMiddle_name();
+            this.GWA = GWA;
+        }
+    }   
+    
 }

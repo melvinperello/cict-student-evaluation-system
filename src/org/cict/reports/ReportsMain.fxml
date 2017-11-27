@@ -138,7 +138,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <ImageView fx:id="img_icon_eval_main" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="img_icon_eval_main" fitHeight="40.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true" visible="false">
                                  <image>
                                     <Image url="@images/eval.png" />
                                  </image>
@@ -278,7 +278,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <ImageView fx:id="img_icon_pres_main" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="img_icon_pres_main" fitHeight="40.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true" visible="false">
                                  <image>
                                     <Image url="@images/eval.png" />
                                  </image>
@@ -311,14 +311,24 @@
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="790.0" spacing="10.0">
                                  <children>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="421.0" spacing="2.0">
+                                    <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="274.0" spacing="2.0">
                                        <children>
                                           <Label text="Curriculum: " wrapText="true">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="cmb_curriculum_pres" prefHeight="33.0" prefWidth="313.0" promptText="- Select a curriculum -" styleClass="metro-combo-box" />
+                                          <ComboBox fx:id="cmb_curriculum_pres" prefHeight="33.0" prefWidth="188.0" promptText="- Select a curriculum -" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="33.0" prefWidth="213.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Year Level:" wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_year_level_pres" prefHeight="33.0" prefWidth="125.0" promptText="- Select a year level-" styleClass="metro-combo-box" />
                                        </children>
                                     </HBox>
                                     <JFXButton fx:id="btn_filter_pres_main" prefHeight="21.0" prefWidth="77.0" style="-fx-border-color: #fff;" text="Filter" textFill="WHITE">
