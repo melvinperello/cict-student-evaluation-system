@@ -51,3 +51,7 @@
 .metro-combo-box{
     -fx-background-color: #FFFFFF;
 }
+
+.metro-row:hover, .button:hover {
+    -fx-background-color: #FF7F00
+}

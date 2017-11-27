@@ -840,6 +840,8 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
         exportTx.whenCancelled(() -> {
             // no results
+            super.cursorDefault();
+            this.btn_export.setDisable(false);
             Mono.fx().snackbar().showError(application_root, "No Data to Export");
         });
 
