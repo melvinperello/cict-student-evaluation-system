@@ -142,7 +142,7 @@ public class ReportsUtility {
         
         // insertion of col names
         for (int i = 0; i < numColumns; i++) {
-            tbl_stud.addCell(createSimpleCell(colNames[i], font6Plain, 0, true, true, 5f, true));
+            tbl_stud.addCell(createSimpleCell(colNames[i].toUpperCase(), font6Bold, 0, true, true, 5f, true));
         }
         
         // insertion of row data
@@ -150,7 +150,7 @@ public class ReportsUtility {
             try {
                 String lastCol = rowData.get(i)[numColumns];
                 if(lastCol != null) {
-                    tbl_stud.addCell(createSimpleCell(lastCol, font6Plain, numColumns, true, true, 4f, true));
+                    tbl_stud.addCell(createSimpleCell(lastCol.toUpperCase(), font6Plain, numColumns, true, true, 4f, true));
                 }
             } catch (IndexOutOfBoundsException e) {
             }
@@ -158,7 +158,7 @@ public class ReportsUtility {
                 tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
             }
         }
-        tbl_stud.addCell(createSimpleCell("*** Nothing Follows ***", font8Plain, numColumns, true, false, 4f, false));
+        tbl_stud.addCell(createSimpleCell("*** Nothing Follows ***", font6Plain, numColumns, true, true, 4f, false));
         return tbl_stud;
     }
     
@@ -264,8 +264,11 @@ public class ReportsUtility {
         cell.addElement(p);
         if(colspan != 0)
             cell.setColspan(colspan);
-        if(!border)
+        if(!border) {
             cell.setBorder(PdfPCell.NO_BORDER);
+        } else {
+            cell.setBorder(1);
+        }
         return cell;
     }
     

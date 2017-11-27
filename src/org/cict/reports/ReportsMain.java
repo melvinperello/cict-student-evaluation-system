@@ -24,12 +24,12 @@
 package org.cict.reports;
 
 import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.utils.FacultyUtility;
-import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -54,11 +54,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -78,7 +77,7 @@ import update3.org.cict.window_prompts.fail_prompt.FailView;
  * @author Joemar
  */
 public class ReportsMain extends SceneFX implements ControllerFX {
-
+    
     @FXML
     private VBox application_root;
 
@@ -92,16 +91,28 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     private JFXButton btn_adding_changing;
 
     @FXML
-    private JFXButton btn_encoding;
+    private JFXButton btn_pres_main;
+
+    @FXML
+    private JFXButton btn_dean_main;
 
     @FXML
     private VBox vbox_eval_main;
+
+    @FXML
+    private ImageView img_icon_eval_main;
 
     @FXML
     private Label lbl_title_eval;
 
     @FXML
     private ComboBox<String> cmb_sort_status_eval;
+
+    @FXML
+    private Label lbl_subtitle;
+
+    @FXML
+    private ComboBox<AcademicTermMapping> cmb_term_eval;
 
     @FXML
     private ComboBox<String> cmb_from_eval_main;
@@ -119,20 +130,44 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     private JFXButton btn_print_eval_main;
 
     @FXML
+    private Label lbl_result;
+
+    @FXML
     private StackPane stack_eval_main;
 
     @FXML
     private VBox vbox_eval_main_table;
+
+    @FXML
+    private VBox vbox_pres_main;
+
+    @FXML
+    private ImageView img_icon_pres_main;
+
+    @FXML
+    private Label lbl_title_pres;
+
+    @FXML
+    private Label lbl_subtitle_pres;
+
+    @FXML
+    private ComboBox<CurriculumMapping> cmb_curriculum_pres;
+
+    @FXML
+    private JFXButton btn_filter_pres_main;
+
+    @FXML
+    private JFXButton btn_print_pres_main;
+
+    @FXML
+    private Label lbl_result_pres;
+
+    @FXML
+    private StackPane stack_pres_main;
+
+    @FXML
+    private VBox vbox_pres_main_table;
     
-    @FXML
-    private ComboBox<AcademicTermMapping> cmb_term_eval;
-    
-    @FXML
-    private Label lbl_result;
-            
-    @FXML
-    private Label lbl_subtitle;
-            
     private LoaderView loaderView;
     private FailView failView;
     private EmptyView emptyView;
@@ -140,16 +175,12 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     public void onInitialization() {
         super.bindScene(application_root);
         
-        this.loaderView = new LoaderView(stack_eval_main);
-        this.failView = new FailView(stack_eval_main);
-        this.emptyView = new EmptyView(stack_eval_main);
-    
 //        this.loaderView = new LoaderView(stack_eval_main);
 //        this.failView = new FailView(stack_eval_main);
 //        this.emptyView = new EmptyView(stack_eval_main);
 //        
         this.setViewTask(btn_evaluation, SystemProperties.instance().getCurrentAcademicTerm().getId());
-        
+        this.changeView(vbox_eval_main);
         
         cmb_sort_status_eval.getItems().clear();
         cmb_sort_status_eval.getItems().add("Accepted");
@@ -165,6 +196,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_type_eval_main.getSelectionModel().selectFirst();
         
         lbl_result.setText("");
+        lbl_result_pres.setText("");
     }
 
     @Override
@@ -184,6 +216,14 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             this.changeView(vbox_eval_main);
         });
         
+        super.addClickEvent(btn_pres_main, ()->{
+            this.changeView(vbox_pres_main);
+        });
+        
+        super.addClickEvent(btn_dean_main, ()->{
+            this.changeView(vbox_pres_main);
+        });
+        
         this.evaluationEvents();
         
     }
@@ -195,6 +235,11 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
 //    private ArrayList<HashMap<String,AcademicTermMapping>> termDetails = new ArrayList<>();
     private void setViewTask(JFXButton button, Integer ACADTERM_id) {
+        
+        this.loaderView = new LoaderView(stack_eval_main);
+        this.failView = new FailView(stack_eval_main);
+        this.emptyView = new EmptyView(stack_eval_main);
+    
         vbox_eval_main_table.getChildren().clear();
         MODE = button.getText();
         lbl_subtitle.setText(MODE.equalsIgnoreCase(EVALUATION)? "List of every evaluation transaction." : "List of every adding and changing transaction.");
@@ -202,7 +247,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_term_eval.getItems().clear();
         cmb_sort_status_eval.getSelectionModel().selectFirst();
         cmb_type_eval_main.getSelectionModel().selectFirst();
-        SimpleTask set = new SimpleTask("set_reports_value");
+        SimpleTask set = new SimpleTask("set_reports_value_eval");
         set.setTask(()->{
             ArrayList<AcademicTermMapping> atMaps = Mono.orm().newSearch(Database.connect().academic_term())
                     .eq(DB.academic_term().approval_state, "ACCEPTED")
@@ -485,7 +530,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         print.transact();
     }
     
-    private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", ENCODING = " ENCODING";
+    private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", PRES_LIST = "President's Lister", DEANS_LIST = "Dean's Lister";
     private ArrayList<EvaluationMapping> results;
     private void fetchResult(JFXButton button) {
         System.out.println(MODE);
@@ -712,8 +757,15 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 //        cmb_type_eval_main.getSelectionModel().selectFirst();
         Animate.fade(node, 150, ()->{
             vbox_eval_main.setVisible(false);
+            vbox_pres_main.setVisible(false);
             node.setVisible(true);
-        }, vbox_eval_main);
+        }, vbox_eval_main, vbox_pres_main);
     }
     
+    //-----------------------------------------
+    // LISTERS
+    private void setViewListers(JFXButton button) {
+        this.MODE = button.getText();
+        SimpleTask set = new SimpleTask("set_reports_value_listers");
+    }
 }

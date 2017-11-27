@@ -94,7 +94,7 @@
                         <Insets left="-30.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton fx:id="btn_encoding" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Encoding" textFill="WHITE">
+                  <JFXButton fx:id="btn_pres_main" graphicTextGap="20.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="President's Lister" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -109,18 +109,36 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <padding>
-                        <Insets left="-90.0" />
+                        <Insets left="-50.0" />
+                     </padding>
+                  </JFXButton>
+                  <JFXButton fx:id="btn_dean_main" graphicTextGap="20.0" layoutX="10.0" layoutY="118.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Dean's Lister" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/encode.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-75.0" />
                      </padding>
                   </JFXButton>
                </children>
             </VBox>
             <StackPane HBox.hgrow="ALWAYS">
                <children>
-                  <VBox fx:id="vbox_eval_main" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_eval_main" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="img_icon_eval_main" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@images/eval.png" />
                                  </image>
@@ -247,6 +265,102 @@
                               <StackPane fx:id="stack_eval_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
                                     <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_pres_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fx:id="img_icon_pres_main" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/eval.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="lbl_title_pres" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="375.0" text="President's Lister" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <VBox prefHeight="107.0" prefWidth="874.0" spacing="10.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../update3/org/cict/my_account/images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label fx:id="lbl_subtitle_pres" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="542.0" text="List of students who are qualified for President's lister in the current semester." wrapText="true" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="790.0" spacing="10.0">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="421.0" spacing="2.0">
+                                       <children>
+                                          <Label text="Curriculum: " wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_curriculum_pres" prefHeight="33.0" prefWidth="313.0" promptText="- Select a curriculum -" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <JFXButton fx:id="btn_filter_pres_main" prefHeight="21.0" prefWidth="77.0" style="-fx-border-color: #fff;" text="Filter" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXButton>
+                                    <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <JFXButton fx:id="btn_print_pres_main" prefHeight="33.0" prefWidth="126.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="874.0">
+                           <children>
+                              <Label fx:id="lbl_result_pres" text="Total Result Found: 1" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="40.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="393.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="40.0" top="5.0" />
+                           </VBox.margin>
+                           <children>
+                              <StackPane fx:id="stack_pres_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox fx:id="vbox_pres_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
                                  </children>
                               </StackPane>
                            </children>
