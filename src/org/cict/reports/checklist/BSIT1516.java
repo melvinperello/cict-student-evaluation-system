@@ -76,6 +76,7 @@ public class BSIT1516 {
             COURSE = "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
             SCHOOL_YEAR = "2015-2016",
             MAJOR = "";
+    public Integer STUDY_YEARS = 4;
 
     //--------------------
     private Document documentFormat;
@@ -189,12 +190,15 @@ public class BSIT1516 {
         //----------------------------------------------------------------------
         // @startBugSegment
         // @tempSolution: Wrap inside try catch statement
-        try {
+//        try {
+        if(STUDY_YEARS.equals(4)) {
             document.add(createCurriculumTable(2, 3));
             document.add(createCurriculumTable(3, 4));
-        } catch (Exception e) {
-            System.err.println("@bug: org.cict.reports.checklist.BSIT1516.java");
         }
+//        } catch (Exception e) {
+//            System.err.println("@bug: org.cict.reports.checklist.BSIT1516.java");
+//            e.printStackTrace();
+//        }
         // @endBugSegment
         //----------------------------------------------------------------------
         writer.setPageEvent(new MyFooter3());
@@ -290,8 +294,9 @@ public class BSIT1516 {
                 //1-total hrs
                 //2-prereq
                 //3-co-req
-                if (subjects.isEmpty()) {
-                    return null;
+                if (subjects==null || subjects.isEmpty()) {
+                    continue;
+//                    return null;
                 }
                 tbl_stud.addCell(createSimpleCell(semester, font5Bold, 11, true, false));
                 tbl_stud.addCell(createSimpleCell("COURSE CODE", font5Bold, 0, true, false));
