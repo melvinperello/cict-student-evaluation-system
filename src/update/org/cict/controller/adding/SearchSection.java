@@ -37,6 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javafx.collections.ObservableList;
+import org.cict.evaluation.EvaluateController;
+import org.cict.evaluation.sectionviewer.SearchBySection;
+import org.cict.evaluation.sectionviewer.SectionsController;
 import org.cict.evaluation.views.SectionSearchView;
 import org.hibernate.criterion.Order;
 
@@ -95,9 +98,9 @@ public class SearchSection extends Transaction {
                 .newSearch(Database.connect().subject())
                 .eq(DB.subject().id, subjectCode)
                 .active().first();
-        
+
         searchedSubject = subject;
-        
+
         if (Objects.isNull(searchedSubject)) {
             return false;
         }
@@ -105,8 +108,8 @@ public class SearchSection extends Transaction {
         CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                 .eq(DB.curriculum_subject().SUBJECT_id, searchedSubject.getId())
                 .active(Order.desc(DB.curriculum_subject().id)).first();
-        
-        if(csMap!=null) {
+
+        if (csMap != null) {
             CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(csMap.getCURRICULUM_id());
             subInfo.setCurriculum(curriculum);
         }
@@ -153,16 +156,29 @@ public class SearchSection extends Transaction {
 
             // get population
             int load_group_ids = load_group.getId(); // for load subject
+            //------------------------------------------------------------------
+            // Enhanced using the same code in getting count in the evaluation
             int population = 0;
-            List res = Mono.orm()
-                    .newSearch(Database.connect().load_subject())
-                    .eq(DB.load_subject().LOADGRP_id, load_group_ids)
-                    .active();
-            if (Objects.isNull(res)) {
+//            List res = Mono.orm()
+//                    .newSearch(Database.connect().load_subject())
+//                    .eq(DB.load_subject().LOADGRP_id, load_group_ids)
+//                    .active();
+//            if (Objects.isNull(res)) {
+//                population = 0;
+//            } else {
+//                population = res.size();
+//            }
+            //------------------------------------------------------------------
+            // code used in the evaluation to get population
+            // just supply the load group and will return string format of the population
+            String populationString = SearchBySection.getLoadGroupPopulation(load_group_ids);
+            // Parse The results
+            try {
+                population = Integer.parseInt(populationString);
+            } catch (NumberFormatException e) {
                 population = 0;
-            } else {
-                population = res.size();
             }
+            //------------------------------------------------------------------
 
             loadGroupPopulation.add(population);
         });
@@ -242,7 +258,7 @@ public class SearchSection extends Transaction {
         suggested.setAcademicProgramMapping(acadProg);
         // added 08.24.2017
         suggested.setLoadGroup(lgMap);
-        
+
         suggested.setCurriculum(curriculum);
         return suggested;
     }
