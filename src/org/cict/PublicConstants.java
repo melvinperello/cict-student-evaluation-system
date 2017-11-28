@@ -157,6 +157,7 @@ public class PublicConstants {
     //----------------------------------
     public final static String MAX_POPULATION_NAME = "MAXIMUM_POPULATION";
     public final static String FTP_PORT = "FTP_PORT";
+    public final static String BULSU_TEL = "BULSU_TELEPHONE_NO";
     //----------------------------------------------
 
 //    public static Integer getMaxPopulation() {
