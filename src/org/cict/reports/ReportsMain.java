@@ -274,6 +274,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_year_level_pres.valueProperty().addListener((a)->{
             this.fetchAchievers();
         });
+        
+        super.addClickEvent(btn_print_pres_main, ()->{
+            this.printAchievers();
+        });
     }
     
     private ArrayList<String> dateList = new ArrayList<>();
@@ -503,11 +507,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
         String[] colNames = new String[]{"Date and Time",status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Evaluator", "Student Number", "Student Name", "Year Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
-        if(results==null) {
-            Notifications.create()
-                    .title("No Evaluation Result Found")
-                    .text("No data to print.")
-                    .showWarning();
+        if(results==null || results.isEmpty()) {
+            Mono.fx().snackbar().showError(application_root, "No Result To Print");
             btn_print_eval_main.setDisable(true);
             return;
         }
@@ -634,6 +635,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 this.emptyView.setMessage("No Result Found");
                 this.emptyView.getButton().setVisible(false);
                 this.emptyView.attach();
+                vbox_eval_main_table.getChildren().clear();
                 return;
             }
             lbl_result.setText(results==null? "" : "Total result found: " + results.size());
@@ -874,6 +876,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         fetch.whenSuccess(()->{
             this.detachAll();
             vbox_pres_main_table.getChildren().clear();
+            previewAchievers.clear();
             System.out.println("MODE: " + MODE);
             if(MODE.equalsIgnoreCase(PRES_LIST)) {
                 if(fetch.getPresListers().isEmpty()) {
@@ -905,8 +908,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         fetch.transact();
     }
     
+    private ArrayList<AchieversData> previewAchievers = new ArrayList<>();
     private void createAchieversTable(ArrayList<AchieversData> results) {
         this.detachAll();
+        previewAchievers = results;
         SimpleTable achieversTable = new SimpleTable();
         achieversTable.getChildren().clear();
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
@@ -1058,4 +1063,61 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
     }   
     
+    private void printAchievers() {
+        if(previewAchievers==null || previewAchievers.isEmpty()) {
+            Mono.fx().snackbar().showError(application_root, "No Result To Print");
+            btn_print_eval_main.setDisable(true);
+            return;
+        }
+        String[] colNames = new String[]{"Student Number","Full Name", "Section", "GWA"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        for (int i = 0; i < previewAchievers.size(); i++) {
+            AchieversData result = previewAchievers.get(i);
+            String[] row = new String[]{(i+1)+".  "+  result.studentNumber,
+                WordUtils.capitalizeFully(result.getFullName()), 
+                result.sectionName, 
+                result.GWA };
+            rowData.add(row);
+        }
+        
+        PrintResult print = new PrintResult();
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
+        print.fileName = lbl_title_pres.getText().replace(" ", "_").toLowerCase() + "_" + dateToday;
+        CurriculumMapping selected = cmb_curriculum_pres.getSelectionModel().getSelectedItem();
+        print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
+        print.reportTitleHeader = lbl_title_pres.getText();
+        print.reportOtherDetail = selected.getName() + (selected.getMajor()==null || selected.getMajor().isEmpty() || selected.getMajor().equalsIgnoreCase("NONE")? "" : " MAJOR IN " + selected.getMajor());
+        print.whenStarted(() -> {
+            btn_print_eval_main.setDisable(true);
+            super.cursorWait();
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_print_eval_main.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print_eval_main.setDisable(false);
+            super.cursorDefault();
+        });
+        //----------------------------------------------------------------------
+        print.transact();
+    }
 }
