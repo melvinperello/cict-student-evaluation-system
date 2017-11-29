@@ -75,6 +75,12 @@ public class SearcherList extends ArrayList {
         if (result == null) {
             return null;
         }
+        //----------------------------------------------------------------------
+        if (result.size() == 0 || result.isEmpty()) {
+            return null;
+        }
+        //----------------------------------------------------------------------
+
         // fix results
         for (int x = 0; x < result.size(); x++) {
             formatted.add((T) result.get(x));
