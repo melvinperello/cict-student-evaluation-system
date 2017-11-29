@@ -604,6 +604,13 @@ public class PrintChecklist extends Transaction {
         standard.SUBJECTS_PER_SEM.put("32", tyrssem);
         standard.SUBJECTS_PER_SEM.put("41", fryrfsem);
         standard.SUBJECTS_PER_SEM.put("42", fryrssem);
+        
+        // conclude that when third yr first sem is empty, the curriculum is
+        // a 2 year course
+        if(tyrfsem.isEmpty()) {
+            standard.STUDY_YEARS = 2;
+        }
+        
         int val = standard.print();
     }
 

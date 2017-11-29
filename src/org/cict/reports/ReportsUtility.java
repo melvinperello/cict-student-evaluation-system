@@ -45,6 +45,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.cict.PublicConstants;
 
 /**
  *
@@ -195,7 +196,7 @@ public class ReportsUtility {
         header.add(new Chunk("Republic of the Philippines\n",font13Plain));
         header.add(new Chunk("Bulacan State University\n",font17Bold));
         header.add(new Chunk("City of Malolos, Bulacan\n",font13Plain));
-        header.add(new Chunk("Tel/Fax (044) 9197800 local 1101\n\n",font9Plain));
+        header.add(new Chunk("Tel/Fax " + PublicConstants.getServerValues(PublicConstants.BULSU_TEL) + "\n\n",font9Plain));
 //        header.add(new Chunk("COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY\n",font19Plain));
 //        header.add(new Chunk("_____________________________________________________\n\n",font17Bold));
 //        header.add(createTitle());

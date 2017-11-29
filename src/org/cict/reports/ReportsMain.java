@@ -23,6 +23,7 @@
  */
 package org.cict.reports;
 
+import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.CurriculumSubjectMapping;
@@ -180,16 +181,21 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     private LoaderView loaderView;
     private FailView failView;
     private EmptyView emptyView;
+    
+    private LoaderView loaderView2;
+    private FailView failView2;
+    private EmptyView emptyView2;
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
         
-//        this.loaderView = new LoaderView(stack_eval_main);
-//        this.failView = new FailView(stack_eval_main);
-//        this.emptyView = new EmptyView(stack_eval_main);
-//        
-        this.setViewTask(btn_evaluation, SystemProperties.instance().getCurrentAcademicTerm().getId());
-        this.changeView(vbox_eval_main);
+        this.loaderView = new LoaderView(stack_eval_main);
+        this.failView = new FailView(stack_eval_main);
+        this.emptyView = new EmptyView(stack_eval_main);
+        
+        this.loaderView2 = new LoaderView(stack_pres_main);
+        this.failView2 = new FailView(stack_pres_main);
+        this.emptyView2 = new EmptyView(stack_pres_main);
         
         cmb_sort_status_eval.getItems().clear();
         cmb_sort_status_eval.getItems().add("Accepted");
@@ -214,6 +220,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         lbl_result_pres.setText("");
         
         this.setViewListers(btn_pres_main);
+        
+        this.setViewTask(btn_evaluation, SystemProperties.instance().getCurrentAcademicTerm().getId());
+        this.changeView(vbox_eval_main);
+        
     }
 
     @Override
@@ -264,6 +274,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_year_level_pres.valueProperty().addListener((a)->{
             this.fetchAchievers();
         });
+        
+        super.addClickEvent(btn_print_pres_main, ()->{
+            this.printAchievers();
+        });
     }
     
     private ArrayList<String> dateList = new ArrayList<>();
@@ -274,10 +288,6 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 //    private ArrayList<HashMap<String,AcademicTermMapping>> termDetails = new ArrayList<>();
     private void setViewTask(JFXButton button, Integer ACADTERM_id) {
         
-        this.loaderView = new LoaderView(stack_eval_main);
-        this.failView = new FailView(stack_eval_main);
-        this.emptyView = new EmptyView(stack_eval_main);
-    
         vbox_eval_main_table.getChildren().clear();
         MODE = button.getText();
         lbl_subtitle.setText(MODE.equalsIgnoreCase(EVALUATION)? "List of every evaluation transaction." : "List of every adding and changing transaction.");
@@ -497,11 +507,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
         String[] colNames = new String[]{"Date and Time",status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Evaluator", "Student Number", "Student Name", "Year Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
-        if(results==null) {
-            Notifications.create()
-                    .title("No Evaluation Result Found")
-                    .text("No data to print.")
-                    .showWarning();
+        if(results==null || results.isEmpty()) {
+            Mono.fx().snackbar().showError(application_root, "No Result To Print");
             btn_print_eval_main.setDisable(true);
             return;
         }
@@ -623,11 +630,13 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             vbox_eval_main.setDisable(false);
             System.out.println(fetch.getLog());
             results = fetch.getResults();
-            if(results==null) {
+            if(results==null || results.isEmpty()) {
                 lbl_result.setText("");
                 this.emptyView.setMessage("No Result Found");
                 this.emptyView.getButton().setVisible(false);
                 this.emptyView.attach();
+                vbox_eval_main_table.getChildren().clear();
+                return;
             }
             lbl_result.setText(results==null? "" : "Total result found: " + results.size());
 //            if(button.getText().equalsIgnoreCase(EVALUATION))
@@ -789,6 +798,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         this.loaderView.detach();
         this.failView.detach();
         this.emptyView.detach();
+        
+        this.loaderView2.detach();
+        this.failView2.detach();
+        this.emptyView2.detach();
     }
     
     private void changeView(Node node) {
@@ -840,9 +853,6 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     }
     
     private void fetchAchievers() {
-        this.loaderView = new LoaderView(stack_pres_main);
-        this.failView = new FailView(stack_pres_main);
-        this.emptyView = new EmptyView(stack_pres_main);
         this.detachAll();
         
         if(cmb_curriculum_pres.getSelectionModel().getSelectedItem()==null)
@@ -853,48 +863,81 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         fetch.YEAR_LEVEL = cmb_year_level_pres.getSelectionModel().getSelectedIndex() + 2;
         fetch.whenStarted(()->{
             this.detachAll();
-            this.loaderView.setMessage("Loading Result");
-            this.loaderView.attach();
-            vbox_pres_main_table.setDisable(vbox_pres_main.isVisible());
+            this.loaderView2.setMessage("Loading Result");
+            this.loaderView2.attach();
         });
         fetch.whenCancelled(()->{
             this.detachAll();
             lbl_result_pres.setText("");
-            this.emptyView.setMessage("No Result Found");
-            this.emptyView.getButton().setVisible(false);
-            this.emptyView.attach();
+            this.emptyView2.setMessage("No Result Found");
+            this.emptyView2.getButton().setVisible(false);
+            this.emptyView2.attach();
         });
         fetch.whenSuccess(()->{
             this.detachAll();
-            System.out.println(MODE);
-            System.out.println("PRESIDENT'S LISTER TOTAL: " + fetch.getPresListers().size());
-            System.out.println("DEAN'S LISTER TOTAL: " + fetch.getDeansListers().size());
+            vbox_pres_main_table.getChildren().clear();
+            previewAchievers.clear();
+            System.out.println("MODE: " + MODE);
             if(MODE.equalsIgnoreCase(PRES_LIST)) {
                 if(fetch.getPresListers().isEmpty()) {
                     lbl_result_pres.setText("");
-                    this.emptyView.setMessage("No Result Found");
-                    this.emptyView.getButton().setVisible(false);
-                    this.emptyView.attach();
+                    this.emptyView2.setMessage("No Result Found");
+                    this.emptyView2.getButton().setVisible(false);
+                    this.emptyView2.attach();
                 } else {
                     //create table here
-                    System.out.println("CREATE TABLE");
+                    int res = fetch.getPresListers().size();
+                    lbl_result_pres.setText("Total result"+(res>1? "s" : "")+" found: " + res);
+                    this.createAchieversTable(fetch.getPresListers());
                 }
             } else if(MODE.equalsIgnoreCase(DEANS_LIST)) {
                 if(fetch.getDeansListers().isEmpty()) {
                     lbl_result_pres.setText("");
-                    this.emptyView.setMessage("No Result Found");
-                    this.emptyView.getButton().setVisible(false);
-                    this.emptyView.attach();
+                    this.emptyView2.setMessage("No Result Found");
+                    this.emptyView2.getButton().setVisible(false);
+                    this.emptyView2.attach();
                 } else {
                     //create table here
-                    System.out.println("CREATE TABLE");
+                    this.createAchieversTable(fetch.getDeansListers());
                 }
             }
         });
         fetch.whenFinished(()->{
-            this.loaderView.detach();
+            this.loaderView2.detach();
         });
         fetch.transact();
+    }
+    
+    private ArrayList<AchieversData> previewAchievers = new ArrayList<>();
+    private void createAchieversTable(ArrayList<AchieversData> results) {
+        this.detachAll();
+        previewAchievers = results;
+        SimpleTable achieversTable = new SimpleTable();
+        achieversTable.getChildren().clear();
+        String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
+        for(AchieversData each: results) {
+            SimpleTableRow row = new SimpleTableRow();
+            row.setRowHeight(70.0);
+            AchieversRow rowFX = M.load(AchieversRow.class);
+            rowFX.getLbl_name().setText(each.getFullName());
+            rowFX.getLbl_section().setText(each.sectionName);
+            rowFX.getLbl_gwa().setText(each.GWA);
+            
+            row.getRowMetaData().put("MORE_INFO", each);
+
+            SimpleTableCell cellParent = new SimpleTableCell();
+            cellParent.setResizePriority(Priority.ALWAYS);
+            cellParent.setContent(rowFX.getApplicationRoot());
+
+            row.addCell(cellParent);
+            achieversTable.addRow(row);
+        }
+        
+        SimpleTableView simpleTableView = new SimpleTableView();
+        simpleTableView.setTable(achieversTable);
+        simpleTableView.setFixedWidth(true);
+
+        simpleTableView.setParentOnScene(vbox_pres_main_table);
     }
     
     //-----------------------------------------
@@ -1002,6 +1045,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         private String firstName;
         private String middleName;
         private String GWA;
+        private String sectionName;
         
         public AchieversData(StudentMapping student, String GWA) {
             this.studentNumber = student.getId();
@@ -1009,7 +1053,71 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             this.firstName = student.getFirst_name();
             this.middleName = student.getMiddle_name()==null? "" : student.getMiddle_name();
             this.GWA = GWA;
+            CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
+            AcademicProgramMapping acadProg = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
+            this.sectionName = acadProg.getCode() + " " + student.getYear_level() + student.getSection() + (student.get_group()==null || student.get_group().equals(0)? "" : "-" + student.get_group());
+        }
+        
+        public String getFullName() {
+            return this.lastName + ", " + this.firstName + (this.middleName==null? "" : " " + this.middleName);
         }
     }   
     
+    private void printAchievers() {
+        if(previewAchievers==null || previewAchievers.isEmpty()) {
+            Mono.fx().snackbar().showError(application_root, "No Result To Print");
+            btn_print_eval_main.setDisable(true);
+            return;
+        }
+        String[] colNames = new String[]{"Student Number","Full Name", "Section", "GWA"};
+        ArrayList<String[]> rowData = new ArrayList<>();
+        for (int i = 0; i < previewAchievers.size(); i++) {
+            AchieversData result = previewAchievers.get(i);
+            String[] row = new String[]{(i+1)+".  "+  result.studentNumber,
+                WordUtils.capitalizeFully(result.getFullName()), 
+                result.sectionName, 
+                result.GWA };
+            rowData.add(row);
+        }
+        
+        PrintResult print = new PrintResult();
+        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.columnNames = colNames;
+        print.ROW_DETAILS = rowData;
+        String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
+        print.fileName = lbl_title_pres.getText().replace(" ", "_").toLowerCase() + "_" + dateToday;
+        CurriculumMapping selected = cmb_curriculum_pres.getSelectionModel().getSelectedItem();
+        print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
+        print.reportTitleHeader = lbl_title_pres.getText();
+        print.reportOtherDetail = selected.getName() + (selected.getMajor()==null || selected.getMajor().isEmpty() || selected.getMajor().equalsIgnoreCase("NONE")? "" : " MAJOR IN " + selected.getMajor());
+        print.whenStarted(() -> {
+            btn_print_eval_main.setDisable(true);
+            super.cursorWait();
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_print_eval_main.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print_eval_main.setDisable(false);
+            super.cursorDefault();
+        });
+        //----------------------------------------------------------------------
+        print.transact();
+    }
 }
