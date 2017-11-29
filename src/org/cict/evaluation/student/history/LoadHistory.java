@@ -127,8 +127,8 @@ public class LoadHistory {
                     canceledBy = (currentEvaluation.getCancelled_by()==null? "NAME NOT FOUND":this.getFacultyName(currentEvaluation.getCancelled_by()));
                     canceledDate = (currentEvaluation.getCancelled_date()==null? "DATE NOT FOUND": formatter.format(currentEvaluation.getCancelled_date()).toString());
                 }catch(NullPointerException a) {
-                    canceledBy = "NAME NOT FOUND";
-                    canceledDate = "DATE NOT FOUND";
+                    canceledBy = "NONE";
+                    canceledDate = "NONE";
                 }
                 holder.add(new History((this.ACADEMIC_TERM.getSchool_year()==null? "" : this.ACADEMIC_TERM.getSchool_year()),
                         (currentEvaluation.getYear_level()==null? "" : StudentValues.getYearLevel(currentEvaluation.getYear_level())),

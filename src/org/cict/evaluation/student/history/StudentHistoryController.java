@@ -103,7 +103,7 @@ public class StudentHistoryController implements ControllerFX{
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"S.Y & Semester", "Year Level", "Evaluator", "Evaluated Date", "Cancelled By", "Cancelled Date"};
+        String[] colNames = new String[]{"S.Y. & Semester", "Year Level", "Evaluator", "Evaluated Date", "Cancelled By", "Cancelled Date"};
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
             History result = results.get(i);
