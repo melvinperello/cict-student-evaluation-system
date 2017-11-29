@@ -171,8 +171,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     @FXML
     private VBox vbox_pres_main_table;
     
-    @FXML
-    private ComboBox<String> cmb_year_level_pres;
+//    @FXML
+//    private ComboBox<String> cmb_year_level_pres;
             
             
     private LoaderView loaderView;
@@ -207,11 +207,11 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_type_eval_main.getItems().add("Irregular");
         cmb_type_eval_main.getSelectionModel().selectFirst();
         
-        cmb_year_level_pres.getItems().clear();
-        cmb_year_level_pres.getItems().add("Second Year");
-        cmb_year_level_pres.getItems().add("Third Year");
-        cmb_year_level_pres.getItems().add("Fourth Year");
-        cmb_year_level_pres.getSelectionModel().selectFirst();
+//        cmb_year_level_pres.getItems().clear();
+//        cmb_year_level_pres.getItems().add("Second Year");
+//        cmb_year_level_pres.getItems().add("Third Year");
+//        cmb_year_level_pres.getItems().add("Fourth Year");
+//        cmb_year_level_pres.getSelectionModel().selectFirst();
         
         lbl_result.setText("");
         lbl_result_pres.setText("");
@@ -268,9 +268,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 //            this.fetchAchievers();
 //        });
         
-        cmb_year_level_pres.valueProperty().addListener((a)->{
-            this.fetchAchievers();
-        });
+//        cmb_year_level_pres.valueProperty().addListener((a)->{
+//            this.fetchAchievers();
+//        });
         
         super.addClickEvent(btn_print_pres_main, ()->{
             this.printAchievers();
