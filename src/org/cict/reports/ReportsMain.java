@@ -657,7 +657,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(70.0);
             ReportsRow rowFX = M.load(ReportsRow.class);
-            rowFX.getLbl_date().setText(status.equalsIgnoreCase("REVOKED")? dateFormat.format(each.getCancelled_date()) : dateFormat.format(each.getEvaluation_date()));
+            rowFX.getLbl_date().setText(dateFormat.format(each.getEvaluation_date()));
             rowFX.getLbl_faculty().setText(WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(status.equalsIgnoreCase("REVOKED")? each.getCancelled_by() : each.getFACULTY_id()))));
             rowFX.getLbl_student_name().setText(WordUtils.capitalizeFully(this.getStudentName(each.getSTUDENT_id())));
             rowFX.getLbl_type().setText(each.getPrint_type().replace("_", " "));
@@ -747,18 +747,18 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                     if(type.equalsIgnoreCase("ALL")) {
                         results = Mono.orm().newSearch(Database.connect().evaluation())
                                 .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
-                                .eq(DB.evaluation().remarks, status)
-                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
+                                .eq(DB.evaluation().remarks, status.equalsIgnoreCase("REVOKED")? "ADDING_CHANGING_REFERENCE" : status)
+                                .between(DB.evaluation().evaluation_date, from, to)
                                 .isNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
+                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
                     } else {
                         results = Mono.orm().newSearch(Database.connect().evaluation())
                                 .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
                                 .eq(DB.evaluation().print_type, type)
-                                .eq(DB.evaluation().remarks, status)
-                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
+                                .eq(DB.evaluation().remarks, status.equalsIgnoreCase("REVOKED")? "ADDING_CHANGING_REFERENCE" : status)
+                                .between(DB.evaluation().evaluation_date, from, to)
                                 .isNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
+                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
                     }
                 } else if(mode.equalsIgnoreCase(ADD_CHANGE)) {
                     if(type.equalsIgnoreCase("ALL")) {
@@ -766,9 +766,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                                 .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
                                 .eq(DB.evaluation().type, "ADDING_CHANGING")
                                 .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
-                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
+                                .between(DB.evaluation().evaluation_date, from, to)
                                 .notNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
+                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
                     } else {
                         results = Mono.orm().newSearch(Database.connect().evaluation())
                                 .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
