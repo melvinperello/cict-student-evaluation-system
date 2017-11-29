@@ -290,7 +290,7 @@
                               </Label>
                            </children>
                         </HBox>
-                        <VBox prefHeight="107.0" prefWidth="874.0" spacing="10.0">
+                        <VBox prefHeight="54.0" prefWidth="874.0" spacing="10.0">
                            <children>
                               <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                                  <children>
@@ -307,48 +307,12 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="790.0" spacing="10.0">
-                                 <children>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="274.0" spacing="2.0">
-                                       <children>
-                                          <Label text="Curriculum: " wrapText="true">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_curriculum_pres" prefHeight="33.0" prefWidth="188.0" promptText="- Select a curriculum -" styleClass="metro-combo-box" />
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="33.0" prefWidth="213.0" spacing="5.0">
-                                       <children>
-                                          <Label text="Year Level:" wrapText="true">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <ComboBox fx:id="cmb_year_level_pres" prefHeight="33.0" prefWidth="125.0" promptText="- Select a year level-" styleClass="metro-combo-box" />
-                                       </children>
-                                    </HBox>
-                                    <JFXButton fx:id="btn_filter_pres_main" prefHeight="21.0" prefWidth="77.0" style="-fx-border-color: #fff;" text="Filter" textFill="WHITE">
+                                    <JFXButton fx:id="btn_print_pres_main" prefHeight="33.0" prefWidth="126.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
                                     </JFXButton>
-                                    <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-                                       <children>
-                                          <JFXButton fx:id="btn_print_pres_main" prefHeight="33.0" prefWidth="126.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                          </JFXButton>
-                                       </children>
-                                    </VBox>
                                  </children>
-                                 <VBox.margin>
-                                    <Insets left="10.0" />
-                                 </VBox.margin>
                               </HBox>
                            </children>
                            <padding>

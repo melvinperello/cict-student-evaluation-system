@@ -95,6 +95,7 @@ public class ListersChecker {
                 .eq(DB.student().verified, 1)
                 .put(Restrictions.isNotNull(DB.student().year_level))
                 .ne(DB.student().year_level, 1)
+                .eq(DB.student().last_evaluation_term, this.acadTermMapping.getId())
                 .active(Order.desc(DB.student().cict_id))
                 .all();
         return qualifiedStudents;
@@ -112,18 +113,6 @@ public class ListersChecker {
         } else {
             return false;
         }
-    }
-
-    class ListerData {
-
-        public StudentMapping student;
-        public String gwa;
-
-        public ListerData(StudentMapping student, String gwa) {
-            this.student = student;
-            this.gwa = gwa;
-        }
-
     }
 
     /**

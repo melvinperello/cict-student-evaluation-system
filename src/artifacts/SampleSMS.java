@@ -26,10 +26,10 @@ public class SampleSMS {
         ListersChecker checker = new ListersChecker();
         AcademicTermMapping current = Database.connect().academic_term().getPrimary(19);
         checker.setCurrentTerm(current);
-        checker.setListerMode(ListersChecker.ListerMode.DEANS_LIST);
-        ArrayList<ListersChecker.ListerData> listers = checker.check();
-        for (ListersChecker.ListerData lister : listers) {
-            
+        checker.setListerMode(ListersChecker.ListerMode.PRESIDENTS_LIST);
+        ArrayList<ListerData> listers = checker.check();
+        for (ListerData lister : listers) {
+            System.out.println(lister.gwa);
         }
     }
 
