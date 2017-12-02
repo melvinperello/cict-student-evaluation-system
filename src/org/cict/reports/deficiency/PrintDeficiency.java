@@ -32,6 +32,7 @@ import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.utils.StudentUtility;
 import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
@@ -52,7 +53,7 @@ import org.hibernate.criterion.Order;
  * @author Joemar
  */
 public class PrintDeficiency extends Transaction {
-    
+
     public Integer CICT_id;
 
     private CurricularLevelAssesor assessmentResults;
@@ -79,34 +80,10 @@ public class PrintDeficiency extends Transaction {
             //------------------------------------------------------------------
             // Address Information
             if (spMap != null) {
-                String hNum = spMap.getHouse_no(),
-                        brgy = spMap.getBrgy(),
-                        city = spMap.getCity(),
-                        province = spMap.getProvince();
-                if (hNum != null) {
-                    address = hNum;
-                }
-                if (brgy != null) {
-                    if (!address.isEmpty()) {
-                        address += " " + spMap.getBrgy();
-                    } else {
-                        address = brgy;
-                    }
-                }
-                if (city != null) {
-                    if (!address.isEmpty()) {
-                        address += " " + city;
-                    } else {
-                        address = city;
-                    }
-                }
-                if (province != null) {
-                    if (!address.isEmpty()) {
-                        address += ", " + province;
-                    } else {
-                        address = province;
-                    }
-                }
+                //------------------------------------------------------------------
+                // Get student address
+                this.address = StudentUtility.getStudentAddress(spMap);
+                //------------------------------------------------------------------
             }
             //------------------------------------------------------------------
 
@@ -150,7 +127,7 @@ public class PrintDeficiency extends Transaction {
         //----------------------------------------------------------------------
         return true;
     }
-    
+
     private ArrayList<Object[]> details = new ArrayList<>();
 
     private void getResult(CurricularLevelAssesor cla, int year, boolean hasPrepData) {
@@ -174,8 +151,9 @@ public class PrintDeficiency extends Transaction {
             }
             for (SubjectAssessmentDetials sadetail : sadetails) {
                 // ------------------------------------------
-                if(!sadetail.getSemester().equals(semester))
+                if (!sadetail.getSemester().equals(semester)) {
                     continue;
+                }
                 // -------------------------------------
                 SubjectMapping subject = sadetail.getSubjectDetails();
                 Object[] detail = new Object[5];
@@ -329,7 +307,7 @@ public class PrintDeficiency extends Transaction {
         def.SUBJECTS_PER_SEM.put("32", tyrssem);
         def.SUBJECTS_PER_SEM.put("41", fryrfsem);
         def.SUBJECTS_PER_SEM.put("42", fryrssem);
-        
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMMM-yyyy hh:mm: aa");
         def.DATETIME = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
         def.USER = WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
@@ -346,7 +324,7 @@ public class PrintDeficiency extends Transaction {
     private void store(ArrayList<Object[]> subjectDetails, Object[] detail) {
         subjectDetails.add(detail);
     }
-    
+
     private Document documentFormat;
 
     public void setDocumentFormat(Document documentFormat) {

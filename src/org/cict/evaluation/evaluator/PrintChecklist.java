@@ -33,6 +33,7 @@ import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
+import app.lazy.models.utils.StudentUtility;
 import artifacts.FTPManager;
 import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
@@ -69,7 +70,7 @@ public class PrintChecklist extends Transaction {
     private CurriculumMapping curriculum;
     private ArrayList<Object[]> details = new ArrayList<>();
     private StudentProfileMapping spMap;
-    
+
     //-------------------
     private Document documentFormat;
 
@@ -121,34 +122,10 @@ public class PrintChecklist extends Transaction {
             //------------------------------------------------------------------
             // check if profile was found
             if (spMap != null) {
-                String hNum = spMap.getHouse_no(),
-                        brgy = spMap.getBrgy(),
-                        city = spMap.getCity(),
-                        province = spMap.getProvince();
-                if (hNum != null) {
-                    address = hNum;
-                }
-                if (brgy != null) {
-                    if (!address.isEmpty()) {
-                        address += " " + spMap.getBrgy();
-                    } else {
-                        address = brgy;
-                    }
-                }
-                if (city != null) {
-                    if (!address.isEmpty()) {
-                        address += " " + city;
-                    } else {
-                        address = city;
-                    }
-                }
-                if (province != null) {
-                    if (!address.isEmpty()) {
-                        address += ", " + province;
-                    } else {
-                        address = province;
-                    }
-                }
+                //------------------------------------------------------------------
+                // Get student address
+                this.address = StudentUtility.getStudentAddress(spMap);
+                //------------------------------------------------------------------
                 highSchool = "";
             }
             //------------------------------------------------------------------
@@ -462,7 +439,7 @@ public class PrintChecklist extends Transaction {
             bsit1516.STUDENT_NUMBER = student.getId();
 
             bsit1516.setDocumentFormat(documentFormat);
-            
+
             String fullName = student.getLast_name() + ", " + student.getFirst_name();
             String midName = (student.getMiddle_name() == null ? "" : student.getMiddle_name());
             fullName += (midName != null ? (" " + midName) : "");
@@ -545,7 +522,7 @@ public class PrintChecklist extends Transaction {
         standard.PRINT_ORIGINAL = printOriginal;
 
         standard.setDocumentFormat(documentFormat);
-        
+
         String fullName = student.getLast_name() + ", " + student.getFirst_name();
         String midName = (student.getMiddle_name() == null ? "" : student.getMiddle_name());
         fullName += (midName != null ? (" " + midName) : "");
@@ -604,13 +581,13 @@ public class PrintChecklist extends Transaction {
         standard.SUBJECTS_PER_SEM.put("32", tyrssem);
         standard.SUBJECTS_PER_SEM.put("41", fryrfsem);
         standard.SUBJECTS_PER_SEM.put("42", fryrssem);
-        
+
         // conclude that when third yr first sem is empty, the curriculum is
         // a 2 year course
-        if(tyrfsem.isEmpty()) {
+        if (tyrfsem.isEmpty()) {
             standard.STUDY_YEARS = 2;
         }
-        
+
         int val = standard.print();
     }
 

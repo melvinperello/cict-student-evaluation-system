@@ -28,6 +28,7 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
+import app.lazy.models.utils.StudentUtility;
 import artifacts.FTPManager;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
@@ -84,41 +85,17 @@ public class PrintStudentProfile extends Transaction {
                 return false; // cancel this transaction
             }
             //------------------------------------------------------------------
-
-            String hNum = spMap.getHouse_no(),
-                    brgy = spMap.getBrgy(),
-                    city = spMap.getCity(),
-                    province = spMap.getProvince();
-            if (hNum != null) {
-                address = hNum;
-            }
-            if (brgy != null) {
-                if (!address.isEmpty()) {
-                    address += " " + spMap.getBrgy();
-                } else {
-                    address = brgy;
-                }
-            }
-            if (city != null) {
-                if (!address.isEmpty()) {
-                    address += " " + city;
-                } else {
-                    address = city;
-                }
-            }
-            if (province != null) {
-                if (!address.isEmpty()) {
-                    address += ", " + province;
-                } else {
-                    address = province;
-                }
-            }
+            
+            //------------------------------------------------------------------
+            // Get student address
+            this.address = StudentUtility.getStudentAddress(spMap);
+            //------------------------------------------------------------------
             studentContact = (spMap.getMobile() == null ? "" : spMap.getMobile());
             emailAdd = (spMap.getEmail() == null ? "" : spMap.getEmail());
             guardianName = (spMap.getIce_name() == null ? "" : spMap.getIce_name());
             guardianAddr = (spMap.getIce_address() == null ? "" : spMap.getIce_address());
             guardianContact = (spMap.getIce_contact() == null ? "" : spMap.getIce_contact());
-            
+
             //------------------------------------------------------------------
             // assign picture
             studentImage = spMap.getProfile_picture();
@@ -188,8 +165,7 @@ public class PrintStudentProfile extends Transaction {
                 studentProfile.setProfileImage(null);
                 int val = studentProfile.print();
             }
-            
-            
+
 //            // this is a downloader thread please put next actions inside
 //            ProfileImage.download(studentImage, path -> {
 //                // now we have the path
