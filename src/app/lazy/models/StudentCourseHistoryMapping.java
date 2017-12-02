@@ -2,7 +2,7 @@
 // SQL_table: student_course_history
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 21, 2017 10:49:59 PM
+// Created: Dec 02, 2017 02:58:37 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello

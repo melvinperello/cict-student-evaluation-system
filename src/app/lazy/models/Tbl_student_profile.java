@@ -2,7 +2,7 @@
 // SQL_table: student_profile
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 21, 2017 10:50:00 PM
+// Created: Dec 02, 2017 02:58:38 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -21,13 +21,14 @@ public final String id = "id";
 public final String STUDENT_id = "STUDENT_id";
 public final String floor_assignment = "floor_assignment";
 public final String profile_picture = "profile_picture";
-public final String mobile = "mobile";
 public final String house_no = "house_no";
 public final String street = "street";
 public final String brgy = "brgy";
 public final String city = "city";
 public final String province = "province";
+public final String student_address = "student_address";
 public final String zipcode = "zipcode";
+public final String mobile = "mobile";
 public final String email = "email";
 public final String ice_name = "ice_name";
 public final String ice_address = "ice_address";

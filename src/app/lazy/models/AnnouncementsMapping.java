@@ -2,7 +2,7 @@
 // SQL_table: announcements
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 21, 2017 10:49:56 PM
+// Created: Dec 02, 2017 02:58:35 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello

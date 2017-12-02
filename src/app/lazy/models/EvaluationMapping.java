@@ -2,7 +2,7 @@
 // SQL_table: evaluation
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 21, 2017 10:49:57 PM
+// Created: Dec 02, 2017 02:58:36 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -39,6 +39,7 @@ private java.lang.String remarks;
 private java.lang.String print_type;
 private java.lang.Integer cancelled_by;
 private java.util.Date cancelled_date;
+private java.lang.String check_mode;
 private java.lang.Integer active;
 
 @Id
@@ -151,6 +152,15 @@ public java.util.Date getCancelled_date() {
 
 public void setCancelled_date(java.util.Date fieldCancelledDate) {
 	this.cancelled_date = fieldCancelledDate;
+}
+
+@Column(name = "check_mode", nullable = true, length = 50)
+public java.lang.String getCheck_mode() {
+	return this.check_mode;
+}
+
+public void setCheck_mode(java.lang.String fieldCheckMode) {
+	this.check_mode = fieldCheckMode;
 }
 
 @Column(name = "active", nullable = true, length = 10)

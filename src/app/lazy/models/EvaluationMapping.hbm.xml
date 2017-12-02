@@ -40,6 +40,9 @@
 <property name="cancelled_date" type="java.util.Date">
 <column name="cancelled_date" length="19"/>
 </property>
+<property name="check_mode" type="java.lang.String">
+<column name="check_mode" length="50"/>
+</property>
 <property name="active" type="java.lang.Integer">
 <column name="active" length="10"/>
 </property>

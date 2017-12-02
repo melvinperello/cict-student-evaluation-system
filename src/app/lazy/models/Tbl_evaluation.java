@@ -2,7 +2,7 @@
 // SQL_table: evaluation
 // Mono Models
 // Monosync Framewrok v1.8.x
-// Created: Nov 21, 2017 10:50:00 PM
+// Created: Dec 02, 2017 02:58:38 PM
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -29,5 +29,6 @@ public final String remarks = "remarks";
 public final String print_type = "print_type";
 public final String cancelled_by = "cancelled_by";
 public final String cancelled_date = "cancelled_date";
+public final String check_mode = "check_mode";
 public final String active = "active";
 }
