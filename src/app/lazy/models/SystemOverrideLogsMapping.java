@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: system_override_logs
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:37 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "system_override_logs", catalog = "cictems")
-public class SystemOverrideLogsMapping implements java.io.Serializable {
+public class SystemOverrideLogsMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -139,6 +138,27 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public SystemOverrideLogsMapping copy() {
+SystemOverrideLogsMapping copyMe = new SystemOverrideLogsMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.category = this.category;
+copyMe.description = this.description;
+copyMe.executed_by = this.executed_by;
+copyMe.executed_date = this.executed_date;
+copyMe.academic_term = this.academic_term;
+copyMe.conforme = this.conforme;
+copyMe.conforme_type = this.conforme_type;
+copyMe.conforme_id = this.conforme_id;
+copyMe.attachment_file = this.attachment_file;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

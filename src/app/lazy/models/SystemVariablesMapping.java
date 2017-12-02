@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: system_variables
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:37 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "system_variables", catalog = "cictems")
-public class SystemVariablesMapping implements java.io.Serializable {
+public class SystemVariablesMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -110,6 +109,24 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public SystemVariablesMapping copy() {
+SystemVariablesMapping copyMe = new SystemVariablesMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.name = this.name;
+copyMe.value = this.value;
+copyMe.created_by = this.created_by;
+copyMe.created_date = this.created_date;
+copyMe.updated_by = this.updated_by;
+copyMe.updated_date = this.updated_date;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

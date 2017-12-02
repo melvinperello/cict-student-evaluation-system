@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: load_subject
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:37 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "load_subject", catalog = "cictems")
-public class LoadSubjectMapping implements java.io.Serializable {
+public class LoadSubjectMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -170,6 +169,30 @@ public java.lang.Integer getCleared() {
 
 public void setCleared(java.lang.Integer fieldCleared) {
 	this.cleared = fieldCleared;
+}
+
+@Override
+public LoadSubjectMapping copy() {
+LoadSubjectMapping copyMe = new LoadSubjectMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.SUBJECT_id = this.SUBJECT_id;
+copyMe.LOADGRP_id = this.LOADGRP_id;
+copyMe.STUDENT_id = this.STUDENT_id;
+copyMe.EVALUATION_id = this.EVALUATION_id;
+copyMe.added_date = this.added_date;
+copyMe.added_by = this.added_by;
+copyMe.remarks = this.remarks;
+copyMe.removed_date = this.removed_date;
+copyMe.removed_by = this.removed_by;
+copyMe.changing_reference = this.changing_reference;
+copyMe.active = this.active;
+copyMe.arhived = this.arhived;
+copyMe.cleared = this.cleared;
+return copyMe;
 }
 
 }

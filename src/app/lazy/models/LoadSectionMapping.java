@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: load_section
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:37 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "load_section", catalog = "cictems")
-public class LoadSectionMapping implements java.io.Serializable {
+public class LoadSectionMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -200,6 +199,33 @@ public java.lang.Integer getArchived() {
 
 public void setArchived(java.lang.Integer fieldArchived) {
 	this.archived = fieldArchived;
+}
+
+@Override
+public LoadSectionMapping copy() {
+LoadSectionMapping copyMe = new LoadSectionMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.ACADTERM_id = this.ACADTERM_id;
+copyMe.ACADPROG_id = this.ACADPROG_id;
+copyMe.CURRICULUM_id = this.CURRICULUM_id;
+copyMe.section_name = this.section_name;
+copyMe.section_description = this.section_description;
+copyMe.year_level = this.year_level;
+copyMe._group = this._group;
+copyMe.type = this.type;
+copyMe.college = this.college;
+copyMe.created_date = this.created_date;
+copyMe.created_by = this.created_by;
+copyMe.updated_date = this.updated_date;
+copyMe.updated_by = this.updated_by;
+copyMe.adviser = this.adviser;
+copyMe.active = this.active;
+copyMe.archived = this.archived;
+return copyMe;
 }
 
 }

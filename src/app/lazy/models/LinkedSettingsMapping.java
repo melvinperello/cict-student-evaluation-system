@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: linked_settings
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "linked_settings", catalog = "cictems")
-public class LinkedSettingsMapping implements java.io.Serializable {
+public class LinkedSettingsMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -159,6 +158,29 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public LinkedSettingsMapping copy() {
+LinkedSettingsMapping copyMe = new LinkedSettingsMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.floor_3_max = this.floor_3_max;
+copyMe.floor_4_max = this.floor_4_max;
+copyMe.floor_3_name = this.floor_3_name;
+copyMe.floor_4_name = this.floor_4_name;
+copyMe.floor_3_last = this.floor_3_last;
+copyMe.floor_4_last = this.floor_4_last;
+copyMe.floor_3_cut = this.floor_3_cut;
+copyMe.floor_4_cut = this.floor_4_cut;
+copyMe.created_by = this.created_by;
+copyMe.created_date = this.created_date;
+copyMe.mark = this.mark;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

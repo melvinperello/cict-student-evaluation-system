@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: student
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:37 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "student", catalog = "cictems")
-public class StudentMapping implements java.io.Serializable {
+public class StudentMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer cict_id;
@@ -333,6 +332,46 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public StudentMapping copy() {
+StudentMapping copyMe = new StudentMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.cict_id = this.cict_id;
+         */
+copyMe.id = this.id;
+copyMe.CURRICULUM_id = this.CURRICULUM_id;
+copyMe.curriculum_assignment = this.curriculum_assignment;
+copyMe.PREP_id = this.PREP_id;
+copyMe.prep_assignment = this.prep_assignment;
+copyMe.last_name = this.last_name;
+copyMe.first_name = this.first_name;
+copyMe.middle_name = this.middle_name;
+copyMe.gender = this.gender;
+copyMe.year_level = this.year_level;
+copyMe.section = this.section;
+copyMe._group = this._group;
+copyMe.has_profile = this.has_profile;
+copyMe.enrollment_type = this.enrollment_type;
+copyMe.admission_year = this.admission_year;
+copyMe.college = this.college;
+copyMe.campus = this.campus;
+copyMe.residency = this.residency;
+copyMe.class_type = this.class_type;
+copyMe.university = this.university;
+copyMe.created_by = this.created_by;
+copyMe.created_date = this.created_date;
+copyMe.updated_by = this.updated_by;
+copyMe.updated_date = this.updated_date;
+copyMe.verified = this.verified;
+copyMe.verification_date = this.verification_date;
+copyMe.verfied_by = this.verfied_by;
+copyMe.last_evaluation_term = this.last_evaluation_term;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

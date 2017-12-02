@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: linked_telemetry
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "linked_telemetry", catalog = "cictems")
-public class LinkedTelemetryMapping implements java.io.Serializable {
+public class LinkedTelemetryMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -219,6 +218,35 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public LinkedTelemetryMapping copy() {
+LinkedTelemetryMapping copyMe = new LinkedTelemetryMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.class_name = this.class_name;
+copyMe.method_name = this.method_name;
+copyMe.line = this.line;
+copyMe.classification = this.classification;
+copyMe.exception_type = this.exception_type;
+copyMe.description = this.description;
+copyMe.student_number = this.student_number;
+copyMe.student_name = this.student_name;
+copyMe.version = this.version;
+copyMe.build = this.build;
+copyMe.model = this.model;
+copyMe.board = this.board;
+copyMe.brand = this.brand;
+copyMe.hardware = this.hardware;
+copyMe.manufacturer = this.manufacturer;
+copyMe.serial = this.serial;
+copyMe.date_submitted = this.date_submitted;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: linked_pila_4f
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "linked_pila_4f", catalog = "cictems")
-public class LinkedPila4fMapping implements java.io.Serializable {
+public class LinkedPila4fMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -58,6 +57,19 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public LinkedPila4fMapping copy() {
+LinkedPila4fMapping copyMe = new LinkedPila4fMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.pila_id = this.pila_id;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

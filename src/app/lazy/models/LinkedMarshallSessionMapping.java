@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: linked_marshall_session
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "linked_marshall_session", catalog = "cictems")
-public class LinkedMarshallSessionMapping implements java.io.Serializable {
+public class LinkedMarshallSessionMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer ses_id;
@@ -130,6 +129,26 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public LinkedMarshallSessionMapping copy() {
+LinkedMarshallSessionMapping copyMe = new LinkedMarshallSessionMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.ses_id = this.ses_id;
+         */
+copyMe.cict_id = this.cict_id;
+copyMe.account_id = this.account_id;
+copyMe.name = this.name;
+copyMe.org = this.org;
+copyMe.imei = this.imei;
+copyMe.session_start = this.session_start;
+copyMe.session_end = this.session_end;
+copyMe.status = this.status;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

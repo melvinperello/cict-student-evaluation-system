@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: curriculum_history
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "curriculum_history", catalog = "cictems")
-public class CurriculumHistoryMapping implements java.io.Serializable {
+public class CurriculumHistoryMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer history_id;
@@ -212,6 +211,34 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public CurriculumHistoryMapping copy() {
+CurriculumHistoryMapping copyMe = new CurriculumHistoryMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.history_id = this.history_id;
+         */
+copyMe.CURRICULUM_id = this.CURRICULUM_id;
+copyMe.major = this.major;
+copyMe.name = this.name;
+copyMe.description = this.description;
+copyMe.ladderization = this.ladderization;
+copyMe.ladderization_type = this.ladderization_type;
+copyMe.study_years = this.study_years;
+copyMe.created_date = this.created_date;
+copyMe.created_by = this.created_by;
+copyMe.updated_date = this.updated_date;
+copyMe.updated_by = this.updated_by;
+copyMe.removed_date = this.removed_date;
+copyMe.removed_by = this.removed_by;
+copyMe.implemented = this.implemented;
+copyMe.implementation_date = this.implementation_date;
+copyMe.implemented_by = this.implemented_by;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

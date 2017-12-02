@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: grade
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "grade", catalog = "cictems")
-public class GradeMapping implements java.io.Serializable {
+public class GradeMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -242,6 +241,37 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public GradeMapping copy() {
+GradeMapping copyMe = new GradeMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.STUDENT_id = this.STUDENT_id;
+copyMe.SUBJECT_id = this.SUBJECT_id;
+copyMe.ACADTERM_id = this.ACADTERM_id;
+copyMe.rating = this.rating;
+copyMe.remarks = this.remarks;
+copyMe.credit = this.credit;
+copyMe.credit_method = this.credit_method;
+copyMe.created_by = this.created_by;
+copyMe.created_date = this.created_date;
+copyMe.posted = this.posted;
+copyMe.posted_by = this.posted_by;
+copyMe.posting_date = this.posting_date;
+copyMe.inc_expire = this.inc_expire;
+copyMe.updated_by = this.updated_by;
+copyMe.updated_date = this.updated_date;
+copyMe.reason_for_update = this.reason_for_update;
+copyMe.referrence_curriculum = this.referrence_curriculum;
+copyMe.course_reference = this.course_reference;
+copyMe.grade_state = this.grade_state;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: curriculum_pre
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "curriculum_pre", catalog = "cictems")
-public class CurriculumPreMapping implements java.io.Serializable {
+public class CurriculumPreMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -120,6 +119,25 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public CurriculumPreMapping copy() {
+CurriculumPreMapping copyMe = new CurriculumPreMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.curriculum_id_get = this.curriculum_id_get;
+copyMe.curriculum_id_req = this.curriculum_id_req;
+copyMe.cur_type = this.cur_type;
+copyMe.created_date = this.created_date;
+copyMe.created_by = this.created_by;
+copyMe.removed_date = this.removed_date;
+copyMe.removed_by = this.removed_by;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

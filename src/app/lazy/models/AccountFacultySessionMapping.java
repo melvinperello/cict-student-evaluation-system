@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: account_faculty_session
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:35 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "account_faculty_session", catalog = "cictems")
-public class AccountFacultySessionMapping implements java.io.Serializable {
+public class AccountFacultySessionMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer session_id;
@@ -141,6 +140,27 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public AccountFacultySessionMapping copy() {
+AccountFacultySessionMapping copyMe = new AccountFacultySessionMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.session_id = this.session_id;
+         */
+copyMe.FACULTY_account_id = this.FACULTY_account_id;
+copyMe.session_start = this.session_start;
+copyMe.keep_alive = this.keep_alive;
+copyMe.ip_address = this.ip_address;
+copyMe.pc_name = this.pc_name;
+copyMe.pc_username = this.pc_username;
+copyMe.os = this.os;
+copyMe.session_end = this.session_end;
+copyMe.platform = this.platform;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

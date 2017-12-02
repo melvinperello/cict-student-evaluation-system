@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: linked_entrance
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "linked_entrance", catalog = "cictems")
-public class LinkedEntranceMapping implements java.io.Serializable {
+public class LinkedEntranceMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer reference_id;
@@ -98,6 +97,23 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public LinkedEntranceMapping copy() {
+LinkedEntranceMapping copyMe = new LinkedEntranceMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.reference_id = this.reference_id;
+         */
+copyMe.student_number = this.student_number;
+copyMe.name = this.name;
+copyMe.status = this.status;
+copyMe.faculty_name = this.faculty_name;
+copyMe.floor_assignment = this.floor_assignment;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

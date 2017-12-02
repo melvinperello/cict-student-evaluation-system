@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: load_group_schedule
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:37 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "load_group_schedule", catalog = "cictems")
-public class LoadGroupScheduleMapping implements java.io.Serializable {
+public class LoadGroupScheduleMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -150,6 +149,28 @@ public java.lang.Integer getArchived() {
 
 public void setArchived(java.lang.Integer fieldArchived) {
 	this.archived = fieldArchived;
+}
+
+@Override
+public LoadGroupScheduleMapping copy() {
+LoadGroupScheduleMapping copyMe = new LoadGroupScheduleMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.load_group_id = this.load_group_id;
+copyMe.class_day = this.class_day;
+copyMe.class_start = this.class_start;
+copyMe.class_end = this.class_end;
+copyMe.class_room = this.class_room;
+copyMe.created_date = this.created_date;
+copyMe.created_by = this.created_by;
+copyMe.updated_date = this.updated_date;
+copyMe.updated_by = this.updated_by;
+copyMe.active = this.active;
+copyMe.archived = this.archived;
+return copyMe;
 }
 
 }

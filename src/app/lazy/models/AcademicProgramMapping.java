@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: academic_program
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:35 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "academic_program", catalog = "cictems")
-public class AcademicProgramMapping implements java.io.Serializable {
+public class AcademicProgramMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -151,6 +150,28 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public AcademicProgramMapping copy() {
+AcademicProgramMapping copyMe = new AcademicProgramMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.code = this.code;
+copyMe.name = this.name;
+copyMe.floor_assignment = this.floor_assignment;
+copyMe.created_date = this.created_date;
+copyMe.created_by = this.created_by;
+copyMe.removed_date = this.removed_date;
+copyMe.removed_by = this.removed_by;
+copyMe.implemented = this.implemented;
+copyMe.implementation_date = this.implementation_date;
+copyMe.implemented_by = this.implemented_by;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

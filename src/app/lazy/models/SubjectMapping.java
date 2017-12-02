@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: subject
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:37 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "subject", catalog = "cictems")
-public class SubjectMapping implements java.io.Serializable {
+public class SubjectMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -150,6 +149,28 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public SubjectMapping copy() {
+SubjectMapping copyMe = new SubjectMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.code = this.code;
+copyMe.descriptive_title = this.descriptive_title;
+copyMe.lec_units = this.lec_units;
+copyMe.lab_units = this.lab_units;
+copyMe.type = this.type;
+copyMe.subtype = this.subtype;
+copyMe.added_by = this.added_by;
+copyMe.added_date = this.added_date;
+copyMe.updated_by = this.updated_by;
+copyMe.updated_date = this.updated_date;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

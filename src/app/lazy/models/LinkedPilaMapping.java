@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: linked_pila
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "linked_pila", catalog = "cictems")
-public class LinkedPilaMapping implements java.io.Serializable {
+public class LinkedPilaMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -211,6 +210,34 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public LinkedPilaMapping copy() {
+LinkedPilaMapping copyMe = new LinkedPilaMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.ACADTERM_id = this.ACADTERM_id;
+copyMe.STUDENT_id = this.STUDENT_id;
+copyMe.ACCOUNT_id = this.ACCOUNT_id;
+copyMe.SETTINGS_id = this.SETTINGS_id;
+copyMe.NOTIFIED = this.NOTIFIED;
+copyMe.conforme = this.conforme;
+copyMe.course = this.course;
+copyMe.imei = this.imei;
+copyMe.request_accepted = this.request_accepted;
+copyMe.request_called = this.request_called;
+copyMe.request_validity = this.request_validity;
+copyMe.floor_assignment = this.floor_assignment;
+copyMe.floor_number = this.floor_number;
+copyMe.cluster_name = this.cluster_name;
+copyMe.status = this.status;
+copyMe.remarks = this.remarks;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

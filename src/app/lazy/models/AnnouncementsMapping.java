@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: announcements
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:35 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "announcements", catalog = "cictems")
-public class AnnouncementsMapping implements java.io.Serializable {
+public class AnnouncementsMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -89,6 +88,22 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public AnnouncementsMapping copy() {
+AnnouncementsMapping copyMe = new AnnouncementsMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.title = this.title;
+copyMe.message = this.message;
+copyMe.date = this.date;
+copyMe.announced_by = this.announced_by;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

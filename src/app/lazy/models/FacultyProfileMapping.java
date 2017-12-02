@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: faculty_profile
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "faculty_profile", catalog = "cictems")
-public class FacultyProfileMapping implements java.io.Serializable {
+public class FacultyProfileMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -528,6 +527,66 @@ public java.lang.String getMother_middlename() {
 
 public void setMother_middlename(java.lang.String fieldMotherMiddlename) {
 	this.mother_middlename = fieldMotherMiddlename;
+}
+
+@Override
+public FacultyProfileMapping copy() {
+FacultyProfileMapping copyMe = new FacultyProfileMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.birthdate = this.birthdate;
+copyMe.place_of_birth = this.place_of_birth;
+copyMe.sex = this.sex;
+copyMe.civil_status = this.civil_status;
+copyMe.height = this.height;
+copyMe.weight = this.weight;
+copyMe.blood_type = this.blood_type;
+copyMe.GSIS_id = this.GSIS_id;
+copyMe.PAGIBIG_id = this.PAGIBIG_id;
+copyMe.PHILHEALTH_id = this.PHILHEALTH_id;
+copyMe.SSS_id = this.SSS_id;
+copyMe.TIN_no = this.TIN_no;
+copyMe.citizenship = this.citizenship;
+copyMe.dual_citizenship = this.dual_citizenship;
+copyMe.dual_type = this.dual_type;
+copyMe.dual_country = this.dual_country;
+copyMe.res_house = this.res_house;
+copyMe.res_street = this.res_street;
+copyMe.res_village = this.res_village;
+copyMe.res_brgy = this.res_brgy;
+copyMe.res_city = this.res_city;
+copyMe.res_province = this.res_province;
+copyMe.res_zip = this.res_zip;
+copyMe.addr_house = this.addr_house;
+copyMe.addr_street = this.addr_street;
+copyMe.addr_village = this.addr_village;
+copyMe.addr_brgy = this.addr_brgy;
+copyMe.addr_city = this.addr_city;
+copyMe.addr_province = this.addr_province;
+copyMe.addr_zip = this.addr_zip;
+copyMe.telephone = this.telephone;
+copyMe.mobile = this.mobile;
+copyMe.email = this.email;
+copyMe.spouse_surname = this.spouse_surname;
+copyMe.spouse_firstname = this.spouse_firstname;
+copyMe.spouse_middlename = this.spouse_middlename;
+copyMe.spouse_name_ext = this.spouse_name_ext;
+copyMe.spouse_occupation = this.spouse_occupation;
+copyMe.spouse_work_agency = this.spouse_work_agency;
+copyMe.spouse_work_address = this.spouse_work_address;
+copyMe.spouse_telephone = this.spouse_telephone;
+copyMe.father_surname = this.father_surname;
+copyMe.father_firstname = this.father_firstname;
+copyMe.father_middlename = this.father_middlename;
+copyMe.father_name_ext = this.father_name_ext;
+copyMe.mother_maidenname = this.mother_maidenname;
+copyMe.mother_surname = this.mother_surname;
+copyMe.mother_firstname = this.mother_firstname;
+copyMe.mother_middlename = this.mother_middlename;
+return copyMe;
 }
 
 }

@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: account_student
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:35 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "account_student", catalog = "cictems")
-public class AccountStudentMapping implements java.io.Serializable {
+public class AccountStudentMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -149,6 +148,28 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public AccountStudentMapping copy() {
+AccountStudentMapping copyMe = new AccountStudentMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.STUDENT_id = this.STUDENT_id;
+copyMe.username = this.username;
+copyMe.password = this.password;
+copyMe.recovery_question = this.recovery_question;
+copyMe.recovery_answer = this.recovery_answer;
+copyMe.access_level = this.access_level;
+copyMe.affiliates = this.affiliates;
+copyMe.state = this.state;
+copyMe.tries = this.tries;
+copyMe.blocked_until = this.blocked_until;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

@@ -157,6 +157,7 @@ public class CreditEncode extends Transaction {
                 // IF EMPTY it means grade will be deleted
                 boolean deleteGrade = false;
                 if (rating.equalsIgnoreCase("")) {
+                    
                     studentGrade.setUpdated_by(facultyUpdater);
                     studentGrade.setUpdated_date(updateDate);
                     studentGrade.setReason_for_update("GRADE REMOVED");

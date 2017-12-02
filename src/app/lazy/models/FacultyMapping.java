@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: faculty
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:36 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "faculty", catalog = "cictems")
-public class FacultyMapping implements java.io.Serializable {
+public class FacultyMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -148,6 +147,28 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public FacultyMapping copy() {
+FacultyMapping copyMe = new FacultyMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.bulsu_id = this.bulsu_id;
+copyMe.last_name = this.last_name;
+copyMe.first_name = this.first_name;
+copyMe.middle_name = this.middle_name;
+copyMe.name_extension = this.name_extension;
+copyMe.mobile_number = this.mobile_number;
+copyMe.gender = this.gender;
+copyMe.rank = this.rank;
+copyMe.designation = this.designation;
+copyMe.department = this.department;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }

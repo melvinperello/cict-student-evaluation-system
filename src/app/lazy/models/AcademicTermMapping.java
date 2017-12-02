@@ -1,8 +1,7 @@
 // SQL_db: cictems
 // SQL_table: academic_term
 // Mono Models
-// Monosync Framewrok v1.8.x
-// Created: Dec 02, 2017 02:58:35 PM
+// Monosync Framewrok v9.08.16
 // Generated using LazyMono
 // This code is computer generated, do not modify
 // Author: Jhon Melvin Nieto Perello
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "academic_term", catalog = "cictems")
-public class AcademicTermMapping implements java.io.Serializable {
+public class AcademicTermMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
 
 private java.lang.Integer id;
@@ -201,6 +200,33 @@ public java.lang.Integer getActive() {
 
 public void setActive(java.lang.Integer fieldActive) {
 	this.active = fieldActive;
+}
+
+@Override
+public AcademicTermMapping copy() {
+AcademicTermMapping copyMe = new AcademicTermMapping();
+        /**
+         * A.I. Field Do Not Copy.
+         *
+         * copyMe.id = this.id;
+         */
+copyMe.school_year = this.school_year;
+copyMe.semester = this.semester;
+copyMe.semester_regular = this.semester_regular;
+copyMe.current = this.current;
+copyMe.evaluation_service = this.evaluation_service;
+copyMe.es_updater = this.es_updater;
+copyMe.es_update_date = this.es_update_date;
+copyMe.adding_service = this.adding_service;
+copyMe.as_updater = this.as_updater;
+copyMe.as_update_date = this.as_update_date;
+copyMe.encoding_service = this.encoding_service;
+copyMe.ens_updater = this.ens_updater;
+copyMe.ens_update_date = this.ens_update_date;
+copyMe.type = this.type;
+copyMe.approval_state = this.approval_state;
+copyMe.active = this.active;
+return copyMe;
 }
 
 }
