@@ -5,6 +5,7 @@
  */
 package org.cict;
 
+import artifacts.ErrorLogger;
 import artifacts.StackTraceDialog;
 import com.jhmvin.Mono;
 import com.melvin.mono.fx.bootstrap.M;
@@ -24,7 +25,10 @@ public class MainApplication extends Application {
     public static HostServicesDelegate HOST_SERVICE;
 
     public static void main(String[] args) {
-        //MainApplication.integrateExceptionCatcher();
+        //----------------------------------------------------------------------
+        // saves error in "error_logs" directory
+        MainApplication.integrateExceptionCatcher();
+        //----------------------------------------------------------------------
         launch(args);
     }
 
@@ -41,10 +45,12 @@ public class MainApplication extends Application {
                     // do nothing this is a known error
                     System.out.println(e.getCause());
                 } else {
-                    StackTraceDialog.show(e);
+                    //StackTraceDialog.show(e);
+                    ErrorLogger.record(e);
                 }
             } catch (Exception haha) {
-                StackTraceDialog.show(e);
+                //StackTraceDialog.show(haha);
+                ErrorLogger.record(haha);
             }
         });
     }
