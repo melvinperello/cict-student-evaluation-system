@@ -71,10 +71,10 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
     @FXML
     private Label lbl_name1;
-    
+
     @FXML
     private Label lbl_name11;
-    
+
     @FXML
     private Label lbl_bulsu_id;
 
@@ -113,7 +113,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
     @FXML
     private TextField txtmname;
-    
+
     @FXML
     private TextField txt_contact;
 
@@ -169,7 +169,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         setData();
         addTextFieldFilters();
     }
-    
+
     private void setComboBox() {
         cmb_rank.getItems().clear();
         cmb_rank.getItems().add("Part Time");
@@ -180,7 +180,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         cmb_rank.getItems().add("Professor I");
         cmb_rank.getItems().add("Professor II");
         cmb_rank.getItems().add("Professor III");
-        
+
         cmb_des.getItems().clear();
         cmb_des.getItems().add("Instructor");
         cmb_des.getItems().add("Faculty");
@@ -189,13 +189,21 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         cmb_des.getItems().add("Department Head");
         cmb_des.getItems().add("Associate Dean");
         cmb_des.getItems().add("Dean");
-        
+
         cmb_dept.getItems().clear();
         ArrayList<AcademicProgramMapping> acads = Mono.orm().newSearch(Database.connect().academic_program())
-//                .eq(DB.academic_program().implemented, 1)
+                //                .eq(DB.academic_program().implemented, 1)
                 .active(Order.asc(DB.academic_program().code))
                 .all();
-        for(AcademicProgramMapping acad: acads) {
+
+        //----------------------------------------------------------------------
+        if (acads == null) {
+            // do not add anything
+            return;
+        }
+        //----------------------------------------------------------------------
+
+        for (AcademicProgramMapping acad : acads) {
             cmb_dept.getItems().add(acad.getCode());
         }
     }
@@ -232,7 +240,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         textName.clone().setTextSource(txt_lastname).applyFilter();
         textName.clone().setTextSource(txt_fname).applyFilter();
         textName.clone().setTextSource(txtmname).applyFilter();
-        
+
         StringFilter textContact = TextInputFilters.string()
                 .setFilterMode(StringFilter.DIGIT)
                 .setMaxCharacters(20)
@@ -249,7 +257,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_back, () -> {
             FacultyMainController controller = homeFx.getController();
             controller.onSearch(false);
-            
+
             Animate.fade(this.application_root, SectionConstants.FADE_SPEED, () -> {
                 super.replaceRoot(homeFx.getApplicationRoot());
             }, homeFx.getApplicationRoot());
@@ -339,18 +347,20 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
             title = "Restored Successfully";
             btn = "Remove Faculty";
             status = "Active";
-            if(afMap!=null) 
+            if (afMap != null) {
                 afMap.setActive(1);
+            }
         } else {
             faculty.setActive(0);
             title = "Removed Successfully";
             btn = "Restore Faculty";
             status = "Inactive";
-            if(afMap!=null) 
+            if (afMap != null) {
                 afMap.setActive(0);
+            }
         }
         if (Database.connect().faculty().update(faculty)) {
-            if(afMap!=null) {
+            if (afMap != null) {
                 Database.connect().account_faculty().update(afMap);
             }
             Notifications.create().darkStyle()
@@ -403,30 +413,38 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         if (MonoString.removeExtraSpace(txtmname.getText().toUpperCase()) != null) {
             middlename = MonoString.removeExtraSpace(txtmname.getText().toUpperCase());
         }
-        
+
         String contactNumber = txt_contact.getText();
-        if(contactNumber==null || contactNumber.isEmpty()) {
+        if (contactNumber == null || contactNumber.isEmpty()) {
             showWarning("Invalid Contact Number", "Contact number must have a value.");
             return;
-        } else if(contactNumber.length()<11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
+        } else if (contactNumber.length() < 11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
             showWarning("Invalid Contact Number", "Must start with \"09\" with a length\n"
                     + "of 11 digits.");
             return;
-        } else if(contactNumber.length() != 11) {
+        } else if (contactNumber.length() != 11) {
             showWarning("Invalid Contact Number", "Must have a length of 11 digits\n"
                     + "and starts with \"09\"");
             return;
         }
-        
+
         if (MonoString.removeExtraSpace(cmb_rank.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {
             rank = MonoString.removeExtraSpace(cmb_rank.getSelectionModel().getSelectedItem().toString().toUpperCase());
         }
         if (MonoString.removeExtraSpace(cmb_des.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {
             designation = MonoString.removeExtraSpace(cmb_des.getSelectionModel().getSelectedItem().toString().replace(" ", "_").toUpperCase());
         }
-        if (MonoString.removeExtraSpace(cmb_dept.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {
-            dept = MonoString.removeExtraSpace(cmb_dept.getSelectionModel().getSelectedItem().toString().toUpperCase());
+        //----------------------------------------------------------------------
+        try {
+            // when there is no academic program to be listed
+            if (MonoString.removeExtraSpace(cmb_dept.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {
+                dept = MonoString.removeExtraSpace(cmb_dept.getSelectionModel().getSelectedItem().toString().toUpperCase());
+            }
+        } catch (Exception e) {
+            dept = null;
         }
+
+        //----------------------------------------------------------------------
         faculty.setBulsu_id(bulsu_id);
         faculty.setLast_name(lastname);
         faculty.setFirst_name(firstname);
@@ -436,7 +454,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         faculty.setGender(gender);
         faculty.setDepartment(dept);
         //------------------
-        faculty.setMobile_number("+639"+contactNumber.substring(2, 11));
+        faculty.setMobile_number("+639" + contactNumber.substring(2, 11));
         //------------------
         if (Database.connect().faculty().update(faculty)) {
             Notifications.create().darkStyle()
@@ -481,13 +499,13 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
         // if no account
         if (afMap == null) {
-            System.out.println("NO ACCOUNT"); 
-           return;
+            System.out.println("NO ACCOUNT");
+            return;
         }
         // set username
         lbl_username.setText(afMap.getUsername().toUpperCase());
         // set account access level
-        String access = afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "ASSISTANT REGISTRAR" : afMap.getAccess_level().replace("_", " ");
+        String access = afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR) ? "ASSISTANT REGISTRAR" : afMap.getAccess_level().replace("_", " ");
         lbl_access.setText(access);
 
         // set status and button text
@@ -510,12 +528,12 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
     private void setBasicInfo() {
         lbl_bulsu_id.setText(faculty.getBulsu_id().toUpperCase());
         lbl_name.setText(WordUtils.capitalizeFully(faculty.getFirst_name()));
-        lbl_name1.setText(faculty.getMiddle_name()==null || faculty.getMiddle_name().isEmpty() ? "---" : WordUtils.capitalizeFully(faculty.getMiddle_name()));
-        lbl_name11.setText(faculty.getLast_name()==null ? "---" : WordUtils.capitalizeFully(faculty.getLast_name()));
-        lbl_gender.setText(faculty.getGender()==null || faculty.getGender().isEmpty()  ? "NOT SPECIFIED" : WordUtils.capitalizeFully(faculty.getGender()));
-        lbl_rank.setText(faculty.getRank()==null || faculty.getRank().isEmpty()  ? "UNRANKED" : faculty.getRank());
-        lbl_department.setText(faculty.getDepartment()==null || faculty.getDepartment().isEmpty()  ? "NONE" : (faculty.getDepartment()));
-        lbl_designation.setText(faculty.getDesignation()==null || faculty.getDesignation().isEmpty()  ? "NONE" : (faculty.getDesignation().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "ASSISTANT REGISTRAR" : faculty.getDesignation().replace("_", " ")));
+        lbl_name1.setText(faculty.getMiddle_name() == null || faculty.getMiddle_name().isEmpty() ? "---" : WordUtils.capitalizeFully(faculty.getMiddle_name()));
+        lbl_name11.setText(faculty.getLast_name() == null ? "---" : WordUtils.capitalizeFully(faculty.getLast_name()));
+        lbl_gender.setText(faculty.getGender() == null || faculty.getGender().isEmpty() ? "NOT SPECIFIED" : WordUtils.capitalizeFully(faculty.getGender()));
+        lbl_rank.setText(faculty.getRank() == null || faculty.getRank().isEmpty() ? "UNRANKED" : faculty.getRank());
+        lbl_department.setText(faculty.getDepartment() == null || faculty.getDepartment().isEmpty() ? "NONE" : (faculty.getDepartment()));
+        lbl_designation.setText(faculty.getDesignation() == null || faculty.getDesignation().isEmpty() ? "NONE" : (faculty.getDesignation().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR) ? "ASSISTANT REGISTRAR" : faculty.getDesignation().replace("_", " ")));
     }
 
     /**
@@ -527,32 +545,34 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         txt_fname.setText(faculty.getFirst_name());
         txtmname.setText(faculty.getMiddle_name() == null ? "" : faculty.getMiddle_name());
 
-        
-        if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("MALE")) {
+        if ((faculty.getGender() == null ? "" : faculty.getGender()).equalsIgnoreCase("MALE")) {
             rbtn_male.setSelected(true);
-        } else if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("FEMALE")) {
+        } else if ((faculty.getGender() == null ? "" : faculty.getGender()).equalsIgnoreCase("FEMALE")) {
             rbtn_female.setSelected(true);
         } else {
             // if none was set in the database
             rbtn_male.setSelected(true);
         }
-        if(faculty.getRank() == null)
+        if (faculty.getRank() == null) {
             cmb_rank.getSelectionModel().selectFirst();
-        else
+        } else {
             cmb_rank.getSelectionModel().select(faculty.getRank());
-        
-        if(faculty.getDesignation()== null)
+        }
+
+        if (faculty.getDesignation() == null) {
             cmb_des.getSelectionModel().selectFirst();
-        else
+        } else {
             cmb_des.getSelectionModel().select(faculty.getDesignation().replace("_", " "));
-        
-        if(faculty.getDepartment()== null)
+        }
+
+        if (faculty.getDepartment() == null) {
             cmb_dept.getSelectionModel().selectFirst();
-        else
+        } else {
             cmb_dept.getSelectionModel().select(faculty.getDepartment());
-        
+        }
+
         //--------------
-        txt_contact.setText(faculty.getMobile_number()==null? "" : "09"+faculty.getMobile_number().substring(4, 13));
+        txt_contact.setText(faculty.getMobile_number() == null ? "" : "09" + faculty.getMobile_number().substring(4, 13));
     }
 
 }
