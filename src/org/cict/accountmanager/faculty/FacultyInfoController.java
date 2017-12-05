@@ -217,11 +217,11 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(true)
                 .setFilterManager(filterManager -> {
-                    if (!filterManager.isValid()) {
-                        Mono.fx().alert().createWarning().setHeader("Warning")
-                                .setMessage(filterManager.getMessage())
-                                .show();
-                    }
+//                    if (!filterManager.isValid()) {
+//                        Mono.fx().alert().createWarning().setHeader("Warning")
+//                                .setMessage(filterManager.getMessage())
+//                                .show();
+//                    }
                 });
         textId.clone().setTextSource(txt_id).applyFilter();
 
@@ -230,11 +230,11 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
                 .setMaxCharacters(100)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager -> {
-                    if (!filterManager.isValid()) {
-                        Mono.fx().alert().createWarning().setHeader("Warning")
-                                .setMessage(filterManager.getMessage())
-                                .show();
-                    }
+//                    if (!filterManager.isValid()) {
+//                        Mono.fx().alert().createWarning().setHeader("Warning")
+//                                .setMessage(filterManager.getMessage())
+//                                .show();
+//                    }
                 });
 
         textName.clone().setTextSource(txt_lastname).applyFilter();
@@ -416,8 +416,8 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
         String contactNumber = txt_contact.getText();
         if (contactNumber == null || contactNumber.isEmpty()) {
-            showWarning("Invalid Contact Number", "Contact number must have a value.");
-            return;
+//            showWarning("Invalid Contact Number", "Contact number must have a value.");
+//            return;
         } else if (contactNumber.length() < 11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
             showWarning("Invalid Contact Number", "Must start with \"09\" with a length\n"
                     + "of 11 digits.");
