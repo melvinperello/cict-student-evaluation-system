@@ -29,6 +29,8 @@ public class MainApplication extends Application {
         //----------------------------------------------------------------------
         // saves error in "error_logs" directory
         MainApplication.integrateExceptionCatcher();
+        com.jhmvin.fx.async.Transaction.setErrorApprehension(true);
+        com.jhmvin.fx.async.SimpleTask.setErrorApprehension(true);
         //----------------------------------------------------------------------
         launch(args);
     }
