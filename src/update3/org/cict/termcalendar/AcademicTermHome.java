@@ -857,6 +857,11 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             addingActive = false;
             encodingActive = false;
 
+            // check if there is a current term
+            if(currentTerm==null) {
+                return false;
+            }
+            
             // reload values
             this.currentTerm = Database.connect()
                     .academic_term()

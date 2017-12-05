@@ -44,6 +44,7 @@ import org.cict.accountmanager.faculty.FacultyMainController;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.EvaluateController;
 import org.cict.reports.ReportsMain;
+import org.controlsfx.control.Notifications;
 import update.org.cict.controller.adding.AddingHome;
 import update2.org.cict.controller.academicprogram.AcademicHome;
 import update3.org.cict.access.Access;
@@ -453,11 +454,24 @@ public class SystemHome extends MonoLauncher {
 
         AcademicTermHome.ServiceStatusChecker ssc = new AcademicTermHome().new ServiceStatusChecker();
         ssc.whenStarted(() -> {
-            btn_evaluation.setDisable(true);
-            btn_adding.setDisable(true);
+            if(operation.equalsIgnoreCase("evaluation"))
+                btn_evaluation.setDisable(true);
+            else
+                btn_adding.setDisable(true);
         });
 
         ssc.whenCancelled(() -> {
+            if(operation.equalsIgnoreCase("evaluation")) {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed evaluation.").showWarning();
+            } else {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed adding.").showWarning();
+            }
         });
 
         ssc.whenFailed(() -> {
