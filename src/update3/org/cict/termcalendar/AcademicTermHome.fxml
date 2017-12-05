@@ -85,7 +85,7 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label fx:id="lbl_evaluation_status" graphicTextGap="10.0" text="ONLINE" textFill="WHITE">
+                        <Label fx:id="lbl_evaluation_status" graphicTextGap="10.0" text="UNAVAILABLE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
@@ -102,13 +102,13 @@
                               <Image url="@images/Time%20Card_48px.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="lbl_eval_service_updater" graphicTextGap="10.0" text="JHON MELVIN PERELLO" textFill="WHITE">
+                        <Label fx:id="lbl_eval_service_updater" graphicTextGap="10.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label alignment="CENTER" graphicTextGap="10.0" text="Changed this status at" textFill="WHITE" />
-                        <Label fx:id="lbl_eval_service_date" graphicTextGap="10.0" text="OCTOBER 12, 2017 04:43 PM" textFill="WHITE">
+                        <Label fx:id="lbl_eval_service_date" graphicTextGap="10.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -170,7 +170,7 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label fx:id="lbl_adding_status" graphicTextGap="10.0" text="OFFLINE" textFill="WHITE">
+                        <Label fx:id="lbl_adding_status" graphicTextGap="10.0" text="UNAVAILABLE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
@@ -187,13 +187,13 @@
                               <Image url="@images/Time%20Card_48px.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="lbl_adding_service_updater" graphicTextGap="10.0" text="JHON MELVIN PERELLO" textFill="WHITE">
+                        <Label fx:id="lbl_adding_service_updater" graphicTextGap="10.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label alignment="CENTER" graphicTextGap="10.0" text="Changed this status at" textFill="WHITE" />
-                        <Label fx:id="lbl_adding_service_date" graphicTextGap="10.0" text="OCTOBER 12, 2017 04:43 PM" textFill="WHITE">
+                        <Label fx:id="lbl_adding_service_date" graphicTextGap="10.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -255,7 +255,7 @@
                               </ImageView>
                            </graphic>
                         </Label>
-                        <Label fx:id="lbl_encoding_status" graphicTextGap="10.0" text="OFFLINE" textFill="WHITE">
+                        <Label fx:id="lbl_encoding_status" graphicTextGap="10.0" text="UNAVAILABLE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
@@ -272,13 +272,13 @@
                               <Image url="@images/Time%20Card_48px.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="lbl_encoding_service_updater" graphicTextGap="10.0" text="JHON MELVIN PERELLO" textFill="WHITE">
+                        <Label fx:id="lbl_encoding_service_updater" graphicTextGap="10.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
                         <Label alignment="CENTER" graphicTextGap="10.0" text="Changed this status at" textFill="WHITE" />
-                        <Label fx:id="lbl_encoding_service_date" graphicTextGap="10.0" text="OCTOBER 12, 2017 04:43 PM" textFill="WHITE">
+                        <Label fx:id="lbl_encoding_service_date" graphicTextGap="10.0" text="NONE" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
