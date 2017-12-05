@@ -249,19 +249,19 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 });
         textField.clone().setTextSource(txt_name).applyFilter();
 
-        StringFilter textField1 = TextInputFilters.string()
+//        StringFilter textField1 = TextInputFilters.string()
 //                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
-                .setMaxCharacters(50)
-                .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager -> {
-                    if (!filterManager.isValid()) {
-                        Mono.fx().alert().createWarning().setHeader("Warning")
-                                .setMessage(filterManager.getMessage())
-                                .show();
-                    }
-                });
-        textField1.clone().setTextSource(txt_major).applyFilter();
-        textField1.clone().setTextSource(txt_description).applyFilter();
+//                .setMaxCharacters(50)
+//                .setNoLeadingTrailingSpaces(false)
+//                .setFilterManager(filterManager -> {
+//                    if (!filterManager.isValid()) {
+//                        Mono.fx().alert().createWarning().setHeader("Warning")
+//                                .setMessage(filterManager.getMessage())
+//                                .show();
+//                    }
+//                });
+        textField.clone().setTextSource(txt_major).applyFilter();
+        textField.clone().setTextSource(txt_description).applyFilter();
 
     }
 
