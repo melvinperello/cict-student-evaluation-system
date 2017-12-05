@@ -157,7 +157,7 @@ public class SystemHome extends MonoLauncher {
         });
 
         MonoClick.addClickEvent(btn_section, () -> {
-            if(this.isCurrentAcadTermNotSet()) {
+            if(this.isCurrentAcadTermNotSet(btn_section)) {
                 Notifications.create()
                         .title("No Academic Term Found")
                         .text("Academic term must be set first\n"
@@ -188,6 +188,13 @@ public class SystemHome extends MonoLauncher {
         });
 
         MonoClick.addClickEvent(btn_linked, () -> {
+            if(this.isCurrentAcadTermNotSet(btn_linked)) {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed linked management.").showWarning();
+                return;
+            }
             onShowLinkedManagement();
         });
 
@@ -196,6 +203,13 @@ public class SystemHome extends MonoLauncher {
         });
 
         MonoClick.addClickEvent(btn_faculty_center, () -> {
+            if(this.isCurrentAcadTermNotSet(btn_faculty_center)) {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed linked management.").showWarning();
+                return;
+            }
             this.onShowFacultyHub();
 //            Mono.fx().snackbar().showInfo(application_root, "Sorry this feature is under constructions.");
         });
@@ -208,6 +222,13 @@ public class SystemHome extends MonoLauncher {
 
         //----------------------------
         MonoClick.addClickEvent(btn_reports, () -> {
+            if(this.isCurrentAcadTermNotSet(btn_reports)) {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed linked management.").showWarning();
+                return;
+            }
             this.onShowReports();
         });
     }
@@ -470,11 +491,13 @@ public class SystemHome extends MonoLauncher {
 
         ssc.whenCancelled(() -> {
             if(operation.equalsIgnoreCase("evaluation")) {
+                btn_evaluation.setDisable(true);
                 Notifications.create()
                         .title("No Academic Term Found")
                         .text("Academic term must be set first\n"
                                 + "to proceed evaluation.").showWarning();
             } else {
+                btn_adding.setDisable(true);
                 Notifications.create()
                         .title("No Academic Term Found")
                         .text("Academic term must be set first\n"
@@ -487,6 +510,8 @@ public class SystemHome extends MonoLauncher {
         });
 
         ssc.whenSuccess(() -> {
+            btn_evaluation.setDisable(false);
+            btn_adding.setDisable(false);
             if (operation.equalsIgnoreCase("evaluation")) {
                 if (ssc.isEvaluationActive()) {
                     onShowEvaluation();
@@ -504,10 +529,10 @@ public class SystemHome extends MonoLauncher {
             }
         });
 
-        ssc.whenFinished(() -> {
-            btn_evaluation.setDisable(false);
-            btn_adding.setDisable(false);
-        });
+//        ssc.whenFinished(() -> {
+//            btn_evaluation.setDisable(false);
+//            btn_adding.setDisable(false);
+//        });
 
         ssc.transact();
     }
@@ -782,7 +807,9 @@ public class SystemHome extends MonoLauncher {
 
     }
     
-    private boolean isCurrentAcadTermNotSet() {
-        return SystemProperties.instance().getCurrentAcademicTerm()==null;
+    private boolean isCurrentAcadTermNotSet(JFXButton button) {
+        boolean res = SystemProperties.instance().getCurrentAcademicTerm()==null;
+        button.setDisable(true);
+        return res;
     }
 }

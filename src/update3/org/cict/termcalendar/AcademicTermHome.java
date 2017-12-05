@@ -422,10 +422,10 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         pending.setActive(0);
         pending.setApproval_state("CANCELLED");
         if (Database.connect().academic_term().update(pending)) {
-            Mono.fx().alert().createInfo()
-                    .setHeader("Successfully Cancelled")
-                    .setMessage("Your prevoius request is cancelled successfully.")
-                    .show();
+//            Mono.fx().alert().createInfo()
+//                    .setHeader("Successfully Cancelled")
+//                    .setMessage("Your prevoius request is cancelled successfully.")
+//                    .show();
             this.checkTermRequest();
         } else {
             Mono.fx().alert().createError()
@@ -496,14 +496,16 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             }
 
             // remove the current term into use
-            current_term.setCurrent(0);
-            Boolean remove = Database.connect().academic_term().transactionalSingleUpdate(currentSession, current_term);
-            if (!remove) {
-                dataTransaction.rollback();
-                log = "Current Academic Term cannot\n"
-                        + "process at this moment.";
-                System.out.println("CURRENT ACAD TERM NOT CHANGED INTO [CURRENT = 0]");
-                return false;
+            if(current_term!=null) {
+                current_term.setCurrent(0);
+                Boolean remove = Database.connect().academic_term().transactionalSingleUpdate(currentSession, current_term);
+                if (!remove) {
+                    dataTransaction.rollback();
+                    log = "Current Academic Term cannot\n"
+                            + "process at this moment.";
+                    System.out.println("CURRENT ACAD TERM NOT CHANGED INTO [CURRENT = 0]");
+                    return false;
+                }
             }
 
             // set all active of the ff into active=0 and archived=1
@@ -617,8 +619,8 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         });
 
         changeState.whenCancelled(() -> {
-
-            Mono.fx().snackbar().showInfo(application_root, "State was Already Updated.");
+            if ((!forceProcess)) 
+                Mono.fx().snackbar().showInfo(application_root, "State was Already Updated.");
         });
 
         changeState.whenFailed(() -> {
@@ -753,6 +755,9 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
         @Override
         protected boolean transaction() {
 
+            if(currentTerm==null)
+                return false;
+            
             // reload values
             this.currentTerm = Database.connect()
                     .academic_term()

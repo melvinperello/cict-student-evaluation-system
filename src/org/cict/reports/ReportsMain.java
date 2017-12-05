@@ -218,7 +218,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         
         this.setViewListers(btn_pres_main);
         
-        this.setViewTask(btn_evaluation, SystemProperties.instance().getCurrentAcademicTerm().getId());
+        this.setViewTask(btn_evaluation, SystemProperties.instance().getCurrentAcademicTerm()==null? null : SystemProperties.instance().getCurrentAcademicTerm().getId());
         this.changeView(vbox_eval_main);
         
     }
@@ -315,8 +315,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 //                hm.put(termName, each);
 //                termDetails.add(hm);
 //            }
-            
-            AcademicTermMapping currentATMap = Database.connect().academic_term().getPrimary(ACADTERM_id);//SystemProperties.instance().getCurrentAcademicTerm();
+            //SystemProperties.instance().getCurrentAcademicTerm();
 //            String termName = (currentATMap.getSchool_year()==null? "No School Year" : currentATMap.getSchool_year()) + " " + (currentATMap.getSemester()==null? "No Semester" : currentATMap.getSemester());
 
             Mono.fx().thread().wrap(()->{
@@ -331,11 +330,18 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                     };
                 };
 
+                AcademicTermMapping currentATMap = null;
+
+                if(ACADTERM_id==null)
+                    currentATMap = Database.connect().academic_term().getPrimary(ACADTERM_id);
             
                 this.cmb_term_eval.getItems().clear();
                 this.cmb_term_eval.getItems().addAll(atMaps);
                 this.cmb_term_eval.setCellFactory(factory);
                 this.cmb_term_eval.setButtonCell(factory.call(null));
+                if(currentATMap==null) {
+                    return;
+                }
                 for(AcademicTermMapping atMap: atMaps) {
                     if(atMap.getId().equals(currentATMap.getId())) {
                         this.cmb_term_eval.getSelectionModel().select(atMap);

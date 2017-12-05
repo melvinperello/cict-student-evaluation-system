@@ -159,7 +159,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
             return false;
         }
         int res = Mono.fx().alert().createConfirmation()
-                .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the override transaction. Continue?")
+                .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the transaction. Continue?")
                 .setHeader("Send OTP To Authorize").confirmYesNo();
         if(res==-1)
             return false;
@@ -290,7 +290,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         }
         System.out.println("Reference Number: " + refID);
         System.out.println("Your One-Time Password (OTP) is " + OTP_raw);
-        lbl_ref_number.setText("Loading...");
+        lbl_ref_number.setText(""+refID);
         SMSWrapper.send(contactNumber,"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
                 + "\n\nSent by Monosync", WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
             System.out.println("RESPONSE: " + response);

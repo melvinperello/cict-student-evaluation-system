@@ -238,6 +238,10 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_pause_2, ()->{
             this.pausedClicked(btn_pause_2, "Two");
         });
+        
+        btn_pause_1.setDisable(lsMap==null);
+        btn_pause_2.setDisable(lsMap==null);
+        
     }
     
     private void pausedClicked(JFXButton button, String number) {
@@ -758,6 +762,10 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         // Affected by the orm update
         lsMap = Mono.orm().newSearch(Database.connect().linked_settings())
                 .active(Order.desc(DB.linked_settings().id)).first();
+        
+        if(lsMap==null) {
+            return;
+        }
         
         SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy hh:mm aa");
         lbl_session_started.setText(lsMap==null? "NONE" : format.format(lsMap.getCreated_date()));

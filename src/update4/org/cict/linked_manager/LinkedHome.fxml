@@ -227,7 +227,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_session_started" text="October 08, 2017">
+                                                <Label fx:id="lbl_session_started" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -237,7 +237,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_started_by" text="Jhon Melvin Nieto Perello">
+                                                <Label fx:id="lbl_started_by" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -256,7 +256,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_cluster1" text="3FLR/IT8">
+                                                <Label fx:id="lbl_cluster1" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -266,7 +266,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_cluster1_max" text="1000">
+                                                <Label fx:id="lbl_cluster1_max" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -276,7 +276,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_cluster1_served" text="25">
+                                                <Label fx:id="lbl_cluster1_served" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -295,7 +295,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_cluster2" text="3FLR/IT8">
+                                                <Label fx:id="lbl_cluster2" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -305,7 +305,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_cluster2_max" text="1000">
+                                                <Label fx:id="lbl_cluster2_max" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
@@ -315,7 +315,7 @@
                                                       <Font name="System Bold" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <Label fx:id="lbl_cluster2_served" text="25">
+                                                <Label fx:id="lbl_cluster2_served" text="NONE">
                                                    <font>
                                                       <Font size="15.0" />
                                                    </font>
