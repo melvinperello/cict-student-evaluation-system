@@ -205,7 +205,6 @@ public class SystemLogin extends MonoLauncher {
         this.addEnterEvent();
         MonoClick.addClickEvent(btn_login, () -> {
             this.onLogin();
-            throw new RuntimeException();
         });
 
 //        this.btnExit.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
