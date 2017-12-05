@@ -25,7 +25,11 @@ package update2.org.cict.controller.academicprogram;
 
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.DB;
+import app.lazy.models.Database;
+import com.jhmvin.Mono;
 import java.util.ArrayList;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -66,6 +70,11 @@ public class AcademicProgramInfo {
     }
 
     public ArrayList<CurriculumMapping> getCurriculums() {
+        if(academicProgram==null)
+            return null;
+        else {
+            curriculums = Mono.orm().newSearch(Database.connect().curriculum()).eq(DB.curriculum().ACADPROG_id, this.academicProgram.getId()).active(Order.asc(DB.curriculum().id)).all();
+        }
         return curriculums;
     }
 

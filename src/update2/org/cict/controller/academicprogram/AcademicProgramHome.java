@@ -493,17 +493,9 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
             this.showAddNewCurriculum(apMap);
         });
         
-        ArrayList<CurriculumMapping> implementedCurriculums = new ArrayList<>();
-        ArrayList<CurriculumMapping> unImplementedCurriculums = new ArrayList<>();
-        if (curriculums != null) {
-            for (CurriculumMapping curriculum : curriculums) {
-                if (curriculum.getImplemented() == 1) {
-                    implementedCurriculums.add(curriculum);
-                } else {
-                    unImplementedCurriculums.add(curriculum);
-                }
-            }
-        }
+        ArrayList<CurriculumMapping> implementedCurriculums = this.getCurriculums(true, info);
+        ArrayList<CurriculumMapping> unImplementedCurriculums =  this.getCurriculums(false, info);
+        
         
         if(implementedCurriculums.isEmpty()) {
             Animate.fade(vbox_curriculum_table_holder, 150, ()->{
@@ -518,14 +510,22 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
             }, vbox_curriculum_table_holder);
             createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
         }
-                
+            
+        // added meta data for the puspose of retriving the acad info of the selected
+        // row
+        row.getRowMetaData().put("INFO", info);
         this.addClickEvent(btn_show, ()->{
             String selected = btn_show.getText(); //cmb_sort.getSelectionModel().getSelectedIndex();
             vbox_curriculum_table_holder.getChildren().clear();
             
+            // get the saved meta data from the row
+            AcademicProgramInfo info2 = (AcademicProgramInfo) row.getRowMetaData().get("INFO");
+            
             if (selected.equalsIgnoreCase("Show Implemented")) {
                 btn_show.setText("Show Unimplemented");
-                if(implementedCurriculums.isEmpty()) {
+                
+                ArrayList<CurriculumMapping> implementedCurriculums2 = this.getCurriculums(true, info2 );
+                if(implementedCurriculums2.isEmpty()) {
                     Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                         vbox_curriculum_table_holder.setVisible(false);
                         vbox_no_found_curriculum.setVisible(true);
@@ -536,11 +536,12 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                         vbox_no_found_curriculum.setVisible(false);
                         vbox_curriculum_table_holder.setVisible(true);
                     }, vbox_curriculum_table_holder);
-                    createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums, lbl_count);
+                    createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums2, lbl_count);
                 }
             } else {
                 btn_show.setText("Show Implemented");
-                if(unImplementedCurriculums.isEmpty()) {
+                ArrayList<CurriculumMapping> unImplementedCurriculums2 = this.getCurriculums(false, info2 );
+                if(unImplementedCurriculums2.isEmpty()) {
                     Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                         vbox_curriculum_table_holder.setVisible(false);
                         vbox_no_found_curriculum.setVisible(true);
@@ -551,10 +552,26 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                         vbox_no_found_curriculum.setVisible(false);
                         vbox_curriculum_table_holder.setVisible(true);
                     }, vbox_curriculum_table_holder);
-                    createCurriculumRows(vbox_curriculum_table_holder, unImplementedCurriculums, lbl_count);
+                    createCurriculumRows(vbox_curriculum_table_holder, unImplementedCurriculums2, lbl_count);
                  }
             }
         });
+    }
+    
+    private ArrayList<CurriculumMapping> getCurriculums(boolean allActive, AcademicProgramInfo info) {
+        ArrayList<CurriculumMapping> curriculums = info.getCurriculums();
+        if (curriculums != null) {
+            ArrayList<CurriculumMapping> curriculumsNeeded = new ArrayList<>();
+            for (CurriculumMapping curriculum : curriculums) {
+                if (allActive && curriculum.getImplemented() == 1) {
+                    curriculumsNeeded.add(curriculum);
+                } else if (!allActive && curriculum.getImplemented() == 0){
+                    curriculumsNeeded.add(curriculum);
+                }
+            }
+            return curriculumsNeeded;
+        }
+        return null;
     }
     
     private void createCurriculumRows(VBox holder, ArrayList<CurriculumMapping> curriculum, Label lbl_count) {
