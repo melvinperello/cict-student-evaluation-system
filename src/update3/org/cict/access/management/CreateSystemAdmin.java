@@ -419,7 +419,7 @@ public class CreateSystemAdmin extends MonoLauncher {
         textPass.clone().setTextSource(txt_password_confirm).applyFilter();
         
         StringFilter textAns = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT)
+//                .setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager->{
