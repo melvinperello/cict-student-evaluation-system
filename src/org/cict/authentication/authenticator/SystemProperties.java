@@ -73,7 +73,8 @@ public class SystemProperties {
     }
 
     public String getCurrentTermString() {
+        if(currentAcademicTerm==null)
+            return null;
         return "AY " + currentAcademicTerm.getSchool_year() + " " + WordUtils.capitalizeFully(currentAcademicTerm.getSemester());
-
     }
 }

@@ -454,7 +454,7 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
         faculty.setGender(gender);
         faculty.setDepartment(dept);
         //------------------
-        faculty.setMobile_number("+639" + contactNumber.substring(2, 11));
+        faculty.setMobile_number(contactNumber==null || contactNumber.isEmpty()? null : "+639" + contactNumber.substring(2, 11));
         //------------------
         if (Database.connect().faculty().update(faculty)) {
             Notifications.create().darkStyle()
