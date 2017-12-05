@@ -153,7 +153,7 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX 
 
     private void addTextFieldFilters() {
         StringFilter textField = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+//                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager -> {
