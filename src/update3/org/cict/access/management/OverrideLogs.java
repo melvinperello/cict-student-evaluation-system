@@ -263,9 +263,9 @@ public class OverrideLogs extends MonoLauncher {
             cmb_from.getSelectionModel().selectFirst();
             cmb_to.getSelectionModel().selectLast();
             cmbChanged = false;
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(OverrideLogs.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            Logger.getLogger(OverrideLogs.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
