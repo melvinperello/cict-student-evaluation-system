@@ -8,6 +8,7 @@ package org.cict;
 import artifacts.ErrorLogger;
 import artifacts.StackTraceDialog;
 import com.jhmvin.Mono;
+import com.jhmvin.fx.async.TransactionException;
 import com.melvin.mono.fx.bootstrap.M;
 import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import com.sun.javafx.application.HostServicesDelegate;
@@ -46,11 +47,11 @@ public class MainApplication extends Application {
                     System.out.println(e.getCause());
                 } else {
                     //StackTraceDialog.show(e);
-                    ErrorLogger.record(e,t);
+                    ErrorLogger.record(e, t);
                 }
             } catch (Exception haha) {
                 //StackTraceDialog.show(haha);
-                ErrorLogger.record(haha,t);
+                ErrorLogger.record(haha, t);
             }
         });
     }

@@ -364,6 +364,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
             btn_save_changes.setDisable(true);
             btn_delete.setDisable(true);
             btn_newCurriculum.setDisable(true);
+            
         }
         
         addClickEvent(btn_save_changes, () -> {

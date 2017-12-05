@@ -249,7 +249,7 @@ public class EncodeGrade extends Transaction {
                 boolean deactivateOld = Database.connect().grade().transactionalSingleUpdate(localSession, existingGrade);
                 if (!deactivateOld) {
                     dataTx.rollback();
-                    throw new TransactionException();
+                    throw new TransactionException("");
                 }
                 // if finished gracefully
                 alreadyPostedGradeCount++;

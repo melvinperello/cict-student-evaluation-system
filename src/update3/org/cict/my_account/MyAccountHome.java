@@ -215,8 +215,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
     @FXML
     private RadioButton rbtn_female;
-    
-    
+
     public MyAccountHome() {
         //
     }
@@ -330,8 +329,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         answerPattern.clone().setTextSource(txt_cs_answer).applyFilter();
         answerPattern.clone().setTextSource(txt_cs_confirm_answer).applyFilter();
         passwordPattern.clone().setTextSource(txt_cs_currnet_password).applyFilter();
-    
-    
+
         StringFilter textName = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_SPACE)
                 .setMaxCharacters(100)
@@ -347,7 +345,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         textName.clone().setTextSource(txt_first).applyFilter();
         textName.clone().setTextSource(txt_last).applyFilter();
         textName.clone().setTextSource(txt_middle).applyFilter();
-        
+
         StringFilter textContact = TextInputFilters.string()
                 .setFilterMode(StringFilter.DIGIT)
                 .setMaxCharacters(20)
@@ -387,7 +385,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             this.detachAll();
         });
 
-        super.addClickEvent(btn_view_update_profile, ()->{
+        super.addClickEvent(btn_view_update_profile, () -> {
             this.showProfile();
             this.changeView(this.vbox_update_profile);
         });
@@ -416,25 +414,25 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_cs_change, () -> {
             changeSecurity();
         });
-        
-        super.addClickEvent(btn_print, ()->{
+
+        super.addClickEvent(btn_print, () -> {
             this.printResult();
         });
-        
-        super.addClickEvent(btn_filter, ()->{
+
+        super.addClickEvent(btn_filter, () -> {
             this.filterResult();
         });
-        
-        cmb_from.valueProperty().addListener((a)->{
+
+        cmb_from.valueProperty().addListener((a) -> {
             cmbChanged = true;
             btn_filter.setDisable(false);
         });
-        cmb_to.valueProperty().addListener((a)->{
+        cmb_to.valueProperty().addListener((a) -> {
             cmbChanged = true;
             btn_filter.setDisable(false);
         });
-        
-        super.addClickEvent(btn_update_info, ()->{
+
+        super.addClickEvent(btn_update_info, () -> {
             this.updateProfile();
         });
     }
@@ -444,14 +442,16 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
     private SimpleDateFormat formatter_sql = new SimpleDateFormat(PublicConstants.SQL_DATETIME_FORMAT);
     private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
     private SimpleDateFormat formatter_plain = new SimpleDateFormat("yyyy-MM-dd");
-    
+
     private ArrayList<String> dateList = new ArrayList<>();
+
     private void setComboBoxLimit(ComboBox<String> source, ComboBox<String> self, int extra, ComboBox<String>... padding) {
         ChoiceRange.setComboBoxLimit(dateList, source, self, 0, padding);
     }
-    
-    private ArrayList<HashMap<String,Date>> dateStorage = new ArrayList<>();
-    private void setCmbValues(){
+
+    private ArrayList<HashMap<String, Date>> dateStorage = new ArrayList<>();
+
+    private void setCmbValues() {
         List<Date> dates = new ArrayList<Date>();
         try {
             AccountFacultyAttemptMapping start = Mono.orm()
@@ -463,27 +463,27 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     .newSearch(Database.connect().account_faculty_attempt())
                     .eq(DB.account_faculty_attempt().account_id, CollegeFaculty.instance().getACCOUNT_ID())
                     .active(Order.desc(DB.account_faculty_attempt().try_id))
-                    .first();  
+                    .first();
             Date endDate = formatter_plain.parse(end.getTime().toString());//DateUtils.addDays(formatter_plain.parse(end.getTime().toString()), 1);
             Date startDate = formatter_plain.parse(start.getTime().toString());
-        
-            long interval = 24*1000 * 60 * 60; // 1 hour in millis
+
+            long interval = 24 * 1000 * 60 * 60; // 1 hour in millis
             long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
             long curTime = startDate.getTime();
             while (curTime <= endTime) {
                 dates.add(new Date(curTime));
                 curTime += interval;
             }
-            for(int i=0;i<dates.size();i++){
+            for (int i = 0; i < dates.size(); i++) {
                 Date lDate = dates.get(i);
-                String ds = formatter_display.format(lDate); 
+                String ds = formatter_display.format(lDate);
                 dateList.add(ds);
-                HashMap<String,Date> nameDate = new HashMap<>();
+                HashMap<String, Date> nameDate = new HashMap<>();
                 nameDate.put(ds, dates.get(i));
-                System.out.println("'"+ds + "' - " + nameDate.get(ds));
+                System.out.println("'" + ds + "' - " + nameDate.get(ds));
                 dateStorage.add(nameDate);
             }
-            cmb_from.getItems().addAll(dateList); 
+            cmb_from.getItems().addAll(dateList);
             cmb_to.getItems().addAll(dateList);
             cmb_from.getSelectionModel().selectFirst();
             cmb_to.getSelectionModel().selectLast();
@@ -492,55 +492,57 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             ex.printStackTrace();
             Logger.getLogger(OverrideLogs.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
-    private void filterResult(){
+
+    private void filterResult() {
         cmbChanged = false;
         String from_str = cmb_from.getSelectionModel().getSelectedItem();
-        String to_str =cmb_to.getSelectionModel().getSelectedItem();
+        String to_str = cmb_to.getSelectionModel().getSelectedItem();
         vbox_access_history.getChildren().clear();
         Date from = null, to = null;
-        try {  
+        try {
             int count = 0;
-            for(int i=0; i<dateList.size(); i++) {
+            for (int i = 0; i < dateList.size(); i++) {
                 String each = dateList.get(i);
-                if(from_str.equalsIgnoreCase(each)) {
+                if (from_str.equalsIgnoreCase(each)) {
                     from = dateStorage.get(i).get(from_str);
                     count++;
                 }
-                if(to_str.equalsIgnoreCase(each)) {
+                if (to_str.equalsIgnoreCase(each)) {
                     to = dateStorage.get(i).get(to_str);
-                    to = DateUtils.addDays(to,1);
+                    to = DateUtils.addDays(to, 1);
                     count++;
                 }
-                if(count==2) {
+                if (count == 2) {
                     break;
                 }
             }
         } catch (Exception e) {
         }
-        
-        if(from==null || to==null) {
+
+        if (from == null || to == null) {
             return;
         }
         btn_filter.setDisable(true);
         this.fetchAccessHistory(from, to);
     }
-    
+
     private boolean cmbChanged = true;
+
     private void printResult() {
-        if(cmbChanged) {
-            int res =  Mono.fx().alert()
+        if (cmbChanged) {
+            int res = Mono.fx().alert()
                     .createConfirmation().setHeader("Not Yet Filtered")
                     .setMessage("The result to be printed are not yet filtered with the given dates above. Do you still want to print?")
                     .confirmYesNo();
-            if(res==-1)
+            if (res == -1) {
                 return;
+            }
         }
-        String[] colNames = new String[]{"Date and Time","PC Name","PC Username", "OS Version", "IP Address", "Result"};
+        String[] colNames = new String[]{"Date and Time", "PC Name", "PC Username", "OS Version", "IP Address", "Result"};
         ArrayList<String[]> rowData = new ArrayList<>();
-        if(preview==null) {
+        if (preview == null) {
             Notifications.create()
                     .title("No Access History Found")
                     .text("No data to print.")
@@ -551,9 +553,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         for (int i = 0; i < preview.size(); i++) {
             AccountFacultyAttemptMapping result = preview.get(i);
             ref = result;
-            String[] row = new String[]{(i+1)+".  "+ ReportsUtility.formatter_mm.format(result.getTime()),
-                WordUtils.capitalizeFully(result.getPc_name()), 
-                (result.getPc_username()), 
+            String[] row = new String[]{(i + 1) + ".  " + ReportsUtility.formatter_mm.format(result.getTime()),
+                WordUtils.capitalizeFully(result.getPc_name()),
+                (result.getPc_username()),
                 (result.getOs_version()),
                 result.getIp_address(),
                 WordUtils.capitalizeFully(result.getResult().replace("_", " "))};
@@ -569,16 +571,17 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         String to = cmb_to.getSelectionModel().getSelectedItem();
         SimpleDateFormat month = new SimpleDateFormat("MMMMM");
         print.reportTitleIntro = CollegeFaculty.instance().getBULSU_ID().toUpperCase() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
-        if(cmbChanged) {
+        if (cmbChanged) {
             print.reportTitleIntro = null;
             print.reportOtherDetail = print.reportTitleIntro;//CollegeFaculty.instance().getBULSU_ID().toUpperCase() + " | " + WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName());
-        } else if(fr==null || to==null || ref==null || ref.getTime()==null) {
+        } else if (fr == null || to == null || ref == null || ref.getTime() == null) {
             print.reportOtherDetail = "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
-        } else if(fr.equalsIgnoreCase(to)) {
+        } else if (fr.equalsIgnoreCase(to)) {
             print.reportOtherDetail = formatter_display.format(ref.getTime());
-         } else
+        } else {
             print.reportOtherDetail = "From " + fr + " to " + to;
-        
+        }
+
         print.reportTitleHeader = "Account Log And Attempts";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
@@ -611,10 +614,8 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         print.transact();
     }
-    
+
     //------------------------------------------------------
-    
-    
     /**
      * Change Security Question and answer.
      */
@@ -698,10 +699,10 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             tgrp_change_pass.getMembers().forEach(member -> {
                 if (member.getText().trim().length() < MIN_PASSWORD_LENGTH) {
                     Mono.fx().snackbar().showError(application_root, member.getAccessibleHelp() + " is below minimum characters.");
-                    throw new RuntimeException();
+                    throw new TransactionException(""); // proceed to catch
                 }
             });
-        } catch (RuntimeException e) {
+        } catch (TransactionException e) {
             return;
         }
 
@@ -840,7 +841,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
         //--
     }
-    
+
     private void fetchAccessHistory(Date FROM, Date TO) {
         FetchAccessHistory accessTx = new FetchAccessHistory();
         accessTx.setFiltereDates(FROM, TO);
@@ -850,7 +851,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             this.detachAll();
             this.loaderView.setMessage("Loading History");
             this.loaderView.attach();
-            
+
             this.btn_view_change_password.setDisable(true);
             this.btn_view_change_pin.setDisable(true);
             this.btn_view_change_question.setDisable(true);
@@ -876,14 +877,14 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         accessTx.whenSuccess(() -> {
             renderHistory(accessTx);
             this.btn_print.setDisable(false);
-            
+
             this.btn_view_change_password.setDisable(false);
             this.btn_view_change_pin.setDisable(false);
             this.btn_view_change_question.setDisable(false);
             this.btn_view_update_profile.setDisable(false);
             this.btn_voew_access_history.setDisable(false);
             this.btn_update_info.setDisable(false);
-            
+
             this.cmb_from.setDisable(false);
             this.cmb_to.setDisable(false);
         });
@@ -900,6 +901,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
      * @param accessTx
      */
     private ArrayList<AccountFacultyAttemptMapping> preview;
+
     private void renderHistory(FetchAccessHistory accessTx) {
         SimpleTask renderTask = new SimpleTask("render-history");
         renderTask.setTask(() -> {
@@ -1030,12 +1032,13 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         private ArrayList<AccountFacultyAttemptMapping> attempts;
 
         //---------------------
-        private Date from = null, to=null;
+        private Date from = null, to = null;
+
         public void setFiltereDates(Date FROM, Date TO) {
             from = FROM;
             to = TO;
         }
-        
+
         public ArrayList<AccountFacultyAttemptMapping> getAttempts() {
             return attempts;
         }
@@ -1044,19 +1047,19 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         protected boolean transaction() {
             Integer logged_account = CollegeFaculty.instance().getACCOUNT_ID();
 
-            if(from != null && to != null) {
+            if (from != null && to != null) {
                 attempts = Mono.orm().newSearch(Database.connect().account_faculty_attempt())
-        //                .between(DB.system_override_logs().executed_date, from, to)
+                        //                .between(DB.system_override_logs().executed_date, from, to)
                         .gte(DB.account_faculty_attempt().time, from)
                         .lte(DB.account_faculty_attempt().time, to)
                         .eq(DB.account_faculty_attempt().account_id, logged_account)
                         .active(Order.asc(DB.account_faculty_attempt().time)).all();
-                if(attempts==null) {
+                if (attempts == null) {
                     return false;
                 }
                 return true;
             }
-            
+
             attempts = Mono.orm()
                     .newSearch(Database.connect().account_faculty_attempt())
                     .eq(DB.account_faculty_attempt().account_id, logged_account)
@@ -1226,53 +1229,54 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
         }
     }
-    
+
     private FacultyMapping faculty;
+
     private void showProfile() {
         faculty = FacultyUtility.getFaculty(CollegeFaculty.instance().getFACULTY_ID());
         txt_first.setText(faculty.getFirst_name());
         txt_last.setText(faculty.getLast_name());
-        txt_middle.setText(faculty.getMiddle_name()==null? "" : faculty.getMiddle_name());
-        txt_mobile.setText(faculty.getMobile_number()==null? "" : "09"+faculty.getMobile_number().substring(4, 13));
-        
-        if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("MALE")) {
+        txt_middle.setText(faculty.getMiddle_name() == null ? "" : faculty.getMiddle_name());
+        txt_mobile.setText(faculty.getMobile_number() == null ? "" : "09" + faculty.getMobile_number().substring(4, 13));
+
+        if ((faculty.getGender() == null ? "" : faculty.getGender()).equalsIgnoreCase("MALE")) {
             rbtn_male.setSelected(true);
-        } else if ((faculty.getGender()==null? "" : faculty.getGender()).equalsIgnoreCase("FEMALE")) {
+        } else if ((faculty.getGender() == null ? "" : faculty.getGender()).equalsIgnoreCase("FEMALE")) {
             rbtn_female.setSelected(true);
         } else {
             // if none was set in the database
             rbtn_male.setSelected(true);
         }
     }
-    
+
     private void updateProfile() {
-        if(txt_last.getText()==null || txt_last.getText().isEmpty()) {
+        if (txt_last.getText() == null || txt_last.getText().isEmpty()) {
             showWarning("Last Name", "Last name cannot be empty.");
             return;
-        } 
-        if(txt_first.getText()==null || txt_first.getText().isEmpty()) {
+        }
+        if (txt_first.getText() == null || txt_first.getText().isEmpty()) {
             showWarning("First Name", "First name cannot be empty.");
             return;
-        } 
+        }
         String contactNumber = txt_mobile.getText();
-        if(contactNumber==null || contactNumber.isEmpty()) {
+        if (contactNumber == null || contactNumber.isEmpty()) {
             showWarning("Invalid Contact Number", "Contact number must have a value.");
             return;
-        } else if(contactNumber.length()<11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
+        } else if (contactNumber.length() < 11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
             showWarning("Invalid Contact Number", "Must start with \"09\" with a length\n"
                     + "of 11 digits.");
             return;
-        } else if(contactNumber.length() != 11) {
+        } else if (contactNumber.length() != 11) {
             showWarning("Invalid Contact Number", "Must have a length of 11 digits\n"
                     + "and starts with \"09\"");
             return;
         }
-        String gender = rbtn_female.isSelected()? "FEMALE" : "MALE";
+        String gender = rbtn_female.isSelected() ? "FEMALE" : "MALE";
         UpdateProfile updateProfile = new UpdateProfile();
         updateProfile.setFirstName(MonoString.removeExtraSpace(txt_first.getText()).toUpperCase());
         updateProfile.setLastName(MonoString.removeExtraSpace(txt_last.getText()).toUpperCase());
-        updateProfile.setMiddleName(txt_middle.getText()==null? "" : MonoString.removeExtraSpace(txt_middle.getText()).toUpperCase());
-        updateProfile.setMobileNumber("+639"+contactNumber.substring(2, 11));
+        updateProfile.setMiddleName(txt_middle.getText() == null ? "" : MonoString.removeExtraSpace(txt_middle.getText()).toUpperCase());
+        updateProfile.setMobileNumber("+639" + contactNumber.substring(2, 11));
         updateProfile.setUser(faculty);
         updateProfile.setGender(gender);
         updateProfile.whenStarted(() -> {
@@ -1303,8 +1307,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                 .text(text)
                 .showWarning();
     }
-    
+
     private class UpdateProfile extends Transaction {
+
         private FacultyMapping user;
         private String lastName;
         private String firstName;
@@ -1335,8 +1340,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         public void setUser(FacultyMapping user) {
             this.user = user;
         }
-        
-        
+
         @Override
         protected boolean transaction() {
             user.setFirst_name(firstName);
@@ -1345,15 +1349,16 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             user.setMobile_number(mobileNumber);
             user.setGender(gender);
             boolean result = Database.connect().faculty().update(user);
-            if(result) {
+            if (result) {
                 CollegeFaculty.instance().setMIDDLE_NAME(middleName);
                 CollegeFaculty.instance().setLAST_NAME(lastName);
                 CollegeFaculty.instance().setFIRST_NAME(firstName);
                 CollegeFaculty.instance().setGENDER(gender);
                 return true;
-            } else
+            } else {
                 return false;
+            }
         }
-        
+
     }
 }

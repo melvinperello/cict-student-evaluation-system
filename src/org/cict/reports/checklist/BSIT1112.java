@@ -23,6 +23,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.jhmvin.fx.async.TransactionException;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -164,7 +165,7 @@ public class BSIT1112 {
             } else {
                 // if the error was default proceed to catch
                 System.out.println("BSIT1122.java: Default Image was used");
-                throw new RuntimeException("The image is default proceeding to catch");
+                throw new TransactionException("Proceed to catch");
             }
         } catch (Exception e) {
             Image image2x2 = Image.getInstance(ResourceManager.fetchFromResource(BSIT1112.class, ReportsDirectory.DEFAULT_IMAGE2x2));
@@ -216,13 +217,13 @@ public class BSIT1112 {
         tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Plain, getShortenedDetail(this.name, 40), font7Plain, "", true), false, true));
         tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT NO: ", font7Plain, getShortenedDetail(this.studentNo, 47), font7Plain, "", true), false, true));
         boolean undrln = true;
-        if(address==null || address.isEmpty()) {
+        if (address == null || address.isEmpty()) {
             address = "_______________________________________";
             undrln = false;
         }
         tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.address, 39), font7Plain, "", undrln), false, false));
         boolean underlined = true;
-        if (highSchool==null || highSchool.isEmpty()) {
+        if (highSchool == null || highSchool.isEmpty()) {
             highSchool = "__________________________________________";
             underlined = false;
         }

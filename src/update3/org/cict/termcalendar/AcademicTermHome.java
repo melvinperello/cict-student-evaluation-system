@@ -438,7 +438,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     private void onLogout() {
         Logout logout = AccountManager.instance().createLogout();
         logout.whenStarted(() -> {
-            throw new RuntimeException("IM AN ERROR!");
+            throw new TransactionException("IM AN ERROR!");
         });
         logout.whenCancelled(() -> {
         });

@@ -31,6 +31,7 @@ import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import com.jhmvin.fx.async.TransactionException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +49,7 @@ public class FetchCurriculumInfo extends Transaction{
     
     private String createdBy;
     public String getCreatedByFirstLastName() {
+        
         return createdBy;
     }
     
