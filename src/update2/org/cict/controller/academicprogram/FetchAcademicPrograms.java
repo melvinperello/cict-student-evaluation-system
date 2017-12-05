@@ -63,6 +63,10 @@ public class FetchAcademicPrograms extends Transaction {
                 .newSearch(Database.connect().academic_program())
                 .active(Order.asc(DB.academic_program().code))
                 .all();
+        
+        //----------------------------------------------------------------------
+        
+        //----------------------------------------------------------------------
 
         for (AcademicProgramMapping academicProgram : academicPrograms) {
             AcademicProgramInfo info = new AcademicProgramInfo();

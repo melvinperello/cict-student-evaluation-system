@@ -163,9 +163,9 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX 
                                 .show();
                     }
                 });
-        textField.clone().setTextSource(txt_name).applyFilter();
-        textField.clone().setTextSource(txt_major).applyFilter();
-        textField.clone().setTextSource(txt_description).applyFilter();
+        //textField.clone().setTextSource(txt_name).applyFilter();
+        //textField.clone().setTextSource(txt_major).applyFilter();
+        //textField.clone().setTextSource(txt_description).applyFilter();
 
     }
 
