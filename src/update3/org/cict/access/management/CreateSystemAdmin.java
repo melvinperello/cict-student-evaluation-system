@@ -419,7 +419,6 @@ public class CreateSystemAdmin extends MonoLauncher {
         textPass.clone().setTextSource(txt_password_confirm).applyFilter();
         
         StringFilter textAns = TextInputFilters.string()
-//                .setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager->{
@@ -431,6 +430,20 @@ public class CreateSystemAdmin extends MonoLauncher {
                 });
         textAns.clone().setTextSource(txt_answer).applyFilter();
         textAns.clone().setTextSource(txt_answer_confirm).applyFilter();
+        
+        StringFilter textFilterPin = TextInputFilters.string()
+                .setFilterMode(StringFilter.DIGIT)
+                .setMaxCharacters(50)
+                .setNoLeadingTrailingSpaces(false)
+                .setFilterManager(filterManager -> {
+//                    if (!filterManager.isValid()) {
+//                        Mono.fx().alert().createWarning().setHeader("Warning")
+//                                .setMessage(filterManager.getMessage())
+//                                .show();
+//                    }
+                });
+        textFilterPin.clone().setTextSource(txt_transaction_pin).applyFilter();
+        textFilterPin.clone().setTextSource(txt_transaction_pin_confirm).applyFilter();
     }
     
     private void onClose(boolean forceClose) {
