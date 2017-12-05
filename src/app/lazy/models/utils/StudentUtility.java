@@ -32,7 +32,31 @@ import java.util.Locale;
  */
 public class StudentUtility {
 
+    /**
+     * using the new field as address reference.
+     *
+     * @param profile
+     * @return
+     */
     public static String getStudentAddress(StudentProfileMapping profile) {
+        String address = "";
+        //----------------------------------------------------------------------
+        address += concat(profile.getStudent_address());
+        //----------------------------------------------------------------------
+        address += concat(" " + profile.getZipcode());
+        //----------------------------------------------------------------------
+        return address;
+    }
+
+    public static String concat(String str) {
+        if (str == null) {
+            return "";
+        } else {
+            return str.trim().toUpperCase(Locale.ENGLISH);
+        }
+    }
+
+    private static String retrieveAddressUsingOldFormat(StudentProfileMapping profile) {
         //----------------------------------------------------------------------
         // Get Values
         String hNum = profile.getHouse_no(),
@@ -54,13 +78,5 @@ public class StudentUtility {
         address += concat(" " + postalCode);
         //----------------------------------------------------------------------
         return address;
-    }
-
-    public static String concat(String str) {
-        if (str == null) {
-            return "";
-        } else {
-            return str.trim().toUpperCase(Locale.ENGLISH);
-        }
     }
 }
