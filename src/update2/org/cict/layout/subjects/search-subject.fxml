@@ -149,7 +149,7 @@
                                        </font>
                                     </Label>
                                     <Line endX="250.0" startX="-100.0" stroke="WHITE" />
-                                    <Label text="The subject is not existing. Do you mind to add it instead?" textFill="WHITE" wrapText="true">
+                                    <Label text="Subject not existing. Do you mind to add instead?" textFill="WHITE" wrapText="true">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -159,7 +159,7 @@
                                     </Label>
                                     <HBox alignment="CENTER_RIGHT" spacing="10.0">
                                        <children>
-                                          <Button fx:id="btn_add_new_subject" mnemonicParsing="false" prefHeight="40.0" prefWidth="121.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Okay, I'll add it" textFill="WHITE">
+                                          <Button fx:id="btn_add_new_subject" mnemonicParsing="false" prefHeight="40.0" prefWidth="121.0" style="-fx-background-color: #E85764; -fx-border-color: #fff;" text="Okay, I'll add" textFill="WHITE">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>

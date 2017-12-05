@@ -160,6 +160,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             btnSearch.setDisable(true);
         });
         fetch.setOnSuccess(onSuccess -> {
+            this.anchor_view.setVisible(true);
             lst_subject = fetch.getSubjectResult();
             SimpleTask create_search_subject_table = new SimpleTask("create_search_subject_table");
             create_search_subject_table.setTask(()->{
@@ -175,8 +176,9 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         fetch.setOnCancel(onCancel -> {
             this.hbox_no_result.setVisible(true);
             this.hbox_search.setVisible(false);
+            this.anchor_view.setVisible(false);
         });
-        fetch.setRestTime(1000);
+//        fetch.setRestTime(1000);
         fetch.transact();
         
         if(MODE_setting.contains("SUBJECT")) {
@@ -251,6 +253,16 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
             return;
         }
         temp_subject_list.clear();
+        
+        if(lst_subject==null) {
+            btnAddnew.setDisable(false);
+            Notifications.create().title("No Subject")
+                    .text("Create and add the subject needed to proceed.")
+                    .showWarning();
+            this.showAddNewSubject();
+            return;
+        }
+        
         for(SubjectMapping currentSubject: lst_subject) {
             if(currentSubject.getCode().equalsIgnoreCase(keyword)
                     || currentSubject.getCode().contains(keyword)) {
@@ -273,7 +285,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     private void showAddNewSubject() {
         String key = txtSearch.getText();
             AddNewSubjectController controller = new AddNewSubjectController();
-            controller.setTextFieldSubjectCode(key);
+            controller.setTextFieldSubjectCode(key.toUpperCase());
 //            controller.setTextFieldSubjectCode(txtSearch.getText());
 //            Mono.fx().create()
 //                    .setPackageName("update2.org.cict.layout.subjects")
@@ -326,6 +338,12 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     
     private void createTable(ArrayList<SubjectMapping> displaySubjects) {
         subjectTable.getChildren().clear();
+        if(displaySubjects==null) {
+            this.hbox_no_result.setVisible(true);
+            this.hbox_search.setVisible(false);
+            this.anchor_view.setVisible(false);
+            return;
+        }
         for(SubjectMapping subject: displaySubjects) {
             createRow(subject);
         }
