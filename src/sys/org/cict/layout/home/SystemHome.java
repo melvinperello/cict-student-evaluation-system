@@ -42,6 +42,7 @@ import org.cict.accountmanager.AccountManager;
 import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyMainController;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.EvaluateController;
 import org.cict.reports.ReportsMain;
 import org.controlsfx.control.Notifications;
@@ -156,6 +157,13 @@ public class SystemHome extends MonoLauncher {
         });
 
         MonoClick.addClickEvent(btn_section, () -> {
+            if(this.isCurrentAcadTermNotSet()) {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed section management.").showWarning();
+                return;
+            }
             this.onShowSectionManagement();
         });
 
@@ -772,5 +780,9 @@ public class SystemHome extends MonoLauncher {
                 "update5.org.cict.facultyhub",
                 "FacultyHub");
 
+    }
+    
+    private boolean isCurrentAcadTermNotSet() {
+        return SystemProperties.instance().getCurrentAcademicTerm()==null;
     }
 }
