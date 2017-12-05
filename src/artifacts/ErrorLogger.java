@@ -42,10 +42,11 @@ public class ErrorLogger {
     private final static String LOG_DIR = "error_logs";
     private final static SimpleDateFormat logTime = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
-    public static void record(Throwable e) {
+    public static void record(Throwable e, Thread t) {
         ErrorLogger el = new ErrorLogger();
         el.header();
         el.setCaughtThrowable(e);
+        el.setErrorThread(t);
         el.printError();
         el.writeToText();
         JOptionPane.showMessageDialog(null, "A System Error Has Occured.\nThe error was saved in your local log files for information,\nthe system needs to be terminated.", "ERROR", JOptionPane.ERROR_MESSAGE);
@@ -53,9 +54,14 @@ public class ErrorLogger {
     }
     private String exceptionLog;
     private Throwable caughtThrowable;
+    private Thread errorThread;
 
     private void setCaughtThrowable(Throwable caughtThrowable) {
         this.caughtThrowable = caughtThrowable;
+    }
+
+    public void setErrorThread(Thread errorThread) {
+        this.errorThread = errorThread;
     }
 
     private ErrorLogger() {
@@ -88,6 +94,7 @@ public class ErrorLogger {
         caughtThrowable.printStackTrace(pw);
         String exceptionText = sw.toString();
         //----------------------------------------------------------------------
+        write("Thread Name: " + errorThread.getName());
         String throwMessage = caughtThrowable.getMessage();
         if (throwMessage != null) {
             write("Message: " + throwMessage);

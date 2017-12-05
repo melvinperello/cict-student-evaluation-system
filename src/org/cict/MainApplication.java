@@ -46,11 +46,11 @@ public class MainApplication extends Application {
                     System.out.println(e.getCause());
                 } else {
                     //StackTraceDialog.show(e);
-                    ErrorLogger.record(e);
+                    ErrorLogger.record(e,t);
                 }
             } catch (Exception haha) {
                 //StackTraceDialog.show(haha);
-                ErrorLogger.record(haha);
+                ErrorLogger.record(haha,t);
             }
         });
     }
