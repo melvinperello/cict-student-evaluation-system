@@ -30,7 +30,6 @@ import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
-import com.jhmvin.orm.Searcher;
 import java.util.ArrayList;
 import org.hibernate.criterion.Order;
 
@@ -65,7 +64,9 @@ public class FetchAcademicPrograms extends Transaction {
                 .all();
         
         //----------------------------------------------------------------------
-        
+        if(academicPrograms==null) {
+            return false;
+        }
         //----------------------------------------------------------------------
 
         for (AcademicProgramMapping academicProgram : academicPrograms) {

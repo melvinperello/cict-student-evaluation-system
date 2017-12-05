@@ -32,6 +32,7 @@ import com.jhmvin.transitions.Animate;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import org.controlsfx.control.Notifications;
 import update.org.cict.controller.home.Home;
 import update2.org.cict.controller.subjects.AddNewSubjectController;
 import update2.org.cict.controller.subjects.SubjectRepositoryController;
@@ -92,20 +93,24 @@ public class AcademicHome extends SceneFX implements ControllerFX {
                     "add-new-subject");
         });
         this.addClickEvent(btn_view_all_acad, ()->{
-            AcademicProgramHome controller = new AcademicProgramHome();
-            LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
-            controller.setHomeFX(homeFX);
-            this.changeRoot(controller,
-                    "update2.org.cict.layout.academicprogram",
-                    "academic-program-home");
+            this.checkValues("program", ()->{
+//                AcademicProgramHome controller = new AcademicProgramHome();
+//                LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+//                controller.setHomeFX(homeFX);
+//                this.changeRoot(controller,
+//                        "update2.org.cict.layout.academicprogram",
+//                        "academic-program-home");
+            });
         });
         this.addClickEvent(btn_view_all_subj, ()->{
-            SubjectRepositoryController controller = new SubjectRepositoryController();
-            LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
-            controller.setHomeFX(homeFX);
-            this.changeRoot(controller,
-                    "update2.org.cict.layout.subjects",
-                    "subject-bank");
+            this.checkValues("subject", ()->{
+//                SubjectRepositoryController controller = new SubjectRepositoryController();
+//                LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+//                controller.setHomeFX(homeFX);
+//                this.changeRoot(controller,
+//                        "update2.org.cict.layout.subjects",
+//                        "subject-bank");
+            });
         });
     }
     
@@ -122,4 +127,36 @@ public class AcademicHome extends SceneFX implements ControllerFX {
         }, fxRoot);
     }
     
+    private void checkValues(String mode, Runnable next) {
+        if(mode.equalsIgnoreCase("subject")) {
+            SubjectRepositoryController controller = new SubjectRepositoryController();
+            LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+            controller.setHomeFX(homeFX);
+            this.changeRoot(controller,
+                    "update2.org.cict.layout.subjects",
+                    "subject-bank");
+        } else {
+            FetchAcademicPrograms fetchProgramsTx = new FetchAcademicPrograms();
+            fetchProgramsTx.whenStarted(()->{
+                btn_view_all_acad.setDisable(true);
+            });
+            fetchProgramsTx.whenCancelled(()->{
+                Notifications.create()
+                        .title("No Academic Program Found")
+                        .text("Create Academic Program to proceed here.").showWarning();
+            });
+            fetchProgramsTx.whenSuccess(()->{
+                AcademicProgramHome controller = new AcademicProgramHome();
+                LayoutDataFX homeFX = new LayoutDataFX(application_root, this);
+                controller.setHomeFX(homeFX);
+                this.changeRoot(controller,
+                        "update2.org.cict.layout.academicprogram",
+                        "academic-program-home");
+            });
+            fetchProgramsTx.whenFinished(()->{
+                btn_view_all_acad.setDisable(false);
+            });
+            fetchProgramsTx.transact();
+        }
+    }
 }
