@@ -6,9 +6,7 @@
 package org.cict;
 
 import artifacts.ErrorLogger;
-import artifacts.StackTraceDialog;
 import com.jhmvin.Mono;
-import com.jhmvin.fx.async.TransactionException;
 import com.melvin.mono.fx.bootstrap.M;
 import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import com.sun.javafx.application.HostServicesDelegate;
