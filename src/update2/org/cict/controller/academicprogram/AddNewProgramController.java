@@ -84,7 +84,7 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
     
     private void addTextFieldFilters() {
         StringFilter textField = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+//                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager->{
@@ -98,7 +98,7 @@ public class AddNewProgramController extends SceneFX implements ControllerFX{
         textField.clone().setTextSource(txt_progname).applyFilter();
         
         StringFilter textFloor = TextInputFilters.string()
-                .setFilterMode(StringFilter.DIGIT)
+//                .setFilterMode(StringFilter.DIGIT)
                 .setMaxCharacters(11)
                 .setNoLeadingTrailingSpaces(true)
                 .setFilterManager(filterManager->{
