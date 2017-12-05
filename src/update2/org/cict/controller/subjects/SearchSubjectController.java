@@ -325,6 +325,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     }
     
     private void createTable(ArrayList<SubjectMapping> displaySubjects) {
+        subjectTable.getChildren().clear();
         for(SubjectMapping subject: displaySubjects) {
             createRow(subject);
         }
