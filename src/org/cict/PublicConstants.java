@@ -28,13 +28,11 @@ import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SystemVariablesMapping;
 import artifacts.ConfigurationManager;
-import artifacts.ResourceManager;
 import com.jhmvin.Mono;
 import com.jhmvin.orm.SQL;
 import com.melvin.java.properties.PropertyFile;
-import java.io.File;
 import java.util.Properties;
-import javax.annotation.Resource;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import sys.org.cict.enumerations.GradeValues;
@@ -126,9 +124,7 @@ public class PublicConstants {
     }
 
     //--------------------------------------------------------------------------
-    public final String KEY_REGISTRAR = "REGISTRAR";
-    public final String KEY_RECOMMENDING_APPROVAL = "RECOMMENDING_APPROVAL";
-
+   
     /**
      * Gets values from the system variables from the server using the keys
      * provided.
@@ -136,7 +132,7 @@ public class PublicConstants {
      * @param key
      * @return
      */
-    public final static String getServerValues(String key) {
+    public final static Object getServerValues(String key) {
         try {
             SystemVariablesMapping map = Mono.orm()
                     .newSearch(Database.connect().system_variables())
@@ -144,35 +140,100 @@ public class PublicConstants {
                     .active(Order.desc(DB.system_variables().id))
                     .first();
             if (map == null) {
-                return ""; // to avoid null pointer
+                return null; 
             }
             return map.getValue();
         } catch (Exception e) {
-            return "";
+            return null;
         }
     }
 
     //--------------------------------------
     // SYSTEM VARIABLES NAME
     //----------------------------------
-    public final static String MAX_POPULATION_NAME = "MAXIMUM_POPULATION";
-    public final static String FTP_PORT = "FTP_PORT";
-    public final static String BULSU_TEL = "BULSU_TELEPHONE_NO";
-    //----------------------------------------------
+    public static final String KEY_REGISTRAR = "REGISTRAR";
+    public static final String KEY_REGISTRAR_DEFAULT = "LEILANIE M. LIZARDO";
+    
+    public static final String KEY_RECOMMENDING_APPROVAL = "RECOMMENDING_APPROVAL";
+    public static final String KEY_RECOMMENDING_APPROVAL_DEFAULT = "ENGR. NOEMI P. REYES";
 
-//    public static Integer getMaxPopulation() {
-//        SystemVariablesMapping map = Mono.orm().newSearch(Database.connect().system_variables())
-//                .eq(DB.system_variables().name, MAX_POPULATION_NAME)
-//                .active().first();
-//        if (map == null) {
-//            return MAX_POPULATION;
-//        } else {
-//            return Integer.valueOf(map.getValue());
-//        }
-//    }
+    public final static String KEY_BULSU_TEL = "BULSU_TELEPHONE_NO";
+    public final static String KEY_BULSU_TEL_DEFAULT = "(044) 9197800 LOCAL 1101";
+    
+    public final static String KEY_MAX_POPULATION_NAME = "MAXIMUM_POPULATION";
+    public final static String KEY_MAX_POPULATION_DEFAULT = "20";
+    
+    public final static String KEY_FTP_PORT = "FTP_PORT";
+    public final static String KEY_FTP_PORT_DEFAULT = "21";
+    
+    public final static String KEY_FTP_USERNAME= "FTP_USERNAME";
+    public final static String KEY_FTP_USERNAME_DEFAULT = "FTP-CICT";
+    
+    public final static String KEY_FTP_PASSWORD = "FTP_PASSWORD";
+    public final static String KEY_FTP_PASSWORD_DEFAULT = "123456";
+    
+    public final static String KEY_FTP_SERVER= "FTP_SERVER";
+    public final static String KEY_FTP_SERVER_DEFAULT = "127.0.0.1";
+    
+    
     //----------------------------------------------
     public static String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     //-----------------------------------------------
     public static boolean DISABLE_ASSISTANCE = false;
+    
+    
+    //------------------------
+    public static Object getSystemVar_BULSU_TEL() {
+        return getSystemValue(KEY_BULSU_TEL, KEY_BULSU_TEL_DEFAULT);
+    }
+    
+    public static Object getSystemVar_REGISTRAR() {
+        return getSystemValue(KEY_REGISTRAR, KEY_REGISTRAR_DEFAULT);
+    }
+    
+    public static Object getSystemVar_RECOMMENDNG_APPRVL() {
+        return getSystemValue(KEY_RECOMMENDING_APPROVAL, KEY_RECOMMENDING_APPROVAL_DEFAULT);
+    }
+    
+    public static Object getSystemVar_MAX_POPULATION() {
+        return getSystemValue(KEY_MAX_POPULATION_NAME, KEY_MAX_POPULATION_DEFAULT);
+    }
+    
+    public static Object getSystemVar_FTP_PORT() {
+        return getSystemValue(KEY_FTP_PORT, KEY_FTP_PORT_DEFAULT);
+    }
+    
+    public static Object getSystemVar_FTP_USERNAME() {
+        return getSystemValue(KEY_FTP_USERNAME, KEY_FTP_USERNAME_DEFAULT);
+    }
+    
+    public static Object getSystemVar_FTP_PASSWORD() {
+        return getSystemValue(KEY_FTP_PASSWORD, KEY_FTP_PASSWORD_DEFAULT);
+    }
+    
+    public static Object getSystemVar_FTP_SERVER() {
+        return getSystemValue(KEY_FTP_SERVER, KEY_FTP_SERVER_DEFAULT);
+    }
+    
+    
+    private static Object getSystemValue(String name, String defaultValue) {
+        Object value = getServerValues(name);
+        if(value==null) {
+            createDefault(name, defaultValue);
+            return defaultValue;
+        }
+        return value;
+    }
+    
+    private static boolean createDefault(String name, String value) {
+        SystemVariablesMapping defaultValue = new SystemVariablesMapping();
+        defaultValue.setActive(1);
+        defaultValue.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
+        defaultValue.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
+        defaultValue.setName(name);
+        defaultValue.setValue(value);
+        Integer res = Database.connect().system_variables().insert(defaultValue);
+        return (res.equals(-1));
+    }
 }

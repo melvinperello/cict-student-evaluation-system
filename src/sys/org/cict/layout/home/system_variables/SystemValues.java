@@ -129,8 +129,8 @@ public class SystemValues extends MonoLauncher {
             return;
         String name = MonoString.removeExtraSpace(txt_name.getText());
         String value = MonoString.removeExtraSpace(txt_value.getText());
-        if(name.equalsIgnoreCase(PublicConstants.MAX_POPULATION_NAME.replace("_", " "))
-                || name.equalsIgnoreCase(PublicConstants.FTP_PORT.replace("_", " "))) {
+        if(name.equalsIgnoreCase(PublicConstants.KEY_MAX_POPULATION_NAME.replace("_", " "))
+                || name.equalsIgnoreCase(PublicConstants.KEY_FTP_PORT.replace("_", " "))) {
             try {
                 Integer check = Integer.valueOf(value);
             } catch (NumberFormatException e) {
@@ -314,8 +314,8 @@ public class SystemValues extends MonoLauncher {
     }
     
     private void update(SimpleTableRow row, String name, String value) {
-        if(name.equalsIgnoreCase(PublicConstants.MAX_POPULATION_NAME.replace("_", " "))
-                || name.equalsIgnoreCase(PublicConstants.FTP_PORT.replace("_", " "))) {
+        if(name.equalsIgnoreCase(PublicConstants.KEY_MAX_POPULATION_NAME.replace("_", " "))
+                || name.equalsIgnoreCase(PublicConstants.KEY_FTP_PORT.replace("_", " "))) {
             try {
                 Integer check = Integer.valueOf(value);
             } catch (NumberFormatException e) {

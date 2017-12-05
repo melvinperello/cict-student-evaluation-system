@@ -236,8 +236,8 @@ public class PrintAddingChangingForm extends Transaction{
         addChangeForm.STUDENT_NUMBER = student.getId();
         addChangeForm.STUDENT_NAME = studentFullName;
         addChangeForm.STUDENT_SECTION = section;
-        addChangeForm.COLLEGE_DEAN = PublicConstants.getServerValues("RECOMMENDING_APPROVAL");//"ENGR. NOEMI REYES";
-        addChangeForm.REGISTRAR = PublicConstants.getServerValues("REGISTRAR"); //"LEILANI M. LIZARDO";
+        addChangeForm.COLLEGE_DEAN = PublicConstants.getSystemVar_RECOMMENDNG_APPRVL().toString();//"ENGR. NOEMI REYES";
+        addChangeForm.REGISTRAR = PublicConstants.getSystemVar_REGISTRAR().toString(); //"LEILANI M. LIZARDO";
         addChangeForm.DATE = date_now;
         addChangeForm.STUDENT_CURRENT_UNITS = String.valueOf(getCurrentUnits());
         boolean canPrint = false;

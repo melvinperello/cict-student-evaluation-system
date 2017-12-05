@@ -84,7 +84,7 @@ public class SectionSearchView extends HBox {
 
                 Integer MAX_VALUE = 1;
                 try {
-                    MAX_VALUE = Integer.valueOf(PublicConstants.getServerValues(PublicConstants.MAX_POPULATION_NAME));
+                    MAX_VALUE = Integer.valueOf(PublicConstants.getSystemVar_MAX_POPULATION().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
