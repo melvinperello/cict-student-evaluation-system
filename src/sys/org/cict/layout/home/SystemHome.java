@@ -102,13 +102,12 @@ public class SystemHome extends MonoLauncher {
 
     @FXML
     private JFXButton btn_logout;
-    
+
     @FXML
     private JFXButton btn_reports;
 
 //    @FXML
 //    private JFXButton btn_system_values;
-
     @FXML
     private JFXButton btn_academic_term;
 
@@ -195,12 +194,11 @@ public class SystemHome extends MonoLauncher {
 //        MonoClick.addClickEvent(btn_system_values, () -> {
 //            this.onShowSystemVariables();
 //        });
-
         //----------------------------------------------------------------------
         this.displayLabels();
-        
+
         //----------------------------
-        MonoClick.addClickEvent(btn_reports, ()->{
+        MonoClick.addClickEvent(btn_reports, () -> {
             this.onShowReports();
         });
     }
@@ -234,9 +232,8 @@ public class SystemHome extends MonoLauncher {
         this.setLabelText(this.lbl_lastname, loggedUser.getLAST_NAME());
         this.setLabelText(this.lbl_middlename, loggedUser.getMIDDLE_NAME());
         this.setLabelText(lbl_gender, loggedUser.getGENDER());
-        this.setLabelText(lbl_access, loggedUser.getACCESS_LEVEL().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "Asst. Registrar" : loggedUser.getACCESS_LEVEL());
-        this.setLabelText(lbl_desgination, loggedUser.getDESIGNATION().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)? "Asst. Registrar" : loggedUser.getDESIGNATION());
-
+        this.setLabelText(lbl_access, loggedUser.getACCESS_LEVEL());
+        this.setLabelText(lbl_desgination, loggedUser.getDESIGNATION());
     }
 
     /**
@@ -250,6 +247,12 @@ public class SystemHome extends MonoLauncher {
             label.setText("");
             return;
         }
+
+        //----------------------------------------------------------------------
+        if (value.equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
+            value = "Asst. Registrar";
+        }
+        //----------------------------------------------------------------------
         value = value.trim();
         if (value.isEmpty()) {
             label.setText("No Data");
@@ -686,11 +689,11 @@ public class SystemHome extends MonoLauncher {
         }
         //----------------------------------------------------------------------
 
-        if(Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR, Access.ACCESS_LOCAL_REGISTRAR)) {
+        if (Access.isDeniedIfNotFrom(Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR, Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-        
+
         ControllerFX controller = new LinkedHome();
         this.changeRoot(controller,
                 "update4.org.cict.linked_manager",
@@ -707,11 +710,11 @@ public class SystemHome extends MonoLauncher {
         }
         //----------------------------------------------------------------------
 
-        if(Access.isDeniedIfNot(Access.ACCESS_LOCAL_REGISTRAR)) {
+        if (Access.isDeniedIfNot(Access.ACCESS_LOCAL_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
-        
+
         ControllerFX controller = new StudentHomeController();
         this.changeRoot(controller,
                 "update5.org.cict.student.layout",
@@ -737,7 +740,7 @@ public class SystemHome extends MonoLauncher {
                 "ReportsMain");
 
     }
-    
+
     //--------------------------------------------------------------------------
     /**
      * Show Faculty Hub.
