@@ -31,6 +31,7 @@ import app.lazy.models.EvaluationMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.LoadSubjectMapping;
+import app.lazy.models.PrintLogsMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
@@ -40,6 +41,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 import org.cict.PublicConstants;
+import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ReportsUtility;
 import org.hibernate.criterion.Order;
 import update.org.cict.reports.add_change_form.AddChangeForm;
 
@@ -272,10 +275,23 @@ public class PrintAddingChangingForm extends Transaction{
 //            addChangeForm.REGISTRAR = "LEILANI M. LIZARDO";
             canPrint = true;
         }
-        if(canPrint)
-            addChangeForm.print();
-        else
+        if(canPrint){
+            PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
+                    .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
+                    .eq(DB.print_logs().title, "ADDING & CHANGING LETTER")
+                    .eq(DB.print_logs().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm()==null? null :  SystemProperties.instance().getCurrentAcademicTerm().getId())
+                    .active().first();
+            boolean secondCopy = false;
+            if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADDING & CHANGING LETTER", "ADDING & CHANGING", (logs!=null)? "REPRINT" : "INITIAL")) {
+                secondCopy = (logs!=null);
+            } else {
+                System.err.println("PRINT LOGS NOT SAVED");
+                return;
+            }
+            addChangeForm.print(secondCopy);
+        } else {
             System.out.println("Nothing to print");
+        }
     }
     
     private double getCurrentUnits() {

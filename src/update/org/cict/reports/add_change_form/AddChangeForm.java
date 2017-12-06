@@ -49,7 +49,7 @@ public class AddChangeForm {
         RESULT = "reports/adding/" + doc + ".pdf";
     }
 
-    public int print() {
+    public int print(boolean secondCopy) {
         try {
             init();
             /**
@@ -58,7 +58,7 @@ public class AddChangeForm {
             if (!ReportsDirectory.check(SAVE_DIRECTORY)) {
                 System.err.println("Cannot Create Directory.");
             }
-            int val = createPdf(RESULT);
+            int val = createPdf(RESULT, secondCopy);
             if (val == 1) {
                 System.out.println("Please close the previous report");
             }
@@ -134,13 +134,13 @@ public class AddChangeForm {
      * @throws DocumentException
      * @throws IOException
      */
-    public int createPdf(String filename)
+    public int createPdf(String filename, boolean secondCopy)
             throws DocumentException, IOException {
         Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.5f),
                 Utilities.inchesToPoints(13f)), 50, 50, 70, 50); //lrtb
         try {
             writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
-            PageNumeration event = new PageNumeration();
+            PageNumeration event = new PageNumeration(secondCopy);
             writer.setPageEvent(event);
         } catch (FileNotFoundException es) {
             return 1;
@@ -425,14 +425,16 @@ class PageNumeration extends PdfPageEventHelper {
     PdfTemplate total;
 
     private Font font_footer, font_footer2, font_footer3;
-
-    public PageNumeration() {
+    private boolean secondCopy = false;
+    
+    public PageNumeration(boolean secondCopy) {
         try {
             font_footer = new Font(FontFamily.HELVETICA, 9, Font.BOLD);
             font_footer3 = new Font(FontFamily.HELVETICA, 11, Font.BOLD);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.secondCopy = secondCopy;
     }
 
     /**
@@ -475,7 +477,7 @@ class PageNumeration extends PdfPageEventHelper {
 
         PdfContentByte cb = writer.getDirectContent();
         Phrase footer = new Phrase("BulSU-OP-OUR-01F4", font_footer3);
-        Phrase footer2 = new Phrase("Revision: 0", font_footer3);
+        Phrase footer2 = new Phrase("Revision: 0" + (secondCopy? " (SECOND COPY)" : ""), font_footer3);
 
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 footer,
