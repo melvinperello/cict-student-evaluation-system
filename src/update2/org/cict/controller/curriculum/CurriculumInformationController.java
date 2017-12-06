@@ -568,7 +568,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             ArrayList<CurriculumSubjectMapping> years = Mono.orm().newSearch(Database.connect().curriculum_subject())
                     .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                     .eq(DB.curriculum_subject().year, ctrYr)
-                    .active()
+                    .active(Order.asc(DB.curriculum_subject().id))
                     .all();
 
             for (int ctrSem = 1; ctrSem <= exptdSem; ctrSem++) {
@@ -761,7 +761,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             for (CurriculumSubjectMapping csMap : semesters) {
                 SubjectMapping subject = Mono.orm().newSearch(Database.connect().subject())
                         .eq(DB.subject().id, csMap.getSUBJECT_id())
-                        .active()
+                        .active(Order.desc(DB.subject().id))
                         .first();
                 if (subject == null) {
                     continue;
