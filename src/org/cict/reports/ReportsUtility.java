@@ -301,6 +301,7 @@ public class ReportsUtility {
     public static boolean savePrintLogs(Integer STUDENT_id, String title, String module, String type) {
         PrintLogsMapping logs = new PrintLogsMapping();
         logs.setModule(module);
+        logs.setACADTERM_id(SystemProperties.instance().getCurrentAcademicTerm()==null? null: SystemProperties.instance().getCurrentAcademicTerm().getId());
         logs.setPrinted_by(CollegeFaculty.instance().getFACULTY_ID());
         logs.setPrinted_date(Mono.orm().getServerTime().getDateWithFormat());
         logs.setSTUDENT_id(STUDENT_id);

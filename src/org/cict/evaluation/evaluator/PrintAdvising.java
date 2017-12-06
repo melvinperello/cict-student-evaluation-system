@@ -41,6 +41,7 @@ import com.jhmvin.fx.async.Transaction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.reports.ReportsUtility;
 import org.cict.reports.advisingslip.AdvisingSlip;
 import org.cict.reports.advisingslip.AdvisingSlipData;
@@ -292,6 +293,7 @@ public class PrintAdvising extends Transaction {
         PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
                 .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
                 .eq(DB.print_logs().title, "ADVISING SLIP")
+                .eq(DB.print_logs().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm()==null? null :  SystemProperties.instance().getCurrentAcademicTerm().getId())
                 .active().first();
         boolean secondCopy = false;
         if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADVISING SLIP", "EVALUATION", (logs!=null)? "REPRINT" : "INITIAL")) {
