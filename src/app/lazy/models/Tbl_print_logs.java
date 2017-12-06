@@ -18,10 +18,12 @@ package app.lazy.models;
 public class Tbl_print_logs {
 public final String id = "id";
 public final String STUDENT_id = "STUDENT_id";
+public final String ACADTERM_id = "ACADTERM_id";
 public final String title = "title";
 public final String module = "module";
 public final String type = "type";
 public final String terminal = "terminal";
 public final String printed_by = "printed_by";
 public final String printed_date = "printed_date";
+public final String active = "active";
 }

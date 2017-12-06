@@ -10,6 +10,9 @@
 <property name="STUDENT_id" type="java.lang.Integer">
 <column name="STUDENT_id" length="10"/>
 </property>
+<property name="ACADTERM_id" type="java.lang.Integer">
+<column name="ACADTERM_id" length="10"/>
+</property>
 <property name="title" type="java.lang.String">
 <column name="title" length="100"/>
 </property>
@@ -27,6 +30,9 @@
 </property>
 <property name="printed_date" type="java.util.Date">
 <column name="printed_date" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
 </property>
 </class>
 </hibernate-mapping>

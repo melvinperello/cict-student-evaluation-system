@@ -28,12 +28,14 @@ public class PrintLogsMapping implements java.io.Serializable, com.jhmvin.orm.Mo
 
 private java.lang.Integer id;
 private java.lang.Integer STUDENT_id;
+private java.lang.Integer ACADTERM_id;
 private java.lang.String title;
 private java.lang.String module;
 private java.lang.String type;
 private java.lang.String terminal;
 private java.lang.Integer printed_by;
 private java.util.Date printed_date;
+private java.lang.Integer active;
 
 @Id
 @GeneratedValue(strategy = IDENTITY)
@@ -46,13 +48,22 @@ public void setId(java.lang.Integer fieldId) {
 	this.id = fieldId;
 }
 
-@Column(name = "STUDENT_id", nullable = false, length = 10)
+@Column(name = "STUDENT_id", nullable = true, length = 10)
 public java.lang.Integer getSTUDENT_id() {
 	return this.STUDENT_id;
 }
 
 public void setSTUDENT_id(java.lang.Integer fieldStudentId) {
 	this.STUDENT_id = fieldStudentId;
+}
+
+@Column(name = "ACADTERM_id", nullable = false, length = 10)
+public java.lang.Integer getACADTERM_id() {
+	return this.ACADTERM_id;
+}
+
+public void setACADTERM_id(java.lang.Integer fieldAcadtermId) {
+	this.ACADTERM_id = fieldAcadtermId;
 }
 
 @Column(name = "title", nullable = false, length = 100)
@@ -110,6 +121,15 @@ public void setPrinted_date(java.util.Date fieldPrintedDate) {
 	this.printed_date = fieldPrintedDate;
 }
 
+@Column(name = "active", nullable = false, length = 10)
+public java.lang.Integer getActive() {
+	return this.active;
+}
+
+public void setActive(java.lang.Integer fieldActive) {
+	this.active = fieldActive;
+}
+
 @Override
 public PrintLogsMapping copy() {
 PrintLogsMapping copyMe = new PrintLogsMapping();
@@ -119,12 +139,14 @@ PrintLogsMapping copyMe = new PrintLogsMapping();
          * copyMe.id = this.id;
          */
 copyMe.STUDENT_id = this.STUDENT_id;
+copyMe.ACADTERM_id = this.ACADTERM_id;
 copyMe.title = this.title;
 copyMe.module = this.module;
 copyMe.type = this.type;
 copyMe.terminal = this.terminal;
 copyMe.printed_by = this.printed_by;
 copyMe.printed_date = this.printed_date;
+copyMe.active = this.active;
 return copyMe;
 }
 
