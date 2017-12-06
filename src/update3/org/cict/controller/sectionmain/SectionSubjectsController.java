@@ -649,7 +649,8 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 btn_print.setDisable(false);
                 super.cursorDefault();
             });
-            print.transact();
+            if(ReportsUtility.savePrintLogs(null, (subject.getCode() + " Master List").toUpperCase(), "SECTIONS", "INITIAL"))
+                print.transact();
 
         });
         fetch.transact();

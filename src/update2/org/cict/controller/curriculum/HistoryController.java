@@ -171,30 +171,31 @@ public class HistoryController extends SceneFX implements ControllerFX {
                 btn_pdf.setDisable(true);
                 super.cursorWait();
             });
-            print.whenCancelled(() -> {
-                Notifications.create()
-                        .title("Request Cancelled")
-                        .text("Sorry for the inconviniece.")
-                        .showWarning();
-            });
-            print.whenFailed(() -> {
-                Notifications.create()
-                        .title("Request Failed")
-                        .text("Something went wrong. Sorry for the inconviniece.")
-                        .showInformation();
-            });
-            print.whenSuccess(() -> {
-                btn_pdf.setDisable(false);
-                Notifications.create()
-                        .title("Printing Results")
-                        .text("Please wait a moment.")
-                        .showInformation();
-            });
-            print.whenFinished(() -> {
-                btn_pdf.setDisable(false);
-                super.cursorDefault();
-            });
-            //----------------------------------------------------------------------
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_pdf.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_pdf.setDisable(false);
+            super.cursorDefault();
+        });
+        //----------------------------------------------------------------------
+        if(ReportsUtility.savePrintLogs(null, "Curriculum information History".toUpperCase(), "ACADEMIC PROGRAMS", "INITIAL"))
             print.transact();
     }
     

@@ -281,7 +281,8 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, "Student Result List".toUpperCase(), "STUDENTS", "INITIAL"))
+                print.transact();
     }
 
     private String searchWord = "";

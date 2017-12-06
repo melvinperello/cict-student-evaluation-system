@@ -146,7 +146,8 @@ public class StudentHistoryController implements ControllerFX{
         });
         //----------------------------------------------------------------------
         print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(lblName)));
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, "Student Evalutaion History".toUpperCase(), "EVALUATION", "INITIAL"))
+            print.transact();
     }
     
 }

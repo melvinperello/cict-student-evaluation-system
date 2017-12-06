@@ -1101,7 +1101,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     private void onShowCredit() {
         String title = "Edit Grades";
-        CreditController controller = new CreditController(this.CURRENT_STUDENT.getCict_id(), "CREDIT");
+        CreditController controller = new CreditController(this.CURRENT_STUDENT.getCict_id(), "CREDIT", "STUDENTS");
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.credit")
                 .setFxmlDocument("Credit")

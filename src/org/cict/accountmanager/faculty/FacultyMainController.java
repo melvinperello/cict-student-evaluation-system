@@ -365,7 +365,8 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, "Faculty Result List".toUpperCase(), "FACULTY", "INITIAL"))
+            print.transact();
     }
 
     private void requestFocus(Node control) {

@@ -95,7 +95,8 @@ public class CreditController implements ControllerFX {
     @FXML
     private StatusBar status_bar;
 
-    public CreditController(Integer studentCictID, String mode) {
+    private String MODULE;
+    public CreditController(Integer studentCictID, String mode, String module) {
         this.CICT_ID = studentCictID;
         this.creditMode = mode;
         this.TITLE = mode.equals(CreditController.MODE_READ) ? "Viewing Mode"
@@ -123,6 +124,8 @@ public class CreditController implements ControllerFX {
         this.creditTree.setRowDefaultColor(defaultColor);
         this.creditTree.setRowDisallowColor("#F76C83");
 
+        //--------------------------
+        this.MODULE = module;
     }
 
     //--------------------------------------------------------------------------
@@ -334,7 +337,8 @@ public class CreditController implements ControllerFX {
             btn_print_history.setDisable(false);
         });
         print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(btn_save)));
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, "Student Grade History".toUpperCase(), this.MODULE, "INITIAL"))
+            print.transact();
     }
     
     private void addToRow(ArrayList<GradeHistory> storage, ArrayList<String[]> rowData, String title){

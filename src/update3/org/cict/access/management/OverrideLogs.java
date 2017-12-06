@@ -492,6 +492,7 @@ public class OverrideLogs extends MonoLauncher {
             super.setCursor(Cursor.DEFAULT);
         });
         //----------------------------------------------------------------------
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, "System Override Logs".toUpperCase(), "ACCESS CONTROLS", "INITIAL"))
+            print.transact();
     }
 }

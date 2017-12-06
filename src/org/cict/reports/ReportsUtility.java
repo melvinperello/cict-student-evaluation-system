@@ -303,7 +303,7 @@ public class ReportsUtility {
         logs.setPrinted_by(CollegeFaculty.instance().getFACULTY_ID());
         logs.setPrinted_date(Mono.orm().getServerTime().getDateWithFormat());
         logs.setSTUDENT_id(STUDENT_id);
-        logs.setTerminal(CollegeComputer.instance().getPC_NAME());
+        logs.setTerminal(CollegeComputer.instance().getPC_NAME() + " " +  CollegeComputer.instance().getPC_USERNAME());
         logs.setTitle(title);
         logs.setType(type);
         return (!Database.connect().print_logs().insert(logs).equals(-1));

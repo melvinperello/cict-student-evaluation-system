@@ -1714,7 +1714,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         System.out.println("ID FROM EVALUATION: " + String.valueOf(this.currentStudent.getCict_id()));
         CreditController controller = new CreditController(
                 this.currentStudent.getCict_id(),
-                mode);
+                mode, "EVALUATE");
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.credit")
                 .setFxmlDocument("Credit")

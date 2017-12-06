@@ -841,7 +841,8 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                 super.cursorDefault();
             });
             print.transact();
-
+            if(ReportsUtility.savePrintLogs(null, (sectionName + " - " + subject.getCode() + " Master List").toUpperCase(), "FACULTY HUB", "INITIAL"))
+                print.transact();
         });
         fetch.transact();
     }

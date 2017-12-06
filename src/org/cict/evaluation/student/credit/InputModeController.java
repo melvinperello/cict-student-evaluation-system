@@ -45,10 +45,11 @@ public class InputModeController implements ControllerFX {
     private Button btnEncode;
 
     private Integer CICT_id;
-    private String MODE;
+    private String MODE, MODULE;
 
-    public InputModeController(Integer cict_id) {
+    public InputModeController(Integer cict_id, String module) {
         this.CICT_id = cict_id;
+        this.MODULE = module;
     }
 
     @Override
@@ -93,7 +94,7 @@ public class InputModeController implements ControllerFX {
         } else {
             title = "Encode Subjects";
         }
-        CreditController controller = new CreditController(this.CICT_id, this.MODE);
+        CreditController controller = new CreditController(this.CICT_id, this.MODE, this.MODULE);
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.credit")
                 .setFxmlDocument("Credit")

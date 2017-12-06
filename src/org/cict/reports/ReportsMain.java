@@ -576,7 +576,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, lbl_title_eval.getText().toUpperCase(), "REPORTS", "INITIAL"))
+            print.transact();
     }
     
     private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", PRES_LIST = "President's Lister", DEANS_LIST = "Dean's Lister";

@@ -149,9 +149,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_attempt` (
   PRIMARY KEY (`try_id`),
   KEY `attempt_fk_from_account_faculty_id` (`account_id`),
   CONSTRAINT `attempt_fk_from_account_faculty_id` FOREIGN KEY (`account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2841 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2844 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_attempt: ~1,052 rows (approximately)
+-- Dumping data for table cictems.account_faculty_attempt: ~1,054 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_attempt` DISABLE KEYS */;
 INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_address`, `pc_name`, `pc_username`, `os_version`, `platform`, `result`, `active`) VALUES
 	(1788, 1, '2017-10-12 00:07:10', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
@@ -1205,7 +1205,10 @@ INSERT INTO `account_faculty_attempt` (`try_id`, `account_id`, `time`, `ip_addre
 	(2837, 1, '2017-11-29 09:54:33', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@x86', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2838, 1, '2017-11-29 21:46:26', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
 	(2839, 1, '2017-11-30 14:51:04', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
-	(2840, 1, '2017-11-30 19:00:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
+	(2840, 1, '2017-11-30 19:00:39', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2841, 13, '2017-12-06 18:13:04', '%192.168.1.3@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2842, 13, '2017-12-06 20:07:00', '%192.168.1.3@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1),
+	(2843, 13, '2017-12-06 20:11:09', '%192.168.1.3@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', 'EVALUATION_SYSTEM', 'SUCCESS', 1);
 /*!40000 ALTER TABLE `account_faculty_attempt` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_faculty_session
@@ -1224,9 +1227,9 @@ CREATE TABLE IF NOT EXISTS `account_faculty_session` (
   PRIMARY KEY (`session_id`),
   KEY `session_fk_from_account_faculty_id` (`FACULTY_account_id`),
   CONSTRAINT `session_fk_from_account_faculty_id` FOREIGN KEY (`FACULTY_account_id`) REFERENCES `account_faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2658 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2661 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.account_faculty_session: ~1,062 rows (approximately)
+-- Dumping data for table cictems.account_faculty_session: ~1,064 rows (approximately)
 /*!40000 ALTER TABLE `account_faculty_session` DISABLE KEYS */;
 INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `session_start`, `keep_alive`, `ip_address`, `pc_name`, `pc_username`, `os`, `session_end`, `platform`, `active`) VALUES
 	(1595, 1, '2017-10-11 18:39:01', '2017-10-11 18:40:31', '%192.168.254.151@40-2C-F4-04-E9-6E%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-10-11 18:39:58', 'EVALUATION_SYSTEM', 1),
@@ -2290,7 +2293,10 @@ INSERT INTO `account_faculty_session` (`session_id`, `FACULTY_account_id`, `sess
 	(2654, 1, '2017-11-29 09:54:33', '2017-11-29 11:04:34', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@x86', '2017-11-29 11:03:55', 'EVALUATION_SYSTEM', 1),
 	(2655, 1, '2017-11-29 21:46:26', '2017-11-29 22:07:56', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-30 14:51:04', 'EVALUATION_SYSTEM', 1),
 	(2656, 1, '2017-11-30 14:51:04', '2017-11-30 14:52:04', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-30 14:51:18', 'EVALUATION_SYSTEM', 1),
-	(2657, 1, '2017-11-30 19:00:39', '2017-11-30 19:01:40', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-30 19:00:48', 'EVALUATION_SYSTEM', 1);
+	(2657, 1, '2017-11-30 19:00:39', '2017-11-30 19:01:40', '%192.168.254.151@40-2C-F4-04-E9-6E', 'Melvin', 'Jhon Melvin', 'Windows 10@amd64', '2017-11-30 19:00:48', 'EVALUATION_SYSTEM', 1),
+	(2658, 13, '2017-12-06 18:13:04', '2017-12-06 18:28:05', '%192.168.1.3@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-12-06 18:27:20', 'EVALUATION_SYSTEM', 1),
+	(2659, 13, '2017-12-06 20:07:01', '2017-12-06 20:09:01', '%192.168.1.3@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', '2017-12-06 20:08:25', 'EVALUATION_SYSTEM', 1),
+	(2660, 13, '2017-12-06 20:11:09', '2017-12-06 20:17:09', '%192.168.1.3@AC-D1-B8-7B-20-B3', 'JOEMAR-PC', 'Joemar', 'Windows 10@amd64', NULL, 'EVALUATION_SYSTEM', 1);
 /*!40000 ALTER TABLE `account_faculty_session` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.account_student
@@ -5391,8 +5397,8 @@ INSERT INTO `otp_generator` (`id`, `code`, `date_created`, `active`) VALUES
 
 -- Dumping structure for table cictems.print_logs
 CREATE TABLE IF NOT EXISTS `print_logs` (
-  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `STUDENT_id` int(11) NOT NULL,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `STUDENT_id` int(11) DEFAULT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `module` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'INITIAL' COMMENT 'REPRINT/INITIAL',
@@ -5400,10 +5406,13 @@ CREATE TABLE IF NOT EXISTS `print_logs` (
   `printed_by` int(11) NOT NULL,
   `printed_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Dumping data for table cictems.print_logs: ~0 rows (approximately)
 /*!40000 ALTER TABLE `print_logs` DISABLE KEYS */;
+INSERT INTO `print_logs` (`id`, `STUDENT_id`, `title`, `module`, `type`, `terminal`, `printed_by`, `printed_date`) VALUES
+	(1, NULL, 'FACULTY RESULT LIST', 'FACULTY', 'INITIAL', 'JOEMAR-PC', 3, '2017-12-06 20:12:03'),
+	(2, NULL, 'ACCOUNT LOG AND ATTEMPTS', 'MY ACCOUNTS', 'INITIAL', 'JOEMAR-PC', 3, '2017-12-06 20:12:55');
 /*!40000 ALTER TABLE `print_logs` ENABLE KEYS */;
 
 -- Dumping structure for table cictems.student
@@ -5730,9 +5739,9 @@ CREATE TABLE IF NOT EXISTS `system_variables` (
   `active` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table cictems.system_variables: ~7 rows (approximately)
+-- Dumping data for table cictems.system_variables: ~8 rows (approximately)
 /*!40000 ALTER TABLE `system_variables` DISABLE KEYS */;
 INSERT INTO `system_variables` (`id`, `name`, `value`, `created_by`, `created_date`, `updated_by`, `updated_date`, `active`) VALUES
 	(1, 'REGISTRAR', 'LEILANIE M. LIZARDO', NULL, '2017-10-03 17:33:32', NULL, NULL, 1),
@@ -5741,7 +5750,8 @@ INSERT INTO `system_variables` (`id`, `name`, `value`, `created_by`, `created_da
 	(4, 'FTP_USERNAME', 'FTP-CICT', 3, '2017-11-09 21:17:36', 3, '2017-11-20 12:53:45', 1),
 	(5, 'FTP_PASSWORD', '123456', NULL, '2017-11-09 21:18:20', 3, '2017-11-10 10:43:04', 1),
 	(6, 'FTP_PORT', '21', NULL, '2017-11-09 21:24:41', 3, '2017-11-09 21:40:54', 1),
-	(7, 'FTP_SERVER', '127.0.0.1', NULL, '2017-11-09 21:30:20', NULL, NULL, 1);
+	(7, 'FTP_SERVER', '127.0.0.1', NULL, '2017-11-09 21:30:20', NULL, NULL, 1),
+	(8, 'BULSU_TELEPHONE_NO', '(044) 9197800 LOCAL 1101', 3, '2017-12-06 20:07:36', NULL, NULL, 1);
 /*!40000 ALTER TABLE `system_variables` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
