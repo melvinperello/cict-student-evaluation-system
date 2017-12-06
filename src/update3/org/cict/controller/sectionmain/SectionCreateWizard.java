@@ -1156,6 +1156,19 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
                 ArrayList<String> normal = meta.normalSections;
                 ArrayList<String> ojt = meta.internSections;
 
+                //--------------------------------------------------------------
+                // avoid duplicate sections for ojt
+                outLoop:
+                for (String normalSections : normal) {
+                    for (String ojtSections : ojt) {
+                        if (ojtSections.equalsIgnoreCase(normalSections)) {
+                            ojt.remove(ojtSections);
+                            continue outLoop;
+                        }
+                    }
+                }
+                //--------------------------------------------------------------
+
                 /**
                  * Create Regular Sections. Throws Transaction error for failed
                  * insertion.
