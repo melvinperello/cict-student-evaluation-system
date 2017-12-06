@@ -54,7 +54,7 @@
          <children>
             <VBox prefHeight="565.0" prefWidth="266.0" spacing="10.0">
                <children>
-                  <JFXButton fx:id="btn_view_sections" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Section" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_sections" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Advisory Class" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -69,10 +69,10 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <padding>
-                        <Insets left="-90.0" />
+                        <Insets left="-65.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton fx:id="btn_view_subjects" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Subject" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_subjects" graphicTextGap="20.0" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Handled Subject" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -87,7 +87,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <padding>
-                        <Insets left="-90.0" />
+                        <Insets left="-50.0" />
                      </padding>
                   </JFXButton>
                </children>
