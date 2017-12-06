@@ -48,6 +48,7 @@ import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
 import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.evaluation.CoRequisiteFilter;
 import org.cict.evaluation.CurricularLevelController;
 import org.cict.evaluation.FirstAssistantController;
 import org.cict.evaluation.evaluator.PrintChecklist;
@@ -459,6 +460,11 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void onSaveChanges() {
+        if(!CoRequisiteFilter.checkCoReqAdd(collection_preview, this.studentSearched.getCURRICULUM_id())) {
+            System.out.println("HEREEE");
+            return;
+        }
+        
         SaveChanges save = new SaveChanges();
 
         // boolean for tracking is there is changes made
@@ -693,6 +699,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private SimpleTable table = new SimpleTable();
+    private ArrayList<SubjectInformationHolder> collection_preview;
 
     /**
      * Create Table
@@ -700,7 +707,11 @@ public class AddingHome extends SceneFX implements ControllerFX {
      * @param collection
      */
     private void createTable(ArrayList<SubjectInformationHolder> collection) {
-
+        
+        //----------------
+        collection_preview = collection;
+        //
+        
         // create the table object
 //        SimpleTable table = new SimpleTable();
         // add listener to this table for changes.
