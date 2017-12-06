@@ -416,16 +416,23 @@ public class FacultyInfoController extends SceneFX implements ControllerFX {
 
         String contactNumber = txt_contact.getText();
         if (contactNumber == null || contactNumber.isEmpty()) {
+            contactNumber = null;
 //            showWarning("Invalid Contact Number", "Contact number must have a value.");
 //            return;
-        } else if (contactNumber.length() < 11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
-            showWarning("Invalid Contact Number", "Must start with \"09\" with a length\n"
-                    + "of 11 digits.");
-            return;
-        } else if (contactNumber.length() != 11) {
+        } else if (contactNumber.length() > 12) {
             showWarning("Invalid Contact Number", "Must have a length of 11 digits\n"
-                    + "and starts with \"09\"");
+                    + "and starts with \"09\" or \"639\"");
             return;
+        } else {
+            if(contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
+                contactNumber = "+639" + contactNumber.substring(2, 11);
+            } else if(contactNumber.substring(0, 3).equalsIgnoreCase("639")) {
+                contactNumber = "+639" + contactNumber.substring(3, 12);
+            } else {
+                showWarning("Invalid Contact Number", "Must start with \"09\" or \"639\" with a length\n"
+                        + "of 11 digits.");
+                return;
+            }
         }
 
         if (MonoString.removeExtraSpace(cmb_rank.getSelectionModel().getSelectedItem().toString().toUpperCase()) != null) {

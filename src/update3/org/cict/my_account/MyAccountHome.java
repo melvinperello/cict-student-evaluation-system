@@ -1261,23 +1261,30 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
         }
         String contactNumber = txt_mobile.getText();
         if (contactNumber == null || contactNumber.isEmpty()) {
-            showWarning("Invalid Contact Number", "Contact number must have a value.");
-            return;
-        } else if (contactNumber.length() < 11 || !contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
-            showWarning("Invalid Contact Number", "Must start with \"09\" with a length\n"
-                    + "of 11 digits.");
-            return;
-        } else if (contactNumber.length() != 11) {
+            contactNumber = null;
+//            showWarning("Invalid Contact Number", "Contact number must have a value.");
+//            return;
+        } else if (contactNumber.length() > 12) {
             showWarning("Invalid Contact Number", "Must have a length of 11 digits\n"
-                    + "and starts with \"09\"");
+                    + "and starts with \"09\" or \"639\"");
             return;
+        } else {
+            if(contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
+                contactNumber = "+639" + contactNumber.substring(2, 11);
+            } else if(contactNumber.substring(0, 3).equalsIgnoreCase("639")) {
+                contactNumber = "+639" + contactNumber.substring(3, 12);
+            } else {
+                showWarning("Invalid Contact Number", "Must start with \"09\" or \"639\" with a length\n"
+                        + "of 11 digits.");
+                return;
+            }
         }
         String gender = rbtn_female.isSelected() ? "FEMALE" : "MALE";
         UpdateProfile updateProfile = new UpdateProfile();
         updateProfile.setFirstName(MonoString.removeExtraSpace(txt_first.getText()).toUpperCase());
         updateProfile.setLastName(MonoString.removeExtraSpace(txt_last.getText()).toUpperCase());
         updateProfile.setMiddleName(txt_middle.getText() == null ? "" : MonoString.removeExtraSpace(txt_middle.getText()).toUpperCase());
-        updateProfile.setMobileNumber("+639" + contactNumber.substring(2, 11));
+        updateProfile.setMobileNumber(contactNumber);
         updateProfile.setUser(faculty);
         updateProfile.setGender(gender);
         updateProfile.whenStarted(() -> {
