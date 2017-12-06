@@ -28,7 +28,7 @@ public class PrintLogsMapping implements java.io.Serializable, com.jhmvin.orm.Mo
 
 private java.lang.Integer id;
 private java.lang.Integer STUDENT_id;
-private java.lang.Integer ACADTERM_id;
+private java.lang.Integer EVALUATION_id;
 private java.lang.String title;
 private java.lang.String module;
 private java.lang.String type;
@@ -57,13 +57,13 @@ public void setSTUDENT_id(java.lang.Integer fieldStudentId) {
 	this.STUDENT_id = fieldStudentId;
 }
 
-@Column(name = "ACADTERM_id", nullable = false, length = 10)
-public java.lang.Integer getACADTERM_id() {
-	return this.ACADTERM_id;
+@Column(name = "EVALUATION_id", nullable = true, length = 10)
+public java.lang.Integer getEVALUATION_id() {
+	return this.EVALUATION_id;
 }
 
-public void setACADTERM_id(java.lang.Integer fieldAcadtermId) {
-	this.ACADTERM_id = fieldAcadtermId;
+public void setEVALUATION_id(java.lang.Integer fieldEvaluationId) {
+	this.EVALUATION_id = fieldEvaluationId;
 }
 
 @Column(name = "title", nullable = false, length = 100)
@@ -139,7 +139,7 @@ PrintLogsMapping copyMe = new PrintLogsMapping();
          * copyMe.id = this.id;
          */
 copyMe.STUDENT_id = this.STUDENT_id;
-copyMe.ACADTERM_id = this.ACADTERM_id;
+copyMe.EVALUATION_id = this.EVALUATION_id;
 copyMe.title = this.title;
 copyMe.module = this.module;
 copyMe.type = this.type;

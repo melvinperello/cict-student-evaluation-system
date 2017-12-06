@@ -279,10 +279,10 @@ public class PrintAddingChangingForm extends Transaction{
             PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
                     .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
                     .eq(DB.print_logs().title, "ADDING & CHANGING LETTER")
-                    .eq(DB.print_logs().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm()==null? null :  SystemProperties.instance().getCurrentAcademicTerm().getId())
+                    .eq(DB.print_logs().EVALUATION_id, this.evaluationID)
                     .active().first();
             boolean secondCopy = false;
-            if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADDING & CHANGING LETTER", "ADDING & CHANGING", (logs!=null)? "REPRINT" : "INITIAL")) {
+            if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADDING & CHANGING LETTER", "ADDING & CHANGING", (logs!=null)? "REPRINT" : "INITIAL", this.evaluationID.toString())) {
                 secondCopy = (logs!=null);
             } else {
                 System.err.println("PRINT LOGS NOT SAVED");

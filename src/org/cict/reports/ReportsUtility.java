@@ -298,16 +298,21 @@ public class ReportsUtility {
         return sizeChooser.getChoosenSize();
     }
     
-    public static boolean savePrintLogs(Integer STUDENT_id, String title, String module, String type) {
+    public static boolean savePrintLogs(Integer STUDENT_id, String title, String module, String... type) {
         PrintLogsMapping logs = new PrintLogsMapping();
         logs.setModule(module);
-        logs.setACADTERM_id(SystemProperties.instance().getCurrentAcademicTerm()==null? null: SystemProperties.instance().getCurrentAcademicTerm().getId());
+        try {
+            logs.setEVALUATION_id(Integer.valueOf(type[1]));
+        } catch (Exception e) {
+//            e.printStackTrace();
+            logs.setEVALUATION_id(null);
+        }
         logs.setPrinted_by(CollegeFaculty.instance().getFACULTY_ID());
         logs.setPrinted_date(Mono.orm().getServerTime().getDateWithFormat());
         logs.setSTUDENT_id(STUDENT_id);
         logs.setTerminal(CollegeComputer.instance().getPC_NAME() + " " +  CollegeComputer.instance().getPC_USERNAME());
         logs.setTitle(title);
-        logs.setType(type);
+        logs.setType(type[0]);
         return (!Database.connect().print_logs().insert(logs).equals(-1));
     }
 }
