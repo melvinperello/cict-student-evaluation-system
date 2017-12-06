@@ -33,6 +33,7 @@ import app.lazy.models.FacultyMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.LoadSubjectMapping;
+import app.lazy.models.PrintLogsMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
@@ -40,6 +41,7 @@ import com.jhmvin.fx.async.Transaction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import org.cict.reports.ReportsUtility;
 import org.cict.reports.advisingslip.AdvisingSlip;
 import org.cict.reports.advisingslip.AdvisingSlipData;
 
@@ -59,6 +61,7 @@ public class PrintAdvising extends Transaction {
 
     public String studentNumber, type; // 2014113844
     public Integer academicTerm;
+    public boolean secondCopy = false;
 
     /**
      * Search cache
@@ -285,7 +288,19 @@ public class PrintAdvising extends Transaction {
         slip.INFO_REMARKS = "";
         slip.INFO_ADVISER = evaluator.getLast_name() + ", " + evaluator.getFirst_name();
 
-        slip.print();
+        
+        PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
+                .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
+                .eq(DB.print_logs().title, "ADVISING SLIP")
+                .active().first();
+        boolean secondCopy = false;
+        if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADVISING SLIP", "EVALUATION", (logs!=null)? "REPRINT" : "INITIAL")) {
+            secondCopy = (logs!=null);
+        } else {
+            System.err.println("PRINT LOGS NOT SAVED");
+            return;
+        }
+        slip.print(secondCopy);
     }
 
 }

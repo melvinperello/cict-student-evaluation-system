@@ -356,7 +356,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private void onShowHistory() {
         this.vbox_studentOptions.setVisible(false);
         StudentHistoryController controller = new StudentHistoryController(this.studentSearched,
-                this.lblCourseSection.getText());
+                this.lblCourseSection.getText(), "ADDING & CHANGING");
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.history")
                 .setFxmlDocument("History")

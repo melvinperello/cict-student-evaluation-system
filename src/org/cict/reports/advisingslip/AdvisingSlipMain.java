@@ -26,7 +26,7 @@ public class AdvisingSlipMain {
         }
         advising_data.INFO_SUBJECTS = table_data;
 
-        int val = advising_data.print();
+        int val = advising_data.print(true);
 //        if(val==1)
 //            return 1;
 //        return 0;

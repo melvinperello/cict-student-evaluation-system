@@ -43,7 +43,7 @@ public class AdvisingSlip {
         RESULT = SAVE_DIRECTORY + "/" + document + ".pdf";
     }
 
-    public int print() {
+    public int print(boolean secondCopy) {
         try {
 
             init();
@@ -62,7 +62,7 @@ public class AdvisingSlip {
             }
             //------------------------------------------------------------------
             //------------------------------------------------------------------
-            int val = createPdf(RESULT);
+            int val = createPdf(RESULT, secondCopy);
             if (val == 1) {
                 System.out.println("Please close the previous report");
             }
@@ -172,7 +172,7 @@ public class AdvisingSlip {
      * @throws DocumentException
      * @throws IOException
      */
-    public int createPdf(String filename)
+    public int createPdf(String filename, boolean secondCopy)
             throws DocumentException, IOException {
         Document document = new Document(new Rectangle(Utilities.inchesToPoints(8.27f), Utilities.inchesToPoints(5.845f)),
                 0, 0, 10, 5);
@@ -185,7 +185,7 @@ public class AdvisingSlip {
         document.add(createHeaderInfo());
         document.add(createSubjectTable(this.INFO_SUBJECTS));
         document.add(createBelowTable(createRegistrationProcedure(), createTotalTable()));
-        document.add(createFooter());
+        document.add(createFooter(secondCopy));
         document.close();
         return 0;
     }
@@ -446,7 +446,7 @@ public class AdvisingSlip {
         }
     }
 
-    private static Paragraph createFooter() {
+    private static Paragraph createFooter(boolean second) {
         Paragraph p = new Paragraph(10);
         p.setSpacingAfter(0);
         p.setSpacingBefore(0);
@@ -454,7 +454,7 @@ public class AdvisingSlip {
         p.setIndentationLeft(12);
         p.add(new Chunk("Note: FOR YOUR REGISTRATION TO BE PROCESSED, YOU MUST SETTLE ALL YOUR OUTSTANDING BALANCES.\n", FONT_CELL_HEADER));
         p.add(new Chunk("BulSU-OP-OUR-01F5\n", FONT_CELL_HEADER));
-        p.add(new Chunk("Revision: 0", FONT_EXCESS_INFO));
+        p.add(new Chunk("Revision: 0" + (second? "   (SECOND COPY)" : ""), FONT_EXCESS_INFO));
         return p;
     }
 
