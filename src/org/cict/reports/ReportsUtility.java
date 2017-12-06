@@ -170,6 +170,7 @@ public class ReportsUtility {
                 tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
             }
         }
+        tbl_stud.addCell(createSimpleCell("Total Result"+(rowData.size()>1? "s" : "")+" Found: " + rowData.size(), font6Bold, numColumns, false, false, 4f, false));
         tbl_stud.addCell(createSimpleCell("*** Nothing Follows ***", font6Plain, numColumns, true, true, 4f, false));
         return tbl_stud;
     }
