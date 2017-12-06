@@ -23,6 +23,8 @@
  */
 package org.cict.reports;
 
+import app.lazy.models.Database;
+import app.lazy.models.PrintLogsMapping;
 import artifacts.ResourceManager;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -39,6 +41,7 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.Utilities;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.jhmvin.Mono;
 import com.melvin.mono.fx.bootstrap.M;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -46,6 +49,9 @@ import java.util.ArrayList;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.cict.PublicConstants;
+import org.cict.authentication.authenticator.CollegeComputer;
+import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 
 /**
  *
@@ -289,5 +295,17 @@ public class ReportsUtility {
             a.showAndWait();
         }
         return sizeChooser.getChoosenSize();
+    }
+    
+    public static boolean savePrintLogs(Integer STUDENT_id, String title, String module, String type) {
+        PrintLogsMapping logs = new PrintLogsMapping();
+        logs.setModule(module);
+        logs.setPrinted_by(CollegeFaculty.instance().getFACULTY_ID());
+        logs.setPrinted_date(Mono.orm().getServerTime().getDateWithFormat());
+        logs.setSTUDENT_id(STUDENT_id);
+        logs.setTerminal(CollegeComputer.instance().getPC_NAME());
+        logs.setTitle(title);
+        logs.setType(type);
+        return (!Database.connect().print_logs().insert(logs).equals(-1));
     }
 }
