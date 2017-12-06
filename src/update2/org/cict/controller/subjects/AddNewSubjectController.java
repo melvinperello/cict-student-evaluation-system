@@ -102,7 +102,7 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
  
     private void addTextFieldFilters() {
         StringFilter textField = TextInputFilters.string()
-                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
+//                .setFilterMode(StringFilter.LETTER_DIGIT_SPACE)
                 .setMaxCharacters(100)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager->{
