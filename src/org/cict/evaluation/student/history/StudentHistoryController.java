@@ -103,13 +103,13 @@ public class StudentHistoryController implements ControllerFX{
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"S.Y. & Semester", "Year Level", "Evaluator", "Evaluated Date", "Cancelled By", "Cancelled Date"};
+        String[] colNames = new String[]{"S.Y. & Semester", "Year Level", "Evaluator", "Evaluated Date", "Cancelled By", "Cancelled Date", "Remarks"};
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
             History result = results.get(i);
             String[] row = new String[]{(i + 1) + ".  " + result.schoolYear.get() + " " + result.semester.get(),
                 result.year.get(), result.evaluatedBy.get(), result.evaluationDate.get(),
-            result.canceledBy.get(), result.canceledDate.get()};
+            result.canceledBy.get(), result.canceledDate.get(), result.remarks.get()};
             rowData.add(row);
         }
         
@@ -146,7 +146,7 @@ public class StudentHistoryController implements ControllerFX{
         });
         //----------------------------------------------------------------------
         print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(lblName)));
-        if(ReportsUtility.savePrintLogs(null, "Student Evalutaion History".toUpperCase(), "EVALUATION", "INITIAL"))
+        if(ReportsUtility.savePrintLogs(this.STUDENT.getCict_id(), "Student Evalutaion History".toUpperCase(), "EVALUATION", "INITIAL"))
             print.transact();
     }
     

@@ -78,6 +78,7 @@ import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
+import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.reports.ReportsUtility;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.cict.reports.profile.student.PrintStudentProfile;
@@ -215,6 +216,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
          
     @FXML
     private JFXButton btn_view_checklist;
+    
+    @FXML
+    private JFXButton btn_view_history;
             
     private StudentValues studentValues = new StudentValues();
     private CurriculumMapping curriculum;
@@ -362,6 +366,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         
         super.addClickEvent(btn_view_checklist, ()->{
             this.printChecklist();
+        });
+        
+        super.addClickEvent(btn_view_history, ()->{
+            this.onShowHistory();
         });
     }
     
@@ -1467,4 +1475,23 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
     }
     
+    
+    private void onShowHistory() {
+        StudentHistoryController controller = new StudentHistoryController(this.CURRENT_STUDENT,
+                this.lbl_acad_prog.getText() + " | " + 
+                (this.CURRENT_STUDENT.getYear_level()==null? "" : this.CURRENT_STUDENT.getYear_level()) + (this.CURRENT_STUDENT.getSection()==null? "" : this.CURRENT_STUDENT.getSection()) + 
+                (this.CURRENT_STUDENT.get_group()==null? "" : "-G"+ this.CURRENT_STUDENT.get_group()) +
+                        " | " + this.lbl_currriculum.getText());
+        Mono.fx().create()
+                .setPackageName("org.cict.evaluation.student.history")
+                .setFxmlDocument("History")
+                .makeFX()
+                .setController(controller)
+                .makeScene()
+                .makeStageWithOwner(Mono.fx().getParentStage(application_root))
+                .stageResizeable(true)
+                .stageMaximized(true)
+                .stageShow();
+    }
+
 }

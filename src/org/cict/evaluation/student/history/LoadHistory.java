@@ -41,7 +41,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.evaluation.student.StudentValues;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -122,23 +124,23 @@ public class LoadHistory {
                 EvaluationMapping currentEvaluation = (EvaluationMapping) evaluationList.get(x);
                 this.setAcademicTerm(currentEvaluation.getACADTERM_id());
                 String canceledBy = "", canceledDate = "";
-                SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy hh:mm a");
+                SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
                 try{
-                    canceledBy = (currentEvaluation.getCancelled_by()==null? "NAME NOT FOUND":this.getFacultyName(currentEvaluation.getCancelled_by()));
-                    canceledDate = (currentEvaluation.getCancelled_date()==null? "DATE NOT FOUND": formatter.format(currentEvaluation.getCancelled_date()).toString());
+                    canceledBy = (currentEvaluation.getCancelled_by()==null? "NONE": WordUtils.capitalizeFully(this.getFacultyName(currentEvaluation.getCancelled_by())));
+                    canceledDate = (currentEvaluation.getCancelled_date()==null? "NONE": formatter.format(currentEvaluation.getCancelled_date()).toString());
                 }catch(NullPointerException a) {
                     canceledBy = "NONE";
                     canceledDate = "NONE";
                 }
                 holder.add(new History((this.ACADEMIC_TERM.getSchool_year()==null? "" : this.ACADEMIC_TERM.getSchool_year()),
-                        (currentEvaluation.getYear_level()==null? "" : StudentValues.getYearLevel(currentEvaluation.getYear_level())),
-                        (this.ACADEMIC_TERM.getSemester()==null? "" : this.ACADEMIC_TERM.getSemester()), 
-                        (currentEvaluation.getType()==null?"":currentEvaluation.getType()),
-                        (currentEvaluation.getFACULTY_id()==null? "" : this.getFacultyName(currentEvaluation.getFACULTY_id())),
-                        (currentEvaluation.getEvaluation_date()==null? "" : formatter.format(currentEvaluation.getEvaluation_date()).toString()),
+                        (currentEvaluation.getYear_level()==null? "NONE" : WordUtils.capitalizeFully(StudentValues.getYearLevel(currentEvaluation.getYear_level()))),
+                        (this.ACADEMIC_TERM.getSemester()==null? "NONE" : WordUtils.capitalizeFully(this.ACADEMIC_TERM.getSemester())), 
+                        (currentEvaluation.getType()==null?"NONE": WordUtils.capitalizeFully(currentEvaluation.getType().replace("_", " "))),
+                        (currentEvaluation.getFACULTY_id()==null? "NONE" : WordUtils.capitalizeFully(this.getFacultyName(currentEvaluation.getFACULTY_id()))),
+                        (currentEvaluation.getEvaluation_date()==null? "NONE" : formatter.format(currentEvaluation.getEvaluation_date())),
                         canceledBy,
                         canceledDate,
-                        (currentEvaluation.getRemarks()==null? "":currentEvaluation.getRemarks())));
+                        (currentEvaluation.getRemarks()==null? "NONE": WordUtils.capitalizeFully(currentEvaluation.getRemarks().replace("_", " ")))));
             }
         }catch(NullPointerException a){}
         lstData.removeAll(lstData);
@@ -149,7 +151,7 @@ public class LoadHistory {
         return Mono.orm()
                 .newSearch(Database.connect().evaluation())
                 .eq(DB.evaluation().STUDENT_id, this.STUDENT.getCict_id())
-                .execute()
+                .execute(Order.asc(DB.evaluation().id))
                 .all();
     }
     

@@ -843,7 +843,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         searchTx.transact();
     }
 
-    class SearchFaculty extends Transaction {
+    public static class SearchFaculty extends Transaction {
 
         private String searchValue;
 

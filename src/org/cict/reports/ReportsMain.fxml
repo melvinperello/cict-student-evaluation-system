@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.ComboBox?>
@@ -195,20 +196,29 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Label>
-                                    <HBox prefHeight="50.0" prefWidth="541.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="230.0" spacing="2.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="230.0" spacing="2.0" HBox.hgrow="ALWAYS">
-                                             <children>
-                                                <Label text="Term:" wrapText="true">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
-                                                <ComboBox fx:id="cmb_term_eval" prefHeight="33.0" prefWidth="343.0" promptText="- Select Term -" styleClass="metro-combo-box" />
-                                             </children>
-                                          </HBox>
+                                          <Label text="Term:" wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_term_eval" prefHeight="33.0" prefWidth="343.0" promptText="- Select Term -" styleClass="metro-combo-box" />
                                        </children>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
                                     </HBox>
+                                    <ComboBox fx:id="cmb_eval_main_faculty_search_vis" prefHeight="25.0" prefWidth="98.0" promptText="Select" styleClass="metro-combo-box" />
+                                    <JFXTextField fx:id="txt_faculty_search" focusColor="#f2f2f2" prefHeight="29.0" prefWidth="223.0" promptText="Search faculty here" style="-fx-text-fill: white;" unFocusColor="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXTextField>
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="790.0" spacing="10.0">
@@ -243,20 +253,20 @@
                                           <ComboBox fx:id="cmb_type_eval_main" prefHeight="33.0" prefWidth="130.0" promptText="- Student Type -" styleClass="metro-combo-box" />
                                        </children>
                                     </HBox>
-                                    <JFXButton fx:id="btn_filter_eval_main" prefHeight="21.0" prefWidth="77.0" style="-fx-border-color: #fff;" text="Filter" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </JFXButton>
-                                    <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="117.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <JFXButton fx:id="btn_print_eval_main" prefHeight="33.0" prefWidth="126.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
+                                          <JFXButton fx:id="btn_filter_eval_main" prefHeight="33.0" prefWidth="182.0" style="-fx-border-color: #fff; -fx-background-color: #1BA261;" text="Filter" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="btn_print_eval_main" prefHeight="33.0" prefWidth="136.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>
                                           </JFXButton>
                                        </children>
-                                    </VBox>
+                                    </HBox>
                                  </children>
                                  <VBox.margin>
                                     <Insets left="10.0" />
@@ -267,14 +277,6 @@
                               <Insets left="30.0" top="5.0" />
                            </padding>
                         </VBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="874.0">
-                           <children>
-                              <Label fx:id="lbl_result" text="Total Result Found: 1" />
-                           </children>
-                           <VBox.margin>
-                              <Insets left="40.0" />
-                           </VBox.margin>
-                        </HBox>
                         <AnchorPane prefHeight="393.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="40.0" top="5.0" />
@@ -285,6 +287,15 @@
                                     <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
                                  </children>
                               </StackPane>
+                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="834.0" AnchorPane.bottomAnchor="5.0">
+                                 <children>
+                                    <Label fx:id="lbl_result">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
                            </children>
                         </AnchorPane>
                      </children>

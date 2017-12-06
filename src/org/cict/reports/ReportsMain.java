@@ -29,11 +29,13 @@ import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
+import app.lazy.models.FacultyMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.utils.FacultyUtility;
 import artifacts.ListerData;
 import artifacts.ListersChecker;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
@@ -43,6 +45,8 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
+import com.jhmvin.orm.SQL;
+import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import java.text.SimpleDateFormat;
@@ -65,10 +69,15 @@ import javafx.util.Callback;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cict.PublicConstants;
+import org.cict.accountmanager.faculty.FacultyInformation;
+import org.cict.accountmanager.faculty.FacultyMainController;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import sys.org.cict.layout.home.SystemHome;
 import update3.org.cict.ChoiceRange;
 import update3.org.cict.layout.default_loader.LoaderView;
@@ -171,9 +180,11 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     @FXML
     private VBox vbox_pres_main_table;
     
-//    @FXML
-//    private ComboBox<String> cmb_year_level_pres;
-            
+    @FXML
+    private ComboBox<String> cmb_eval_main_faculty_search_vis;
+          
+    @FXML
+    private JFXTextField txt_faculty_search;
             
     private LoaderView loaderView;
     private FailView failView;
@@ -207,11 +218,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_type_eval_main.getItems().add("Irregular");
         cmb_type_eval_main.getSelectionModel().selectFirst();
         
-//        cmb_year_level_pres.getItems().clear();
-//        cmb_year_level_pres.getItems().add("Second Year");
-//        cmb_year_level_pres.getItems().add("Third Year");
-//        cmb_year_level_pres.getItems().add("Fourth Year");
-//        cmb_year_level_pres.getSelectionModel().selectFirst();
+        cmb_eval_main_faculty_search_vis.getItems().clear();
+        cmb_eval_main_faculty_search_vis.getItems().add("Name");
+        cmb_eval_main_faculty_search_vis.getItems().add("BulSU ID");
+        cmb_eval_main_faculty_search_vis.getSelectionModel().selectFirst();
         
         lbl_result.setText("");
         lbl_result_pres.setText("");
@@ -284,7 +294,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
 //    private ArrayList<HashMap<String,AcademicTermMapping>> termDetails = new ArrayList<>();
     private void setViewTask(JFXButton button, Integer ACADTERM_id) {
-        
+        txt_faculty_search.setText("");
+        cmb_eval_main_faculty_search_vis.getSelectionModel().selectFirst();
         vbox_eval_main_table.getChildren().clear();
         MODE = button.getText();
         lbl_subtitle.setText(MODE.equalsIgnoreCase(EVALUATION)? "List of every evaluation transaction." : "List of every adding and changing transaction.");
@@ -332,14 +343,16 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 
                 AcademicTermMapping currentATMap = null;
 
-                if(ACADTERM_id==null)
+                if(ACADTERM_id==null) {
+                    System.out.println("ITS NULL");
                     currentATMap = Database.connect().academic_term().getPrimary(ACADTERM_id);
-            
+                }
                 this.cmb_term_eval.getItems().clear();
                 this.cmb_term_eval.getItems().addAll(atMaps);
                 this.cmb_term_eval.setCellFactory(factory);
                 this.cmb_term_eval.setButtonCell(factory.call(null));
                 if(currentATMap==null) {
+                    this.cmb_term_eval.getSelectionModel().selectFirst();
                     return;
                 }
                 for(AcademicTermMapping atMap: atMaps) {
@@ -367,7 +380,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             vbox_eval_main.setDisable(false);
             this.setCmbValues(ACADTERM_id);
             this.setComboBoxLimit(cmb_from_eval_main, cmb_to_eval_main, 0);
-            this.fetchResult(button);
+            this.onSearchFaculty(txt_faculty_search.getText(), cmb_eval_main_faculty_search_vis.getSelectionModel().getSelectedItem());
         });
         set.start();
     }
@@ -474,11 +487,11 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 //            System.out.println("TYPE: " + type);
 //            System.out.println("MODE: " + MODE);
 //            System.out.println("***************************");
-            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing);
+            this.onSearchFaculty(txt_faculty_search.getText(), cmb_eval_main_faculty_search_vis.getSelectionModel().getSelectedItem());
         });
         super.addClickEvent(btn_filter_eval_main, ()->{
             cmbChanged = false;
-            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing);
+            this.onSearchFaculty(txt_faculty_search.getText(), cmb_eval_main_faculty_search_vis.getSelectionModel().getSelectedItem());
         });
         super.addClickEvent(btn_print_eval_main, ()->{
             this.printResult(lbl_title_eval.getText());
@@ -582,7 +595,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
     private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", PRES_LIST = "President's Lister", DEANS_LIST = "Dean's Lister";
     private ArrayList<EvaluationMapping> results;
-    private void fetchResult(JFXButton button) {
+    private void fetchResult(JFXButton button, ArrayList<FacultyMapping> facultyRes) {
         System.out.println(MODE);
         btn_print_eval_main.setDisable(false);
         cmbChanged = false;
@@ -617,6 +630,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         fetch.to = to;
         fetch.type = cmb_type_eval_main.getSelectionModel().getSelectedItem();
         fetch.status= cmb_sort_status_eval.getSelectionModel().getSelectedItem().toUpperCase();
+        
+        fetch.facultyResult = facultyRes;
         
         fetch.whenFailed(()->{
             System.out.println("FAILED");
@@ -718,6 +733,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         public Integer ACADTERM_id;
         public String type, status;
         public Date from, to;
+        public ArrayList<FacultyMapping> facultyResult;
         
         
         private ArrayList<EvaluationMapping> results;
@@ -752,43 +768,107 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 //            } else if(status.equalsIgnoreCase("REVOKED")) {
                 if(mode.equalsIgnoreCase(EVALUATION)) {
                     if(type.equalsIgnoreCase("ALL")) {
-                        results = Mono.orm().newSearch(Database.connect().evaluation())
-                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
-                                .eq(DB.evaluation().remarks, status.equalsIgnoreCase("REVOKED")? "ADDING_CHANGING_REFERENCE" : status)
-                                .between(DB.evaluation().evaluation_date, from, to)
-                                .isNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                        if(facultyResult==null || facultyResult.isEmpty()) {
+                        } else {
+                            System.out.println("HEREEE 2");
+                            results = new ArrayList<>();
+                            for(FacultyMapping faculty : facultyResult) {
+                                ArrayList<EvaluationMapping> temp_results = Mono.orm().newSearch(Database.connect().evaluation())
+                                        .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+                                        .eq(DB.evaluation().remarks, status)
+                                        .between(DB.evaluation().evaluation_date, from, to)
+                                        .isNull(DB.evaluation().adding_reference_id)
+                                        .eq(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_by : DB.evaluation().FACULTY_id, faculty.getId())
+                                        .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                                if(temp_results!=null) {
+                                    System.out.println("temp_results : " + temp_results.size());
+                                    results.addAll(temp_results);
+                                }
+                            }
+                        }
                     } else {
-                        results = Mono.orm().newSearch(Database.connect().evaluation())
-                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
-                                .eq(DB.evaluation().print_type, type)
-                                .eq(DB.evaluation().remarks, status.equalsIgnoreCase("REVOKED")? "ADDING_CHANGING_REFERENCE" : status)
-                                .between(DB.evaluation().evaluation_date, from, to)
-                                .isNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                        System.out.println("HEREEE 3");
+//                        results = Mono.orm().newSearch(Database.connect().evaluation())
+//                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+//                                .eq(DB.evaluation().print_type, type)
+//                                .eq(DB.evaluation().remarks, status)
+//                                .between(DB.evaluation().evaluation_date, from, to)
+//                                .isNull(DB.evaluation().adding_reference_id)
+//                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                    
+                        if(facultyResult==null || facultyResult.isEmpty()) {
+                        } else {
+                            System.out.println("HEREEE 2");
+                            results = new ArrayList<>();
+                            for(FacultyMapping faculty : facultyResult) {
+                                ArrayList<EvaluationMapping> temp_results = Mono.orm().newSearch(Database.connect().evaluation())
+                                        .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+                                        .eq(DB.evaluation().print_type, type)
+                                        .eq(DB.evaluation().remarks, status)
+                                        .between(DB.evaluation().evaluation_date, from, to)
+                                        .isNull(DB.evaluation().adding_reference_id)
+                                        .eq(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_by : DB.evaluation().FACULTY_id, faculty.getId())
+                                        .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                                if(temp_results!=null) {
+                                    System.out.println("temp_results : " + temp_results.size());
+                                    results.addAll(temp_results);
+                                }
+                            }
+                        }
+                    
                     }
                 } else if(mode.equalsIgnoreCase(ADD_CHANGE)) {
                     if(type.equalsIgnoreCase("ALL")) {
-                        results = Mono.orm().newSearch(Database.connect().evaluation())
-                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
-                                .eq(DB.evaluation().type, "ADDING_CHANGING")
-                                .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
-                                .between(DB.evaluation().evaluation_date, from, to)
-                                .notNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                        if(facultyResult==null || facultyResult.isEmpty()) {
+                        } else {
+                            results = new ArrayList<>();
+                            for(FacultyMapping faculty : facultyResult) {
+                                ArrayList<EvaluationMapping> temp_results = Mono.orm().newSearch(Database.connect().evaluation())
+                                        .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+                                        .eq(DB.evaluation().type, "ADDING_CHANGING")
+                                        .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
+                                        .between(DB.evaluation().evaluation_date, from, to)
+                                        .notNull(DB.evaluation().adding_reference_id)
+                                        .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                                if(temp_results!=null) {
+                                    System.out.println("temp_results : " + temp_results.size());
+                                    results.addAll(temp_results);
+                                }
+                            }
+                        }
                     } else {
-                        results = Mono.orm().newSearch(Database.connect().evaluation())
-                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
-                                .eq(DB.evaluation().print_type, type)
-                                .eq(DB.evaluation().type, "ADDING_CHANGING")
-                                .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
-                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
-                                .notNull(DB.evaluation().adding_reference_id)
-                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
+//                        results = Mono.orm().newSearch(Database.connect().evaluation())
+//                                .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+//                                .eq(DB.evaluation().print_type, type)
+//                                .eq(DB.evaluation().type, "ADDING_CHANGING")
+//                                .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
+//                                .between(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date, from, to)
+//                                .notNull(DB.evaluation().adding_reference_id)
+//                                .execute(Order.asc(status.equalsIgnoreCase("REVOKED")? DB.evaluation().cancelled_date : DB.evaluation().evaluation_date)).all();
+                    
+                    
+                        if(facultyResult==null || facultyResult.isEmpty()) {
+                        } else {
+                            results = new ArrayList<>();
+                            for(FacultyMapping faculty : facultyResult) {
+                                ArrayList<EvaluationMapping> temp_results = Mono.orm().newSearch(Database.connect().evaluation())
+                                        .eq(DB.evaluation().ACADTERM_id, this.ACADTERM_id)
+                                        .eq(DB.evaluation().print_type, type)
+                                        .eq(DB.evaluation().type, "ADDING_CHANGING")
+                                        .eq(DB.evaluation().remarks, (status.equalsIgnoreCase("REVOKED")? "REVOKED_ADD_CHANGE" : status))
+                                        .between(DB.evaluation().evaluation_date, from, to)
+                                        .notNull(DB.evaluation().adding_reference_id)
+                                        .execute(Order.asc(DB.evaluation().evaluation_date)).all();
+                                if(temp_results!=null) {
+                                    System.out.println("temp_results : " + temp_results.size());
+                                    results.addAll(temp_results);
+                                }
+                            }
+                        }
                     }
                 }
 //            }
-            if(results==null) {
+            if(results==null || results.isEmpty()) {
                 log = "No result found.";
             } else {
                 log = "Total Result Found: " + results.size() + "";
@@ -1174,4 +1254,36 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         print.transact();
     }
+    
+    
+    //------------------------------
+    private void onSearchFaculty(String key, String mode) {
+        FacultyMainController.SearchFaculty searchTx = new FacultyMainController.SearchFaculty();
+        searchTx.setSearchValue(key.trim());
+        searchTx.setSearchMode(mode.equalsIgnoreCase("BulSU ID")? "ID" : mode);
+        searchTx.whenStarted(() -> {
+            this.btn_filter_eval_main.setDisable(true);
+        });
+        searchTx.whenCancelled(() -> {
+            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, null);
+        });
+        searchTx.whenFailed(() -> {
+        });
+        searchTx.whenSuccess(() -> {
+            ArrayList<FacultyMapping> facultyResults = searchTx.getFacultyList();
+            if(facultyResults!=null){
+                System.out.println("FACULTY FOUND: " + facultyResults.size());
+            }
+            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, facultyResults);
+        });
+        searchTx.whenFinished(() -> {
+            this.btn_filter_eval_main.setDisable(false);
+        });
+        if(key!=null || !key.isEmpty()) {
+            searchTx.transact();
+        } else {
+            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, null);
+        }
+    }
+    
 }

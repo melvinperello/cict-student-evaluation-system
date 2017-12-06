@@ -201,6 +201,25 @@
                                     </ImageView>
                                  </graphic>
                               </JFXButton>
+                              <JFXButton fx:id="btn_view_history" layoutX="10.0" layoutY="283.0" prefHeight="65.0" prefWidth="304.0" style="-fx-border-color: #fff;" text=" History">
+                                 <styleClass>
+                                    <String fx:value="label" />
+                                    <String fx:value="metro-base-color" />
+                                 </styleClass>
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="10.0" left="-50.0" top="10.0" />
+                                 </padding>
+                                 <graphic>
+                                    <ImageView fitHeight="33.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Historical_32px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
                               <JFXButton fx:id="btn_remove_student" prefHeight="0.0" prefWidth="304.0" style="-fx-border-color: #fff;" text="Remove Student" visible="false">
                                  <styleClass>
                                     <String fx:value="label" />
