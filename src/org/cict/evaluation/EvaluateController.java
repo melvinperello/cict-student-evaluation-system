@@ -1687,7 +1687,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private void onShowHistory() {
         this.vbox_studentOptions.setVisible(false);
         StudentHistoryController controller = new StudentHistoryController(this.currentStudent,
-                this.lblCourseSection.getText());
+                this.lblCourseSection.getText(), "EVALUATION");
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.history")
                 .setFxmlDocument("History")

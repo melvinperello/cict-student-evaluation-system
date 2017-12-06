@@ -1481,7 +1481,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 this.lbl_acad_prog.getText() + " | " + 
                 (this.CURRENT_STUDENT.getYear_level()==null? "" : this.CURRENT_STUDENT.getYear_level()) + (this.CURRENT_STUDENT.getSection()==null? "" : this.CURRENT_STUDENT.getSection()) + 
                 (this.CURRENT_STUDENT.get_group()==null? "" : "-G"+ this.CURRENT_STUDENT.get_group()) +
-                        " | " + this.lbl_currriculum.getText());
+                        " | " + this.lbl_currriculum.getText(), "STUDENTS");
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.history")
                 .setFxmlDocument("History")

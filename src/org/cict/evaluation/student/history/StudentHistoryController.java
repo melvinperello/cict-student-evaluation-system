@@ -61,11 +61,12 @@ public class StudentHistoryController implements ControllerFX{
     private Button btn_print;
             
     private StudentMapping STUDENT;
-    private String COURSE;
+    private String COURSE, MODULE;
     
-    public StudentHistoryController(StudentMapping student, String course) {
+    public StudentHistoryController(StudentMapping student, String course, String module) {
         this.STUDENT = student;
         this.COURSE = course;
+        this.MODULE = module;
     }
     
     @Override
@@ -146,7 +147,7 @@ public class StudentHistoryController implements ControllerFX{
         });
         //----------------------------------------------------------------------
         print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(lblName)));
-        if(ReportsUtility.savePrintLogs(this.STUDENT.getCict_id(), "Student Evalutaion History".toUpperCase(), "EVALUATION", "INITIAL"))
+        if(ReportsUtility.savePrintLogs(this.STUDENT.getCict_id(), "Student Evalutaion History".toUpperCase(), MODULE, "INITIAL"))
             print.transact();
     }
     
