@@ -185,6 +185,40 @@ public class ReportsMain extends SceneFX implements ControllerFX {
           
     @FXML
     private JFXTextField txt_faculty_search;
+        
+    @FXML
+    private VBox vbox_print_logs_main;
+           
+    @FXML
+    private StackPane stack_print_logs; 
+            
+    @FXML
+    private VBox vbox_print_logs_table;
+         
+    @FXML
+    private ComboBox<String> cmb_from_print_logs;
+            
+    @FXML
+    private ComboBox<String> cmb_to_print_logs;
+            
+    @FXML
+    private ComboBox<String> cmb_print_logs_faculty_search_vis1;
+      
+    @FXML
+    private JFXTextField txt_faculty_search_print_logs;
+            
+    @FXML
+    private JFXButton btn_filter_print_logs;
+            
+    @FXML
+    private JFXButton btn_print_print_logs;
+         
+
+    @FXML
+    private Label lbl_result_print_logs;   
+      
+    @FXML
+    private JFXButton btn_print_logs;
             
     private LoaderView loaderView;
     private FailView failView;
@@ -284,6 +318,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         
         super.addClickEvent(btn_print_pres_main, ()->{
             this.printAchievers();
+        });
+        
+        super.addClickEvent(btn_print_logs, ()->{
+            this.changeView(vbox_print_logs_main);
         });
     }
     
@@ -894,8 +932,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         Animate.fade(node, 150, ()->{
             vbox_eval_main.setVisible(false);
             vbox_pres_main.setVisible(false);
+            vbox_print_logs_main.setVisible(false);
             node.setVisible(true);
-        }, vbox_eval_main, vbox_pres_main);
+        }, vbox_eval_main, vbox_pres_main, vbox_print_logs_main);
     }
     
     //-----------------------------------------

@@ -15,7 +15,7 @@ public class AddChangeFormMain {
         addChangeForm.STUDENT_SUBJECTS.add(sampleData);
         addChangeForm.STUDENT_SUBJECTS.add(sampleData);
         addChangeForm.STUDENT_SUBJECTS.add(sampleData);
-        int val = addChangeForm.print();
+        int val = addChangeForm.print(false);
     }
 
     public static void main(String[] args) {
