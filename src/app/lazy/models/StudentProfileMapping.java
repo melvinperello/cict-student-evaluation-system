@@ -9,6 +9,7 @@
 //
 // The Framework uses Hibernate as its ORM
 // For more information about Hibernate visit hibernate.org
+
 package app.lazy.models;
 
 import javax.persistence.Column;
@@ -18,221 +19,223 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "student_profile", catalog = "cictems")
 public class StudentProfileMapping implements java.io.Serializable, com.jhmvin.orm.MonoMapping {
 
-    private java.lang.Integer id;
-    private java.lang.Integer STUDENT_id;
-    private java.lang.Integer floor_assignment;
-    private java.lang.String profile_picture;
-    private java.lang.String house_no;
-    private java.lang.String street;
-    private java.lang.String brgy;
-    private java.lang.String city;
-    private java.lang.String province;
-    private java.lang.String student_address;
-    private java.lang.String zipcode;
-    private java.lang.String mobile;
-    private java.lang.String email;
-    private java.lang.String ice_name;
-    private java.lang.String ice_address;
-    private java.lang.String ice_contact;
-    private java.util.Date created_date;
-    private java.lang.Integer active;
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", nullable = false, length = 10)
-    public java.lang.Integer getId() {
-        return this.id;
-    }
+private java.lang.Integer id;
+private java.lang.Integer STUDENT_id;
+private java.lang.Integer floor_assignment;
+private java.lang.String profile_picture;
+private java.lang.String house_no;
+private java.lang.String street;
+private java.lang.String brgy;
+private java.lang.String city;
+private java.lang.String province;
+private java.lang.String student_address;
+private java.lang.String zipcode;
+private java.lang.String mobile;
+private java.lang.String email;
+private java.lang.String ice_name;
+private java.lang.String ice_address;
+private java.lang.String ice_contact;
+private java.util.Date created_date;
+private java.lang.Integer active;
 
-    public void setId(java.lang.Integer fieldId) {
-        this.id = fieldId;
-    }
+@Id
+@GeneratedValue(strategy = IDENTITY)
+@Column(name = "id", nullable = false, length = 10)
+public java.lang.Integer getId() {
+	return this.id;
+}
 
-    @Column(name = "STUDENT_id", nullable = true, length = 10)
-    public java.lang.Integer getSTUDENT_id() {
-        return this.STUDENT_id;
-    }
+public void setId(java.lang.Integer fieldId) {
+	this.id = fieldId;
+}
 
-    public void setSTUDENT_id(java.lang.Integer fieldStudentId) {
-        this.STUDENT_id = fieldStudentId;
-    }
+@Column(name = "STUDENT_id", nullable = true, length = 10)
+public java.lang.Integer getSTUDENT_id() {
+	return this.STUDENT_id;
+}
 
-    @Column(name = "floor_assignment", nullable = true, length = 10)
-    public java.lang.Integer getFloor_assignment() {
-        return this.floor_assignment;
-    }
+public void setSTUDENT_id(java.lang.Integer fieldStudentId) {
+	this.STUDENT_id = fieldStudentId;
+}
 
-    public void setFloor_assignment(java.lang.Integer fieldFloorAssignment) {
-        this.floor_assignment = fieldFloorAssignment;
-    }
+@Column(name = "floor_assignment", nullable = true, length = 10)
+public java.lang.Integer getFloor_assignment() {
+	return this.floor_assignment;
+}
 
-    @Column(name = "profile_picture", nullable = true, length = 60)
-    public java.lang.String getProfile_picture() {
-        return this.profile_picture;
-    }
+public void setFloor_assignment(java.lang.Integer fieldFloorAssignment) {
+	this.floor_assignment = fieldFloorAssignment;
+}
 
-    public void setProfile_picture(java.lang.String fieldProfilePicture) {
-        this.profile_picture = fieldProfilePicture;
-    }
+@Column(name = "profile_picture", nullable = true, length = 60)
+public java.lang.String getProfile_picture() {
+	return this.profile_picture;
+}
 
-    @Column(name = "house_no", nullable = true, length = 100)
-    public java.lang.String getHouse_no() {
-        return this.house_no;
-    }
+public void setProfile_picture(java.lang.String fieldProfilePicture) {
+	this.profile_picture = fieldProfilePicture;
+}
 
-    public void setHouse_no(java.lang.String fieldHouseNo) {
-        this.house_no = fieldHouseNo;
-    }
+@Column(name = "house_no", nullable = true, length = 100)
+public java.lang.String getHouse_no() {
+	return this.house_no;
+}
 
-    @Column(name = "street", nullable = true, length = 100)
-    public java.lang.String getStreet() {
-        return this.street;
-    }
+public void setHouse_no(java.lang.String fieldHouseNo) {
+	this.house_no = fieldHouseNo;
+}
 
-    public void setStreet(java.lang.String fieldStreet) {
-        this.street = fieldStreet;
-    }
+@Column(name = "street", nullable = true, length = 100)
+public java.lang.String getStreet() {
+	return this.street;
+}
 
-    @Column(name = "brgy", nullable = true, length = 100)
-    public java.lang.String getBrgy() {
-        return this.brgy;
-    }
+public void setStreet(java.lang.String fieldStreet) {
+	this.street = fieldStreet;
+}
 
-    public void setBrgy(java.lang.String fieldBrgy) {
-        this.brgy = fieldBrgy;
-    }
+@Column(name = "brgy", nullable = true, length = 100)
+public java.lang.String getBrgy() {
+	return this.brgy;
+}
 
-    @Column(name = "city", nullable = true, length = 300)
-    public java.lang.String getCity() {
-        return this.city;
-    }
+public void setBrgy(java.lang.String fieldBrgy) {
+	this.brgy = fieldBrgy;
+}
 
-    public void setCity(java.lang.String fieldCity) {
-        this.city = fieldCity;
-    }
+@Column(name = "city", nullable = true, length = 300)
+public java.lang.String getCity() {
+	return this.city;
+}
 
-    @Column(name = "province", nullable = true, length = 50)
-    public java.lang.String getProvince() {
-        return this.province;
-    }
+public void setCity(java.lang.String fieldCity) {
+	this.city = fieldCity;
+}
 
-    public void setProvince(java.lang.String fieldProvince) {
-        this.province = fieldProvince;
-    }
+@Column(name = "province", nullable = true, length = 50)
+public java.lang.String getProvince() {
+	return this.province;
+}
 
-    @Column(name = "student_address", nullable = true, length = 300)
-    public java.lang.String getStudent_address() {
-        return this.student_address;
-    }
+public void setProvince(java.lang.String fieldProvince) {
+	this.province = fieldProvince;
+}
 
-    public void setStudent_address(java.lang.String fieldStudentAddress) {
-        this.student_address = fieldStudentAddress;
-    }
+@Column(name = "student_address", nullable = true, length = 300)
+public java.lang.String getStudent_address() {
+	return this.student_address;
+}
 
-    @Column(name = "zipcode", nullable = true, length = 100)
-    public java.lang.String getZipcode() {
-        return this.zipcode;
-    }
+public void setStudent_address(java.lang.String fieldStudentAddress) {
+	this.student_address = fieldStudentAddress;
+}
 
-    public void setZipcode(java.lang.String fieldZipcode) {
-        this.zipcode = fieldZipcode;
-    }
+@Column(name = "zipcode", nullable = true, length = 100)
+public java.lang.String getZipcode() {
+	return this.zipcode;
+}
 
-    @Column(name = "mobile", nullable = true, length = 50)
-    public java.lang.String getMobile() {
-        return this.mobile;
-    }
+public void setZipcode(java.lang.String fieldZipcode) {
+	this.zipcode = fieldZipcode;
+}
 
-    public void setMobile(java.lang.String fieldMobile) {
-        this.mobile = fieldMobile;
-    }
+@Column(name = "mobile", nullable = true, length = 50)
+public java.lang.String getMobile() {
+	return this.mobile;
+}
 
-    @Column(name = "email", nullable = true, length = 100)
-    public java.lang.String getEmail() {
-        return this.email;
-    }
+public void setMobile(java.lang.String fieldMobile) {
+	this.mobile = fieldMobile;
+}
 
-    public void setEmail(java.lang.String fieldEmail) {
-        this.email = fieldEmail;
-    }
+@Column(name = "email", nullable = true, length = 100)
+public java.lang.String getEmail() {
+	return this.email;
+}
 
-    @Column(name = "ice_name", nullable = true, length = 100)
-    public java.lang.String getIce_name() {
-        return this.ice_name;
-    }
+public void setEmail(java.lang.String fieldEmail) {
+	this.email = fieldEmail;
+}
 
-    public void setIce_name(java.lang.String fieldIceName) {
-        this.ice_name = fieldIceName;
-    }
+@Column(name = "ice_name", nullable = true, length = 100)
+public java.lang.String getIce_name() {
+	return this.ice_name;
+}
 
-    @Column(name = "ice_address", nullable = true, length = 150)
-    public java.lang.String getIce_address() {
-        return this.ice_address;
-    }
+public void setIce_name(java.lang.String fieldIceName) {
+	this.ice_name = fieldIceName;
+}
 
-    public void setIce_address(java.lang.String fieldIceAddress) {
-        this.ice_address = fieldIceAddress;
-    }
+@Column(name = "ice_address", nullable = true, length = 150)
+public java.lang.String getIce_address() {
+	return this.ice_address;
+}
 
-    @Column(name = "ice_contact", nullable = true, length = 50)
-    public java.lang.String getIce_contact() {
-        return this.ice_contact;
-    }
+public void setIce_address(java.lang.String fieldIceAddress) {
+	this.ice_address = fieldIceAddress;
+}
 
-    public void setIce_contact(java.lang.String fieldIceContact) {
-        this.ice_contact = fieldIceContact;
-    }
+@Column(name = "ice_contact", nullable = true, length = 50)
+public java.lang.String getIce_contact() {
+	return this.ice_contact;
+}
 
-    @Column(name = "created_date", nullable = true, length = 19)
-    @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    public java.util.Date getCreated_date() {
-        return this.created_date;
-    }
+public void setIce_contact(java.lang.String fieldIceContact) {
+	this.ice_contact = fieldIceContact;
+}
 
-    public void setCreated_date(java.util.Date fieldCreatedDate) {
-        this.created_date = fieldCreatedDate;
-    }
+@Column(name = "created_date", nullable = true, length = 19)
+@javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
+public java.util.Date getCreated_date() {
+	return this.created_date;
+}
 
-    @Column(name = "active", nullable = true, length = 10)
-    public java.lang.Integer getActive() {
-        return this.active;
-    }
+public void setCreated_date(java.util.Date fieldCreatedDate) {
+	this.created_date = fieldCreatedDate;
+}
 
-    public void setActive(java.lang.Integer fieldActive) {
-        this.active = fieldActive;
-    }
+@Column(name = "active", nullable = true, length = 10)
+public java.lang.Integer getActive() {
+	return this.active;
+}
 
-    @Override
-    public StudentProfileMapping copy() {
-        StudentProfileMapping copyMe = new StudentProfileMapping();
+public void setActive(java.lang.Integer fieldActive) {
+	this.active = fieldActive;
+}
+
+@Override
+public StudentProfileMapping copy() {
+StudentProfileMapping copyMe = new StudentProfileMapping();
         /**
          * A.I. Field Do Not Copy.
          *
          * copyMe.id = this.id;
          */
-        copyMe.STUDENT_id = this.STUDENT_id;
-        copyMe.floor_assignment = this.floor_assignment;
-        copyMe.profile_picture = this.profile_picture;
-        copyMe.house_no = this.house_no;
-        copyMe.street = this.street;
-        copyMe.brgy = this.brgy;
-        copyMe.city = this.city;
-        copyMe.province = this.province;
-        copyMe.student_address = this.student_address;
-        copyMe.zipcode = this.zipcode;
-        copyMe.mobile = this.mobile;
-        copyMe.email = this.email;
-        copyMe.ice_name = this.ice_name;
-        copyMe.ice_address = this.ice_address;
-        copyMe.ice_contact = this.ice_contact;
-        copyMe.created_date = this.created_date;
-        copyMe.active = this.active;
-        return copyMe;
-    }
+copyMe.STUDENT_id = this.STUDENT_id;
+copyMe.floor_assignment = this.floor_assignment;
+copyMe.profile_picture = this.profile_picture;
+copyMe.house_no = this.house_no;
+copyMe.street = this.street;
+copyMe.brgy = this.brgy;
+copyMe.city = this.city;
+copyMe.province = this.province;
+copyMe.student_address = this.student_address;
+copyMe.zipcode = this.zipcode;
+copyMe.mobile = this.mobile;
+copyMe.email = this.email;
+copyMe.ice_name = this.ice_name;
+copyMe.ice_address = this.ice_address;
+copyMe.ice_contact = this.ice_contact;
+copyMe.created_date = this.created_date;
+copyMe.active = this.active;
+return copyMe;
+}
 
 }

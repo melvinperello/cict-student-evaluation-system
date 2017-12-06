@@ -45,6 +45,7 @@ private MonoModels tbl_load_group_schedule;
 private MonoModels tbl_load_section;
 private MonoModels tbl_load_subject;
 private MonoModels tbl_otp_generator;
+private MonoModels tbl_print_logs;
 private MonoModels tbl_student;
 private MonoModels tbl_student_course_history;
 private MonoModels tbl_student_profile;
@@ -129,6 +130,8 @@ Mono.orm().addMappings("LoadSubjectMapping");
 this.tbl_load_subject = Mono.orm().createModel(LoadSubjectMapping.class);
 Mono.orm().addMappings("OtpGeneratorMapping");
 this.tbl_otp_generator = Mono.orm().createModel(OtpGeneratorMapping.class);
+Mono.orm().addMappings("PrintLogsMapping");
+this.tbl_print_logs = Mono.orm().createModel(PrintLogsMapping.class);
 Mono.orm().addMappings("StudentMapping");
 this.tbl_student = Mono.orm().createModel(StudentMapping.class);
 Mono.orm().addMappings("StudentCourseHistoryMapping");
@@ -232,6 +235,9 @@ return tbl_load_subject;
 }
 public MonoModels otp_generator() {
 return tbl_otp_generator;
+}
+public MonoModels print_logs() {
+return tbl_print_logs;
 }
 public MonoModels student() {
 return tbl_student;

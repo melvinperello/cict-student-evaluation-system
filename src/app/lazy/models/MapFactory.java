@@ -107,6 +107,9 @@ return new LoadSubjectMapping();
 public OtpGeneratorMapping otp_generator() {
 return new OtpGeneratorMapping();
 }
+public PrintLogsMapping print_logs() {
+return new PrintLogsMapping();
+}
 public StudentMapping student() {
 return new StudentMapping();
 }
