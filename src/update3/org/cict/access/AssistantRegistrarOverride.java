@@ -95,6 +95,10 @@ public class AssistantRegistrarOverride extends MonoLauncher {
                 .setHeader("Send OTP To Authorize").confirmYesNo();
         if(res==-1)
             return false;
+        
+        if(!Access.enterTransactionPin(stage))
+            return false;
+        
         OtpGeneratorMapping map = new OtpGeneratorMapping();
         String OTP_raw = OTPGenerator.generateOTP();
         map.setActive(1);
