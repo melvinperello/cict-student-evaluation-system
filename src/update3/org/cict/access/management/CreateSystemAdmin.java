@@ -319,17 +319,32 @@ public class CreateSystemAdmin extends MonoLauncher {
                     .setMessage("Please enter a " + category.toLowerCase()  +".")
                     .show();
             return null;
-        } else if(res==2) {
+        }
+        
+        if(category.equalsIgnoreCase("transaction pin")) {
+            if(password.equalsIgnoreCase(node1.getText())) {
+                Mono.fx().alert().createWarning()
+                        .setMessage("Transaction pin must not be equal to your password.")
+                        .show();
+                return null;
+            }
+        }
+        
+        if(res==2) {
             Mono.fx().alert().createWarning()
                     .setMessage("Please re-enter " + category.toLowerCase() +".")
                     .show();
             return null;
-        } else if(res==-1) {
+        }
+        
+        if(res==-1) {
             Mono.fx().alert().createWarning()
                     .setMessage(WordUtils.capitalizeFully(category) + " not match.")
                     .show();
             return null;
-        } else if(result.length()<6 && checkLength) {
+        }
+        
+        if(result.length()<6 && checkLength) {
             Mono.fx().alert().createWarning()
                     .setMessage("Weak " + category + ". Minimum of 6 characters.")
                     .show();

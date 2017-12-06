@@ -32,17 +32,13 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
-import com.jhmvin.transitions.Animate;
-import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.cict.authentication.LoginController;
-import update3.org.cict.SectionConstants;
+import update3.org.cict.my_account.MyAccountHome;
 
 /**
  *
@@ -63,7 +59,7 @@ public class RecoveryController extends SceneFX implements ControllerFX{
     private JFXPasswordField txt_confirm_pin;
 
     @FXML
-    private ComboBox cmb_questions;
+    private ComboBox<String> cmb_questions;
 
     @FXML
     private JFXPasswordField txt_answer;
@@ -84,8 +80,10 @@ public class RecoveryController extends SceneFX implements ControllerFX{
     @Override
     public void onInitialization() {
         bindScene(application_root);
-        this.init();
+//        this.init();
         addTextFieldFilters();
+        cmb_questions.getItems().addAll(MyAccountHome.LIST_SECURITY_QUESTIONS);
+        cmb_questions.getSelectionModel().selectFirst();
     }
 
     private void addTextFieldFilters() {
@@ -122,9 +120,9 @@ public class RecoveryController extends SceneFX implements ControllerFX{
         this.buttonEvents();
     }
     
-    private void init(){
-        this.setComboBoxQuestions(cmb_questions);
-    }
+//    private void init(){
+//        this.setComboBoxQuestions(cmb_questions);
+//    }
     
     private void buttonEvents(){
         this.btn_Register.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
@@ -163,6 +161,16 @@ public class RecoveryController extends SceneFX implements ControllerFX{
                     .setTitle("Credentials")
                     .setHeader("Confirm Pin Is Empty!")
                     .setMessage("Please re-enter your pin.")
+                    .showAndWait();
+            this.requestFocus(this.txt_confirm_pin);
+            return false;
+        } else if(Mono.security().hashFactory().hash_sha512(pin).equals(this.accountFaculty.getPassword())) {
+            Mono.fx()
+                    .alert()
+                    .createWarning()
+                    .setTitle("Credentials")
+                    .setHeader("Invalid Pin!")
+                    .setMessage("Transaction pin must not equal to your password.")
                     .showAndWait();
             this.requestFocus(this.txt_confirm_pin);
             return false;
@@ -293,21 +301,21 @@ public class RecoveryController extends SceneFX implements ControllerFX{
         control.requestFocus();
     }
     
-    public void setComboBoxQuestions(ComboBox cmb_questions){
-        ArrayList<String> questions = new ArrayList<>();
-        questions.add("Where was your favorite place to visit as a child?");
-        questions.add("Who is your favorite actor, musician, or artist?");
-        questions.add("What is the name of your favorite pet?");
-        questions.add("In what city were you born?");
-        questions.add("Which is your favorite web browser?");
-        questions.add("What is the name of your first school?");
-        questions.add("What is your favorite movie?");
-        questions.add("What is your mother's maiden name?");
-        questions.add("What is your favorite color?");
-        questions.add("What is your father's middle name?");
-        cmb_questions.getItems().addAll(questions);
-        cmb_questions.getSelectionModel().selectFirst();
-    }
+//    public void setComboBoxQuestions(ComboBox cmb_questions){
+//        ArrayList<String> questions = new ArrayList<>();
+//        questions.add("Where was your favorite place to visit as a child?");
+//        questions.add("Who is your favorite actor, musician, or artist?");
+//        questions.add("What is the name of your favorite pet?");
+//        questions.add("In what city were you born?");
+//        questions.add("Which is your favorite web browser?");
+//        questions.add("What is the name of your first school?");
+//        questions.add("What is your favorite movie?");
+//        questions.add("What is your mother's maiden name?");
+//        questions.add("What is your favorite color?");
+//        questions.add("What is your father's middle name?");
+//        cmb_questions.getItems().addAll(questions);
+//        cmb_questions.getSelectionModel().selectFirst();
+//    }
     
     public void onShowLogin() {
 //        LoginController controller = new LoginController();

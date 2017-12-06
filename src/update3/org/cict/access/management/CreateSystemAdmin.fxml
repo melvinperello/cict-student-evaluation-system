@@ -231,7 +231,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
-                        <CustomPasswordField fx:id="txt_transaction_pin" prefHeight="239.0" prefWidth="394.0">
+                        <CustomPasswordField fx:id="txt_transaction_pin" prefHeight="239.0" prefWidth="394.0" promptText="6 digit transaction pin">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -248,7 +248,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
-                        <CustomPasswordField fx:id="txt_transaction_pin_confirm" prefHeight="239.0" prefWidth="394.0">
+                        <CustomPasswordField fx:id="txt_transaction_pin_confirm" prefHeight="239.0" prefWidth="394.0" promptText="6 digit transaction pin">
                            <font>
                               <Font size="15.0" />
                            </font>
