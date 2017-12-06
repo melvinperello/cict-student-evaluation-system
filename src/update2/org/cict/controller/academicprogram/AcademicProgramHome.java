@@ -65,7 +65,6 @@ import update2.org.cict.controller.curriculum.CurriculumInformationController;
 import update2.org.cict.controller.subjects.SubjectRepositoryController;
 import update2.org.cict.layout.academicprogram.ProgramRowExtension;
 import update3.org.cict.SectionConstants;
-import update3.org.cict.access.management.FacultyRow;
 
 /**
  *
@@ -496,6 +495,9 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         ArrayList<CurriculumMapping> implementedCurriculums = this.getCurriculums(true, info);
         ArrayList<CurriculumMapping> unImplementedCurriculums =  this.getCurriculums(false, info);
         
+        if(implementedCurriculums==null) {
+            return;
+        }
         
         if(implementedCurriculums.isEmpty()) {
             Animate.fade(vbox_curriculum_table_holder, 150, ()->{
@@ -525,7 +527,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                 btn_show.setText("Show Unimplemented");
                 
                 ArrayList<CurriculumMapping> implementedCurriculums2 = this.getCurriculums(true, info2 );
-                if(implementedCurriculums2.isEmpty()) {
+                if(implementedCurriculums2==null) {
                     Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                         vbox_curriculum_table_holder.setVisible(false);
                         vbox_no_found_curriculum.setVisible(true);
@@ -541,7 +543,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
             } else {
                 btn_show.setText("Show Implemented");
                 ArrayList<CurriculumMapping> unImplementedCurriculums2 = this.getCurriculums(false, info2 );
-                if(unImplementedCurriculums2.isEmpty()) {
+                if(unImplementedCurriculums2==null) {
                     Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                         vbox_curriculum_table_holder.setVisible(false);
                         vbox_no_found_curriculum.setVisible(true);
