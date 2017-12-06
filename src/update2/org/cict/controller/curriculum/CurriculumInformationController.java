@@ -230,12 +230,13 @@ public class CurriculumInformationController extends SceneFX implements Controll
             cmb_prereq.getItems().add(NONE);
             for (CurriculumMapping currentCurriculum : allCurriculums) {
                 cmb_prereq.getItems().add(currentCurriculum.getName());
-                if(all)
+                if (all) {
                     cmb_preparatory.getItems().add(currentCurriculum.getName());
+                }
             }
         }
     }
-    
+
     private void addTextFieldFilters() {
         StringFilter textField = TextInputFilters.string()
                 .setMaxCharacters(50)
@@ -306,12 +307,12 @@ public class CurriculumInformationController extends SceneFX implements Controll
             setViewCheckCmbBoxPreReq(ladderType);
         });
 
-        cmb_preparatory.valueProperty().addListener((a)->{
+        cmb_preparatory.valueProperty().addListener((a) -> {
             this.refreshCmbCurriculums(false);
             cmb_prereq.getItems().remove(cmb_preparatory.getSelectionModel().getSelectedItem());
         });
     }
-    
+
     private void onObsolete() {
         if (run) {
             run = false;
@@ -329,11 +330,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     .showInformation();
         }
     }
-    
+
     private void onImplement() {
         btn_implement.setDisable(isImplemented);
         boolean isComplete = true;
-        for (int yrCtr = (CURRICULUM.getLadderization_type().equalsIgnoreCase("CONSEQUENT")? 3 : 1); yrCtr <= CURRICULUM.getStudy_years(); yrCtr++) {
+        for (int yrCtr = (CURRICULUM.getLadderization_type().equalsIgnoreCase("CONSEQUENT") ? 3 : 1); yrCtr <= CURRICULUM.getStudy_years(); yrCtr++) {
             for (int semCtr = 1; semCtr <= 2; semCtr++) {
                 Object exist = Mono.orm().newSearch(Database.connect().curriculum_subject())
                         .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM.getId())
@@ -455,7 +456,6 @@ public class CurriculumInformationController extends SceneFX implements Controll
         }, pane);
     }
 
-    
     private void setViewCheckCmbBoxPreReq(String mode) {
         if (mode.equalsIgnoreCase(PREPARATORY)
                 || mode.equalsIgnoreCase("NO")) {
@@ -579,17 +579,27 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     for (CurriculumSubjectMapping csMap : years) {
                         if (csMap.getSemester() == ctrSem) {
                             semesters.add(csMap);
-                            SubjectMapping subject = Mono.orm().newSearch(Database.connect().subject())
-                                    .eq(DB.subject().id, csMap.getSUBJECT_id())
-                                    .active()
-                                    .first();
+                            SubjectMapping subject = Database.connect().subject()
+                                    .getPrimary(csMap.getSUBJECT_id());
+                            //--------------------------------------------------
+                            if (subject == null) {
+                                continue;
+                            }
+                            //--------------------------------------------------
+
+                            System.out.println(subject.getId());
                             totalUnits += (subject.getLab_units() + subject.getLec_units());
                             totalSubjects++;
                         }
                     }
                 } catch (NullPointerException s) {
+                    //----------------------------------------------------------
+                    s.printStackTrace();
+                    //----------------------------------------------------------
                 }
+                //--------------------------------------------------------------
                 createRow(ctrYr, ctrSem, totalSubjects, totalUnits, semesters);
+                //--------------------------------------------------------------
             }
             if (isConsequent) {
                 ctrYr -= 2;
@@ -610,6 +620,15 @@ public class CurriculumInformationController extends SceneFX implements Controll
 
     private Integer curriculumID;
 
+    /**
+     * Create rows for the subjects in a particular year level and semester.
+     *
+     * @param year
+     * @param sem
+     * @param subjects
+     * @param units
+     * @param semesters
+     */
     private void createRow(Integer year, Integer sem, Double subjects, Double units, ArrayList<CurriculumSubjectMapping> semesters) {
         curriculumID = this.CURRICULUM.getId();
         SimpleTableRow row = new SimpleTableRow();
@@ -634,6 +653,9 @@ public class CurriculumInformationController extends SceneFX implements Controll
         lbl_units.setText(units.toString());
         btn_add_subject.setDisable(isImplemented);
 
+        /**
+         * Disables the adding of subject if not admin.
+         */
         if (AcademicProgramAccessManager.denyIfNotAdmin()) {
             btn_add_subject.setDisable(true);
         }
@@ -1265,7 +1287,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     break;
                 }
             }
-            if (prep !=null && clearAllPrimaryExcept(prep.getId(), true)) {
+            if (prep != null && clearAllPrimaryExcept(prep.getId(), true)) {
                 changedCol.add("CURRICULUM PRIMARY");
             }
 
