@@ -202,7 +202,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     public void onEventHandling() {
         txtSearch.textProperty().addListener(listener -> {
             if (txtSearch.getText().isEmpty()) {
-                if (this.lst_subject != null) {
+                if (this.lst_subject != null || !this.lst_subject.isEmpty()) {
                     anchor_view.setVisible(true);
                     hbox_no_result.setVisible(false);
                     subjectTable.getChildren().clear();
@@ -254,7 +254,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         }
         temp_subject_list.clear();
         
-        if(lst_subject==null) {
+        if(lst_subject==null || lst_subject.isEmpty()) {
             btnAddnew.setDisable(false);
             Notifications.create().title("No Subject")
                     .text("Create and add the subject needed to proceed.")
