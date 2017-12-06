@@ -115,7 +115,7 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
     
     private CurriculumMapping CURRICULUM;
     private Integer YEAR, SEMESTER, SUBJECT_id_get;
-    private ArrayList<SubjectMapping> lst_subject;
+    private ArrayList<SubjectMapping> lst_subject = new ArrayList<>();
     private ArrayList<SubjectMapping> temp_subject_list = new ArrayList<>();
     private SimpleTable subjectTable = new SimpleTable();
     private String MODE_setting;

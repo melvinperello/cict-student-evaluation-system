@@ -496,10 +496,6 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         ArrayList<CurriculumMapping> unImplementedCurriculums =  this.getCurriculums(false, info);
         
         if(implementedCurriculums==null) {
-            return;
-        }
-        
-        if(implementedCurriculums.isEmpty()) {
             Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                 vbox_curriculum_table_holder.setVisible(false);
                 vbox_no_found_curriculum.setVisible(true);
@@ -519,7 +515,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_show, ()->{
             String selected = btn_show.getText(); //cmb_sort.getSelectionModel().getSelectedIndex();
             vbox_curriculum_table_holder.getChildren().clear();
-            
+            System.out.println(selected);
             // get the saved meta data from the row
             AcademicProgramInfo info2 = (AcademicProgramInfo) row.getRowMetaData().get("INFO");
             
@@ -541,6 +537,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                     createCurriculumRows(vbox_curriculum_table_holder, implementedCurriculums2, lbl_count);
                 }
             } else {
+                System.out.println("hereeee");
                 btn_show.setText("Show Implemented");
                 ArrayList<CurriculumMapping> unImplementedCurriculums2 = this.getCurriculums(false, info2 );
                 if(unImplementedCurriculums2==null) {
