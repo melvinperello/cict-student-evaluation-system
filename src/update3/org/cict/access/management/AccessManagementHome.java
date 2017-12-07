@@ -482,8 +482,14 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             super.addClickEvent(rowFX.getBtn_change_cluster(), ()->{
                 FacultyInformation info = (FacultyInformation) row.getRowMetaData().get(KEY_MORE_INFO);
                 FacultyRow fx = (FacultyRow) row.getRowMetaData().get("FX");
-                int res = this.getCluster(true, info.getAccountFacultyMapping());
-                if(res==1) {
+                Integer res = this.getCluster(true, info.getAccountFacultyMapping());
+                if(res==null) {
+                    Notifications.create().title("No Current Session")
+                            .text("You can create a session in Linked System.\n"
+                                    + " then click New Session.").showWarning();
+                    return;
+                }
+                if(res.equals(1)) {
                     fx.getLbl_cluster_name().setText(info.getAccountFacultyMapping().getAssigned_cluster()==null? "No Cluster Assigned" : (info.getAccountFacultyMapping().getAssigned_cluster().equals(1)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
                 }
             });
