@@ -118,7 +118,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
 //        String msg = SystemOverriding.getACRONYM(15, transactionRequest_) + " Code:" + OTP_raw + " REQ.BY:" + SystemOverriding.getACRONYM(15, CollegeFaculty.instance().getLAST_NAME(), "name") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()) + ". Ref.No:" + refID
 //                + " <eems-no-reply>";
 
-        String msg = Access.getFORMATTED_MESSAGE(SystemOverriding.getACRONYM(10, transactionRequest_), OTP_raw, CollegeFaculty.instance().getLAST_NAME().replaceAll(" ", "") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()), refID);
+        String msg = Access.getFORMATTED_MESSAGE(SystemOverriding.getACRONYM(15, transactionRequest_), OTP_raw, CollegeFaculty.instance().getLAST_NAME().replaceAll(" ", "") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()), refID);
         System.out.println(msg);
         SMSWrapper.send(contactNumber, msg, WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
             System.out.println("RESPONSE: " + response);
@@ -308,7 +308,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         lbl_ref_number.setText(""+refID);
 //        String msg = SystemOverriding.getACRONYM(15, transactionRequest_) + " Code:" + OTP_raw + " REQ.BY:" + SystemOverriding.getACRONYM(15, CollegeFaculty.instance().getLAST_NAME(), "name") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()) + ". Ref.No:" + refID
 //                + " <eems-no-reply>";
-        String msg = Access.getFORMATTED_MESSAGE(SystemOverriding.getACRONYM(10, transactionRequest_), OTP_raw, CollegeFaculty.instance().getLAST_NAME().replaceAll(" ", "") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()), refID);
+        String msg = Access.getFORMATTED_MESSAGE(SystemOverriding.getACRONYM(15, transactionRequest_), OTP_raw, CollegeFaculty.instance().getLAST_NAME().replaceAll(" ", "") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()), refID);
         System.out.println(msg);
         SMSWrapper.send(contactNumber, msg, WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
         System.out.println("RESPONSE: " + response);
