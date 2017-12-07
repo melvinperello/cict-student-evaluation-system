@@ -208,7 +208,7 @@ public class RegisterController extends SceneFX implements ControllerFX{
             this.requestFocus(this.txt_password);
             return false;
         }
-        if(pass.length()<5){
+        if(pass.length()<6){
             Mono.fx()
                     .alert()
                     .createWarning()
