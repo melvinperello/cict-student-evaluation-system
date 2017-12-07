@@ -76,8 +76,10 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_cancel1;
 
-    public EvaluationOverride(boolean hasAccess) {
+    private String transacationRequest;
+    public EvaluationOverride(boolean hasAccess, String trasactionDetails) {
         this.access = hasAccess;
+        this.transacationRequest = trasactionDetails;
     }
     
     //----------------------------------
@@ -191,7 +193,7 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
         
         super.addClickEvent(btn_upload, ()->{
             //--------------------------------
-            if(AssistantRegistrarOverride.isAuthorized(this.getStage())) {
+            if(AssistantRegistrarOverride.isAuthorized(this.getStage(), transacationRequest)) {
                 Mono.fx().alert().createInfo()
                         .setMessage("You can now override this transaction by uploading first "
                                 + "a file with a format of RAR, ZIP or 7Z. Then click Continue")

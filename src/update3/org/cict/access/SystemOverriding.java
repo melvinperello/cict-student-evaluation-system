@@ -23,6 +23,8 @@
  */
 package update3.org.cict.access;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 /**
  *
  * @author Jhon Melvin
@@ -42,4 +44,59 @@ public class SystemOverriding {
     public static final String EVAL_EXCEED_MAX_POPULATION = "EXCEEDED_MAX_POPULATION";
     public static final String EVAL_CHANGED_YEAR_LEVEL_BACKWARD = "CHANGED_YEAR_LEVEL_BACKWARD";
     public static final String EVAL_STUDENT_OVERSTAY = "OVERSTAYED_STUDENT";
+
+
+    public static String getACRONYM(int maxChar, String... strng) {
+        String temp = null;
+        String str = strng[0];
+        if(str==null || str.isEmpty()) {
+            return "";
+        }
+        try {
+            String mode = (strng[1]);
+            System.out.println(mode);
+            temp = str.replaceAll("_", "");
+            String[] name = temp.split(" ");
+            temp = "";
+            for(String each: name) {
+                temp += get(each, 5);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            temp = str.replaceAll(" ", "").replaceAll("_", "");
+            temp = get(temp, maxChar);
+        }
+        return temp;
+    }
+    
+    private static String get(String temp, int maxChar) {
+        if(temp.length()>maxChar) {
+            temp = temp.replaceAll("A", "");
+            System.out.println(temp);
+            if(temp.length()>maxChar) {
+                temp = temp.replaceAll("E", "");
+                System.out.println(temp);
+                if(temp.length()>maxChar) {
+                    temp = temp.replaceAll("I", "");
+                    System.out.println(temp);
+                    if(temp.length()>maxChar) {
+                        temp = temp.replaceAll("O", "");
+                        System.out.println(temp);
+                        if(temp.length()>maxChar) {
+                            temp = temp.replaceAll("U", "");
+                            System.out.println(temp);
+                                if(temp.length()>maxChar) {
+                                    temp = temp = temp.substring(0, maxChar);
+                                    System.out.println(temp);
+                                    if(temp.length()>maxChar) {
+                                        temp = temp = WordUtils.initials(temp);
+                                        System.out.println(temp);
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+        }
+        return temp;
+    }
 }

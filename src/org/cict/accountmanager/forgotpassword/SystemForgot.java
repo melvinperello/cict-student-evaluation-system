@@ -48,6 +48,8 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
+import update3.org.cict.access.Access;
+import update3.org.cict.access.SystemOverriding;
 
 /**
  *
@@ -285,8 +287,10 @@ public class SystemForgot extends MonoLauncher {
         }
         System.out.println("Reference Number: " + refID);
         System.out.println("Your One-Time Password (OTP) is " + OTP_raw);
-        SMSWrapper.send(faculty.getMobile_number(),"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
-                + "\n\nSent by Monosync", "SYSTEM", response -> {
+//        String msg = SystemOverriding.getACRONYM(10, "FORGOT_PASSWORD") + " Code:" + OTP_raw + " REQ.BY:" + SystemOverriding.getACRONYM(10,this.faculty.getLast_name(), "name") + " " +  WordUtils.initials(this.faculty.getFirst_name()) + ". REF.NO:" + refID
+//                + " <eems-no-reply>";
+        String msg = Access.getFORMATTED_MESSAGE(SystemOverriding.getACRONYM(10, "FORGOT_PASSWORD"), OTP_raw, this.faculty.getLast_name().replaceAll(" ",  "") + " " +  WordUtils.initials(this.faculty.getFirst_name()), refID);
+        SMSWrapper.send(faculty.getMobile_number(), msg, "SYSTEM", response -> {
             System.out.println("RESPONSE: " + response);
             if(response.equalsIgnoreCase("FAILED")) {
                 Mono.fx().thread().wrap(()->{

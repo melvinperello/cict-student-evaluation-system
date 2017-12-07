@@ -75,7 +75,9 @@ public class AssistantRegistrarOverride extends MonoLauncher {
     private JFXButton btn_cancel;
     
     private static String contactNumber = "";
-    public static boolean isAuthorized(Stage stage) {
+    private static String transactionRequest_;
+    public static boolean isAuthorized(Stage stage, String transactionRequest) {
+        transactionRequest_ = transactionRequest;
         if(!Access.isGrantedIf(Access.ACCESS_CO_REGISTRAR, Access.ACCESS_LOCAL_REGISTRAR))
             return false;
         AccountFacultyMapping localRegistrarAcc = Mono.orm().newSearch(Database.connect().account_faculty())
@@ -113,8 +115,12 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         }
         System.out.println("Reference Number: " + refID);
         System.out.println("Your One-Time Password (OTP) is " + OTP_raw);
-        SMSWrapper.send(contactNumber,"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
-                + "\n\nSent by Monosync", WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
+//        String msg = SystemOverriding.getACRONYM(15, transactionRequest_) + " Code:" + OTP_raw + " REQ.BY:" + SystemOverriding.getACRONYM(15, CollegeFaculty.instance().getLAST_NAME(), "name") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()) + ". Ref.No:" + refID
+//                + " <eems-no-reply>";
+
+        String msg = Access.getFORMATTED_MESSAGE(SystemOverriding.getACRONYM(10, transactionRequest_), OTP_raw, CollegeFaculty.instance().getLAST_NAME().replaceAll(" ", "") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()), refID);
+        System.out.println(msg);
+        SMSWrapper.send(contactNumber, msg, WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
             System.out.println("RESPONSE: " + response);
             if(response.equalsIgnoreCase("FAILED")) {
                 Mono.fx().thread().wrap(()->{
@@ -150,73 +156,73 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         return authorized;
     }
     
-    public static boolean isAuthorized(Stage stage, String...authorizedAccessLevels) {
-        boolean access = Access.isGrantedIf(authorizedAccessLevels);
-        if(!access) {
-            return false;
-        }
-        AccountFacultyMapping localRegistrarAcc = Mono.orm().newSearch(Database.connect().account_faculty())
-                .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR).active().first();
-        if(localRegistrarAcc != null) {
-            FacultyMapping localRegistrar = Database.connect().faculty().getPrimary(localRegistrarAcc.getFACULTY_id());
-            contactNumber = localRegistrar==null? "" : localRegistrar.getMobile_number();
-        }
-        if(contactNumber==null || contactNumber.isEmpty()) {
-            Notifications.create().darkStyle().title("Sending of OTP failed")
-                    .text("No mobile number found. Please update the\n"
-                            + "Local Registrar's account.").showWarning();
-            return false;
-        }
-        int res = Mono.fx().alert().createConfirmation()
-                .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the transaction. Continue?")
-                .setHeader("Send OTP To Authorize").confirmYesNo();
-        if(res==-1)
-            return false;
-        OtpGeneratorMapping map = new OtpGeneratorMapping();
-        String OTP_raw = OTPGenerator.generateOTP();
-        map.setActive(1);
-        map.setCode(Mono.security().hashFactory().hash_sha512(OTP_raw));
-        map.setDate_created(Mono.orm().getServerTime().getDateWithFormat());
-        Integer refID = Database.connect().otp_generator().insert(map);
-        if(refID.equals(-1)) {
-            Notifications.create().darkStyle().title("Failed")
-                    .text("Please check your connectivity to\n"
-                            + "the server.").showWarning();
-            return false;
-        }
-        System.out.println("Reference Number: " + refID);
-        System.out.println("Your One-Time Password (OTP) is " + OTP_raw);
-        SMSWrapper.send(contactNumber,"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
-                + "\n\nSent by Monosync", WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
-            System.out.println("RESPONSE: " + response);
-            if(response.equalsIgnoreCase("FAILED")) {
-                Mono.fx().thread().wrap(()->{
-                    Notifications.create().darkStyle().title("Failed")
-                            .text("Sending of OTP to the Local Registrar\nfailed.").showError();
-                });
-            } else if(response.equalsIgnoreCase("NO_REPLY")) {
-                Mono.fx().thread().wrap(()->{
-                    Notifications.create().darkStyle().title("No Response")
-                            .text("Please try again later.").showError();
-                });
-            }
-        });
-        
-        AssistantRegistrarOverride asstRegistrar =  M.load(AssistantRegistrarOverride.class);
-        asstRegistrar.onDelayedStart();
-        asstRegistrar.setDetails(contactNumber, refID);
-        boolean authorized = false;
-        try {
-            asstRegistrar.getCurrentStage().showAndWait();
-        } catch (NullPointerException e) {
-            Stage a = asstRegistrar.createChildStage(stage);
-            a.initStyle(StageStyle.UNDECORATED);
-            a.showAndWait();
-            authorized = asstRegistrar.isAuthorized();
-        }
-        System.out.println(authorized);
-        return authorized;
-    }
+//    public static boolean isAuthorized(Stage stage, String...authorizedAccessLevels) {
+//        boolean access = Access.isGrantedIf(authorizedAccessLevels);
+//        if(!access) {
+//            return false;
+//        }
+//        AccountFacultyMapping localRegistrarAcc = Mono.orm().newSearch(Database.connect().account_faculty())
+//                .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR).active().first();
+//        if(localRegistrarAcc != null) {
+//            FacultyMapping localRegistrar = Database.connect().faculty().getPrimary(localRegistrarAcc.getFACULTY_id());
+//            contactNumber = localRegistrar==null? "" : localRegistrar.getMobile_number();
+//        }
+//        if(contactNumber==null || contactNumber.isEmpty()) {
+//            Notifications.create().darkStyle().title("Sending of OTP failed")
+//                    .text("No mobile number found. Please update the\n"
+//                            + "Local Registrar's account.").showWarning();
+//            return false;
+//        }
+//        int res = Mono.fx().alert().createConfirmation()
+//                .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the transaction. Continue?")
+//                .setHeader("Send OTP To Authorize").confirmYesNo();
+//        if(res==-1)
+//            return false;
+//        OtpGeneratorMapping map = new OtpGeneratorMapping();
+//        String OTP_raw = OTPGenerator.generateOTP();
+//        map.setActive(1);
+//        map.setCode(Mono.security().hashFactory().hash_sha512(OTP_raw));
+//        map.setDate_created(Mono.orm().getServerTime().getDateWithFormat());
+//        Integer refID = Database.connect().otp_generator().insert(map);
+//        if(refID.equals(-1)) {
+//            Notifications.create().darkStyle().title("Failed")
+//                    .text("Please check your connectivity to\n"
+//                            + "the server.").showWarning();
+//            return false;
+//        }
+//        System.out.println("Reference Number: " + refID);
+//        System.out.println("Your One-Time Password (OTP) is " + OTP_raw);
+//        SMSWrapper.send(contactNumber,"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
+//                + "\n\nSent by Monosync", WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
+//            System.out.println("RESPONSE: " + response);
+//            if(response.equalsIgnoreCase("FAILED")) {
+//                Mono.fx().thread().wrap(()->{
+//                    Notifications.create().darkStyle().title("Failed")
+//                            .text("Sending of OTP to the Local Registrar\nfailed.").showError();
+//                });
+//            } else if(response.equalsIgnoreCase("NO_REPLY")) {
+//                Mono.fx().thread().wrap(()->{
+//                    Notifications.create().darkStyle().title("No Response")
+//                            .text("Please try again later.").showError();
+//                });
+//            }
+//        });
+//        
+//        AssistantRegistrarOverride asstRegistrar =  M.load(AssistantRegistrarOverride.class);
+//        asstRegistrar.onDelayedStart();
+//        asstRegistrar.setDetails(contactNumber, refID);
+//        boolean authorized = false;
+//        try {
+//            asstRegistrar.getCurrentStage().showAndWait();
+//        } catch (NullPointerException e) {
+//            Stage a = asstRegistrar.createChildStage(stage);
+//            a.initStyle(StageStyle.UNDECORATED);
+//            a.showAndWait();
+//            authorized = asstRegistrar.isAuthorized();
+//        }
+//        System.out.println(authorized);
+//        return authorized;
+//    }
     
     @Override
     public void onStartUp() {
@@ -300,34 +306,64 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         System.out.println("Reference Number: " + refID);
         System.out.println("Your One-Time Password (OTP) is " + OTP_raw);
         lbl_ref_number.setText(""+refID);
-        SMSWrapper.send(contactNumber,"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
-                + "\n\nSent by Monosync", WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
-            System.out.println("RESPONSE: " + response);
-            if(response.equalsIgnoreCase("FAILED")) {
-                Mono.fx().thread().wrap(()->{
-                    Notifications.create().darkStyle().title("Failed")
-                            .text("Sending of OTP to the Local Registrar\nfailed.").showError();
-                });
-                return;
-            } else if(response.equalsIgnoreCase("NO_REPLY")) {
-                Mono.fx().thread().wrap(()->{
-                    Notifications.create().darkStyle().title("No Response")
-                            .text("Please try again later.").showError();
-                });
-                return;
-            } else {
-                Mono.fx().thread().wrap(()->{
-                    Notifications.create().darkStyle().title("Sending")
-                            .text("Processing your request.").showInformation();
-                });
-                this.setTimer();
-                timer.start();
-            }
-            
+//        String msg = SystemOverriding.getACRONYM(15, transactionRequest_) + " Code:" + OTP_raw + " REQ.BY:" + SystemOverriding.getACRONYM(15, CollegeFaculty.instance().getLAST_NAME(), "name") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()) + ". Ref.No:" + refID
+//                + " <eems-no-reply>";
+        String msg = Access.getFORMATTED_MESSAGE(SystemOverriding.getACRONYM(10, transactionRequest_), OTP_raw, CollegeFaculty.instance().getLAST_NAME().replaceAll(" ", "") + " " +  WordUtils.initials(CollegeFaculty.instance().getFIRST_NAME()), refID);
+        System.out.println(msg);
+        SMSWrapper.send(contactNumber, msg, WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
+        System.out.println("RESPONSE: " + response);
+        if(response.equalsIgnoreCase("FAILED")) {
             Mono.fx().thread().wrap(()->{
-                this.setDetails(contactNumber, refID);
+                Notifications.create().darkStyle().title("Failed")
+                        .text("Sending of OTP to the Local Registrar\nfailed.").showError();
             });
+            return;
+        } else if(response.equalsIgnoreCase("NO_REPLY")) {
+            Mono.fx().thread().wrap(()->{
+                Notifications.create().darkStyle().title("No Response")
+                        .text("Please try again later.").showError();
+            });
+            return;
+        } else {
+            Mono.fx().thread().wrap(()->{
+                Notifications.create().darkStyle().title("Sending")
+                        .text("Processing your request.").showInformation();
+            });
+            this.setTimer();
+            timer.start();
+        }
+        Mono.fx().thread().wrap(()->{
+            this.setDetails(contactNumber, refID);
         });
+    });
+                    
+//        SMSWrapper.send(contactNumber,"Your One-Time Password (OTP) is " + OTP_raw + ". Reference Number: " + refID 
+//                + "\n\nSent by Monosync", WordUtils.capitalizeFully(CollegeFaculty.instance().getFirstLastName()), response -> {
+//            System.out.println("RESPONSE: " + response);
+//            if(response.equalsIgnoreCase("FAILED")) {
+//                Mono.fx().thread().wrap(()->{
+//                    Notifications.create().darkStyle().title("Failed")
+//                            .text("Sending of OTP to the Local Registrar\nfailed.").showError();
+//                });
+//                return;
+//            } else if(response.equalsIgnoreCase("NO_REPLY")) {
+//                Mono.fx().thread().wrap(()->{
+//                    Notifications.create().darkStyle().title("No Response")
+//                            .text("Please try again later.").showError();
+//                });
+//                return;
+//            } else {
+//                Mono.fx().thread().wrap(()->{
+//                    Notifications.create().darkStyle().title("Sending")
+//                            .text("Processing your request.").showInformation();
+//                });
+//                this.setTimer();
+//                timer.start();
+//            }
+//            Mono.fx().thread().wrap(()->{
+//                this.setDetails(contactNumber, refID);
+//            });
+//        });
     }
     
     private CronThread timer;

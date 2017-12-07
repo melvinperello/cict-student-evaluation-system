@@ -243,7 +243,7 @@ public class MovingUpController extends SceneFX implements ControllerFX {
     
     
     private void systemOverride(String type, SimpleTableRow row) {
-        Object[] res = Access.isEvaluationOverride(allowOverride);
+        Object[] res = Access.isEvaluationOverride(allowOverride, SystemOverriding.getACRONYM(15, type));
         boolean ok = (boolean) res[0];
         String fileName = (String) res[1];
         if (ok) {

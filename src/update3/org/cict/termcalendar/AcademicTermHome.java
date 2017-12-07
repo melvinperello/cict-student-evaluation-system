@@ -385,7 +385,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             btn_evaluation_service.setDisable(true);
             changeStatus(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE);
 
-            if (AssistantRegistrarOverride.isAuthorized(this.getStage())) {
+            if (AssistantRegistrarOverride.isAuthorized(this.getStage(), "ACADTERMCHNGE")) {
                 Mono.fx().snackbar().showSuccess(application_root, "Request Granted");
                 this.acceptRequest();
             } else {

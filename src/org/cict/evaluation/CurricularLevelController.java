@@ -47,6 +47,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
@@ -491,7 +492,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
 
     private boolean allowOverride = false;
     private void systemOverride(String type) {
-        Object[] result = Access.isEvaluationOverride(allowOverride);
+        Object[] result = Access.isEvaluationOverride(allowOverride, SystemOverriding.getACRONYM(15, type));
         boolean ok = (boolean) result[0];
         String fileName = (String) result[1];
         if (ok) {

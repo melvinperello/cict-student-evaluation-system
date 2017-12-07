@@ -60,7 +60,6 @@ import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.evaluator.Evaluator;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
-import update.org.cict.controller.adding.SubjectInformationHolder;
 import update3.org.cict.access.Access;
 import update3.org.cict.access.SystemOverriding;
 
@@ -325,7 +324,7 @@ public class AssistantController extends SceneFX implements ControllerFX {
      */
     private boolean allowOverride = false;
     private void systemOverride(String type) {
-        Object[] result = Access.isEvaluationOverride(allowOverride);
+        Object[] result = Access.isEvaluationOverride(allowOverride, SystemOverriding.getACRONYM(15, type));
         boolean ok = (boolean) result[0];
         String fileName = (String) result[1];
         if (ok) {

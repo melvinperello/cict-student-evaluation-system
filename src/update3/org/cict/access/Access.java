@@ -29,6 +29,7 @@ import com.jhmvin.Mono;
 import com.melvin.mono.fx.bootstrap.M;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 
 /**
@@ -190,8 +191,8 @@ public class Access {
      * @param giveAccess
      * @return
      */
-    public static Object[] isEvaluationOverride(boolean giveAccess) {
-        EvaluationOverride controller = new EvaluationOverride(giveAccess);
+    public static Object[] isEvaluationOverride(boolean giveAccess, String request) {
+        EvaluationOverride controller = new EvaluationOverride(giveAccess, request);
         Mono.fx().create()
                 .setPackageName("update3.org.cict.access")
                 .setFxmlDocument("EvaluationOverride")
@@ -225,5 +226,10 @@ public class Access {
             result = enterPin.canProceed();
         }
         return result;
+    }
+    
+    public static String getFORMATTED_MESSAGE(String SUBJECT, String CODE, String REQBY, Integer refID) {
+        return SystemOverriding.getACRONYM(10, SUBJECT) + " Code:" + CODE + " REQ.BY:" + REQBY + ". REF#" + refID
+                + "<eems-no-reply>";
     }
 }
