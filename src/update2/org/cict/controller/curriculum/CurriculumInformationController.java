@@ -565,7 +565,9 @@ public class CurriculumInformationController extends SceneFX implements Controll
             if (isConsequent) {
                 ctrYr += 2;
             }
-            ArrayList<CurriculumSubjectMapping> years = Mono.orm().newSearch(Database.connect().curriculum_subject())
+            //------------------------------------------------------------------
+            ArrayList<CurriculumSubjectMapping> years = Mono.orm()
+                    .newSearch(Database.connect().curriculum_subject())
                     .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
                     .eq(DB.curriculum_subject().year, ctrYr)
                     .active(Order.asc(DB.curriculum_subject().id))
@@ -586,15 +588,18 @@ public class CurriculumInformationController extends SceneFX implements Controll
                                 continue;
                             }
                             //--------------------------------------------------
+                            if (ctrSem == 2 && ctrYr == 1) {
+                                System.out.println("SUB: " + subject.getDescriptive_title());
+                            }
 
-                            System.out.println(subject.getId());
                             totalUnits += (subject.getLab_units() + subject.getLec_units());
-                            totalSubjects++;
+                            totalSubjects += 1.0;
                         }
                     }
                 } catch (NullPointerException s) {
                     //----------------------------------------------------------
                     s.printStackTrace();
+                    continue;
                     //----------------------------------------------------------
                 }
                 //--------------------------------------------------------------
