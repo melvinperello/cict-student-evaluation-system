@@ -2,6 +2,7 @@ package update.org.cict.controller.adding;
 
 import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.CurriculumRequisiteExtMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
@@ -157,8 +158,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
         vbox_studentOptions.setVisible(false);
         anchor_preview.setVisible(false);
-         
-        Animate.fade(vbox_waiting_queue, 150, ()->{
+
+        Animate.fade(vbox_waiting_queue, 150, () -> {
             vbox_waiting_queue.setVisible(false);
             vbox_list.setVisible(false);
             vbox_waiting_queue.setVisible(true);
@@ -173,36 +174,37 @@ public class AddingHome extends SceneFX implements ControllerFX {
      */
     private SimpleTable studentTable = new SimpleTable();
     private CronThread cronThreadQueue;
+
     private void createQueueTable() {
         AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
         Integer clusterNumber = afMap.getAssigned_cluster();
         cronThreadQueue = new CronThread("adding_changing_queue");
         cronThreadQueue.setInterval(5000);
-        cronThreadQueue.setTask(()->{
+        cronThreadQueue.setTask(() -> {
             boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
-            if(result) {
-                Mono.fx().thread().wrap(()->{
-                    Animate.fade(vbox_list, 150, ()->{
+            if (result) {
+                Mono.fx().thread().wrap(() -> {
+                    Animate.fade(vbox_list, 150, () -> {
                         vbox_waiting_queue.setVisible(false);
                         vbox_list.setVisible(true);
                     }, vbox_waiting_queue, vbox_list);
                 });
             } else {
-                Mono.fx().thread().wrap(()->{
-                    Animate.fade(vbox_waiting_queue, 150, ()->{
+                Mono.fx().thread().wrap(() -> {
+                    Animate.fade(vbox_waiting_queue, 150, () -> {
                         lbl_total_queue.setText("0");
                         vbox_list.setVisible(false);
                         vbox_waiting_queue.setVisible(true);
                     }, vbox_waiting_queue, vbox_list);
                 });
             }
-            if(ThreadMill.searching) {
+            if (ThreadMill.searching) {
                 this.onSearchStudent();
             }
         });
         cronThreadQueue.start();
     }
-    
+
     @Override
     public void onEventHandling() {
         btnFind.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -216,9 +218,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //        btn_home1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 //            onBackToHome();
 //        });
-
         btnSaveChanges.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
-            if(!Access.enterTransactionPin(super.getStage())){
+            if (!Access.enterTransactionPin(super.getStage())) {
                 Mono.fx().snackbar().showError(application_root, "Transaction Denied");
                 return;
             }
@@ -267,53 +268,57 @@ public class AddingHome extends SceneFX implements ControllerFX {
             printChecklist();
         });
     }
-    
+
     private Boolean FLAG_CROSS_ENROLLEE;
+
     private void printChecklist() {
         // disallows cross enrollees to print a check list.
         if (this.FLAG_CROSS_ENROLLEE) {
             Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
             return;
         }
-        
+
         CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(studentSearched.getCURRICULUM_id());
         CurriculumMapping curriculum_prep = null;
-        if(studentSearched.getPREP_id()!=null){
+        if (studentSearched.getPREP_id() != null) {
             curriculum_prep = Database.connect().curriculum().getPrimary(studentSearched.getPREP_id());
         }
         Boolean isLegacyExist = false;
-        for(String legacy: PublicConstants.LEGACY_CURRICULUM) {
-            if(legacy.equalsIgnoreCase(curriculum.getName())) {
+        for (String legacy : PublicConstants.LEGACY_CURRICULUM) {
+            if (legacy.equalsIgnoreCase(curriculum.getName())) {
                 isLegacyExist = true;
                 break;
             }
-            if(curriculum_prep!=null){
-                if(legacy.equalsIgnoreCase(curriculum_prep.getName())) {
+            if (curriculum_prep != null) {
+                if (legacy.equalsIgnoreCase(curriculum_prep.getName())) {
                     isLegacyExist = true;
                     break;
                 }
             }
         }
-        
+
         Boolean printLegacy = false;
-        if(isLegacyExist) {
+        if (isLegacyExist) {
             int res = Mono.fx().alert().createConfirmation()
                     .setHeader("Checklist Format")
                     .setMessage("Please choose a format.")
                     .confirmCustom("Legacy", "Standard");
-            if(res==1)
+            if (res == 1) {
                 printLegacy = true;
+            }
         }
-        if(curriculum_prep != null) {
-            if(printLegacy)
+        if (curriculum_prep != null) {
+            if (printLegacy) {
                 printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
-            else
+            } else {
                 printCheckList(printLegacy, curriculum_prep.getId(), null);
-        } else
+            }
+        } else {
             printCheckList(printLegacy, curriculum.getId(), null);
+        }
     }
-    
-    private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id){
+
+    private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
         printCheckList.CICT_id = studentSearched.getCict_id();
@@ -323,20 +328,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
         });
         printCheckList.setOnSuccess(onSuccess -> {
             GenericLoadingShow.instance().hide();
-            if(prep_id==null){
+            if (prep_id == null) {
                 Notifications.create().title("Please wait, we're nearly there.")
                         .text("Printing the Checklist.").showInformation();
-            } else
+            } else {
                 printCheckList(printLegacy, prep_id, null);
+            }
         });
         printCheckList.setOnCancel(onCancel -> {
             GenericLoadingShow.instance().hide();
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
-        
-        if(!printLegacy)
+
+        if (!printLegacy) {
             printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        }
         printCheckList.transact();
     }
 
@@ -384,7 +391,6 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                .stageShow();
 //        setView("home");
 //    }
-
     private void hideDropDownEvents() {
         txtStudentNumber.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
             this.vbox_studentOptions.setVisible(false);
@@ -398,7 +404,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void revokeAddChange() {
-        
+
         /**
          * Confirmation
          */
@@ -436,8 +442,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showError(application_root, "You Are Not Allowed To Re-evaluate Students.");
             return;
         }
-        
-        
+
         RevokeChanges revoke = new RevokeChanges();
         revoke.currentEvaluation = this.currentStudentEvaluationDetails;
 
@@ -460,11 +465,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void onSaveChanges() {
-        if(!CoRequisiteFilter.checkCoReqAdd(collection_preview, this.studentSearched.getCURRICULUM_id())) {
-            System.out.println("HEREEE");
-            return;
-        }
-        
+
         SaveChanges save = new SaveChanges();
 
         // boolean for tracking is there is changes made
@@ -488,6 +489,19 @@ public class AddingHome extends SceneFX implements ControllerFX {
             Object[] o = new Object[]{row_status, row_info, old_lg};
             details.add(o);
         }
+
+        //----------------------------------------------------------------------
+        // the collection must not conatin the removed subject.
+        ArrayList<CurriculumRequisiteExtMapping> missingcoreq
+                = CoRequisiteFilter
+                        .checkCoReqAdd(collection_preview,
+                                this.studentSearched.getCURRICULUM_id());
+
+        if (missingcoreq != null) {
+            System.out.println("There is a missing coreq");
+            return;
+        }
+        //----------------------------------------------------------------------
 
         // pass the values to the transaction.
         save.evaluationDetails = this.currentStudentEvaluationDetails;
@@ -563,7 +577,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 FLAG_CROSS_ENROLLEE = checkStudentTx.isCrossEnrollee();
                 //----------------------------
                 // if cross enrollee, must not continue adding and changing process
-                if(FLAG_CROSS_ENROLLEE) {
+                if (FLAG_CROSS_ENROLLEE) {
                     Mono.fx().alert().createWarning()
                             .setMessage("Cross enrollee students are not allowed to take adding and changing transactions.")
                             .show();
@@ -577,14 +591,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 this.currentStudentEvaluationDetails = checkStudentTx.getEvaluationMap();
                 this.studentSearched = checkStudentTx.getStudentMap();
 
-                if(!PublicConstants.DISABLE_ASSISTANCE ) {
+                if (!PublicConstants.DISABLE_ASSISTANCE) {
                     showFirstAssistant();
                 }
                 onShowCurricularLevel();
-                if(!PublicConstants.DISABLE_ASSISTANCE ) {
+                if (!PublicConstants.DISABLE_ASSISTANCE) {
                     showAssistant();
                 }
-                
+
                 setView("preview");
                 onShowStudent(checkStudentTx.getStudentMap(), checkStudentTx.getStudentSection());
 
@@ -594,8 +608,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 onLoadEvaluatedSubjects(checkStudentTx.getEvaluationMap(), checkStudentTx.getStudentMap());
             }
         });
-        checkStudentTx.setOnCancel(onCancel->{
-            if(checkStudentTx.getTxResult().equalsIgnoreCase("NO_CURRICULUM")) {
+        checkStudentTx.setOnCancel(onCancel -> {
+            if (checkStudentTx.getTxResult().equalsIgnoreCase("NO_CURRICULUM")) {
                 Mono.fx().alert().createWarning()
                         .setMessage("Student must have a curriculum to enter adding and changing transaction.")
                         .show();
@@ -653,7 +667,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private void onShowStudent(StudentMapping sMap, String section) {
         String studentFullName = sMap.getLast_name() + ", "
                 + sMap.getFirst_name() + " "
-                + (sMap.getMiddle_name()==null? "":sMap.getMiddle_name());
+                + (sMap.getMiddle_name() == null ? "" : sMap.getMiddle_name());
 
         this.lblCourseSection.setText(section);
         this.lblName.setText(studentFullName);
@@ -667,27 +681,26 @@ public class AddingHome extends SceneFX implements ControllerFX {
      * @param studentMap
      */
     private void onLoadEvaluatedSubjects(EvaluationMapping evaluationMap, StudentMapping studentMap) {
-        
+
         //-------------------------------
         // set image
         SimpleTask set_profile = new SimpleTask("set_profile");
-        set_profile.setTask(()->{
+        set_profile.setTask(() -> {
             this.setImageView();
         });
-        set_profile.whenCancelled(()->{
+        set_profile.whenCancelled(() -> {
             Notifications.create().text("Loading of image is cancelled")
                     .showInformation();
         });
-        set_profile.whenFailed(()->{
+        set_profile.whenFailed(() -> {
             Notifications.create().text("Failed to load image.")
                     .showInformation();
         });
-        set_profile.whenSuccess(()->{
+        set_profile.whenSuccess(() -> {
         });
         set_profile.start();
         //-------------------------------
-        
-        
+
         CheckEvaluatedSubjects checkEvaluationTx = new CheckEvaluatedSubjects();
         checkEvaluationTx.evaluationMap = evaluationMap;
         checkEvaluationTx.studentMap = studentMap;
@@ -707,11 +720,11 @@ public class AddingHome extends SceneFX implements ControllerFX {
      * @param collection
      */
     private void createTable(ArrayList<SubjectInformationHolder> collection) {
-        
+
         //----------------
         collection_preview = collection;
         //
-        
+
         // create the table object
 //        SimpleTable table = new SimpleTable();
         // add listener to this table for changes.
@@ -882,7 +895,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
-        
+
         row.getStyleClass().add("table-mutate-as-default");
         HBox subjectRow = (HBox) Mono.fx().create()
                 .setPackageName("update.org.cict.layout.adding_changing")
@@ -898,7 +911,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         Label lbl_lab = searchAccessibilityText(subjectRow, "lab");
         Label lbl_section = searchAccessibilityText(subjectRow, "section");
 
-        super.addClickEvent(img_extension, ()->{
+        super.addClickEvent(img_extension, () -> {
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("res.img", "plus_sign.png"));
                 row.hideExtension();
@@ -921,8 +934,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 System.out.println("EXTENSION NOTHING HAPPENED");
             }
         });
-        
-        super.addDoubleClickEvent(row, ()->{
+
+        super.addDoubleClickEvent(row, () -> {
             if (row.isExtensionShown()) {
                 img_extension.setImage(SimpleImage.make("res.img", "plus_sign.png"));
                 row.hideExtension();
@@ -1370,7 +1383,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
             try {
                 // if value was recieved
                 SubjectInformationHolder subinfo = AddingDataPipe.instance().isChangedValue;
-                
+
                 validateSubject("CHANGE", row, subinfo);
                 // if value was recieved
 //                SubjectInformationHolder subinfo = AddingDataPipe.instance().isChangedValue;
@@ -1579,7 +1592,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         try {
             // if local registrar allow override.
             allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
-            
+
             AddingSubjects addingSubjects = new AddingSubjects();
             addingSubjects.setStudentNumber(studentSearched.getId(), studentSearched.getCURRICULUM_id());
 
@@ -1598,14 +1611,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
             AddingDataPipe.instance().isChanged = true;
             add_stage.showAndWait();
             if (AddingDataPipe.instance().isChangedValueRecieved) {
-                
+
                 try {
                     // if value was recieved
                     SubjectInformationHolder subinfo = AddingDataPipe.instance().isChangedValue;
 
                     //---------------------
                     // check if existing before validation
-                    if(!checkIfNotExisting(subinfo.getSubjectMap())) {
+                    if (!checkIfNotExisting(subinfo.getSubjectMap())) {
                         showWarningNotification("Subject Exist", "The subject you are trying to add is already in the list.");
                         AddingDataPipe.instance().resetIsChanged();
                         return;
@@ -1613,7 +1626,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     //--------------------------------------
                     if (subinfo.getSubjectMap().getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                         if (!ValidateOJT.isValidForOJT(studentSearched)) {
-                            
+
                             Notifications.create().title("Warning")
                                     .position(Pos.BOTTOM_RIGHT)
                                     .text("Student Number: " + studentSearched.getId()
@@ -1628,7 +1641,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                     .setHeader("Deficieny Report")
                                     .setMessage("Do you want to print the student's subject with missing grade?")
                                     .confirmYesNo();
-                            if(res==1) {
+                            if (res == 1) {
                                 printDeficiency();
                             }
                             AddingDataPipe.instance().resetIsChanged();
@@ -1636,7 +1649,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         }
                     }
 
-                    if(AddingDataPipe.instance().isMaxPopulationReached) {
+                    if (AddingDataPipe.instance().isMaxPopulationReached) {
                         Notifications.create().title("Max Population Reached")
                                 .position(Pos.BOTTOM_RIGHT)
                                 .text("Section reached the maximum population."
@@ -1661,23 +1674,23 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     .showAndWait();
         }
     }
-    
+
     private void printDeficiency() {
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = studentSearched.getCict_id();
-        print.whenSuccess(()->{
+        print.whenSuccess(() -> {
             Notifications.create()
                     .title("Nearly there.")
                     .text("Printing the deficiency report.")
                     .showInformation();
         });
-        print.whenCancelled(()->{
+        print.whenCancelled(() -> {
             Notifications.create()
                     .title("Request Cancelled")
                     .text("Sorry for the inconviniece.")
                     .showWarning();
         });
-        print.whenFailed(()->{
+        print.whenFailed(() -> {
             Notifications.create()
                     .title("Request Failed")
                     .text("Something went wrong. Sorry for the inconviniece.")
@@ -1686,7 +1699,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         print.transact();
     }
-    
+
     /**
      * Override filters.
      */
@@ -1699,22 +1712,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private final String INTERNSHIP_WITH_OTHERS = SystemOverriding.EVAL_INTERNSHIP_WITH_OTHERS;
     private final String BYPASSED_PRE_REQUISITES = SystemOverriding.EVAL_BYPASSED_PRE_REQUISITES;
     private final String INTERN_GRADE_REQUIREMENT = SystemOverriding.EVAL_INTERN_GRADE_REQUIREMENT;
-    
+
     private final String MAX_POPULATION = SystemOverriding.EVAL_EXCEED_MAX_POPULATION;
 
     private SubjectInformationHolder subinfo_CHANGE_SUBJECT;
-    
+
     private void validateSubject(String mode, SimpleTableRow row, SubjectInformationHolder subinfo) {
-        
+
         // if local registrar allow override.
         allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
-        
+
         /**
          * validate the subject before anything else
          */
         ValidateAddingSubject validate = new ValidateAddingSubject();
         validate.studentCICT_id = this.studentSearched.getCict_id();
-        SubjectMapping subjectToBeValidated =  subinfo.getSubjectMap();
+        SubjectMapping subjectToBeValidated = subinfo.getSubjectMap();
         validate.subjectID = subjectToBeValidated.getId();
 
         try {
@@ -1777,18 +1790,19 @@ public class AddingHome extends SceneFX implements ControllerFX {
             logs("MODE: " + mode);
             if (notExist) {
                 logs("SUBJECT " + validatedSubject.getCode() + " IS NOT EXISTING");
-                
-                
+
                 boolean isAdd = false;
-                if(mode.equalsIgnoreCase("add"))
+                if (mode.equalsIgnoreCase("add")) {
                     isAdd = true;
+                }
                 boolean stopTransaction = isOverMaxUnits(subinfo, totalUnitsAll, subjectToBeValidated.getLab_units() + subjectToBeValidated.getLec_units(), PublicConstants.MAX_UNITS, isAdd, mode, row);
-                if(stopTransaction)
+                if (stopTransaction) {
                     return;
-                
+                }
+
                 if (mode.equalsIgnoreCase("ADD")) {
                     SimpleTableView tableView = (SimpleTableView) this.vbox_tableHandler.getChildren().get(0);
-                    
+
                     if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                         logs("VALIDATED SUBJECT IS A TYPE INTERNSHIP");
                         if (count == 1) {
@@ -1823,7 +1837,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             Notifications.create()
                                     .title("Warning")
                                     .text("Internship can only be taken with"
-                                    + "\n 1 Minor or Elective subject."
+                                            + "\n 1 Minor or Elective subject."
                                             + "\nClick for more details.")
                                     .onAction(a -> {
                                         this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
@@ -1834,11 +1848,11 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     } else if (isInternshipExist) {
                         if (count > 1) {
                             //invalid
-                            logs("5");    
+                            logs("5");
                             Notifications.create()
                                     .title("Warning")
                                     .text("Internship can only be taken with"
-                                    + "\n 1 Minor or Elective subject."
+                                            + "\n 1 Minor or Elective subject."
                                             + "\nClick for more details.")
                                     .onAction(a -> {
                                         this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, null, null);
@@ -1848,7 +1862,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         } else {
                             if (SubjectClassification.isMajor(validatedSubject.getType())) {
                                 //invalid
-                                logs("6");    
+                                logs("6");
                                 Notifications.create()
                                         .title("Warning")
                                         .text("Cannot take Internship with a Major Subject."
@@ -1878,7 +1892,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                             Notifications.create()
                                     .title("Warning")
                                     .text("Internship can only be taken with"
-                                    + "\n 1 Minor or Elective subject."
+                                            + "\n 1 Minor or Elective subject."
                                             + "\nClick for more details.")
                                     .onAction(a -> {
                                         this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
@@ -1899,7 +1913,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                                 if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                     //invalid
                                     showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                    logs("3");    
+                                    logs("3");
                                     Notifications.create()
                                             .title("Warning")
                                             .text("Cannot take Internship with a Major Subject."
@@ -1929,11 +1943,11 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     if (isInternshipExist) {
                         if (count > 2) {
                             //invalid
-                            logs("5"); 
+                            logs("5");
                             Notifications.create()
                                     .title("Warning")
                                     .text("Internship can only be taken with"
-                                    + "\n 1 Minor or Elective subject."
+                                            + "\n 1 Minor or Elective subject."
                                             + "\nClick for more details.")
                                     .onAction(a -> {
                                         this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
@@ -1943,7 +1957,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         } else {
                             if (SubjectClassification.isMajor(validatedSubject.getType())) {
                                 //invalid
-                                logs("6");  
+                                logs("6");
                                 Notifications.create()
                                         .title("Warning")
                                         .text("Cannot take Internship with a Major Subject."
@@ -1967,22 +1981,22 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         SubjectMapping subject = subinfo.getSubjectMap();
                         double totalNew = subject.getLec_units() + subject.getLab_units();
                         double totalOld = OLD_subject.getLec_units() + OLD_subject.getLab_units();
-                        if(totalNew != totalOld) {  
+                        if (totalNew != totalOld) {
                             if (Access.isDeniedIfNotFrom(
-                                Access.ACCESS_LOCAL_REGISTRAR,
-                                Access.ACCESS_CO_REGISTRAR)) {
+                                    Access.ACCESS_LOCAL_REGISTRAR,
+                                    Access.ACCESS_CO_REGISTRAR)) {
                                 Mono.fx().alert().createWarning()
                                         .setHeader("Units Must Be Equal")
                                         .setMessage("Changing of subject requires an equal total"
-                                            + "\nnumber of units.")
+                                                + "\nnumber of units.")
                                         .show();
                                 return;
                             } else {
                                 System.out.println("GRANTED");
                             }
-                            
+
                         }
-                        
+
                         SimpleTableCell simplecell = row.getCell(0);
                         HBox simplerowcontent = simplecell.getContent();
 
@@ -1993,7 +2007,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                         Label lbl_lab = searchAccessibilityText(simplerowcontent, "lab");
                         Label lbl_section = searchAccessibilityText(simplerowcontent, "section");
                         Label lbl_icon = searchAccessibilityText(simplerowcontent, "letter");
-                        
+
                         lbl_icon.setText(subject.getCode().charAt(0) + "");
                         lbl_code.setText(subject.getCode());
                         lbl_descriptive_title.setText(subject.getDescriptive_title());
@@ -2007,99 +2021,99 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     }
                 } else if (mode.equalsIgnoreCase("REVERT")) {
 //                    if (isNormalTransaction) {
-                        SubjectMapping OLD_subject = subinfo_CHANGE_SUBJECT.getSubjectMap();
-                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            if (count > 2) {
-                                //invalid
+                    SubjectMapping OLD_subject = subinfo_CHANGE_SUBJECT.getSubjectMap();
+                    if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                        if (count > 2) {
+                            //invalid
 //                                showWarningNotification("Warning", "Internship can only be taken with"
 //                                        + "\n 1 Minor or Elective subject.");
-                                logs("1");
-                                 
-                                Notifications.create()
-                                        .title("Warning")
-                                        .text("Internship can only be taken with"
-                                        + "\n1 Minor or Elective subject." +
-                                                "\nClick for more details.")
-                                        .onAction(a -> {
-                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
-                                        })
-                                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                                return;
-                            } else if (count <= 2) {
-                                for (int i = 0; i < table.getChildren().size(); i++) {
-                                    SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
-                                    SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
-                                    SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
+                            logs("1");
 
-                                    if (row == currentTableRow) {
-                                        logs("SKIP");
-                                        continue;
-                                    }
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with"
+                                            + "\n1 Minor or Elective subject."
+                                            + "\nClick for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        } else if (count <= 2) {
+                            for (int i = 0; i < table.getChildren().size(); i++) {
+                                SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
+                                SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
+                                SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
 
-                                    if (SubjectClassification.isMajor(subjectInTheList.getType())) {
-                                        //invalid
-//                                        showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                        logs("3");
-                                        Notifications.create()
-                                                .title("Warning")
-                                                .text("Cannot take Internship with a Major Subject." +
-                                                        "\nClick for more details.")
-                                                .onAction(a -> {
-                                                    this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
-                                                })
-                                                .position(Pos.BOTTOM_RIGHT).showWarning();
-                                        return;
-                                    }
+                                if (row == currentTableRow) {
+                                    logs("SKIP");
+                                    continue;
                                 }
-                            } else {
-                                //valid
-                                logs("5");
-                            }
-                        }
 
-                        if (OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)
-                                && isInternshipExist) {
-                            isInternshipExist = false;
-                            //valid
-                            logs("8");
-                        }
-
-                        if (isInternshipExist) {
-                            if (count > 2) {
-                                //invalid
-//                                showWarningNotification("Warning", "Internship can only be taken with"
-//                                        + "\n 1 Minor or Elective subject.");
-                                logs("5");
-                                Notifications.create()
-                                        .title("Warning")
-                                        .text("Internship can only be taken with"
-                                        + "\n1 Minor or Elective subject." +
-                                                "\nClick for more details.")
-                                        .onAction(a -> {
-                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
-                                        })
-                                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                                return;
-                            } else {
-                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
+                                if (SubjectClassification.isMajor(subjectInTheList.getType())) {
                                     //invalid
-//                                    showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                    logs("6");
+//                                        showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
+                                    logs("3");
                                     Notifications.create()
                                             .title("Warning")
-                                            .text("Cannot take Internship with a Major Subject." +
-                                                    "\nClick for more details.")
+                                            .text("Cannot take Internship with a Major Subject."
+                                                    + "\nClick for more details.")
                                             .onAction(a -> {
                                                 this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
                                             })
                                             .position(Pos.BOTTOM_RIGHT).showWarning();
                                     return;
-                                } else {
-                                    //valid
-                                    logs("7");
                                 }
                             }
+                        } else {
+                            //valid
+                            logs("5");
                         }
+                    }
+
+                    if (OLD_subject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)
+                            && isInternshipExist) {
+                        isInternshipExist = false;
+                        //valid
+                        logs("8");
+                    }
+
+                    if (isInternshipExist) {
+                        if (count > 2) {
+                            //invalid
+//                                showWarningNotification("Warning", "Internship can only be taken with"
+//                                        + "\n 1 Minor or Elective subject.");
+                            logs("5");
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with"
+                                            + "\n1 Minor or Elective subject."
+                                            + "\nClick for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        } else {
+                            if (SubjectClassification.isMajor(validatedSubject.getType())) {
+                                //invalid
+//                                    showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
+                                logs("6");
+                                Notifications.create()
+                                        .title("Warning")
+                                        .text("Cannot take Internship with a Major Subject."
+                                                + "\nClick for more details.")
+                                        .onAction(a -> {
+                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                                        })
+                                        .position(Pos.BOTTOM_RIGHT).showWarning();
+                                return;
+                            } else {
+                                //valid
+                                logs("7");
+                            }
+                        }
+                    }
 //                    }
 
                     // when reverted back to normal state.
@@ -2138,88 +2152,88 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     invokeListener(table);
                 } else if (mode.equalsIgnoreCase("ORIGINAL")) {
 //                    if (isNormalTransaction) {
-                        if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
-                            if (count > 1) {
-                                //invalid
-                                logs("1");
+                    if (validatedSubject.getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
+                        if (count > 1) {
+                            //invalid
+                            logs("1");
 //                                showWarningNotification("Warning", "Internship can only be taken with"
 //                                        + "\n 1 Minor or Elective subject.");
-                                Notifications.create()
-                                        .title("Warning")
-                                        .text("Internship can only be taken with 1 Minor or "
-                                                + "\nElective subject. Click for more details.")
-                                        .onAction(a -> {
-                                            this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, null);
-                                        })
-                                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                                return;
-                            } else if (count == 1) {
-                                for (int i = 0; i < table.getChildren().size(); i++) {
-                                    SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
-                                    String row_status = (String) currentTableRow.getRowMetaData().get(KEY_ROW_STATUS);
-                                    if (!row_status.equalsIgnoreCase("REMOVED")) {
-                                        SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
-                                        SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
-                                        if (SubjectClassification.isMajor(subjectInTheList.getType())) {
-                                            //invalid
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with 1 Minor or "
+                                            + "\nElective subject. Click for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, null);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        } else if (count == 1) {
+                            for (int i = 0; i < table.getChildren().size(); i++) {
+                                SimpleTableRow currentTableRow = (SimpleTableRow) table.getChildren().get(i);
+                                String row_status = (String) currentTableRow.getRowMetaData().get(KEY_ROW_STATUS);
+                                if (!row_status.equalsIgnoreCase("REMOVED")) {
+                                    SubjectInformationHolder subInfoOfCurrentRow = (SubjectInformationHolder) currentTableRow.getRowMetaData().get(KEY_SUB_INFO);
+                                    SubjectMapping subjectInTheList = subInfoOfCurrentRow.getSubjectMap();
+                                    if (SubjectClassification.isMajor(subjectInTheList.getType())) {
+                                        //invalid
 //                                            showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                            logs("2");
-                                            Notifications.create()
-                                                    .title("Warning")
-                                                    .text("Cannot take Internship with a Major Subject." +
-                                                            "\nClick for more details.")
-                                                    .onAction(a -> {
-                                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, null);
-                                                    })
-                                                    .position(Pos.BOTTOM_RIGHT).showWarning();
-                                            return;
-                                        } else {
-                                            //valid
-                                            logs("3");
-                                        }
+                                        logs("2");
+                                        Notifications.create()
+                                                .title("Warning")
+                                                .text("Cannot take Internship with a Major Subject."
+                                                        + "\nClick for more details.")
+                                                .onAction(a -> {
+                                                    this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, null);
+                                                })
+                                                .position(Pos.BOTTOM_RIGHT).showWarning();
+                                        return;
+                                    } else {
+                                        //valid
+                                        logs("3");
                                     }
                                 }
-                            } else {
-                                //valid
-                                logs("4");
                             }
+                        } else {
+                            //valid
+                            logs("4");
                         }
+                    }
 
-                        if (isInternshipExist) {
-                            if (count > 1) {
-                                //invalid
-                                logs("5");
+                    if (isInternshipExist) {
+                        if (count > 1) {
+                            //invalid
+                            logs("5");
 //                                showWarningNotification("Warning", "Internship can only be taken with"
 //                                        + "\n 1 Minor or Elective subject.");
+                            Notifications.create()
+                                    .title("Warning")
+                                    .text("Internship can only be taken with 1 Minor or "
+                                            + "\nElective subject. Click for more details.")
+                                    .onAction(a -> {
+                                        this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, null);
+                                    })
+                                    .position(Pos.BOTTOM_RIGHT).showWarning();
+                            return;
+                        } else {
+                            if (SubjectClassification.isMajor(validatedSubject.getType())) {
+                                //invalid
+//                                    showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
+                                logs("6");
                                 Notifications.create()
                                         .title("Warning")
-                                        .text("Internship can only be taken with 1 Minor or "
-                                                + "\nElective subject. Click for more details.")
+                                        .text("Cannot take Internship with a Major Subject."
+                                                + "\nClick for more details.")
                                         .onAction(a -> {
                                             this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, null);
                                         })
                                         .position(Pos.BOTTOM_RIGHT).showWarning();
                                 return;
                             } else {
-                                if (SubjectClassification.isMajor(validatedSubject.getType())) {
-                                    //invalid
-//                                    showWarningNotification("Warning", "Cannot take Internship with a Major Subject.");
-                                    logs("6");
-                                    Notifications.create()
-                                            .title("Warning")
-                                            .text("Cannot take Internship with a Major Subject." +
-                                                    "\nClick for more details.")
-                                            .onAction(a -> {
-                                                this.systemOverride(this.INTERNSHIP_WITH_OTHERS, subinfo, mode, row, null);
-                                            })
-                                            .position(Pos.BOTTOM_RIGHT).showWarning();
-                                    return;
-                                } else {
-                                    //valid
-                                    logs("7");
-                                }
+                                //valid
+                                logs("7");
                             }
                         }
+                    }
 //                    }
 
                     row.getRowMetaData().put(KEY_ROW_STATUS, "ORIGINAL");
@@ -2270,23 +2284,23 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                showWarningNotification("Pre-Requisites Required.", subinfo.getSubjectMap().getCode() + "\n"
 //                        + "Verified For S/N: " + studentSearched.getId() + ", " + studentSearched.getLast_name() + ".\n"
 //                        + "Requires: " + prereqs);
-                
-            Notifications.create()
-                    .title("Pre-Requisites Required")
-                    .text(subinfo.getSubjectMap().getCode() + "\n"
-                        + "Verified For S/N: " + studentSearched.getId() + ", " + studentSearched.getLast_name() + ".\n"
-                        + "Requires: " + prereqs)
-                    .onAction(a -> {
-                        this.systemOverride(this.BYPASSED_PRE_REQUISITES, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
-                    })
-                    .position(Pos.BOTTOM_RIGHT).showWarning();
+
+                Notifications.create()
+                        .title("Pre-Requisites Required")
+                        .text(subinfo.getSubjectMap().getCode() + "\n"
+                                + "Verified For S/N: " + studentSearched.getId() + ", " + studentSearched.getLast_name() + ".\n"
+                                + "Requires: " + prereqs)
+                        .onAction(a -> {
+                            this.systemOverride(this.BYPASSED_PRE_REQUISITES, subinfo, mode, row, subinfo_CHANGE_SUBJECT);
+                        })
+                        .position(Pos.BOTTOM_RIGHT).showWarning();
             }
             AddingDataPipe.instance().resetIsChanged();
         });
-        
+
         validate.transact();
     }
-    
+
     private boolean checkIfNotExisting(SubjectMapping validatedSubject) {
         boolean notExist = true;
         for (int i = 0; i < table.getChildren().size(); i++) {
@@ -2302,19 +2316,19 @@ public class AddingHome extends SceneFX implements ControllerFX {
         }
         return notExist;
     }
-    
-    
+
     /**
-     * IS OVERRIDABLE BY SYSTEM. checks whether if the student is
-     * overloaded.
+     * IS OVERRIDABLE BY SYSTEM. checks whether if the student is overloaded.
      */
     private boolean isOverMaxUnits(SubjectInformationHolder subjinfo, double unit_count, double getSubjectUnits, double max_units, boolean isAdd, String mode, SimpleTableRow row) {
-        if(AddingDataPipe.instance().isChanged)
+        if (AddingDataPipe.instance().isChanged) {
             return false;
+        }
         double total = unit_count;
-        if(isAdd) 
+        if (isAdd) {
             total += getSubjectUnits;
-        
+        }
+
         if (total > max_units) {
             String text = subjinfo.getSubjectMap().getCode() + ", Cannot be added."
                     + "\nThis will exceed the maximum units allowed."
@@ -2332,9 +2346,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
             return false;
         }
     }
-    
-    
-    
+
     private void systemOverride(String type, SubjectInformationHolder subinfo, String mode, SimpleTableRow row, SubjectInformationHolder subinfo_CHANGE_SUBJECT) {
         Object[] result = Access.isEvaluationOverride(allowOverride);
         boolean ok = (boolean) result[0];
@@ -2360,7 +2372,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
             //-----------------
             map.setAttachment_file(fileName);
             //------------
-                
+
             int id = Database.connect().system_override_logs().insert(map);
             if (id <= 0) {
                 Mono.fx().snackbar().showError(anchor_add_change, "Something went wrong please try again.");
@@ -2369,11 +2381,11 @@ public class AddingHome extends SceneFX implements ControllerFX {
             }
         }
     }
-    
+
     private void forceTransact(SubjectInformationHolder subinfo, String mode, SimpleTableRow row, SubjectInformationHolder subinfo_CHANGE_SUBJECT) {
-        if(mode.equalsIgnoreCase("ADD")) {
+        if (mode.equalsIgnoreCase("ADD")) {
             createRow(subinfo, true);
-        } else if(mode.equalsIgnoreCase("CHANGE")) {
+        } else if (mode.equalsIgnoreCase("CHANGE")) {
             SubjectMapping subject = subinfo.getSubjectMap();
 
             SimpleTableCell simplecell = row.getCell(0);
@@ -2395,14 +2407,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
             row.hideExtension();
             createChangedRowExtension(table, row, subinfo, subinfo_CHANGE_SUBJECT);
             row.showExtension();
-        } else if(mode.equalsIgnoreCase("REVERT")) {
+        } else if (mode.equalsIgnoreCase("REVERT")) {
             // when reverted back to normal state.
             row.getStyleClass().remove("table-mutate-as-changed");
             row.getRowMetaData().put(KEY_ROW_STATUS, "REVERT");
-            
+
             row.getRowMetaData().put(KEY_SUB_INFO, subinfo);
             row.hideExtension();
-            
+
             SimpleTableCell simplecell = row.getCell(0);
             HBox simplerowcontent = simplecell.getContent();
             SubjectMapping subject = subinfo.getSubjectMap();
@@ -2423,10 +2435,10 @@ public class AddingHome extends SceneFX implements ControllerFX {
             // refresh total values.
             invokeListener(table);
         } else if (mode.equalsIgnoreCase("ORIGINAL")) {
-             row.getRowMetaData().put(KEY_ROW_STATUS, "ORIGINAL");
+            row.getRowMetaData().put(KEY_ROW_STATUS, "ORIGINAL");
             row.getStyleClass().remove("table-mutate-as-removed");
             row.hideExtension();
-            
+
             createDefaultRowExtension(table, row);
             row.showExtension();
             // refresh total values.
@@ -2443,9 +2455,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 .title("System Rules Override")
                 .text(text)
                 .position(Pos.BOTTOM_RIGHT).showWarning();
-            
-    }
 
+    }
 
     private void showWarningNotification(String title, String message) {
         Notifications.create()
@@ -2652,8 +2663,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                this.hbox_search.setVisible(true); // search
 //                this.btnFind.setDisable(false);
 //                this.btn_winAdd.setDisable(true);
-                
-                Animate.fade(anchor_results, 150, ()->{
+
+                Animate.fade(anchor_results, 150, () -> {
                     reset();
                     this.studentSearched = null;
                     this.anchor_results.setVisible(true);
@@ -2668,8 +2679,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                this.hbox_loading.setVisible(true); // search
 //                this.btnFind.setDisable(true);
 //                this.btn_winAdd.setDisable(true);
-                
-                Animate.fade(anchor_results, 150, ()->{
+
+                Animate.fade(anchor_results, 150, () -> {
                     reset();
                     this.anchor_results.setVisible(true);
                     this.hbox_loading.setVisible(true); // search
@@ -2682,8 +2693,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                this.btn_winAdd.setDisable(true);
 //                this.anchor_results.setVisible(true);
 //                this.hbox_none.setVisible(true); // search
-                
-                Animate.fade(anchor_results, 150, ()->{
+
+                Animate.fade(anchor_results, 150, () -> {
                     reset();
                     this.btn_winAdd.setDisable(true);
                     this.anchor_results.setVisible(true);
@@ -2694,19 +2705,19 @@ public class AddingHome extends SceneFX implements ControllerFX {
             case "preview":
 //                anchor_add_change.setDisable(false);
 //                this.anchor_preview.setVisible(true); 
-                
-                Animate.fade(anchor_preview, 150, ()->{
+
+                Animate.fade(anchor_preview, 150, () -> {
                     reset();
                     anchor_add_change.setDisable(false);
-                    this.anchor_preview.setVisible(true); 
+                    this.anchor_preview.setVisible(true);
                 }, this.anchor_preview, this.anchor_results);
                 break;
             case "already":
 //                this.anchor_results.setVisible(true);
 //                this.hbox_already.setVisible(true); // search
 //                this.btn_winAdd.setDisable(true);
-                
-                Animate.fade(anchor_results, 150, ()->{
+
+                Animate.fade(anchor_results, 150, () -> {
                     reset();
                     this.anchor_results.setVisible(true);
                     this.hbox_already.setVisible(true); // search
@@ -2715,7 +2726,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 break;
         }
     }
-    
+
     private void reset() {
         this.btnFind.setDisable(false);
         this.btn_winAdd.setDisable(false);
@@ -2727,18 +2738,18 @@ public class AddingHome extends SceneFX implements ControllerFX {
         this.hbox_already.setVisible(false);
         vbox_studentOptions.setVisible(false);
     }
-    
+
     private void setImageView() {
         StudentProfileMapping spMap = null;
-        if(this.studentSearched.getHas_profile().equals(1)) {
+        if (this.studentSearched.getHas_profile().equals(1)) {
             spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, this.studentSearched.getCict_id())
                     .active(Order.desc(DB.student_profile().id)).first();
         }
-        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        String studentImage = (spMap == null ? null : spMap.getProfile_picture());
         if (studentImage == null
-            || studentImage.isEmpty()
-            || studentImage.equalsIgnoreCase("NONE")) {
+                || studentImage.isEmpty()
+                || studentImage.equalsIgnoreCase("NONE")) {
             ImageUtility.addDefaultImageToFx(img_profile, 0, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 0);

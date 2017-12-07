@@ -56,13 +56,8 @@ public class CoRequisiteFilter {
             //------------------------------------------------------------------
             SubjectView view = (SubjectView) object;
             //------------------------------------------------------------------
-            ArrayList<CurriculumRequisiteExtMapping> corequisites = Mono.orm().newSearch(Database.connect().curriculum_requisite_ext())
-                    .eq(DB.curriculum_requisite_ext().CURRICULUM_id, studentCurriculumID)
-                    .eq(DB.curriculum_requisite_ext().SUBJECT_id_get, view.subjectID)
-                    .eq(DB.curriculum_requisite_ext().type, "COREQUISITE")
-                    .active(Order.desc(DB.curriculum_requisite_ext().id))
-                    .all();
-
+            ArrayList<CurriculumRequisiteExtMapping> corequisites
+                    = getCoRequisites(studentCurriculumID, view.subjectID);
             //------------------------------------------------------------------
             if (corequisites == null) {
                 // ok no requisites
@@ -123,24 +118,44 @@ public class CoRequisiteFilter {
         return exist;
     }
 
-    //--------------------------------------------------------------------------
-    // for adding
-    public static boolean checkCoReqAdd(ArrayList<SubjectInformationHolder> collection, int curriculumID) {
+    private static ArrayList<CurriculumRequisiteExtMapping>
+            getCoRequisites(Integer curriculumID, Integer subjectID) {
+        return Mono.orm()
+                .newSearch(Database.connect().curriculum_requisite_ext())
+                .eq(DB.curriculum_requisite_ext().CURRICULUM_id, curriculumID)
+                .eq(DB.curriculum_requisite_ext().SUBJECT_id_get, subjectID)
+                .eq(DB.curriculum_requisite_ext().type, "COREQUISITE")
+                .active(Order.desc(DB.curriculum_requisite_ext().id))
+                .all();
+    }
+
+    /**
+     * Checks whether there is a corequisite.
+     *
+     * if returned null pre requisites are complete.
+     *
+     * @param collection the collection without the removed subject.
+     * @param curriculumID curriculum ID of the student.
+     * @return
+     */
+    public static ArrayList<CurriculumRequisiteExtMapping> checkCoReqAdd(
+            ArrayList<SubjectInformationHolder> collection, Integer curriculumID) {
         for (SubjectInformationHolder subInfo : collection) {
             SubjectMapping subjectMap = subInfo.getSubjectMap();
-            int subjectID = subjectMap.getId();
+            Integer subjectID = subjectMap.getId();
             //------------------------------------------------------------------
-            ArrayList<CurriculumRequisiteExtMapping> corequisites = Mono.orm().newSearch(Database.connect().curriculum_requisite_ext())
-                    .eq(DB.curriculum_requisite_ext().CURRICULUM_id, curriculumID)
-                    .eq(DB.curriculum_requisite_ext().SUBJECT_id_get, subjectID)
-                    .eq(DB.curriculum_requisite_ext().type, "COREQUISITE")
-                    .active(Order.desc(DB.curriculum_requisite_ext().id))
-                    .all();
+            ArrayList<CurriculumRequisiteExtMapping> corequisites
+                    = getCoRequisites(curriculumID, subjectID);
             //------------------------------------------------------------------
             if (corequisites == null) {
                 // ok no requisites
                 continue; // go to next subject view object
             }
+            //------------------------------------------------------------------
+            // clone co requisites.
+            ArrayList<CurriculumRequisiteExtMapping> cloneReq
+                    = new ArrayList<>();
+            cloneReq.addAll(corequisites);
             //------------------------------------------------------------------
             // check for coreq of this subject in the view
             int thisIterationSize = corequisites.size();
@@ -151,6 +166,10 @@ public class CoRequisiteFilter {
                 // iterate all over the subjects
                 //--------------------------------------------------------------
                 if (checkIfInListAdding(requiredSubject, collection)) {
+                    // if found
+                    // remove from clone
+                    cloneReq.remove(coreq);
+                    // increment
                     thisIterationGot++;
                 }
                 //--------------------------------------------------------------
@@ -158,14 +177,13 @@ public class CoRequisiteFilter {
             //------------------------------------------------------------------
             if (thisIterationSize != thisIterationGot) {
                 // some co requisite is not found in the list
-                return false;
+                // if not equal check the remaining entry in clone req
+                return cloneReq;
             }
             //------------------------------------------------------------------
-
-        }
-
+        } // loop completed
         //----------------------------------------------------------------------
-        return true;
+        return null;
     }
 
     /**
