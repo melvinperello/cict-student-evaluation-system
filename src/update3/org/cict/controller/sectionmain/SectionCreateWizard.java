@@ -1158,12 +1158,14 @@ public class SectionCreateWizard extends SceneFX implements ControllerFX {
 
                 //--------------------------------------------------------------
                 // avoid duplicate sections for ojt
-                outLoop:
-                for (String normalSections : normal) {
-                    for (String ojtSections : ojt) {
-                        if (ojtSections.equalsIgnoreCase(normalSections)) {
-                            ojt.remove(ojtSections);
-                            continue outLoop;
+                if (ojt != null) {
+                    outLoop:
+                    for (String normalSections : normal) {
+                        for (String ojtSections : ojt) {
+                            if (ojtSections.equalsIgnoreCase(normalSections)) {
+                                ojt.remove(ojtSections);
+                                continue outLoop;
+                            }
                         }
                     }
                 }
