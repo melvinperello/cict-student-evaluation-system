@@ -257,7 +257,7 @@ public class SystemForgot extends MonoLauncher {
     }
     
     private void checkAnswer() {
-        String answer = MonoString.removeExtraSpace(this.txt_answer.getText().toUpperCase());
+        String answer = MonoString.removeExtraSpace(this.txt_answer.getText());
         if(Mono.security().hashFactory().hash_sha512(answer).equals(account.getRecovery_answer())) {
             this.changeView(vbox_reset);
         } else {

@@ -222,7 +222,8 @@ public class CreateSystemAdmin extends MonoLauncher {
         cmb_questions.getSelectionModel().selectFirst();
         MonoClick.addClickEvent(btn_next3, ()->{
             question = cmb_questions.getSelectionModel().getSelectedItem().toUpperCase();
-            answer = this.validate(txt_answer, txt_answer_confirm, "recovery answer", false).toUpperCase();
+            answer = this.validate(txt_answer, txt_answer_confirm, "recovery answer", false);
+            System.out.println(answer);
             if(answer==null)
                 return;
             if(this.saveNewAdmin())
@@ -313,7 +314,7 @@ public class CreateSystemAdmin extends MonoLauncher {
     
     private String validate(CustomPasswordField node1, CustomPasswordField node2, String category, boolean checkLength) {
         int res = this.check(node1, node2);
-        String result = node1.getText();
+        String result = MonoString.removeExtraSpace(node1.getText());
         if(res==1) {
             Mono.fx().alert().createWarning()
                     .setMessage("Please enter a " + category.toLowerCase()  +".")
