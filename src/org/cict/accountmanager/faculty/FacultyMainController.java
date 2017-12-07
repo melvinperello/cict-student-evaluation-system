@@ -324,7 +324,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                 WordUtils.capitalizeFully(result.getFullName()),
                 (result.getDepartment() == null || result.getDepartment().isEmpty() ? "NONE" : result.getDepartment()),
                 (result.getAccountFacultyMapping() == null ? "NO ACCOUNT" : result.getAccountFacultyMapping().getUsername().toUpperCase()),
-                WordUtils.capitalizeFully(result.getAccessLevel().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR) ? "Assistant Registrar" : result.getAccessLevel().replace("_", " "))};
+                WordUtils.capitalizeFully(result.getAccessLevel().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR) ? "Assistant Registrar" : (result.getAccessLevel()==null || result.getAccessLevel().isEmpty()? "NONE" : result.getAccessLevel().replace("_", " ")))};
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
