@@ -10,7 +10,7 @@
 
 <VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" spacing="10.0" style="-fx-background-color: #0247FE;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Access Local Registrar's Override" textFill="WHITE">
+      <Label text="Access Local Registrar" textFill="WHITE">
          <font>
             <Font size="30.0" />
          </font></Label>
@@ -92,7 +92,7 @@
       <VBox alignment="CENTER" />
       <VBox alignment="BOTTOM_CENTER" prefHeight="110.0" prefWidth="560.0">
          <children>
-            <Label prefHeight="57.0" prefWidth="560.0" text="Every request of a Local Registrar's Override, the system will provide unique OTPs. Please refer from the reference number." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+            <Label prefHeight="57.0" prefWidth="560.0" text="Every request of a Access Local Registrar, the system will provide unique OTPs. Please refer from the reference number." textAlignment="CENTER" textFill="WHITE" wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>

@@ -76,7 +76,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
     
     private static String contactNumber = "";
     public static boolean isAuthorized(Stage stage) {
-        if(!Access.isGranted(Access.ACCESS_CO_REGISTRAR))
+        if(!Access.isGrantedIf(Access.ACCESS_CO_REGISTRAR, Access.ACCESS_LOCAL_REGISTRAR))
             return false;
         AccountFacultyMapping localRegistrarAcc = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR).active().first();
@@ -91,7 +91,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
             return false;
         }
         int res = Mono.fx().alert().createConfirmation()
-                .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the override transaction. Continue?")
+                .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the Access Local Registrar transaction. Continue?")
                 .setHeader("Send OTP To Authorize").confirmYesNo();
         if(res==-1)
             return false;
@@ -125,6 +125,11 @@ public class AssistantRegistrarOverride extends MonoLauncher {
                 Mono.fx().thread().wrap(()->{
                     Notifications.create().darkStyle().title("No Response")
                             .text("Please try again later.").showError();
+                });
+            } else if(response.equalsIgnoreCase("SENDING")) {
+                Mono.fx().thread().wrap(()->{
+                    Notifications.create().darkStyle().title("Sending")
+                            .text("Please wait for the message.").showInformation();
                 });
             }
         });
