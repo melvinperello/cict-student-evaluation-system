@@ -229,7 +229,7 @@ public class Access {
     }
     
     public static String getFORMATTED_MESSAGE(String SUBJECT, String CODE, String REQBY, Integer refID) {
-        return SystemOverriding.getACRONYM(10, SUBJECT) + " Code:" + CODE + " REQ.BY:" + REQBY + ". REF#" + refID
+        return SystemOverriding.getACRONYM(15, SUBJECT) + " Code:" + CODE + " REQ.BY:" + REQBY + ". REF#" + refID
                 + "<eems-no-reply>";
     }
 }
