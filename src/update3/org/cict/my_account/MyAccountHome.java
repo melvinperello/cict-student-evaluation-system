@@ -348,7 +348,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
 
         StringFilter textContact = TextInputFilters.string()
                 .setFilterMode(StringFilter.DIGIT)
-                .setMaxCharacters(20)
+                .setMaxCharacters(12)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager -> {
                 });
@@ -1264,18 +1264,18 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             contactNumber = null;
 //            showWarning("Invalid Contact Number", "Contact number must have a value.");
 //            return;
-        } else if (contactNumber.length() > 12) {
-            showWarning("Invalid Contact Number", "Must have a length of 11 digits\n"
+        } else if (contactNumber.length() > 12 || contactNumber.length() < 11) {
+            showWarning("Invalid Contact Number", "Must have a length of 11 or 12 digits\n"
                     + "and starts with \"09\" or \"639\"");
             return;
         } else {
-            if(contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
+            if(contactNumber.length() == 11 && contactNumber.substring(0, 2).equalsIgnoreCase("09")) {
                 contactNumber = "+639" + contactNumber.substring(2, 11);
-            } else if(contactNumber.substring(0, 3).equalsIgnoreCase("639")) {
+            } else if(contactNumber.length() == 12 && contactNumber.substring(0, 3).equalsIgnoreCase("639")) {
                 contactNumber = "+639" + contactNumber.substring(3, 12);
             } else {
                 showWarning("Invalid Contact Number", "Must start with \"09\" or \"639\" with a length\n"
-                        + "of 11 digits.");
+                        + "of 11 or 12 digits.");
                 return;
             }
         }
