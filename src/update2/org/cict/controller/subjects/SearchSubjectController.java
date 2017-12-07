@@ -629,11 +629,11 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         CurriculumSubjectMapping exist = Mono.orm().newSearch(Database.connect().curriculum_subject())
                 .eq(DB.curriculum_subject().SUBJECT_id, SUBJECT.getId())
                 .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM.getId())
-                .execute(Order.desc(DB.curriculum_subject().id))
+                .active(Order.desc(DB.curriculum_subject().id))
                 .first();
         
         if(exist != null) {
-            if(exist.getActive() == 1) {
+//            if(exist.getActive() == 1) {
                 //exist
                 Mono.fx().alert()
                         .createWarning()
@@ -641,35 +641,35 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
                         .setMessage("Subject is already in the curriculum's list of subject.")
                         .showAndWait();
                 return;
-            } else {
-                if(Objects.equals(exist.getSemester(), SEMESTER) && Objects.equals(exist.getYear(), YEAR)) {
-                    exist.setActive(1);
-                    exist.setAdded_by(CREATED_BY);
-                    exist.setAdded_date(CREATED_DATE);
-                    this.showResultAlert(Database.connect().curriculum_subject().update(exist), SUBJECT, "ADD");
-                    return;
-                } else {
-                    int res = Mono.fx().alert()
-                            .createConfirmation()
-                            .setHeader("Subject Exist But Inactive")
-                            .setMessage("This subject is existing in this curriculum, " 
-                                    + getYearLevel(exist.getYear()) + " " 
-                                    + getSemester(exist.getSemester()) + " but inactive. Do you still want to add it?")
-                            .confirmYesNo();
-                    if(res != 1) {
-                        return;
-                    } else {
-                        //update the values to avoid unused data 
-                        exist.setSemester(SEMESTER);
-                        exist.setYear(YEAR);
-                        exist.setActive(1);
-                        exist.setAdded_by(CREATED_BY);
-                        exist.setAdded_date(CREATED_DATE);
-                        this.showResultAlert(Database.connect().curriculum_subject().update(exist), SUBJECT, "RESTORE");
-                        return;
-                    }
-                }
-            }
+//            } else {
+//                if(Objects.equals(exist.getSemester(), SEMESTER) && Objects.equals(exist.getYear(), YEAR)) {
+//                    exist.setActive(1);
+//                    exist.setAdded_by(CREATED_BY);
+//                    exist.setAdded_date(CREATED_DATE);
+//                    this.showResultAlert(Database.connect().curriculum_subject().update(exist), SUBJECT, "ADD");
+//                    return;
+//                } else {
+//                    int res = Mono.fx().alert()
+//                            .createConfirmation()
+//                            .setHeader("Subject Exist But Inactive")
+//                            .setMessage("This subject is existing in this curriculum, " 
+//                                    + getYearLevel(exist.getYear()) + " " 
+//                                    + getSemester(exist.getSemester()) + " but inactive. Do you still want to add it?")
+//                            .confirmYesNo();
+//                    if(res != 1) {
+//                        return;
+//                    } else {
+//                        //update the values to avoid unused data 
+//                        exist.setSemester(SEMESTER);
+//                        exist.setYear(YEAR);
+//                        exist.setActive(1);
+//                        exist.setAdded_by(CREATED_BY);
+//                        exist.setAdded_date(CREATED_DATE);
+//                        this.showResultAlert(Database.connect().curriculum_subject().update(exist), SUBJECT, "RESTORE");
+//                        return;
+//                    }
+//                }
+//            }
         }
         
         CheckOJTExist check = new CheckOJTExist(CURRICULUM.getId());
