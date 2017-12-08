@@ -24,6 +24,7 @@
 package org.cict.evaluation;
 
 import app.lazy.models.CurriculumRequisiteExtMapping;
+import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
@@ -118,17 +119,6 @@ public class CoRequisiteFilter {
         return exist;
     }
 
-    private static ArrayList<CurriculumRequisiteExtMapping>
-            getCoRequisites(Integer curriculumID, Integer subjectID) {
-        return Mono.orm()
-                .newSearch(Database.connect().curriculum_requisite_ext())
-                .eq(DB.curriculum_requisite_ext().CURRICULUM_id, curriculumID)
-                .eq(DB.curriculum_requisite_ext().SUBJECT_id_get, subjectID)
-                .eq(DB.curriculum_requisite_ext().type, "COREQUISITE")
-                .active(Order.desc(DB.curriculum_requisite_ext().id))
-                .all();
-    }
-
     /**
      * Checks whether there is a corequisite.
      *
@@ -139,9 +129,15 @@ public class CoRequisiteFilter {
      * @return
      */
     public static ArrayList<CurriculumRequisiteExtMapping> checkCoReqAdd(
-            ArrayList<SubjectInformationHolder> collection, Integer curriculumID) {
-        for (SubjectInformationHolder subInfo : collection) {
-            SubjectMapping subjectMap = subInfo.getSubjectMap();
+            // Parameters
+            ArrayList<SubjectMapping> collection,
+            Integer curriculumID,
+            Integer studentID
+    ) {
+        // iterate all over the collection
+        for (SubjectMapping subInfo : collection) {
+            // get info
+            SubjectMapping subjectMap = subInfo;
             Integer subjectID = subjectMap.getId();
             //------------------------------------------------------------------
             ArrayList<CurriculumRequisiteExtMapping> corequisites
@@ -162,8 +158,6 @@ public class CoRequisiteFilter {
             int thisIterationGot = 0;
             for (CurriculumRequisiteExtMapping coreq : corequisites) {
                 int requiredSubject = coreq.getSUBJECT_id_req();
-                //--------------------------------------------------------------
-                // iterate all over the subjects
                 //--------------------------------------------------------------
                 if (checkIfInListAdding(requiredSubject, collection)) {
                     // if found
@@ -195,11 +189,11 @@ public class CoRequisiteFilter {
      */
     private static boolean checkIfInListAdding(
             int requiredSubject,
-            ArrayList<SubjectInformationHolder> collection
+            ArrayList<SubjectMapping> collection
     ) {
         boolean exist = false;
-        for (SubjectInformationHolder subInfo : collection) {
-            SubjectMapping subjectMap = subInfo.getSubjectMap();
+        for (SubjectMapping subInfo : collection) {
+            SubjectMapping subjectMap = subInfo;
             int subjectID = subjectMap.getId();
             //----------------------------------------------------------
             if (subjectID == requiredSubject) {
@@ -212,4 +206,63 @@ public class CoRequisiteFilter {
 
         return exist;
     }
+
+    /**
+     * Get he co requisites of a particular subject if there is one.
+     *
+     * @param curriculumID
+     * @param subjectID
+     * @return
+     */
+    private static ArrayList<CurriculumRequisiteExtMapping>
+            getCoRequisites(Integer curriculumID, Integer subjectID) {
+        return Mono.orm()
+                .newSearch(Database.connect().curriculum_requisite_ext())
+                .eq(DB.curriculum_requisite_ext().CURRICULUM_id, curriculumID)
+                .eq(DB.curriculum_requisite_ext().SUBJECT_id_get, subjectID)
+                .eq(DB.curriculum_requisite_ext().type, "COREQUISITE")
+                .active(Order.desc(DB.curriculum_requisite_ext().id))
+                .all();
+    }
+
+    /**
+     * get the subject information of the subject from the curriculum
+     * curriculum.
+     *
+     * @param curriculumID
+     * @param subjectID
+     * @return
+     */
+    @Deprecated
+    private static ArrayList<CurriculumSubjectMapping>
+            getCoRequisiteInfo(Integer curriculumID, Integer subjectID) {
+        return Mono.orm()
+                .newSearch(Database.connect().curriculum_subject())
+                .eq(DB.curriculum_subject().CURRICULUM_id, curriculumID)
+                .eq(DB.curriculum_subject().SUBJECT_id, subjectID)
+                .active(Order.desc(DB.curriculum_requisite_ext().id))
+                .all();
+    }
+
+    /**
+     * If the corequisite is not enrolled at the same time check whether it is
+     * already taken. passed or failed.
+     *
+     * @param cictID
+     * @param subjectID
+     * @return
+     */
+    private static boolean isCoTaken(Integer cictID, Integer subjectID) {
+        Object hasGrade = Mono.orm().newSearch(Database.connect().grade())
+                .eq(DB.grade().STUDENT_id, cictID)
+                .eq(DB.grade().SUBJECT_id, subjectID)
+                .eq(DB.grade().posted, 1)
+                .active(Order.desc(DB.grade().id))
+                .all();
+        if (hasGrade == null) {
+            return false;
+        }
+        return true;
+    }
+
 }

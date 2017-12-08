@@ -465,6 +465,10 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void onSaveChanges() {
+        //----------------------------------------------------------------------
+        // Co-Requisite Validation
+        ArrayList<SubjectMapping> subjectCoReqCheck = new ArrayList<SubjectMapping>();
+        //----------------------------------------------------------------------
 
         SaveChanges save = new SaveChanges();
 
@@ -472,8 +476,10 @@ public class AddingHome extends SceneFX implements ControllerFX {
         boolean isModified = false;
         // get details
         ArrayList<Object[]> details = new ArrayList<>();
+
         for (Node row : this.table.getRows()) {
             SimpleTableRow simplerow = (SimpleTableRow) row;
+            //------------------------------------------------------------------
             SubjectInformationHolder row_info = (SubjectInformationHolder) simplerow.getRowMetaData().get(KEY_SUB_INFO);
             String row_status = (String) simplerow.getRowMetaData().get(KEY_ROW_STATUS);
             SubjectInformationHolder old_lg = null;
@@ -486,20 +492,35 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     isModified = true;
                     break;
             }
+            //------------------------------------------------------------------
+            // if not removed add to coreq validation
+            if (!row_status.equalsIgnoreCase("REMOVED")) {
+                subjectCoReqCheck.add(row_info.getSubjectMap());
+            }
+            //------------------------------------------------------------------
+
             Object[] o = new Object[]{row_status, row_info, old_lg};
             details.add(o);
         }
 
         //----------------------------------------------------------------------
-        // the collection must not conatin the removed subject.
-        ArrayList<CurriculumRequisiteExtMapping> missingcoreq
-                = CoRequisiteFilter
-                        .checkCoReqAdd(collection_preview,
-                                this.studentSearched.getCURRICULUM_id());
+        if (!subjectCoReqCheck.isEmpty()) {
+            // the collection must not conatin the removed subject.
+            ArrayList<CurriculumRequisiteExtMapping> missingcoreq
+                    = CoRequisiteFilter
+                            .checkCoReqAdd(subjectCoReqCheck,
+                                    this.studentSearched.getCURRICULUM_id(),
+                                    studentSearched.getCict_id()
+                            );
 
-        if (missingcoreq != null) {
-            System.out.println("There is a missing coreq");
-            return;
+            if (missingcoreq != null) {
+                System.out.println("There is a missing coreq");
+                for (CurriculumRequisiteExtMapping ext : missingcoreq) {
+                    System.out.println(ext.getSUBJECT_id_req());
+                }
+                return;
+            }
+
         }
         //----------------------------------------------------------------------
 
@@ -675,7 +696,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     /**
-     * Load evaluated subjects.
+     * Load evaluated subjectCoReqCheck.
      *
      * @param evaluationMap
      * @param studentMap
@@ -1155,7 +1176,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     /**
-     * Default row extension. from original subjects.
+     * Default row extension. from original subjectCoReqCheck.
      *
      * @param table table where called
      * @param row contained in this row.
@@ -1163,7 +1184,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private void createDefaultRowExtension(SimpleTable table, SimpleTableRow row) {
 //        RowExtensionFactory defaultExtension = new RowExtensionFactory();
 //        defaultExtension.imagePath = "res/img/ext_info.png";
-//        defaultExtension.message = "You can only change subjects with the same amount"
+//        defaultExtension.message = "You can only change subjectCoReqCheck with the same amount"
 //                + " of Lab and Lec Units, You can also remove this subject and"
 //                + " replace it with another one, or just unload this subject "
 //                + "without replacement.";
@@ -1461,8 +1482,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
 //                     * was transferred to
 //                     * @function createChangedRowExtension(table, row);
 //                     */
-//                    // add another meta data that this row is changed and not part as the original subjects
-//                    // when the row is not part of the original subjects
+//                    // add another meta data that this row is changed and not part as the original subjectCoReqCheck
+//                    // when the row is not part of the original subjectCoReqCheck
 //                    // when this subject is being changed again
 //                    // it does not need to saved its values before mutating
 //                    // saving the old values from the original are required
@@ -1742,7 +1763,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     isAllSubjectsValid = true,
                     majorSubjectExist = false,
                     isInternshipExist = false;
-            //count all the subjects in the list
+            //count all the subjectCoReqCheck in the list
             int count = 0;
             SubjectInformationHolder subinfo_CURRENT_SUBJECT = null;
             if (mode.equalsIgnoreCase("REVERT")) {
