@@ -163,8 +163,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     @FXML
     private Label lbl_subtitle_pres;
 
-//    @FXML
-//    private ComboBox<CurriculumMapping> cmb_curriculum_pres;
+    @FXML
+    private ComboBox<CurriculumMapping> cmb_curriculum_lister;
 //
 //    @FXML
 //    private JFXButton btn_filter_pres_main;
@@ -330,9 +330,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 //            this.fetchAchievers();
 //        });
         
-//        cmb_curriculum_pres.valueProperty().addListener((a)->{
-//            this.fetchAchievers();
-//        });
+        cmb_curriculum_lister.valueProperty().addListener((a)->{
+            this.fetchAchievers();
+        });
         
 //        cmb_year_level_pres.valueProperty().addListener((a)->{
 //            this.fetchAchievers();
@@ -853,7 +853,21 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                                         .execute(Order.asc(DB.evaluation().evaluation_date)).all();
                                 if(temp_results!=null) {
                                     System.out.println("temp_results : " + temp_results.size());
-                                    results.addAll(temp_results);
+//                                    results.addAll(temp_results);
+                                    outLoop:
+                                    for(EvaluationMapping each : temp_results) {
+                                        boolean exist = false;
+                                        innerLoop:
+                                        for(EvaluationMapping res : results) {
+                                            if(each.getId().equals(res.getId())) {
+                                                exist = true;
+                                                break innerLoop;
+                                            }
+                                        }
+                                        if(!exist) {
+                                            results.add(each);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -882,7 +896,21 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                                         .execute(Order.asc(DB.evaluation().evaluation_date)).all();
                                 if(temp_results!=null) {
                                     System.out.println("temp_results : " + temp_results.size());
-                                    results.addAll(temp_results);
+//                                    results.addAll(temp_results);
+                                    outLoop:
+                                    for(EvaluationMapping each : temp_results) {
+                                        boolean exist = false;
+                                        innerLoop:
+                                        for(EvaluationMapping res : results) {
+                                            if(each.getId().equals(res.getId())) {
+                                                exist = true;
+                                                break innerLoop;
+                                            }
+                                        }
+                                        if(!exist) {
+                                            results.add(each);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -903,7 +931,21 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                                         .execute(Order.asc(DB.evaluation().evaluation_date)).all();
                                 if(temp_results!=null) {
                                     System.out.println("temp_results : " + temp_results.size());
-                                    results.addAll(temp_results);
+//                                    results.addAll(temp_results);
+                                    outLoop:
+                                    for(EvaluationMapping each : temp_results) {
+                                        boolean exist = false;
+                                        innerLoop:
+                                        for(EvaluationMapping res : results) {
+                                            if(each.getId().equals(res.getId())) {
+                                                exist = true;
+                                                break innerLoop;
+                                            }
+                                        }
+                                        if(!exist) {
+                                            results.add(each);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -981,44 +1023,45 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         lbl_subtitle_pres.setText(MODE.equalsIgnoreCase(PRES_LIST)? "List of students who are qualified for President's lister in the current semester." : "List of students who are qualified for Dean's lister in the current semester.");
         this.fetchAchievers();
         lbl_title_pres.setText(MODE.equalsIgnoreCase(PRES_LIST)? "President's Lister" : "Dean's Lister");
-//        SimpleTask set = new SimpleTask("set_reports_value_listers");
-//        set.setTask(()->{
-//            ArrayList<CurriculumMapping> cMaps = Mono.orm().newSearch(Database.connect().curriculum())
-//                    .active(Order.asc(DB.curriculum().name)).all();
-//            
-//            Mono.fx().thread().wrap(()->{
-//                Callback<ListView<CurriculumMapping>, ListCell<CurriculumMapping>> factory = lv -> {
-//                    return new ListCell<CurriculumMapping>() {
-//                        @Override
-//                        protected void updateItem(CurriculumMapping item, boolean empty) {
-//                            super.updateItem(item, empty);
-//                            setText(empty ? "" : (item.getName()));
-//                        }
-//                    };
-//                };
-//                
-//                this.cmb_curriculum_pres.getItems().clear();
-//                this.cmb_curriculum_pres.getItems().addAll(cMaps);
-//                this.cmb_curriculum_pres.setCellFactory(factory);
-//                this.cmb_curriculum_pres.setButtonCell(factory.call(null));
-//                this.cmb_curriculum_pres.getSelectionModel().selectFirst();
-//            });
-//        });
-//        set.whenFailed(()->{
-//            set.getTaskException().printStackTrace();
-//        });
-//        set.whenSuccess(()->{
-//            this.fetchAchievers();
-//        });
-//        set.start();
+        SimpleTask set = new SimpleTask("set_reports_value_listers");
+        set.setTask(()->{
+            ArrayList<CurriculumMapping> cMaps = Mono.orm().newSearch(Database.connect().curriculum())
+                    .active(Order.asc(DB.curriculum().name)).all();
+            
+            Mono.fx().thread().wrap(()->{
+                Callback<ListView<CurriculumMapping>, ListCell<CurriculumMapping>> factory = lv -> {
+                    return new ListCell<CurriculumMapping>() {
+                        @Override
+                        protected void updateItem(CurriculumMapping item, boolean empty) {
+                            super.updateItem(item, empty);
+                            setText(empty ? "" : (item.getName()));
+                        }
+                    };
+                };
+                
+                this.cmb_curriculum_lister.getItems().clear();
+                this.cmb_curriculum_lister.getItems().addAll(cMaps);
+                this.cmb_curriculum_lister.setCellFactory(factory);
+                this.cmb_curriculum_lister.setButtonCell(factory.call(null));
+                this.cmb_curriculum_lister.getSelectionModel().selectFirst();
+            });
+        });
+        set.whenFailed(()->{
+            set.getTaskException().printStackTrace();
+        });
+        set.whenSuccess(()->{
+            this.fetchAchievers();
+        });
+        set.start();
     }
     
     private void fetchAchievers() {
         this.detachAll();
         
-//        if(cmb_curriculum_pres.getSelectionModel().getSelectedItem()==null)
-//            return;
-//        Integer CURRICULUM_id = cmb_curriculum_pres.getSelectionModel().getSelectedItem().getId();
+        if(cmb_curriculum_lister.getSelectionModel().getSelectedItem()==null) {
+            return;
+        }
+        Integer CURRICULUM_id = cmb_curriculum_lister.getSelectionModel().getSelectedItem().getId();
         
         FetchAchievers fetch = new FetchAchievers();
 //        fetch.CUR_id = CURRICULUM_id;
@@ -1296,10 +1339,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = lbl_title_pres.getText().replace(" ", "_").toLowerCase() + "_" + dateToday;
-//        CurriculumMapping selected = cmb_curriculum_pres.getSelectionModel().getSelectedItem();
+        CurriculumMapping selected = cmb_curriculum_lister.getSelectionModel().getSelectedItem();
         print.reportOtherDetail = SystemProperties.instance().getCurrentTermString();
         print.reportTitleHeader = lbl_title_pres.getText();
-//        print.reportOtherDetail = selected.getName() + (selected.getMajor()==null || selected.getMajor().isEmpty() || selected.getMajor().equalsIgnoreCase("NONE")? "" : " MAJOR IN " + selected.getMajor());
+        print.reportOtherDetail = selected.getName() + (selected.getMajor()==null || selected.getMajor().isEmpty() || selected.getMajor().equalsIgnoreCase("NONE")? "" : " MAJOR IN " + selected.getMajor());
         print.whenStarted(() -> {
             btn_print_eval_main.setDisable(true);
             super.cursorWait();
@@ -1339,9 +1382,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         searchTx.setSearchMode(mode.equalsIgnoreCase("BulSU ID")? "ID" : mode);
         searchTx.whenStarted(() -> {
             this.btn_filter_eval_main.setDisable(true);
+            this.btn_filter_print_logs.setDisable(true);
         });
         searchTx.whenCancelled(() -> {
-            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, null);
+//            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, null);
         });
         searchTx.whenFailed(() -> {
         });
@@ -1358,11 +1402,12 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         searchTx.whenFinished(() -> {
             this.btn_filter_eval_main.setDisable(false);
+            this.btn_filter_print_logs.setDisable(false);
         });
         if(key!=null || !key.isEmpty()) {
             searchTx.transact();
         } else {
-            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, null);
+//            this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, null);
         }
     }
     
@@ -1371,7 +1416,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     //---------------------------------------------------------------
     // PRINT LOGS
     //-------------------------------------
-    private ArrayList<PrintLogsMapping> printLogsView;
+    private ArrayList<PrintLogsMapping> printLogsView = new ArrayList<>();
     private void setViewInPrintLogs() {
         MODE = PRINT_LOGS;
         SimpleTask setter = new SimpleTask("set_print_logs_view");
@@ -1436,12 +1481,19 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             this.setComboBoxLimit(cmb_from_print_logs, cmb_to_print_logs, 0);
             this.onSearchFaculty(txt_faculty_search_print_logs.getText(), cmb_print_logs_faculty_search_vis1.getSelectionModel().getSelectedItem());
         });
-        setter.whenFinished(()->{});
+        setter.whenFinished(()->{
+            this.detachAll();
+        });
         setter.start();
     }
     
     private void fetchPrintLogsTable(ArrayList<FacultyMapping> facultyResults) {
         if(cmb_from_print_logs.getItems().isEmpty()) {
+            lbl_result_print_logs.setText("");
+            this.emptyView3.setMessage("No Result Found");
+            this.emptyView3.getButton().setVisible(false);
+            this.emptyView3.attach();
+            this.printLogsView.clear();
             return;
         }
         String from_str = cmb_from_print_logs.getSelectionModel().getSelectedItem();
@@ -1488,7 +1540,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             } else {
                 //create table here
                 int res = fetch.result.size();
-                lbl_result_pres.setText("Total result"+(res>1? "s" : "")+" found: " + res);
+                lbl_result_print_logs.setText("Total result"+(res>1? "s" : "")+" found: " + res);
                 
                 this.printLogsView = fetch.result;
                 this.createPrintLogsTable(printLogsView);
@@ -1519,7 +1571,21 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                             .active(Order.asc(DB.print_logs().printed_date)).all();
                     if(temp_results!=null) {
                         System.out.println("temp_results : " + temp_results.size());
-                        result.addAll(temp_results);
+//                      result.addAll(temp_results);
+                        outLoop:
+                        for(PrintLogsMapping each : temp_results) {
+                            boolean exist = false;
+                            innerLoop:
+                            for(PrintLogsMapping res : result) {
+                                if(each.getId().equals(res.getId())) {
+                                    exist = true;
+                                    break innerLoop;
+                                }
+                            }
+                            if(!exist) {
+                                result.add(each);
+                            }
+                        }
                     }
                 }
             }

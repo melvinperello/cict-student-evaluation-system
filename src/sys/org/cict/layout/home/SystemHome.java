@@ -757,7 +757,7 @@ public class SystemHome extends MonoLauncher {
         }
         //----------------------------------------------------------------------
 
-        if (Access.isDeniedIfNot(Access.ACCESS_LOCAL_REGISTRAR)) {
+        if (Access.isDeniedIfNotFrom(Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }

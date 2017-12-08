@@ -284,7 +284,10 @@
                            <children>
                               <StackPane fx:id="stack_eval_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
+                                    <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css">
+                                       <StackPane.margin>
+                                          <Insets bottom="20.0" />
+                                       </StackPane.margin></VBox>
                                  </children>
                               </StackPane>
                               <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="834.0" AnchorPane.bottomAnchor="5.0">
@@ -303,7 +306,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_pres_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" visible="false">
+                  <VBox fx:id="vbox_pres_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -348,29 +351,48 @@
                               <Insets left="30.0" top="5.0" />
                            </padding>
                         </VBox>
-                        <AnchorPane prefHeight="393.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" prefHeight="47.0" prefWidth="809.0" spacing="10.0">
+                           <children>
+                              <Label text="Curriculum:" wrapText="true">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox fx:id="cmb_curriculum_lister" prefHeight="25.0" prefWidth="280.0" promptText="- No Curriculum Found -" styleClass="metro-combo-box" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="40.0" top="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="462.0" prefWidth="874.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="40.0" top="5.0" />
                            </VBox.margin>
                            <children>
                               <StackPane fx:id="stack_pres_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <VBox fx:id="vbox_pres_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
+                                    <VBox fx:id="vbox_pres_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css">
+                                       <StackPane.margin>
+                                          <Insets />
+                                       </StackPane.margin></VBox>
                                  </children>
                               </StackPane>
-                              <HBox alignment="CENTER_LEFT" prefHeight="35.0" prefWidth="874.0" AnchorPane.bottomAnchor="10.0">
-                                 <children>
-                                    <Label fx:id="lbl_result_pres" text="Total Result Found: 1" />
-                                 </children>
-                              </HBox>
                            </children>
                         </AnchorPane>
+                        <HBox alignment="CENTER_LEFT" prefHeight="1.0" prefWidth="874.0">
+                           <children>
+                              <Label fx:id="lbl_result_pres" text="Total Result Found: 1" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="40.0" />
+                           </VBox.margin>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_print_logs_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_print_logs_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>

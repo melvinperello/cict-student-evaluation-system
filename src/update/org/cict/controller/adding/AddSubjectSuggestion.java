@@ -38,6 +38,8 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.cict.authentication.authenticator.SystemProperties;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -74,11 +76,11 @@ public class AddSubjectSuggestion extends Transaction {
         /**
          * Check academic term. where current is 1
          */
-        acadTerm = Mono.orm()
+        acadTerm = SystemProperties.instance().getCurrentAcademicTerm();/*Mono.orm()
                 .newSearch(Database.connect().academic_term())
                 .eq(DB.academic_term().current, 1)
                 .active()
-                .first();
+                .first();*/
 
         if (acadTerm == null) {
             log("academic term not set");
@@ -96,8 +98,8 @@ public class AddSubjectSuggestion extends Transaction {
         subjects = Mono.orm()
                 .newSearch(Database.connect().curriculum_subject())
 //                .eq(DB.curriculum_subject().CURRICULUM_id, student.getCURRICULUM_id())
-                .eq(DB.curriculum_subject().semester, semester)
-                .active()
+//                .eq(DB.curriculum_subject().semester, semester)
+                .active(Order.asc(DB.curriculum_subject().id))
                 .all();
 
         if (subjects == null) {
