@@ -440,58 +440,60 @@ public class AssistantController extends SceneFX implements ControllerFX {
         
         annualAsses.getSemestralResults(semester).forEach(sem_details -> {
             boolean canBeTaken = true;
-            if(Objects.equals(subject.getId(), sem_details.getSubjectID())) {
-                ArrayList<Integer> pre_ids = new ArrayList<>();
-                Integer[] preqid = new Integer[0];
-                if (sem_details.getSubjectRequisites() == null) {
-                    // do nothing no preq
-                    canBeTaken = true;
-                } else {
-                    sem_details.getSubjectRequisites().forEach(pre_requisite -> {
-                            pre_ids.add(pre_requisite.getSUBJECT_id_req());
-                    });
-                    preqid = pre_ids.toArray(new Integer[pre_ids.size()]);
-                
-                    // if this assessment contains a grade
-                    if (sem_details.getGradeDetails() != null) {
-                        System.out.println("GRADES NOT NULL");
-                    }
+            if(subject!=null) {
+                if(Objects.equals(subject.getId(), sem_details.getSubjectID())) {
+                    ArrayList<Integer> pre_ids = new ArrayList<>();
+                    Integer[] preqid = new Integer[0];
+                    if (sem_details.getSubjectRequisites() == null) {
+                        // do nothing no preq
+                        canBeTaken = true;
+                    } else {
+                        sem_details.getSubjectRequisites().forEach(pre_requisite -> {
+                                pre_ids.add(pre_requisite.getSUBJECT_id_req());
+                        });
+                        preqid = pre_ids.toArray(new Integer[pre_ids.size()]);
 
-                    for (int q = 0; q < preqid.length; q++) {
-                        GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
-                                .eq(DB.grade().STUDENT_id, studentSearched.getCict_id())
-                                .eq(DB.grade().SUBJECT_id, preqid[q])
-                                .active(Order.desc(DB.grade().id))
-                                .first();
-                        if(grade == null) {
-                            System.out.println("NO GRADE OF PRE REQ");
-                            canBeTaken = false;
-                        } else {
-                            try {
-                                switch(grade.getRemarks()) {
-                                    case "PASSED":
-                                    case "INCOMPLETE":
-                                        break;
-                                    default:
-                                        canBeTaken = false;
-                                        break;
-                                }
-                            } catch (NullPointerException a) {
+                        // if this assessment contains a grade
+                        if (sem_details.getGradeDetails() != null) {
+                            System.out.println("GRADES NOT NULL");
+                        }
+
+                        for (int q = 0; q < preqid.length; q++) {
+                            GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
+                                    .eq(DB.grade().STUDENT_id, studentSearched.getCict_id())
+                                    .eq(DB.grade().SUBJECT_id, preqid[q])
+                                    .active(Order.desc(DB.grade().id))
+                                    .first();
+                            if(grade == null) {
+                                System.out.println("NO GRADE OF PRE REQ");
                                 canBeTaken = false;
+                            } else {
+                                try {
+                                    switch(grade.getRemarks()) {
+                                        case "PASSED":
+                                        case "INCOMPLETE":
+                                            break;
+                                        default:
+                                            canBeTaken = false;
+                                            break;
+                                    }
+                                } catch (NullPointerException a) {
+                                    canBeTaken = false;
+                                }
                             }
                         }
                     }
-                }
 
-                if(canTake) {
-                    if(canBeTaken) {
-                        if(!isAlreadyTaken(subject))
-                            allSubjects.add(subject);
-                    }
-                } else {
-                    if(!canBeTaken) {
-                        if(!isAlreadyTaken(subject))
-                            allSubjects.add(subject);
+                    if(canTake) {
+                        if(canBeTaken) {
+                            if(!isAlreadyTaken(subject))
+                                allSubjects.add(subject);
+                        }
+                    } else {
+                        if(!canBeTaken) {
+                            if(!isAlreadyTaken(subject))
+                                allSubjects.add(subject);
+                        }
                     }
                 }
             }

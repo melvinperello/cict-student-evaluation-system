@@ -304,7 +304,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                 // now you have the gradeRating
                 String gradeRating = this.getGradeRating(subID);
                 // let's write it in the spreadsheet if there is a grade
-                if (gradeRating != null) {
+                if (gradeRating != null && !gradeRating.equalsIgnoreCase("UNPOSTED")) {
                     this.writeSheetValues(row.get(3), gradeRating);
                     //----------------------------------------------------------
                     // after writing test the value

@@ -222,15 +222,21 @@ public class SearchStudent extends Transaction {
         studentLoadGroup.forEach(load_groups -> {
             int subject_id = load_groups.getSUBJECT_id();
             // retrieve each mapping of the subject
-            SubjectMapping subject_mapping = Mono.orm()
+            SubjectMapping subject_mapping = Database.connect().subject().getPrimary(subject_id);/*Mono.orm()
                     .newSearch(Database.connect().subject())
                     .eq(DB.subject().id, subject_id)
                     //@removed since primary key was used already
                     //@revision: 001
                     //.eq("ACADPROG_id", acadProg)
-                    .active().<SubjectMapping>first();
+                    .active().<SubjectMapping>first();*/
             // add every resutl
-            studentSubject.add(subject_mapping);
+            System.out.println("SUBJECT ID: " + subject_id);
+            //--------------------
+            if(subject_mapping != null) {
+                System.out.println(subject_mapping.getCode());
+                studentSubject.add(subject_mapping);
+            }
+            //-------------------
         });
         // end of worker thread proceed to @preview
 

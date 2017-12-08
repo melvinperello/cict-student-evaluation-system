@@ -384,6 +384,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_already_print, () -> {
             // REPRINT ADVISING SLIP.
             this.hideDropDown();
+            if(!Access.enterTransactionPin(this.getStage())) {
+                return;
+            }
             this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
         });
 
