@@ -164,7 +164,7 @@ public class WinIrregularSectionsController extends SceneFX implements Controlle
             sout(this.sectionType);
             if(sectionType.equalsIgnoreCase("MIDYEAR")) {
                 String termType = SystemProperties.instance().getCurrentAcademicTerm().getType();
-                if(!termType.equalsIgnoreCase(sectionType) || SystemProperties.instance().getCurrentAcademicTerm().getSemester_regular().equals(0)) {
+                if(!termType.equalsIgnoreCase(sectionType) || !SystemProperties.instance().getCurrentAcademicTerm().getSemester_regular().equals(0)) {
                     Notifications.create().darkStyle()
                             .title("Invalid Academic Term")
                             .text("Creation of Midyear Classes\n"
