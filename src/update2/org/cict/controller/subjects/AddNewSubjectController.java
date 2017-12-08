@@ -46,6 +46,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.cict.SubjectClassification;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import update3.org.cict.SectionConstants;
 
 /**
@@ -337,6 +338,8 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
         newSubject.setLab_units(labDbl);
         newSubject.setSubtype(subType);
         newSubject.setType(type);
+        newSubject.setAdded_by(CollegeFaculty.instance().getFACULTY_ID());
+        newSubject.setAdded_date(Mono.orm().getServerTime().getDateWithFormat());
         int res = Database.connect().subject().insert(newSubject);
         if(res != -1) {
             Mono.fx().alert()
