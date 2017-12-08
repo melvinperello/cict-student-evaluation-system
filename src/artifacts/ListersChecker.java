@@ -135,6 +135,9 @@ public class ListersChecker {
         this.curriculumSubjectCache = new HashMap<>();
         //----------------------------------------------------------------------
         // Iterate all the qualified students for verification
+        if(qualifiedStudents==null) {
+            return listerList;
+        }
         for (StudentMapping student : qualifiedStudents) { // Start Loop
             Integer yearLevel = student.getYear_level();
             //------------------------------------------------------------------
