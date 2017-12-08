@@ -1113,7 +1113,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         @Override
         protected boolean transaction() {
             ListersChecker checker = new ListersChecker();
-            AcademicTermMapping current = Database.connect().academic_term().getPrimary(19);
+            AcademicTermMapping current = SystemProperties.instance().getCurrentAcademicTerm();//Database.connect().academic_term().getPrimary(19);
             checker.setCurrentTerm(current);
             checker.setListerMode(MODE);
             ArrayList<ListerData> listers = checker.check();
