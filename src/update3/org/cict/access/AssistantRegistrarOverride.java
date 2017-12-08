@@ -227,6 +227,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
     @Override
     public void onStartUp() {
         MonoClick.addClickEvent(btn_cancel, () -> {
+            authorized = false;
             this.getCurrentStage().close();
         });
         this.setTimer();

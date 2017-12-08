@@ -199,10 +199,12 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
                                 + "a file with a format of RAR, ZIP or 7Z. Then click Continue")
                         .setHeader("Authorization Accepted").showAndWait();
                 Mono.fx().snackbar().showSuccess(application_root, "Access Granted.");
+            } else {
+               return; 
             }
             //--------------------------------
             
-            else if (!this.access) {
+            if (!this.access) {
                 Mono.fx().snackbar().showError(application_root, "You are not Authorized.");
                 return;
             }
