@@ -717,7 +717,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
             btn_home1.setDisable(false);
         });
         
-        fetchProgramsTx.setRestTime(restTime);
+//        fetchProgramsTx.setRestTime(restTime);
         fetchProgramsTx.transact();
     }
     
