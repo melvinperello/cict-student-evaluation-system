@@ -377,25 +377,27 @@ public class CreditController implements ControllerFX {
             is4Yrs = curriculum != null? (curriculum.getStudy_years().equals(4)) : false;
             ArrayList<GradeMapping> grades = Mono.orm().newSearch(Database.connect().grade())
                     .eq(DB.grade().STUDENT_id, CICT_id).execute().all();
-            for(GradeMapping grade: grades) {
-                CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                        .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
-                        .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
-                CurriculumSubjectMapping csMap_prep = null;
-                if(PREP_id != null) {
-                    csMap_prep = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                            .eq(DB.curriculum_subject().CURRICULUM_id, PREP_id)
+            if(grades != null) {
+                for(GradeMapping grade: grades) {
+                    CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                            .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
                             .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
-                 }
-                GradeHistory history;
-                if(csMap != null) {
-                    SubjectMapping subject = Database.connect().subject().getPrimary(csMap.getSUBJECT_id());
-                    history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
-                    this.store(csMap, history);
-                } else if(csMap_prep != null) {
-                    SubjectMapping subject = Database.connect().subject().getPrimary(csMap_prep.getSUBJECT_id());
-                    history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
-                    this.store(csMap_prep, history);
+                    CurriculumSubjectMapping csMap_prep = null;
+                    if(PREP_id != null) {
+                        csMap_prep = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                                .eq(DB.curriculum_subject().CURRICULUM_id, PREP_id)
+                                .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
+                     }
+                    GradeHistory history;
+                    if(csMap != null) {
+                        SubjectMapping subject = Database.connect().subject().getPrimary(csMap.getSUBJECT_id());
+                        history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
+                        this.store(csMap, history);
+                    } else if(csMap_prep != null) {
+                        SubjectMapping subject = Database.connect().subject().getPrimary(csMap_prep.getSUBJECT_id());
+                        history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
+                        this.store(csMap_prep, history);
+                    }
                 }
             }
         });

@@ -65,6 +65,8 @@ public class ValidateOJT {
     }
 
     private static ValidateOJT classInstance;
+    
+    public static String log;
 
     public static boolean isValidForOJT(StudentMapping currentStudent) {
         /**
@@ -107,6 +109,13 @@ public class ValidateOJT {
             //------------------------------------------------------------------
             if (currentStudent == null) {
                 System.out.println("STUDENT IS NULL");
+                return false;
+            }
+            //-------------------
+            if(yearOfOJT==null) {
+                System.out.println("OJT SUBJECT NOT FOUND");
+                log = "Selected Internship subject doesn't exist\n"
+                        + "in the student's curriculum.";
                 return false;
             }
             //------------------------------------------------------------------

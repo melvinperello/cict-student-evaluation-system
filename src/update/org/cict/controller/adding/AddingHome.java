@@ -1626,25 +1626,35 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     //--------------------------------------
                     if (subinfo.getSubjectMap().getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                         if (!ValidateOJT.isValidForOJT(studentSearched)) {
-
-                            Notifications.create().title("Warning")
-                                    .position(Pos.BOTTOM_RIGHT)
-                                    .text("Student Number: " + studentSearched.getId()
-                                            + "\nCannot take Internship based on the student's current status."
-                                            + "\nClick This notification for more details.")
-                                    .onAction(onAction -> {
-                                        this.systemOverride(INTERNSHIP_WITH_OTHERS, subinfo, "add", null, null);
-                                    })
-                                    .showWarning();
-                            int res = Mono.fx().alert()
-                                    .createConfirmation()
-                                    .setHeader("Deficieny Report")
-                                    .setMessage("Do you want to print the student's subject with missing grade?")
-                                    .confirmYesNo();
-                            if (res == 1) {
-                                printDeficiency();
+                            if(ValidateOJT.log!=null) {
+                                Notifications.create().title("Warning")
+                                        .position(Pos.BOTTOM_RIGHT)
+                                        .text("Student Number: " + studentSearched.getId()
+                                                + "\n" + ValidateOJT.log)
+//                                        .onAction(onAction -> {
+//                                            this.systemOverride(INTERNSHIP_WITH_OTHERS, subinfo, "add", null, null);
+//                                        })
+                                        .showWarning();
+                            } else {
+                                int res = Mono.fx().alert()
+                                        .createConfirmation()
+                                        .setHeader("Deficieny Report")
+                                        .setMessage("Do you want to print the student's subject with missing grade?")
+                                        .confirmYesNo();
+                                if (res == 1) {
+                                    printDeficiency();
+                                }
+                                Notifications.create().title("Warning")
+                                        .position(Pos.BOTTOM_RIGHT)
+                                        .text("Student Number: " + studentSearched.getId()
+                                                + "\nCannot take Internship based on the student's current status."
+                                                + "\nClick This notification for more details.")
+                                        .onAction(onAction -> {
+                                            this.systemOverride(INTERNSHIP_WITH_OTHERS, subinfo, "add", null, null);
+                                        })
+                                        .showWarning();
+                                AddingDataPipe.instance().resetIsChanged();
                             }
-                            AddingDataPipe.instance().resetIsChanged();
                             return;
                         }
                     }

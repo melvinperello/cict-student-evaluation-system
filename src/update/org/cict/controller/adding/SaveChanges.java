@@ -126,21 +126,22 @@ public class SaveChanges extends Transaction {
                 .eq(DB.grade().posted, 0)
                 .active()
                 .all();
+        if(unposted_grades != null) {
+            for (GradeMapping unposted_grade : unposted_grades) {
+                unposted_grade.setRemarks("CANCELLED");
+                unposted_grade.setRating("CANCELLED");
+                unposted_grade.setCredit(0.00);
+                unposted_grade.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
+                unposted_grade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+                unposted_grade.setReason_for_update("ADDING_CHANGING");
+                unposted_grade.setActive(0);
 
-        for (GradeMapping unposted_grade : unposted_grades) {
-            unposted_grade.setRemarks("CANCELLED");
-            unposted_grade.setRating("CANCELLED");
-            unposted_grade.setCredit(0.00);
-            unposted_grade.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
-            unposted_grade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
-            unposted_grade.setReason_for_update("ADDING_CHANGING");
-            unposted_grade.setActive(0);
+                boolean _grade = Database.connect().grade().transactionalSingleUpdate(local_session, unposted_grade);
 
-            boolean _grade = Database.connect().grade().transactionalSingleUpdate(local_session, unposted_grade);
-
-            if (!_grade) {
-                dataTx.rollback();
-                return false;
+                if (!_grade) {
+                    dataTx.rollback();
+                    return false;
+                }
             }
         }
 

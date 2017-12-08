@@ -1095,7 +1095,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         /**
          * If no subjects are added.
          */
-        if (this.unitCount == 0) {
+        if (this.subjectCount == 0) {
             Mono.fx()
                     .alert()
                     .createWarning()
