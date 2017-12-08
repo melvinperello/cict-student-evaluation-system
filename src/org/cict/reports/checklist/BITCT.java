@@ -144,7 +144,7 @@ public class BITCT {
             image1X1.scaleAbsolute(Utilities.inchesToPoints(2), Utilities.inchesToPoints(2)); //size
             document.add(image1X1);
         } catch (Exception e) {
-            Image image1X1 = Image.getInstance(ReportsDirectory.DEFAULT_IMAGE2x2);
+            Image image1X1 = Image.getInstance(ResourceManager.fetchFromResource(BITCT.class, ReportsDirectory.DEFAULT_IMAGE2x2));
             image1X1.setAbsolutePosition(450f, 750); //position
             image1X1.scaleAbsolute(Utilities.inchesToPoints(2), Utilities.inchesToPoints(2)); //size
             document.add(image1X1);
@@ -206,7 +206,7 @@ public class BITCT {
             address = "_______________________________________";
             u = false;
         }
-        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.STUDENT_ADDRESS, 39), font7Plain, "", u), false, false));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("ADDRESS: ", font7Plain, getShortenedDetail(this.address, 39), font7Plain, "", u), false, false));
 
         boolean l = true;
         if (highSchool.isEmpty()) {
