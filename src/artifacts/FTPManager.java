@@ -42,14 +42,14 @@ public class FTPManager {
      */
     private static FTPClient establishConnection() throws IOException {
         //---------------------------------
-        SystemVariablesMapping ftpPort = Mono.orm().newSearch(Database.connect().system_variables())
-                .eq(DB.system_variables().name, "FTP_PORT").active().first();
-        SystemVariablesMapping ftpUser = Mono.orm().newSearch(Database.connect().system_variables())
-                .eq(DB.system_variables().name, "FTP_USERNAME").active().first();
-        SystemVariablesMapping ftpPass = Mono.orm().newSearch(Database.connect().system_variables())
-                .eq(DB.system_variables().name, "FTP_PASSWORD").active().first();
-        SystemVariablesMapping ftpServer = Mono.orm().newSearch(Database.connect().system_variables())
-                .eq(DB.system_variables().name, "FTP_SERVER").active().first();
+//        SystemVariablesMapping ftpPort = Mono.orm().newSearch(Database.connect().system_variables())
+//                .eq(DB.system_variables().name, "FTP_PORT").active().first();
+//        SystemVariablesMapping ftpUser = Mono.orm().newSearch(Database.connect().system_variables())
+//                .eq(DB.system_variables().name, "FTP_USERNAME").active().first();
+//        SystemVariablesMapping ftpPass = Mono.orm().newSearch(Database.connect().system_variables())
+//                .eq(DB.system_variables().name, "FTP_PASSWORD").active().first();
+//        SystemVariablesMapping ftpServer = Mono.orm().newSearch(Database.connect().system_variables())
+//                .eq(DB.system_variables().name, "FTP_SERVER").active().first();
         //-----------------------------------
 
         FTPClient ftpClient = new FTPClient();

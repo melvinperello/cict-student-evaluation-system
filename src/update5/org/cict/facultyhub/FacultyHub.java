@@ -711,10 +711,14 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                     });
                 }
             });
-            openTask.whenFinished(()->{
-                super.getScene().setCursor(Cursor.DEFAULT);
-                btn_export.setDisable(false);
-            });
+//            openTask.whenStarted(()->{
+//                super.getScene().setCursor(Cursor.WAIT);
+//                btn_export.setDisable(true);
+//            });
+//            openTask.whenFinished(()->{
+//                super.getScene().setCursor(Cursor.DEFAULT);
+//                btn_export.setDisable(false);
+//            });
             openTask.start();
 
         });
@@ -731,6 +735,8 @@ public class FacultyHub extends SceneFX implements ControllerFX {
         });
 
         exportTx.whenFinished(() -> {
+            super.getScene().setCursor(Cursor.DEFAULT);
+            btn_export.setDisable(false);
         });
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -812,7 +818,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
 
             print.reportTitleHeader = sectionName + " - " + subject.getCode() + " Master List";
-            print.reportOtherDetail = WordUtils.capitalizeFully(subject.getDescriptive_title());
+            print.reportOtherDetail = (subject.getDescriptive_title());
             print.whenStarted(() -> {
                 btn_print.setDisable(true);
                 super.cursorWait();
@@ -840,7 +846,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                 btn_print.setDisable(false);
                 super.cursorDefault();
             });
-            print.transact();
+//            print.transact();
             if(ReportsUtility.savePrintLogs(null, (sectionName + " - " + subject.getCode() + " Master List").toUpperCase(), "FACULTY HUB", "INITIAL"))
                 print.transact();
         });
