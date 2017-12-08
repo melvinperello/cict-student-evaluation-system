@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.cict.PublicConstants;
 
 /**
  *
@@ -52,8 +53,8 @@ public class FTPManager {
         //-----------------------------------
 
         FTPClient ftpClient = new FTPClient();
-        ftpClient.connect((ftpServer.getValue() == null ? FTP_SERVER : ftpServer.getValue()), (ftpPort.getValue() == null ? FTP_PORT : Integer.parseInt(ftpPort.getValue())));
-        ftpClient.login((ftpUser.getValue() == null ? FTP_USER : ftpUser.getValue()), (ftpPass.getValue() == null ? FTP_PASS : ftpPass.getValue()));
+        ftpClient.connect(PublicConstants.getSystemVar_FTP_SERVER().toString(), Integer.parseInt(PublicConstants.getSystemVar_FTP_PORT().toString()));//((ftpServer.getValue() == null ? FTP_SERVER : ftpServer.getValue()), (ftpPort.getValue() == null ? FTP_PORT : Integer.parseInt(ftpPort.getValue())));
+        ftpClient.login(PublicConstants.getSystemVar_FTP_USERNAME().toString(), PublicConstants.getSystemVar_FTP_PASSWORD().toString());//((ftpUser.getValue() == null ? FTP_USER : ftpUser.getValue()), (ftpPass.getValue() == null ? FTP_PASS : ftpPass.getValue()));
         ftpClient.enterLocalPassiveMode();
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         return ftpClient;

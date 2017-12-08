@@ -167,7 +167,7 @@ public class PublicConstants {
     public final static String KEY_FTP_PORT_DEFAULT = "21";
     
     public final static String KEY_FTP_USERNAME= "FTP_USERNAME";
-    public final static String KEY_FTP_USERNAME_DEFAULT = "FTP-CICT";
+    public final static String KEY_FTP_USERNAME_DEFAULT = "ftp-cict";
     
     public final static String KEY_FTP_PASSWORD = "FTP_PASSWORD";
     public final static String KEY_FTP_PASSWORD_DEFAULT = "123456";

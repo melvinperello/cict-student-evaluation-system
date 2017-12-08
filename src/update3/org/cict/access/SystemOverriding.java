@@ -70,28 +70,24 @@ public class SystemOverriding {
     
     private static String get(String temp, int maxChar) {
         if(temp.length()>maxChar) {
-            temp = temp.replaceAll("A", "");
+            temp = checkIfFirstChar(temp, "A");//temp.replaceAll("A", "");
             System.out.println(temp);
             if(temp.length()>maxChar) {
-                temp = temp.replaceAll("E", "");
+                temp = checkIfFirstChar(temp, "E");//temp = temp.replaceAll("E", "");
                 System.out.println(temp);
                 if(temp.length()>maxChar) {
-                    temp = temp.replaceAll("I", "");
+                    temp = checkIfFirstChar(temp, "I");//temp = temp.replaceAll("I", "");
                     System.out.println(temp);
                     if(temp.length()>maxChar) {
-                        temp = temp.replaceAll("O", "");
+                        temp = checkIfFirstChar(temp, "O");//temp = temp.replaceAll("O", "");
                         System.out.println(temp);
                         if(temp.length()>maxChar) {
-                            temp = temp.replaceAll("U", "");
+                            temp = checkIfFirstChar(temp, "U");//temp = temp.replaceAll("U", "");
                             System.out.println(temp);
-                                if(temp.length()>maxChar) {
-                                    temp = temp = temp.substring(0, maxChar);
-                                    System.out.println(temp);
-                                    if(temp.length()>maxChar) {
-                                        temp = temp = WordUtils.initials(temp);
-                                        System.out.println(temp);
-                                    }
-                                }
+                            if(temp.length()>maxChar) {
+                                temp = temp.substring(0, maxChar);
+                                System.out.println(temp);
+                            }
                         }
                     }
                 }
@@ -99,4 +95,16 @@ public class SystemOverriding {
         }
         return temp;
     }
+    
+    private static String checkIfFirstChar(String str, String checker) {
+        String result = "";
+        if(str.length() > 2) {
+            char temp = str.charAt(0);
+            String checked = str.substring(1).replaceAll(checker, "");
+            result = temp + checked;
+        }
+        return result;
+    }
+    
 }
+
