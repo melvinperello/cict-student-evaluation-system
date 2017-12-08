@@ -163,50 +163,52 @@ public class CreateNewSessionTransaction extends Transaction {
             // transfer the current inline students from the new session
             // day 1 200  students left (#800 - #1000)
             // transfer them to the next session day 2
-            for (LinkedPilaMapping transfering : inline_students) {
-                if (transfering.getFloor_assignment().equals(3)) {
-                    try {
-                        // floor 3 cluster 1
-                        // Create new Entry for the student in the pila_table
-                        LinkedPilaMapping new_pila = transferData(transfering, new_session.getId(), new_session.getFloor_3_name());
-                        int new_pila_id = Database.connect().linked_pila().transactionalInsert(localSession, new_pila);
-                        // Create new numbering entry
-                        LinkedPila3fMapping new_pila_number = new LinkedPila3fMapping();
-                        new_pila_number.setPila_id(new_pila_id);
-                        int new_floor_number = Database.connect().linked_pila_3f().transactionalInsert(localSession, new_pila_number);
-                        // assign new floor number
-                        new_pila.setFloor_number(new_floor_number);
-                        Database.connect().linked_pila().transactionalSingleUpdate(localSession, new_pila);
-                    } catch (Exception e) {
-                        dataTx.rollback();
-                        return false;
+            if(inline_students != null || !inline_students.isEmpty()) {
+                for (LinkedPilaMapping transfering : inline_students) {
+                    if (transfering.getFloor_assignment().equals(3)) {
+                        try {
+                            // floor 3 cluster 1
+                            // Create new Entry for the student in the pila_table
+                            LinkedPilaMapping new_pila = transferData(transfering, new_session.getId(), new_session.getFloor_3_name());
+                            int new_pila_id = Database.connect().linked_pila().transactionalInsert(localSession, new_pila);
+                            // Create new numbering entry
+                            LinkedPila3fMapping new_pila_number = new LinkedPila3fMapping();
+                            new_pila_number.setPila_id(new_pila_id);
+                            int new_floor_number = Database.connect().linked_pila_3f().transactionalInsert(localSession, new_pila_number);
+                            // assign new floor number
+                            new_pila.setFloor_number(new_floor_number);
+                            Database.connect().linked_pila().transactionalSingleUpdate(localSession, new_pila);
+                        } catch (Exception e) {
+                            dataTx.rollback();
+                            return false;
+                        }
+                    } else if (transfering.getFloor_assignment().equals(4)) {
+                        try {
+                            // floor 4 cluster 2
+                            LinkedPilaMapping new_pila = transferData(transfering, new_session.getId(), new_session.getFloor_4_name());
+                            int new_pila_id = Database.connect().linked_pila().transactionalInsert(localSession, new_pila);
+                            // Create new numbering entry
+                            LinkedPila4fMapping new_pila_number = new LinkedPila4fMapping();
+                            new_pila_number.setPila_id(new_pila_id);
+                            int new_floor_number = Database.connect().linked_pila_4f().transactionalInsert(localSession, new_pila_number);
+                            // assign new floor number
+                            new_pila.setFloor_number(new_floor_number);
+                            Database.connect().linked_pila().transactionalSingleUpdate(localSession, new_pila);
+                        } catch (Exception e) {
+                            dataTx.rollback();
+                            return false;
+                        }
+                    } else {
+                        // do nothing
                     }
-                } else if (transfering.getFloor_assignment().equals(4)) {
-                    try {
-                        // floor 4 cluster 2
-                        LinkedPilaMapping new_pila = transferData(transfering, new_session.getId(), new_session.getFloor_4_name());
-                        int new_pila_id = Database.connect().linked_pila().transactionalInsert(localSession, new_pila);
-                        // Create new numbering entry
-                        LinkedPila4fMapping new_pila_number = new LinkedPila4fMapping();
-                        new_pila_number.setPila_id(new_pila_id);
-                        int new_floor_number = Database.connect().linked_pila_4f().transactionalInsert(localSession, new_pila_number);
-                        // assign new floor number
-                        new_pila.setFloor_number(new_floor_number);
-                        Database.connect().linked_pila().transactionalSingleUpdate(localSession, new_pila);
-                    } catch (Exception e) {
-                        dataTx.rollback();
-                        return false;
-                    }
-                } else {
-                    // do nothing
+                    //--------------------------------------------------------------
+                    // Deactivate the old one.
+                    transfering.setActive(0);
+                    transfering.setStatus("VOID");
+                    transfering.setRemarks("TRANSFERRED");
+                    Database.connect().linked_pila().transactionalSingleUpdate(localSession, transfering);
+                    //--------------------------------------------------------------
                 }
-                //--------------------------------------------------------------
-                // Deactivate the old one.
-                transfering.setActive(0);
-                transfering.setStatus("VOID");
-                transfering.setRemarks("TRANSFERRED");
-                Database.connect().linked_pila().transactionalSingleUpdate(localSession, transfering);
-                //--------------------------------------------------------------
             }
         } else {
             // IF FIRST TIME
