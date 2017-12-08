@@ -65,12 +65,30 @@ public class TimeTableController extends SceneFX implements ControllerFX {
 
     @FXML
     private HBox hbox_over;
+    private ArrayList<String> colors;
 
     public TimeTableController(HashMap<String, ArrayList<ScheduleData>> schedule) {
         // pass schedule information in constructor
         this.schedule = schedule;
+        this.colors = new ArrayList<>();
+        this.colors.add("#ccff99");
+        this.colors.add("#ff99ff");
+        this.colors.add("#33ccff");
+        this.colors.add("#33cccc");
+        this.colors.add("#99ccff");
+        this.colors.add("#ff99cc");
+        this.colors.add("#ccff99");
+        this.colors.add("#ccff99");
+        this.colors.add("#00ff99");
+        this.colors.add("#00ffcc");
+        this.colors.add("#ffccff");
+        this.colors.add("#66ccff");
+        this.colors.add("#ffffcc");
+        this.colors.add("#ccccff");
+        this.colors.add("#ccff66");
     }
 
+    private HashMap<String, String> colorScheme;
     private HashMap<String, ArrayList<ScheduleData>> schedule;
 
     private final Double LINE_DISTANCE = 14.00; // must be even // the distance from  start and ending 20 - 7 + 1 header
@@ -85,6 +103,7 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         this.tableBelowListener();
         this.tableOverListener();
 
+        colorScheme = new HashMap<>();
         /**
          * Create columns from time to Sunday.
          */
@@ -287,6 +306,35 @@ public class TimeTableController extends SceneFX implements ControllerFX {
         sss.pane.setMaxWidth(Double.MAX_VALUE);
         sss.pane.setUserData(Integer.valueOf(span));
         sss.pane.getStyleClass().add("row-filler");
+        //----------------------------------------------------------------------
+        String currentStyle = sss.pane.getStyle();
+        // check if exist in color
+        String color = this.colorScheme.getOrDefault(text, null);
+        if (color == null) {
+            // there is no color associated with this value
+            // select a color
+            for (String hexColor : this.colors) {
+                boolean taken = false;
+                for (String colorValue : this.colorScheme.values()) {
+                    if (hexColor.equals(colorValue)) {
+                        // already taken
+                        taken = true;
+                        break; // proceed to next color
+                    }
+                }
+                if (!taken) {
+                    this.colorScheme.put(text, hexColor);
+                    break;
+                }
+            }
+        }
+        color = this.colorScheme.getOrDefault(text, null);
+        if (color == null) {
+            color = "#C0C0C0";
+        }
+        sss.pane.setStyle(currentStyle + "-fx-background-color: " + color + ";");
+
+        //----------------------------------------------------------------------
         sss.content.getStyleClass().add("row-filler-text");
         sss.content.setText(text);
         cf.getChildren().add(sss.pane);
