@@ -578,7 +578,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 totalUnits = 0.0;
                 ArrayList<CurriculumSubjectMapping> semesters = new ArrayList<>();
                 try {
-                    if(years!=null || !years.isEmpty()) {
+                    if(years==null || years.isEmpty()) {
+                    } else {
                         for (CurriculumSubjectMapping csMap : years) {
                             if (csMap.getSemester() == ctrSem) {
                                 semesters.add(csMap);
