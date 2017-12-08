@@ -495,7 +495,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
         ArrayList<CurriculumMapping> implementedCurriculums = this.getCurriculums(true, info);
         ArrayList<CurriculumMapping> unImplementedCurriculums =  this.getCurriculums(false, info);
         
-        if(implementedCurriculums==null) {
+        if(implementedCurriculums==null || implementedCurriculums.isEmpty()) {
             Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                 vbox_curriculum_table_holder.setVisible(false);
                 vbox_no_found_curriculum.setVisible(true);
@@ -523,7 +523,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                 btn_show.setText("Show Unimplemented");
                 
                 ArrayList<CurriculumMapping> implementedCurriculums2 = this.getCurriculums(true, info2 );
-                if(implementedCurriculums2==null) {
+                if(implementedCurriculums2==null || implementedCurriculums2.isEmpty()) {
                     Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                         vbox_curriculum_table_holder.setVisible(false);
                         vbox_no_found_curriculum.setVisible(true);
@@ -540,7 +540,7 @@ public class AcademicProgramHome extends SceneFX implements ControllerFX {
                 System.out.println("hereeee");
                 btn_show.setText("Show Implemented");
                 ArrayList<CurriculumMapping> unImplementedCurriculums2 = this.getCurriculums(false, info2 );
-                if(unImplementedCurriculums2==null) {
+                if(unImplementedCurriculums2==null || unImplementedCurriculums2.isEmpty()) {
                     Animate.fade(vbox_curriculum_table_holder, 150, ()->{
                         vbox_curriculum_table_holder.setVisible(false);
                         vbox_no_found_curriculum.setVisible(true);
