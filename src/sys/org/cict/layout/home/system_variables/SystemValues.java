@@ -327,7 +327,7 @@ public class SystemValues extends MonoLauncher {
         }
         SystemVariablesMapping updateThis = (SystemVariablesMapping) row.getRowMetaData().get("MAP");
         updateThis.setName(name.toUpperCase().replace(" ", "_"));
-        updateThis.setValue(value.toUpperCase());
+        updateThis.setValue(value);
         updateThis.setUpdated_by(FACULTY_ID);
         updateThis.setUpdated_date(SERVER_DATETIME);
         if(Database.connect().system_variables().update(updateThis)) {
