@@ -578,28 +578,30 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 totalUnits = 0.0;
                 ArrayList<CurriculumSubjectMapping> semesters = new ArrayList<>();
                 try {
-                    for (CurriculumSubjectMapping csMap : years) {
-                        if (csMap.getSemester() == ctrSem) {
-                            semesters.add(csMap);
-                            SubjectMapping subject = Database.connect().subject()
-                                    .getPrimary(csMap.getSUBJECT_id());
-                            //--------------------------------------------------
-                            if (subject == null) {
-                                continue;
-                            }
-                            //--------------------------------------------------
-                            if (ctrSem == 2 && ctrYr == 1) {
-                                System.out.println("SUB: " + subject.getDescriptive_title());
-                            }
+                    if(years!=null || !years.isEmpty()) {
+                        for (CurriculumSubjectMapping csMap : years) {
+                            if (csMap.getSemester() == ctrSem) {
+                                semesters.add(csMap);
+                                SubjectMapping subject = Database.connect().subject()
+                                        .getPrimary(csMap.getSUBJECT_id());
+                                //--------------------------------------------------
+                                if (subject == null) {
+                                    continue;
+                                }
+                                //--------------------------------------------------
+                                if (ctrSem == 2 && ctrYr == 1) {
+                                    System.out.println("SUB: " + subject.getDescriptive_title());
+                                }
 
-                            totalUnits += (subject.getLab_units() + subject.getLec_units());
-                            totalSubjects += 1.0;
+                                totalUnits += (subject.getLab_units() + subject.getLec_units());
+                                totalSubjects += 1.0;
+                            }
                         }
                     }
                 } catch (NullPointerException s) {
                     //----------------------------------------------------------
                     s.printStackTrace();
-                    continue;
+//                    continue;
                     //----------------------------------------------------------
                 }
                 //--------------------------------------------------------------
@@ -785,6 +787,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
     private void createSubjectRows(VBox holder, ArrayList<CurriculumSubjectMapping> semesters, Label subjects, Label units) {
         SimpleTable subjectTable = new SimpleTable();
         try {
+            double subjectCount = 0.0, totalUnits = 0.0;
             for (CurriculumSubjectMapping csMap : semesters) {
                 SubjectMapping subject = Mono.orm().newSearch(Database.connect().subject())
                         .eq(DB.subject().id, csMap.getSUBJECT_id())
@@ -793,7 +796,8 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 if (subject == null) {
                     continue;
                 }
-
+                subjectCount += 1.0;
+                totalUnits += (subject.getLab_units() + subject.getLec_units());
                 SimpleTableRow row = new SimpleTableRow();
                 row.setRowHeight(70.0);
 
@@ -849,8 +853,10 @@ public class CurriculumInformationController extends SceneFX implements Controll
                 // add row
                 subjectTable.addRow(row);
             }
+            subjects.setText(subjectCount+"");
+            units.setText(totalUnits + "");
         } catch (NullPointerException a) {
-            System.out.println("Null is here");
+            a.printStackTrace();
         }
         // when all details are added in the table;
         SimpleTableView simpleTableView = new SimpleTableView();
@@ -1091,6 +1097,10 @@ public class CurriculumInformationController extends SceneFX implements Controll
 
         if (major == null || major.isEmpty()) {
             major = NONE;
+        }
+        
+        if(ladderType == null || ladderType.isEmpty()) {
+            ladderType = "NONE";
         }
 
         if (isAnyChangeMade()) {
