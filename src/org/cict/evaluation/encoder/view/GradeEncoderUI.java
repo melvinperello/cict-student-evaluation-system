@@ -1024,7 +1024,10 @@ public class GradeEncoderUI {
         EncodeGrade encodeGrade = Evaluator.instance().createGradeEncoder();
         encodeGrade.CICT_id = this.CICT_id;
         encodeGrade.spreadSheet = this.spreadSheet;
-        encodeGrade.CURRICULUM_id = studentMap.getCURRICULUM_id();
+        //----------------------------------------------------------------------
+        encodeGrade.studentMapping = studentMap;
+        encodeGrade.encodingYear = this.yearLevel;
+        //----------------------------------------------------------------------
 //        if (ACAD_TERM_id != null) {
 //            encodeGrade.ACAD_TERM_id = this.ACAD_TERM_id;
 //        }
@@ -1113,15 +1116,21 @@ public class GradeEncoderUI {
                     Thread.sleep(200);
                     String cellText = spreadSheetGrid.getRows().get(x).get(finalCol).getText();
                     String cellRemark = spreadSheetGrid.getRows().get(x).get(remarkCol).getText();
-
-                    //----------------------------
+                    //----------------------------------------------------------
+                    // MUST BE REMOVED
+                    //----------------------------------------------------------
                     // verify if grade is already posted with failed/inc
                     String cellCode = spreadSheetGrid.getRows().get(x).get(codeCol).getText();
+                    System.out.print("VERIFYING IF ALREADY POSTED: ");
+                    System.out.println(cellCode);
+                    //----------------------------------------------------------
                     ArrayList<SubjectMapping> subjects = Mono.orm().newSearch(Database.connect().subject())
                             .eq(DB.subject().code, cellCode)
                             .active()
                             .all();
+                    //----------------------------------------------------------
                     SubjectMapping temp_subject = null;
+                    //----------------------------------------------------------
                     for (SubjectMapping temp : subjects) {
                         CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                                 .eq(DB.curriculum_subject().SUBJECT_id, temp.getId())
@@ -1133,6 +1142,7 @@ public class GradeEncoderUI {
                             break;
                         }
                     }
+                    //----------------------------------------------------------
                     if (temp_subject != null) {
                         GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
                                 .eq(DB.grade().STUDENT_id, CICT_id)
@@ -1150,8 +1160,9 @@ public class GradeEncoderUI {
                     } else {
                         System.out.println("TEMP SUBJECT IS NULL");
                     }
-
-                    //-----------------------------
+                    //----------------------------------------------------------
+                    // <MUST BE REMOVED>
+                    //----------------------------------------------------------
                     if (cellText.isEmpty()) {
                         // if empty paint it white
                         rowPaint(x, "#FFFFFF");
