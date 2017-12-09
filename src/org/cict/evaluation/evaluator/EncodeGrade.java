@@ -29,6 +29,7 @@ import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import artifacts.CurriculumFix;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.async.TransactionException;
@@ -128,19 +129,8 @@ public class EncodeGrade extends Transaction {
             for (SubjectMapping temp_subject : subjects) {
                 //--------------------------------------------------------------
                 //--------------------------------------------------------------
-                Integer correctCurriculum;
-                // check student if student has prep id
-                if (this.studentMapping.getPREP_id() != null) {
-                    if (this.encodingYear.equals(1) || this.encodingYear.equals(2)) {
-                        // if first year or second year
-                        correctCurriculum = this.studentMapping.getPREP_id();
-                    } else {
-                        correctCurriculum = this.studentMapping.getCURRICULUM_id();
-                    }
-                } else {
-                    // if no prep id
-                    correctCurriculum = this.studentMapping.getCURRICULUM_id();
-                }
+                Integer correctCurriculum = CurriculumFix
+                        .getCorrectCurriculum(this.studentMapping, this.encodingYear);
                 //--------------------------------------------------------------
                 CurriculumSubjectMapping csMap = Mono.orm()
                         .newSearch(Database.connect().curriculum_subject())
