@@ -27,7 +27,9 @@ import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
+import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import artifacts.CurriculumFix;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.async.TransactionException;
@@ -61,7 +63,10 @@ public class EncodeGrade extends Transaction {
     public SpreadsheetView spreadSheet;
     public Integer CICT_id;
     public String MODE = "";
-    public Integer CURRICULUM_id;
+    //--------------------------------------------------------------------------
+    public StudentMapping studentMapping;
+    public Integer encodingYear;
+    //--------------------------------------------------------------------------
 
     private final Integer FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
     public Integer ACAD_TERM_id;
@@ -110,7 +115,7 @@ public class EncodeGrade extends Transaction {
             // search subjects from the repository
             ArrayList<SubjectMapping> subjects = Mono.orm()
                     .newSearch(Database.connect().subject())
-                    .eq("code", subjectCode)
+                    .eq(DB.subject().code, subjectCode)
                     .active()
                     .all();
 
@@ -118,14 +123,22 @@ public class EncodeGrade extends Transaction {
                 System.out.println("SUBJECTS NOT FOUND");
                 return false;
             }
+            //------------------------------------------------------------------
             // identify the subject from the curriculum list
             SubjectMapping subject = null;
             for (SubjectMapping temp_subject : subjects) {
-                CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                        .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRICULUM_id)
+                //--------------------------------------------------------------
+                //--------------------------------------------------------------
+                Integer correctCurriculum = CurriculumFix
+                        .getCorrectCurriculum(this.studentMapping, this.encodingYear);
+                //--------------------------------------------------------------
+                CurriculumSubjectMapping csMap = Mono.orm()
+                        .newSearch(Database.connect().curriculum_subject())
+                        .eq(DB.curriculum_subject().CURRICULUM_id, correctCurriculum)
                         .eq(DB.curriculum_subject().SUBJECT_id, temp_subject.getId())
                         .active()
                         .first();
+                //--------------------------------------------------------------
                 if (csMap != null) {
                     subject = temp_subject;
                     break;

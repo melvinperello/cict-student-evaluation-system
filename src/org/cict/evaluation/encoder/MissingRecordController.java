@@ -31,6 +31,7 @@ import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import artifacts.CurriculumFix;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -151,19 +152,8 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         Integer count = 0;
         //----------------------------------------------------------------------
-        Integer correctCurriculum;
-        // check student if student has prep id
-        if (this.CURRENT_STUDENT.getPREP_id() != null) {
-            if (this.year_level.equals(1) || this.year_level.equals(2)) {
-                // if first year or second year
-                correctCurriculum = this.CURRENT_STUDENT.getPREP_id();
-            } else {
-                correctCurriculum = this.CURRENT_STUDENT.getCURRICULUM_id();
-            }
-        } else {
-            // if no prep id
-            correctCurriculum = this.CURRENT_STUDENT.getCURRICULUM_id();
-        }
+        Integer correctCurriculum = CurriculumFix
+                .getCorrectCurriculum(CURRENT_STUDENT, this.year_level);
         //----------------------------------------------------------------------
         ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm()
                 .newSearch(Database.connect().curriculum_subject())
