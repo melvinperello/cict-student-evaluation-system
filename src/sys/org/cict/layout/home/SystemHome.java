@@ -169,8 +169,7 @@ public class SystemHome extends MonoLauncher {
             if(SystemProperties.instance().getCurrentAcademicTerm().getSemester_regular().equals(0)) {
                 Notifications.create()
                         .title("Unavailable")
-                        .text("Midyear Academic Term is not allowed\n"
-                                + "to proceed adding.").showWarning();
+                        .text("Adding is not allowed in Midyear Academic Term.").showWarning();
                 return;
             }
             
