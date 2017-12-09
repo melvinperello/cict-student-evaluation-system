@@ -65,6 +65,9 @@ return new EvaluationMapping();
 public FacultyMapping faculty() {
 return new FacultyMapping();
 }
+public FacultyDataHistoryMapping faculty_data_history() {
+return new FacultyDataHistoryMapping();
+}
 public FacultyProfileMapping faculty_profile() {
 return new FacultyProfileMapping();
 }
@@ -115,6 +118,9 @@ return new StudentMapping();
 }
 public StudentCourseHistoryMapping student_course_history() {
 return new StudentCourseHistoryMapping();
+}
+public StudentDataHistoryMapping student_data_history() {
+return new StudentDataHistoryMapping();
 }
 public StudentProfileMapping student_profile() {
 return new StudentProfileMapping();

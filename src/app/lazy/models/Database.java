@@ -31,6 +31,7 @@ private MonoModels tbl_curriculum_requisite_line;
 private MonoModels tbl_curriculum_subject;
 private MonoModels tbl_evaluation;
 private MonoModels tbl_faculty;
+private MonoModels tbl_faculty_data_history;
 private MonoModels tbl_faculty_profile;
 private MonoModels tbl_grade;
 private MonoModels tbl_linked_entrance;
@@ -48,6 +49,7 @@ private MonoModels tbl_otp_generator;
 private MonoModels tbl_print_logs;
 private MonoModels tbl_student;
 private MonoModels tbl_student_course_history;
+private MonoModels tbl_student_data_history;
 private MonoModels tbl_student_profile;
 private MonoModels tbl_subject;
 private MonoModels tbl_system_override_logs;
@@ -102,6 +104,8 @@ Mono.orm().addMappings("EvaluationMapping");
 this.tbl_evaluation = Mono.orm().createModel(EvaluationMapping.class);
 Mono.orm().addMappings("FacultyMapping");
 this.tbl_faculty = Mono.orm().createModel(FacultyMapping.class);
+Mono.orm().addMappings("FacultyDataHistoryMapping");
+this.tbl_faculty_data_history = Mono.orm().createModel(FacultyDataHistoryMapping.class);
 Mono.orm().addMappings("FacultyProfileMapping");
 this.tbl_faculty_profile = Mono.orm().createModel(FacultyProfileMapping.class);
 Mono.orm().addMappings("GradeMapping");
@@ -136,6 +140,8 @@ Mono.orm().addMappings("StudentMapping");
 this.tbl_student = Mono.orm().createModel(StudentMapping.class);
 Mono.orm().addMappings("StudentCourseHistoryMapping");
 this.tbl_student_course_history = Mono.orm().createModel(StudentCourseHistoryMapping.class);
+Mono.orm().addMappings("StudentDataHistoryMapping");
+this.tbl_student_data_history = Mono.orm().createModel(StudentDataHistoryMapping.class);
 Mono.orm().addMappings("StudentProfileMapping");
 this.tbl_student_profile = Mono.orm().createModel(StudentProfileMapping.class);
 Mono.orm().addMappings("SubjectMapping");
@@ -194,6 +200,9 @@ return tbl_evaluation;
 public MonoModels faculty() {
 return tbl_faculty;
 }
+public MonoModels faculty_data_history() {
+return tbl_faculty_data_history;
+}
 public MonoModels faculty_profile() {
 return tbl_faculty_profile;
 }
@@ -244,6 +253,9 @@ return tbl_student;
 }
 public MonoModels student_course_history() {
 return tbl_student_course_history;
+}
+public MonoModels student_data_history() {
+return tbl_student_data_history;
 }
 public MonoModels student_profile() {
 return tbl_student_profile;

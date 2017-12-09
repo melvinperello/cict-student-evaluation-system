@@ -34,8 +34,8 @@ private java.lang.String house_no;
 private java.lang.String street;
 private java.lang.String brgy;
 private java.lang.String city;
-private java.lang.String province;
 private java.lang.String student_address;
+private java.lang.String province;
 private java.lang.String zipcode;
 private java.lang.String mobile;
 private java.lang.String email;
@@ -119,15 +119,6 @@ public void setCity(java.lang.String fieldCity) {
 	this.city = fieldCity;
 }
 
-@Column(name = "province", nullable = true, length = 50)
-public java.lang.String getProvince() {
-	return this.province;
-}
-
-public void setProvince(java.lang.String fieldProvince) {
-	this.province = fieldProvince;
-}
-
 @Column(name = "student_address", nullable = true, length = 300)
 public java.lang.String getStudent_address() {
 	return this.student_address;
@@ -135,6 +126,15 @@ public java.lang.String getStudent_address() {
 
 public void setStudent_address(java.lang.String fieldStudentAddress) {
 	this.student_address = fieldStudentAddress;
+}
+
+@Column(name = "province", nullable = true, length = 50)
+public java.lang.String getProvince() {
+	return this.province;
+}
+
+public void setProvince(java.lang.String fieldProvince) {
+	this.province = fieldProvince;
 }
 
 @Column(name = "zipcode", nullable = true, length = 100)
@@ -225,8 +225,8 @@ copyMe.house_no = this.house_no;
 copyMe.street = this.street;
 copyMe.brgy = this.brgy;
 copyMe.city = this.city;
-copyMe.province = this.province;
 copyMe.student_address = this.student_address;
+copyMe.province = this.province;
 copyMe.zipcode = this.zipcode;
 copyMe.mobile = this.mobile;
 copyMe.email = this.email;

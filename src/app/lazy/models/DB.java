@@ -52,6 +52,9 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_faculty faculty = new Tbl_faculty();
     public static Tbl_faculty faculty() {
         return faculty;
+    }private final static Tbl_faculty_data_history faculty_data_history = new Tbl_faculty_data_history();
+    public static Tbl_faculty_data_history faculty_data_history() {
+        return faculty_data_history;
     }private final static Tbl_faculty_profile faculty_profile = new Tbl_faculty_profile();
     public static Tbl_faculty_profile faculty_profile() {
         return faculty_profile;
@@ -103,6 +106,9 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_student_course_history student_course_history = new Tbl_student_course_history();
     public static Tbl_student_course_history student_course_history() {
         return student_course_history;
+    }private final static Tbl_student_data_history student_data_history = new Tbl_student_data_history();
+    public static Tbl_student_data_history student_data_history() {
+        return student_data_history;
     }private final static Tbl_student_profile student_profile = new Tbl_student_profile();
     public static Tbl_student_profile student_profile() {
         return student_profile;

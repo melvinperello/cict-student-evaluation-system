@@ -28,11 +28,11 @@
 <property name="city" type="java.lang.String">
 <column name="city" length="300"/>
 </property>
-<property name="province" type="java.lang.String">
-<column name="province" length="50"/>
-</property>
 <property name="student_address" type="java.lang.String">
 <column name="student_address" length="300"/>
+</property>
+<property name="province" type="java.lang.String">
+<column name="province" length="50"/>
 </property>
 <property name="zipcode" type="java.lang.String">
 <column name="zipcode" length="100"/>

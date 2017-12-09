@@ -32,7 +32,7 @@
 <column name="printed_date" length="19"/>
 </property>
 <property name="active" type="java.lang.Integer">
-<column name="active" length="10"/>
+<column name="active" length="3"/>
 </property>
 </class>
 </hibernate-mapping>
