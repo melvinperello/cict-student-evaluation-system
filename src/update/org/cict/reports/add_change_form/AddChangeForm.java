@@ -461,7 +461,7 @@ class PageNumeration extends PdfPageEventHelper {
             PdfPCell cell = new PdfPCell();
             cell.setBorder(0);
             cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-            cell.setPhrase(new Phrase(String.format("Page %d of ", writer.getPageNumber()), font_footer));
+            cell.setPhrase(new Phrase(String.format((secondCopy? "(SECOND COPY) " : "") + "Page %d of ", writer.getPageNumber()), font_footer));
             table.addCell(cell);
 
             cell = new PdfPCell(Image.getInstance(total));
@@ -477,7 +477,7 @@ class PageNumeration extends PdfPageEventHelper {
 
         PdfContentByte cb = writer.getDirectContent();
         Phrase footer = new Phrase("BulSU-OP-OUR-01F4", font_footer3);
-        Phrase footer2 = new Phrase("Revision: 0" + (secondCopy? " (SECOND COPY)" : ""), font_footer3);
+        Phrase footer2 = new Phrase("Revision: 0", font_footer3);
 
         ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                 footer,

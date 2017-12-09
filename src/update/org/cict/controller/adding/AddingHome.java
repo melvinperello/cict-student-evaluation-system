@@ -235,6 +235,10 @@ public class AddingHome extends SceneFX implements ControllerFX {
         });
 
         addClickEvent(btn_already_print, () -> {
+            if (!Access.enterTransactionPin(super.getStage())) {
+                Mono.fx().snackbar().showError(application_root, "Transaction Denied");
+                return;
+            }
             printAddChangeForm(null, "Processing your request.");
         });
 
