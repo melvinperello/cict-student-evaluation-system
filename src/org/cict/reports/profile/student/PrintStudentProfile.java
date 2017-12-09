@@ -85,7 +85,7 @@ public class PrintStudentProfile extends Transaction {
                 return false; // cancel this transaction
             }
             //------------------------------------------------------------------
-            
+
             //------------------------------------------------------------------
             // Get student address
             this.address = StudentUtility.getStudentAddress(spMap);
@@ -133,8 +133,33 @@ public class PrintStudentProfile extends Transaction {
 
         StudentProfile studentProfile = new StudentProfile(RESULT);
         AcademicTermMapping acadTerm = SystemProperties.instance().getCurrentAcademicTerm();
-        studentProfile.SEMESTER = acadTerm.getSemester_regular() == 1 ? "1st" : "2nd";
-        studentProfile.SCHOOL_YEAR = acadTerm.getSchool_year();
+        //----------------------------------------------------------------------
+        String semester = "";
+        String schoolYear = "";
+        if (acadTerm == null) {
+            semester = "";
+        } else {
+            //
+            schoolYear = acadTerm.getSchool_year();
+            switch (acadTerm.getSemester_regular()) {
+                case 0:
+                    semester = "Midyear";
+                    break;
+                case 1:
+                    semester = "1st";
+                    break;
+                case 2:
+                    semester = "2nd";
+                    break;
+                default:
+                    semester = "UNREGISTERED";
+            }
+        }
+        //----------------------------------------------------------------------
+        studentProfile.SEMESTER = semester;
+        //----------------------------------------------------------------------
+        studentProfile.SCHOOL_YEAR = schoolYear;
+        //----------------------------------------------------------------------
         studentProfile.STUDENT_NAME = WordUtils.capitalizeFully(fullName);
         studentProfile.STUDENT_ADDRESS = WordUtils.capitalizeFully(address);
         studentProfile.STUDENT_CONTACT_NO = WordUtils.capitalizeFully(studentContact);
