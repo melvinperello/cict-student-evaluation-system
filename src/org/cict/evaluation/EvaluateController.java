@@ -34,10 +34,12 @@ import app.lazy.models.CurriculumRequisiteExtMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
+import app.lazy.models.GradeMapping;
 import app.lazy.models.LinkedEntranceMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
+import app.lazy.models.StudentCourseHistoryMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
@@ -53,10 +55,13 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
@@ -78,11 +83,14 @@ import org.cict.reports.ReportsUtility;
 import org.cict.reports.advisingslip.ChooseTypeController;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.controlsfx.control.Notifications;
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.CurriculumConstants;
 import update3.org.cict.access.Access;
 import update3.org.cict.access.SystemOverriding;
+import update5.org.cict.student.controller.StudentInformation;
+import update5.org.cict.student.layout.CurriculumChooser;
 
 /**
  * FXML Controller class
@@ -377,6 +385,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_already_print, () -> {
             // REPRINT ADVISING SLIP.
             this.hideDropDown();
+            if(!Access.enterTransactionPin(this.getStage())) {
+                return;
+            }
             this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
         });
 
@@ -723,16 +734,28 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         //------------------------------
         // check if overstaying
-        if (StudentOverStay.check(currentStudent) && !allowOverStay) {
-            Notifications.create()
-                    .title("Overstayed Student")
-                    .text("Click here for more information.")
-                    .onAction(pop -> {
-                        this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
-                    })
-                    .position(Pos.BOTTOM_RIGHT).showWarning();
-            return;
+        if(StudentOverStay.check(currentStudent) && !allowOverStay) {
+            this.setView("home");
+            int res = Mono.fx().alert().createConfirmation()
+                    .setHeader("Overstayed Student")
+                    .setMessage("The student exceeded in the maximum of six (6) study years. Change the student's course to continue evaluation.")
+                    .confirmCustom("Reassign Course", "Cancel Evaluation");
+            if(res==-1) {
+                Notifications.create()
+                            .title("Overstayed Student")
+                            .text("Click here for more information.")
+                            .onAction(pop -> {
+                                this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
+                            })
+                            .position(Pos.BOTTOM_RIGHT).showWarning();
+                return;
+            } else {
+                if(!this.onShowCoursesOffered()) {
+                    return;
+                }
+            }
         }
+        this.allowOverStay = false;
         //------------------------------
 
         System.out.println("@EvaluateController: Search Success");
@@ -1074,7 +1097,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         /**
          * If no subjects are added.
          */
-        if (this.unitCount == 0) {
+        if (this.subjectCount == 0) {
             Mono.fx()
                     .alert()
                     .createWarning()
@@ -1118,6 +1141,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         evaluateTask.whenSuccess(() -> {
             showChooseType(acad_term_id, true);
+            this.allowOverStay = false;
         });
         evaluateTask.whenFinished(() -> {
             GenericLoadingShow.instance().hide();
@@ -1824,11 +1848,228 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             //------------
 
             int id = Database.connect().system_override_logs().insert(map);
-            if (id <= 0) {
+            if (id <= -1) {
                 Mono.fx().snackbar().showError(anchor_right, "Something went wrong please try again.");
             } else {
-                allowOverStay = true;
+                if(type.equalsIgnoreCase(SystemOverriding.EVAL_STUDENT_OVERSTAY)) {
+                    this.allowOverStay = true;
+                    this.searchStudent();
+                }
             }
+        }
+    }
+    
+    //------------------------------------------
+    // OVERSTAYED STUDENT
+    private boolean onShowCoursesOffered() {
+//        EvaluationMapping eMap = Mono.orm().newSearch(Database.connect().evaluation())
+//                .eq(DB.evaluation().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
+//                .eq(DB.evaluation().STUDENT_id, this.currentStudent.getCict_id())
+//                .active(Order.desc(DB.evaluation().id)).first();
+//        if(eMap != null) {
+//            Mono.fx().alert().createWarning()
+//                    .setHeader("Already Evaluated")
+//                    .setMessage("The student is already evaluated in the current semester and cannot proceed to shifting. Please revoke the evaluation first before continuing.")
+//                    .show();
+//            return;
+//        }
+        
+        CurriculumMapping selected = selectCurriculum("You can ask for the Local Registrar's assistance. Are you sure you want to continue?");
+        if (selected == null) {
+            return false;
+        }
+        
+        if(!Access.enterTransactionPin(this.getStage())) {
+            Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
+            return false;
+        }
+        //----------------------------------------------------------------------
+        System.out.println(selected.getName());
+        this.processReassignment(selected.getId());
+        //----------------------------
+        return true;
+    }
+    
+      
+    private CurriculumMapping selectCurriculum(String message) {
+        CurriculumChooser curriculumChooser = M.load(CurriculumChooser.class);
+        curriculumChooser.setStudentID(currentStudent.getCict_id());
+        curriculumChooser.onDelayedStart(); // do not put database transactions on startUp
+        //----------------------------------------------------------------------
+        try {
+            System.out.println("Stage Recycled. ^^v");
+            curriculumChooser.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = curriculumChooser.createChildStage(super.getStage());
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+        //----------------------------------------------------------------------
+
+        CurriculumMapping selected = curriculumChooser.getSelected();
+        if (selected != null && message != null) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage(message).confirmYesNo();
+            if (res == -1) {
+                return null;
+            }
+        }
+        if (selected == null) {
+            return null;
+        }
+        
+        
+        //-------------------------------------------
+        // consiquent curriculum, check if all grades are taken and passed
+        if(selected.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
+            Mono.fx().alert().createWarning()
+                    .setMessage("You are not allowed to take consequent curriculum.")
+                    .show();
+            return null;
+        }
+        //------------------------------------------
+        return selected;
+    }
+    
+    
+    private void processReassignment(Integer curriculum_id) {
+        TransactGrades transact = new TransactGrades();
+        transact.student_id = currentStudent.getCict_id();
+        transact.curriculum_id = curriculum_id;
+        /*transact.course_reference = course_ref;*/
+        transact.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text(transact.log)
+                    .showWarning();
+        });
+        transact.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong.")
+                    .showError();
+        });
+        transact.whenSuccess(() -> {
+//            StudentInformation currentStudent = new StudentInformation(Database.connect().student().getPrimary(this.currentStudent.getCict_id()));
+//            if (currentStudent.getStudentMapping() == null) {
+//                return;
+//            }
+            Notifications.create()
+                    .title("Successfully Reassigned")
+                    .text("Student's curriculum is changed"
+                            + "\n successfully.")
+                    .showInformation();
+            this.searchStudent();
+            this.allowOverStay = false;
+        });
+        transact.transact();
+    }
+    
+    class TransactGrades extends Transaction {
+
+        public Integer curriculum_id;
+        public Integer student_id;
+        //----------------------------------------------------------------------
+        public Integer course_reference; // must be retrieved within transaction
+        //----------------------------------------------------------------------
+        
+        public String log;
+
+//        public Boolean retain;
+        
+//        public Boolean alreadyTaken = false;
+//        public Integer prevCourseRef_id;
+        @Override
+        protected boolean transaction() {
+            //------------------------------------------------------------------
+            Session currentSession = Mono.orm().openSession();
+            // start your transaction
+            org.hibernate.Transaction dataTransaction = currentSession.beginTransaction();
+            //------------------------------------------------------------------
+            // include the insertion of the course history in the transaction
+            StudentCourseHistoryMapping schMap = new StudentCourseHistoryMapping();
+            schMap.setActive(1);
+            schMap.setCurriculum_assigment(Mono.orm().getServerTime().getDateWithFormat());
+            schMap.setCurriculum_id(studentCurriculum.getId());
+            schMap.setPrep_assignment(currentStudent.getPrep_assignment());
+            schMap.setPrep_id(currentStudent.getPREP_id());
+            schMap.setStudent_id(currentStudent.getCict_id());
+            int courseHistoryID = Database.connect().student_course_history()
+                    .transactionalInsert(currentSession, schMap);
+
+            //------------------------------------------------------------------
+            // check if history was properly inserted
+            if (courseHistoryID <= 0) {
+                dataTransaction.rollback();
+                log = "Cannot Insert Course History";
+                return false; // cancel the transaction
+            } else {
+                // assign this history ID
+                this.course_reference = courseHistoryID;
+            }
+            //------------------------------------------------------------------
+            ArrayList<GradeMapping> grades = Mono.orm().newSearch(Database.connect().grade())
+                    .eq(DB.grade().STUDENT_id, student_id)
+                    .active()
+                    .all();
+            //------------------------------------------------------------------
+            // updating grades with course reference
+            
+            // --------------------------------
+            // if retain is true, retain it
+            if (grades != null) {
+                for (GradeMapping grade : grades) {
+                    grade.setActive(0);
+                    grade.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
+                    grade.setUpdated_date(Mono.orm().getServerTime().getDateWithFormat());
+                    grade.setReason_for_update("Student Overstayed".toUpperCase());
+                    grade.setCourse_reference(course_reference);
+                    if (!Database.connect().grade().transactionalSingleUpdate(currentSession, grade)) {
+                        // if errors occured during temporary insert
+                        dataTransaction.rollback();
+                        log = "Curriculum is not properly updated.";
+                        System.out.println(log);
+                        return false;
+                    }
+                }
+            }
+            //------------------------------------------------------------------
+            StudentMapping student = Database.connect().student().getPrimary(student_id);
+            if (student != null) {
+                student.setCURRICULUM_id(curriculum_id);
+                student.setCurriculum_assignment(Mono.orm().getServerTime().getDateWithFormat());
+                student.setPREP_id(null);
+                student.setPrep_assignment(null);
+                if (!Database.connect().student().transactionalSingleUpdate(currentSession, student)) {
+                    dataTransaction.rollback();
+                    log = "Cannot Update Curriculum For the moment.";
+                    System.out.println(log);
+                    return false;
+                }
+            } else {
+                dataTransaction.rollback();
+                log = "Cannot retrieve student data.";
+                System.out.println(log);
+                return false;
+            }
+            
+            ArrayList<EvaluationMapping> oldEvaluationDetails = Mono.orm().newSearch(Database.connect().evaluation())
+                    .eq(DB.evaluation().STUDENT_id, student_id)
+                    .active().all();
+            if(oldEvaluationDetails!=null || !oldEvaluationDetails.isEmpty()) {
+                for(EvaluationMapping each: oldEvaluationDetails) {
+                    each.setCheck_mode("IGNORED");
+                    if (!Database.connect().evaluation().transactionalSingleUpdate(currentSession, each)) {
+                        dataTransaction.rollback();
+                        log = "Cannot Update Evaluation For Now.";
+                        System.out.println(log);
+                        return false;
+                    }
+                }
+            }
+            
+            dataTransaction.commit();
+            return true;
         }
     }
 }
