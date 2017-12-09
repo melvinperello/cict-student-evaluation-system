@@ -126,7 +126,8 @@ public class CoRequisiteFilter {
      *
      * @param collection the collection without the removed subject.
      * @param curriculumID curriculum ID of the student.
-     * @return
+     * @param studentID cict id
+     * @return CurriculumRequisiteExtMapping list of missing required.
      */
     public static ArrayList<CurriculumRequisiteExtMapping> checkCoReqAdd(
             // Parameters
@@ -172,7 +173,19 @@ public class CoRequisiteFilter {
             if (thisIterationSize != thisIterationGot) {
                 // some co requisite is not found in the list
                 // if not equal check the remaining entry in clone req
-                return cloneReq;
+                //--------------------------------------------------------------
+                // check missing if taken
+                for (CurriculumRequisiteExtMapping ext : cloneReq) {
+                    if (isCoTaken(studentID, ext.getSUBJECT_id_req())) {
+                        cloneReq.remove(ext);
+                    }
+                }
+                //--------------------------------------------------------------
+                if (!cloneReq.isEmpty()) {
+                    return cloneReq; // if not empty.
+                }
+                //--------------------------------------------------------------
+
             }
             //------------------------------------------------------------------
         } // loop completed
