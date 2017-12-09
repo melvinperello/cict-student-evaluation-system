@@ -30,6 +30,7 @@ import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.CurriculumPreMapping;
+import app.lazy.models.CurriculumRequisiteExtMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
@@ -143,7 +144,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_deficiency;
-    
+
     @FXML
     private JFXButton btnCreditUnits;
 
@@ -179,17 +180,16 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_list;
-    
+
     @FXML
     private ImageView img_profile;
 
     @FXML
     private Label lbl_total_queue;
-            
+
     @FXML
     private VBox vbox_waiting_queue;
-            
-            
+
     public EvaluateController() {
         //
     }
@@ -215,6 +215,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * Controller Initialization.
      */
     private boolean allowOverride = false;
+
     @Override
     public void onInitialization() {
         //----------------------------------------------------------------------
@@ -239,14 +240,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         scroll_subjects.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
             Evaluator.mouseDropSubject(currentStudent, MAX_UNITS, unitCount, vbox_subjects, anchor_right);
         });
-        
-        Animate.fade(vbox_waiting_queue, 150, ()->{
+
+        Animate.fade(vbox_waiting_queue, 150, () -> {
             vbox_waiting_queue.setVisible(false);
             vbox_list.setVisible(false);
             vbox_waiting_queue.setVisible(true);
         }, vbox_waiting_queue, vbox_list);
         createQueueTable();
-        
+
         allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
     }
 
@@ -363,9 +364,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         super.addClickEvent(btnEvaluate, () -> {
             this.hideDropDown();
             checkEvaluationService(() -> {
-                if(Access.enterTransactionPin(super.getStage()))
+                if (Access.enterTransactionPin(super.getStage())) {
                     saveEvaluation();
-                else {
+                } else {
                     Mono.fx().snackbar().showError(application_root, "Transaction Denied");
                 }
             });
@@ -387,12 +388,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             });
         });
         //----------------------------------------------------------------------
-        
-        super.addClickEvent(btn_deficiency, ()->{
+
+        super.addClickEvent(btn_deficiency, () -> {
             this.printDeficiency();
         });
     }
-    
+
     private void printDeficiency() {
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = this.currentStudent.getCict_id();
@@ -722,18 +723,18 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         //------------------------------
         // check if overstaying
-        if(StudentOverStay.check(currentStudent) && !allowOverStay) {
+        if (StudentOverStay.check(currentStudent) && !allowOverStay) {
             Notifications.create()
-                        .title("Overstayed Student")
-                        .text("Click here for more information.")
-                        .onAction(pop -> {
-                            this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
-                        })
-                        .position(Pos.BOTTOM_RIGHT).showWarning();
+                    .title("Overstayed Student")
+                    .text("Click here for more information.")
+                    .onAction(pop -> {
+                        this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
+                    })
+                    .position(Pos.BOTTOM_RIGHT).showWarning();
             return;
         }
         //------------------------------
-        
+
         System.out.println("@EvaluateController: Search Success");
 
         //----------------------------------------------------------------------
@@ -741,13 +742,13 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         // run this if not a cross enrollee student
         if (!FLAG_CROSS_ENROLLEE) {
-            if(!PublicConstants.DISABLE_ASSISTANCE ) {
+            if (!PublicConstants.DISABLE_ASSISTANCE) {
                 if (FLAG_ASSISTANT_SHOW) {
                     showFirstAssistant();
                 }
             }
             onShowCurricularLevel();
-            if(!PublicConstants.DISABLE_ASSISTANCE ) {
+            if (!PublicConstants.DISABLE_ASSISTANCE) {
                 showAssistant();
             }
         }
@@ -906,9 +907,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
-        if(!printLegacy)
+        if (!printLegacy) {
             printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
-        
+        }
+
         printCheckList.transact();
     }
 
@@ -1037,6 +1039,21 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * Saves the evaluation.
      */
     private void saveEvaluation() {
+        //----------------------------------------------------------------------
+        ArrayList<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
+                this.studentCurriculum.getId(),
+                this.currentStudent.getCict_id());
+
+        if (sub != null) {
+            System.out.println("MISSING REQUIRED CORREC");
+            for (CurriculumRequisiteExtMapping ext : sub) {
+                System.out.println(ext.getSUBJECT_id_req());
+            }
+            return;
+        } else {
+            System.out.println("NO MISSING PRE REQUISITE");
+        }
+        //----------------------------------------------------------------------
         /**
          * if below minimum.
          */
@@ -1183,7 +1200,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .stageCenter()
                     .stageShowAndWait();
 
-            evaluationMap.setPrint_type(controller.getSelected()==null? "NOT_SET" : controller.getSelected().toUpperCase());
+            evaluationMap.setPrint_type(controller.getSelected() == null ? "NOT_SET" : controller.getSelected().toUpperCase());
             Database.connect().evaluation().update(evaluationMap);
         }
 
@@ -1360,8 +1377,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             btn_encoding.setDisable((this.currentStudent.getPREP_id() != null));
         });
     }
-    
+
     private static String currentSection;
+
     public static String getSection() {
         return currentSection;
     }
@@ -1742,56 +1760,58 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     private SimpleTable studentTable = new SimpleTable();
     private CronThread cronThreadQueue;
-    private void createQueueTable() {        
+
+    private void createQueueTable() {
         AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
         Integer clusterNumber = afMap.getAssigned_cluster();
         cronThreadQueue = new CronThread("evaluation_queue");
         cronThreadQueue.setInterval(5000);
-        cronThreadQueue.setTask(()->{
+        cronThreadQueue.setTask(() -> {
             boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
-            if(result) {
-                Mono.fx().thread().wrap(()->{
-                    Animate.fade(vbox_list, 150, ()->{
+            if (result) {
+                Mono.fx().thread().wrap(() -> {
+                    Animate.fade(vbox_list, 150, () -> {
                         vbox_waiting_queue.setVisible(false);
                         vbox_list.setVisible(true);
                     }, vbox_waiting_queue, vbox_list);
                 });
             } else {
-                Mono.fx().thread().wrap(()->{
-                    Animate.fade(vbox_waiting_queue, 150, ()->{
+                Mono.fx().thread().wrap(() -> {
+                    Animate.fade(vbox_waiting_queue, 150, () -> {
                         lbl_total_queue.setText("0");
                         vbox_list.setVisible(false);
                         vbox_waiting_queue.setVisible(true);
                     }, vbox_waiting_queue, vbox_list);
                 });
             }
-            if(ThreadMill.searching) {
+            if (ThreadMill.searching) {
                 this.searchStudent();
             }
         });
         cronThreadQueue.start();
     }
-    
+
     private void setImageView() {
         StudentProfileMapping spMap = null;
-        if(this.currentStudent.getHas_profile().equals(1)) {
+        if (this.currentStudent.getHas_profile().equals(1)) {
             spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, this.currentStudent.getCict_id())
                     .active(Order.desc(DB.student_profile().id)).first();
         }
-        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        String studentImage = (spMap == null ? null : spMap.getProfile_picture());
         if (studentImage == null
-            || studentImage.isEmpty()
-            || studentImage.equalsIgnoreCase("NONE")) {
+                || studentImage.isEmpty()
+                || studentImage.equalsIgnoreCase("NONE")) {
             ImageUtility.addDefaultImageToFx(img_profile, 1, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 1);
         }
     }
-    
+
     //-----------------------------
     // override over stay
     private boolean allowOverStay = false;
+
     private void goLang(String type) {
         Object[] result = Access.isEvaluationOverride(allowOverride, SystemOverriding.getACRONYM(15, type));
         boolean ok = (boolean) result[0];
