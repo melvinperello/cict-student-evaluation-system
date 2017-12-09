@@ -335,7 +335,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
     private void setCurrentTerm() {
         current = SystemProperties.instance().getCurrentAcademicTerm();
         if (current == null) {
-            lbl_current_term.setText("NO CURRENT ACADEMIC TERM FOUND");
+            lbl_current_term.setText("NO ACADEMIC TERM FOUND");
         } else {
             lbl_current_term.setText("A.Y. " + (current.getSchool_year() == null ? "Not Set" : current.getSchool_year()) + " " + (current.getSemester() == null ? "Semester Not Specified" : WordUtils.capitalizeFully(current.getSemester())));
         }

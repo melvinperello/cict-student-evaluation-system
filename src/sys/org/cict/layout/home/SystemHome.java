@@ -144,12 +144,36 @@ public class SystemHome extends MonoLauncher {
         this.application_root = this.getApplicationRoot();
         //----------------------------------------------------------------------
         MonoClick.addClickEvent(btn_evaluation, () -> {
+            if(this.isCurrentAcadTermNotSet(btn_evaluation)) {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed evaluation.").showWarning();
+                return;
+            }
+            
             checkStatus("evaluation", () -> {
                 onShowEvaluation();
             });
         });
 
         MonoClick.addClickEvent(btn_adding, () -> {
+            if(this.isCurrentAcadTermNotSet(btn_adding)) {
+                Notifications.create()
+                        .title("No Academic Term Found")
+                        .text("Academic term must be set first\n"
+                                + "to proceed adding.").showWarning();
+                return;
+            }
+            
+            if(SystemProperties.instance().getCurrentAcademicTerm().getSemester_regular().equals(0)) {
+                Notifications.create()
+                        .title("Unavailable")
+                        .text("Midyear Academic Term is not allowed\n"
+                                + "to proceed adding.").showWarning();
+                return;
+            }
+            
             checkStatus("adding", () -> {
                 onShowAddingAndChanging();
             });
