@@ -17,6 +17,7 @@ import com.jhmvin.Mono;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -576,7 +577,7 @@ public class GradeEncoderUI {
      * @return returns string array [GRADE,REMARKS]
      */
     private String[] validateGrade(Object grade, int row) {
-        openRestrictedAccess= false;
+        openRestrictedAccess = false;
         String[] cellValue = {"", ""};
         try {
             if (grade.equals("")) {
@@ -586,7 +587,7 @@ public class GradeEncoderUI {
             }
             if (grade instanceof String) {
                 String rating = (String) grade;
-                
+
                 if (rating.equalsIgnoreCase("INC")) {
                     cellValue[0] = "INC";
                     cellValue[1] = "Incomplete";
@@ -631,7 +632,6 @@ public class GradeEncoderUI {
         }
         return cellValue;
     }
-    
 
 //    private boolean willShow = false;
 //    private void checkForPreReq(Object grade, String cellValue[], int row) {
@@ -825,11 +825,11 @@ public class GradeEncoderUI {
      * @param rating
      */
     private SubjectMapping subject = null;
-    
+
     //-----------------------------
     private boolean openRestrictedAccess = false;
     //---------------------
-    
+
     private void enterGrade(String rating) {
         this.isKeyEvent = false;
         subject = null;
@@ -991,11 +991,12 @@ public class GradeEncoderUI {
                 return;
             }
         }
-        
-        if(openRestrictedAccess) {
-            
+
+        if (openRestrictedAccess) {
+
             /**
-             * Only Local Registrar and Co-Registrars are allowed to re-evaluate.
+             * Only Local Registrar and Co-Registrars are allowed to
+             * re-evaluate.
              */
             boolean isAllowed = false;
             AccountFacultyMapping allowedUser = null;
@@ -1112,7 +1113,7 @@ public class GradeEncoderUI {
                     Thread.sleep(200);
                     String cellText = spreadSheetGrid.getRows().get(x).get(finalCol).getText();
                     String cellRemark = spreadSheetGrid.getRows().get(x).get(remarkCol).getText();
-                    
+
                     //----------------------------
                     // verify if grade is already posted with failed/inc
                     String cellCode = spreadSheetGrid.getRows().get(x).get(codeCol).getText();
@@ -1132,21 +1133,24 @@ public class GradeEncoderUI {
                             break;
                         }
                     }
-                    if(temp_subject!=null) {
+                    if (temp_subject != null) {
                         GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
                                 .eq(DB.grade().STUDENT_id, CICT_id)
                                 .eq(DB.grade().SUBJECT_id, temp_subject.getId())
                                 .active(Order.desc(DB.grade().id)).first();
-                        if(grade!=null) {
-                            if(grade.getRemarks().equalsIgnoreCase("FAILED") || grade.getRemarks().equalsIgnoreCase("INCOMPLETE")) {
-                                if(!cellRemark.equalsIgnoreCase(grade.getRemarks()))
+                        if (grade != null) {
+                            if (grade.getRemarks().equalsIgnoreCase("FAILED") || grade.getRemarks().equalsIgnoreCase("INCOMPLETE")) {
+                                if (!cellRemark.equalsIgnoreCase(grade.getRemarks())) {
                                     openRestrictedAccess = true;
+                                }
                             }
-                        } else
+                        } else {
                             System.out.println("GRADE IS NULL");
-                    } else
+                        }
+                    } else {
                         System.out.println("TEMP SUBJECT IS NULL");
-                    
+                    }
+
                     //-----------------------------
                     if (cellText.isEmpty()) {
                         // if empty paint it white
@@ -1220,10 +1224,11 @@ public class GradeEncoderUI {
     private void verficationResult(int count) {
         this.verficationResult = count;
     }
-    
+
     //-------------------------------------------
-    private ArrayList<HashMap<String, String>> restrictedSubjects = new ArrayList<>();
-    public void addRestrictedSubject(HashMap<String, String> detail) {
+    private ArrayList<Hashtable<String, String>> restrictedSubjects = new ArrayList<>();
+
+    public void addRestrictedSubject(Hashtable<String, String> detail) {
         restrictedSubjects.add(detail);
     }
 }

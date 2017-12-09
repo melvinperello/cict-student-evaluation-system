@@ -85,7 +85,7 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
     private Boolean isCompleted = false;
     private Integer year_level;
     private Integer current_SEMESTER;
-    private Integer current_YEAR;
+//    private Integer current_YEAR;
 
     public MissingRecordController(StudentMapping currentStudent,
             ArrayList<ArrayList<SubjectMapping>> subjectsPerSem,
@@ -124,14 +124,17 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
     private SimpleTable recordTable = new SimpleTable();
 
     private void init() {
+        //----------------------------------------------------------------------
         AcademicTermMapping acadTermMap = SystemProperties.instance().getCurrentAcademicTerm();
         current_SEMESTER = acadTermMap.getSemester_regular();
-        String[] sy = acadTermMap.getSchool_year().split("-");
-        try {
-            current_YEAR = Integer.valueOf(sy[0]);
-        } catch (NumberFormatException e) {
-        }
-
+        //----------------------------------------------------------------------
+//        String[] sy = acadTermMap.getSchool_year().split("-");
+//        try {
+//            current_YEAR = Integer.valueOf(sy[0]);
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//        }
+        //----------------------------------------------------------------------
         for (int i = 0; i < 2; i++) {
             String title = TITLES.get(i);
             createRow(title, i);
@@ -145,18 +148,36 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
     }
 
     private Integer unacquiredCount(Integer sem) {
+        //----------------------------------------------------------------------
         Integer count = 0;
-
-        ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                .eq(DB.curriculum_subject().CURRICULUM_id, this.CURRENT_STUDENT.getCURRICULUM_id())
+        //----------------------------------------------------------------------
+        Integer correctCurriculum;
+        // check student if student has prep id
+        if (this.CURRENT_STUDENT.getPREP_id() != null) {
+            if (this.year_level.equals(1) || this.year_level.equals(2)) {
+                // if first year or second year
+                correctCurriculum = this.CURRENT_STUDENT.getPREP_id();
+            } else {
+                correctCurriculum = this.CURRENT_STUDENT.getCURRICULUM_id();
+            }
+        } else {
+            // if no prep id
+            correctCurriculum = this.CURRENT_STUDENT.getCURRICULUM_id();
+        }
+        //----------------------------------------------------------------------
+        ArrayList<CurriculumSubjectMapping> csMaps = Mono.orm()
+                .newSearch(Database.connect().curriculum_subject())
+                .eq(DB.curriculum_subject().CURRICULUM_id, correctCurriculum)
                 .eq(DB.curriculum_subject().semester, (sem + 1))
                 .eq(DB.curriculum_subject().year, this.year_level)
                 .active()
                 .all();
-
+        //----------------------------------------------------------------------
         if (csMaps == null) {
+            logs("NO CS MAPS Found");
             return count;
         }
+        //----------------------------------------------------------------------
         System.out.println("SEMESTER " + (sem + 1));
         for (CurriculumSubjectMapping csMap : csMaps) {
             GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
@@ -211,7 +232,7 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
         Button btn_encode = searchAccessibilityText(titleRow, "encode");
         //----------------------------------------------------------------------
         lbl_title.setText(title);
-        lbl_subject.setText(unacquiredCount(index) + "");
+        lbl_subject.setText(unacquiredCount(index).toString());
         //----------------------------------------------------------------------
         addClickEvent(btn_encode, () -> {
             this.onShowGradeEncoder(index, title);
@@ -370,35 +391,6 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
         }
 
         //----------------------------------------------------------------------
-//
-//        if (Objects.equals(CURRENT_STUDENT.getYear_level(), year_level)) {
-//            if (current_SEMESTER == 1) {
-//                Mono.fx().alert()
-//                        .createWarning()
-//                        .setTitle("Restricted")
-//                        .setHeader("Cannot Encode Yet.")
-//                        .setMessage("The student is not yet in this semester.")
-//                        .showAndWait();
-//                return false;
-//            } else if (current_SEMESTER > 1) {
-//                if (semester == 1) {
-//                    return true;
-//                } else {
-//                    Mono.fx().alert()
-//                            .createWarning()
-//                            .setTitle("Restricted")
-//                            .setHeader("Cannot Encode Yet.")
-//                            .setMessage("The student is not yet in this semester.")
-//                            .showAndWait();
-//                    return false;
-//                }
-//            } else {
-//                System.out.println("SEMESTER NOT EQUAL TO CURRENT SEM");
-//            }
-//        } else {
-//            System.out.println("YEAR LEVEL NOT EQUAL TO STUDENT'S YEAR LEVEL");
-//        }
-//        return true;
     }
     //--------------------------------------------------------------------------
 

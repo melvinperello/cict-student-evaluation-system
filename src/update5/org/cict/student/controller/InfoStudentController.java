@@ -204,22 +204,22 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_shown;
-    
+
     @FXML
     private VBox vbox_removed;
-    
+
     @FXML
     private ImageView img_icon;
 
     @FXML
     private Label lbl_college;
-         
+
     @FXML
     private JFXButton btn_view_checklist;
-    
+
     @FXML
     private JFXButton btn_view_history;
-            
+
     private StudentValues studentValues = new StudentValues();
     private CurriculumMapping curriculum;
     private AcademicProgramMapping acadProg;
@@ -248,7 +248,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         ToggleGroup group2 = new ToggleGroup();
         rbtn_male.setToggleGroup(group2);
         rbtn_female.setToggleGroup(group2);
-        
+
         this.isVerified(false);
         this.setCmbYearLevel();
         this.setCmbCampus();
@@ -257,22 +257,22 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
         vbox_shown.setVisible(false);
         hbox_home.setVisible(true);
-        
+
         //-------------------------------
         // set image
         SimpleTask set_profile = new SimpleTask("set_profile");
-        set_profile.setTask(()->{
+        set_profile.setTask(() -> {
             this.setImageView();
         });
-        set_profile.whenCancelled(()->{
+        set_profile.whenCancelled(() -> {
             Notifications.create().text("Loading of image is cancelled")
                     .showInformation();
         });
-        set_profile.whenFailed(()->{
+        set_profile.whenFailed(() -> {
             Notifications.create().text("Failed to load image.")
                     .showInformation();
         });
-        set_profile.whenSuccess(()->{
+        set_profile.whenSuccess(() -> {
         });
         set_profile.start();
         //-------------------------------
@@ -359,20 +359,20 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 hbox_home.setVisible(true);
             }, hbox_home);
         });
-        
-        super.addClickEvent(btn_remove_student, ()->{
+
+        super.addClickEvent(btn_remove_student, () -> {
             this.onRemove();
         });
-        
-        super.addClickEvent(btn_view_checklist, ()->{
+
+        super.addClickEvent(btn_view_checklist, () -> {
             this.printChecklist();
         });
-        
-        super.addClickEvent(btn_view_history, ()->{
+
+        super.addClickEvent(btn_view_history, () -> {
             this.onShowHistory();
         });
     }
-    
+
     private void printChecklist() {
         // disallows cross enrollees to print a check list.
         if (this.CURRENT_STUDENT.getResidency().equalsIgnoreCase("CROSS_ENROLLEE")) {
@@ -450,7 +450,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             printCheckList(printLegacy, curriculum.getId(), null);
         }
     }
-    
+
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
@@ -473,43 +473,44 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             Notifications.create().title("Cannot Produce a Checklist")
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
-        if(!printLegacy)
+        if (!printLegacy) {
             printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
-        
+        }
+
         printCheckList.transact();
     }
 
-    
     private void onRemove() {
         String btn = btn_remove_student.getText(),
                 title, message, header;
         Integer activeness = 0;
-        if(btn.equalsIgnoreCase("Remove Student")){
+        if (btn.equalsIgnoreCase("Remove Student")) {
             activeness = 0;
             title = "Removed Successfully";
             message = "Student " + this.CURRENT_STUDENT.getId()
-                                + " is successfully removed.";
+                    + " is successfully removed.";
             btn = "Restore Student";
             header = "Remove Student";
         } else {
             activeness = 1;
             title = "Restored Successfully";
             message = "Student " + this.CURRENT_STUDENT.getId()
-                                + " is successfully restored.";
+                    + " is successfully restored.";
             btn = "Remove Student";
             header = "Restore Student";
         }
         int res = Mono.fx().alert()
-            .createConfirmation()
-            .setHeader(header)
-            .setMessage("Are you sure you want to " + header.toLowerCase() + " "
-                    + CURRENT_STUDENT.getId() + "?")
-            .confirmYesNo();
-        if(res==-1)
+                .createConfirmation()
+                .setHeader(header)
+                .setMessage("Are you sure you want to " + header.toLowerCase() + " "
+                        + CURRENT_STUDENT.getId() + "?")
+                .confirmYesNo();
+        if (res == -1) {
             return;
+        }
         this.CURRENT_STUDENT.setActive(activeness);
-        if(Database.connect().student().update(this.CURRENT_STUDENT)) {
-            if(asMap!=null) {
+        if (Database.connect().student().update(this.CURRENT_STUDENT)) {
+            if (asMap != null) {
                 this.asMap.setActive(activeness);
                 Database.connect().student().update(this.asMap);
             }
@@ -578,10 +579,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             Label lbl_name_prev_date = rowFX.getLbl_prevoius_curriculum_date();
 
             String current = getCurriculumName(each.getCurriculum_id());
-            lbl_name_current.setText((current==null? "NONE" : current));
+            lbl_name_current.setText((current == null ? "NONE" : current));
             lbl_name_current_date.setText(each.getCurriculum_assigment() == null ? "NOT SET" : "" + each.getCurriculum_assigment());
             String prep = getCurriculumName(each.getPrep_id());
-            if(prep==null) {
+            if (prep == null) {
                 rowFX.getVbox_prep().setVisible(false);
             } else {
                 lbl_name_prev.setText(prep);
@@ -605,8 +606,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private String getCurriculumName(Integer id) {
-        if(id==null)
+        if (id == null) {
             return null;
+        }
         CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(id);
         if (curriculum == null) {
             return null;
@@ -622,14 +624,14 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 .eq(DB.evaluation().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
                 .eq(DB.evaluation().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
                 .active(Order.desc(DB.evaluation().id)).first();
-        if(eMap != null) {
+        if (eMap != null) {
             Mono.fx().alert().createWarning()
                     .setHeader("Already Evaluated")
                     .setMessage("The student is already evaluated in the current semester and cannot proceed to shifting. Please revoke the evaluation first before continuing.")
                     .show();
             return;
         }
-        
+
         CurriculumMapping selected = selectCurriculum("Are you sure you want to shift the student's course?");
         if (selected == null) {
             return;
@@ -639,53 +641,54 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         //----------------------------
         this.validateCurriculum(selected);
     }
-    
+
     public void validateCurriculum(CurriculumMapping curriculumSelected) {
-        
+
         // check if the curriculum is in the course history
         // if so, reactivate the grades related to the course history
         StudentCourseHistoryMapping schMap = Mono.orm().newSearch(Database.connect().student_course_history())
                 .eq(DB.student_course_history().curriculum_id, curriculumSelected.getId())
                 .eq(DB.student_course_history().student_id, CURRENT_STUDENT.getCict_id())
                 .active(Order.desc(DB.student_course_history().id)).first();
-        if(schMap!=null) {
+        if (schMap != null) {
             int res = Mono.fx().alert().createConfirmation()
                     .setMessage("This curriculum is already taken by this student. Do you want to retain the previous grade?")
                     .confirmYesNo();
             Boolean retain = false;
-            if(res==1) {
+            if (res == 1) {
                 retain = true;
             }
             this.processGrades(curriculumSelected.getId(), retain, false, schMap.getId());
             return;
         }
-        
+
         ArrayList<CurriculumSubjectMapping> subjects = Mono.orm().newSearch(Database.connect().curriculum_subject())
                 .eq(DB.curriculum_subject().CURRICULUM_id, curriculumSelected.getId())
                 .active().all();
-        if(subjects==null)
+        if (subjects == null) {
             return;
+        }
         // ------------------------------
         // check the grade for each subject found
         // ------------------
         boolean hasGrade = false;
-        for(CurriculumSubjectMapping subject: subjects) {
+        for (CurriculumSubjectMapping subject : subjects) {
             GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
                     .eq(DB.grade().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
                     .eq(DB.grade().SUBJECT_id, subject.getSUBJECT_id())
                     .active(Order.desc(DB.grade().id)).first();
-            if(grade==null) {
+            if (grade == null) {
             } else {
                 hasGrade = true;
                 break;
             }
         }
         Boolean retain = false;
-        if(hasGrade) {
+        if (hasGrade) {
             int res = Mono.fx().alert().createConfirmation()
                     .setMessage("Some subjects in this curriculum are already taken by this student. Do you want to retain them?")
                     .confirmYesNo();
-            if(res==1) {
+            if (res == 1) {
                 retain = true;
             }
         }
@@ -697,7 +700,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         Session currentSession = Mono.orm().openSession();
         // start your transaction
         org.hibernate.Transaction dataTransaction = currentSession.beginTransaction();
-        for(GradeMapping currentGrade: currentGrades) {
+        for (GradeMapping currentGrade : currentGrades) {
             GradeMapping retainedGrade = new GradeMapping();
             retainedGrade.setACADTERM_id(currentGrade.getACADTERM_id());
             retainedGrade.setActive(1);
@@ -754,7 +757,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             if (currentStudent.getStudentMapping() == null) {
                 return;
             }
-            
+
             this.setStudentInformation(currentStudent);
             this.setValues();
             Notifications.create()
@@ -765,7 +768,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         });
         transact.transact();
     }
-    
+
     class TransactGrades extends Transaction {
 
         public Integer curriculum_id;
@@ -773,13 +776,14 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         public Integer course_reference; // must be retrieved within transaction
         //----------------------------------------------------------------------
-        
+
         public String log;
 
         public Boolean retain;
-        
+
         public Boolean alreadyTaken = false;
         public Integer prevCourseRef_id;
+
         @Override
         protected boolean transaction() {
             //------------------------------------------------------------------
@@ -815,12 +819,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .all();
             //------------------------------------------------------------------
             // updating grades with course reference
-            
+
             // --------------------------------
             // if retain is true, retain it
             if (grades != null) {
                 for (GradeMapping grade : grades) {
-                    if(retain) {
+                    if (retain) {
                         GradeMapping retainThis = this.getRetainedGradeMap(grade);
                         int gradeID = Database.connect().grade()
                                 .transactionalInsert(currentSession, retainThis);
@@ -866,13 +870,13 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             //------------------------------------------------------------------
             // reactivate if alreadyTaken is true
             //-----------------------------------
-            if(alreadyTaken) {
+            if (alreadyTaken) {
                 ArrayList<GradeMapping> previousGrades = Mono.orm().newSearch(Database.connect().grade())
                         .eq(DB.grade().course_reference, prevCourseRef_id)
                         .eq(DB.grade().STUDENT_id, student_id)
                         .execute().all();
-                if(previousGrades!=null) {
-                    for(GradeMapping previousGrade: previousGrades) {
+                if (previousGrades != null) {
+                    for (GradeMapping previousGrade : previousGrades) {
                         previousGrade.setActive(1);
                         if (!Database.connect().grade().transactionalSingleUpdate(currentSession, previousGrade)) {
                             dataTransaction.rollback();
@@ -883,11 +887,11 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     }
                 }
             }
-            
+
             dataTransaction.commit();
             return true;
         }
-        
+
         private GradeMapping getRetainedGradeMap(GradeMapping currentGrade) {
             GradeMapping retainedGrade = new GradeMapping();
             retainedGrade.setACADTERM_id(currentGrade.getACADTERM_id());
@@ -924,7 +928,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 //        schMap.setStudent_id(CURRENT_STUDENT.getCict_id());
 //        return Database.connect().student_course_history().insert(schMap);
 //    }
-    
     private CurriculumMapping selectCurriculum(String message) {
         CurriculumChooser curriculumChooser = M.load(CurriculumChooser.class);
         curriculumChooser.setStudentID(CURRENT_STUDENT.getCict_id());
@@ -959,17 +962,17 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .showError();
             return null;
         }
-        
+
         //-------------------------------------------
         // consiquent curriculum, check if all grades are taken and passed
-        if(selected.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
+        if (selected.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
             int res = Mono.fx().alert().createConfirmation()
                     .setMessage("You are shifting to a consequent curriculum. "
                             + "This requires all the subjects in the current curriculum"
                             + " to be taken and passed. Do you still want to continue?")
                     .confirmYesNo();
-            if(res==1) {
-                if(!canTakeConsequent(selected)) {
+            if (res == 1) {
+                if (!canTakeConsequent(selected)) {
                     Notifications.create().darkStyle()
                             .title("Cannot Shift Course")
                             .text("Consequent curriculums requires a"
@@ -978,31 +981,35 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                             .showWarning();
                     return null;
                 }
-            } else 
+            } else {
                 return null;
+            }
         }
         //------------------------------------------
         return selected;
     }
-    
+
     private boolean canTakeConsequent(CurriculumMapping selected) {
         ArrayList<CurriculumPreMapping> prereqs = Mono.orm().newSearch(Database.connect().curriculum_pre())
                 .eq(DB.curriculum_pre().curriculum_id_get, selected.getId())
                 .active().all();
-        if(prereqs==null)
+        if (prereqs == null) {
             return true;
+        }
         Integer student_prep_id = CURRENT_STUDENT.getPREP_id();
-        for(CurriculumPreMapping prereq: prereqs) {
-            if(student_prep_id!=null) {
-                if(student_prep_id.equals(prereq.getCurriculum_id_req()))
+        for (CurriculumPreMapping prereq : prereqs) {
+            if (student_prep_id != null) {
+                if (student_prep_id.equals(prereq.getCurriculum_id_req())) {
                     return true;
+                }
             }
             StudentCourseHistoryMapping schMap = Mono.orm().newSearch(Database.connect().student_course_history())
                     .eq(DB.student_course_history().prep_id, prereq.getCurriculum_id_req())
                     .eq(DB.student_course_history().student_id, CURRENT_STUDENT.getCict_id())
                     .active(Order.desc(DB.student_course_history().id)).first();
-            if(schMap!=null)
+            if (schMap != null) {
                 return true;
+            }
         }
         return false;
     }
@@ -1136,6 +1143,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private AccountStudentMapping asMap;
+
     private void setValues() {
         try {
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
@@ -1171,8 +1179,8 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             // -----------------------------------------------------
             lbl_acad_prog.setText((acadProg == null ? "NONE" : acadProg.getName()));
             lbl_currriculum.setText((curriculum == null ? "NONE" : curriculum.getName()));
-            
-            if(this.CURRENT_STUDENT.getActive().equals(0)) {
+
+            if (this.CURRENT_STUDENT.getActive().equals(0)) {
                 btn_remove_student.setText("Restore Student");
                 vbox_removed.setVisible(true);
             } else {
@@ -1180,9 +1188,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 vbox_removed.setVisible(false);
             }
             asMap = Database.connect().account_student().getPrimary(this.CURRENT_STUDENT.getCict_id());
-            
+
             for (String[] strings : SectionHomeController.COLLEGE_LIST) {
-                if(this.CURRENT_STUDENT.getCollege()!=null && this.CURRENT_STUDENT.getCollege().equalsIgnoreCase(strings[0])) {
+                if (this.CURRENT_STUDENT.getCollege() != null && this.CURRENT_STUDENT.getCollege().equalsIgnoreCase(strings[0])) {
                     lbl_college.setText(strings[1]);
                 }
             }
@@ -1205,7 +1213,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
     }
 
-
     public void back() {
         StudentHomeController controller = homeFX.getController();
         controller.onSearch();
@@ -1219,6 +1226,28 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private void update() {
+        //----------------------------------------------------------------------
+        // create history object
+        StudentDataHistory history = new StudentDataHistory();
+        history.setCictID(this.CURRENT_STUDENT.getCict_id());
+        history.setStudentNumber(this.CURRENT_STUDENT.getId());
+        history.setLastName(this.CURRENT_STUDENT.getLast_name());
+        history.setFirstName(this.CURRENT_STUDENT.getFirst_name());
+        history.setMiddleName(this.CURRENT_STUDENT.getMiddle_name());
+        history.setGender(this.CURRENT_STUDENT.getGender());
+        history.setCampus(this.CURRENT_STUDENT.getCampus());
+        history.setYearLevel(String.valueOf(this.CURRENT_STUDENT.getYear_level()));
+        history.setSection(this.CURRENT_STUDENT.getSection());
+        history.setGroup(String.valueOf(this.CURRENT_STUDENT.get_group()));
+        if (this.CURRENT_STUDENT.getUpdated_by() == null) {
+            history.setUpdatedby(this.CURRENT_STUDENT.getCreated_by());
+            history.setUpdatedDate(this.CURRENT_STUDENT.getCreated_date());
+        } else {
+            history.setUpdatedby(this.CURRENT_STUDENT.getUpdated_by());
+            history.setUpdatedDate(this.CURRENT_STUDENT.getUpdated_date());
+        }
+        //----------------------------------------------------------------------
+
         if (getValues()) {
             int res = this.validateStudent(this.CURRENT_STUDENT.getCict_id(),
                     txt_studnum.getText());
@@ -1230,6 +1259,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                                 .text("Student successfully updated.")
                                 .showInformation();
                         this.setValues();
+                        //------------------------------------------------------
+                        // create history if successfully evaluated
+                        history.makeHistory();
+                        //------------------------------------------------------
                     }
                     break;
             }
@@ -1460,28 +1493,27 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     private void setImageView() {
         StudentProfileMapping spMap = null;
-        if(this.CURRENT_STUDENT.getHas_profile().equals(1)) {
+        if (this.CURRENT_STUDENT.getHas_profile().equals(1)) {
             spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
                     .active(Order.desc(DB.student_profile().id)).first();
         }
-        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        String studentImage = (spMap == null ? null : spMap.getProfile_picture());
         if (studentImage == null
-            || studentImage.isEmpty()
-            || studentImage.equalsIgnoreCase("NONE")) {
+                || studentImage.isEmpty()
+                || studentImage.equalsIgnoreCase("NONE")) {
             ImageUtility.addDefaultImageToFx(img_icon, 1, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_icon, 1);
         }
     }
-    
-    
+
     private void onShowHistory() {
         StudentHistoryController controller = new StudentHistoryController(this.CURRENT_STUDENT,
-                this.lbl_acad_prog.getText() + " | " + 
-                (this.CURRENT_STUDENT.getYear_level()==null? "" : this.CURRENT_STUDENT.getYear_level()) + (this.CURRENT_STUDENT.getSection()==null? "" : this.CURRENT_STUDENT.getSection()) + 
-                (this.CURRENT_STUDENT.get_group()==null? "" : "-G"+ this.CURRENT_STUDENT.get_group()) +
-                        " | " + this.lbl_currriculum.getText(), "STUDENTS");
+                this.lbl_acad_prog.getText() + " | "
+                + (this.CURRENT_STUDENT.getYear_level() == null ? "" : this.CURRENT_STUDENT.getYear_level()) + (this.CURRENT_STUDENT.getSection() == null ? "" : this.CURRENT_STUDENT.getSection())
+                + (this.CURRENT_STUDENT.get_group() == null ? "" : "-G" + this.CURRENT_STUDENT.get_group())
+                + " | " + this.lbl_currriculum.getText(), "STUDENTS");
         Mono.fx().create()
                 .setPackageName("org.cict.evaluation.student.history")
                 .setFxmlDocument("History")

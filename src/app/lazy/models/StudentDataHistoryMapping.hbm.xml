@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.StudentDataHistoryMapping" table="student_data_history" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="cict_id" type="java.lang.Integer">
+<column name="cict_id" length="10"/>
+</property>
+<property name="student_number" type="java.lang.String">
+<column name="student_number" length="50"/>
+</property>
+<property name="last_name" type="java.lang.String">
+<column name="last_name" length="100"/>
+</property>
+<property name="first_name" type="java.lang.String">
+<column name="first_name" length="100"/>
+</property>
+<property name="middle_name" type="java.lang.String">
+<column name="middle_name" length="100"/>
+</property>
+<property name="gender" type="java.lang.String">
+<column name="gender" length="100"/>
+</property>
+<property name="campus" type="java.lang.String">
+<column name="campus" length="100"/>
+</property>
+<property name="year_level" type="java.lang.String">
+<column name="year_level" length="10"/>
+</property>
+<property name="section" type="java.lang.String">
+<column name="section" length="10"/>
+</property>
+<property name="_group" type="java.lang.String">
+<column name="_group" length="10"/>
+</property>
+<property name="updated_by" type="java.lang.String">
+<column name="updated_by" length="100"/>
+</property>
+<property name="updated_date" type="java.util.Date">
+<column name="updated_date" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>

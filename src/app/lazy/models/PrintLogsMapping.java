@@ -102,7 +102,7 @@ public void setTerminal(java.lang.String fieldTerminal) {
 	this.terminal = fieldTerminal;
 }
 
-@Column(name = "printed_by", nullable = false, length = 10)
+@Column(name = "printed_by", nullable = true, length = 10)
 public java.lang.Integer getPrinted_by() {
 	return this.printed_by;
 }
@@ -111,7 +111,7 @@ public void setPrinted_by(java.lang.Integer fieldPrintedBy) {
 	this.printed_by = fieldPrintedBy;
 }
 
-@Column(name = "printed_date", nullable = false, length = 19)
+@Column(name = "printed_date", nullable = true, length = 19)
 @javax.persistence.Temporal(javax.persistence.TemporalType.TIMESTAMP)
 public java.util.Date getPrinted_date() {
 	return this.printed_date;
@@ -121,7 +121,7 @@ public void setPrinted_date(java.util.Date fieldPrintedDate) {
 	this.printed_date = fieldPrintedDate;
 }
 
-@Column(name = "active", nullable = false, length = 10)
+@Column(name = "active", nullable = false, length = 3)
 public java.lang.Integer getActive() {
 	return this.active;
 }
