@@ -428,9 +428,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             this.onClickLevel(hbox_4_progress.getPrefWidth(), 4);
         });
         //----------------------------------------------------------------------
-        Mono.fx().key(KeyCode.ENTER).release(application_pane, () -> {
-            Mono.fx().getParentStage(application_pane).close();
-        });
+//        Mono.fx().key(KeyCode.ENTER).release(application_pane, () -> {
+//            Mono.fx().getParentStage(application_pane).close();
+//        });
         chkbx_disable_ai.selectedProperty().addListener((a)->{
             PublicConstants.DISABLE_ASSISTANCE = !chkbx_disable_ai.isSelected();
         });
