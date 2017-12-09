@@ -1039,21 +1039,6 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * Saves the evaluation.
      */
     private void saveEvaluation() {
-        //----------------------------------------------------------------------
-        ArrayList<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
-                this.studentCurriculum.getId(),
-                this.currentStudent.getCict_id());
-
-        if (sub != null) {
-            System.out.println("MISSING REQUIRED CORREC");
-            for (CurriculumRequisiteExtMapping ext : sub) {
-                System.out.println(ext.getSUBJECT_id_req());
-            }
-            return;
-        } else {
-            System.out.println("NO MISSING PRE REQUISITE");
-        }
-        //----------------------------------------------------------------------
         /**
          * if below minimum.
          */
