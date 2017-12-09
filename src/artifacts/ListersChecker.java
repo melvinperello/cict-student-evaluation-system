@@ -206,7 +206,7 @@ public class ListersChecker {
             //------------------------------------------------------------------
             double overAllgwa = (phase1Grade + phase2Grade) / 2.00;
             if (listerMode.equals(ListerMode.DEANS_LIST)) {
-                if (overAllgwa <= DEAN_CAP /*&& !(overAllgwa <= PRES_CAP*/)) {
+                if (overAllgwa <= DEAN_CAP /*&& !(overAllgwa <= PRES_CAP)*/) {
                     // deans list
                     df.setRoundingMode(RoundingMode.CEILING);
                     listerList.add(new ListerData(student, df.format(overAllgwa)));
