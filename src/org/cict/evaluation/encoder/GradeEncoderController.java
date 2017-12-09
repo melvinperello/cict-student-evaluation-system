@@ -41,7 +41,7 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Hashtable;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -322,7 +322,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                             // if these fields are modified, ask for 
                             // local registrar's credentials
                             // before saving grades
-                            HashMap<String, String> detail = new HashMap();
+                            Hashtable<String, String> detail = new Hashtable();
                             detail.put(row.get(0).getText(), remarks);
                             gei.addRestrictedSubject(detail);
                         }
