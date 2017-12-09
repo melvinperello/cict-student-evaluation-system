@@ -210,7 +210,7 @@ public class SystemHome extends MonoLauncher {
                 Notifications.create()
                         .title("No Academic Term Found")
                         .text("Academic term must be set first\n"
-                                + "to proceed linked management.").showWarning();
+                                + "to proceed faculty hub.").showWarning();
                 return;
             }
             this.onShowFacultyHub();
@@ -229,7 +229,7 @@ public class SystemHome extends MonoLauncher {
                 Notifications.create()
                         .title("No Academic Term Found")
                         .text("Academic term must be set first\n"
-                                + "to proceed linked management.").showWarning();
+                                + "to proceed view of reports.").showWarning();
                 return;
             }
             this.onShowReports();
