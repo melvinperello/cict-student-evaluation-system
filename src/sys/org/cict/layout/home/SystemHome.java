@@ -267,7 +267,7 @@ public class SystemHome extends MonoLauncher {
         this.setLabelText(lbl_gender, loggedUser.getGENDER());
         this.setLabelText(lbl_access, loggedUser.getACCESS_LEVEL());
         this.setLabelText(lbl_desgination, loggedUser.getDESIGNATION());
-        this.setLabelText(lbl_current_term, (SystemProperties.instance().getCurrentTermString()==null || SystemProperties.instance().getCurrentTermString().isEmpty()? "No Academic Term" : SystemProperties.instance().getCurrentTermString()));
+        this.lbl_current_term.setText((SystemProperties.instance().getCurrentTermString()==null || SystemProperties.instance().getCurrentTermString().isEmpty()? "No Academic Term" : SystemProperties.instance().getCurrentTermString()));
     }
 
     /**
