@@ -47,9 +47,16 @@ public class CoRequisiteFilter {
      * @param subjectContainer the vbox that contains the subject since this
      * does not use simple table.
      * @param studentCurriculumID
+     * @param studentID CICT ID.
      * @return
      */
-    public static boolean checkCoReqEval(VBox subjectContainer, int studentCurriculumID) {
+    public static ArrayList<CurriculumRequisiteExtMapping> checkCoReqEval(
+            VBox subjectContainer,
+            Integer studentCurriculumID,
+            Integer studentID
+    ) {
+
+        ArrayList<SubjectMapping> subjectMapCollection = new ArrayList<>();
         for (Object object : subjectContainer.getChildrenUnmodifiable()) {
             if (!(object instanceof SubjectView)) {
                 continue;
@@ -57,39 +64,41 @@ public class CoRequisiteFilter {
             //------------------------------------------------------------------
             SubjectView view = (SubjectView) object;
             //------------------------------------------------------------------
-            ArrayList<CurriculumRequisiteExtMapping> corequisites
-                    = getCoRequisites(studentCurriculumID, view.subjectID);
+//            ArrayList<CurriculumRequisiteExtMapping> corequisites
+//                    = getCoRequisites(studentCurriculumID, view.subjectID);
+//            //------------------------------------------------------------------
+//            if (corequisites == null) {
+//                // ok no requisites
+//                continue; // go to next subject view object
+//            }
+//            //------------------------------------------------------------------
+//            // check for coreq of this subject in the view
+//            int thisIterationSize = corequisites.size();
+//            int thisIterationGot = 0;
+//            for (CurriculumRequisiteExtMapping coreq : corequisites) {
+//                int requiredSubject = coreq.getSUBJECT_id_req();
+//                //--------------------------------------------------------------
+//                // iterate all over the subjects
+//                //--------------------------------------------------------------
+//                if (checkIfInList(requiredSubject, subjectContainer)) {
+//                    thisIterationGot++;
+//                }
+//                //--------------------------------------------------------------
+//            }
+//            //------------------------------------------------------------------
+//            if (thisIterationSize != thisIterationGot) {
+//                // some co requisite is not found in the list
+//                return false;
+//            }
+//            //------------------------------------------------------------------
             //------------------------------------------------------------------
-            if (corequisites == null) {
-                // ok no requisites
-                continue; // go to next subject view object
-            }
-
-            //------------------------------------------------------------------
-            // check for coreq of this subject in the view
-            int thisIterationSize = corequisites.size();
-            int thisIterationGot = 0;
-            for (CurriculumRequisiteExtMapping coreq : corequisites) {
-                int requiredSubject = coreq.getSUBJECT_id_req();
-                //--------------------------------------------------------------
-                // iterate all over the subjects
-                //--------------------------------------------------------------
-                if (checkIfInList(requiredSubject, subjectContainer)) {
-                    thisIterationGot++;
-                }
-                //--------------------------------------------------------------
-            }
-            //------------------------------------------------------------------
-            if (thisIterationSize != thisIterationGot) {
-                // some co requisite is not found in the list
-                return false;
-            }
-            //------------------------------------------------------------------
-
+            // dependent on co req checking for adding.
+            SubjectMapping sub = new SubjectMapping();
+            sub.setId(view.subjectID);
+            subjectMapCollection.add(sub);
         }
 
-        // all coreq found
-        return true;
+        return checkCoReqAdd(subjectMapCollection, studentCurriculumID, studentID);
     }
 
     /**
@@ -99,6 +108,7 @@ public class CoRequisiteFilter {
      * @param subjectContainer
      * @return
      */
+    @Deprecated
     private static boolean checkIfInList(int requiredSubject, VBox subjectContainer) {
         boolean exist = false;
         for (Object object2 : subjectContainer.getChildrenUnmodifiable()) {
@@ -121,6 +131,8 @@ public class CoRequisiteFilter {
 
     /**
      * Checks whether there is a corequisite.
+     *
+     * SubjectMapping only uses the subjectID value.
      *
      * if returned null pre requisites are complete.
      *
