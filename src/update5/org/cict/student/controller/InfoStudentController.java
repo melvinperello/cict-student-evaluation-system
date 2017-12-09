@@ -1280,7 +1280,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         }
 
         try {
-            campus = (cmb_campus.getSelectionModel().getSelectedItem().toString());
+            campus = (cmb_campus.getSelectionModel().getSelectedItem().toString()).toUpperCase();
         } catch (NullPointerException a) {
             Mono.fx().alert()
                     .createError()

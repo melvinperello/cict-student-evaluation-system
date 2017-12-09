@@ -1064,7 +1064,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         Integer CURRICULUM_id = cmb_curriculum_lister.getSelectionModel().getSelectedItem().getId();
         
         FetchAchievers fetch = new FetchAchievers();
-//        fetch.CUR_id = CURRICULUM_id;
+        fetch.CURRICULUM_id = CURRICULUM_id;
         fetch.MODE =(MODE.equalsIgnoreCase(PRES_LIST))? ListersChecker.ListerMode.PRESIDENTS_LIST : ListersChecker.ListerMode.DEANS_LIST;
 //        fetch.YEAR_LEVEL = cmb_year_level_pres.getSelectionModel().getSelectedIndex() + 2;
         fetch.whenStarted(()->{
@@ -1180,6 +1180,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     public class FetchAchievers extends Transaction{
         
         public ListersChecker.ListerMode MODE;
+        public Integer CURRICULUM_id;
         
         private ArrayList<AchieversData> presListers;
         public ArrayList<AchieversData> getPresListers() {
@@ -1196,6 +1197,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             AcademicTermMapping current = SystemProperties.instance().getCurrentAcademicTerm();//Database.connect().academic_term().getPrimary(19);
             checker.setCurrentTerm(current);
             checker.setListerMode(MODE);
+            checker.setCURRICULUM_id(CURRICULUM_id);
             ArrayList<ListerData> listers = checker.check();
             if(listers==null || listers.isEmpty())
                 return false;

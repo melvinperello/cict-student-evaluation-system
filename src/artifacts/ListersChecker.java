@@ -57,6 +57,7 @@ public class ListersChecker {
 
     private AcademicTermMapping acadTermMapping;
     private ListerMode listerMode;
+    private Integer CURRICULUM_id;
 
     public void setCurrentTerm(AcademicTermMapping currentTerm) {
         this.acadTermMapping = currentTerm;
@@ -64,6 +65,10 @@ public class ListersChecker {
 
     public void setListerMode(ListerMode listerMode) {
         this.listerMode = listerMode;
+    }
+
+    public void setCURRICULUM_id(Integer CURRICULUM_id) {
+        this.CURRICULUM_id = CURRICULUM_id;
     }
 
     public ArrayList<ListerData> check() {
@@ -74,7 +79,7 @@ public class ListersChecker {
         }
         //----------------------------------------------------------------------
         // Get Qualified Students
-        ArrayList<StudentMapping> qualifiedStudents = this.listValidStudents();
+        ArrayList<StudentMapping> qualifiedStudents = this.listValidStudents(CURRICULUM_id);
         //----------------------------------------------------------------------
         // Check Grades of Students
         return this.checkGrades(qualifiedStudents);
@@ -85,7 +90,7 @@ public class ListersChecker {
      *
      * @return
      */
-    private ArrayList<StudentMapping> listValidStudents() {
+    private ArrayList<StudentMapping> listValidStudents(Integer CURRICULUM_id) {
         ArrayList<StudentMapping> qualifiedStudents = Mono.orm()
                 .newSearch(Database.connect().student())
                 .eq(DB.student().college, "CICT")
@@ -96,6 +101,10 @@ public class ListersChecker {
                 .put(Restrictions.isNotNull(DB.student().year_level))
                 .ne(DB.student().year_level, 1)
                 .eq(DB.student().last_evaluation_term, this.acadTermMapping.getId())
+                //-----------------------
+                // added curriculum_id
+                .eq(DB.student().CURRICULUM_id, CURRICULUM_id)
+                //-----
                 .active(Order.desc(DB.student().cict_id))
                 .all();
         return qualifiedStudents;
@@ -227,7 +236,7 @@ public class ListersChecker {
         for (CurriculumSubjectMapping sub : phase) {
             GradeMapping studentGradeInThisSubject = Mono.orm().newSearch(Database.connect().grade())
                     // Grade for the subject
-                    .eq(DB.grade().SUBJECT_id, sub.getId())
+                    .eq(DB.grade().SUBJECT_id, sub.getSUBJECT_id())
                     // Must be posted
                     .eq(DB.grade().posted, 1)
                     // Must Be Accepted
