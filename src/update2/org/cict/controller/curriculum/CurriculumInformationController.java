@@ -219,6 +219,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
             txt_description.setDisable(true);
             txt_major.setDisable(true);
             txt_name.setDisable(true);
+            cmb_preparatory.setDisable(true);
+            cmb_prereq.setDisable(true);
+            cmb_type.setDisable(true);
+            rbtn_no.setDisable(true);
+            rbtn_yes.setDisable(true);
         }
 
         addTextFieldFilters();
