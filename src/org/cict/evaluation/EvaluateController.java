@@ -385,7 +385,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_already_print, () -> {
             // REPRINT ADVISING SLIP.
             this.hideDropDown();
-            if(!Access.enterTransactionPin(this.getStage())) {
+            if (!Access.enterTransactionPin(this.getStage())) {
                 return;
             }
             this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
@@ -734,23 +734,23 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         //------------------------------
         // check if overstaying
-        if(StudentOverStay.check(currentStudent) && !allowOverStay) {
+        if (StudentOverStay.check(currentStudent) && !allowOverStay) {
             this.setView("home");
             int res = Mono.fx().alert().createConfirmation()
                     .setHeader("Overstayed Student")
                     .setMessage("The student exceeded in the maximum of six (6) study years. Change the student's course to continue evaluation.")
                     .confirmCustom("Reassign Course", "Cancel Evaluation");
-            if(res==-1) {
+            if (res == -1) {
                 Notifications.create()
-                            .title("Overstayed Student")
-                            .text("Click here for more information.")
-                            .onAction(pop -> {
-                                this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
-                            })
-                            .position(Pos.BOTTOM_RIGHT).showWarning();
+                        .title("Overstayed Student")
+                        .text("Click here for more information.")
+                        .onAction(pop -> {
+                            this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
+                        })
+                        .position(Pos.BOTTOM_RIGHT).showWarning();
                 return;
             } else {
-                if(!this.onShowCoursesOffered()) {
+                if (!this.onShowCoursesOffered()) {
                     return;
                 }
             }
@@ -1062,6 +1062,21 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * Saves the evaluation.
      */
     private void saveEvaluation() {
+        //----------------------------------------------------------------------
+        ArrayList<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
+                this.studentCurriculum.getId(),
+                this.currentStudent.getCict_id());
+
+        if (sub != null) {
+            System.out.println("MISSING REQUIRED CORREC");
+            for (CurriculumRequisiteExtMapping ext : sub) {
+                System.out.println(ext.getSUBJECT_id_req());
+            }
+            return;
+        } else {
+            System.out.println("NO MISSING PRE REQUISITE");
+        }
+        //----------------------------------------------------------------------
         /**
          * if below minimum.
          */
@@ -1851,14 +1866,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             if (id <= -1) {
                 Mono.fx().snackbar().showError(anchor_right, "Something went wrong please try again.");
             } else {
-                if(type.equalsIgnoreCase(SystemOverriding.EVAL_STUDENT_OVERSTAY)) {
+                if (type.equalsIgnoreCase(SystemOverriding.EVAL_STUDENT_OVERSTAY)) {
                     this.allowOverStay = true;
                     this.searchStudent();
                 }
             }
         }
     }
-    
+
     //------------------------------------------
     // OVERSTAYED STUDENT
     private boolean onShowCoursesOffered() {
@@ -1873,13 +1888,13 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //                    .show();
 //            return;
 //        }
-        
+
         CurriculumMapping selected = selectCurriculum("You can ask for the Local Registrar's assistance. Are you sure you want to continue?");
         if (selected == null) {
             return false;
         }
-        
-        if(!Access.enterTransactionPin(this.getStage())) {
+
+        if (!Access.enterTransactionPin(this.getStage())) {
             Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
             return false;
         }
@@ -1889,8 +1904,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         //----------------------------
         return true;
     }
-    
-      
+
     private CurriculumMapping selectCurriculum(String message) {
         CurriculumChooser curriculumChooser = M.load(CurriculumChooser.class);
         curriculumChooser.setStudentID(currentStudent.getCict_id());
@@ -1917,11 +1931,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         if (selected == null) {
             return null;
         }
-        
-        
+
         //-------------------------------------------
         // consiquent curriculum, check if all grades are taken and passed
-        if(selected.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
+        if (selected.getLadderization_type().equalsIgnoreCase(CurriculumConstants.TYPE_CONSEQUENT)) {
             Mono.fx().alert().createWarning()
                     .setMessage("You are not allowed to take consequent curriculum.")
                     .show();
@@ -1930,8 +1943,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         //------------------------------------------
         return selected;
     }
-    
-    
+
     private void processReassignment(Integer curriculum_id) {
         TransactGrades transact = new TransactGrades();
         transact.student_id = currentStudent.getCict_id();
@@ -1964,7 +1976,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         transact.transact();
     }
-    
+
     class TransactGrades extends Transaction {
 
         public Integer curriculum_id;
@@ -1972,11 +1984,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         public Integer course_reference; // must be retrieved within transaction
         //----------------------------------------------------------------------
-        
+
         public String log;
 
 //        public Boolean retain;
-        
 //        public Boolean alreadyTaken = false;
 //        public Integer prevCourseRef_id;
         @Override
@@ -2014,7 +2025,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .all();
             //------------------------------------------------------------------
             // updating grades with course reference
-            
+
             // --------------------------------
             // if retain is true, retain it
             if (grades != null) {
@@ -2052,12 +2063,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 System.out.println(log);
                 return false;
             }
-            
+
             ArrayList<EvaluationMapping> oldEvaluationDetails = Mono.orm().newSearch(Database.connect().evaluation())
                     .eq(DB.evaluation().STUDENT_id, student_id)
                     .active().all();
-            if(oldEvaluationDetails!=null || !oldEvaluationDetails.isEmpty()) {
-                for(EvaluationMapping each: oldEvaluationDetails) {
+            if (oldEvaluationDetails != null || !oldEvaluationDetails.isEmpty()) {
+                for (EvaluationMapping each : oldEvaluationDetails) {
                     each.setCheck_mode("IGNORED");
                     if (!Database.connect().evaluation().transactionalSingleUpdate(currentSession, each)) {
                         dataTransaction.rollback();
@@ -2067,7 +2078,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     }
                 }
             }
-            
+
             dataTransaction.commit();
             return true;
         }
