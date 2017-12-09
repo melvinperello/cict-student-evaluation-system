@@ -10,7 +10,7 @@
 
 <VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0" style="-fx-background-color: #008CB7;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label styleClass="metro-title-33" text="Shift Course" textFill="WHITE">
+      <Label styleClass="metro-title-33" text="Course Chooser" textFill="WHITE">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
@@ -23,7 +23,7 @@
             <VBox fx:id="vbox_list" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" />
             <VBox fx:id="vbox_no_found" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" visible="false">
                <children>
-                  <Label text="No Student Found" textFill="WHITE">
+                  <Label text="No Curriculum Found" textFill="WHITE">
                      <font>
                         <Font size="17.0" />
                      </font>

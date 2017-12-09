@@ -379,6 +379,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             Mono.fx().snackbar().showInfo(application_root, "No Check List for Cross Enrollees");
             return;
         }
+        if(CURRENT_STUDENT.getCURRICULUM_id()==null) {
+            Mono.fx().snackbar().showInfo(application_root, "No Curriculum Yet");
+            return;
+        }
         //----------------------------------------------------------------------
         // current curriculum
         CurriculumMapping curriculum = Database.connect()
@@ -1066,6 +1070,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private void printDeficiency() {
+        
+        if(CURRENT_STUDENT.getCURRICULUM_id()==null) {
+            Mono.fx().snackbar().showInfo(application_root, "No Curriculum Yet");
+            return;
+        }
+        
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = CURRENT_STUDENT.getCict_id();
         //----------------------------------------------------------------------
@@ -1115,6 +1125,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private void onShowCredit() {
+        if(CURRENT_STUDENT.getCURRICULUM_id()==null) {
+            Mono.fx().snackbar().showInfo(application_root, "No Curriculum Yet");
+            return;
+        }
         String title = "Edit Grades";
         CreditController controller = new CreditController(this.CURRENT_STUDENT.getCict_id(), "CREDIT", "STUDENTS");
         Mono.fx().create()
