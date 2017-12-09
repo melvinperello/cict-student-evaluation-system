@@ -46,10 +46,10 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
-import com.jhmvin.orm.SQL;
-import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,15 +70,11 @@ import javafx.util.Callback;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cict.PublicConstants;
-import org.cict.accountmanager.faculty.FacultyInformation;
 import org.cict.accountmanager.faculty.FacultyMainController;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import sys.org.cict.layout.home.SystemHome;
 import update3.org.cict.ChoiceRange;
 import update3.org.cict.layout.default_loader.LoaderView;
@@ -1057,6 +1053,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
     private void fetchAchievers() {
         this.detachAll();
+        vbox_pres_main_table.getChildren().clear();
+        previewAchievers.clear();
         
         if(cmb_curriculum_lister.getSelectionModel().getSelectedItem()==null) {
             return;
@@ -1081,7 +1079,6 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         fetch.whenSuccess(()->{
             this.detachAll();
-            vbox_pres_main_table.getChildren().clear();
             previewAchievers.clear();
             System.out.println("MODE: " + MODE);
             if(MODE.equalsIgnoreCase(PRES_LIST)) {
@@ -1104,6 +1101,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                     this.emptyView2.attach();
                 } else {
                     //create table here
+                    int res = fetch.getDeansListers().size();
+                    lbl_result_pres.setText("Total result"+(res>1? "s" : "")+" found: " + res);
                     this.createAchieversTable(fetch.getDeansListers());
                 }
             }
@@ -1118,9 +1117,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     private void sort(ArrayList<AchieversData> results) {
         previewAchievers.clear();
         results.forEach((each)->{
-            if(previewAchievers.isEmpty())
+            if(previewAchievers.isEmpty()) {
                 previewAchievers.add(each);
-            else {
+            } else {
                 for(AchieversData eachPreview : previewAchievers) {
                     if(Double.valueOf(each.GWA)>Double.valueOf(eachPreview.GWA)) {
                         previewAchievers.remove(eachPreview);
@@ -1310,7 +1309,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             this.GWA = GWA;
             CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(student.getCURRICULUM_id());
             AcademicProgramMapping acadProg = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
-            this.sectionName = acadProg.getCode() + " " + student.getYear_level() + student.getSection() + (student.get_group()==null || student.get_group().equals(0)? "" : "-" + student.get_group());
+            this.sectionName = acadProg.getCode() + " " + student.getYear_level() + student.getSection() + (student.get_group()==null || student.get_group().equals(0)? "" : "-G" + student.get_group());
         }
         
         public String getFullName() {
@@ -1344,7 +1343,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         CurriculumMapping selected = cmb_curriculum_lister.getSelectionModel().getSelectedItem();
         print.reportOtherDetail = SystemProperties.instance().getCurrentTermString();
         print.reportTitleHeader = lbl_title_pres.getText();
-        print.reportOtherDetail = selected.getName() + (selected.getMajor()==null || selected.getMajor().isEmpty() || selected.getMajor().equalsIgnoreCase("NONE")? "" : " MAJOR IN " + selected.getMajor());
+        print.reportTitleIntro = selected.getName() + (selected.getMajor()==null || selected.getMajor().isEmpty() || selected.getMajor().equalsIgnoreCase("NONE")? "" : " MAJOR IN " + selected.getMajor());
         print.whenStarted(() -> {
             btn_print_eval_main.setDisable(true);
             super.cursorWait();

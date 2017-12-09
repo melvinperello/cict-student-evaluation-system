@@ -261,23 +261,23 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 
     private void systemAdminEvents() {
         super.addClickEvent(btn_assign_new_sys_admin, () -> {
-            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_ADMIN)) {
                 assignSystemAdmin();
             }
         });
         super.addClickEvent(btn_add_new_asst_admin, () -> {
-            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_ADMIN)) {
                 addNewAsstAdmin();
             }
         });
         super.addClickEvent(btn_assign_local_registrar, () -> {
-            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 assignLocalRegistrar();
             }
         });
 
         super.addClickEvent(btn_add_new_asst_admin1, () -> {
-            if (this.isGranted("Access Denied. Not A System Administrator.", Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_ADMIN)) {
                 if (addNewAsstAdmin()) {
                     fetchFaculty(Access.ACCESS_ASST_ADMIN, vbox_asst_admin_table, true);
                 }
@@ -291,25 +291,25 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 
     private void localRegistrarEvents() {
         super.addClickEvent(btn_add_asst_registrar, () -> {
-            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 this.assignAsstRegistrar();
             }
         });
         super.addClickEvent(btn_add_evaluators, () -> {
-            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
                 this.addEvaluator();
             }
         });
 
         super.addClickEvent(btn_add_asst_registrar1, () -> {
-            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN)) {
                 if (this.assignAsstRegistrar()) {
                     fetchFaculty(Access.ACCESS_CO_REGISTRAR, vbox_asst_registrar_table, true);
                 }
             }
         });
         super.addClickEvent(btn_add_evaluators1, () -> {
-            if (this.isGranted("Access Denied. Not a Local Registrar.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
                 if (this.addEvaluator()) {
                     fetchFaculty(Access.ACCESS_EVALUATOR, vbox_evaluator_table, true);
                 }
@@ -317,7 +317,9 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         });
         
         super.addClickEvent(btn_show_override_logs, ()->{
-            this.onShowOverrideLogs();
+            if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
+                this.onShowOverrideLogs();
+            }
         });
     }
     

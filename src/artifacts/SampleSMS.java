@@ -14,6 +14,7 @@ import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.criterion.Order;
 
 /**
@@ -24,12 +25,13 @@ public class SampleSMS {
 
     public static void main(String... args) {
         ListersChecker checker = new ListersChecker();
-        AcademicTermMapping current = Database.connect().academic_term().getPrimary(19);
+        AcademicTermMapping current = SystemProperties.instance().getCurrentAcademicTerm();//Database.connect().academic_term().getPrimary(19);
         checker.setCurrentTerm(current);
+        checker.setCURRICULUM_id(13);
         checker.setListerMode(ListersChecker.ListerMode.PRESIDENTS_LIST);
         ArrayList<ListerData> listers = checker.check();
         for (ListerData lister : listers) {
-            System.out.println(lister.gwa);
+            System.out.println(lister.student.getId() + " " + lister.gwa);
         }
     }
 
