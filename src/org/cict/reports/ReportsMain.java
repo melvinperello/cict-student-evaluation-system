@@ -52,6 +52,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1015,9 +1016,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     //-----------------------------------------
     // LISTERS
     private void setViewListers(JFXButton button) {
+        vbox_pres_main_table.getChildren().clear();
         this.MODE = button.getText();
         lbl_subtitle_pres.setText(MODE.equalsIgnoreCase(PRES_LIST)? "List of students who are qualified for President's lister in the current semester." : "List of students who are qualified for Dean's lister in the current semester.");
-        this.fetchAchievers();
         lbl_title_pres.setText(MODE.equalsIgnoreCase(PRES_LIST)? "President's Lister" : "Dean's Lister");
         SimpleTask set = new SimpleTask("set_reports_value_listers");
         set.setTask(()->{
@@ -1114,48 +1115,24 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     }
     
     private ArrayList<AchieversData> previewAchievers = new ArrayList<>();
-    private void sort(ArrayList<AchieversData> results) {
-        previewAchievers.clear();
-        results.forEach((each)->{
-            if(previewAchievers.isEmpty()) {
-                previewAchievers.add(each);
-            } else {
-                for(AchieversData eachPreview : previewAchievers) {
-                    if(Double.valueOf(each.GWA)>Double.valueOf(eachPreview.GWA)) {
-                        previewAchievers.remove(eachPreview);
-                        previewAchievers.add(each);
-                        previewAchievers.add(eachPreview);
-                    }
-                }
-            }
-        });
-//        for(AchieversData each: results) {
-//            if(previewAchievers.isEmpty())
-//                previewAchievers.add(each);
-//            else {
-//                for(AchieversData eachPreview : previewAchievers) {
-//                    if(Double.valueOf(each.GWA)>Double.valueOf(eachPreview.GWA)) {
-//
-//                    }
-//                }
-//            }
-//        }
-    }
     
     private void createAchieversTable(ArrayList<AchieversData> results) {
         this.detachAll();
-        this.sort(results);
-//        previewAchievers = results;
+        previewAchievers = results;
         SimpleTable achieversTable = new SimpleTable();
         achieversTable.getChildren().clear();
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
-        for(AchieversData each: results) {
+        for(AchieversData each: previewAchievers) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(70.0);
             AchieversRow rowFX = M.load(AchieversRow.class);
             rowFX.getLbl_name().setText(each.getFullName());
             rowFX.getLbl_section().setText(each.sectionName);
             rowFX.getLbl_gwa().setText(each.GWA);
+            
+            
+            System.out.println(each.getFullName() + " " + each.GWA);
+            
             
             row.getRowMetaData().put("MORE_INFO", each);
 
@@ -1206,91 +1183,14 @@ public class ReportsMain extends SceneFX implements ControllerFX {
 
             for(ListerData each: listers) {
                 AchieversData data = new AchieversData(each.student, each.gwa);
-                if(MODE.equals(ListersChecker.ListerMode.PRESIDENTS_LIST))
+                if(MODE.equals(ListersChecker.ListerMode.PRESIDENTS_LIST)) {
                     presListers.add(data);
-                else
+                } else {
                     deansListers.add(data);
+                }
             }
             return true;
-//            ArrayList<StudentMapping> students;
-//            if(YEAR_LEVEL==null) {
-//                students = Mono.orm().newSearch(Database.connect().student())
-//                        .eq(DB.student().CURRICULUM_id, CUR_id)
-//                        .notNull(DB.student().year_level)
-//                        // first year students are not yet valid candidate for listers
-//                        .ne(DB.student().year_level, 1)
-//                        .active(Order.asc(DB.student().last_name)).all();
-//            } else {
-//                students = Mono.orm().newSearch(Database.connect().student())
-//                        .eq(DB.student().CURRICULUM_id, CUR_id)
-//                        .eq(DB.student().year_level, YEAR_LEVEL)
-//                        .active(Order.asc(DB.student().last_name)).all();
-//            }
-//            if(students==null) // no student found
-//                return false;
-//            
-//            presListers = new ArrayList<>();
-//            deansListers = new ArrayList<>();
-//            
-//            DecimalFormat df = new DecimalFormat("0.0000");
-//            for(StudentMapping student: students) {
-//                Integer STUDENT_id = student.getCict_id();
-//                Integer STUDENT_yrlvl = student.getYear_level();
-//                System.out.println("\nSTUDENT CICT_id: " + student.getCict_id());
-//                ArrayList<CurriculumSubjectMapping> csMaps_phase1  = Mono.orm().newSearch(Database.connect().curriculum_subject())
-//                        .eq(DB.curriculum_subject().CURRICULUM_id, CUR_id)
-//                        .eq(DB.curriculum_subject().year, STUDENT_yrlvl-1)
-//                        .eq(DB.curriculum_subject().semester, 2).active().all();
-//
-//                ArrayList<CurriculumSubjectMapping> csMaps_phase2 = Mono.orm().newSearch(Database.connect().curriculum_subject())
-//                        .eq(DB.curriculum_subject().CURRICULUM_id, CUR_id)
-//                        .eq(DB.curriculum_subject().year, STUDENT_yrlvl)
-//                        .eq(DB.curriculum_subject().semester, 1).active().all();
-//            
-//                double gwaPhase1 = getGWA(csMaps_phase1, STUDENT_id);
-//                System.out.println("GWA1: " + gwaPhase1);
-//                double gwaPhase2 = getGWA(csMaps_phase2, STUDENT_id);
-//                
-//                System.out.println("GWA2: "+gwaPhase2);
-//                double overallGWA = (gwaPhase1 + gwaPhase2) / 2;
-//                
-//                System.out.println("OVERALL: " + df.format(overallGWA)+"\n");
-//                if(overallGWA>=1.20) {
-//                    presListers.add(new AchieversData(student, df.format(overallGWA)));
-//                } else if(overallGWA <= 1.21 && overallGWA >= 1.75) {
-//                    deansListers.add(new AchieversData(student, df.format(overallGWA)));
-//                }
-//            }
-//            
-//            return true;
         }
-//    
-//        private double getGWA(ArrayList<CurriculumSubjectMapping> csMaps, Integer STUDENT_id) {
-//            double gwa = 0.0;
-//            if(csMaps != null) { 
-//                double gradeTotal = 0.0;
-//                double totalUnits = 0.0;
-//                for(CurriculumSubjectMapping csMap: csMaps) {
-//                    Integer SUBJECT_id = csMap.getSUBJECT_id();
-//                    SubjectMapping subject = Database.connect().subject().getPrimary(SUBJECT_id);
-//                    GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
-//                            .eq(DB.grade().STUDENT_id, STUDENT_id)
-//                            .eq(DB.grade().SUBJECT_id, SUBJECT_id)
-//                            .ne(DB.grade().grade_state, "CORRECTION").active(Order.desc(DB.grade().id)).first();
-//                    //
-//                    try {
-//                        if(grade==null)
-//                            continue;
-//                        double rating = Double.parseDouble(grade.getRating());
-//                        totalUnits += subject.getLab_units() + subject.getLec_units();
-//                        gradeTotal += rating * (subject.getLab_units() + subject.getLec_units());
-//                    } catch (NumberFormatException e) {
-//                    }
-//                }
-//                gwa = gradeTotal / totalUnits;
-//            }
-//            return gwa;
-//        }
     }
     
     private class AchieversData {

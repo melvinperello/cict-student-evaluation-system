@@ -195,18 +195,18 @@ public class ListersChecker {
                     = getSubjectsFromCurriculum(studentCurriculum.getId(),
                             (yearLevel), 1);
             //------------------------------------------------------------------
-            double phase1Grade = validateGrade(subjectsPhase1);
+            double phase1Grade = validateGrade(subjectsPhase1, student.getCict_id());
             if (phase1Grade == 0.00) {
                 continue;
             }
-            double phase2Grade = validateGrade(subjectsPhase2);
+            double phase2Grade = validateGrade(subjectsPhase2, student.getCict_id());
             if (phase2Grade == 0.00) {
                 continue;
             }
             //------------------------------------------------------------------
             double overAllgwa = (phase1Grade + phase2Grade) / 2.00;
             if (listerMode.equals(ListerMode.DEANS_LIST)) {
-                if (overAllgwa <= DEAN_CAP) {
+                if (overAllgwa <= DEAN_CAP /*&& !(overAllgwa <= PRES_CAP*/)) {
                     // deans list
                     df.setRoundingMode(RoundingMode.CEILING);
                     listerList.add(new ListerData(student, df.format(overAllgwa)));
@@ -218,6 +218,7 @@ public class ListersChecker {
                     listerList.add(new ListerData(student, df.format(overAllgwa)));
                 }
             }
+            System.out.println(student.getLast_name() + " " + overAllgwa);
             //------------------------------------------------------------------
         }// End Loop
         return listerList;
@@ -229,7 +230,7 @@ public class ListersChecker {
      * @param phase
      * @return
      */
-    private double validateGrade(ArrayList<CurriculumSubjectMapping> phase) {
+    private double validateGrade(ArrayList<CurriculumSubjectMapping> phase, Integer STUDENT_id) {
         // subjects in that phase
         double totalUnits = 0.00;
         double totalGrade = 0.00;
@@ -246,6 +247,8 @@ public class ListersChecker {
                             Restrictions.ne(DB.grade().rating, "CANCELLED"),
                             Restrictions.ne(DB.grade().rating, "UNPOSTED")
                     ))
+                    // student id must be here as well
+                    .eq(DB.grade().STUDENT_id, STUDENT_id)
                     // Acitve or Inactive
                     .active(Order.desc(DB.grade().id))
                     // get all
