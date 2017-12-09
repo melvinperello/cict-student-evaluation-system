@@ -99,5 +99,5 @@ public class StudentInfoHistoryRow extends MonoLauncher{
     public Label getLbl_grp() {
         return lbl_grp;
     }
-    
+
 }
