@@ -170,6 +170,7 @@ public class BSIT1516 {
                 p.add(getTextUnderlined("MAJOR IN " + major + "\n", font7Bold));
             }
             p.add(new Chunk("AY " + sy + "\n\n", font6Plain));
+            document.add(p);
         } else {
             if (!major.isEmpty()) {
                 ReportsUtility.createHeader(document, "AY " + sy, course, "MAJOR IN " + major);

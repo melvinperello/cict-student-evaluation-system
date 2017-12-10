@@ -896,7 +896,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             if (printLegacy) {
                 printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
             } else {
-                printCheckList(printLegacy, curriculum_prep.getId(), curriculum_prep.getId());
+                printCheckList(printLegacy, curriculum_prep.getId(), null);
             }
         } else {
             printCheckList(printLegacy, curriculum.getId(), null);
