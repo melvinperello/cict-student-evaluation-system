@@ -37,6 +37,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
 import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
+import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
@@ -54,12 +55,15 @@ import org.cict.reports.ReportsUtility;
 import org.cict.reports.result.PrintResult;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
+import update3.org.cict.layout.default_loader.LoaderView;
+import update3.org.cict.window_prompts.empty_prompt.EmptyView;
+import update3.org.cict.window_prompts.fail_prompt.FailView;
 
 /**
  *
  * @author Joemar
  */
-public class StudentHistoryController implements ControllerFX{
+public class StudentHistoryController extends SceneFX implements ControllerFX{
 
     @FXML
     private VBox application_root;
@@ -101,10 +105,22 @@ public class StudentHistoryController implements ControllerFX{
         this.MODULE = module;
     }
     
+    private LoaderView loaderView;
+    private FailView failView;
+    private EmptyView emptyView;
+    
     @Override
     public void onInitialization() {
+        super.bindScene(application_root);
+        
+        this.loaderView = new LoaderView(stack_view);
+        this.emptyView = new EmptyView(stack_view);
+        this.emptyView.getLabelMessage().setStyle("-fx-text-fill: black;");
+        this.loaderView.getLabelMessage().setStyle("-fx-text-fill: black;");
+        
         this.setValues();
         load.setStudent(this.STUDENT);
+        this.detachAll();
         load.createTableView(this.tblEvaluation);
         this.changeView(this.tblEvaluation);
     }
@@ -125,6 +141,9 @@ public class StudentHistoryController implements ControllerFX{
                 this.fetchInfoHistory();
                 this.changeView(this.vbox_table_history);
             } else {
+                this.detachAll();
+                load.setStudent(this.STUDENT);
+                load.createTableView(this.tblEvaluation);
                 this.changeView(this.tblEvaluation);
             }
         });
@@ -239,21 +258,31 @@ public class StudentHistoryController implements ControllerFX{
         simpleTableView.setParentOnScene(vbox_table_history);
 
     }
+    
     private ArrayList<StudentDataHistoryMapping> previewHistory;
     private void fetchInfoHistory() {
         FetchStudentInfoHistory fetch = new FetchStudentInfoHistory();
         fetch.CICT_id = this.STUDENT.getCict_id();
-        fetch.whenStarted(()->{});
+        fetch.whenStarted(()->{
+            this.vbox_table_history.getChildren().clear();
+            this.detachAll();
+            this.loaderView.setMessage("Loading Student's History");
+            this.loaderView.attach();
+        });
         fetch.whenSuccess(()->{
+            this.detachAll();
             previewHistory = fetch.getHistoryResult();
-            if(previewHistory!=null) {
+            if(previewHistory != null) {
                 this.createTable(previewHistory);
-            } else {
-                Mono.fx().snackbar().showInfo(application_root, "No Student Information History Found");
             }
         });
-        fetch.whenFinished(()->{});
-        fetch.whenFailed(()->{});
+        fetch.whenCancelled(()->{
+            System.out.println("CANCELLED");
+            this.detachAll();
+            emptyView.setMessage("No History Found");
+            emptyView.getButton().setVisible(false);
+            emptyView.attach();
+        });
         fetch.transact();
     }
 
@@ -293,8 +322,13 @@ public class StudentHistoryController implements ControllerFX{
         protected boolean transaction() {
             historyResult = Mono.orm().newSearch(Database.connect().student_data_history())
                     .eq(DB.student_data_history().cict_id, CICT_id).active(Order.asc(DB.student_data_history().updated_date)).all();
-            return true;
+            return (historyResult != null);
         }
-        
+    }
+    
+    
+    private void detachAll() {
+        this.loaderView.detach();
+        this.emptyView.detach();
     }
 }

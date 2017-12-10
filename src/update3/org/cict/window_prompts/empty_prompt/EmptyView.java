@@ -73,5 +73,9 @@ public class EmptyView extends SceneFX {
     public void detach() {
         Attachment.detach(stackPane, emptyBox);
     }
+
+    public Label getLabelMessage() {
+        return loadingMessaage;
+    }
     
 }

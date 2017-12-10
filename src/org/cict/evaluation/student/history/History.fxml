@@ -80,7 +80,7 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="917.0" spacing="10.0">
                      <children>
-                        <JFXButton fx:id="btn_info_history" layoutX="669.0" layoutY="10.0" prefHeight="53.0" prefWidth="234.0" style="-fx-border-color: black;" text="Student Information History">
+                        <JFXButton fx:id="btn_info_history" layoutX="669.0" layoutY="10.0" prefHeight="53.0" prefWidth="234.0" style="-fx-border-color: black;" text="Show Information History">
                            <font>
                               <Font size="15.0" />
                            </font>

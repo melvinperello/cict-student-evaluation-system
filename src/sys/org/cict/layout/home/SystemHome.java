@@ -646,7 +646,9 @@ public class SystemHome extends MonoLauncher {
          */
         if (Access.isDeniedIfNotFrom(
                 Access.ACCESS_ADMIN,
-                Access.ACCESS_ASST_ADMIN)) {
+                Access.ACCESS_ASST_ADMIN,
+                Access.ACCESS_LOCAL_REGISTRAR,
+                Access.ACCESS_CO_REGISTRAR)) {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
@@ -808,6 +810,15 @@ public class SystemHome extends MonoLauncher {
         }
         //----------------------------------------------------------------------
 
+        if (Access.isDeniedIfNotFrom(
+                Access.ACCESS_ADMIN,
+                Access.ACCESS_ASST_ADMIN,
+                Access.ACCESS_LOCAL_REGISTRAR,
+                Access.ACCESS_CO_REGISTRAR)) {
+            Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
+            return;
+        }
+        
         ControllerFX controller = new ReportsMain();
         this.changeRoot(controller,
                 "org.cict.reports",

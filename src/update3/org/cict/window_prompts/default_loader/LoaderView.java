@@ -67,4 +67,8 @@ public class LoaderView extends SceneFX {
         Attachment.detach(stackPane, loadingBox);
     }
 
+    public Label getLabelMessage() {
+        return loadingMessaage;
+    }
+    
 }

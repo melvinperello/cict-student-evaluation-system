@@ -1037,10 +1037,12 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 };
                 
                 this.cmb_curriculum_lister.getItems().clear();
-                this.cmb_curriculum_lister.getItems().addAll(cMaps);
+                if(cMaps != null) {
+                    this.cmb_curriculum_lister.getItems().addAll(cMaps);
+                    this.cmb_curriculum_lister.getSelectionModel().selectFirst();
+                }
                 this.cmb_curriculum_lister.setCellFactory(factory);
                 this.cmb_curriculum_lister.setButtonCell(factory.call(null));
-                this.cmb_curriculum_lister.getSelectionModel().selectFirst();
             });
         });
         set.whenFailed(()->{
