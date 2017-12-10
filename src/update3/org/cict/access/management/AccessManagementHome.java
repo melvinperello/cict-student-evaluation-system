@@ -812,8 +812,27 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        afMap.setAccess_level(Access.ACCESS_LOCAL_REGISTRAR);
-        if (Database.connect().account_faculty().update(afMap)) {
+        boolean updatedDetails = true;
+        AccountFacultyMapping currentLocalRegistrar = Mono.orm().newSearch(Database.connect().account_faculty())
+                .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR)
+                .active(Order.asc(DB.account_faculty().id)).first();
+        if(currentLocalRegistrar != null) {
+            int res = Mono.fx().alert().createConfirmation()
+                    .setMessage("There is an existing Local Registrar account. This action will make the said account into Faculty access level. Continue?")
+                    .confirmYesNo();
+            if(res==-1) {
+                return;
+            } 
+            currentLocalRegistrar.setAccess_level(Access.ACCESS_FACULTY);
+            updatedDetails = Database.connect().account_faculty().update(currentLocalRegistrar);
+        }
+        
+        if(updatedDetails) {
+            afMap.setAccess_level(Access.ACCESS_LOCAL_REGISTRAR);
+            updatedDetails = Database.connect().account_faculty().update(afMap);
+        }
+        
+        if (updatedDetails) {
             Notifications.create().darkStyle()
                     .title("Assigned Successfully")
                     .text("New Local Registrar is assigned.")
