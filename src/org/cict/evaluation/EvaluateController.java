@@ -726,33 +726,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             setView("already");
             return;
         }
-
-        //------------------------------
-        // check if overstaying
-        if (StudentOverStay.check(currentStudent) && !allowOverStay) {
-            this.setView("home");
-            int res = Mono.fx().alert().createConfirmation()
-                    .setHeader("Overstayed Student")
-                    .setMessage("The student exceeded in the maximum of six (6) study years. Change the student's course to continue evaluation.")
-                    .confirmCustom("Reassign Course", "Cancel Evaluation");
-            if (res == -1) {
-                Notifications.create()
-                        .title("Overstayed Student")
-                        .text("Click here for more information.")
-                        .onAction(pop -> {
-                            this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
-                        })
-                        .position(Pos.BOTTOM_RIGHT).showWarning();
-                return;
-            } else {
-                if (!this.onShowCoursesOffered()) {
-                    return;
-                }
-            }
-        }
-        this.allowOverStay = false;
-        //------------------------------
-
+        
         System.out.println("@EvaluateController: Search Success");
 
         //----------------------------------------------------------------------
@@ -760,6 +734,32 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         // run this if not a cross enrollee student
         if (!FLAG_CROSS_ENROLLEE) {
+            //------------------------------
+            // check if overstaying
+            if (StudentOverStay.check(currentStudent) && !allowOverStay) {
+                this.setView("home");
+                int res = Mono.fx().alert().createConfirmation()
+                        .setHeader("Overstayed Student")
+                        .setMessage("The student exceeded in the maximum of six (6) study years. Change the student's course to continue evaluation.")
+                        .confirmCustom("Reassign Course", "Cancel Evaluation");
+                if (res == -1) {
+                    Notifications.create()
+                            .title("Overstayed Student")
+                            .text("Click here for more information.")
+                            .onAction(pop -> {
+                                this.goLang(SystemOverriding.EVAL_STUDENT_OVERSTAY);
+                            })
+                            .position(Pos.BOTTOM_RIGHT).showWarning();
+                    return;
+                } else {
+                    if (!this.onShowCoursesOffered()) {
+                        return;
+                    }
+                }
+            }
+            this.allowOverStay = false;
+            //------------------------------
+            
             if (!PublicConstants.DISABLE_ASSISTANCE) {
                 if (FLAG_ASSISTANT_SHOW) {
                     showFirstAssistant();
