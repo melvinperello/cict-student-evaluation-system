@@ -41,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.cict.authentication.authenticator.SystemProperties;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -51,11 +52,11 @@ import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.CoRequisiteFilter;
 import org.cict.evaluation.CurricularLevelController;
+import org.cict.evaluation.EvaluateController;
 import org.cict.evaluation.FirstAssistantController;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
-import org.cict.evaluation.student.info.InfoStudentController;
 import org.cict.reports.ReportsUtility;
 import org.cict.reports.deficiency.PrintDeficiency;
 import org.controlsfx.control.Notifications;
@@ -510,20 +511,18 @@ public class AddingHome extends SceneFX implements ControllerFX {
         //----------------------------------------------------------------------
         if (!subjectCoReqCheck.isEmpty()) {
             // the collection must not conatin the removed subject.
-            ArrayList<CurriculumRequisiteExtMapping> missingcoreq
+            List<CurriculumRequisiteExtMapping> missingcoreq
                     = CoRequisiteFilter
                             .checkCoReqAdd(subjectCoReqCheck,
                                     this.studentSearched.getCURRICULUM_id(),
                                     studentSearched.getCict_id()
                             );
 
-            if (missingcoreq != null) {
-                System.out.println("There is a missing coreq");
-                for (CurriculumRequisiteExtMapping ext : missingcoreq) {
-                    System.out.println(ext.getSUBJECT_id_req());
-                }
+            //------------------------------------------------------------------
+            if (CoRequisiteFilter.checkCoRequisite(missingcoreq)) {
                 return;
             }
+            //------------------------------------------------------------------
 
         }
         //----------------------------------------------------------------------
@@ -1651,14 +1650,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     //--------------------------------------
                     if (subinfo.getSubjectMap().getType().equalsIgnoreCase(SubjectClassification.TYPE_INTERNSHIP)) {
                         if (!ValidateOJT.isValidForOJT(studentSearched)) {
-                            if(ValidateOJT.log!=null) {
+                            if (ValidateOJT.log != null) {
                                 Notifications.create().title("Warning")
                                         .position(Pos.BOTTOM_RIGHT)
                                         .text("Student Number: " + studentSearched.getId()
                                                 + "\n" + ValidateOJT.log)
-//                                        .onAction(onAction -> {
-//                                            this.systemOverride(INTERNSHIP_WITH_OTHERS, subinfo, "add", null, null);
-//                                        })
+                                        //                                        .onAction(onAction -> {
+                                        //                                            this.systemOverride(INTERNSHIP_WITH_OTHERS, subinfo, "add", null, null);
+                                        //                                        })
                                         .showWarning();
                             } else {
                                 int res = Mono.fx().alert()

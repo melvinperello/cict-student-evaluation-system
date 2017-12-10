@@ -35,7 +35,6 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.GradeMapping;
-import app.lazy.models.LinkedEntranceMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
@@ -50,19 +49,16 @@ import com.jhmvin.fx.async.CronThread;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
-import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
-import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
-import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.apache.commons.lang3.text.WordUtils;
+import javax.swing.JOptionPane;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.ThreadMill;
@@ -89,7 +85,6 @@ import update.org.cict.controller.home.Home;
 import update3.org.cict.CurriculumConstants;
 import update3.org.cict.access.Access;
 import update3.org.cict.access.SystemOverriding;
-import update5.org.cict.student.controller.StudentInformation;
 import update5.org.cict.student.layout.CurriculumChooser;
 
 /**
@@ -1058,23 +1053,21 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShow();
     }
 
+
+
+   
+
     /**
      * Saves the evaluation.
      */
     private void saveEvaluation() {
         //----------------------------------------------------------------------
-        ArrayList<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
+        List<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
                 this.studentCurriculum.getId(),
                 this.currentStudent.getCict_id());
-
-        if (sub != null) {
-            System.out.println("MISSING REQUIRED CORREC");
-            for (CurriculumRequisiteExtMapping ext : sub) {
-                System.out.println(ext.getSUBJECT_id_req());
-            }
+        //----------------------------------------------------------------------
+        if (CoRequisiteFilter.checkCoRequisite(sub)) {
             return;
-        } else {
-            System.out.println("NO MISSING PRE REQUISITE");
         }
         //----------------------------------------------------------------------
         /**
