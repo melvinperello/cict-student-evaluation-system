@@ -28,12 +28,10 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
-import com.izum.fx.textinputfilters.DoubleFilter;
-import com.izum.fx.textinputfilters.StringFilter;
-import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
+import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
 import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
@@ -46,8 +44,6 @@ import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -58,7 +54,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.apache.commons.lang3.text.WordUtils;
-import org.cict.SubjectClassification;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -95,19 +90,24 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
     @FXML
     private HBox hbox_none;
 
+    @FXML
+    private HBox hbox_home;
 
     private ArrayList<SubjectMapping> lst_subject;
 //    private SimpleTable subjectTable = new SimpleTable();
     
     private AnchorPane application_root;
     
+    private FetchSubjects fetch;
     @Override
     public void onInitialization() {
         application_root = anchor_main;
         bindScene(application_root);
+        hbox_home.setVisible(true);
         
-        FetchSubjects fetch = new FetchSubjects();
+        fetch = new FetchSubjects();
         fetch.setOnStart(onStart -> {
+            hbox_home.setVisible(false);
             this.vbox_subjects.getChildren().clear();
             this.hbox_searching.setVisible(true);
             this.txt_search.setDisable(true);
@@ -118,20 +118,23 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
             this.renderTable(lst_subject);
         });
         fetch.setOnCancel(onCancel -> {
+            hbox_home.setVisible(false);
             this.vbox_subjects.getChildren().clear();
             this.hbox_none.setVisible(true);
             this.hbox_searching.setVisible(false);
         });
-        fetch.transact();
+//        fetch.transact();
     }
     
     private void renderTable(ArrayList<SubjectMapping> lst_subject) {
+        hbox_home.setVisible(false);
         SimpleTask rendering_task = new SimpleTask("rendering_task");
         SimpleTable subjectTable = new SimpleTable();
         rendering_task.setTask(()->{
             createTable(lst_subject, subjectTable);
         });
         rendering_task.setOnStart((a)->{
+            hbox_home.setVisible(false);
             this.vbox_subjects.getChildren().clear();
             this.hbox_searching.setVisible(true);
             this.txt_search.setDisable(true);
@@ -180,21 +183,62 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
     private void onSearch() {
         String searchKey = MonoString.removeExtraSpace(txt_search.getText());
         if(searchKey.isEmpty()) {
-            this.renderTable(lst_subject);
+            fetch.transact();
+//            this.renderTable(lst_subject);
             return;
         }
-        ArrayList<SubjectMapping> results = Mono.orm().newSearch(Database.connect().subject())
-                .put(SQL.or(Restrictions.ilike(DB.subject().code, (searchKey), MatchMode.ANYWHERE)))
+        SearchSubjects search = new SearchSubjects();
+        search.searchKey = searchKey;
+        search.whenStarted(()->{
+            this.vbox_subjects.getChildren().clear();
+            this.hbox_searching.setVisible(true);
+            this.txt_search.setDisable(true);
+            this.btnFind.setDisable(true);
+        });
+        search.whenSuccess(()->{
+            if(search.results==null) {
+                Animate.fade(hbox_searching, 150, ()->{
+                    hbox_searching.setVisible(false);
+                    hbox_home.setVisible(false);
+                    vbox_subjects.getChildren().clear();
+                    hbox_none.setVisible(true);
+                }, hbox_none);
+                return;
+            } 
+
+            hbox_none.setVisible(false);
+            this.renderTable(search.results);
+        });
+        search.whenFinished(()->{
+            this.hbox_searching.setVisible(false);
+            this.txt_search.setDisable(false);
+            this.btnFind.setDisable(false);
+        });
+        search.transact();
+    }
+    
+    class SearchSubjects extends  Transaction {
+
+        public String searchKey;
+        
+        private ArrayList<SubjectMapping> results;
+
+        public ArrayList<SubjectMapping> getResults() {
+            return results;
+        }
+        
+        @Override
+        protected boolean transaction() {
+            results = Mono.orm().newSearch(Database.connect().subject())
+                .put(SQL.or(Restrictions.ilike(DB.subject().code, (searchKey), MatchMode.ANYWHERE),
+                        Restrictions.ilike(DB.subject().descriptive_title, (searchKey), MatchMode.ANYWHERE),
+                        Restrictions.ilike(DB.subject().type, (searchKey), MatchMode.ANYWHERE)))
+//                .put(SQL.or(Restrictions.ilike(DB.subject().descriptive_title, (searchKey), MatchMode.ANYWHERE)))
+//                .put(SQL.or(Restrictions.ilike(DB.subject().type, (searchKey), MatchMode.ANYWHERE)))
                 .active(Order.asc(DB.subject().code)).all();
-        if(results==null) {
-            Animate.fade(hbox_searching, 150, ()->{
-                hbox_searching.setVisible(false);
-                vbox_subjects.getChildren().clear();
-                hbox_none.setVisible(true);
-            }, hbox_none);
-            return;
+            return true;
         }
-        this.renderTable(results);
+        
     }
     
     private void createTable(ArrayList<SubjectMapping> lst_subject, SimpleTable subjectTable) {

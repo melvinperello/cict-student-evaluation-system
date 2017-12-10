@@ -24,9 +24,9 @@
             </Label>
             <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                <children>
-                  <HBox alignment="CENTER" prefHeight="58.0" prefWidth="303.0">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="58.0" prefWidth="466.0">
                      <children>
-                        <TextField fx:id="txt_search" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="245.0" promptText="Subject Code (e.g. IT 113)" style="-fx-border-color: #000;">
+                        <TextField fx:id="txt_search" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="408.0" promptText="Subject Code (e.g. IT 113)" style="-fx-border-color: #000;">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -57,7 +57,7 @@
             </HBox>
          </children>
       </HBox>
-      <VBox fx:id="vbox_subjects" layoutX="40.0" layoutY="94.0" prefHeight="530.0" prefWidth="1165.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-table" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0">
+      <VBox fx:id="vbox_subjects" layoutX="25.0" layoutY="93.0" prefHeight="517.0" prefWidth="1128.0" style="-fx-border-color: #FFFFFF;" styleClass="metro-table" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="93.0">
          <stylesheets>
             <URL value="@../metro-ui-table.css" />
             <URL value="@../metro-row.css" />
@@ -111,6 +111,36 @@
                   </Label>
                   <Line endX="340.0" startX="-100.0" stroke="WHITE" />
                   <Label text="Sorry, but I have nothing to preview. Try adding a subject first." wrapText="true">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox fx:id="hbox_home" alignment="CENTER" layoutY="260.0" prefHeight="150.0" prefWidth="1195.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@img/icons8-google-web-search-500.png" />
+               </image>
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </ImageView>
+            <VBox alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="606.0">
+               <children>
+                  <Label text="Easy Search Just For You!" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Line endX="340.0" startX="-100.0" stroke="WHITE" />
+                  <Label text="Search via Subject Code, Descriptive Title or Type of the subject in the creation process." wrapText="true">
                      <font>
                         <Font size="25.0" />
                      </font>
