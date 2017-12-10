@@ -437,6 +437,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     }
 
     private void onShowMovingUp() {
+        
+        if(!Access.enterTransactionPin(this.getStage())) {
+            Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
+            return;
+        }
+            
         FetchCurriculumInfo fetch = new FetchCurriculumInfo();
         fetch.student = currentStudent;
         fetch.whenStarted(() -> {
@@ -908,15 +914,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
         }
         //----------------------------------------------------------------------
-        if (curriculum_prep != null) {
-            if (printLegacy) {
-                printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
-            } else {
-                printCheckList(printLegacy, curriculum_prep.getId(), null);
-            }
-        } else {
-            printCheckList(printLegacy, curriculum.getId(), null);
-        }
+        printCheckList(printLegacy, curriculum.getId(), null);
+
     }
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {

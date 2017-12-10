@@ -312,15 +312,8 @@ public class AddingHome extends SceneFX implements ControllerFX {
                 printLegacy = true;
             }
         }
-        if (curriculum_prep != null) {
-            if (printLegacy) {
-                printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
-            } else {
-                printCheckList(printLegacy, curriculum_prep.getId(), null);
-            }
-        } else {
-            printCheckList(printLegacy, curriculum.getId(), null);
-        }
+        printCheckList(printLegacy, curriculum.getId(), null);
+
     }
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
