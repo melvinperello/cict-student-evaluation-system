@@ -50,6 +50,7 @@ public class ErrorLogger {
         el.printError();
         el.writeToText();
         JOptionPane.showMessageDialog(null, "A System Error Has Occured.\nThe error was saved in your local log files for information,\nthe system needs to be terminated.", "ERROR", JOptionPane.ERROR_MESSAGE);
+        // TERMINATES THE APPLCATION FORCIBLY.
         Runtime.getRuntime().halt(0);
     }
     private String exceptionLog;
