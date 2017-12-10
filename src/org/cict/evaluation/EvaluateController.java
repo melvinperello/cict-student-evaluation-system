@@ -734,6 +734,22 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         // run this if not a cross enrollee student
         if (!FLAG_CROSS_ENROLLEE) {
+            
+            //----------------------
+            // if curriculum is obsolete, don't allow evaluation
+            if(studentCurriculum != null) {
+                if(studentCurriculum.getObsolete_term().equals(1)) {
+                    Mono.fx().alert().createWarning()
+                            .setHeader("Obsolete Curriculum")
+                            .setMessage("The student is registered to an obsolete curriculum. Please reassign the student to a currently offered course to proceed evaluation.")
+                            .show();
+                    this.setView("home");
+                    return;
+                }
+            }
+            //-----------------------
+            
+            
             //------------------------------
             // check if overstaying
             if (StudentOverStay.check(currentStudent) && !allowOverStay) {
