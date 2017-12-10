@@ -138,12 +138,12 @@ public class CurriculumChooser extends MonoLauncher {
                     .neOrNn(DB.curriculum().obsolete_term, 1)
                     // must not be consequent
                     // shift to the preparatory then moving up
-//                    .ne(DB.curriculum().ladderization_type, CurriculumConstants.TYPE_CONSEQUENT)
+                    .ne(DB.curriculum().ladderization_type, CurriculumConstants.TYPE_CONSEQUENT)
                     .active()
                     .all();
             //------------------------------------------------------------------
             if (curriculums == null) {
-                log = "No account found.";
+                log = "No curriculum found.";
                 return false;
             }
             results = new ArrayList<>();

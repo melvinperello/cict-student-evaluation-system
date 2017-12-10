@@ -444,15 +444,15 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             }
         }
         //----------------------------------------------------------------------
-        if (curriculum_prep != null) {
-            if (printLegacy) {
-                printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
-            } else {
-                printCheckList(printLegacy, curriculum_prep.getId(), curriculum_prep.getId());
-            }
-        } else {
+//        if (curriculum_prep != null) {
+//            if (printLegacy) {
+//                printCheckList(printLegacy, curriculum.getId(), curriculum_prep.getId());
+//            } else {
+//                printCheckList(printLegacy, curriculum_prep.getId(), curriculum_prep.getId());
+//            }
+//        } else {
             printCheckList(printLegacy, curriculum.getId(), null);
-        }
+//        }
     }
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
@@ -623,6 +623,13 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     //--------------------------------------------------------------------------
     private void onShiftCourse() {
+        if(SystemProperties.instance().getCurrentAcademicTerm()==null) {
+            Notifications.create()
+                    .title("No Academic Term Found")
+                    .text("Academic term must be set first\n"
+                            + "to proceed shifting.").showWarning();
+            return;
+        }
         // check if evaluated
         EvaluationMapping eMap = Mono.orm().newSearch(Database.connect().evaluation())
                 .eq(DB.evaluation().ACADTERM_id, SystemProperties.instance().getCurrentAcademicTerm().getId())
@@ -648,24 +655,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     public void validateCurriculum(CurriculumMapping curriculumSelected) {
 
-        // check if the curriculum is in the course history
-        // if so, reactivate the grades related to the course history
-        StudentCourseHistoryMapping schMap = Mono.orm().newSearch(Database.connect().student_course_history())
-                .eq(DB.student_course_history().curriculum_id, curriculumSelected.getId())
-                .eq(DB.student_course_history().student_id, CURRENT_STUDENT.getCict_id())
-                .active(Order.desc(DB.student_course_history().id)).first();
-        if (schMap != null) {
-            int res = Mono.fx().alert().createConfirmation()
-                    .setMessage("This curriculum is already taken by this student. Do you want to retain the previous grade?")
-                    .confirmYesNo();
-            Boolean retain = false;
-            if (res == 1) {
-                retain = true;
-            }
-            this.processGrades(curriculumSelected.getId(), retain, false, schMap.getId());
-            return;
-        }
-
         ArrayList<CurriculumSubjectMapping> subjects = Mono.orm().newSearch(Database.connect().curriculum_subject())
                 .eq(DB.curriculum_subject().CURRICULUM_id, curriculumSelected.getId())
                 .active().all();
@@ -676,6 +665,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         // check the grade for each subject found
         // ------------------
         boolean hasGrade = false;
+        Integer prevCourse_h = null;
         for (CurriculumSubjectMapping subject : subjects) {
             GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
                     .eq(DB.grade().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
@@ -683,20 +673,17 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .active(Order.desc(DB.grade().id)).first();
             if (grade == null) {
             } else {
-                hasGrade = true;
-                break;
+                if(grade.getCourse_reference()!=null) {
+                    StudentCourseHistoryMapping schMap_checker = Database.connect().student_course_history().getPrimary(grade.getCourse_reference());
+                    if(schMap_checker.getCurriculum_id().equals(curriculumSelected.getId())) {
+                        prevCourse_h = schMap_checker.getId();
+                        hasGrade = true;
+                        break;
+                    }
+                }
             }
         }
-        Boolean retain = false;
-        if (hasGrade) {
-            int res = Mono.fx().alert().createConfirmation()
-                    .setMessage("Some subjects in this curriculum are already taken by this student. Do you want to retain them?")
-                    .confirmYesNo();
-            if (res == 1) {
-                retain = true;
-            }
-        }
-        this.processGrades(curriculumSelected.getId(), retain, false, null);
+        this.processGrades(curriculumSelected.getId(), false, prevCourse_h);
     }
 
     private boolean retain(ArrayList<GradeMapping> currentGrades) {
@@ -736,14 +723,11 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         return true;
     }
 
-    private void processGrades(Integer curriculum_id/*, Integer course_ref*/, Boolean retain, Boolean alreadyTaken, Integer prevCourseRef_id) {
+    private void processGrades(Integer curriculum_id/*, Boolean retain*/, Boolean alreadyTaken, Integer prevCourseRef_id) {
         TransactGrades transact = new TransactGrades();
         transact.student_id = CURRENT_STUDENT.getCict_id();
         transact.curriculum_id = curriculum_id;
-        transact.retain = retain;
-        transact.alreadyTaken = alreadyTaken;
         transact.prevCourseRef_id = prevCourseRef_id;
-        /*transact.course_reference = course_ref;*/
         transact.whenCancelled(() -> {
             Notifications.create()
                     .title("Request Cancelled")
@@ -783,9 +767,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
         public String log;
 
-        public Boolean retain;
-
-        public Boolean alreadyTaken = false;
         public Integer prevCourseRef_id;
 
         @Override
@@ -823,21 +804,16 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .all();
             //------------------------------------------------------------------
             // updating grades with course reference
-
-            // --------------------------------
-            // if retain is true, retain it
             if (grades != null) {
                 for (GradeMapping grade : grades) {
-                    if (retain) {
-                        GradeMapping retainThis = this.getRetainedGradeMap(grade);
-                        int gradeID = Database.connect().grade()
-                                .transactionalInsert(currentSession, retainThis);
-                        if (gradeID <= 0) {
-                            dataTransaction.rollback();
-                            log = "Grade is not properly retained.";
-                            System.out.println(log);
-                            return false;
-                        }
+                    GradeMapping cloneOnly = this.getGradeMapClone(grade, prevCourseRef_id);
+                    int gradeID = Database.connect().grade()
+                            .transactionalInsert(currentSession, cloneOnly);
+                    if (gradeID <= 0) {
+                        dataTransaction.rollback();
+                        log = "Grade is not properly cloned.";
+                        System.out.println(log);
+                        return false;
                     }
                     grade.setActive(0);
                     grade.setUpdated_by(CollegeFaculty.instance().getFACULTY_ID());
@@ -858,7 +834,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             if (student != null) {
                 student.setCURRICULUM_id(curriculum_id);
                 student.setCurriculum_assignment(Mono.orm().getServerTime().getDateWithFormat());
-
+                
                 if (!Database.connect().student().transactionalSingleUpdate(currentSession, student)) {
                     dataTransaction.rollback();
                     log = "Cannot Update Curriculum For the moment.";
@@ -871,52 +847,32 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 System.out.println(log);
                 return false;
             }
-            //------------------------------------------------------------------
-            // reactivate if alreadyTaken is true
-            //-----------------------------------
-            if (alreadyTaken) {
-                ArrayList<GradeMapping> previousGrades = Mono.orm().newSearch(Database.connect().grade())
-                        .eq(DB.grade().course_reference, prevCourseRef_id)
-                        .eq(DB.grade().STUDENT_id, student_id)
-                        .execute().all();
-                if (previousGrades != null) {
-                    for (GradeMapping previousGrade : previousGrades) {
-                        previousGrade.setActive(1);
-                        if (!Database.connect().grade().transactionalSingleUpdate(currentSession, previousGrade)) {
-                            dataTransaction.rollback();
-                            log = "Cannot Update Grade For Now.";
-                            System.out.println(log);
-                            return false;
-                        }
-                    }
-                }
-            }
-
             dataTransaction.commit();
             return true;
         }
 
-        private GradeMapping getRetainedGradeMap(GradeMapping currentGrade) {
-            GradeMapping retainedGrade = new GradeMapping();
-            retainedGrade.setACADTERM_id(currentGrade.getACADTERM_id());
-            retainedGrade.setActive(1);
-            retainedGrade.setCourse_reference(currentGrade.getCourse_reference());
-            retainedGrade.setCreated_by(currentGrade.getCreated_by());
-            retainedGrade.setCreated_date(currentGrade.getCreated_date());
-            retainedGrade.setCredit(currentGrade.getCredit());
-            retainedGrade.setCredit_method(currentGrade.getCredit_method());
-            retainedGrade.setInc_expire(currentGrade.getInc_expire());
-            retainedGrade.setPosted(currentGrade.getPosted());
-            retainedGrade.setPosted_by(currentGrade.getPosted_by());
-            retainedGrade.setPosting_date(currentGrade.getPosting_date());
-            retainedGrade.setRating(currentGrade.getRating());
-            retainedGrade.setReason_for_update(currentGrade.getReason_for_update());
-            retainedGrade.setReferrence_curriculum(currentGrade.getReferrence_curriculum());
-            retainedGrade.setRemarks(currentGrade.getRemarks());
-            retainedGrade.setSTUDENT_id(currentGrade.getSTUDENT_id());
-            retainedGrade.setSUBJECT_id(currentGrade.getSUBJECT_id());
-            retainedGrade.setUpdated_by(currentGrade.getUpdated_by());
-            retainedGrade.setUpdated_date(currentGrade.getUpdated_date());
+        private GradeMapping getGradeMapClone(GradeMapping currentGrade, Integer currentHistory) {
+            GradeMapping retainedGrade = currentGrade.copy();
+            retainedGrade.setActive(0);
+            retainedGrade.setCourse_reference(currentHistory);
+//            retainedGrade.setACADTERM_id(currentGrade.getACADTERM_id());
+//            retainedGrade.setActive(1);
+//            retainedGrade.setCreated_by(currentGrade.getCreated_by());
+//            retainedGrade.setCreated_date(currentGrade.getCreated_date());
+//            retainedGrade.setCredit(currentGrade.getCredit());
+//            retainedGrade.setCredit_method(currentGrade.getCredit_method());
+//            retainedGrade.setInc_expire(currentGrade.getInc_expire());
+//            retainedGrade.setPosted(currentGrade.getPosted());
+//            retainedGrade.setPosted_by(currentGrade.getPosted_by());
+//            retainedGrade.setPosting_date(currentGrade.getPosting_date());
+//            retainedGrade.setRating(currentGrade.getRating());
+//            retainedGrade.setReason_for_update(currentGrade.getReason_for_update());
+//            retainedGrade.setReferrence_curriculum(currentGrade.getReferrence_curriculum());
+//            retainedGrade.setRemarks(currentGrade.getRemarks());
+//            retainedGrade.setSTUDENT_id(currentGrade.getSTUDENT_id());
+//            retainedGrade.setSUBJECT_id(currentGrade.getSUBJECT_id());
+//            retainedGrade.setUpdated_by(currentGrade.getUpdated_by());
+//            retainedGrade.setUpdated_date(currentGrade.getUpdated_date());
             return retainedGrade;
         }
 
@@ -1000,10 +956,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         if (prereqs == null) {
             return true;
         }
-        Integer student_prep_id = CURRENT_STUDENT.getPREP_id();
+        Integer student_prep_id = CURRENT_STUDENT.getCURRICULUM_id();
         for (CurriculumPreMapping prereq : prereqs) {
             if (student_prep_id != null) {
                 if (student_prep_id.equals(prereq.getCurriculum_id_req())) {
+                    CURRENT_STUDENT.setPREP_id(student_prep_id);
+                    CURRENT_STUDENT.setPrep_assignment(Mono.orm().getServerTime().getDateWithFormat());
                     return true;
                 }
             }

@@ -424,7 +424,9 @@ public class CurriculumInformationController extends SceneFX implements Controll
             }
             cmb_type.getSelectionModel().select(NONE);
         }
-
+        if(AcademicProgramAccessManager.denyIfNotAdmin()) {
+            cmb_type.setDisable(true);
+        }
     }
 
     private final String SECTION_BASE_COLOR = "#414852";
@@ -557,6 +559,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
     }
 
     private void setYearAndSemesterView() {
+        boolean modified = false;
         createTable();
         int exptdSem = 2;
         int studyYears = this.CURRICULUM.getStudy_years();
@@ -594,6 +597,16 @@ public class CurriculumInformationController extends SceneFX implements Controll
                                 if (subject == null) {
                                     continue;
                                 }
+                                
+                                if(subject.getActive().equals(0)) {
+                                    System.out.println("SUBJECT IS DELETED, IT MUST BE REMOVED IN THE CURRICULUM TOO");
+                                    csMap.setActive(0);
+                                    if(!Database.connect().curriculum_subject().update(csMap)) {
+                                        System.err.println("CSMAP NOT SET TO INACTIVE BUT IT MUST!");
+                                    } else {
+                                        modified = true;
+                                    }
+                                }
                                 //--------------------------------------------------
                                 if (ctrSem == 2 && ctrYr == 1) {
                                     System.out.println("SUB: " + subject.getDescriptive_title());
@@ -617,6 +630,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
             if (isConsequent) {
                 ctrYr -= 2;
             }
+        }
+        if(modified) {
+            Notifications.create().title("Information")
+                    .text("Subjects of the curriculum are verified.")
+                    .showInformation();
         }
     }
 
