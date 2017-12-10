@@ -76,6 +76,7 @@ import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.evaluator.PrintChecklist;
+import org.cict.evaluation.moving_up.MovingUpController;
 import org.cict.evaluation.student.StudentValues;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
@@ -86,6 +87,7 @@ import org.controlsfx.control.Notifications;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import update3.org.cict.CurriculumConstants;
+import update3.org.cict.access.Access;
 import update3.org.cict.controller.sectionmain.SectionHomeController;
 import update3.org.collegechooser.ChooserHome;
 import update5.org.cict.student.layout.CourseHistoryRow;
@@ -220,6 +222,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_view_history;
 
+    @FXML
+    private VBox vbox_moving_up;
+            
+    @FXML
+    private JFXButton btn_move_up;
+            
     private StudentValues studentValues = new StudentValues();
     private CurriculumMapping curriculum;
     private AcademicProgramMapping acadProg;
@@ -245,6 +253,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
+        
         ToggleGroup group2 = new ToggleGroup();
         rbtn_male.setToggleGroup(group2);
         rbtn_female.setToggleGroup(group2);
@@ -343,6 +352,12 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         });
 
         super.addClickEvent(btn_shift_course, () -> {
+            
+            if(!Access.enterTransactionPin(this.getStage())) {
+                Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
+                return;
+            }
+            
             this.onShiftCourse();
         });
 
@@ -370,6 +385,17 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
         super.addClickEvent(btn_view_history, () -> {
             this.onShowHistory();
+        });
+        
+        //------------------
+        super.addClickEvent(btn_move_up, ()->{
+            
+            if(!Access.enterTransactionPin(this.getStage())) {
+                Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
+                return;
+            }
+            
+            this.fetchCurriculums();
         });
     }
 
@@ -834,6 +860,8 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             if (student != null) {
                 student.setCURRICULUM_id(curriculum_id);
                 student.setCurriculum_assignment(Mono.orm().getServerTime().getDateWithFormat());
+                student.setPREP_id(null);
+                student.setPrep_assignment(null);
                 
                 if (!Database.connect().student().transactionalSingleUpdate(currentSession, student)) {
                     dataTransaction.rollback();
@@ -1169,6 +1197,13 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         } catch (NullPointerException f) {
             f.printStackTrace();
         }
+        
+        this.vbox_moving_up.setVisible(false);
+        if(this.curriculum != null) {
+            if(this.curriculum.getLadderization_type().equalsIgnoreCase("PREPARATORY")) {
+                this.vbox_moving_up.setVisible(true);
+            }
+        }
     }
 
     public String removeExtraSpace(String str) {
@@ -1498,4 +1533,98 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                 .stageShow();
     }
 
+    private void onShowMoving_up(ArrayList<CurriculumMapping> results) {
+        MovingUpController controller = new MovingUpController(this.CURRENT_STUDENT, results);
+        Mono.fx().create()
+                .setPackageName("org.cict.evaluation.moving_up")
+                .setFxmlDocument("moving-up")
+                .makeFX()
+                .setController(controller)
+                .makeScene()
+                .makeStageWithOwner(Mono.fx().getParentStage(application_root))
+                .stageResizeable(false)
+                .stageTitle("Moving Up")
+                .stageUndecorated(true)
+                .stageShowAndWait();
+        if (controller.isSaved()) {
+            btn_move_up.setDisable(true);
+            this.setValues();
+        }
+    }
+
+    private void fetchCurriculums() {
+        FetchCurriculum fetch = new FetchCurriculum();
+        fetch.CURRICULUM_id = this.CURRENT_STUDENT.getCURRICULUM_id();
+        fetch.whenSuccess(() -> {
+            this.onShowMoving_up(fetch.results);
+        });
+        fetch.whenCancelled(() -> {
+            Notifications.create().darkStyle()
+                    .title("No Available Curriculum")
+                    .text("There is no course found inline\n"
+                            + "with the student's current curriculum.")
+                    .showInformation();
+        });
+        fetch.whenFailed(() -> {
+            Notifications.create().darkStyle()
+                    .title("Process Failed")
+                    .text("Something went wrong. Please"
+                            + "\ntry again later.")
+                    .showError();
+        });
+        
+        fetch.transact();
+    }
+    
+    class FetchCurriculum extends Transaction {
+
+        public Integer CURRICULUM_id;
+        private ArrayList<CurriculumMapping> results;
+
+        public ArrayList<CurriculumMapping> getResults() {
+            return results;
+        }
+        private String log;
+
+        @Override
+        protected boolean transaction() {
+            // get all the requisite of the prep curriculum of the student
+            ArrayList<CurriculumPreMapping> curPreMaps = Mono.orm().newSearch(Database.connect().curriculum_pre())
+                    .eq(DB.curriculum_pre().curriculum_id_req, CURRICULUM_id)
+                    .active(Order.asc(DB.curriculum_pre().id)).all();
+            if(curPreMaps != null) {
+                results = new ArrayList<>();
+                for(CurriculumPreMapping curPreMap: curPreMaps) {
+                    //------------------------------------------------------------------
+                    CurriculumMapping curriculums = Mono.orm()
+                            .newSearch(Database.connect().curriculum())
+                            // -------
+                            .eq(DB.curriculum().id, curPreMap.getCurriculum_id_get())
+                            // --------------
+                            .eq(DB.curriculum().implemented, 1)
+                            // must not be 1 or must not be null
+                            .neOrNn(DB.curriculum().obsolete_term, 1)
+                            // must not be consequent
+                            // shift to the preparatory then moving up
+                            .eq(DB.curriculum().ladderization_type, CurriculumConstants.TYPE_CONSEQUENT)
+                            .active()
+                            .first();
+                    //------------------------------------------------------------------
+                    if (curriculums == null) {
+                        log = "No curriculum found.";
+                        return false;
+                    }
+                    results.add(curriculums);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        protected void after() {
+        }
+
+    }
 }

@@ -358,7 +358,6 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             try {
                 getScene().setCursor(Cursor.WAIT);
             } catch (NullPointerException e) {
-                e.printStackTrace();
             }
         });
         fetch.whenRunning(() -> {
@@ -409,7 +408,6 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             try {
                 getScene().setCursor(Cursor.DEFAULT);
             } catch (NullPointerException e) {
-                e.printStackTrace();
             }
         });
         fetch.transact();

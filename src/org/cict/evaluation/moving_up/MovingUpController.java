@@ -290,6 +290,7 @@ public class MovingUpController extends SceneFX implements ControllerFX {
         if(res!=1) {
             return;
         }
+        
         CurriculumMapping selected_cur = (CurriculumMapping) row.getRowMetaData().get(KEY_MORE_INFO);
         SaveMovingUp save = new SaveMovingUp();
         save.student = this.student;
@@ -314,6 +315,7 @@ public class MovingUpController extends SceneFX implements ControllerFX {
             isSaved = true;
             Mono.fx().getParentStage(application_root).close();
         });
+        
         save.transact();
     }
     
