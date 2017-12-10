@@ -90,10 +90,10 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
 
     @FXML
     private HBox pnl_spreadsheet;
-    
+
     @FXML
     private HBox pnl_loading;
-    
+
     @FXML
     private HBox pnl_error;
 
@@ -105,7 +105,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
 
     @FXML
     private Button btnPost;
-    
+
     @FXML
     private ImageView img_profile;
 
@@ -156,23 +156,22 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         //-------------------------------
         // set image
         SimpleTask set_profile = new SimpleTask("set_profile");
-        set_profile.setTask(()->{
+        set_profile.setTask(() -> {
             this.setImageView();
         });
-        set_profile.whenCancelled(()->{
+        set_profile.whenCancelled(() -> {
             Notifications.create().text("Loading of image is cancelled")
                     .showInformation();
         });
-        set_profile.whenFailed(()->{
+        set_profile.whenFailed(() -> {
             Notifications.create().text("Failed to load image.")
                     .showInformation();
         });
-        set_profile.whenSuccess(()->{
+        set_profile.whenSuccess(() -> {
         });
         set_profile.start();
         //-------------------------------
-        
-        
+
         this.changeView(pnl_loading);
         this.CURRICULUM_id = CURRENT_STUDENT.getCURRICULUM_id();
         this.tbl_rating = this.gei.createGradeTable(this.tbl_rating);
@@ -316,9 +315,9 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                     } else {
                         // make the cell updatable
                         row.get(3).setEditable(true);
-                        
+
                         // check if the remarks is failed or inc
-                        if(remarks.equalsIgnoreCase("FAILED") || remarks.equalsIgnoreCase("INCOMPLETE")) {
+                        if (remarks.equalsIgnoreCase("FAILED") || remarks.equalsIgnoreCase("INCOMPLETE")) {
                             // if these fields are modified, ask for 
                             // local registrar's credentials
                             // before saving grades
@@ -437,28 +436,31 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             return null;
         }
     }
-    
+
     //-------------------------
     private void changeView(Node node) {
-        Animate.fade(node, 150, ()->{
+        Animate.fade(node, 150, () -> {
             pnl_error.setVisible(false);
             pnl_loading.setVisible(false);
             pnl_spreadsheet.setVisible(false);
             node.setVisible(true);
         }, pnl_error, pnl_loading, pnl_spreadsheet);
     }
-    
+
     private void setImageView() {
         StudentProfileMapping spMap = null;
-        if(this.CURRENT_STUDENT.getHas_profile().equals(1)) {
+        if (this.CURRENT_STUDENT.getHas_profile().equals(1)) {
             spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
                     .active(Order.desc(DB.student_profile().id)).first();
         }
-        String studentImage = (spMap==null? null: spMap.getProfile_picture());
+        String studentImage = null;
+        if (spMap != null) {
+            studentImage = spMap.getProfile_picture();
+        }
         if (studentImage == null
-            || studentImage.isEmpty()
-            || studentImage.equalsIgnoreCase("NONE")) {
+                || studentImage.isEmpty()
+                || studentImage.equalsIgnoreCase("NONE")) {
             ImageUtility.addDefaultImageToFx(img_profile, 1, this.getClass());
         } else {
             ImageUtility.addImageToFX("temp/images/profile", "student_avatar", studentImage, img_profile, 1);
