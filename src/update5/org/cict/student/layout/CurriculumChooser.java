@@ -133,7 +133,7 @@ public class CurriculumChooser extends MonoLauncher {
             //------------------------------------------------------------------
             ArrayList<CurriculumMapping> curriculums = Mono.orm()
                     .newSearch(Database.connect().curriculum())
-                    //                    .eq(DB.curriculum().implemented, 1)
+                    .eq(DB.curriculum().implemented, 1)
                     // must not be 1 or must not be null
                     .neOrNn(DB.curriculum().obsolete_term, 1)
                     // must not be consequent
