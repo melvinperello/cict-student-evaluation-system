@@ -23,6 +23,9 @@
  */
 package sys.org.cict.layout.home;
 
+import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.DB;
+import app.lazy.models.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.display.ControllerFX;
@@ -698,6 +701,14 @@ public class SystemHome extends MonoLauncher {
             Mono.fx().snackbar().showInfo(application_root, "You are not allowed to use this feature.");
             return;
         }
+        
+        if(this.thereIsTermRequest()) {
+            Notifications.create().title("Request Pending")
+                    .text("There is currently a waiting request for\n"
+                            + "Change in Academic Term.").showInformation();
+            return;
+        }
+        
         ControllerFX controller = new AcademicTermHome();
         this.changeRoot(controller,
                 "update3.org.cict.termcalendar",
@@ -849,5 +860,12 @@ public class SystemHome extends MonoLauncher {
         boolean res = SystemProperties.instance().getCurrentAcademicTerm()==null;
         button.setDisable(true);
         return res;
+    }
+    
+    private boolean thereIsTermRequest() {
+        AcademicTermMapping pending = Mono.orm().newSearch(Database.connect().academic_term())
+                .eq(DB.academic_term().approval_state, "PENDING")
+                .active().first();
+        return (pending != null);
     }
 }

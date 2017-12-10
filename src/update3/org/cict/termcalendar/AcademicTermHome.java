@@ -24,8 +24,10 @@
 package update3.org.cict.termcalendar;
 
 import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.AccountFacultyMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import app.lazy.models.FacultyMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadGroupScheduleMapping;
 import app.lazy.models.LoadSectionMapping;
@@ -344,6 +346,22 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
 
     private void changeTerm() {
         if (Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_CO_REGISTRAR)) {
+            AccountFacultyMapping localRegistrarAcc = Mono.orm().newSearch(Database.connect().account_faculty())
+                    .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR).active(Order.asc(DB.faculty().id)).first();
+            if(localRegistrarAcc != null) {
+                FacultyMapping localRegistrar = Database.connect().faculty().getPrimary(localRegistrarAcc.getFACULTY_id());
+                if(localRegistrar.getMobile_number()==null || localRegistrar.getMobile_number().isEmpty()) {
+                    Notifications.create().darkStyle().title("Sending of OTP failed")
+                            .text("No mobile number found. Please update the\n"
+                                    + "Local Registrar's account.").showWarning();
+                    return;
+                }
+            }
+            
+            if(!Access.enterTransactionPin(this.getStage())) {
+                return;
+            }
+        
             ChangeAcademicTerm change = M.load(ChangeAcademicTerm.class);
             change.onDelayedStart();
             try {
@@ -384,7 +402,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             btn_encoding_service.setDisable(true);
             btn_evaluation_service.setDisable(true);
             changeStatus(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE);
-
+            
             if (AssistantRegistrarOverride.isAuthorized(this.getStage(), "ACADTERMCHNGE")) {
                 Mono.fx().snackbar().showSuccess(application_root, "Request Granted");
                 this.acceptRequest();
@@ -484,6 +502,7 @@ public class AcademicTermHome extends SceneFX implements ControllerFX {
             // accept the requested term
             request.setApproval_state("ACCEPTED");
             request.setCurrent(1);
+            request.setActive(1);
             Boolean accept = Database.connect().academic_term().transactionalSingleUpdate(currentSession, request);
             if (!accept) {
                 dataTransaction.rollback();

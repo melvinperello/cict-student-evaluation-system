@@ -46,6 +46,7 @@ import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Order;
 
 /**
  *
@@ -81,7 +82,7 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         if(!Access.isGrantedIf(Access.ACCESS_CO_REGISTRAR, Access.ACCESS_LOCAL_REGISTRAR))
             return false;
         AccountFacultyMapping localRegistrarAcc = Mono.orm().newSearch(Database.connect().account_faculty())
-                .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR).active().first();
+                .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR).active(Order.asc(DB.faculty().id)).first();
         if(localRegistrarAcc != null) {
             FacultyMapping localRegistrar = Database.connect().faculty().getPrimary(localRegistrarAcc.getFACULTY_id());
             contactNumber = localRegistrar==null? "" : localRegistrar.getMobile_number();
@@ -95,11 +96,13 @@ public class AssistantRegistrarOverride extends MonoLauncher {
         int res = Mono.fx().alert().createConfirmation()
                 .setMessage("The system will send a One-Time Password (OTP) to the current Local Registrar. You will use this to authorize the Access Local Registrar transaction. Continue?")
                 .setHeader("Send OTP To Authorize").confirmYesNo();
-        if(res==-1)
+        if(res==-1) {
             return false;
+        }
         
-        if(!Access.enterTransactionPin(stage))
+        if(!Access.enterTransactionPin(stage)) {
             return false;
+        }
         
         OtpGeneratorMapping map = new OtpGeneratorMapping();
         String OTP_raw = OTPGenerator.generateOTP();
