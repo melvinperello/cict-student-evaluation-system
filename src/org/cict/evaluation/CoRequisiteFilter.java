@@ -30,16 +30,50 @@ import app.lazy.models.Database;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import javafx.scene.layout.VBox;
+import javax.swing.JOptionPane;
 import org.cict.evaluation.views.SubjectView;
 import org.hibernate.criterion.Order;
-import update.org.cict.controller.adding.SubjectInformationHolder;
 
 /**
  *
  * @author Jhon Melvin
  */
 public class CoRequisiteFilter {
+
+    private static String getSubjectCode(Integer id) {
+        SubjectMapping map = Database.connect().subject().getPrimary(id);
+        if (map == null) {
+            return "***";
+        } else {
+            return map.getCode();
+        }
+    }
+
+    /**
+     * Blocks the operation of evaluation and adding if missing pre requisite.
+     *
+     * @param sub
+     * @return
+     */
+    public static boolean checkCoRequisite(List<CurriculumRequisiteExtMapping> sub) {
+        if (sub != null) {
+            System.out.println("MISSING REQUIRED CORREC");
+            String message_text = "Cannot evaluate the following subjects: ";
+            for (CurriculumRequisiteExtMapping ext : sub) {
+                String required = CoRequisiteFilter.getSubjectCode(ext.getSUBJECT_id_req());
+                String willTake = CoRequisiteFilter.getSubjectCode(ext.getSUBJECT_id_get());
+                message_text += (willTake + " requires " + required + "\n");
+            }
+            message_text += ("Must be taken with their co-requisite");
+            JOptionPane.showMessageDialog(null, message_text, "Co-Requisite Required", JOptionPane.WARNING_MESSAGE);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * for evaluation.
@@ -50,7 +84,7 @@ public class CoRequisiteFilter {
      * @param studentID CICT ID.
      * @return
      */
-    public static ArrayList<CurriculumRequisiteExtMapping> checkCoReqEval(
+    public static List<CurriculumRequisiteExtMapping> checkCoReqEval(
             VBox subjectContainer,
             Integer studentCurriculumID,
             Integer studentID
@@ -130,7 +164,7 @@ public class CoRequisiteFilter {
     }
 
     /**
-     * Checks whether there is a corequisite.
+     * Checks whether there is cloneReqIter corequisite.
      *
      * SubjectMapping only uses the subjectID value.
      *
@@ -141,7 +175,7 @@ public class CoRequisiteFilter {
      * @param studentID cict id
      * @return CurriculumRequisiteExtMapping list of missing required.
      */
-    public static ArrayList<CurriculumRequisiteExtMapping> checkCoReqAdd(
+    public static List<CurriculumRequisiteExtMapping> checkCoReqAdd(
             // Parameters
             ArrayList<SubjectMapping> collection,
             Integer curriculumID,
@@ -162,8 +196,8 @@ public class CoRequisiteFilter {
             }
             //------------------------------------------------------------------
             // clone co requisites.
-            ArrayList<CurriculumRequisiteExtMapping> cloneReq
-                    = new ArrayList<>();
+            List<CurriculumRequisiteExtMapping> cloneReq
+                    = Collections.synchronizedList(new ArrayList<>());
             cloneReq.addAll(corequisites);
             //------------------------------------------------------------------
             // check for coreq of this subject in the view
@@ -186,10 +220,14 @@ public class CoRequisiteFilter {
                 // some co requisite is not found in the list
                 // if not equal check the remaining entry in clone req
                 //--------------------------------------------------------------
-                // check missing if taken
-                for (CurriculumRequisiteExtMapping ext : cloneReq) {
+                // check missing if 
+                //--------------------------------------------------------------
+                // cannot remove elements when iterating using for loop
+                Iterator<CurriculumRequisiteExtMapping> cloneReqIter = cloneReq.iterator();
+                while (cloneReqIter.hasNext()) {
+                    CurriculumRequisiteExtMapping ext = cloneReqIter.next();
                     if (isCoTaken(studentID, ext.getSUBJECT_id_req())) {
-                        cloneReq.remove(ext);
+                        cloneReqIter.remove();
                     }
                 }
                 //--------------------------------------------------------------
@@ -233,7 +271,7 @@ public class CoRequisiteFilter {
     }
 
     /**
-     * Get he co requisites of a particular subject if there is one.
+     * Get he co requisites of cloneReqIter particular subject if there is one.
      *
      * @param curriculumID
      * @param subjectID
