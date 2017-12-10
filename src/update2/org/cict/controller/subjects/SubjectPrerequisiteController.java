@@ -252,13 +252,16 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
      
     private SimpleTable subjectTable = new SimpleTable();
     private void createSubjectTable() {
-        for (SubjectMapping subject : prereqs) {
-            createRow(subject, "P");
+        if(prereqs != null) {
+            for (SubjectMapping subject : prereqs) {
+                createRow(subject, "P");
+            }
         }
-        for (SubjectMapping subject : coreqs) {
-            createRow(subject, "C");
+        if(coreqs != null) {
+            for (SubjectMapping subject : coreqs) {
+                createRow(subject, "C");
+            }
         }
-        
         SimpleTableView simpleTableView = new SimpleTableView();
         simpleTableView.setTable(subjectTable);
         simpleTableView.setFixedWidth(true);
@@ -267,6 +270,12 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
     }
     
     private void createRow(SubjectMapping subject, String mode) {
+        if(subject == null) {
+            System.out.println("ITS NULL");
+            return;
+        }
+        System.out.println(subject.getId());
+        
         SimpleTableRow row = new SimpleTableRow();
         row.setRowHeight(70.0);
 

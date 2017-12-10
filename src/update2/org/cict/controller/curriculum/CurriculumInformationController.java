@@ -884,11 +884,6 @@ public class CurriculumInformationController extends SceneFX implements Controll
         String code = "", yearSem = "";
         if (crlMap != null) {
             isAPrerequisite = true;
-            SubjectMapping subjectGet = Mono.orm().newSearch(Database.connect().subject())
-                    .eq(DB.subject().id, crlMap.getSUBJECT_id_get())
-                    .active()
-                    .first();
-            code = subjectGet.getCode();
             CurriculumSubjectMapping csubjectMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                     .eq(DB.curriculum_subject().CURRICULUM_id, curriculumID)
                     .eq(DB.curriculum_subject().SUBJECT_id, crlMap.getSUBJECT_id_get())
@@ -896,6 +891,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     .first();
             if (csubjectMap != null) {
                 if (csubjectMap.getActive() == 1) {
+                    SubjectMapping subjectGet = Mono.orm().newSearch(Database.connect().subject())
+                            .eq(DB.subject().id, crlMap.getSUBJECT_id_get())
+                            .active()
+                            .first();
+                    code = subjectGet.getCode();
                     yearSem = getYearLevel(csubjectMap.getYear()) + "-" + getSemester(csubjectMap.getSemester());
                 } else {
                     isAPrerequisite = false;
@@ -909,7 +909,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             }
         } else {
             isAPrerequisite = false;
-
+        }
             CurriculumRequisiteExtMapping creMap = Mono.orm().newSearch(Database.connect().curriculum_requisite_ext())
                     .eq(DB.curriculum_requisite_ext().CURRICULUM_id, this.curriculumID)
                     .eq(DB.curriculum_requisite_ext().SUBJECT_id_req, subject.getId())
@@ -918,11 +918,6 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     .first();
             if (creMap != null) {
                 isACoRequisite = true;
-                SubjectMapping subjectGet = Mono.orm().newSearch(Database.connect().subject())
-                        .eq(DB.subject().id, creMap.getSUBJECT_id_get())
-                        .active()
-                        .first();
-                code = subjectGet.getCode();
                 CurriculumSubjectMapping csubjectMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                         .eq(DB.curriculum_subject().CURRICULUM_id, curriculumID)
                         .eq(DB.curriculum_subject().SUBJECT_id, creMap.getSUBJECT_id_get())
@@ -930,6 +925,11 @@ public class CurriculumInformationController extends SceneFX implements Controll
                         .first();
                 if (csubjectMap != null) {
                     if (csubjectMap.getActive() == 1) {
+                        SubjectMapping subjectGet = Mono.orm().newSearch(Database.connect().subject())
+                                .eq(DB.subject().id, creMap.getSUBJECT_id_get())
+                                .active()
+                                .first();
+                        code = subjectGet.getCode();
                         yearSem = getYearLevel(csubjectMap.getYear()) + "-" + getSemester(csubjectMap.getSemester());
                     } else {
                         isACoRequisite = false;
@@ -944,7 +944,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
             } else {
                 isACoRequisite = false;
             }
-        }
+        //}
 
         if (isImplemented) {
             Mono.fx().alert()
@@ -953,7 +953,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     .setMessage("It seems like this subject has an implemented curriculum, therefore removing is prohibited.")
                     .showAndWait();
             return;
-        } else if (isAPrerequisite) {
+        }/* else if (isAPrerequisite) {
             Mono.fx().alert()
                     .createWarning()
                     .setHeader("Subject Cannot Be Remove")
@@ -967,7 +967,7 @@ public class CurriculumInformationController extends SceneFX implements Controll
                     .setMessage("This subject is a co-requisite of " + code + " from " + yearSem
                             + ", therefore removing is not allowed.")
                     .showAndWait();
-        } else {
+        }*/ else {
             int res = Mono.fx().alert()
                     .createConfirmation()
                     .setHeader("Remove Subject")

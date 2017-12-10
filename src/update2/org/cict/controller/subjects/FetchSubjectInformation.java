@@ -110,7 +110,9 @@ public class FetchSubjectInformation extends Transaction{
                             .eq(DB.subject().id, crlMap.getSUBJECT_id_req())
                             .active()
                             .first();
-                    prereqs.add(subjectPreReq);
+                    if(subjectPreReq != null) {
+                        prereqs.add(subjectPreReq);
+                    }
             }
         } else
             logs("NO PRE-REQUISITE FOUND FOR SUBJECT ID: " + this.subjectID);
@@ -131,7 +133,9 @@ public class FetchSubjectInformation extends Transaction{
                             .eq(DB.subject().id, creMap.getSUBJECT_id_req())
                             .active()
                             .first();
-                    coreqs.add(subjectPreReq);
+                    if(coreqs != null) {
+                        coreqs.add(subjectPreReq);
+                    }
             }
         } else
             logs("NO CO-REQUISITE FOUND FOR SUBJECT ID: " + this.subjectID);
