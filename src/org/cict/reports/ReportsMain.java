@@ -35,6 +35,7 @@ import app.lazy.models.StudentMapping;
 import app.lazy.models.utils.FacultyUtility;
 import artifacts.ListerData;
 import artifacts.ListersChecker;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
@@ -48,11 +49,8 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -588,6 +586,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 return;
         }
         // select paper size
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
         String[] colNames = new String[]{"Date and Time",status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Evaluator", "Student Number", "Student Name", "Year Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
@@ -609,7 +611,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
@@ -1225,6 +1227,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             btn_print_eval_main.setDisable(true);
             return;
         }
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         String[] colNames = new String[]{"Student Number","Full Name", "Section", "GWA"};
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < previewAchievers.size(); i++) {
@@ -1237,7 +1243,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
@@ -1555,6 +1561,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 return;
         }
         // select paper size
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         String[] colNames = new String[]{"Printed Date","Printed By", "Module", "Title", "Terminal"};
         ArrayList<String[]> rowData = new ArrayList<>();
         if(printLogsView==null || printLogsView.isEmpty()) {
@@ -1576,7 +1586,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         
         String title = "PRINTING LOGS - " + this.typePrint;
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());

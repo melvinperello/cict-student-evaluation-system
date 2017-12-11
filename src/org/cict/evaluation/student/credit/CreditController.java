@@ -31,6 +31,7 @@ import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.utils.FacultyUtility;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.FXThread;
@@ -289,6 +290,10 @@ public class CreditController implements ControllerFX {
     private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
     
     private void print(boolean is4Yrs) {
+        Document doc = ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(btn_save));
+        if(doc==null) {
+            return;
+        }
         String[] colNames = new String[]{"Date and Time","Subject Code", "Rating", "Updated By", "Reason For\nUpdate", "State"};
         ArrayList<String[]> rowData = new ArrayList<>();
         this.addToRow(first_1, rowData, "FIRST YEAR - First Semester");
@@ -336,7 +341,7 @@ public class CreditController implements ControllerFX {
         print.whenFinished(() -> {
             btn_print_history.setDisable(false);
         });
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(btn_save)));
+        print.setDocumentFormat(doc);
         if(ReportsUtility.savePrintLogs(null, "Student Grade History".toUpperCase(), this.MODULE, "INITIAL"))
             print.transact();
     }

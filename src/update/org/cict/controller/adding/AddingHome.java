@@ -12,6 +12,7 @@ import app.lazy.models.StudentProfileMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.SystemOverrideLogsMapping;
 import artifacts.ImageUtility;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.CronThread;
@@ -52,7 +53,6 @@ import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.CoRequisiteFilter;
 import org.cict.evaluation.CurricularLevelController;
-import org.cict.evaluation.EvaluateController;
 import org.cict.evaluation.FirstAssistantController;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.student.credit.CreditController;
@@ -317,6 +317,11 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
+        
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
         printCheckList.CICT_id = studentSearched.getCict_id();
@@ -340,7 +345,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         });
 
         if (!printLegacy) {
-            printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+            printCheckList.setDocumentFormat(doc);
         }
         printCheckList.transact();
     }
@@ -1704,6 +1709,10 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void printDeficiency() {
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = studentSearched.getCict_id();
         print.whenSuccess(() -> {
@@ -1724,7 +1733,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     .text("Something went wrong. Sorry for the inconviniece.")
                     .showInformation();
         });
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.transact();
     }
 

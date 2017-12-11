@@ -29,6 +29,7 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import artifacts.MonoString;
+import com.itextpdf.text.Document;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
@@ -316,6 +317,10 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         String[] colNames = new String[]{"BulSU ID", "Name", "Department", "Username", "Access Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < preview.size(); i++) {
@@ -328,7 +333,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "faculty_list_" + cmb_sort.getSelectionModel().getSelectedItem().toLowerCase();

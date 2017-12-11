@@ -39,6 +39,7 @@ import app.lazy.models.utils.DateString;
 import app.lazy.models.utils.FacultyUtility;
 import artifacts.ImageUtility;
 import artifacts.MonoString;
+import com.itextpdf.text.Document;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
@@ -482,6 +483,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
         printCheckList.CICT_id = CURRENT_STUDENT.getCict_id();
@@ -504,7 +509,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
         if (!printLegacy) {
-            printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+            printCheckList.setDocumentFormat(doc);
         }
 
         printCheckList.transact();
@@ -1062,6 +1067,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             return;
         }
         
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = CURRENT_STUDENT.getCict_id();
         //----------------------------------------------------------------------
@@ -1093,7 +1102,7 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             btn_view_deficiency.setDisable(false);
             super.cursorDefault();
         });
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         //----------------------------------------------------------------------
         print.transact();
     }

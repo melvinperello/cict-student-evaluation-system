@@ -7,14 +7,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="482.0" spacing="20.0" style="-fx-background-color: #F9A11F;" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="193.0" prefWidth="482.0" spacing="20.0" style="-fx-background-color: #F9A11F;" stylesheets="@metro-ui.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Paper Size Chooser">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
+      <HBox>
+         <children>
+            <Label maxWidth="1.7976931348623157E308" text="Paper Size Chooser" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
       <HBox spacing="20.0">
          <children>
             <JFXButton fx:id="btn_short" prefWidth="141.0" style="-fx-border-color: white;" text="Short Paper" textFill="WHITE">
@@ -34,6 +37,11 @@
             </JFXButton>
          </children>
       </HBox>
+      <JFXButton fx:id="btn_cancel" prefHeight="33.0" prefWidth="451.0" style="-fx-border-color: white;" text="Cancel" textFill="WHITE">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </JFXButton>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

@@ -23,6 +23,7 @@
  */
 package update3.org.cict.scheduling;
 
+import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import com.jhmvin.flow.MonoLoop;
 import com.jhmvin.fx.display.ControllerFX;
@@ -445,10 +446,15 @@ public class TimeTableController extends SceneFX implements ControllerFX {
      * @param pdfName
      */
     private void printSchedule(String imageLocation, String pdfName) {
+        ReportsUtility.rotate = true;
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            ReportsUtility.rotate = false;
+            return;
+        }
         ImageToPdf imageViewer = new ImageToPdf(pdfName);
         imageViewer.imageLocation = imageLocation;
-        ReportsUtility.rotate = true;
-        imageViewer.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        imageViewer.setDocumentFormat(doc);
         imageViewer.print();
     }
 

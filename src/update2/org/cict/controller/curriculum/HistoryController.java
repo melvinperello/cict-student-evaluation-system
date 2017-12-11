@@ -29,7 +29,7 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import app.lazy.models.utils.FacultyUtility;
-import com.jfoenix.controls.JFXButton;
+import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
@@ -148,6 +148,10 @@ public class HistoryController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         String[] colNames = new String[]{"Date & Time", "Faculty", "Description"};
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < chsMaps.size(); i++) {
@@ -159,7 +163,7 @@ public class HistoryController extends SceneFX implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());

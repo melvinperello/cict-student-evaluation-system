@@ -30,6 +30,7 @@ import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import app.lazy.models.utils.FacultyUtility;
 import artifacts.MonoString;
+import com.itextpdf.text.Document;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextGroup;
 import com.izum.fx.textinputfilters.TextInputFilters;
@@ -549,6 +550,10 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         AccountFacultyAttemptMapping ref = null;
         for (int i = 0; i < preview.size(); i++) {
             AccountFacultyAttemptMapping result = preview.get(i);
@@ -562,7 +567,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         String username = CollegeFaculty.instance().getUSERNAME();

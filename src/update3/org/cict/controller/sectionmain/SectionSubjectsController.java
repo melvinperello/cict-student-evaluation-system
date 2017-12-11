@@ -36,8 +36,7 @@ import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.utils.FacultyUtility;
-import com.izum.fx.textinputfilters.StringFilter;
-import com.izum.fx.textinputfilters.TextInputFilters;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -87,7 +86,6 @@ import update3.org.collegechooser.ChooserHome;
 import update3.org.excelprinter.StudentMasterListPrinter;
 import update3.org.facultychooser.FacultyChooser;
 import update3.org.facultychooser.FacultyNamer;
-import update5.org.cict.facultyhub.FacultyHub;
 
 /**
  * This class is used in both regular and irregular sections.
@@ -601,10 +599,14 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                         .showWarning();
                 return;
             }
+            Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+            if(doc==null) {
+                return;
+            }
             String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
             ArrayList<String[]> rowData = new ArrayList<>();
             PrintResult print = new PrintResult();
-            print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+            print.setDocumentFormat(doc);
 
             for (int i = 0; i < preview.size(); i++) {
                 MasterListPdfStudent result = preview.get(i);

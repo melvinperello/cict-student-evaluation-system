@@ -30,6 +30,7 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import artifacts.MonoString;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
@@ -231,6 +232,10 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name", "Section"};
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < students.size(); i++) {
@@ -244,7 +249,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "student_list_" + searchWord.toLowerCase();

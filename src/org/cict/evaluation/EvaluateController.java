@@ -45,6 +45,7 @@ import app.lazy.models.SubjectMapping;
 import app.lazy.models.SystemOverrideLogsMapping;
 import artifacts.ImageUtility;
 import artifacts.StudentOverStay;
+import com.itextpdf.text.Document;
 import com.jhmvin.fx.async.CronThread;
 import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
@@ -58,7 +59,6 @@ import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javax.swing.JOptionPane;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.ThreadMill;
@@ -401,6 +401,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     }
 
     private void printDeficiency() {
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = this.currentStudent.getCict_id();
         //----------------------------------------------------------------------
@@ -431,7 +435,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             GenericLoadingShow.instance().hide();
             super.cursorDefault();
         });
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         //----------------------------------------------------------------------
         print.transact();
     }

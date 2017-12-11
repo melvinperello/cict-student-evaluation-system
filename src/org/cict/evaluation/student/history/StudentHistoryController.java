@@ -28,6 +28,7 @@ import app.lazy.models.Database;
 import app.lazy.models.StudentDataHistoryMapping;
 import app.lazy.models.StudentMapping;
 import artifacts.MonoString;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jhmvin.Mono;
@@ -198,6 +199,10 @@ public class StudentHistoryController extends SceneFX implements ControllerFX{
                 rowData.add(row);
             }
         }
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         PrintResult print = new PrintResult();
         print.columnNames = colNames;
         print.ROW_DETAILS = rowData;
@@ -230,7 +235,7 @@ public class StudentHistoryController extends SceneFX implements ControllerFX{
             btn_print.setDisable(false);
         });
         //----------------------------------------------------------------------
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(lblName)));
+        print.setDocumentFormat(doc);
         if(ReportsUtility.savePrintLogs(this.STUDENT.getCict_id(), lbl_title.getText().toUpperCase(), MODULE, "INITIAL"))
             print.transact();
     }

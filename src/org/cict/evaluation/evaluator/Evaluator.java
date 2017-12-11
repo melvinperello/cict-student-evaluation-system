@@ -16,6 +16,7 @@ import app.lazy.models.MapFactory;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import app.lazy.models.SystemOverrideLogsMapping;
+import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.sectionviewer.SearchBySection;
@@ -767,6 +768,10 @@ public class Evaluator implements Process {
 
     // print deficiency
     private void printDeficiency(Integer cict_id, Stage stage) {
+        Document doc = ReportsUtility.paperSizeChooser(stage);
+        if(doc==null) {
+            return;
+        }
         PrintDeficiency print = new PrintDeficiency();
         print.CICT_id = cict_id;
         print.whenSuccess(()->{
@@ -787,7 +792,7 @@ public class Evaluator implements Process {
                     .text("Something went wrong. Sorry for the inconviniece.")
                     .showInformation();
         });
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(stage));
+        print.setDocumentFormat(doc);
         print.transact();
     }
 }

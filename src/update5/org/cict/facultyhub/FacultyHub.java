@@ -32,6 +32,7 @@ import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.LoadSubjectMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -798,10 +799,14 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                         .showWarning();
                 return;
             }
+            Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+            if(doc==null) {
+                return;
+            }
             String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
             ArrayList<String[]> rowData = new ArrayList<>();
             PrintResult print = new PrintResult();
-            print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+            print.setDocumentFormat(doc);
 
             for (int i = 0; i < preview.size(); i++) {
                 MasterListPdfStudent result = preview.get(i);
@@ -936,10 +941,14 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
+        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        if(doc==null) {
+            return;
+        }
         String[] colNames = new String[]{"Student Number", "Full Name", "Grade", "Status"};
         ArrayList<String[]> rowData = new ArrayList<>();
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
+        print.setDocumentFormat(doc);
         for (int i = 0; i < preview.size(); i++) {
             ReadData result = preview.get(i);
             String[] row = new String[]{(i + 1) + ".  " + result.getSTUDENT_NUMBER().toUpperCase(),

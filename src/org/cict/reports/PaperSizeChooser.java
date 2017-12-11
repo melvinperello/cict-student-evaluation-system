@@ -49,6 +49,10 @@ public class PaperSizeChooser extends MonoLauncher{
     @FXML
     private JFXButton btn_a4;
     
+    @FXML
+    private JFXButton btn_cancel;
+            
+            
     @Override
     public void onStartUp() {
         MonoClick.addClickEvent(btn_short, ()->{
@@ -61,6 +65,10 @@ public class PaperSizeChooser extends MonoLauncher{
         });
         MonoClick.addClickEvent(btn_a4, ()->{
             this.choosenSize = ReportsUtility.createA4Document();
+            Mono.fx().getParentStage(application_root).close();
+        });
+        MonoClick.addClickEvent(btn_cancel, ()->{
+            this.choosenSize = null;
             Mono.fx().getParentStage(application_root).close();
         });
     }
