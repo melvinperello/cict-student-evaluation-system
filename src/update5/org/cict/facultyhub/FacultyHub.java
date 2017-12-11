@@ -237,8 +237,10 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             });
 
             super.addClickEvent(rowFX.getPrint_import(), () -> {
-                SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                this.readExcel(info.loadGroup, rowFX.getPrint_import(), info.getSectionName());
+                this.checkEncodingService(()->{
+                    SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
+                    this.readExcel(info.loadGroup, rowFX.getPrint_import(), info.getSectionName());
+                });
             });
 
             SimpleTableCell cellParent = new SimpleTableCell();
@@ -351,8 +353,10 @@ public class FacultyHub extends SceneFX implements ControllerFX {
 
             rowFX.getPrint_import().setDisable(true);
             super.addClickEvent(rowFX.getPrint_import(), () -> {
-                SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
-                this.readExcel(info.loadGroup, rowFX.getPrint_import(), info.getSectionName());
+                this.checkEncodingService(()->{
+                    SubjectData info = (SubjectData) row.getRowMetaData().get("MORE_INFO");
+                    this.readExcel(info.loadGroup, rowFX.getPrint_import(), info.getSectionName());
+                });
             });
 
             SimpleTableCell cellParent = new SimpleTableCell();
@@ -992,5 +996,27 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         print.transact();
+    }
+    
+    private void checkEncodingService(Runnable runMe) {
+        Integer encoding_service = SystemProperties.instance().getCurrentAcademicTerm().getEncoding_service();
+        if (encoding_service == null) {
+            Mono.fx().alert().createWarning().setTitle("Checking Service")
+                    .setHeader("Grade Encoding Service")
+                    .setMessage("Cannot check the encoding service. Please Try Again.")
+                    .show();
+        } else {
+            switch (encoding_service) {
+                case 1:
+                    runMe.run();
+                    break;
+                default:
+                    Mono.fx().alert().createWarning().setTitle("Grade Encoding Service")
+                            .setHeader("Grade Encoding is OFFLINE")
+                            .setMessage("Grade Encoding Service is currently offline, no grade can be save at the moment")
+                            .show();
+                    break;
+            }
+        }
     }
 }
