@@ -288,6 +288,10 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
     private String searchWord = "";
 
     public void onSearch() {
+        try {
+            getScene().setCursor(Cursor.WAIT);
+        } catch (NullPointerException e) {
+        }
         isFiltered = true;
         if (vbox_result.isVisible()) {
             searchWord = MonoString.removeExtraSpace(txt_search_key.getText()).toUpperCase();
@@ -355,10 +359,6 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             vbox_list.setVisible(false);
             
             btn_home1.setDisable(true);
-            try {
-                getScene().setCursor(Cursor.WAIT);
-            } catch (NullPointerException e) {
-            }
         });
         fetch.whenRunning(() -> {
             lbl_status.setText("Loading...");
