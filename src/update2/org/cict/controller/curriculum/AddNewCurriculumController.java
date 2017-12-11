@@ -312,6 +312,10 @@ public class AddNewCurriculumController extends SceneFX implements ControllerFX 
             studyYears = 4;
         }
 
+        if(ladderType == null || ladderType.isEmpty()) {
+            ladderType = "NONE";
+        }
+        
         /**
          * set values to mapping check if preparatory, just add to curriculum
          * table if consequent, add to curriculum table and curriculum_pre
