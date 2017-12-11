@@ -54,6 +54,7 @@ import org.cict.accountmanager.AccountManager;
 import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyInformation;
 import org.cict.authentication.authenticator.CollegeFaculty;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import sys.org.cict.layout.home.system_variables.SystemValues;
@@ -166,11 +167,24 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     @FXML
     private JFXButton btn_show_override_logs;
     
+    @FXML
+    private JFXButton btn_change_cluster_admin;
+    
+    @FXML
+    private JFXButton btn_change_cluster_local_reg;
+    
+    @FXML
+    private Label lbl_cluster_local_reg;
+    
+    @FXML
+    private Label lbl_cluster_admin;
+    
     public AccessManagementHome() {
         //
     }
 
     private LinkedSettingsMapping currentLinkedSettings;
+    private AccountFacultyMapping currentAccount;
     
     @Override
     public void onInitialization() {
@@ -180,6 +194,24 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         
         currentLinkedSettings = Mono.orm().newSearch(Database.connect().linked_settings())
                 .eq(DB.linked_settings().mark, "ALIVE").active(Order.desc(DB.linked_settings().id)).first();
+    
+        AccountFacultyMapping admin = Mono.orm().newSearch(Database.connect().account_faculty())
+                .eq(DB.account_faculty().access_level, Access.ACCESS_ADMIN)
+                .active(Order.asc(DB.account_faculty().id)).first();
+        if(admin != null) {
+            lbl_cluster_admin.setText(admin.getAssigned_cluster()==null? "No Cluster Assigned" : (admin.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+        } else {
+            lbl_cluster_admin.setText("NO ADMIN FOUND");
+        }
+        
+        AccountFacultyMapping localRegistrar = Mono.orm().newSearch(Database.connect().account_faculty())
+                .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR)
+                .active(Order.asc(DB.account_faculty().id)).first();
+        if(localRegistrar != null) {
+            lbl_cluster_local_reg.setText(admin.getAssigned_cluster()==null? "No Cluster Assigned" : (admin.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+        } else {
+            lbl_cluster_local_reg.setText("NO LOCAL REGISTRAR FOUND");
+        }
     }
 
     /**
@@ -287,6 +319,10 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_system_values, ()->{
             this.onShowSystemVariables();
         });
+        
+        super.addClickEvent(btn_change_cluster_admin, ()->{
+            this.onChangeClusterOf(Access.ACCESS_ADMIN, lbl_cluster_admin);
+        });
     }
 
     private void localRegistrarEvents() {
@@ -320,6 +356,10 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
                 this.onShowOverrideLogs();
             }
+        });
+        
+        super.addClickEvent(btn_change_cluster_local_reg, ()->{
+            this.onChangeClusterOf(Access.ACCESS_LOCAL_REGISTRAR, lbl_cluster_local_reg);
         });
     }
     
@@ -861,8 +901,9 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .setMessage("Please choose a cluster for the faculty selected.")
                     .confirmCustom("Cluster 1: "+ currentLinkedSettings.getFloor_3_name(), "Cluster 2: " + (cluster2Closed? "CLOSED" : currentLinkedSettings.getFloor_4_name()));
             if(cluster2Closed && res==-1) {
-            } else
+            } else {
                 invalid = false;
+            }
             choosen = res==-1? 4 : 3;
         }
         if(save) {
@@ -1045,6 +1086,28 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             Stage a = systemValues.createChildStage(this.getStage());
             a.initStyle(StageStyle.UNDECORATED);
             a.showAndWait();
+        }
+    }
+    
+    private void onChangeClusterOf(String access, Label lbl) {
+        currentAccount = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        if(!currentAccount.getAccess_level().equalsIgnoreCase(access)) {
+            Mono.fx().snackbar().showError(application_root, "Not Authorized To Change This Cluster");
+            return;
+        }
+        Integer res = this.getCluster(true, currentAccount);
+        if(res==null) {
+            Notifications.create().title("No Current Session")
+                    .text("You can create a session in Linked System.\n"
+                            + " then click New Session.").showWarning();
+            return;
+        }
+        if(res.equals(1)) {
+            lbl.setText(currentAccount.getAssigned_cluster()==null? "No Cluster Assigned" : (currentAccount.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+            Notifications.create().darkStyle()
+                    .title("Successfully Updated")
+                    .text("Cluster of the faculty is updated\n"
+                            + "successfully.").showInformation();
         }
     }
 
