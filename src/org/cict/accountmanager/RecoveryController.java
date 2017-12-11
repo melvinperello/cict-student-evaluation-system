@@ -196,8 +196,8 @@ public class RecoveryController extends SceneFX implements ControllerFX{
             return;
         
         String question = this.cmb_questions.getSelectionModel().getSelectedItem().toString().toUpperCase();
-        String answer = MonoString.removeExtraSpace(this.txt_answer.getText().toUpperCase());
-        String reenter = MonoString.removeExtraSpace(this.txt_reenter.getText().toUpperCase());
+        String answer = MonoString.removeExtraSpace(this.txt_answer.getText());
+        String reenter = MonoString.removeExtraSpace(this.txt_reenter.getText());
         if(checkEmpty(answer, reenter)){
             ValidateRegister validateRegister= AccountManager
                     .instance()
