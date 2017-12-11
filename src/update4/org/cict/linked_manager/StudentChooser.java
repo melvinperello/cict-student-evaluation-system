@@ -312,8 +312,10 @@ public class StudentChooser extends MonoLauncher {
                     view.setVisible(true);
                 }, view);
             });
-        } else
+        } else {
             btn_change_org.setVisible(false);
+            rowFX.getBtn_force_logout().setVisible(false);
+        }
         
         lbl_num.setText((accountInfo.getStudentMapping().getId()==null? "NO STUDENT NUMBER" : accountInfo.getStudentMapping().getId()));
         lbl_name.setText(accountInfo.getFullName());

@@ -252,6 +252,8 @@ public class EvaluationOverride extends SceneFX implements ControllerFX {
                 attachmentFile = file.getName();
                 Mono.fx().thread().wrap(()->{
                     this.changeView(vbox_continue);
+                    Notifications.create().text("Attachment file is uploaded successfully.")
+                            .title("Uploaded Successfully").showWarning();
                 });
             } else {
                 Mono.fx().thread().wrap(()->{
