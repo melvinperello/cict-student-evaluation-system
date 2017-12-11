@@ -9,6 +9,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.cict.PublicConstants;
 
 /**
  * Wrapper Class for sending an SMS using MONOSYNC SMS SERVER.
@@ -20,7 +21,7 @@ public class SMSWrapper {
     /**
      * SMS Server IP.
      */
-    private final static String SMS_SERVER_IP = "127.0.0.1";
+    private final static String SMS_SERVER_IP = PublicConstants.getServerIP();
     /**
      * API Link.
      */
