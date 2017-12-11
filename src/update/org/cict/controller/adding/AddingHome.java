@@ -623,6 +623,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                  * Load Evaluated subjects
                  */
                 onLoadEvaluatedSubjects(checkStudentTx.getEvaluationMap(), checkStudentTx.getStudentMap());
+                vbox_list.setDisable(false);
             }
         });
         checkStudentTx.setOnCancel(onCancel -> {
