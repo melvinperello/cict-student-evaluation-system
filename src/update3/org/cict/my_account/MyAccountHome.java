@@ -617,7 +617,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(null, "Account Log And Attempts".toUpperCase(), "MY ACCOUNTS", "INITIAL"))
+        if(ReportsUtility.savePrintLogs(null, "Account Log And Attempts".toUpperCase(), "ACCOUNT", "INITIAL"))
             print.transact();
     }
 

@@ -218,6 +218,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             
     @FXML
     private ComboBox<String> cmb_print_logs_type;
+      
+    @FXML
+    private ComboBox<String> cmb_module;
             
             
     private LoaderView loaderView;
@@ -282,6 +285,20 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_print_logs_type.getItems().add("Initial");
         cmb_print_logs_type.getItems().add("Reprint");
         cmb_print_logs_type.getSelectionModel().selectFirst();
+        
+        cmb_module.getItems().clear();
+        cmb_module.getItems().add("All");
+        cmb_module.getItems().add("Evaluation");
+        cmb_module.getItems().add("Adding & Changing");
+        cmb_module.getItems().add("Faculty Hub");
+        cmb_module.getItems().add("Account");
+        cmb_module.getItems().add("Reports");
+        cmb_module.getItems().add("Academic Programs");
+        cmb_module.getItems().add("Students");
+        cmb_module.getItems().add("Sections");
+        cmb_module.getItems().add("Faculty");
+        cmb_module.getItems().add("Access Controls");
+        cmb_module.getSelectionModel().selectFirst();
     }
 
     @Override
@@ -338,11 +355,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         
         super.addClickEvent(btn_print_logs, ()->{
-            this.changeView(vbox_print_logs_main);
-        });
-        
-        super.addClickEvent(btn_print_logs, ()->{
             this.setViewInPrintLogs();
+            this.changeView(vbox_print_logs_main);
         });
         
         super.addClickEvent(btn_filter_print_logs, ()->{
@@ -1432,6 +1446,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         fetch.from = from;
         fetch.to = to;
         fetch.type = cmb_print_logs_type.getSelectionModel().getSelectedItem().toUpperCase();
+        //-----
+        fetch.module = cmb_module.getSelectionModel().getSelectedItem();
         fetch.whenStarted(()->{
             this.detachAll();
             this.loaderView3.setMessage("Loading Print Logs Result");
@@ -1465,6 +1481,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         public Date to;
         public ArrayList<FacultyMapping> facultyResult;
         public String type;
+        public String module;
         
         private ArrayList<PrintLogsMapping> result;
         @Override
@@ -1473,11 +1490,21 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             } else {
                 result = new ArrayList<>();
                 for(FacultyMapping faculty : facultyResult) {
-                    ArrayList<PrintLogsMapping> temp_results = Mono.orm().newSearch(Database.connect().print_logs())
-                            .between(DB.print_logs().printed_date, from, to)
-                            .eq(DB.print_logs().printed_by, faculty.getId())
-                            .eq(DB.print_logs().type, type)
-                            .active(Order.asc(DB.print_logs().printed_date)).all();
+                    ArrayList<PrintLogsMapping> temp_results;
+                    if(module.equalsIgnoreCase("All")) {
+                        temp_results = Mono.orm().newSearch(Database.connect().print_logs())
+                                .between(DB.print_logs().printed_date, from, to)
+                                .eq(DB.print_logs().printed_by, faculty.getId())
+                                .eq(DB.print_logs().type, type)
+                                .active(Order.asc(DB.print_logs().printed_date)).all();
+                    } else {
+                        temp_results = Mono.orm().newSearch(Database.connect().print_logs())
+                                .between(DB.print_logs().printed_date, from, to)
+                                .eq(DB.print_logs().printed_by, faculty.getId())
+                                .eq(DB.print_logs().type, type)
+                                .eq(DB.print_logs().module, module.toUpperCase())
+                                .active(Order.asc(DB.print_logs().printed_date)).all();
+                    }
                     if(temp_results!=null) {
                         System.out.println("temp_results : " + temp_results.size());
 //                      result.addAll(temp_results);
