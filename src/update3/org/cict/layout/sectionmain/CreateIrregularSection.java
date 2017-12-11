@@ -184,9 +184,11 @@ public class CreateIrregularSection extends SceneFX implements ControllerFX {
         
         super.addClickEvent(txt_instructor, () -> {
             FacultyMapping selected_faculty = selectFaculty();
-            if (selected_faculty != null) {
-                this.instructor = selected_faculty;
+            this.instructor = selected_faculty;
+            if (instructor != null) {
                 txt_instructor.setText(selected_faculty.getLast_name() + ", " + selected_faculty.getFirst_name());
+            } else {
+                txt_instructor.setText("");
             }
         });
 
