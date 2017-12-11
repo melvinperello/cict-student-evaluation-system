@@ -623,7 +623,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
 
             print.reportTitleHeader = subject.getCode() + " Master List";
-            print.reportOtherDetail = WordUtils.capitalizeFully(subject.getDescriptive_title());
+            print.reportOtherDetail = (subject.getDescriptive_title());
             print.whenStarted(() -> {
                 btn_print.setDisable(true);
                 super.cursorWait();
@@ -843,7 +843,6 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
 
         exportTx.whenCancelled(() -> {
             // no results
-            super.cursorDefault();
             this.btn_export.setDisable(false);
             Mono.fx().snackbar().showError(application_root, "No Data to Export");
         });
@@ -853,6 +852,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
         });
 
         exportTx.whenFinished(() -> {
+            super.cursorDefault();
         });
         
         DirectoryChooser directoryChooser = new DirectoryChooser();
