@@ -810,8 +810,8 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
             // include the insertion of the course history in the transaction
             StudentCourseHistoryMapping schMap = new StudentCourseHistoryMapping();
             schMap.setActive(1);
-            schMap.setCurriculum_assigment(Mono.orm().getServerTime().getDateWithFormat());
-            schMap.setCurriculum_id(curriculum.getId());
+            schMap.setCurriculum_assigment(CURRENT_STUDENT.getCurriculum_assignment());
+            schMap.setCurriculum_id(CURRENT_STUDENT.getCURRICULUM_id());
             schMap.setPrep_assignment(CURRENT_STUDENT.getPrep_assignment());
             schMap.setPrep_id(CURRENT_STUDENT.getPREP_id());
             schMap.setStudent_id(CURRENT_STUDENT.getCict_id());
@@ -947,7 +947,8 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         if (selected == null) {
             return null;
         }
-        if (selected.getId().equals(curriculum.getId())) {
+        
+        if (curriculum != null && selected.getId().equals(curriculum.getId())) {
             Notifications.create()
                     .title("Nothing Happened")
                     .text("Student is already in this"
@@ -1155,6 +1156,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
 
     private void setValues() {
         try {
+            if(CURRENT_STUDENT.getCURRICULUM_id() != null) {
+                curriculum = Database.connect().curriculum().getPrimary(CURRENT_STUDENT.getCURRICULUM_id());
+                acadProg = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
+            }
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
             lbl_lastname.setText(CURRENT_STUDENT.getLast_name());
             lbl_middlename.setText(CURRENT_STUDENT.getMiddle_name() == null ? "" : CURRENT_STUDENT.getMiddle_name());

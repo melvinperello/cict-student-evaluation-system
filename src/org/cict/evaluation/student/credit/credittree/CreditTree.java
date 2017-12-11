@@ -304,6 +304,11 @@ public class CreditTree extends HBox {
             for (int x = 0; x < preqCount; x++) {
                 CreditTreeRow preRequisite = this.getRowById(row.getPreRequisites()[x]);
 
+                //-------
+                if(preRequisite == null) {
+                    continue;
+                }
+                
                 if (preRequisite.getGradeField().getText().trim().isEmpty()) {
                     emptyPre++;
                 }
