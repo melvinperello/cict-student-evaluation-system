@@ -244,6 +244,7 @@ public class MissingInfoController extends SceneFX implements ControllerFX {
         try {
             Integer CURRICULUM_id = curriculumIDs.get(cmb_curriculum.getSelectionModel().getSelectedIndex());
             STUDENT.setCURRICULUM_id(CURRICULUM_id);
+            STUDENT.setCurriculum_assignment(Mono.orm().getServerTime().getDateWithFormat());
         } catch (Exception e) {
             // null pointer or index out of bound
             Mono.fx().alert().createWarning()
