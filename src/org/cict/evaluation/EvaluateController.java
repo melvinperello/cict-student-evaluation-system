@@ -797,6 +797,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         // display the results.
         this.showPreview();
         setView("preview");
+        this.vbox_list.setDisable(false);
     }
 
     /**
@@ -1794,10 +1795,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private CronThread cronThreadQueue;
 
     private void createQueueTable() {
+        cronThreadQueue = new CronThread("evaluation_queue");
+        cronThreadQueue.setInterval(3000);
         AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
         Integer clusterNumber = afMap.getAssigned_cluster();
-        cronThreadQueue = new CronThread("evaluation_queue");
-        cronThreadQueue.setInterval(5000);
         cronThreadQueue.setTask(() -> {
             boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
             if (result) {
@@ -1818,6 +1819,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
             if (ThreadMill.searching) {
                 this.searchStudent();
+                this.vbox_list.setDisable(true);
             }
         });
         cronThreadQueue.start();

@@ -492,7 +492,11 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     return;
                 }
                 if(res.equals(1)) {
-                    fx.getLbl_cluster_name().setText(info.getAccountFacultyMapping().getAssigned_cluster()==null? "No Cluster Assigned" : (info.getAccountFacultyMapping().getAssigned_cluster().equals(1)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+                    fx.getLbl_cluster_name().setText(info.getAccountFacultyMapping().getAssigned_cluster()==null? "No Cluster Assigned" : (info.getAccountFacultyMapping().getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+                    Notifications.create().darkStyle()
+                            .title("Successfully Updated")
+                            .text("Cluster of the faculty is updated\n"
+                                    + "successfully.").showInformation();
                 }
             });
             
@@ -859,7 +863,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             if(cluster2Closed && res==-1) {
             } else
                 invalid = false;
-            choosen = res==-1? 2 : 1;
+            choosen = res==-1? 4 : 3;
         }
         if(save) {
             afMap.setAssigned_cluster(choosen);

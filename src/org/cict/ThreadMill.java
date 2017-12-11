@@ -102,12 +102,13 @@ public class ThreadMill {
         if(clusterNumber==null) {
             leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
                     .eq(DB.linked_entrance().status, "NONE")
-                    .active(Order.asc(DB.linked_entrance().reference_id)).take(5);
+                    .active(Order.asc(DB.linked_entrance().reference_id)).take(10);
         } else {
+            System.out.println("clusterNumber " + clusterNumber);
             leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
                     .eq(DB.linked_entrance().status, "NONE")
                     .eq(DB.linked_entrance().floor_assignment, clusterNumber)
-                    .active(Order.asc(DB.linked_entrance().reference_id)).take(5);
+                    .active(Order.asc(DB.linked_entrance().reference_id)).take(10);
         }
         if(leMaps==null || leMaps.isEmpty()) {
             return false;
@@ -115,7 +116,7 @@ public class ThreadMill {
         
         Mono.fx().thread().wrap(()->{
             studentTable = new SimpleTable();
-            labelTotal.setText("Loading...");
+            labelTotal.setText("");
         });
         for (int i = 0; i < leMaps.size(); i++) {
             LinkedEntranceMapping leMap = leMaps.get(i);
@@ -162,11 +163,11 @@ public class ThreadMill {
                             .showError();
                     return;
                 }
+                holder.setDisable(true);
                 txtStudentNumber.setText(selected.getStudent_number());
                 searching = true;
                 ThreadMill.resfresh(holder, txtStudentNumber, labelTotal, clusterNumber);
             });
-            row.setDisable(!studentTable.getChildren().isEmpty());
             studentTable.addRow(row);
         });
     }

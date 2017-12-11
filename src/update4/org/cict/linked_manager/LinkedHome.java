@@ -720,8 +720,8 @@ public class LinkedHome extends SceneFX implements ControllerFX {
 
     private void update(SimpleTableRow row, String name, String value) {
         AnnouncementsMapping updateThis = (AnnouncementsMapping) row.getRowMetaData().get("MAP");
-        updateThis.setTitle(name.toUpperCase());
-        updateThis.setMessage(value.toUpperCase());
+        updateThis.setTitle(name);
+        updateThis.setMessage(value);
         updateThis.setAnnounced_by(CollegeFaculty.instance().getFACULTY_ID());
         if (Database.connect().announcements().update(updateThis)) {
             Notifications.create().darkStyle()

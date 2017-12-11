@@ -177,10 +177,10 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private CronThread cronThreadQueue;
 
     private void createQueueTable() {
+        cronThreadQueue = new CronThread("adding_changing_queue");
+        cronThreadQueue.setInterval(3000);
         AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
         Integer clusterNumber = afMap.getAssigned_cluster();
-        cronThreadQueue = new CronThread("adding_changing_queue");
-        cronThreadQueue.setInterval(5000);
         cronThreadQueue.setTask(() -> {
             boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
             if (result) {
