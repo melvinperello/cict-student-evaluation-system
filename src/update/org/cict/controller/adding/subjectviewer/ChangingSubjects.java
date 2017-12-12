@@ -97,6 +97,7 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
         search.totalUnits = totalUnits;
         search.setOnSuccess(onSuccess -> {
             this.suggestedSubject = search.getSubjectSuggestion();
+            System.out.println("RES: " + suggestedSubject.size());
             this.createSubjectTable(this.suggestedSubject);
         });
 
@@ -126,14 +127,17 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
             SimpleTable tableSubject = new SimpleTable();
             for (int i = 0; i < subjectsToDisplay.size(); i++) {
                 SubjectMapping currentSubject = subjectsToDisplay.get(i).getSubjectMap();
+                System.out.println("ADD TO ROW SUBJECT CODE: " + currentSubject.getCode());
                 createRow(currentSubject, tableSubject);
             }
-
+            System.out.println("TABLE: "+tableSubject.getChildren().size());
             changeView(vbox_subjectList);
             SimpleTableView simpleTableView = new SimpleTableView();
             simpleTableView.setTable(tableSubject);
             simpleTableView.setFixedWidth(true);
             simpleTableView.setParentOnScene(vbox_subjectList);
+            System.out.println("VBOX: "+vbox_subjectList.getChildren().size());
+            System.out.println("vbox_subjectList is visible? " + vbox_subjectList.isVisible());
         } catch (NullPointerException a) {
 //            this.hbox_no_result.setVisible(true);
 //            this.hbox_search.setVisible(false);
@@ -173,7 +177,7 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
          */
         row.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             vbox_subjectList.getChildren().clear();
-            this.searchSection(subject);
+            this.searchSection((SubjectMapping) row.getRowMetaData().get(KEY_MORE_INFO));
         });
 
         row.getRowMetaData().put(KEY_MORE_INFO, subject);

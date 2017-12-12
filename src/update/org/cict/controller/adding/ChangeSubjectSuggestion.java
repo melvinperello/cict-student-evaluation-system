@@ -63,11 +63,11 @@ public class ChangeSubjectSuggestion extends Transaction {
         /**
          * Get student information.
          */
-        student = Mono.orm()
+        student = Database.connect().student().getPrimary(studentNumber);/*Mono.orm()
                 .newSearch(Database.connect().student())
                 .eq(DB.student().cict_id, studentNumber)
                 .active()
-                .first();
+                .first();*/
 
         /**
          * Check Student.
@@ -114,7 +114,7 @@ public class ChangeSubjectSuggestion extends Transaction {
          */
         ArrayList<SubjectMapping> subjectWithNoGrades = new ArrayList<>();
         for (CurriculumSubjectMapping subject : subjects) {
-            SubjectMapping sub = (SubjectMapping) Database.connect().subject().getBy(DB.subject().id, subject.getSUBJECT_id());
+            SubjectMapping sub = Database.connect().subject().getPrimary(subject.getSUBJECT_id());
             // check if taken with passed or inc remarks
             GradeMapping grade = Mono.orm()
                     .newSearch(Database.connect().grade())
@@ -165,7 +165,10 @@ public class ChangeSubjectSuggestion extends Transaction {
                     loadSection = getLoadSection(subjectWithNoGrade);
                     if (loadSection != null) {
                         // with section open and active
+                        System.out.println("1 ADDED " + subjectWithNoGrade.getCode());
                         addNewSubjectInformationHolder(subjectWithNoGrade, loadSection);
+                    } else {
+                        System.out.println("2 NO SECTION " + subjectWithNoGrade.getCode());
                     }
                 }
             } else {
@@ -186,6 +189,7 @@ public class ChangeSubjectSuggestion extends Transaction {
                     
                     if (preq == null) {
                         // no grade found 
+                        log("No prereq 1");
                         takenAll = false;
                         break;
                     }
@@ -198,6 +202,8 @@ public class ChangeSubjectSuggestion extends Transaction {
                         loadSection = getLoadSection(subjectWithNoGrade);
                         if (loadSection != null) {
                             addNewSubjectInformationHolder(subjectWithNoGrade, loadSection);
+                        } else {
+                            log("3");
                         }
                     }
                 }
@@ -216,7 +222,7 @@ public class ChangeSubjectSuggestion extends Transaction {
     }
     
     private void log(String message) {
-        boolean logging = false;
+        boolean logging = true;
         if (logging) {
             System.out.println("@ChangeSubjectSuggestion: " + message);
         }
@@ -249,8 +255,8 @@ public class ChangeSubjectSuggestion extends Transaction {
         ArrayList<LoadGroupMapping> loadGrps = Mono.orm()
                 .newSearch(Database.connect().load_group())
                 .eq(DB.load_group().SUBJECT_id, subjectWithNoGrade.getId())
-                .active();
-        
+                .active().all();
+        System.out.println("SUBJECT_id " + subjectWithNoGrade.getId() + " " + loadGrps.size());
         LoadSectionMapping loadSection = null;
         for (int i = 0; i < loadGrps.size(); i++) {
             /**
@@ -261,9 +267,13 @@ public class ChangeSubjectSuggestion extends Transaction {
                     //.eq(DB.load_section().state, "OPEN")
                     .active()
                     .first();
+            System.out.println("LOAD SECTION ID " + loadGrps.get(i).getLOADSEC_id());
             // return only one instance, any of the sections 
             if (loadSection != null) {
+                log("2");
                 return loadSection;
+            } else {
+                log("1");
             }
         }
         return loadSection;

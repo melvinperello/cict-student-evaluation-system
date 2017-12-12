@@ -317,10 +317,12 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
-        
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
-        if(doc==null) {
-            return;
+        Document doc = null;
+        if(!printLegacy) {
+            doc = ReportsUtility.paperSizeChooser(this.getStage());
+            if(doc==null) {
+                return;
+            }
         }
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
