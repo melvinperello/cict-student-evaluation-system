@@ -1081,13 +1081,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * Saves the evaluation.
      */
     private void saveEvaluation() {
-        //----------------------------------------------------------------------
-        List<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
-                this.studentCurriculum.getId(),
-                this.currentStudent.getCict_id());
-        //----------------------------------------------------------------------
-        if (CoRequisiteFilter.checkCoRequisite(sub)) {
-            return;
+        if(studentCurriculum != null) {
+            //----------------------------------------------------------------------
+            List<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
+                    this.studentCurriculum.getId(),
+                    this.currentStudent.getCict_id());
+            //----------------------------------------------------------------------
+            if (CoRequisiteFilter.checkCoRequisite(sub)) {
+                return;
+            }
         }
         //----------------------------------------------------------------------
         /**
