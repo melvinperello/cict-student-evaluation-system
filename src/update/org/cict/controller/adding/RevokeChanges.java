@@ -135,18 +135,20 @@ public class RevokeChanges extends Transaction{
                     .eq(DB.grade().remarks, UNPOSTED)
                     .active(Order.desc(DB.grade().id))
                     .first();
-            currentGrade.setActive(0);
-            currentGrade.setRemarks(CANCELLED);
-            currentGrade.setRating(CANCELLED);
-            currentGrade.setCredit(0.0);
-            currentGrade.setUpdated_by(CANCELLED_BY);
-            currentGrade.setUpdated_date(CANCELLED_DATE);
-            currentGrade.setReason_for_update(REMARKS_REVOKED_ADD_CHANGE);
-            Boolean res = Database.connect().grade().update(currentGrade);
-            if(res == false) {
-                System.out.println("Error in current grade");
-                dataTx.rollback();
-                return false;
+            if(currentGrade != null) {
+                currentGrade.setActive(0);
+                currentGrade.setRemarks(CANCELLED);
+                currentGrade.setRating(CANCELLED);
+                currentGrade.setCredit(0.0);
+                currentGrade.setUpdated_by(CANCELLED_BY);
+                currentGrade.setUpdated_date(CANCELLED_DATE);
+                currentGrade.setReason_for_update(REMARKS_REVOKED_ADD_CHANGE);
+                Boolean res = Database.connect().grade().update(currentGrade);
+                if(res == false) {
+                    System.out.println("Error in current grade");
+                    dataTx.rollback();
+                    return false;
+                }
             }
         }
         

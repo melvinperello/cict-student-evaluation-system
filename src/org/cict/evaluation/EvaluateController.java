@@ -1357,13 +1357,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.setImageView();
         });
         previewTk.whenStarted(() -> {
-            btnFind.setDisable(true);
-            btnEvaluate.setDisable(true);
             // before displaying the subject.
         });
         previewTk.whenSuccess(() -> {
-            btnFind.setDisable(false);
-            btnEvaluate.setDisable(false);
             log("EvaluateController: Success Loading Preview.");
         });
         previewTk.whenFailed(() -> {
