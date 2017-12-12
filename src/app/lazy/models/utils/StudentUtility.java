@@ -43,7 +43,7 @@ public class StudentUtility {
         //----------------------------------------------------------------------
         address += concat(profile.getStudent_address());
         //----------------------------------------------------------------------
-        address += concat(" " + profile.getZipcode());
+        address += " " + concat(profile.getZipcode());
         //----------------------------------------------------------------------
         return address;
     }
