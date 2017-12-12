@@ -98,7 +98,7 @@
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="anchor_view" prefHeight="452.0" prefWidth="1000.0" visible="false">
+                  <AnchorPane fx:id="anchor_view" prefHeight="452.0" prefWidth="1000.0">
                      <children>
                         <VBox fx:id="vbox_subjectList" alignment="CENTER" layoutY="-3.0" prefHeight="443.0" prefWidth="950.0" styleClass="metro-table" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0" />
                      </children>

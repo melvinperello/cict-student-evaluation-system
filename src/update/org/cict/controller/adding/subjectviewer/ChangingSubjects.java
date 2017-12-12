@@ -130,7 +130,7 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
                 System.out.println("ADD TO ROW SUBJECT CODE: " + currentSubject.getCode());
                 createRow(currentSubject, tableSubject);
             }
-            System.out.println("TABLE: "+tableSubject.getChildren().size());
+            System.out.println("TABLE: " + tableSubject.getChildren().size());
             changeView(vbox_subjectList);
             SimpleTableView simpleTableView = new SimpleTableView();
             simpleTableView.setTable(tableSubject);
