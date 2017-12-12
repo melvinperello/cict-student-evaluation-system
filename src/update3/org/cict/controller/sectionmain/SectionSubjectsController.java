@@ -559,20 +559,26 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
             try {
                 FacultyMapping selected_faculty = selectFaculty();
                 LoadGroupMapping map = Database.connect().load_group().getPrimary(this.selected_load_group_in_sections.getId());
-                if (selected_faculty.getId().equals(map.getFaculty())) {
+                
+                if(selected_faculty == null){
+                    map.setFaculty(null);
+                } else if (selected_faculty.getId().equals(map.getFaculty())) {
                     Mono.fx().snackbar().showInfo(application_root, "No Changes Were Made.");
                     return;
                 } else {
                     map.setFaculty(selected_faculty.getId());
-                    //update
-                    boolean updated = Database.connect().load_group().update(map);
-                    if (updated) {
-                        Mono.fx().snackbar().showSuccess(application_root, "Instructor Has Been Changed.");
-                        FacultyMapping instructor = Database.connect().faculty().getPrimary(map.getFaculty());
-                        lbl_instructor_big.setText(FacultyNamer.getName(instructor));
-                    } else {
-                        Mono.fx().snackbar().showError(application_root, "Cannot Connect To Database.");
+                }
+                //update
+                boolean updated = Database.connect().load_group().update(map);
+                if (updated) {
+                    Mono.fx().snackbar().showSuccess(application_root, "Instructor Has Been Changed.");
+                    if(map.getFaculty()==null) {
+                        lbl_instructor_big.setText("");
+                        return;
                     }
+                    FacultyMapping instructor = Database.connect().faculty().getPrimary(map.getFaculty());
+                    lbl_instructor_big.setText(FacultyUtility.getFacultyName(instructor));
+                    Mono.fx().snackbar().showError(application_root, "Cannot Connect To Database.");
                 }
             } catch (Exception e) {
                 Mono.fx().snackbar().showError(application_root, "Failed To Update.");
