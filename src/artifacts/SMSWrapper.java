@@ -21,7 +21,7 @@ public class SMSWrapper {
     /**
      * SMS Server IP.
      */
-    private final static String SMS_SERVER_IP = PublicConstants.getServerIP();
+    private final static String SMS_SERVER_IP = PublicConstants.getSystemVar_SMS_SERVER().toString();
     /**
      * API Link.
      */

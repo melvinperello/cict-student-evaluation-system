@@ -176,6 +176,8 @@ public class PublicConstants {
     public final static String KEY_FTP_SERVER= "FTP_SERVER";
     public final static String KEY_FTP_SERVER_DEFAULT = "127.0.0.1";
     
+    public final static String KEY_SMS_SERVER= "SMS_SERVER";
+    public final static String KEY_SMS_SERVER_DEFAULT = "127.0.0.1";
     
     //----------------------------------------------
     public static String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -217,6 +219,9 @@ public class PublicConstants {
         return getSystemValue(KEY_FTP_SERVER, KEY_FTP_SERVER_DEFAULT);
     }
     
+    public static Object getSystemVar_SMS_SERVER() {
+        return getSystemValue(KEY_SMS_SERVER, KEY_SMS_SERVER_DEFAULT);
+    }
     
     private static Object getSystemValue(String name, String defaultValue) {
         Object value = getServerValues(name);
