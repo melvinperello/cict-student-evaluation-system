@@ -145,12 +145,6 @@ public class SystemHome extends MonoLauncher {
 
     @Override
     public void onDelayedStart() {
-        //---------------
-        this.autoCreateSystemVariables(()->{
-            System.err.println("DONE");
-        });
-        //----------
-        
         this.application_root = this.getApplicationRoot();
         //----------------------------------------------------------------------
         MonoClick.addClickEvent(btn_evaluation, () -> {
@@ -875,16 +869,5 @@ public class SystemHome extends MonoLauncher {
                 .eq(DB.academic_term().approval_state, "PENDING")
                 .active().first();
         return (pending != null);
-    }
-    
-    private void autoCreateSystemVariables(Runnable run) {
-        PublicConstants.getSystemVar_BULSU_TEL();
-        PublicConstants.getSystemVar_FTP_PASSWORD();
-        PublicConstants.getSystemVar_FTP_PORT();
-        PublicConstants.getSystemVar_FTP_SERVER();
-        PublicConstants.getSystemVar_FTP_USERNAME();
-        PublicConstants.getSystemVar_MAX_POPULATION();
-        PublicConstants.getSystemVar_RECOMMENDNG_APPRVL();
-        PublicConstants.getSystemVar_REGISTRAR();
     }
 }

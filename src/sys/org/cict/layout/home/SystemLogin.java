@@ -113,6 +113,7 @@ public class SystemLogin extends MonoLauncher {
         startHibernate.whenSuccess(() -> {
 //            this.vbox_loading.setVisible(false);
 //            this.vbox_login.setVisible(true);
+            this.autoCreateSystemVariables();
             Animate.fade(vbox_loading, 150, () -> {
                 this.vbox_loading.setVisible(false);
                 this.vbox_login.setVisible(true);
@@ -468,5 +469,17 @@ public class SystemLogin extends MonoLauncher {
         forgotStage.setTitle("CICT | Enrollment Evaluation Management System | Recover Account");
         forgotFx.onDelayedStart();
         forgotStage.show();
+    }
+    
+    private void autoCreateSystemVariables() {
+        PublicConstants.getSystemVar_BULSU_TEL();
+        PublicConstants.getSystemVar_FTP_PASSWORD();
+        PublicConstants.getSystemVar_FTP_PORT();
+        PublicConstants.getSystemVar_FTP_SERVER();
+        PublicConstants.getSystemVar_FTP_USERNAME();
+        PublicConstants.getSystemVar_MAX_POPULATION();
+        PublicConstants.getSystemVar_RECOMMENDNG_APPRVL();
+        PublicConstants.getSystemVar_REGISTRAR();
+        PublicConstants.getSystemVar_SMS_SERVER();
     }
 }
