@@ -1164,8 +1164,13 @@ public class GradeEncoderUI {
                     // <MUST BE REMOVED>
                     //----------------------------------------------------------
                     if (cellText.isEmpty()) {
-                        // if empty paint it white
-                        rowPaint(x, "#FFFFFF");
+                        // if remarks is NOT FOR ENCODING, retain color
+                        if(cellRemark.equalsIgnoreCase("NOT FOR ENCODING")) {
+                            rowPaint(x, "#E74C3C");
+                        } else {
+                            // if empty paint it white
+                            rowPaint(x, "#FFFFFF");
+                        }
                         errorCount++;
                     } else {
                         if (cellText.equalsIgnoreCase("EXP")) {

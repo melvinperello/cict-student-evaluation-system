@@ -104,12 +104,20 @@ public class EncodeGrade extends Transaction {
             //------------------------------------------------------------------
             ObservableList<SpreadsheetCell> individualRow = gridRows.get(rowIndex);
             String subjectCode = individualRow.get(0).getItem().toString();
-            String gradeRating = individualRow.get(3).getItem().toString();
-            String gradeRemarks = individualRow.get(4).getItem().toString().toUpperCase();
+            String gradeRating = individualRow.get(3).getItem()==null? null : individualRow.get(3).getItem().toString();
+            String gradeRemarks = individualRow.get(4).getItem()==null? null : individualRow.get(4).getItem().toString().toUpperCase();
+            //------------------
+            if(gradeRating==null || gradeRemarks==null || gradeRating.isEmpty()) {
+                System.out.println("GRADE IS NULL " + subjectCode);
+                continue;
+            }
+            //----------------------
+
             // check if not for encoding then skip
             if (gradeRemarks.equalsIgnoreCase("not for encoding")) {
                 continue;
             }
+            
 
             //------------------------------------------------------------------
             // search subjects from the repository
