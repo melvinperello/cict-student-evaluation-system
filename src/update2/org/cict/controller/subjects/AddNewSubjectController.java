@@ -141,9 +141,9 @@ public class AddNewSubjectController extends SceneFX implements ControllerFX{
         addClickEvent(btn_add, () -> {
             this.addNewSubject();
         });
-        Mono.fx().key(KeyCode.ENTER).release(vbox_main, ()->{
-            this.addNewSubject();
-        });
+//        Mono.fx().key(KeyCode.ENTER).release(vbox_main, ()->{
+//            this.addNewSubject();
+//        });
         cmbb_type.valueProperty().addListener((e) -> {
             String selected = cmbb_type.getSelectionModel().getSelectedItem();
             cmb_subtype.setDisable(!SubjectClassification.isMajor(selected));
