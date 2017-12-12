@@ -48,9 +48,10 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
     private VBox vbox_subjectList;
 
     private SubjectInformationHolder subjectInfo;
-    private String studentNumber;
+    private Integer studentNumber;
     private ArrayList<SubjectInformationHolder> suggestedSubject;
     private Integer CURRICULUM_id;
+    private double totalUnits;
     /**
      * Changed to type Object to give way for the load section mapping as third
      * index.
@@ -66,12 +67,13 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
         this.subjectInfo = subjectInfo;
     }
 
-    public void setStudentNumber(String studNum) {
+    public void setStudentNumber(Integer studNum) {
         this.studentNumber = studNum;
     }
     
-    public ChangingSubjects(Integer CURRICULUM_id) {
+    public ChangingSubjects(Integer CURRICULUM_id, double totalUnits) {
         this.CURRICULUM_id = CURRICULUM_id;
+        this.totalUnits = totalUnits;
     }
     
     @Override
@@ -92,6 +94,7 @@ public class ChangingSubjects extends SceneFX implements ControllerFX {
         ChangeSubjectSuggestion search = new ChangeSubjectSuggestion();
         search.studentNumber = this.studentNumber;
         search.subjectInfoHolder = this.subjectInfo;
+        search.totalUnits = totalUnits;
         search.setOnSuccess(onSuccess -> {
             this.suggestedSubject = search.getSubjectSuggestion();
             this.createSubjectTable(this.suggestedSubject);

@@ -40,6 +40,7 @@ import com.jhmvin.orm.SQL;
 import java.util.ArrayList;
 import java.util.Objects;
 import org.cict.PublicConstants;
+import org.cict.authentication.authenticator.SystemProperties;
 import org.hibernate.criterion.Order;
 
 /**
@@ -48,8 +49,9 @@ import org.hibernate.criterion.Order;
  */
 public class ChangeSubjectSuggestion extends Transaction {
     
-    public String studentNumber;
+    public Integer studentNumber;
     public SubjectInformationHolder subjectInfoHolder;
+    public double totalUnits;
     
     private StudentMapping student;
     private AcademicTermMapping acadTerm;
@@ -63,7 +65,7 @@ public class ChangeSubjectSuggestion extends Transaction {
          */
         student = Mono.orm()
                 .newSearch(Database.connect().student())
-                .eq(DB.student().id, studentNumber)
+                .eq(DB.student().cict_id, studentNumber)
                 .active()
                 .first();
 
@@ -78,11 +80,11 @@ public class ChangeSubjectSuggestion extends Transaction {
         /**
          * Check academic term. where current is 1
          */
-        acadTerm = Mono.orm()
+        acadTerm = SystemProperties.instance().getCurrentAcademicTerm();/*Mono.orm()
                 .newSearch(Database.connect().academic_term())
                 .eq(DB.academic_term().current, 1)
                 .active()
-                .first();
+                .first();*/
         
         if (acadTerm == null) {
             log("academic term not set");
@@ -90,9 +92,7 @@ public class ChangeSubjectSuggestion extends Transaction {
         }
 
         // get semester integer value
-        int semester = acadTerm.getSemester().equalsIgnoreCase("FIRST SEMESTER") ? 1
-                : acadTerm.getSemester().equalsIgnoreCase("SECOND SEMESTER") ? 2
-                : 0;
+        int semester = acadTerm.getSemester_regular();
 
         /**
          * Get all subjects from the curriculum offered in a given semester.
@@ -128,7 +128,10 @@ public class ChangeSubjectSuggestion extends Transaction {
             
             if (grade == null) {
                 // no grade
-                subjectWithNoGrades.add(sub);
+                double totalSubjectUnits = (sub.getLab_units() + sub.getLec_units());
+                if(totalSubjectUnits == totalUnits) {
+                    subjectWithNoGrades.add(sub);
+                }
             }
         }
 

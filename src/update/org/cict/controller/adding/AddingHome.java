@@ -1373,10 +1373,12 @@ public class AddingHome extends SceneFX implements ControllerFX {
      * @param row
      */
     private void changeEvent(SimpleTable table, SimpleTableRow row) {
-        ChangingSubjects changeSubjects = new ChangingSubjects(studentSearched.getCURRICULUM_id());
+        SubjectInformationHolder info = (SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO);
+        double totalUnits = (info.getSubjectMap().getLab_units() + info.getSubjectMap().getLec_units());
+        ChangingSubjects changeSubjects = new ChangingSubjects(studentSearched.getCURRICULUM_id(), totalUnits);
         // pass the values
-        changeSubjects.setSubjectInfo((SubjectInformationHolder) row.getRowMetaData().get(KEY_SUB_INFO));
-        changeSubjects.setStudentNumber(this.studentSearched.getId());
+        changeSubjects.setSubjectInfo(info);
+        changeSubjects.setStudentNumber(this.studentSearched.getCict_id());
 //        addSubjects.setSubjectInTheList(subjectInTheList);
         /**
          * This is the vent that will open the change window.
