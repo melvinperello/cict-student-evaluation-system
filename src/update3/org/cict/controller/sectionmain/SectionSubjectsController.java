@@ -578,6 +578,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                     }
                     FacultyMapping instructor = Database.connect().faculty().getPrimary(map.getFaculty());
                     lbl_instructor_big.setText(FacultyUtility.getFacultyName(instructor));
+                } else {
                     Mono.fx().snackbar().showError(application_root, "Cannot Connect To Database.");
                 }
             } catch (Exception e) {
