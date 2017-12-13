@@ -364,7 +364,7 @@
             </HBox>
             <VBox>
                <children>
-                  <Label styleClass="footer-text" text="System Version 2017.01 build 10212017-01">
+                  <Label styleClass="footer-text" text="System Version 2017.01 build 12132017-01">
                      <font>
                         <Font name="Courier New" size="15.0" />
                      </font>
