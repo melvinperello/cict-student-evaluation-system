@@ -291,10 +291,25 @@ public class CreditController implements ControllerFX {
     private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
     
     private void print(boolean is4Yrs) {
-//        Document doc = ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(btn_save));
-//        if(doc==null) {
-//            return;
-//        }
+        
+        ArrayList<String[]> rowData = new ArrayList<>();
+        this.addToRow(first_1, rowData, "FIRST YEAR - First Semester");
+        this.addToRow(first_2, rowData, "FIRST YEAR - Second Semester");
+        this.addToRow(second_1, rowData, "SECOND YEAR - First Semester");
+        this.addToRow(second_2, rowData, "SECOND YEAR - Second Semester");
+        if(is4Yrs) {
+            this.addToRow(third_1, rowData, "THIRD YEAR - First Semester");
+            this.addToRow(third_2, rowData, "THIRD YEAR - Second Semester");
+            this.addToRow(fourth_1, rowData, "FOURTH YEAR - First Semester");
+            this.addToRow(fourth_2, rowData, "FOURTH YEAR - Second Semester");
+        }
+        
+        if(rowData.size()<1) {
+            Notifications.create().title("No Result")
+                    .text("No result to print.").showWarning();
+            return;
+        }
+        
         String[] colNames = new String[]{"Date and Time","Subject Code", "Rating", "Updated By", "Reason For\nUpdate", "State"};
         String[] colDescprtion = new String[]{"Date and time encoded.","Subject code.", "Rating encoded.", "Faculty who updated the grade.", "Reason for update.", "State of the grade."};
         //--------------
@@ -315,18 +330,6 @@ public class CreditController implements ControllerFX {
             }
         }
         //
-        
-        ArrayList<String[]> rowData = new ArrayList<>();
-        this.addToRow(first_1, rowData, "FIRST YEAR - First Semester");
-        this.addToRow(first_2, rowData, "FIRST YEAR - Second Semester");
-        this.addToRow(second_1, rowData, "SECOND YEAR - First Semester");
-        this.addToRow(second_2, rowData, "SECOND YEAR - Second Semester");
-        if(is4Yrs) {
-            this.addToRow(third_1, rowData, "THIRD YEAR - First Semester");
-            this.addToRow(third_2, rowData, "THIRD YEAR - Second Semester");
-            this.addToRow(fourth_1, rowData, "FOURTH YEAR - First Semester");
-            this.addToRow(fourth_2, rowData, "FOURTH YEAR - Second Semester");
-        }
         
         PrintResult print = new PrintResult();
         print.SHOW_EXTRA_HEADER = true;
@@ -375,6 +378,7 @@ public class CreditController implements ControllerFX {
             String lastCol = null;
             if(i == 0){
                 lastCol = title;
+                System.out.println(title);
             }
             String[] row = new String[]{(i+1)+".  "+ history.getCreated(),
                 (history.getSubjectCode()), 

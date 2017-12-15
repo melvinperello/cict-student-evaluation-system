@@ -1784,7 +1784,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         //----------------------------------------------------------------------
         // search student again to refresh values
-        this.searchStudent();
+        if(mode.equalsIgnoreCase(CreditController.MODE_CREDIT)) {
+            this.searchStudent();
+        }
     }
 
     private void hideDropDown() {

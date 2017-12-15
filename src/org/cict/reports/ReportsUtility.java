@@ -160,32 +160,39 @@ public class ReportsUtility {
         tbl_stud.setPaddingTop(20f);
         
         tbl_stud.addCell(createSimpleCell("Total Result"+(rowData.size()>1? "s" : "")+" Found: " + rowData.size(), font6Bold, numColumns, false, false, 4f, false));
-        // insertion of col names
-        for (int i = 0; i < numColumns; i++) {
-            if(customized.get(i) != null) {
-                String newColname = (String) colNames.get(i);
-                tbl_stud.addCell(createSimpleCell(newColname/*colNames.get(i)*/.toUpperCase(), font6Bold, 0, true, true, 5f, true));
+        
+        if(!showExtraHeader) {
+            // insertion of col names
+            for (int i = 0; i < numColumns; i++) {
+                if(customized.get(i) != null) {
+                    String newColname = (String) colNames.get(i);
+                    tbl_stud.addCell(createSimpleCell(newColname/*colNames.get(i)*/.toUpperCase(), font6Bold, 0, true, true, 5f, true));
+                }
             }
         }
-        
         // insertion of row data
         for (int i = 0; i < rowData.size(); i++) {
             if(showExtraHeader) {
                 try {
-                    String lastCol = rowData.get(i)[numColumns];
+                    String lastCol = rowData.get(i)[rowData.get(i).length-1];
                     if(lastCol != null) {
                         tbl_stud.addCell(createSimpleCell(lastCol.toUpperCase(), font6Plain, numColumns, true, true, 4f, true));
+                        for (int a = 0; a < numColumns; a++) {
+                            if(customized.get(a) != null) {
+                                String newColname = (String) colNames.get(a);
+                                tbl_stud.addCell(createSimpleCell(newColname/*colNames.get(i)*/.toUpperCase(), font6Bold, 0, true, true, 5f, true));
+                            }
+                        }
                     }
                 } catch (IndexOutOfBoundsException e) {
                 }
-            }
+            } 
             for (int j = 0; j < rowData.size(); j++) {
                 if(customized.get(j) != null) {
                     Boolean isChecked = (Boolean) customized.get(j)[0];
                     if(isChecked != null && isChecked) {
                         tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
                     }
-                    System.out.println(rowData.get(i)[j]);
                 }
             }
         }
