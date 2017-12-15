@@ -35,8 +35,8 @@ import javafx.scene.layout.VBox;
  *
  * @author Joemar
  */
-public class PaperSizeChooser extends MonoLauncher{
-
+public class PageSizeChooser extends MonoLauncher {
+    
     @FXML
     private VBox application_root;
 
@@ -50,39 +50,40 @@ public class PaperSizeChooser extends MonoLauncher{
     private JFXButton btn_a4;
     
     @FXML
+    private VBox vbox_table_col;
+    
+    @FXML
     private JFXButton btn_cancel;
-            
-            
+    
+    private Document choosenDetails;
+    public Document getChoosenSize() {
+        return choosenDetails;
+    }
+
     @Override
     public void onStartUp() {
-        MonoClick.addClickEvent(btn_short, ()->{
-            this.choosenSize = ReportsUtility.createShortDocument();
-            Mono.fx().getParentStage(application_root).close();
-        });
-        MonoClick.addClickEvent(btn_long, ()->{
-            this.choosenSize = ReportsUtility.createLongDocument();
-            Mono.fx().getParentStage(application_root).close();
-        });
-        MonoClick.addClickEvent(btn_a4, ()->{
-            this.choosenSize = ReportsUtility.createA4Document();
-            Mono.fx().getParentStage(application_root).close();
-        });
-        MonoClick.addClickEvent(btn_cancel, ()->{
-            this.choosenSize = null;
-            Mono.fx().getParentStage(application_root).close();
-        });
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void onDelayedStart() {
-        
+        MonoClick.addClickEvent(btn_a4, ()->{
+            this.choosenDetails = ReportsUtility.createA4Document();
+            Mono.fx().getParentStage(application_root).close();
+        });
+        MonoClick.addClickEvent(btn_long, ()->{
+            this.choosenDetails = ReportsUtility.createLongDocument();
+            Mono.fx().getParentStage(application_root).close();
+        });
+        MonoClick.addClickEvent(btn_short, ()->{
+            this.choosenDetails = ReportsUtility.createShortDocument();
+            Mono.fx().getParentStage(application_root).close();
+        });
+        MonoClick.addClickEvent(btn_cancel, ()->{
+            this.choosenDetails = null;
+            Mono.fx().getParentStage(application_root).close();
+        });
         super.onDelayedStart(); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    private Document choosenSize;
-
-    public Document getChoosenSize() {
-        return choosenSize;
     }
     
 }

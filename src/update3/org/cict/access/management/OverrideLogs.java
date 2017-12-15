@@ -28,6 +28,7 @@ import app.lazy.models.Database;
 import app.lazy.models.SystemOverrideLogsMapping;
 import app.lazy.models.utils.FacultyUtility;
 import artifacts.FTPManager;
+import com.itextpdf.text.Document;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.SimpleTask;
@@ -437,7 +438,27 @@ public class OverrideLogs extends MonoLauncher {
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"Date","Faculty Name","Description","Category","Conforme"};
+        String[] colNames = new String[]{"Date & Time","Faculty Name","Description","Category","Conforme"};
+        String[] colDescprtion = new String[]{"Date and time","Faculty name.","Description of the override action.","Category of the process.","Conforme of the override transaction."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(applicationn_root), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
+        if(doc==null) {
+            return;
+        }
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         ArrayList<String[]> rowData = new ArrayList<>();
         SystemOverrideLogsMapping ref = null;
         for (int i = 0; i < preview.size(); i++) {
@@ -450,9 +471,9 @@ public class OverrideLogs extends MonoLauncher {
         }
         SimpleDateFormat month = new SimpleDateFormat("MMMMM");
         PrintResult print = new PrintResult();
-        print.columnNames = colNames;
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
-        print.fileName = "system_override_logs";
+        print.fileName = "System Override Logs";
         String fr = cmb_from.getSelectionModel().getSelectedItem();
         String to = cmb_to.getSelectionModel().getSelectedItem();
         if(cmbChanged) {
@@ -492,7 +513,8 @@ public class OverrideLogs extends MonoLauncher {
             super.setCursor(Cursor.DEFAULT);
         });
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(null, "System Override Logs".toUpperCase(), "ACCESS CONTROLS", "INITIAL"))
+        if(ReportsUtility.savePrintLogs(null, "System Override Logs".toUpperCase(), "ACCESS CONTROLS", "INITIAL")) {
             print.transact();
+        }
     }
 }

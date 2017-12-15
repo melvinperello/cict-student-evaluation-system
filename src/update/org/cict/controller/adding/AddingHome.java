@@ -349,7 +349,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
         if (!printLegacy) {
             printCheckList.setDocumentFormat(doc);
         }
-        printCheckList.transact();
+        if(ReportsUtility.savePrintLogs(this.studentSearched.getCict_id(), "CHECKLIST", "ADDING & CHANGING", "INITIAL")) {
+            printCheckList.transact();
+        }
     }
 
     private void onShowGrades() {
@@ -1738,7 +1740,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     .showInformation();
         });
         print.setDocumentFormat(doc);
-        print.transact();
+        if(ReportsUtility.savePrintLogs(this.studentSearched.getCict_id(), "DEFICIENCY REPORT", "ADDING & CHANGING", "INITIAL")) {
+            print.transact();
+        }
     }
 
     /**

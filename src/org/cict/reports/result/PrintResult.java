@@ -28,6 +28,7 @@ import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.apache.commons.lang3.text.WordUtils;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.reports.ReportsDirectory;
@@ -39,13 +40,17 @@ import org.cict.reports.ReportsDirectory;
 public class PrintResult extends Transaction {
 
     public String reportTitleHeader = null, reportTitleIntro = null, reportOtherDetail = null;
-    public String[] columnNames = null;
+    public ArrayList<String> columnNames = null;
     public ArrayList<String[]> ROW_DETAILS = null;
     public String fileName = "";
+    public boolean SHOW_EXTRA_HEADER;
+    
     private Document documentFormat;
+    private HashMap<Integer, Object[]> customizedDetails;
 
-    public void setDocumentFormat(Document documentFormat) {
+    public void setDocumentFormat(Document documentFormat, HashMap<Integer, Object[]> res) {
         this.documentFormat = documentFormat;
+        this.customizedDetails = res;
     }
     
     
@@ -78,7 +83,8 @@ public class PrintResult extends Transaction {
         //------------------------------------------------------------------
 
         ResultReport def = new ResultReport(RESULT);
-        def.setDocumentFormat(documentFormat);
+        def.showExtra = SHOW_EXTRA_HEADER;
+        def.setDocumentFormat(documentFormat, customizedDetails);
         def.REPORT_TITLE = reportTitleHeader;
         def.COLUMN_NAMES = columnNames;
         def.ROW_DETAILS = ROW_DETAILS;

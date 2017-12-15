@@ -46,12 +46,12 @@ import com.melvin.mono.fx.bootstrap.M;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeComputer;
 import org.cict.authentication.authenticator.CollegeFaculty;
-import org.cict.authentication.authenticator.SystemProperties;
 
 /**
  *
@@ -145,32 +145,50 @@ public class ReportsUtility {
      * @return
      * @throws DocumentException 
      */
-    public static PdfPTable createPdfPTable(int numColumns, String[] colNames, ArrayList<String[]> rowData) throws DocumentException {
+    public static PdfPTable createPdfPTable(int numColumns, ArrayList<String> colNames, ArrayList<String[]> rowData, HashMap<Integer, Object[]> customized, boolean showExtraHeader) throws DocumentException {
+        
+        System.out.println("numColumns " + numColumns);
+        
+        if(numColumns<0) {
+            return null;
+        }
+        
         PdfPTable tbl_stud = new PdfPTable(numColumns);
         tbl_stud.setTotalWidth(500);
         tbl_stud.setLockedWidth(true);
         tbl_stud.setSpacingAfter(10f);
         tbl_stud.setPaddingTop(20f);
         
+        tbl_stud.addCell(createSimpleCell("Total Result"+(rowData.size()>1? "s" : "")+" Found: " + rowData.size(), font6Bold, numColumns, false, false, 4f, false));
         // insertion of col names
         for (int i = 0; i < numColumns; i++) {
-            tbl_stud.addCell(createSimpleCell(colNames[i].toUpperCase(), font6Bold, 0, true, true, 5f, true));
+            if(customized.get(i) != null) {
+                String newColname = (String) colNames.get(i);
+                tbl_stud.addCell(createSimpleCell(newColname/*colNames.get(i)*/.toUpperCase(), font6Bold, 0, true, true, 5f, true));
+            }
         }
         
         // insertion of row data
         for (int i = 0; i < rowData.size(); i++) {
-            try {
-                String lastCol = rowData.get(i)[numColumns];
-                if(lastCol != null) {
-                    tbl_stud.addCell(createSimpleCell(lastCol.toUpperCase(), font6Plain, numColumns, true, true, 4f, true));
+            if(showExtraHeader) {
+                try {
+                    String lastCol = rowData.get(i)[numColumns];
+                    if(lastCol != null) {
+                        tbl_stud.addCell(createSimpleCell(lastCol.toUpperCase(), font6Plain, numColumns, true, true, 4f, true));
+                    }
+                } catch (IndexOutOfBoundsException e) {
                 }
-            } catch (IndexOutOfBoundsException e) {
             }
-            for (int j = 0; j < numColumns; j++) {
-                tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
+            for (int j = 0; j < rowData.size(); j++) {
+                if(customized.get(j) != null) {
+                    Boolean isChecked = (Boolean) customized.get(j)[0];
+                    if(isChecked != null && isChecked) {
+                        tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
+                    }
+                    System.out.println(rowData.get(i)[j]);
+                }
             }
         }
-        tbl_stud.addCell(createSimpleCell("Total Result"+(rowData.size()>1? "s" : "")+" Found: " + rowData.size(), font6Bold, numColumns, false, false, 4f, false));
         tbl_stud.addCell(createSimpleCell("*** Nothing Follows ***", font6Plain, numColumns, true, true, 4f, false));
         return tbl_stud;
     }
@@ -286,7 +304,22 @@ public class ReportsUtility {
     }
     
     public static Document paperSizeChooser(Stage stage) {
-        PaperSizeChooser sizeChooser = M.load(PaperSizeChooser.class);
+        PageSizeChooser sizeChooser = M.load(PageSizeChooser.class);
+        sizeChooser.onDelayedStart(); // do not put database transactions on startUp
+        try {
+            sizeChooser.getCurrentStage().showAndWait();
+        } catch (NullPointerException e) {
+            Stage a = sizeChooser.createChildStage(stage);
+            a.initStyle(StageStyle.UNDECORATED);
+            a.showAndWait();
+        }
+        return sizeChooser.getChoosenSize();
+    }
+    
+    public static ArrayList<Object> paperSizeChooserwithCustomize(Stage stage, String[] COLUMN_NAMES, String[] COLUMN_Descriptions) {
+        PaperSizeChooserWithCustomize sizeChooser = M.load(PaperSizeChooserWithCustomize.class);
+        sizeChooser.setCOLUMN_NAMES(COLUMN_NAMES);
+        sizeChooser.setCOLUMN_Descriptions(COLUMN_Descriptions);
         sizeChooser.onDelayedStart(); // do not put database transactions on startUp
         try {
             sizeChooser.getCurrentStage().showAndWait();

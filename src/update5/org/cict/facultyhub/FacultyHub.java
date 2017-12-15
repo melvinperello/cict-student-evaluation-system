@@ -50,6 +50,7 @@ import com.melvin.mono.fx.bootstrap.M;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -803,14 +804,30 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                         .showWarning();
                 return;
             }
-            Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+            String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
+            String[] colDescprtion = new String[]{"Student number of the student.", "Last name.", "First name.", "Middle name."};
+            //--------------
+            ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
+            Document doc = (Document) colDetails.get(0);
             if(doc==null) {
                 return;
             }
-            String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
+            HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+            ArrayList<String> newColNames = new ArrayList<>();
+            for (int i = 0; i < customized.size(); i++) {
+                Object[] details = customized.get(i);
+                if(details != null) {
+                    Boolean isChecked = (Boolean) details[0];
+                    if(isChecked) {
+                        newColNames.add((String) details[1]);
+                    }
+                }
+            }
+            //
+        
             ArrayList<String[]> rowData = new ArrayList<>();
             PrintResult print = new PrintResult();
-            print.setDocumentFormat(doc);
+            print.setDocumentFormat(doc, customized);
 
             for (int i = 0; i < preview.size(); i++) {
                 MasterListPdfStudent result = preview.get(i);
@@ -820,7 +837,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                 WordUtils.capitalizeFully(result.middleName)};
                 rowData.add(row);
             }
-            print.columnNames = colNames;
+            print.columnNames = newColNames;
             print.ROW_DETAILS = rowData;
             SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
             print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Master List " + String.valueOf(Calendar.getInstance().getTimeInMillis());
@@ -945,14 +962,30 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        String[] colNames = new String[]{"Student Number", "Full Name", "Grade", "Status"};
+        String[] colDescprtion = new String[]{"Student number.", "Full name of the student.", "Grade encoded to the student.", "Status of the encoded grade."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
-        String[] colNames = new String[]{"Student Number", "Full Name", "Grade", "Status"};
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         ArrayList<String[]> rowData = new ArrayList<>();
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
+        print.setDocumentFormat(doc, customized);
         for (int i = 0; i < preview.size(); i++) {
             ReadData result = preview.get(i);
             String[] row = new String[]{(i + 1) + ".  " + result.getSTUDENT_NUMBER().toUpperCase(),
@@ -961,7 +994,7 @@ public class FacultyHub extends SceneFX implements ControllerFX {
                 result.getSTATUS()};
             rowData.add(row);
         }
-        print.columnNames = colNames;
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
         SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
         print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Encode Status Report " + String.valueOf(Calendar.getInstance().getTimeInMillis());
@@ -995,7 +1028,9 @@ public class FacultyHub extends SceneFX implements ControllerFX {
             btn_print.setDisable(false);
             super.cursorDefault();
         });
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, "ENCODING STATUS REPORT", "FACULTY HUB", "INITIAL")) {
+            print.transact();
+        }
     }
     
     private void checkEncodingService(Runnable runMe) {

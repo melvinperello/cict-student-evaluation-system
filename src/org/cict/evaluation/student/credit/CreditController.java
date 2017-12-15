@@ -41,6 +41,7 @@ import com.melvin.mono.fx.events.MonoClick;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -290,11 +291,31 @@ public class CreditController implements ControllerFX {
     private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
     
     private void print(boolean is4Yrs) {
-        Document doc = ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(btn_save));
+//        Document doc = ReportsUtility.paperSizeChooser(Mono.fx().getParentStage(btn_save));
+//        if(doc==null) {
+//            return;
+//        }
+        String[] colNames = new String[]{"Date and Time","Subject Code", "Rating", "Updated By", "Reason For\nUpdate", "State"};
+        String[] colDescprtion = new String[]{"Date and time encoded.","Subject code.", "Rating encoded.", "Faculty who updated the grade.", "Reason for update.", "State of the grade."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(btn_save), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
-        String[] colNames = new String[]{"Date and Time","Subject Code", "Rating", "Updated By", "Reason For\nUpdate", "State"};
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         ArrayList<String[]> rowData = new ArrayList<>();
         this.addToRow(first_1, rowData, "FIRST YEAR - First Semester");
         this.addToRow(first_2, rowData, "FIRST YEAR - Second Semester");
@@ -308,7 +329,8 @@ public class CreditController implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
-        print.columnNames = colNames;
+        print.SHOW_EXTRA_HEADER = true;
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = "Student Grade History " + this.STUDENT_MAP.getId() + "_" + dateToday;
@@ -341,9 +363,10 @@ public class CreditController implements ControllerFX {
         print.whenFinished(() -> {
             btn_print_history.setDisable(false);
         });
-        print.setDocumentFormat(doc);
-        if(ReportsUtility.savePrintLogs(null, "Student Grade History".toUpperCase(), this.MODULE, "INITIAL"))
+        print.setDocumentFormat(doc, customized);
+        if(ReportsUtility.savePrintLogs(this.CICT_ID, "Student Grade History".toUpperCase(), this.MODULE, "INITIAL")) {
             print.transact();
+        }
     }
     
     private void addToRow(ArrayList<GradeHistory> storage, ArrayList<String[]> rowData, String title){

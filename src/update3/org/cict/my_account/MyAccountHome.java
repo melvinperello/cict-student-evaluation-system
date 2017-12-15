@@ -540,9 +540,7 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             if (res == -1) {
                 return;
             }
-        }
-        String[] colNames = new String[]{"Date and Time", "PC Name", "PC Username", "OS Version", "IP Address", "Result"};
-        ArrayList<String[]> rowData = new ArrayList<>();
+        }ArrayList<String[]> rowData = new ArrayList<>();
         if (preview == null) {
             Notifications.create()
                     .title("No Access History Found")
@@ -550,10 +548,27 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        String[] colNames = new String[]{"Date and Time", "PC Name", "PC Username", "OS Version", "IP Address", "Result"};
+        String[] colDescprtion = new String[]{"Date and time.", "PC name.", "PC username.", "OS Version.", "IP Address.", "Result of the action."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         AccountFacultyAttemptMapping ref = null;
         for (int i = 0; i < preview.size(); i++) {
             AccountFacultyAttemptMapping result = preview.get(i);
@@ -567,8 +582,8 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
-        print.columnNames = colNames;
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
         String username = CollegeFaculty.instance().getUSERNAME();
         print.fileName = "log_attempts_" + username.toLowerCase();
@@ -617,8 +632,9 @@ public class MyAccountHome extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(null, "Account Log And Attempts".toUpperCase(), "ACCOUNT", "INITIAL"))
+        if(ReportsUtility.savePrintLogs(null, "Account Log And Attempts".toUpperCase(), "ACCOUNT", "INITIAL")) {
             print.transact();
+        }
     }
 
     //------------------------------------------------------

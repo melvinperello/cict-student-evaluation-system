@@ -599,19 +599,36 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             if(res==-1)
                 return;
         }
-        // select paper size
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
-        if(doc==null) {
-            return;
-        }
-        String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
-        String[] colNames = new String[]{"Date and Time",status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Evaluator", "Student Number", "Student Name", "Year Level"};
         ArrayList<String[]> rowData = new ArrayList<>();
         if(results==null || results.isEmpty()) {
             Mono.fx().snackbar().showError(application_root, "No Result To Print");
             btn_print_eval_main.setDisable(true);
             return;
         }
+        
+        String status = cmb_sort_status_eval.getSelectionModel().getSelectedItem();
+        //--------------
+        String[] colNames = new String[]{"Date and Time",status.equalsIgnoreCase("REVOKED")? "Revoked By" : "Evaluator", "Student Number", "Student Name", "Year Level"};
+        String[] colDescprtion = new String[] {"Date and time information.",status.equalsIgnoreCase("REVOKED")? "Faculty who revoked the transaction." : "Evaluator of the student.", "Student number of the student.", "Full name of the student.", "Year level of the student."};
+        System.out.println("colNames " + colNames.length);
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(this.getStage(), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
+        if(doc==null) {
+            return;
+        }
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         EvaluationMapping ref = null;
         for (int i = 0; i < results.size(); i++) {
             EvaluationMapping result = results.get(i);
@@ -625,8 +642,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
-        print.columnNames = colNames;
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;//colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = title.replace(" ", "_").toLowerCase() + "_" + dateToday;
@@ -673,8 +690,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(null, lbl_title_eval.getText().toUpperCase(), "REPORTS", "INITIAL"))
+        if(ReportsUtility.savePrintLogs(null, lbl_title_eval.getText().toUpperCase(), "REPORTS", "INITIAL")) {
             print.transact();
+        }
     }
     
     private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", PRES_LIST = "President's Lister", DEANS_LIST = "Dean's Lister", PRINT_LOGS = "Print Logs";
@@ -1241,11 +1259,27 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             btn_print_eval_main.setDisable(true);
             return;
         }
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        String[] colNames = new String[]{"Student Number","Full Name", "Section", "GWA"};
+        String[] colDescprtion = new String[] {"Student number of the student.", "Full name of the student.", "Section of the student.", "General Weighted Average of the student."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(this.getStage(), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
-        String[] colNames = new String[]{"Student Number","Full Name", "Section", "GWA"};
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < previewAchievers.size(); i++) {
             AchieversData result = previewAchievers.get(i);
@@ -1255,10 +1289,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
                 result.GWA };
             rowData.add(row);
         }
-        
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
-        print.columnNames = colNames;
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;//colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = lbl_title_pres.getText().replace(" ", "_").toLowerCase() + "_" + dateToday;
@@ -1294,7 +1327,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        print.transact();
+        if(ReportsUtility.savePrintLogs(null, lbl_title_pres.getText(), "REPORTS", "INITIAL")) {
+            print.transact();
+        }
     }
     
     
@@ -1587,18 +1622,34 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             if(res==-1)
                 return;
         }
-        // select paper size
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
-        if(doc==null) {
-            return;
-        }
-        String[] colNames = new String[]{"Printed Date","Printed By", "Module", "Title", "Terminal"};
         ArrayList<String[]> rowData = new ArrayList<>();
         if(printLogsView==null || printLogsView.isEmpty()) {
             Mono.fx().snackbar().showError(application_root, "No Result To Print");
             btn_print_print_logs.setDisable(true);
             return;
         }
+        
+        String[] colNames = new String[]{"Printed Date","Printed By", "Module", "Title", "Terminal"};
+        String[] colDescprtion = new String[] {"Printed date of the document.","Faculty who printed the document.", "Module's name where the document is produced.", "Title of the document.", "Terminal where the document is printed."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(this.getStage(), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
+        if(doc==null) {
+            return;
+        }
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         PrintLogsMapping ref = null;
         for (int i = 0; i < this.printLogsView.size(); i++) {
             PrintLogsMapping result = printLogsView.get(i);
@@ -1613,8 +1664,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         
         String title = "PRINTING LOGS - " + this.typePrint;
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
-        print.columnNames = colNames;
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;//colNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = title.toUpperCase() + "_" + dateToday;

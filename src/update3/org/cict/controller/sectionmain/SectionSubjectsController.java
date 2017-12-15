@@ -55,6 +55,7 @@ import com.melvin.mono.fx.bootstrap.M;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -606,14 +607,30 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                         .showWarning();
                 return;
             }
-            Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+            String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
+            String[] colDescprtion = new String[]{"Student number of the student.", "Last name of the student.", "First name of the student.", "Middle name of the student."};
+            
+            //--------------
+            ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
+            Document doc = (Document) colDetails.get(0);
             if(doc==null) {
                 return;
             }
-            String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name"};
-            ArrayList<String[]> rowData = new ArrayList<>();
+            HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+            ArrayList<String> newColNames = new ArrayList<>();
+            for (int i = 0; i < customized.size(); i++) {
+                Object[] details = customized.get(i);
+                if(details != null) {
+                    Boolean isChecked = (Boolean) details[0];
+                    if(isChecked) {
+                        newColNames.add((String) details[1]);
+                    }
+                }
+            }
+            //
+        ArrayList<String[]> rowData = new ArrayList<>();
             PrintResult print = new PrintResult();
-            print.setDocumentFormat(doc);
+            print.setDocumentFormat(doc, customized);
 
             for (int i = 0; i < preview.size(); i++) {
                 MasterListPdfStudent result = preview.get(i);
@@ -623,7 +640,7 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 WordUtils.capitalizeFully(result.middleName)};
                 rowData.add(row);
             }
-            print.columnNames = colNames;
+            print.columnNames = newColNames;
             print.ROW_DETAILS = rowData;
             SubjectMapping subject = this.getSubject(loadGroup.getSUBJECT_id());
             print.fileName = SystemProperties.instance().getCurrentTermString() + " " + subject.getCode() + " Master List " + String.valueOf(Calendar.getInstance().getTimeInMillis());
@@ -658,8 +675,9 @@ public class SectionSubjectsController extends SceneFX implements ControllerFX {
                 btn_print.setDisable(false);
                 super.cursorDefault();
             });
-            if(ReportsUtility.savePrintLogs(null, (subject.getCode() + " Master List").toUpperCase(), "SECTIONS", "INITIAL"))
+            if(ReportsUtility.savePrintLogs(null, (subject.getCode() + " Master List").toUpperCase(), "SECTIONS", "INITIAL")) {
                 print.transact();
+            }
 
         });
         fetch.transact();
