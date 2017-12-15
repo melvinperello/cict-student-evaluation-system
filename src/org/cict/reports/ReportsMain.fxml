@@ -286,13 +286,13 @@
                                  <children>
                                     <VBox fx:id="vbox_eval_main_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css">
                                        <StackPane.margin>
-                                          <Insets bottom="20.0" />
+                                          <Insets bottom="30.0" />
                                        </StackPane.margin></VBox>
                                  </children>
                               </StackPane>
                               <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="834.0" AnchorPane.bottomAnchor="5.0">
                                  <children>
-                                    <Label fx:id="lbl_result">
+                                    <Label fx:id="lbl_result" text="dsvcds">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
@@ -366,7 +366,7 @@
                         </HBox>
                         <AnchorPane prefHeight="462.0" prefWidth="874.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets left="40.0" top="5.0" />
+                              <Insets bottom="10.0" left="40.0" top="5.0" />
                            </VBox.margin>
                            <children>
                               <StackPane fx:id="stack_pres_main" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -505,7 +505,10 @@
                            <children>
                               <StackPane fx:id="stack_print_logs" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <VBox fx:id="vbox_print_logs_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css" />
+                                    <VBox fx:id="vbox_print_logs_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css">
+                                       <StackPane.margin>
+                                          <Insets bottom="30.0" />
+                                       </StackPane.margin></VBox>
                                  </children>
                               </StackPane>
                               <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="834.0" AnchorPane.bottomAnchor="5.0">
