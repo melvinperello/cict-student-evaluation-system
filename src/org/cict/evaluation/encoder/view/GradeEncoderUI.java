@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
-import org.cict.evaluation.encoder.EncodeGrade;
+import org.cict.evaluation.encoder.SpreadSheetGradeEncoder;
 import org.cict.evaluation.evaluator.Evaluator;
 import org.controlsfx.control.Notifications;
 
@@ -1023,7 +1023,7 @@ public class GradeEncoderUI {
             }
         }
 
-        EncodeGrade encodeGrade = Evaluator.instance().createGradeEncoder();
+        SpreadSheetGradeEncoder encodeGrade = Evaluator.instance().createGradeEncoder();
         encodeGrade.CICT_id = this.CICT_id;
         encodeGrade.spreadSheet = this.spreadSheet;
         //----------------------------------------------------------------------
