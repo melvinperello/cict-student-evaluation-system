@@ -86,7 +86,7 @@ public class MainApplication extends Application {
         SystemLogin loginFx = M.load(SystemLogin.class);
         Stage loginStage = loginFx.createStageApplication();
         loginStage.setResizable(false);
-        loginStage.setTitle("CICT | Enrollment Evaluation Management System");
+        loginStage.setTitle("CICT | Student Evaluation System");
 
         loginFx.onDelayedStart();
         loginStage.show();
