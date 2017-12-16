@@ -2122,7 +2122,8 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .text(checker.getLog()).showWarning();
         });
         checker.whenSuccess(()->{
-            if(checker.getLog().equalsIgnoreCase("PRINTING")) {
+            if(checker.getLog()==null) {
+            } else if(checker.getLog().equalsIgnoreCase("PRINTING")) {
                 Notifications.create().darkStyle()
                         .title("Failed Grade Found")
                         .text("Printing the retention letter for the student.").showWarning();
