@@ -793,6 +793,8 @@ public class Evaluator implements Process {
                     .showInformation();
         });
         print.setDocumentFormat(doc);
-        print.transact();
+        if(ReportsUtility.savePrintLogs(cict_id, "DEFICIENCY", "EVALUATION", "INITIAL")) {
+            print.transact();
+        }
     }
 }

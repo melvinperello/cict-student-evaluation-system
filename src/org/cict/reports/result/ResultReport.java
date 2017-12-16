@@ -43,8 +43,9 @@ public class ResultReport {
     
     private Document documentFormat;
 
-    public void setDocumentFormat(Document documentFormat) {
+    public void setDocumentFormat(Document documentFormat, HashMap<Integer, Object[]> res) {
         this.documentFormat = documentFormat;
+        this.CUSTOMIZED_DETAILS = res;
     }
 
     public int print() {
@@ -83,8 +84,15 @@ public class ResultReport {
             REPORT_DESCRIPTION = null,
             TERMINAL = null,
             REPORT_OTHER_DETAIL = null; 
-    public String[] COLUMN_NAMES;
+    public ArrayList<String> COLUMN_NAMES;
     public ArrayList<String[]> ROW_DETAILS;
+    public boolean showExtra = false;
+    
+    //----
+    // added for customizable col header
+    public HashMap<Integer, Object[]> CUSTOMIZED_DETAILS;
+    //
+    
     public void init() {
         
     }
@@ -112,7 +120,7 @@ public class ResultReport {
         if(STUDENT_NAME!=null)
             ReportsUtility.createStudentInfoHeader(document, STUDENT_NAME, STUDENT_NUMBER, this.STUDENT_ADDRESS);
         
-        document.add(ReportsUtility.createPdfPTable(COLUMN_NAMES.length, COLUMN_NAMES, ROW_DETAILS));
+        document.add(ReportsUtility.createPdfPTable(COLUMN_NAMES.size(), COLUMN_NAMES, ROW_DETAILS, CUSTOMIZED_DETAILS, showExtra));
         
         document.close();
         return 0;

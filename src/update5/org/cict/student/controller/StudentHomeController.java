@@ -46,6 +46,7 @@ import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -232,11 +233,27 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name", "Section"};        
+        String[] colDescprtion = new String[]{"Student number.", "Last name.", "First name.", "Middle name.", "Section of the student."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
-        String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name", "Section"};
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < students.size(); i++) {
             StudentMapping result = students.get(i);
@@ -249,8 +266,8 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
-        print.columnNames = colNames;
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "student_list_" + searchWord.toLowerCase();
         print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
@@ -286,8 +303,9 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(null, "Student Result List".toUpperCase(), "STUDENTS", "INITIAL"))
-                print.transact();
+        if(ReportsUtility.savePrintLogs(null, "Student Result List".toUpperCase(), "STUDENTS", "INITIAL")) {
+            print.transact();
+        }
     }
 
     private String searchWord = "";

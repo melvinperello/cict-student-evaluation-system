@@ -40,6 +40,7 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -148,11 +149,28 @@ public class HistoryController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        
+        String[] colNames = new String[]{"Date & Time", "Faculty", "Description"};
+        String[] colDescprtion = new String[]{"Date and time.", "Faculty who made the update.", "Description of the alteration."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
-        String[] colNames = new String[]{"Date & Time", "Faculty", "Description"};
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < chsMaps.size(); i++) {
             CurriculumHistorySummaryMapping result = chsMaps.get(i);
@@ -163,8 +181,8 @@ public class HistoryController extends SceneFX implements ControllerFX {
         }
         
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
-        print.columnNames = colNames;
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
         String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
         print.fileName = "curriculum_history" + "_" + dateToday;
@@ -199,8 +217,9 @@ public class HistoryController extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(null, "Curriculum information History".toUpperCase(), "ACADEMIC PROGRAMS", "INITIAL"))
+        if(ReportsUtility.savePrintLogs(null, "Curriculum information History".toUpperCase(), "ACADEMIC PROGRAMS", "INITIAL")) {
             print.transact();
+        }
     }
     
      

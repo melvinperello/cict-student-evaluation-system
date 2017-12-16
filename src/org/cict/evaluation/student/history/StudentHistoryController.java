@@ -43,6 +43,7 @@ import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -160,6 +161,7 @@ public class StudentHistoryController extends SceneFX implements ControllerFX{
     private ObservableList<History> results;
     private void printResult() {
         String[] colNames = null;
+        String[] colDescprtion = null;
         ArrayList<String[]> rowData = new ArrayList<>();
         if(tblEvaluation.isVisible()) {
             results = load.getResults();
@@ -171,6 +173,7 @@ public class StudentHistoryController extends SceneFX implements ControllerFX{
                 return;
             }
             colNames = new String[]{"S.Y. & Semester", "Year Level", "Evaluator", "Evaluated Date", "Cancelled By", "Cancelled Date", "Remarks"};
+            colDescprtion = new String[]{"School year & semester.", "Year level of the student.", "Evaluator who evaluates the student.", "Evaluated date.", "Faculty who cancelled the transaction.", "Cancelled date.", "Remarks of the action."};
 
             for (int i = 0; i < results.size(); i++) {
                 History result = results.get(i);
@@ -187,24 +190,41 @@ public class StudentHistoryController extends SceneFX implements ControllerFX{
                         .showWarning();
                 return;
             }
-            colNames = new String[]{"Update Information", "Student No.", "Full Name", "Yr.Level  |  Section  |  Group", "Gender  |  Campus"};
+            colNames = new String[]{"Update Information", "Student No.", "Full Name", "Year Level", "Section", "Group", "Gender", "Campus"};
+            colDescprtion = new String[]{"Update information.", "Student number of the student.", "Student's full name.", "Year level of the student.","Student's section","Group of the student.", "Gender of the student.", "Campus."};
             for (int i = 0; i < previewHistory.size(); i++) {
                 StudentDataHistoryMapping result = previewHistory.get(i);
                 String[] row = new String[]{(i + 1) + ".  " + result.getUpdated_date() + " | " + result.getUpdated_by(), 
                     result.getStudent_number(), WordUtils.capitalizeFully(result.getLast_name() + ", " + result.getFirst_name() + (result.getMiddle_name()==null || result.getMiddle_name().equalsIgnoreCase("null")? "" : " " + result.getMiddle_name())),
-                    (result.getYear_level()==null || result.getYear_level().isEmpty() || result.getYear_level().equalsIgnoreCase("null")? "NONE" : result.getYear_level()) + " | " + 
-                        (result.getSection()==null || result.getSection().isEmpty() || result.getSection().equalsIgnoreCase("null")? "NONE" : result.getSection())  + " | " + 
+                    (result.getYear_level()==null || result.getYear_level().isEmpty() || result.getYear_level().equalsIgnoreCase("null")? "NONE" : result.getYear_level()),
+                        (result.getSection()==null || result.getSection().isEmpty() || result.getSection().equalsIgnoreCase("null")? "NONE" : result.getSection()),
                         (result.get_group()==null || result.get_group().isEmpty() || result.get_group().equalsIgnoreCase("null")? "NONE" : result.get_group()),
-                        (result.getGender()==null || result.getGender().isEmpty()? "NONE" : result.getGender()) + " | " + result.getCampus()};
+                        (result.getGender()==null || result.getGender().isEmpty()? "NONE" : result.getGender()),
+                        (result.getCampus()==null || result.getCampus().isEmpty()? "NONE" : result.getCampus())};
                 rowData.add(row);
             }
         }
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         PrintResult print = new PrintResult();
-        print.columnNames = colNames;
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
         print.fileName = lbl_title.getText() + " " + MonoString.removeAll(this.STUDENT.getId(), " ").toLowerCase();
         print.reportTitleIntro = this.lblName.getText();
@@ -235,9 +255,10 @@ public class StudentHistoryController extends SceneFX implements ControllerFX{
             btn_print.setDisable(false);
         });
         //----------------------------------------------------------------------
-        print.setDocumentFormat(doc);
-        if(ReportsUtility.savePrintLogs(this.STUDENT.getCict_id(), lbl_title.getText().toUpperCase(), MODULE, "INITIAL"))
+        print.setDocumentFormat(doc, customized);
+        if(ReportsUtility.savePrintLogs(this.STUDENT.getCict_id(), lbl_title.getText().toUpperCase(), MODULE, "INITIAL")) {
             print.transact();
+        }
     }
     
     

@@ -48,6 +48,7 @@ import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -317,11 +318,27 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+        String[] colNames = new String[]{"BulSU ID", "Name", "Department", "Username", "Access Level"};
+        String[] colDescprtion = new String[]{"Registered BulSU ID of the faculty.", "Full name of the faculty.", "Department of the faculty.", "Registered username of faculty in the system.", "Current access level."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(this.getStage(), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
         if(doc==null) {
             return;
         }
-        String[] colNames = new String[]{"BulSU ID", "Name", "Department", "Username", "Access Level"};
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < preview.size(); i++) {
             FacultyInformation result = preview.get(i);
@@ -333,8 +350,8 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
             rowData.add(row);
         }
         PrintResult print = new PrintResult();
-        print.setDocumentFormat(doc);
-        print.columnNames = colNames;
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
         print.fileName = "faculty_list_" + cmb_sort.getSelectionModel().getSelectedItem().toLowerCase();
 

@@ -511,8 +511,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         if (!printLegacy) {
             printCheckList.setDocumentFormat(doc);
         }
-
-        printCheckList.transact();
+        if(ReportsUtility.savePrintLogs(this.CURRENT_STUDENT.getCict_id(), "CHECKLIST", "STUDENTS", "INITIAL")) {
+            printCheckList.transact();
+        }
     }
 
     private void onRemove() {
@@ -1105,7 +1106,9 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
         });
         print.setDocumentFormat(doc);
         //----------------------------------------------------------------------
-        print.transact();
+        if(ReportsUtility.savePrintLogs(this.CURRENT_STUDENT.getCict_id(), "DEFICIENCY REPORT", "STUDENTS", "INITIAL")) {
+            print.transact();
+        }
     }
 
     private void onVerify() {

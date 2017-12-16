@@ -437,7 +437,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         print.setDocumentFormat(doc);
         //----------------------------------------------------------------------
-        print.transact();
+        if(ReportsUtility.savePrintLogs(this.currentStudent.getCict_id(), "DEFICIENCY REPORT", "EVALUATION", "INITIAL")) {
+            print.transact();
+        }
     }
 
     private void onShowMovingUp() {
@@ -949,7 +951,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         }
 
-        printCheckList.transact();
+        if(ReportsUtility.savePrintLogs(this.currentStudent.getCict_id(), "CHECKLIST", "EVALUATION", "INITIAL")) {
+            printCheckList.transact();
+        }
     }
 
     private void hideDropDownEvents() {
@@ -1780,7 +1784,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         //----------------------------------------------------------------------
         // search student again to refresh values
-        this.searchStudent();
+        if(mode.equalsIgnoreCase(CreditController.MODE_CREDIT)) {
+            this.searchStudent();
+        }
     }
 
     private void hideDropDown() {
