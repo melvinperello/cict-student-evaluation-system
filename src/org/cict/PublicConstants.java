@@ -179,6 +179,15 @@ public class PublicConstants {
     public final static String KEY_SMS_SERVER= "SMS_SERVER";
     public final static String KEY_SMS_SERVER_DEFAULT = "127.0.0.1";
     
+    public static final String KEY_NOTED_BY= "NOTED_BY";
+    public static final String KEY_NOTED_BY_DEFAULT = "Engr. Noemi P. Reyes, Dean-CICT";
+    
+    public static final String KEY_RETENTION_LETTER_SENDER1= "LOCAL_REGISTRAR1";
+    public static final String KEY_RETENTION_LETTER_SENDER_DEFAULT1 = "Engr. Alex P. Caparas, Local Registrar-BSIT";
+
+    public static final String KEY_RETENTION_LETTER_SENDER2= "LOCAL_REGISTRAR2";
+    public static final String KEY_RETENTION_LETTER_SENDER_DEFAULT2 = "Engr. Evelyn Samson, Local Registrar-BSIT";
+
     //----------------------------------------------
     public static String SQL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -221,6 +230,18 @@ public class PublicConstants {
     
     public static Object getSystemVar_SMS_SERVER() {
         return getSystemValue(KEY_SMS_SERVER, KEY_SMS_SERVER_DEFAULT);
+    }
+    
+    public static Object getSystemVar_Noted_By() {
+        return getSystemValue(KEY_NOTED_BY, KEY_NOTED_BY_DEFAULT);
+    }
+    
+    public static Object getSystemVar_LocalRegistrar1() {
+        return getSystemValue(KEY_RETENTION_LETTER_SENDER1, KEY_RETENTION_LETTER_SENDER_DEFAULT1);
+    }
+    
+    public static Object getSystemVar_LocalRegistrar2() {
+        return getSystemValue(KEY_RETENTION_LETTER_SENDER2, KEY_RETENTION_LETTER_SENDER_DEFAULT2);
     }
     
     private static Object getSystemValue(String name, String defaultValue) {

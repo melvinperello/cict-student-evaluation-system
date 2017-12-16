@@ -32,11 +32,15 @@ import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
+import com.itextpdf.text.Document;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import java.util.ArrayList;
 import org.apache.commons.lang3.text.WordUtils;
+import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ReportsDirectory;
+import org.cict.reports.retention.RetentionLetter;
 import org.hibernate.criterion.Order;
 
 /**
@@ -159,16 +163,62 @@ public class FailedGradeChecker extends Transaction{
     protected void after() {
         // print if qualified for retention letter
         if(failedSubject >= 2) {
-            System.out.println(student.getFirst_name()+ (student.getMiddle_name()==null? "" : " " + WordUtils.initials(student.getMiddle_name())) + " " + student.getLast_name());
-            System.out.println((failedSubject==2)?"Two(2)" : "("+failedSubject+")");
+            String name = student.getFirst_name()+ (student.getMiddle_name()==null? "" : " " + WordUtils.initials(student.getMiddle_name())) + " " + student.getLast_name();
+            String section = "";
+            String failed = (failedSubject==2)?"Two(2)" : "("+failedSubject+")";
+            
             if(acadProgram != null) {
-                System.out.println(acadProgram.getCode() + " " + student.getYear_level() + student.getSection() + (student.get_group()==null? "" : "-G" + student.get_group()));
+                section = acadProgram.getCode() + " " + student.getYear_level() + student.getSection() + (student.get_group()==null? "" : "-G" + student.get_group());
             }
             if(prevAcadTerm != null) {
                 System.out.println(prevAcadTerm.getSchool_year() + " Semester " + (prevAcadTerm.getSemester_regular()==1? "1st" : (prevAcadTerm.getSemester_regular()==2? "2nd" : "Midyear")));
             }
+            this.printeLetter(name, section, failed);
         }
         super.after(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public final static String SAVE_DIRECTORY = "reports/retention";
+    private void printeLetter(String name, String section, String failedGrades) {
+        String doc = "Retention Letter For " + student.getId() + "_" + Mono.orm().getServerTime().getCalendar().getTimeInMillis();
+
+        String RESULT = SAVE_DIRECTORY + "/" + doc + ".pdf";
+
+        //------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------
+        /**
+         * Check if the report save directory is already existing and created if
+         * not this will try to create the needed directories.
+         */
+        boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
+
+        if (!isCreated) {
+            // some error message that the directory is not created
+            System.err.println("Directory is not created.");
+            return;
+        }
+        //------------------------------------------------------------------
+        //------------------------------------------------------------------
+        RetentionLetter retention = new RetentionLetter(RESULT);
+        retention.STUDENT_NAME = name;
+        retention.STUDENT_SECTION = section;
+        retention.DEAN = PublicConstants.getSystemVar_Noted_By().toString();
+        retention.SERVER_DATE = Mono.orm().getServerTime().getDateWithFormat();
+        retention.NUMBER_OF_FAILED_SUBJECTS = failedGrades;
+        retention.PREV_SCHOOL_YEAR = "";
+        retention.PREV_SEMESTER = "";
+        if(prevAcadTerm != null) {
+            retention.PREV_SCHOOL_YEAR = prevAcadTerm.getSchool_year();
+            retention.PREV_SEMESTER = (prevAcadTerm.getSemester_regular()==1? "1st" : (prevAcadTerm.getSemester_regular()==2? "2nd" : "Midyear"));
+        }
+        retention.SENDER_NAMES = new String[] {PublicConstants.getSystemVar_LocalRegistrar1().toString(), PublicConstants.getSystemVar_LocalRegistrar2().toString()};
+        retention.setDocumentFormat(document);
+        retention.print();
+    }
+    
+    private Document document;
+    public void setDocument(Document parentStage) {
+        this.document = parentStage;
     }
     
 }

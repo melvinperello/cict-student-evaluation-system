@@ -2116,6 +2116,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private void retentionChecker() {
         FailedGradeChecker checker = new FailedGradeChecker();
         checker.setStudent(currentStudent);
+        checker.setDocument(ReportsUtility.createShortDocument());
         checker.whenCancelled(()->{
             Notifications.create().darkStyle()
                     .title("Warning")
