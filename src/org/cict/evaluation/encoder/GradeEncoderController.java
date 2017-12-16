@@ -183,11 +183,11 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         this.gei.setNotificationPane(pnl_main);
         //----------------------------------------------------------------------
         btnPost.setDisable(false);
-        try {
-            gei.setAcadTermId(this.getAcadTermId());
-        } catch (NullPointerException a) {
-            a.printStackTrace();
-        }
+//        try {
+//            gei.setAcadTermId(this.getAcadTermId());
+//        } catch (NullPointerException a) {
+//            a.printStackTrace();
+//        }
         gei.setCictId(this.CURRENT_STUDENT.getCict_id());
         //----------------------------------------------------------------------
         // subjects to be displayed in the spread sheet.
@@ -266,7 +266,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                     .confirmCustom("Yes", "No");
 
             if (choice == 1) {
-                this.gei.pnl_spreadsheet = this.pnl_spreadsheet;
+//                this.gei.setPnl_spreadsheet(this.pnl_spreadsheet);
                 this.gei.verifySheet(btnPost);
             }
         });
@@ -418,37 +418,39 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     }
 
     /**
-     *
+     * this value was not used.
      */
+    @Deprecated
     private Integer getAcadTermId() {
-        Integer admissionYear = null;
-        try {
-            SubjectMapping subjectReference = this.subjectsToEncode.get(0);
-            CurriculumSubjectMapping curriculumSubjectReference = Mono.orm()
-                    .newSearch(Database.connect().curriculum_subject())
-                    .eq("SUBJECT_id", subjectReference.getId())
-                    .active()
-                    .first();
-            Integer subjectYear = curriculumSubjectReference.getYear();
-            Integer semester = curriculumSubjectReference.getSemester();
-            try {
-                admissionYear = Integer.valueOf(this.CURRENT_STUDENT.getAdmission_year());
-            } catch (NumberFormatException a) {
-                logs("NumberFormatException ADMISSION YEAR");
-            }
-            admissionYear += (subjectYear - 1);
-            String school_year = admissionYear + "-" + (admissionYear += 1);
-            logs(school_year);
-            AcademicTermMapping acadTerm = Mono.orm()
-                    .newSearch(Database.connect().academic_term())
-                    .eq("school_year", school_year)
-                    .eq("semester_regular", semester)
-                    .active()
-                    .first();
-            return acadTerm.getId();
-        } catch (IndexOutOfBoundsException a) {
-            return null;
-        }
+//        Integer admissionYear = null;
+//        try {
+//            SubjectMapping subjectReference = this.subjectsToEncode.get(0);
+//            CurriculumSubjectMapping curriculumSubjectReference = Mono.orm()
+//                    .newSearch(Database.connect().curriculum_subject())
+//                    .eq("SUBJECT_id", subjectReference.getId())
+//                    .active()
+//                    .first();
+//            Integer subjectYear = curriculumSubjectReference.getYear();
+//            Integer semester = curriculumSubjectReference.getSemester();
+//            try {
+//                admissionYear = Integer.valueOf(this.CURRENT_STUDENT.getAdmission_year());
+//            } catch (NumberFormatException a) {
+//                logs("NumberFormatException ADMISSION YEAR");
+//            }
+//            admissionYear += (subjectYear - 1);
+//            String school_year = admissionYear + "-" + (admissionYear += 1);
+//            logs(school_year);
+//            AcademicTermMapping acadTerm = Mono.orm()
+//                    .newSearch(Database.connect().academic_term())
+//                    .eq("school_year", school_year)
+//                    .eq("semester_regular", semester)
+//                    .active()
+//                    .first();
+//            return acadTerm.getId();
+//        } catch (IndexOutOfBoundsException a) {
+//            return null;
+//        }
+        return null;
     }
 
     /**

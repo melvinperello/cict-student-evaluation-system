@@ -52,22 +52,25 @@ import update3.org.cict.access.Access;
 
 public class GradeEncoderUI {
 
-    //--------------------------------------------------------------------------
-    private final Integer FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
-    private Integer ACAD_TERM_id;
-    private Date POSTED_DATE;
-    private boolean POSTED;
-//    private String MODE = "";
-    private Integer CURRICULUM_id, yearLevel, semester;
-
-    public HBox pnl_spreadsheet;
-
     private void logs(String str) {
         if (true) {
             System.out.println("@GradeEncoderUI: " + str);
         }
     }
 
+    //--------------------------------------------------------------------------
+    private final Integer FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
+//    private Integer ACAD_TERM_id;
+    private Date POSTED_DATE;
+    private boolean POSTED;
+//    private String MODE = "";
+    private Integer CURRICULUM_id, yearLevel, semester;
+
+//    private HBox pnl_spreadsheet;
+//
+//    public void setPnl_spreadsheet(HBox pnl_spreadsheet) {
+//        this.pnl_spreadsheet = pnl_spreadsheet;
+//    }
     public GradeEncoderUI() {
         this.POSTED = false;
         /**
@@ -80,11 +83,9 @@ public class GradeEncoderUI {
 //    public void setMode(String mode) {
 //        this.MODE = mode;
 //    }
-
-    public void setAcadTermId(Integer id) {
-        this.ACAD_TERM_id = id;
-    }
-
+//    public void setAcadTermId(Integer id) {
+//        this.ACAD_TERM_id = id;
+//    }
     public void setCurriculumID(Integer id, Integer yr, Integer sem) {
         this.CURRICULUM_id = id;
         this.yearLevel = yr;
@@ -1165,7 +1166,7 @@ public class GradeEncoderUI {
                     //----------------------------------------------------------
                     if (cellText.isEmpty()) {
                         // if remarks is NOT FOR ENCODING, retain color
-                        if(cellRemark.equalsIgnoreCase("NOT FOR ENCODING")) {
+                        if (cellRemark.equalsIgnoreCase("NOT FOR ENCODING")) {
                             rowPaint(x, "#E74C3C");
                         } else {
                             // if empty paint it white
