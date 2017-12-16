@@ -8,6 +8,7 @@
  */
 package org.cict.evaluation.evaluator;
 
+import org.cict.evaluation.encoder.EncodeGrade;
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.Database;

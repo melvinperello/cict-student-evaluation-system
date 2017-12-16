@@ -56,27 +56,36 @@ public class StudentUtility {
         }
     }
 
+    /**
+     * Not used.
+     *
+     * @param profile
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     private static String retrieveAddressUsingOldFormat(StudentProfileMapping profile) {
-        //----------------------------------------------------------------------
-        // Get Values
-        String hNum = profile.getHouse_no(),
-                brgy = profile.getBrgy(),
-                city = profile.getCity(),
-                province = profile.getProvince();
-        String postalCode = profile.getZipcode();
-        //----------------------------------------------------------------------
-        String address = "";
-        //----------------------------------------------------------------------
-        address += concat(hNum);
-        //----------------------------------------------------------------------
-        address += concat(" " + brgy);
-        //----------------------------------------------------------------------
-        address += concat(" " + city);
-        //----------------------------------------------------------------------
-        address += concat(" " + province);
-        //----------------------------------------------------------------------
-        address += concat(" " + postalCode);
-        //----------------------------------------------------------------------
-        return address;
+//        //----------------------------------------------------------------------
+//        // Get Values
+//        String hNum = profile.getHouse_no(),
+//                brgy = profile.getBrgy(),
+//                city = profile.getCity(),
+//                province = profile.getProvince();
+//        String postalCode = profile.getZipcode();
+//        //----------------------------------------------------------------------
+//        String address = "";
+//        //----------------------------------------------------------------------
+//        address += concat(hNum);
+//        //----------------------------------------------------------------------
+//        address += concat(" " + brgy);
+//        //----------------------------------------------------------------------
+//        address += concat(" " + city);
+//        //----------------------------------------------------------------------
+//        address += concat(" " + province);
+//        //----------------------------------------------------------------------
+//        address += concat(" " + postalCode);
+//        //----------------------------------------------------------------------
+//        return address;
+        return "";
     }
 }

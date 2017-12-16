@@ -1,13 +1,69 @@
 package org.bsu.cict.alerts;
 
+import java.util.Locale;
 import javax.swing.JOptionPane;
 
 /**
- * Standard Java Message Boxes Factory..
+ * Standard Java Message Box Factory.
+ *
+ * Supports HTML 3.2 and simple CSS Styling.
  *
  * @author Jhon Melvin
  */
 public class MessageBox {
+
+    /**
+     * Message display block alignment.
+     */
+    public enum TextAlignment {
+        LEFT, RIGHT, CENTER;
+    }
+
+    //--------------------------------------------------------------------------
+    // default values
+    private static int width = 180;
+    private static TextAlignment alignment = TextAlignment.LEFT;
+    //--------------------------------------------------------------------------
+
+    /**
+     * overrides the default width.
+     *
+     * @param width
+     */
+    public static void setWidth(int width) {
+        MessageBox.width = width;
+    }
+
+    /**
+     * overrides the default alignment.
+     *
+     * @param alignment
+     */
+    public static void setAlignment(TextAlignment alignment) {
+        MessageBox.alignment = alignment;
+    }
+
+    //--------------------------------------------------------------------------
+    // fields for html initialization.
+    private final static String HTML_START = "<html><body>";
+    private final static String HTML_CONTENT = "<p style='width: " + MessageBox.width + "px;text-align: " + alignment.toString().toLowerCase(Locale.ENGLISH) + ";'>";
+    private final static String HTML_END = "</p></body></html>";
+    //--------------------------------------------------------------------------
+
+    /**
+     * Plain Message. with no added context.
+     *
+     * @param title
+     * @param message
+     * @param type JOptionPane.(Type).
+     */
+    public static void show(String title, String message, int type) {
+        //----------------------------------------------------------------------
+        // add to space padding for title.
+        title = "  " + title;
+        //----------------------------------------------------------------------
+        JOptionPane.showMessageDialog(null, message, title, type);
+    }
 
     /**
      * private method to create a typical swing message dialog with void return.
@@ -17,7 +73,27 @@ public class MessageBox {
      * @param messageType
      */
     private static void createSwingMessage(String title, String message, int messageType) {
-        JOptionPane.showMessageDialog(null, message, title, messageType);
+        String body = HTML_START + HTML_CONTENT + message + HTML_END;
+        MessageBox.show(title, body, messageType);
+    }
+
+    /**
+     * Create a standard swing confirmation.
+     *
+     * @param title
+     * @param message
+     * @param option
+     * @return
+     */
+    private static int createSwingConfirm(String title, String message, int option) {
+        String body = HTML_START + HTML_CONTENT + message + HTML_END;
+        //----------------------------------------------------------------------
+        // add to space padding for title.
+        title = "  " + title;
+        //----------------------------------------------------------------------
+        return JOptionPane.showConfirmDialog(null, body, title,
+                option,
+                JOptionPane.QUESTION_MESSAGE);
     }
 
     /**
@@ -51,16 +127,6 @@ public class MessageBox {
     }
 
     /**
-     * Plain Message.
-     *
-     * @param title
-     * @param message
-     */
-    public static void show(String title, String message) {
-        createSwingMessage(title, message, JOptionPane.PLAIN_MESSAGE);
-    }
-
-    /**
      * Show Question.
      *
      * @param title
@@ -68,20 +134,6 @@ public class MessageBox {
      */
     public static void showQuestion(String title, String message) {
         createSwingMessage(title, message, JOptionPane.QUESTION_MESSAGE);
-    }
-
-    /**
-     * Create a standard swing confirmation.
-     *
-     * @param title
-     * @param message
-     * @param option
-     * @return
-     */
-    private static int createSwingConfirm(String title, String message, int option) {
-        return JOptionPane.showConfirmDialog(null, message, title,
-                option,
-                JOptionPane.QUESTION_MESSAGE);
     }
 
     /**

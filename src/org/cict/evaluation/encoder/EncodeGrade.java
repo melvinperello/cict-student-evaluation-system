@@ -21,7 +21,7 @@
  * THIS PROJECT DOES NOT INCLUDE DISTRIBUTION FOR OTHER PURPOSES.
  *
  */
-package org.cict.evaluation.evaluator;
+package org.cict.evaluation.encoder;
 
 import app.lazy.models.CurriculumSubjectMapping;
 import app.lazy.models.DB;
