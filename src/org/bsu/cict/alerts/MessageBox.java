@@ -1,5 +1,6 @@
 package org.bsu.cict.alerts;
 
+import java.awt.Dimension;
 import javax.swing.JOptionPane;
 
 /**
@@ -9,6 +10,13 @@ import javax.swing.JOptionPane;
  */
 public class MessageBox {
 
+    public static void main(String[] args) {
+        showInformation("Asd", "<h1>lkjkljk</h1>ljkljklj<p>kljkljkljkl</p><p>jkljkljkljkljkljkljkljkljjlkjkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljjlkjkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljjlkjkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljjlkjkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljkljj");
+    }
+
+    private final static String HTML_START = "<html><body wdth='10'>";
+    private final static String HTML_END = "</body></html>";
+
     /**
      * private method to create a typical swing message dialog with void return.
      *
@@ -17,7 +25,9 @@ public class MessageBox {
      * @param messageType
      */
     private static void createSwingMessage(String title, String message, int messageType) {
-        JOptionPane.showMessageDialog(null, message, title, messageType);
+        String body = HTML_START + message + HTML_END;
+        System.out.println(body);
+        JOptionPane.showMessageDialog(null, body, title, messageType);
     }
 
     /**
