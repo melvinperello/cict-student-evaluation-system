@@ -191,7 +191,7 @@ public class ReportsUtility {
                 if(customized.get(j) != null) {
                     Boolean isChecked = (Boolean) customized.get(j)[0];
                     if(isChecked != null && isChecked) {
-                        tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, (j!=0), false, 4f, false));
+                        tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, true, false, 4f, false));
                     }
                 }
             }

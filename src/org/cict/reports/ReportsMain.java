@@ -361,6 +361,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         
         super.addClickEvent(btn_filter_print_logs, ()->{
             cmbChanged = false;
+            btn_print_print_logs.setDisable(false);
             this.onSearchFaculty(txt_faculty_search_print_logs.getText(), cmb_print_logs_faculty_search_vis1.getSelectionModel().getSelectedItem());
         });
         
