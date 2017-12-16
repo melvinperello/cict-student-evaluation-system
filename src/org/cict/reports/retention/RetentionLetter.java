@@ -102,7 +102,10 @@ public class RetentionLetter {
         document.add(createLetterHeader());
         document.add(createReceieverInformation());
         document.add(createBody());
-        document.add(createSenderInfo());
+        PdfPTable tableSender = createSenderInfo();
+        if(tableSender != null) {
+            document.add(tableSender);
+        }
         document.add(createDeanInfo());
         addText(STUDENT_NAME, 7, 240, document.getPageSize().getHeight()- 212);
         addText(STUDENT_SECTION, 7, 455,  document.getPageSize().getHeight()- 212);
@@ -205,6 +208,9 @@ public class RetentionLetter {
     }
 
     private PdfPTable createSenderInfo(){
+        if(SENDER_NAMES.length==0) {
+            return null;
+        }
         PdfPTable tbl_sender = new PdfPTable(SENDER_NAMES.length);
         tbl_sender.setHorizontalAlignment(Element.ALIGN_RIGHT);
         tbl_sender.setTotalWidth(200);

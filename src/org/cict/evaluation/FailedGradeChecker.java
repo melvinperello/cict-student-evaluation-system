@@ -211,7 +211,17 @@ public class FailedGradeChecker extends Transaction{
             retention.PREV_SCHOOL_YEAR = prevAcadTerm.getSchool_year();
             retention.PREV_SEMESTER = (prevAcadTerm.getSemester_regular()==1? "1st" : (prevAcadTerm.getSemester_regular()==2? "2nd" : "Midyear"));
         }
-        retention.SENDER_NAMES = new String[] {PublicConstants.getSystemVar_LocalRegistrar1().toString(), PublicConstants.getSystemVar_LocalRegistrar2().toString()};
+        String localReg1 = PublicConstants.getSystemVar_LocalRegistrar1().toString();
+        String localReg2 = PublicConstants.getSystemVar_LocalRegistrar2().toString();
+        if(!localReg1.isEmpty() && !localReg2.isEmpty()) {
+            retention.SENDER_NAMES = new String[] {localReg1, localReg2};
+        } else if(!localReg1.isEmpty()) {
+            retention.SENDER_NAMES = new String[] {localReg1};
+        } else if(!localReg2.isEmpty()) {
+            retention.SENDER_NAMES = new String[] {localReg2};
+        } else {
+            retention.SENDER_NAMES = new String[] {};
+        }
         retention.setDocumentFormat(document);
         retention.print();
     }

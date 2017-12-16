@@ -481,5 +481,8 @@ public class SystemLogin extends MonoLauncher {
         PublicConstants.getSystemVar_RECOMMENDNG_APPRVL();
         PublicConstants.getSystemVar_REGISTRAR();
         PublicConstants.getSystemVar_SMS_SERVER();
+        PublicConstants.getSystemVar_Noted_By();
+        PublicConstants.getSystemVar_LocalRegistrar1();
+        PublicConstants.getSystemVar_LocalRegistrar2();
     }
 }
