@@ -8,7 +8,7 @@
  */
 package org.cict.evaluation.evaluator;
 
-import org.cict.evaluation.encoder.EncodeGrade;
+import org.cict.evaluation.encoder.SpreadSheetGradeEncoder;
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AcademicTermMapping;
 import app.lazy.models.Database;
@@ -98,8 +98,8 @@ public class Evaluator implements Process {
         return new CheckGrade();
     }
 
-    public EncodeGrade createGradeEncoder() {
-        return new EncodeGrade();
+    public SpreadSheetGradeEncoder createGradeEncoder() {
+        return new SpreadSheetGradeEncoder();
     }
 
     /**

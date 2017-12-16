@@ -58,18 +58,18 @@ import org.hibernate.criterion.Order;
  * @reviewed 10/17/2017
  * @editor Melvin.
  */
-public class EncodeGrade extends Transaction {
+public class SpreadSheetGradeEncoder extends Transaction {
 
     public SpreadsheetView spreadSheet;
     public Integer CICT_id;
-    public String MODE = "";
+//    public String MODE = "";
     //--------------------------------------------------------------------------
     public StudentMapping studentMapping;
     public Integer encodingYear;
     //--------------------------------------------------------------------------
 
     private final Integer FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
-    public Integer ACAD_TERM_id;
+//    public Integer ACAD_TERM_id;
 
 //    private boolean POSTED = false;
     private boolean beenModified = false;
