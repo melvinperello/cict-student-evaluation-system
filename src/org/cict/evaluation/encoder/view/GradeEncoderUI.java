@@ -57,7 +57,7 @@ public class GradeEncoderUI {
     private Integer ACAD_TERM_id;
     private Date POSTED_DATE;
     private boolean POSTED;
-    private String MODE = "";
+//    private String MODE = "";
     private Integer CURRICULUM_id, yearLevel, semester;
 
     public HBox pnl_spreadsheet;
@@ -77,9 +77,9 @@ public class GradeEncoderUI {
         initialize();
     }
 
-    public void setMode(String mode) {
-        this.MODE = mode;
-    }
+//    public void setMode(String mode) {
+//        this.MODE = mode;
+//    }
 
     public void setAcadTermId(Integer id) {
         this.ACAD_TERM_id = id;

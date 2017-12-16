@@ -118,10 +118,12 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     private Integer CURRICULUM_id, yearLevel, semester;
 
     public GradeEncoderController(String mode, StudentMapping student, ArrayList<SubjectMapping> subjectsToEncode, String title) {
+        //----------------------------------------------------------------------
         this.CURRENT_STUDENT = student;
         this.subjectsToEncode = subjectsToEncode;
         this.TITLE = title;
         this.MODE = mode;
+        //----------------------------------------------------------------------
         try {
             this.gei = new GradeEncoderUI();
         } catch (Exception e) {
@@ -138,12 +140,11 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         this.semester = sem;
     }
 
-    public GradeEncoderController() {
-        // blank constructor
-    }
-
     private Pane application_root;
 
+    /**
+     * Initialization of the FXML.
+     */
     @Override
     public void onInitialization() {
         this.application_root = this.pnl_main;
@@ -153,7 +154,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     }
 
     private void init() {
-        //-------------------------------
+        //----------------------------------------------------------------------
         // set image
         SimpleTask set_profile = new SimpleTask("set_profile");
         set_profile.setTask(() -> {
@@ -170,25 +171,38 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         set_profile.whenSuccess(() -> {
         });
         set_profile.start();
-        //-------------------------------
-
+        //----------------------------------------------------------------------
+        // show loading
         this.changeView(pnl_loading);
+        //----------------------------------------------------------------------
         this.CURRICULUM_id = CURRENT_STUDENT.getCURRICULUM_id();
+        //----------------------------------------------------------------------
+        // set the grading table on the left side.
         this.tbl_rating = this.gei.createGradeTable(this.tbl_rating);
+        // set where the notificaiton will appear
         this.gei.setNotificationPane(pnl_main);
+        //----------------------------------------------------------------------
         btnPost.setDisable(false);
         try {
             gei.setAcadTermId(this.getAcadTermId());
         } catch (NullPointerException a) {
+            a.printStackTrace();
         }
         gei.setCictId(this.CURRENT_STUDENT.getCict_id());
+        //----------------------------------------------------------------------
+        // subjects to be displayed in the spread sheet.
         gei.setSubjectsToBePrinted(this.subjectsToEncode);
-        gei.setMode(this.MODE);
+        //----------------------------------------------------------------------
+        // gei.setMode(this.MODE);
+        //----------------------------------------------------------------------
         gei.setCurriculumID(CURRICULUM_id, yearLevel, semester);
+        //----------------------------------------------------------------------
+        // construct spreadsheet.
         SimpleTask createSpredSheetTx = new SimpleTask("create-ss");
-
         createSpredSheetTx.setTask(() -> {
-            createSpreadSheet();
+            // create the spreadsheet.
+            spv = this.gei.createSpreadsheet();
+            HBox.setHgrow(spv, Priority.ALWAYS);
         });
         createSpredSheetTx.whenStarted(() -> {
             tbl_rating.setDisable(true);
@@ -230,7 +244,9 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                 super.close();
             }
         });
+        //----------------------------------------------------------------------
         createSpredSheetTx.start();
+        //----------------------------------------------------------------------
     }
 
     @Override
@@ -239,7 +255,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     }
 
     private void buttonEvents() {
-        btnPost.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+        btnPost.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             int choice = Mono.fx()
                     .alert()
                     .createConfirmation()
@@ -271,11 +287,6 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                 Mono.fx().getParentStage(btnPost).close();
             }
         });
-    }
-
-    public void createSpreadSheet() {
-        spv = this.gei.createSpreadsheet();
-        HBox.setHgrow(spv, Priority.ALWAYS);
     }
 
     private void logs(String str) {
@@ -406,6 +417,9 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         return false;
     }
 
+    /**
+     *
+     */
     private Integer getAcadTermId() {
         Integer admissionYear = null;
         try {
@@ -437,7 +451,11 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         }
     }
 
-    //-------------------------
+    /**
+     * switch between views of this controller.
+     *
+     * @param node
+     */
     private void changeView(Node node) {
         Animate.fade(node, 150, () -> {
             pnl_error.setVisible(false);
@@ -447,13 +465,19 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         }, pnl_error, pnl_loading, pnl_spreadsheet);
     }
 
+    /**
+     * Get the student's profile image.
+     */
     private void setImageView() {
+        //----------------------------------------------------------------------
         StudentProfileMapping spMap = null;
+        //----------------------------------------------------------------------
         if (this.CURRENT_STUDENT.getHas_profile().equals(1)) {
             spMap = Mono.orm().newSearch(Database.connect().student_profile())
                     .eq(DB.student_profile().STUDENT_id, this.CURRENT_STUDENT.getCict_id())
                     .active(Order.desc(DB.student_profile().id)).first();
         }
+        //----------------------------------------------------------------------
         String studentImage = null;
         if (spMap != null) {
             studentImage = spMap.getProfile_picture();
