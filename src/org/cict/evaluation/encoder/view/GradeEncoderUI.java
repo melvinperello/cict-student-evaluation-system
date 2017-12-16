@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
-import org.cict.evaluation.evaluator.EncodeGrade;
+import org.cict.evaluation.encoder.EncodeGrade;
 import org.cict.evaluation.evaluator.Evaluator;
 import org.controlsfx.control.Notifications;
 
@@ -59,10 +59,10 @@ public class GradeEncoderUI {
     }
 
     //--------------------------------------------------------------------------
-    private final Integer FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
+//    private final Integer FACULTY_id;
 //    private Integer ACAD_TERM_id;
-    private Date POSTED_DATE;
-    private boolean POSTED;
+//    private Date POSTED_DATE;
+//    private boolean POSTED;
 //    private String MODE = "";
     private Integer CURRICULUM_id, yearLevel, semester;
 
@@ -72,11 +72,12 @@ public class GradeEncoderUI {
 //        this.pnl_spreadsheet = pnl_spreadsheet;
 //    }
     public GradeEncoderUI() {
-        this.POSTED = false;
+//        this.POSTED = false;
         /**
          * @improper_date: 09.02.2017
          */
-        this.POSTED_DATE = Mono.orm().getServerTime().getDateWithFormat();
+//        this.FACULTY_id = CollegeFaculty.instance().getFACULTY_ID();
+//        this.POSTED_DATE = Mono.orm().getServerTime().getDateWithFormat();
         initialize();
     }
 
