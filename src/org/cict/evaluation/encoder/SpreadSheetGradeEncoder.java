@@ -36,6 +36,7 @@ import com.jhmvin.fx.async.TransactionException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import javafx.collections.ObservableList;
 import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
@@ -83,7 +84,8 @@ public class SpreadSheetGradeEncoder extends Transaction {
 //    }
     @Override
     protected boolean transaction() {
-        final Calendar serverCalendar = Mono.orm().getServerTime().getCalendar();
+        //----------------------------------------------------------------------
+        //final Calendar serverCalendar = Mono.orm().getServerTime().getCalendar();
         final Date serverDate = Mono.orm().getServerTime().getDateWithFormat();
         final Calendar incExpireTime = Calendar.getInstance();
         incExpireTime.setTime(serverDate);
@@ -104,10 +106,10 @@ public class SpreadSheetGradeEncoder extends Transaction {
             //------------------------------------------------------------------
             ObservableList<SpreadsheetCell> individualRow = gridRows.get(rowIndex);
             String subjectCode = individualRow.get(0).getItem().toString();
-            String gradeRating = individualRow.get(3).getItem()==null? null : individualRow.get(3).getItem().toString();
-            String gradeRemarks = individualRow.get(4).getItem()==null? null : individualRow.get(4).getItem().toString().toUpperCase();
+            String gradeRating = individualRow.get(3).getItem() == null ? null : individualRow.get(3).getItem().toString();
+            String gradeRemarks = individualRow.get(4).getItem() == null ? null : individualRow.get(4).getItem().toString().toUpperCase(Locale.ENGLISH);
             //------------------
-            if(gradeRating==null || gradeRemarks==null || gradeRating.isEmpty()) {
+            if (gradeRating == null || gradeRemarks == null || gradeRating.isEmpty()) {
                 System.out.println("GRADE IS NULL " + subjectCode);
                 continue;
             }
@@ -117,7 +119,6 @@ public class SpreadSheetGradeEncoder extends Transaction {
             if (gradeRemarks.equalsIgnoreCase("not for encoding")) {
                 continue;
             }
-            
 
             //------------------------------------------------------------------
             // search subjects from the repository

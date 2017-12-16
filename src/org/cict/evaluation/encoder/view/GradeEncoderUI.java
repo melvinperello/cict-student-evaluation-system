@@ -87,12 +87,30 @@ public class GradeEncoderUI {
 //    public void setAcadTermId(Integer id) {
 //        this.ACAD_TERM_id = id;
 //    }
-    public void setCurriculumID(Integer id, Integer yr, Integer sem) {
-        this.CURRICULUM_id = id;
+    /**
+     * Student Mapping.
+     */
+    private StudentMapping studentMap;
+
+    public void setStudentMap(StudentMapping student) {
+        this.studentMap = student;
+        this.CURRICULUM_id = student.getCURRICULUM_id();
+        this.CICT_id = student.getCict_id();
+    }
+
+    public void setYearAndSem(Integer yr, Integer sem) {
+        //this.CURRICULUM_id = id;
         this.yearLevel = yr;
         this.semester = sem;
     }
 
+    //----------------------------------------------------
+//    public void setCictId(Integer cict_id) {
+//        // get student curriculum
+//        this.CICT_id = cict_id;
+//        studentMap = (StudentMapping) Database.connect().student().getPrimary(cict_id);
+//    }
+    //-----------------------------------------------------
     private boolean valueFiltering = true;
 
     /**
@@ -103,16 +121,6 @@ public class GradeEncoderUI {
     public void setValueFiltering(boolean valueFiltering) {
         this.valueFiltering = valueFiltering;
     }
-
-    //----------------------------------------------------
-    private StudentMapping studentMap;
-
-    public void setCictId(Integer cict_id) {
-        // get student curriculum
-        this.CICT_id = cict_id;
-        studentMap = (StudentMapping) Database.connect().student().getPrimary(cict_id);
-    }
-    //-----------------------------------------------------
 
     public void setSubjectsToBePrinted(ArrayList<SubjectMapping> subjects) {
         this.subjectsToBePrinted = subjects;

@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import org.bsu.cict.alerts.MessageBox;
 
 /**
  *
@@ -49,6 +50,7 @@ public class ErrorLogger {
         el.setErrorThread(t);
         el.printError();
         el.writeToText();
+        MessageBox.showError("Fatal Error","A system error has occured. The error details was saved in your local log files.");
         //JOptionPane.showMessageDialog(null, "A System Error Has Occured.\nThe error was saved in your local log files for information,\nthe system needs to be terminated.", "ERROR", JOptionPane.ERROR_MESSAGE);
         // TERMINATES THE APPLCATION FORCIBLY.
        // Runtime.getRuntime().halt(0);
