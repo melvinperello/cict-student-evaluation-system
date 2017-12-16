@@ -193,6 +193,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     @FXML
     private VBox vbox_waiting_queue;
 
+    
     public EvaluateController() {
         //
     }
@@ -384,6 +385,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 return;
             }
             this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
+            
+            //---------------
+            // for retention
+            this.retentionChecker();
+            //---------------
         });
 
         super.addClickEvent(btn_already_evaluate, () -> {
@@ -797,6 +803,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 showAssistant();
             }
         }
+        
+        //---------------
+        // for retention
+        this.retentionChecker();
+        //---------------
 
         //----------------------------------------------------------------------
         // display the results.
@@ -2099,5 +2110,24 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             dataTransaction.commit();
             return true;
         }
+    }
+    
+    private void retentionChecker() {
+        FailedGradeChecker checker = new FailedGradeChecker();
+        checker.setStudent(currentStudent);
+        checker.setDocument(ReportsUtility.createShortDocument());
+        checker.whenCancelled(()->{
+            Notifications.create().darkStyle()
+                    .title("Warning")
+                    .text(checker.getLog()).showWarning();
+        });
+        checker.whenSuccess(()->{
+            if(checker.getLog().equalsIgnoreCase("PRINTING")) {
+                Notifications.create().darkStyle()
+                        .title("Failed Grade Found")
+                        .text("Printing the retention letter for the student.").showWarning();
+            }
+        });
+        checker.transact();
     }
 }

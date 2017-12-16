@@ -123,7 +123,7 @@ public class SystemValues extends MonoLauncher {
     }
     
     private Integer FACULTY_ID = CollegeFaculty.instance().getFACULTY_ID();
-    private Date SERVER_DATETIME = Mono.orm().getServerTime().getDateWithFormat();
+    private Date SERVER_DATETIME;
     private void save() {
         if(this.checkIfEmpty(txt_name, txt_value))
             return;
@@ -143,6 +143,7 @@ public class SystemValues extends MonoLauncher {
         SystemVariablesMapping addedVar = new SystemVariablesMapping();
         addedVar.setActive(1);
         addedVar.setCreated_by(FACULTY_ID);
+        SERVER_DATETIME = Mono.orm().getServerTime().getDateWithFormat();
         addedVar.setCreated_date(SERVER_DATETIME);
         addedVar.setName(name.toUpperCase().replace(" ", "_"));
         addedVar.setValue(value.toUpperCase());
@@ -238,8 +239,8 @@ public class SystemValues extends MonoLauncher {
         btn_add_new1.setDisable(!isGranted);
         
         MonoClick.addClickEvent(btn_add_new1, ()->{
-            if(this.checkIfEmpty(txt_name1, txt_value1))
-                return;
+//            if(this.checkIfEmpty(txt_name1, txt_value1))
+//                return;
             String name = MonoString.removeExtraSpace(txt_name1.getText());
             String value = MonoString.removeExtraSpace(txt_value1.getText());
             this.update(row, name, value);
@@ -326,9 +327,10 @@ public class SystemValues extends MonoLauncher {
             }
         }
         SystemVariablesMapping updateThis = (SystemVariablesMapping) row.getRowMetaData().get("MAP");
-        updateThis.setName(name.toUpperCase().replace(" ", "_"));
+//        updateThis.setName(name.toUpperCase().replace(" ", "_"));
         updateThis.setValue(value);
         updateThis.setUpdated_by(FACULTY_ID);
+        SERVER_DATETIME = Mono.orm().getServerTime().getDateWithFormat();
         updateThis.setUpdated_date(SERVER_DATETIME);
         if(Database.connect().system_variables().update(updateThis)) {
             Notifications.create().darkStyle()
