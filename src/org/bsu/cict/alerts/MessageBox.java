@@ -4,18 +4,26 @@ import java.util.Locale;
 import javax.swing.JOptionPane;
 
 /**
- * Standard Java Message Boxes Factory..
+ * Standard Java Message Box Factory.
+ *
+ * Supports HTML 3.2 and simple CSS Styling.
  *
  * @author Jhon Melvin
  */
 public class MessageBox {
 
+    /**
+     * Message display block alignment.
+     */
     public enum TextAlignment {
         LEFT, RIGHT, CENTER;
     }
 
+    //--------------------------------------------------------------------------
+    // default values
     private static int width = 180;
     private static TextAlignment alignment = TextAlignment.LEFT;
+    //--------------------------------------------------------------------------
 
     /**
      * overrides the default width.
