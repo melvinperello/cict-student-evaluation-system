@@ -175,7 +175,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         // show loading
         this.changeView(pnl_loading);
         //----------------------------------------------------------------------
-        this.CURRICULUM_id = CURRENT_STUDENT.getCURRICULUM_id();
+        //this.CURRICULUM_id = CURRENT_STUDENT.getCURRICULUM_id();
         //----------------------------------------------------------------------
         // set the grading table on the left side.
         this.tbl_rating = this.gei.createGradeTable(this.tbl_rating);
@@ -188,14 +188,17 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
 //        } catch (NullPointerException a) {
 //            a.printStackTrace();
 //        }
-        gei.setCictId(this.CURRENT_STUDENT.getCict_id());
+        //gei.setCictId(this.CURRENT_STUDENT.getCict_id());
+        //----------------------------------------------------------------------
+        gei.setStudentMap(CURRENT_STUDENT);
         //----------------------------------------------------------------------
         // subjects to be displayed in the spread sheet.
         gei.setSubjectsToBePrinted(this.subjectsToEncode);
         //----------------------------------------------------------------------
         // gei.setMode(this.MODE);
         //----------------------------------------------------------------------
-        gei.setCurriculumID(CURRICULUM_id, yearLevel, semester);
+        //gei.setCurriculumID(CURRICULUM_id, yearLevel, semester);
+        gei.setYearAndSem(yearLevel, semester);
         //----------------------------------------------------------------------
         // construct spreadsheet.
         SimpleTask createSpredSheetTx = new SimpleTask("create-ss");
@@ -399,16 +402,17 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
             lbl_lastname.setText(CURRENT_STUDENT.getLast_name());
             lbl_middlename.setText(CURRENT_STUDENT.getMiddle_name() == null ? "" : CURRENT_STUDENT.getMiddle_name());
-
+            //------------------------------------------------------------------
+            // get curriculum
             CurriculumMapping curriculum
                     = Database.connect()
                             .curriculum()
                             .getPrimary(this.CURRENT_STUDENT.getCURRICULUM_id());
-
+            // get academic program
             AcademicProgramMapping aMap
                     = Database.connect().academic_program()
                             .getPrimary(curriculum.getACADPROG_id());
-
+            // set value
             lbl_course.setText(aMap.getCode());
         } catch (NullPointerException e) {
             e.printStackTrace();

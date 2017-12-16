@@ -130,7 +130,10 @@ public class SearchSuggestions extends Transaction {
 
             if (grade == null) {
                 // no grade
+                log("The Subjet has no grade");
                 subjectWithNoGrades.add(sub);
+            } else {
+                log("TAKEN WITH PASSED OR INC");
             }
         }
 
