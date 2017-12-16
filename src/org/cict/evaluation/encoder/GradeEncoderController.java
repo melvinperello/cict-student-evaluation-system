@@ -66,49 +66,49 @@ import org.hibernate.criterion.Order;
  * @author Joemar
  */
 public final class GradeEncoderController extends SceneFX implements ControllerFX {
-    
+
     @FXML
     private VBox pnl_main;
-    
+
     @FXML
     private Label lbl_lastname;
-    
+
     @FXML
     private Label lbl_firstname;
-    
+
     @FXML
     private Label lbl_middlename;
-    
+
     @FXML
     private Label lbl_course;
-    
+
     @FXML
     private Label lbl_stud_id;
-    
+
     @FXML
     private JFXTreeTableView<RatingTableClass> tbl_rating;
-    
+
     @FXML
     private HBox pnl_spreadsheet;
-    
+
     @FXML
     private HBox pnl_loading;
-    
+
     @FXML
     private HBox pnl_error;
-    
+
     @FXML
     private Label lblTitle;
-    
+
     @FXML
     private Button btnSkip;
-    
+
     @FXML
     private Button btnPost;
-    
+
     @FXML
     private ImageView img_profile;
-    
+
     private GradeEncoderUI gei;
     private SpreadsheetView spv;
     private StudentMapping CURRENT_STUDENT;
@@ -116,7 +116,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     private String TITLE;
     private String MODE;
     private Integer CURRICULUM_id, yearLevel, semester;
-    
+
     public GradeEncoderController(String mode, StudentMapping student, ArrayList<SubjectMapping> subjectsToEncode, String title) {
         //----------------------------------------------------------------------
         this.CURRENT_STUDENT = student;
@@ -134,12 +134,12 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                     .showError();
         }
     }
-    
+
     public void setYearAndSem(Integer yr, Integer sem) {
         this.yearLevel = yr;
         this.semester = sem;
     }
-    
+
     private Pane application_root;
 
     /**
@@ -152,7 +152,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         this.init();
         this.onPrepare();
     }
-    
+
     private void init() {
         //----------------------------------------------------------------------
         // set image
@@ -251,12 +251,12 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         createSpredSheetTx.start();
         //----------------------------------------------------------------------
     }
-    
+
     @Override
     public void onEventHandling() {
         this.buttonEvents();
     }
-    
+
     private void buttonEvents() {
         btnPost.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             int choice = Mono.fx()
@@ -267,13 +267,13 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                     .setMessage("Are you sure you want to post grades? "
                             + "This will no longer be editable after this process.")
                     .confirmCustom("Yes", "No");
-            
+
             if (choice == 1) {
 //                this.gei.setPnl_spreadsheet(this.pnl_spreadsheet);
                 this.gei.verifySheet(btnPost);
             }
         });
-        
+
         this.addClickEvent(btnSkip, () -> {
             int choice = 0;
             if (!btnPost.isDisable()) {
@@ -291,13 +291,13 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             }
         });
     }
-    
+
     private void logs(String str) {
         if (false) {
             System.out.println("@GradeEncoderController: " + str);
         }
     }
-    
+
     private void writeEncodedGrades() {
         // enable the post button
         this.btnPost.setDisable(false);
@@ -345,7 +345,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                 }
             }
         }
-        
+
         this.gei.setValueFiltering(true);
         //----------------------------------------------------------------------
         // now when the loop is over let's compare how many rows we have against writeCount
@@ -357,9 +357,9 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             // re enable value filtering
 
         }
-        
+
     }
-    
+
     private Integer isInList(ArrayList<SubjectMapping> list, String subjectCode) {
         for (SubjectMapping subjectMapping : list) {
             if (subjectCode.equalsIgnoreCase(subjectMapping.getCode())) {
@@ -380,7 +380,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         currentCell.setItem(value);
         currentCell.setEditable(false);
     }
-    
+
     public String getGradeRating(Integer subjectID) {
         // since subject id is unique it will return only 1 result
         // unless the subject is taken twice or more
@@ -394,7 +394,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         // if not empty return the first latest result
         return grades == null ? null : grades.getRating();
     }
-    
+
     public boolean onPrepare() {
         try {
             lblTitle.setText(this.TITLE);
@@ -402,16 +402,17 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             lbl_firstname.setText(CURRENT_STUDENT.getFirst_name());
             lbl_lastname.setText(CURRENT_STUDENT.getLast_name());
             lbl_middlename.setText(CURRENT_STUDENT.getMiddle_name() == null ? "" : CURRENT_STUDENT.getMiddle_name());
-            
+            //------------------------------------------------------------------
+            // get curriculum
             CurriculumMapping curriculum
                     = Database.connect()
                             .curriculum()
                             .getPrimary(this.CURRENT_STUDENT.getCURRICULUM_id());
-            
+            // get academic program
             AcademicProgramMapping aMap
                     = Database.connect().academic_program()
                             .getPrimary(curriculum.getACADPROG_id());
-            
+            // set value
             lbl_course.setText(aMap.getCode());
         } catch (NullPointerException e) {
             e.printStackTrace();
