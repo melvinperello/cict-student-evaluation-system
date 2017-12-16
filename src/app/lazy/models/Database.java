@@ -3,7 +3,6 @@ package app.lazy.models;
 
 import com.jhmvin.Mono;
 import com.jhmvin.orm.MonoModels;
-import org.cict.PublicConstants;
 
 
 public class Database {
@@ -58,7 +57,7 @@ private MonoModels tbl_system_variables;
 private void setup() {
 Mono.orm().setConnectionDriverClass("org.mariadb.jdbc.Driver");
 Mono.orm().setConnectionProvider("jdbc:mariadb");
-Mono.orm().setHost(PublicConstants.getServerIP());
+Mono.orm().setHost("127.0.0.1");
 Mono.orm().setPort(3306);
 Mono.orm().setDatabaseName("cictems");
 Mono.orm().setDatabaseUser("root");

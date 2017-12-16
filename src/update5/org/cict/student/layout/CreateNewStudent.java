@@ -47,7 +47,7 @@ import org.controlsfx.control.Notifications;
  *
  * @author Joemar
  */
-public class CreateNewStudent extends MonoLauncher{
+public class CreateNewStudent extends MonoLauncher {
 
     @FXML
     private VBox application_root;
@@ -82,13 +82,13 @@ public class CreateNewStudent extends MonoLauncher{
         rbtn_cluster1.setToggleGroup(group);
         rbtn_cluster2.setToggleGroup(group);
 
-        MonoClick.addClickEvent(btn_cancel, ()->{
+        MonoClick.addClickEvent(btn_cancel, () -> {
             Mono.fx().getParentStage(btn_add).close();
         });
-        
+
         this.textFieldFilters();
     }
-    
+
     private void textFieldFilters() {
         StringFilter textId = TextInputFilters.string()
                 //                .setFilterMode(StringFilter.LETTER_DIGIT)
@@ -102,9 +102,9 @@ public class CreateNewStudent extends MonoLauncher{
                     }
                 });
         textId.clone().setTextSource(txt_id).applyFilter();
-        
+
         StringFilter textName = TextInputFilters.string()
-                                .setFilterMode(StringFilter.LETTER_SPACE)
+                .setFilterMode(StringFilter.LETTER_SPACE)
                 .setMaxCharacters(100)
                 .setNoLeadingTrailingSpaces(false)
                 .setFilterManager(filterManager -> {
@@ -121,7 +121,7 @@ public class CreateNewStudent extends MonoLauncher{
 
     @Override
     public void onDelayedStart() {
-        MonoClick.addClickEvent(btn_add, ()->{
+        MonoClick.addClickEvent(btn_add, () -> {
             this.saveStudent();
         });
         super.onDelayedStart(); //To change body of generated methods, choose Tools | Templates.
@@ -129,7 +129,7 @@ public class CreateNewStudent extends MonoLauncher{
 
     private void saveStudent() {
         String id = MonoString.removeExtraSpace(txt_id.getText().toUpperCase());
-        if(id==null || id.isEmpty()) {
+        if (id == null || id.isEmpty()) {
             Mono.fx().alert().createWarning()
                     .setHeader("Student Number")
                     .setMessage("Student Number must have a value.").show();
@@ -137,14 +137,14 @@ public class CreateNewStudent extends MonoLauncher{
         }
         StudentMapping exist = Mono.orm().newSearch(Database.connect().student())
                 .eq(DB.student().id, id).active().first();
-        if(exist != null) {
+        if (exist != null) {
             Mono.fx().alert().createWarning()
                     .setHeader("Student Exist!")
                     .setMessage("Student Number already existing.").show();
             return;
         }
         String lastName = MonoString.removeExtraSpace(txt_last_name.getText().toUpperCase());
-        if(lastName==null || lastName.isEmpty()) {
+        if (lastName == null || lastName.isEmpty()) {
             Mono.fx().alert().createWarning()
                     .setHeader("Last Name")
                     .setMessage("Last Name must have a value.").show();
@@ -152,18 +152,18 @@ public class CreateNewStudent extends MonoLauncher{
         }
 
         String firstName = MonoString.removeExtraSpace(txt_first_name.getText().toUpperCase());
-        if(firstName==null || firstName.isEmpty()) {
+        if (firstName == null || firstName.isEmpty()) {
             Mono.fx().alert().createWarning()
                     .setHeader("First Name")
                     .setMessage("First Name must have a value.").show();
             return;
         }
 
-        String middleName = txt_middle_name.getText()==null? "" : MonoString.removeExtraSpace(txt_middle_name.getText().toUpperCase());
-        
+        String middleName = txt_middle_name.getText() == null ? "" : MonoString.removeExtraSpace(txt_middle_name.getText().toUpperCase());
+
         Integer cluster = null;
         try {
-            cluster = rbtn_cluster1.isSelected()? 3 : (rbtn_cluster2.isSelected()? 4 : null);
+            cluster = rbtn_cluster1.isSelected() ? 3 : (rbtn_cluster2.isSelected() ? 4 : null);
             System.out.println("CLUSTER: " + cluster);
         } catch (NullPointerException e) {
             Mono.fx().alert().createWarning()
@@ -171,7 +171,7 @@ public class CreateNewStudent extends MonoLauncher{
                     .setMessage("Select a Cluster Assignment for the student.").show();
             return;
         }
-        
+
         Date DATE = Mono.orm().getServerTime().getDateWithFormat();
         StudentMapping newStudent = new StudentMapping();
         newStudent.setCreated_by("FACULTY");
@@ -184,7 +184,7 @@ public class CreateNewStudent extends MonoLauncher{
         newStudent.setVerification_date(DATE);
         newStudent.setVerified(1);
         Integer newStudentCICT_id = Database.connect().student().insert(newStudent);
-        if(newStudentCICT_id.equals(-1)) {
+        if (newStudentCICT_id.equals(-1)) {
             Notifications.create().darkStyle()
                     .title("Failed")
                     .text("Please check your connectivity with\nthe server.").showError();
@@ -192,23 +192,20 @@ public class CreateNewStudent extends MonoLauncher{
         }
         StudentProfileMapping profile = new StudentProfileMapping();
         profile.setActive(1);
-        profile.setBrgy("");
-        profile.setCity("");
         profile.setCreated_date(DATE);
         profile.setEmail("");
         profile.setFloor_assignment(cluster);
-        profile.setHouse_no("");
         profile.setIce_address("");
         profile.setIce_contact("");
         profile.setIce_name("");
         profile.setMobile("");
-        profile.setProfile_picture("");
-        profile.setProvince("");
+        //----------------------------------------------------------------------
+        profile.setProfile_picture("NONE");
+        //----------------------------------------------------------------------
         profile.setSTUDENT_id(newStudentCICT_id);
-        profile.setStreet("");
         profile.setZipcode("");
         Integer profileID = Database.connect().student_profile().insert(profile);
-        if(!profileID.equals(-1)) {
+        if (!profileID.equals(-1)) {
             Notifications.create().darkStyle()
                     .title("Successfully Created!")
                     .text("New Student is created.").showInformation();

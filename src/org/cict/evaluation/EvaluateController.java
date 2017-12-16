@@ -402,7 +402,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     private void printDeficiency() {
         Document doc = ReportsUtility.paperSizeChooser(this.getStage());
-        if(doc==null) {
+        if (doc == null) {
             return;
         }
         PrintDeficiency print = new PrintDeficiency();
@@ -437,18 +437,18 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         print.setDocumentFormat(doc);
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(this.currentStudent.getCict_id(), "DEFICIENCY REPORT", "EVALUATION", "INITIAL")) {
+        if (ReportsUtility.savePrintLogs(this.currentStudent.getCict_id(), "DEFICIENCY REPORT", "EVALUATION", "INITIAL")) {
             print.transact();
         }
     }
 
     private void onShowMovingUp() {
-        
-        if(!Access.enterTransactionPin(this.getStage())) {
+
+        if (!Access.enterTransactionPin(this.getStage())) {
             Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
             return;
         }
-            
+
         FetchCurriculumInfo fetch = new FetchCurriculumInfo();
         fetch.student = currentStudent;
         fetch.whenStarted(() -> {
@@ -738,7 +738,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             setView("already");
             return;
         }
-        
+
         System.out.println("@EvaluateController: Search Success");
 
         //----------------------------------------------------------------------
@@ -746,11 +746,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
         // run this if not a cross enrollee student
         if (!FLAG_CROSS_ENROLLEE) {
-            
+
             //----------------------
             // if curriculum is obsolete, don't allow evaluation
-            if(studentCurriculum != null) {
-                if(studentCurriculum.getObsolete_term().equals(1)) {
+            if (studentCurriculum != null) {
+                if (studentCurriculum.getObsolete_term().equals(1)) {
                     Mono.fx().alert().createWarning()
                             .setHeader("Obsolete Curriculum")
                             .setMessage("The student is registered to an obsolete curriculum. Please reassign the student to a currently offered course to proceed evaluation.")
@@ -760,8 +760,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 }
             }
             //-----------------------
-            
-            
+
             //------------------------------
             // check if overstaying
             if (StudentOverStay.check(currentStudent) && !allowOverStay) {
@@ -787,7 +786,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
             this.allowOverStay = false;
             //------------------------------
-            
+
             if (!PublicConstants.DISABLE_ASSISTANCE) {
                 if (FLAG_ASSISTANT_SHOW) {
                     showFirstAssistant();
@@ -951,7 +950,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         }
 
-        if(ReportsUtility.savePrintLogs(this.currentStudent.getCict_id(), "CHECKLIST", "EVALUATION", "INITIAL")) {
+        if (ReportsUtility.savePrintLogs(this.currentStudent.getCict_id(), "CHECKLIST", "EVALUATION", "INITIAL")) {
             printCheckList.transact();
         }
     }
@@ -1077,15 +1076,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShow();
     }
 
-
-
-   
-
     /**
      * Saves the evaluation.
      */
     private void saveEvaluation() {
-        if(studentCurriculum != null) {
+        if (studentCurriculum != null) {
             //----------------------------------------------------------------------
             List<CurriculumRequisiteExtMapping> sub = CoRequisiteFilter.checkCoReqEval(vbox_subjects,
                     this.studentCurriculum.getId(),
@@ -1700,26 +1695,30 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         setView("home");
     }
 
+    /**
+     * This method is not used.
+     */
+    @Deprecated
     private void updateYearLevelForRegular() {
-        String[] schoolYear = Evaluator.instance()
-                .getCurrentAcademicTerm()
-                .getSchool_year().split("-");
-        Integer admissionYear = Integer.valueOf(this.currentStudent.getAdmission_year());
-        Integer yearLevel = Integer.valueOf(schoolYear[1]) - admissionYear;
-        if (!Objects.equals(this.currentStudent.getYear_level(), yearLevel)) {
-            this.currentStudent.setYear_level(yearLevel);
-            if (Database.connect().student().update(this.currentStudent)) {
-                System.out.println("@EvaluateController: STUDENT UPDATED YEAR LEVEL INTO " + yearLevel);
-//                this.searchStudent();// students section
-                String section = this.currentStudent.getYear_level()
-                        + " "
-                        + this.currentStudent.getSection()
-                        + " - G"
-                        + this.currentStudent.get_group();
-                this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
-
-            }
-        }
+//        String[] schoolYear = Evaluator.instance()
+//                .getCurrentAcademicTerm()
+//                .getSchool_year().split("-");
+//        Integer admissionYear = Integer.valueOf(this.currentStudent.getAdmission_year());
+//        Integer yearLevel = Integer.valueOf(schoolYear[1]) - admissionYear;
+//        if (!Objects.equals(this.currentStudent.getYear_level(), yearLevel)) {
+//            this.currentStudent.setYear_level(yearLevel);
+//            if (Database.connect().student().update(this.currentStudent)) {
+//                System.out.println("@EvaluateController: STUDENT UPDATED YEAR LEVEL INTO " + yearLevel);
+////                this.searchStudent();// students section
+//                String section = this.currentStudent.getYear_level()
+//                        + " "
+//                        + this.currentStudent.getSection()
+//                        + " - G"
+//                        + this.currentStudent.get_group();
+//                this.lblCourseSection.setText(this.studentProgram.getName() + " | " + section);
+//
+//            }
+//        }
     }
 
     /**
@@ -1784,7 +1783,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         //----------------------------------------------------------------------
         // search student again to refresh values
-        if(mode.equalsIgnoreCase(CreditController.MODE_CREDIT)) {
+        if (mode.equalsIgnoreCase(CreditController.MODE_CREDIT)) {
             this.searchStudent();
         }
     }

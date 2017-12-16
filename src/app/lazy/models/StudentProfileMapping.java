@@ -30,12 +30,7 @@ private java.lang.Integer id;
 private java.lang.Integer STUDENT_id;
 private java.lang.Integer floor_assignment;
 private java.lang.String profile_picture;
-private java.lang.String house_no;
-private java.lang.String street;
-private java.lang.String brgy;
-private java.lang.String city;
 private java.lang.String student_address;
-private java.lang.String province;
 private java.lang.String zipcode;
 private java.lang.String mobile;
 private java.lang.String email;
@@ -83,42 +78,6 @@ public void setProfile_picture(java.lang.String fieldProfilePicture) {
 	this.profile_picture = fieldProfilePicture;
 }
 
-@Column(name = "house_no", nullable = true, length = 100)
-public java.lang.String getHouse_no() {
-	return this.house_no;
-}
-
-public void setHouse_no(java.lang.String fieldHouseNo) {
-	this.house_no = fieldHouseNo;
-}
-
-@Column(name = "street", nullable = true, length = 100)
-public java.lang.String getStreet() {
-	return this.street;
-}
-
-public void setStreet(java.lang.String fieldStreet) {
-	this.street = fieldStreet;
-}
-
-@Column(name = "brgy", nullable = true, length = 100)
-public java.lang.String getBrgy() {
-	return this.brgy;
-}
-
-public void setBrgy(java.lang.String fieldBrgy) {
-	this.brgy = fieldBrgy;
-}
-
-@Column(name = "city", nullable = true, length = 300)
-public java.lang.String getCity() {
-	return this.city;
-}
-
-public void setCity(java.lang.String fieldCity) {
-	this.city = fieldCity;
-}
-
 @Column(name = "student_address", nullable = true, length = 300)
 public java.lang.String getStudent_address() {
 	return this.student_address;
@@ -126,15 +85,6 @@ public java.lang.String getStudent_address() {
 
 public void setStudent_address(java.lang.String fieldStudentAddress) {
 	this.student_address = fieldStudentAddress;
-}
-
-@Column(name = "province", nullable = true, length = 50)
-public java.lang.String getProvince() {
-	return this.province;
-}
-
-public void setProvince(java.lang.String fieldProvince) {
-	this.province = fieldProvince;
 }
 
 @Column(name = "zipcode", nullable = true, length = 100)
@@ -221,12 +171,7 @@ StudentProfileMapping copyMe = new StudentProfileMapping();
 copyMe.STUDENT_id = this.STUDENT_id;
 copyMe.floor_assignment = this.floor_assignment;
 copyMe.profile_picture = this.profile_picture;
-copyMe.house_no = this.house_no;
-copyMe.street = this.street;
-copyMe.brgy = this.brgy;
-copyMe.city = this.city;
 copyMe.student_address = this.student_address;
-copyMe.province = this.province;
 copyMe.zipcode = this.zipcode;
 copyMe.mobile = this.mobile;
 copyMe.email = this.email;
