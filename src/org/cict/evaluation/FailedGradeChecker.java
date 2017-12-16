@@ -139,18 +139,20 @@ public class FailedGradeChecker extends Transaction{
                     .active(Order.desc(DB.grade().id)).first();
             
             if(grade != null) {
-                if(semester == 2) {
-                    prevAcadTermID = currentAcadTerm.getId();
-                }
+                prevAcadTermID = grade.getACADTERM_id();
                 System.out.println("IT'S FAILED " + subject.getCode());
                 failedSubject++;
             }
         }
+        if(currentAcadTerm.getSemester_regular().equals(2)) {
+            prevAcadTermID = currentAcadTerm.getId();
+        }
         
         if(prevAcadTermID != null) {
             prevAcadTerm = Database.connect().academic_term().getPrimary(prevAcadTermID);
-            if(semester == 2) {
+            if(currentAcadTerm.getSemester_regular().equals(2)) {
                prevAcadTerm.setSemester_regular(1);
+               prevAcadTerm.setSemester("FIRST SEMESTER");
             }
         }
         if(failedSubject>=2) {
@@ -159,13 +161,30 @@ public class FailedGradeChecker extends Transaction{
         return true;
     }
 
+    private static final String[] numNames = {
+        "",
+        " One",
+        " Two",
+        " Three",
+        " Four",
+        " Five",
+        " Six",
+        " Seven",
+        " Eight",
+        " Nine",
+        " Ten",
+        " Eleven",
+        " Twelve",
+        " Thirteen",
+        " Fourteen",
+        " Fifteen"};
     @Override
     protected void after() {
         // print if qualified for retention letter
         if(failedSubject >= 2) {
             String name = student.getFirst_name()+ (student.getMiddle_name()==null? "" : " " + WordUtils.initials(student.getMiddle_name())) + " " + student.getLast_name();
             String section = "";
-            String failed = (failedSubject==2)?"Two(2)" : "("+failedSubject+")";
+            String failed = numNames[failedSubject] + " ("+failedSubject+")";
             
             if(acadProgram != null) {
                 section = acadProgram.getCode() + " " + student.getYear_level() + student.getSection() + (student.get_group()==null? "" : "-G" + student.get_group());
