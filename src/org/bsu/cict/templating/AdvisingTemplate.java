@@ -253,9 +253,10 @@ public class AdvisingTemplate {
             ArrayList<String> sec = new ArrayList<>();
             ArrayList<String> lec = new ArrayList<>();
             ArrayList<String> lab = new ArrayList<>();
-            for (int x = 0; x < 12; x++) {
+            for (int x = 0; x < 10; x++) {
                 codes.add("MATH 113");
-                titles.add("POLITICS AND GOVERNANCE WITH PHILIPPINE CONSTITUTIONS");
+                // limit to 28 characters to dis avoid overflow.
+                titles.add("POLITICS AND GOVERNANCE WIT");
                 sec.add("BSIT 4H-G2");
                 lec.add("2.0");
                 lab.add("1.0");
