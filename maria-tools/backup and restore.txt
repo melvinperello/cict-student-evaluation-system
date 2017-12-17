@@ -1,0 +1,2 @@
+mysqldump --host=127.0.0.1 --user=root --password=root --add-drop-database  --databases cictems > D:\db1.monosync
+mysql.exe --host 127.0.0.1 --user=root --password=root < D:\db1.monosync

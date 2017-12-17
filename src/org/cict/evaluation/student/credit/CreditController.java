@@ -226,17 +226,17 @@ public class CreditController implements ControllerFX {
                     CreditTreeRow row = creditview.createNewRow();
                     row.setColor(this.defaultColor);
                     row.setID(sem_details.getSubjectID());
-                    System.out.println("cOdE: " + sem_details.getSubjectDetails().getCode() + " [] " + sem_details.getSubjectID());
+                    //System.out.println("cOdE: " + sem_details.getSubjectDetails().getCode() + " [] " + sem_details.getSubjectID());
                     // set pre requistes
                     ArrayList<Integer> pre_ids = new ArrayList<>();
                     Integer[] preqid = new Integer[0];
                     if (sem_details.getSubjectRequisites() == null) {
                         // do nothing no preq
-                        System.out.println("NO PREQ");
+                        //System.out.println("NO PREQ");
                     } else {
                         sem_details.getSubjectRequisites().forEach(pre_requisite -> {
                             pre_ids.add(pre_requisite.getSUBJECT_id_req());
-                            System.out.println("ID: " + pre_requisite.getSUBJECT_id_req());
+                           // System.out.println("ID: " + pre_requisite.getSUBJECT_id_req());
                         });
                         preqid = pre_ids.toArray(new Integer[pre_ids.size()]);
                     }
