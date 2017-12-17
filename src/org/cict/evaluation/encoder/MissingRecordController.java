@@ -275,7 +275,7 @@ public class MissingRecordController extends SceneFX implements ControllerFX {
             Transaction loadEncoder = new Transaction() {
                 @Override
                 protected boolean transaction() {
-                    controller = new GradeEncoderController("", CURRENT_STUDENT,
+                    controller = new GradeEncoderController(CURRENT_STUDENT,
                             FILTERED_SUBJECTS.get(index),
                             selected);
                     controller.setYearAndSem(year_level, index + 1);

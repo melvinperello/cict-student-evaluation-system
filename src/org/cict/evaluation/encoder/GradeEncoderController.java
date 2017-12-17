@@ -114,15 +114,15 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     private StudentMapping CURRENT_STUDENT;
     private ArrayList<SubjectMapping> subjectsToEncode;
     private String TITLE;
-    private String MODE;
+//    private String MODE;
     private Integer CURRICULUM_id, yearLevel, semester;
 
-    public GradeEncoderController(String mode, StudentMapping student, ArrayList<SubjectMapping> subjectsToEncode, String title) {
+    public GradeEncoderController(StudentMapping student, ArrayList<SubjectMapping> subjectsToEncode, String title) {
         //----------------------------------------------------------------------
         this.CURRENT_STUDENT = student;
         this.subjectsToEncode = subjectsToEncode;
         this.TITLE = title;
-        this.MODE = mode;
+//        this.MODE = mode;
         //----------------------------------------------------------------------
         try {
             this.gei = new GradeEncoderUI();
@@ -135,11 +135,20 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         }
     }
 
+    /**
+     * Set year and sem in the Spreadsheet.
+     *
+     * @param yr
+     * @param sem
+     */
     public void setYearAndSem(Integer yr, Integer sem) {
         this.yearLevel = yr;
         this.semester = sem;
     }
 
+    /**
+     * Proxy for application root.
+     */
     private Pane application_root;
 
     /**
@@ -258,7 +267,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     }
 
     private void buttonEvents() {
-        btnPost.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+        this.addClickEvent(btnPost, () -> {
             int choice = Mono.fx()
                     .alert()
                     .createConfirmation()
@@ -330,15 +339,17 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                         // make the cell updatable
                         row.get(3).setEditable(true);
 
-                        // check if the remarks is failed or inc
-                        if (remarks.equalsIgnoreCase("FAILED") || remarks.equalsIgnoreCase("INCOMPLETE")) {
-                            // if these fields are modified, ask for 
-                            // local registrar's credentials
-                            // before saving grades
-                            Hashtable<String, String> detail = new Hashtable();
-                            detail.put(row.get(0).getText(), remarks);
-                            gei.addRestrictedSubject(detail);
-                        }
+                        //------------------------------------------------------
+//                        // check if the remarks is failed or inc
+//                        if (remarks.equalsIgnoreCase("FAILED") || remarks.equalsIgnoreCase("INCOMPLETE")) {
+//                            // if these fields are modified, ask for 
+//                            // local registrar's credentials
+//                            // before saving grades
+//                            Hashtable<String, String> detail = new Hashtable();
+//                            detail.put(row.get(0).getText(), remarks);
+//                            gei.addRestrictedSubject(detail);
+//                        }
+                        //------------------------------------------------------
                     }
 
                     //----------------------------------------------------------

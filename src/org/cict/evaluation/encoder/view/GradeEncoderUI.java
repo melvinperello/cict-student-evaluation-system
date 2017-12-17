@@ -1271,9 +1271,9 @@ public class GradeEncoderUI {
     }
 
     //-------------------------------------------
-    private ArrayList<Hashtable<String, String>> restrictedSubjects = new ArrayList<>();
-
-    public void addRestrictedSubject(Hashtable<String, String> detail) {
-        restrictedSubjects.add(detail);
-    }
+//    private ArrayList<Hashtable<String, String>> restrictedSubjects = new ArrayList<>();
+//
+//    public void addRestrictedSubject(Hashtable<String, String> detail) {
+//        restrictedSubjects.add(detail);
+//    }
 }
