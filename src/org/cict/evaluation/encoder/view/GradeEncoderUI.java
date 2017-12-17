@@ -35,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javax.swing.JOptionPane;
+import org.bsu.cict.alerts.MessageBox;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
@@ -247,6 +248,7 @@ public class GradeEncoderUI {
             try {
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                     String rating = this.treeTableView.getSelectionModel().getSelectedItem().getValue().rating.get();
+
                     this.enterGrade(rating);
                 }
             } catch (Exception e) {
@@ -845,11 +847,7 @@ public class GradeEncoderUI {
         subject = null;
         TablePosition cellFocusPosition = this.spreadSheet.getSelectionModel().getFocusedCell();
         if (cellFocusPosition.getRow() == -1) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Invalid Selection")
-                    .setMessage("Please select the [FINAL] column.")
-                    .show();
+            MessageBox.showWarning("Invalid Selection", "Please select the [FINAL] column.");
             return;
         }
         if (isTheSame(rating, cellFocusPosition)) {
@@ -860,13 +858,35 @@ public class GradeEncoderUI {
             int focusRow = (cellFocusPosition.getRow());
             int focusCol = (cellFocusPosition.getColumn());
             if (focusCol != this.finalCol) {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Invalid Selection")
-                        .setMessage("Please select the [FINAL] column.")
-                        .show();
+                MessageBox.showWarning("Invalid Selection", "Please select the [FINAL] column.");
                 return;
             }
+            //------------------------------------------------------------------
+            // Replacement block for the unsed code block
+            // @date 12/17/2017
+            // @author Jhon Melvin
+            SpreadsheetCell testCell = this.spreadSheetGrid.getRows()
+                    .get(focusRow).get(this.finalCol);
+            if (testCell.isEditable()) {
+                this.setToDefaultCell(focusRow);
+                this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
+            } else {
+                MessageBox.showWarning("Not Editable", "The current selection is not for editting please skip this.");
+            }
+            // End of replacement code
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            if (true) {
+                return;
+            }
+            // Disregard below code.
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            /**
+             * UNUSED COdE BLOCK
+             */
             // validate pre req here
             String subjectCode = this.spreadSheetGrid.getRows().get(cellFocusPosition.getRow()).get(cellFocusPosition.getColumn() - 3).getText();
             logs("SELECTED " + subjectCode);
@@ -875,6 +895,7 @@ public class GradeEncoderUI {
                     .active()
                     .all();
 
+            //------------------------------------------------------------------
             for (SubjectMapping temp : subjects) {
                 CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                         .eq(DB.curriculum_subject().SUBJECT_id, temp.getId())
@@ -891,7 +912,7 @@ public class GradeEncoderUI {
                 validate.studentCICT_id = studentMap.getCict_id();
                 validate.subjectID = subject.getId();
                 validate.setOnSuccess(onSuccess -> {
-                    setToDefaultCell(focusRow);
+                    setToDefaultCell(focusRow); // do not look
                     this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                 });
                 validate.setOnCancel(onCancel -> {
@@ -916,10 +937,10 @@ public class GradeEncoderUI {
                                 + "Verified For S/N: " + studentMap.getId() + ", " + studentMap.getLast_name() + ".\n"
                                 + "Requires: " + prereqs);
                     } else if (validate.isNoSectionOffered()) {
-                        setToDefaultCell(focusRow);
+                        setToDefaultCell(focusRow); // do not look
                         this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                     } else {
-                        setToDefaultCell(focusRow);
+                        setToDefaultCell(focusRow); // do not look
                         this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                     }
                 });
@@ -927,12 +948,10 @@ public class GradeEncoderUI {
             } else {
                 logs("SUBJECT IS NULL");
             }
+            //------------------------------------------------------------------
+            // END OF UNUSED COdE BLOcK
         } catch (Exception e) {
-            Mono.fx().alert()
-                    .createError()
-                    .setMessage("Cannot encode this grade.")
-                    .show();
-//            JOptionPane.showMessageDialog(null, "Cannot encode this grade.", "Error", JOptionPane.ERROR_MESSAGE);
+            MessageBox.showError("Failed", "Cannot encode this grade.");
         }
     }
 
@@ -1002,12 +1021,7 @@ public class GradeEncoderUI {
             }
         }
 
-        if (openRestrictedAccess) {
-
-            /**
-             * Only Local Registrar and Co-Registrars are allowed to
-             * re-evaluate.
-             */
+        if (this.openRestrictedAccess) {
             boolean isAllowed = false;
             AccountFacultyMapping allowedUser = null;
             if (Access.isDeniedIfNotFrom(
@@ -1024,11 +1038,12 @@ public class GradeEncoderUI {
                 // allowed user
                 isAllowed = true;
             }
-
+            //------------------------------------------------------------------
             if (!isAllowed) {
                 this.showWarningNotification("Access Denied", "Cannot update grade with INC and Failed.");
-                return;
+                return; // do not execute below code
             }
+            //------------------------------------------------------------------
         }
 
         SpreadSheetGradeEncoder encodeGrade = Evaluator.instance().createGradeEncoder();
@@ -1052,37 +1067,21 @@ public class GradeEncoderUI {
             // two reasons this will be cancelled
             System.out.println("SUBJECTS NOT FOUND");
             System.out.println("FAILED TO FIND SUBJECT IN CURRICULUM");
-            Mono.fx().alert()
-                    .createError()
-                    .setHeader("Transaction Failed")
-                    .setMessage("Please Try Again.")
-                    .showAndWait();
+            MessageBox.showError("Failed", "Please try again.");
         });
 
         encodeGrade.whenFailed(() -> {
             // when insertion failed
-            Mono.fx().alert()
-                    .createError()
-                    .setHeader("Transaction Failed")
-                    .setMessage("Cannot insert or update new values from the database.")
-                    .showAndWait();
+            MessageBox.showError("Failed", "Cannot insert or update new values from the database.");
 //            Mono.fx().getParentStage(this.notificationPane).close();
         });
 
         encodeGrade.whenSuccess(() -> {
             if (encodeGrade.isAlreadyPosted()) {
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Done")
-                        .setMessage("No Changes Where Made.")
-                        .showAndWait();
+                MessageBox.showInformation("Done", "No Changes Where Made.");
                 Mono.fx().getParentStage(this.notificationPane).close();
             } else {
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Done")
-                        .setMessage("Grades successfully posted.")
-                        .showAndWait();
+                MessageBox.showInformation("Done", "Grades successfully posted.");
                 Mono.fx().getParentStage(this.notificationPane).close();
             }
 
@@ -1252,9 +1251,9 @@ public class GradeEncoderUI {
     }
 
     //-------------------------------------------
-    private ArrayList<Hashtable<String, String>> restrictedSubjects = new ArrayList<>();
-
-    public void addRestrictedSubject(Hashtable<String, String> detail) {
-        restrictedSubjects.add(detail);
-    }
+//    private ArrayList<Hashtable<String, String>> restrictedSubjects = new ArrayList<>();
+//
+//    public void addRestrictedSubject(Hashtable<String, String> detail) {
+//        restrictedSubjects.add(detail);
+//    }
 }

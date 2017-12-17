@@ -231,7 +231,7 @@ public class MissingRecordControllerBACKYUP extends SceneFX implements Controlle
             Transaction loadEncoder = new Transaction() {
                 @Override
                 protected boolean transaction() {
-                    controller = new GradeEncoderController("", CURRENT_STUDENT,
+                    controller = new GradeEncoderController(CURRENT_STUDENT,
                              FILTERED_SUBJECTS.get(index),
                              selected);
                     controller.setYearAndSem(year_level, index + 1);

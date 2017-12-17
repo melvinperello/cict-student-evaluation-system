@@ -105,10 +105,11 @@ public class PublicConstants {
      * @return
      */
     public static Criterion getCurriculumRequisite(StudentMapping studentMap) {
-        return SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getCURRICULUM_id());
-//        return SQL.or(
-//                SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getCURRICULUM_id()),
-//                SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getPREP_id()));
+        //return SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getCURRICULUM_id());
+        return SQL.or(
+                SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getCURRICULUM_id()),
+                SQL.where(DB.curriculum_requisite_line().CURRICULUM_id).equalTo(studentMap.getPREP_id())
+        );
     }
     //--------------------------------------------------------------------------
 
@@ -125,7 +126,6 @@ public class PublicConstants {
     }
 
     //--------------------------------------------------------------------------
-   
     /**
      * Gets values from the system variables from the server using the keys
      * provided.
@@ -141,7 +141,7 @@ public class PublicConstants {
                     .active(Order.desc(DB.system_variables().id))
                     .first();
             if (map == null) {
-                return null; 
+                return null;
             }
             return map.getValue();
         } catch (Exception e) {
@@ -154,38 +154,38 @@ public class PublicConstants {
     //----------------------------------
     public static final String KEY_REGISTRAR = "REGISTRAR";
     public static final String KEY_REGISTRAR_DEFAULT = "LEILANIE M. LIZARDO";
-    
+
     public static final String KEY_RECOMMENDING_APPROVAL = "RECOMMENDING_APPROVAL";
     public static final String KEY_RECOMMENDING_APPROVAL_DEFAULT = "ENGR. NOEMI P. REYES";
 
     public final static String KEY_BULSU_TEL = "BULSU_TELEPHONE_NO";
     public final static String KEY_BULSU_TEL_DEFAULT = "(044) 9197800 LOCAL 1101";
-    
+
     public final static String KEY_MAX_POPULATION_NAME = "MAXIMUM_POPULATION";
     public final static String KEY_MAX_POPULATION_DEFAULT = "20";
-    
+
     public final static String KEY_FTP_PORT = "FTP_PORT";
     public final static String KEY_FTP_PORT_DEFAULT = "21";
-    
-    public final static String KEY_FTP_USERNAME= "FTP_USERNAME";
+
+    public final static String KEY_FTP_USERNAME = "FTP_USERNAME";
     public final static String KEY_FTP_USERNAME_DEFAULT = "ftp-cict";
-    
+
     public final static String KEY_FTP_PASSWORD = "FTP_PASSWORD";
     public final static String KEY_FTP_PASSWORD_DEFAULT = "123456";
-    
-    public final static String KEY_FTP_SERVER= "FTP_SERVER";
+
+    public final static String KEY_FTP_SERVER = "FTP_SERVER";
     public final static String KEY_FTP_SERVER_DEFAULT = "127.0.0.1";
-    
-    public final static String KEY_SMS_SERVER= "SMS_SERVER";
+
+    public final static String KEY_SMS_SERVER = "SMS_SERVER";
     public final static String KEY_SMS_SERVER_DEFAULT = "127.0.0.1";
-    
-    public static final String KEY_NOTED_BY= "NOTED_BY";
+
+    public static final String KEY_NOTED_BY = "NOTED_BY";
     public static final String KEY_NOTED_BY_DEFAULT = "Engr. Noemi P. Reyes, Dean-CICT";
-    
-    public static final String KEY_RETENTION_LETTER_SENDER1= "LOCAL_REGISTRAR1";
+
+    public static final String KEY_RETENTION_LETTER_SENDER1 = "LOCAL_REGISTRAR1";
     public static final String KEY_RETENTION_LETTER_SENDER_DEFAULT1 = "Engr. Alex P. Caparas, Local Registrar-BSIT";
 
-    public static final String KEY_RETENTION_LETTER_SENDER2= "LOCAL_REGISTRAR2";
+    public static final String KEY_RETENTION_LETTER_SENDER2 = "LOCAL_REGISTRAR2";
     public static final String KEY_RETENTION_LETTER_SENDER_DEFAULT2 = "Engr. Evelyn Samson, Local Registrar-BSIT";
 
     //----------------------------------------------
@@ -193,66 +193,65 @@ public class PublicConstants {
 
     //-----------------------------------------------
     public static boolean DISABLE_ASSISTANCE = false;
-    
-    
+
     //------------------------
     public static Object getSystemVar_BULSU_TEL() {
         return getSystemValue(KEY_BULSU_TEL, KEY_BULSU_TEL_DEFAULT);
     }
-    
+
     public static Object getSystemVar_REGISTRAR() {
         return getSystemValue(KEY_REGISTRAR, KEY_REGISTRAR_DEFAULT);
     }
-    
+
     public static Object getSystemVar_RECOMMENDNG_APPRVL() {
         return getSystemValue(KEY_RECOMMENDING_APPROVAL, KEY_RECOMMENDING_APPROVAL_DEFAULT);
     }
-    
+
     public static Object getSystemVar_MAX_POPULATION() {
         return getSystemValue(KEY_MAX_POPULATION_NAME, KEY_MAX_POPULATION_DEFAULT);
     }
-    
+
     public static Object getSystemVar_FTP_PORT() {
         return getSystemValue(KEY_FTP_PORT, KEY_FTP_PORT_DEFAULT);
     }
-    
+
     public static Object getSystemVar_FTP_USERNAME() {
         return getSystemValue(KEY_FTP_USERNAME, KEY_FTP_USERNAME_DEFAULT);
     }
-    
+
     public static Object getSystemVar_FTP_PASSWORD() {
         return getSystemValue(KEY_FTP_PASSWORD, KEY_FTP_PASSWORD_DEFAULT);
     }
-    
+
     public static Object getSystemVar_FTP_SERVER() {
         return getSystemValue(KEY_FTP_SERVER, KEY_FTP_SERVER_DEFAULT);
     }
-    
+
     public static Object getSystemVar_SMS_SERVER() {
         return getSystemValue(KEY_SMS_SERVER, KEY_SMS_SERVER_DEFAULT);
     }
-    
+
     public static Object getSystemVar_Noted_By() {
         return getSystemValue(KEY_NOTED_BY, KEY_NOTED_BY_DEFAULT);
     }
-    
+
     public static Object getSystemVar_LocalRegistrar1() {
         return getSystemValue(KEY_RETENTION_LETTER_SENDER1, KEY_RETENTION_LETTER_SENDER_DEFAULT1);
     }
-    
+
     public static Object getSystemVar_LocalRegistrar2() {
         return getSystemValue(KEY_RETENTION_LETTER_SENDER2, KEY_RETENTION_LETTER_SENDER_DEFAULT2);
     }
-    
+
     private static Object getSystemValue(String name, String defaultValue) {
         Object value = getServerValues(name);
-        if(value==null) {
+        if (value == null) {
             createDefault(name, defaultValue);
             return defaultValue;
         }
         return value;
     }
-    
+
     private static boolean createDefault(String name, String value) {
         SystemVariablesMapping defaultValue = new SystemVariablesMapping();
         defaultValue.setActive(1);

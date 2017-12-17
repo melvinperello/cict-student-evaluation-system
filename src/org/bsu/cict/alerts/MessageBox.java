@@ -23,6 +23,7 @@ public class MessageBox {
     // default values
     private static int width = 180;
     private static TextAlignment alignment = TextAlignment.LEFT;
+    private final static String titlePadding = " "; // single space padding
     //--------------------------------------------------------------------------
 
     /**
@@ -60,7 +61,7 @@ public class MessageBox {
     public static void show(String title, String message, int type) {
         //----------------------------------------------------------------------
         // add to space padding for title.
-        title = "  " + title;
+        title = titlePadding + title;
         //----------------------------------------------------------------------
         JOptionPane.showMessageDialog(null, message, title, type);
     }
@@ -89,7 +90,7 @@ public class MessageBox {
         String body = HTML_START + HTML_CONTENT + message + HTML_END;
         //----------------------------------------------------------------------
         // add to space padding for title.
-        title = "  " + title;
+        title = titlePadding + title;
         //----------------------------------------------------------------------
         return JOptionPane.showConfirmDialog(null, body, title,
                 option,

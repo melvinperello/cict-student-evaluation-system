@@ -90,7 +90,7 @@ public class CreditController implements ControllerFX {
 
     @FXML
     private JFXButton btn_save;
-    
+
     @FXML
     private JFXButton btn_print_history;
 
@@ -98,6 +98,7 @@ public class CreditController implements ControllerFX {
     private StatusBar status_bar;
 
     private String MODULE;
+
     public CreditController(Integer studentCictID, String mode, String module) {
         this.CICT_ID = studentCictID;
         this.creditMode = mode;
@@ -139,7 +140,7 @@ public class CreditController implements ControllerFX {
     private final Integer CICT_ID;
     private StudentMapping STUDENT_MAP;
     private final ArrayList<Object[]> studentGrades = new ArrayList<>();
-    private final ArrayList<Object[]> retrievedGrades = new ArrayList<>();
+    //private final ArrayList<Object[]> retrievedGrades = new ArrayList<>();
     //--------------------------------------------------------------------------
 
     @Override
@@ -225,15 +226,17 @@ public class CreditController implements ControllerFX {
                     CreditTreeRow row = creditview.createNewRow();
                     row.setColor(this.defaultColor);
                     row.setID(sem_details.getSubjectID());
-
+                    System.out.println("cOdE: " + sem_details.getSubjectDetails().getCode() + " [] " + sem_details.getSubjectID());
                     // set pre requistes
                     ArrayList<Integer> pre_ids = new ArrayList<>();
                     Integer[] preqid = new Integer[0];
                     if (sem_details.getSubjectRequisites() == null) {
                         // do nothing no preq
+                        System.out.println("NO PREQ");
                     } else {
                         sem_details.getSubjectRequisites().forEach(pre_requisite -> {
                             pre_ids.add(pre_requisite.getSUBJECT_id_req());
+                            System.out.println("ID: " + pre_requisite.getSUBJECT_id_req());
                         });
                         preqid = pre_ids.toArray(new Integer[pre_ids.size()]);
                     }
@@ -275,7 +278,7 @@ public class CreditController implements ControllerFX {
             readContents();
             // }
         });
-        MonoClick.addClickEvent(btn_print_history, ()->{
+        MonoClick.addClickEvent(btn_print_history, () -> {
             this.fetchData();
         });
     }
@@ -289,48 +292,48 @@ public class CreditController implements ControllerFX {
     private ArrayList<GradeHistory> fourth_2 = new ArrayList<>();
     private SimpleDateFormat formatter_filename = new SimpleDateFormat("MMddyyyhhmmss");
     private SimpleDateFormat formatter_display = new SimpleDateFormat("MMMM dd, yyyy");
-    
+
     private void print(boolean is4Yrs) {
-        
+
         ArrayList<String[]> rowData = new ArrayList<>();
         this.addToRow(first_1, rowData, "FIRST YEAR - First Semester");
         this.addToRow(first_2, rowData, "FIRST YEAR - Second Semester");
         this.addToRow(second_1, rowData, "SECOND YEAR - First Semester");
         this.addToRow(second_2, rowData, "SECOND YEAR - Second Semester");
-        if(is4Yrs) {
+        if (is4Yrs) {
             this.addToRow(third_1, rowData, "THIRD YEAR - First Semester");
             this.addToRow(third_2, rowData, "THIRD YEAR - Second Semester");
             this.addToRow(fourth_1, rowData, "FOURTH YEAR - First Semester");
             this.addToRow(fourth_2, rowData, "FOURTH YEAR - Second Semester");
         }
-        
-        if(rowData.size()<1) {
+
+        if (rowData.size() < 1) {
             Notifications.create().title("No Result")
                     .text("No result to print.").showWarning();
             return;
         }
-        
-        String[] colNames = new String[]{"Date and Time","Subject Code", "Rating", "Updated By", "Reason For\nUpdate", "State"};
-        String[] colDescprtion = new String[]{"Date and time encoded.","Subject code.", "Rating encoded.", "Faculty who updated the grade.", "Reason for update.", "State of the grade."};
+
+        String[] colNames = new String[]{"Date and Time", "Subject Code", "Rating", "Updated By", "Reason For\nUpdate", "State"};
+        String[] colDescprtion = new String[]{"Date and time encoded.", "Subject code.", "Rating encoded.", "Faculty who updated the grade.", "Reason for update.", "State of the grade."};
         //--------------
         ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(btn_save), colNames, colDescprtion);
         Document doc = (Document) colDetails.get(0);
-        if(doc==null) {
+        if (doc == null) {
             return;
         }
         HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
         ArrayList<String> newColNames = new ArrayList<>();
         for (int i = 0; i < customized.size(); i++) {
             Object[] details = customized.get(i);
-            if(details != null) {
+            if (details != null) {
                 Boolean isChecked = (Boolean) details[0];
-                if(isChecked) {
+                if (isChecked) {
                     newColNames.add((String) details[1]);
                 }
             }
         }
         //
-        
+
         PrintResult print = new PrintResult();
         print.SHOW_EXTRA_HEADER = true;
         print.columnNames = newColNames;
@@ -340,7 +343,7 @@ public class CreditController implements ControllerFX {
         print.reportTitleIntro = lbl_CURRICULUM_name.getText();
         print.reportTitleHeader = "Student Grade History";
         print.reportOtherDetail = WordUtils.capitalizeFully(lbl_STUDENT_name.getText()) + "\n"
-                        + "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+                + "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
         print.whenStarted(() -> {
             btn_print_history.setDisable(true);
         });
@@ -367,30 +370,31 @@ public class CreditController implements ControllerFX {
             btn_print_history.setDisable(false);
         });
         print.setDocumentFormat(doc, customized);
-        if(ReportsUtility.savePrintLogs(this.CICT_ID, "Student Grade History".toUpperCase(), this.MODULE, "INITIAL")) {
+        if (ReportsUtility.savePrintLogs(this.CICT_ID, "Student Grade History".toUpperCase(), this.MODULE, "INITIAL")) {
             print.transact();
         }
     }
-    
-    private void addToRow(ArrayList<GradeHistory> storage, ArrayList<String[]> rowData, String title){
+
+    private void addToRow(ArrayList<GradeHistory> storage, ArrayList<String[]> rowData, String title) {
         for (int i = 0; i < storage.size(); i++) {
             GradeHistory history = storage.get(i);
             String lastCol = null;
-            if(i == 0){
+            if (i == 0) {
                 lastCol = title;
                 System.out.println(title);
             }
-            String[] row = new String[]{(i+1)+".  "+ history.getCreated(),
-                (history.getSubjectCode()), 
+            String[] row = new String[]{(i + 1) + ".  " + history.getCreated(),
+                (history.getSubjectCode()),
                 history.getRating(),
-                WordUtils.capitalizeFully(history.getUpdatedBy()), 
-                WordUtils.capitalizeFully(history.getReason().replace("_", " ")), 
+                WordUtils.capitalizeFully(history.getUpdatedBy()),
+                WordUtils.capitalizeFully(history.getReason().replace("_", " ")),
                 WordUtils.capitalizeFully(history.getState()), lastCol};
             rowData.add(row);
         }
     }
-    
+
     private boolean is4Yrs = false;
+
     private void fetchData() {
         first_1.clear();
         first_2.clear();
@@ -401,57 +405,57 @@ public class CreditController implements ControllerFX {
         fourth_1.clear();
         fourth_2.clear();
         SimpleTask fetch_history = new SimpleTask("fetch_history");
-        fetch_history.setTask(()->{
+        fetch_history.setTask(() -> {
             Integer CICT_id = this.STUDENT_MAP.getCict_id();
             Integer CURRICULUM_id = this.STUDENT_MAP.getCURRICULUM_id();
             Integer PREP_id = this.STUDENT_MAP.getPREP_id();
             CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(CURRICULUM_id);
-            is4Yrs = curriculum != null? (curriculum.getStudy_years().equals(4)) : false;
+            is4Yrs = curriculum != null ? (curriculum.getStudy_years().equals(4)) : false;
             ArrayList<GradeMapping> grades = Mono.orm().newSearch(Database.connect().grade())
                     .eq(DB.grade().STUDENT_id, CICT_id).execute().all();
-            if(grades != null) {
-                for(GradeMapping grade: grades) {
+            if (grades != null) {
+                for (GradeMapping grade : grades) {
                     CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                             .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
                             .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
                     CurriculumSubjectMapping csMap_prep = null;
-                    if(PREP_id != null) {
+                    if (PREP_id != null) {
                         csMap_prep = Mono.orm().newSearch(Database.connect().curriculum_subject())
                                 .eq(DB.curriculum_subject().CURRICULUM_id, PREP_id)
                                 .eq(DB.curriculum_subject().SUBJECT_id, grade.getSUBJECT_id()).active().first();
-                     }
+                    }
                     GradeHistory history;
-                    if(csMap != null) {
+                    if (csMap != null) {
                         SubjectMapping subject = Database.connect().subject().getPrimary(csMap.getSUBJECT_id());
-                        history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
+                        history = new GradeHistory(grade.getCreated_date(), subject == null ? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by() == null ? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update() == null ? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1) ? "Active" : "Inactive");
                         this.store(csMap, history);
-                    } else if(csMap_prep != null) {
+                    } else if (csMap_prep != null) {
                         SubjectMapping subject = Database.connect().subject().getPrimary(csMap_prep.getSUBJECT_id());
-                        history = new GradeHistory(grade.getCreated_date(), subject==null? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by()==null? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update()==null? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1)? "Active": "Inactive");
+                        history = new GradeHistory(grade.getCreated_date(), subject == null ? "NONE" : subject.getCode(), grade.getRating(), grade.getRemarks(), grade.getUpdated_by() == null ? "NONE" : FacultyUtility.getFacultyName(FacultyUtility.getFaculty(grade.getUpdated_by())), grade.getReason_for_update() == null ? "NONE" : grade.getReason_for_update(), grade.getActive().equals(1) ? "Active" : "Inactive");
                         this.store(csMap_prep, history);
                     }
                 }
             }
         });
-        fetch_history.whenStarted(()->{
+        fetch_history.whenStarted(() -> {
             btn_print_history.setDisable(true);
         });
-        fetch_history.whenCancelled(()->{
+        fetch_history.whenCancelled(() -> {
             System.out.println("CANCELLED");
         });
-        fetch_history.whenFailed(()->{
+        fetch_history.whenFailed(() -> {
             fetch_history.getTaskException().printStackTrace();
             System.out.println("FAILED");
             Notifications.create().darkStyle()
                     .title("Failed")
                     .text("No result found.").showError();
         });
-        fetch_history.whenSuccess(()->{
+        fetch_history.whenSuccess(() -> {
             this.print(is4Yrs);
             btn_print_history.setDisable(false);
         });
-        
-        if(this.STUDENT_MAP.getCURRICULUM_id()==null) {
+
+        if (this.STUDENT_MAP.getCURRICULUM_id() == null) {
             Notifications.create().darkStyle()
                     .title("Cancelled")
                     .text("No curriculum found.").showError();
@@ -459,40 +463,46 @@ public class CreditController implements ControllerFX {
         }
         fetch_history.start();
     }
-    
+
     private void store(CurriculumSubjectMapping csMap, GradeHistory history) {
-        switch(csMap.getYear()) {
-                    case 1:
-                        if(csMap.getSemester().equals(1))
-                            first_1.add(history);
-                        else if(csMap.getSemester().equals(2))
-                            first_2.add(history);
-                        break;
-                    case 2:
-                        if(csMap.getSemester().equals(1))
-                            second_1.add(history);
-                        else if(csMap.getSemester().equals(2))
-                            second_2.add(history);
-                        break;
-                    case 3:
-                        if(csMap.getSemester().equals(1))
-                            third_1.add(history);
-                        else if(csMap.getSemester().equals(2))
-                            third_2.add(history);
-                        break;
-                    case 4:
-                        if(csMap.getSemester().equals(1))
-                            fourth_1.add(history);
-                        else if(csMap.getSemester().equals(2))
-                            fourth_2.add(history);
-                        break;
+        switch (csMap.getYear()) {
+            case 1:
+                if (csMap.getSemester().equals(1)) {
+                    first_1.add(history);
+                } else if (csMap.getSemester().equals(2)) {
+                    first_2.add(history);
                 }
+                break;
+            case 2:
+                if (csMap.getSemester().equals(1)) {
+                    second_1.add(history);
+                } else if (csMap.getSemester().equals(2)) {
+                    second_2.add(history);
+                }
+                break;
+            case 3:
+                if (csMap.getSemester().equals(1)) {
+                    third_1.add(history);
+                } else if (csMap.getSemester().equals(2)) {
+                    third_2.add(history);
+                }
+                break;
+            case 4:
+                if (csMap.getSemester().equals(1)) {
+                    fourth_1.add(history);
+                } else if (csMap.getSemester().equals(2)) {
+                    fourth_2.add(history);
+                }
+                break;
+        }
     }
-    
+
     class GradeHistory {
+
         private String created;
         private String subjectCode, rating, remarks, updatedBy, reason, state;
         private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss aa");
+
         GradeHistory(Date created, String subjectCode, String rating, String remarks, String updatedBy, String reason, String state) {
             this.created = format.format(created);
             this.reason = reason;
@@ -524,7 +534,7 @@ public class CreditController implements ControllerFX {
         }
 
         public String getReason() {
-            return reason==null || reason.isEmpty()? "NOT SPECIFIED" : reason;
+            return reason == null || reason.isEmpty() ? "NOT SPECIFIED" : reason;
         }
 
         public String getRemarks() {
@@ -534,7 +544,7 @@ public class CreditController implements ControllerFX {
         public SimpleDateFormat getFormat() {
             return format;
         }
-        
+
     }
 
     /**

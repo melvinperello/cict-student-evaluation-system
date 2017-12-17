@@ -163,8 +163,8 @@ public class SpreadSheetGradeEncoder extends Transaction {
             // this can be posted or unposted as long as there is an existing grade
             GradeMapping existingGrade = Mono.orm()
                     .newSearch(Database.connect().grade())
-                    .eq("STUDENT_id", this.CICT_id)
-                    .eq("SUBJECT_id", subject.getId())
+                    .eq(DB.grade().STUDENT_id, this.CICT_id)
+                    .eq(DB.grade().SUBJECT_id, subject.getId())
                     .active(Order.desc(DB.grade().id))
                     .first();
 
@@ -224,7 +224,7 @@ public class SpreadSheetGradeEncoder extends Transaction {
                 newGrade.setACADTERM_id(existingGrade.getACADTERM_id());
                 newGrade.setRating(gradeRating); // new rating
                 newGrade.setRemarks(gradeRemarks); // new remarks
-                newGrade.setReason_for_update("UPDATED FAILED OR INCOMPLETE GRADE");
+                newGrade.setReason_for_update("UPDATED GRADE");
                 //--------------------------------------------------------------
                 // created meta
                 newGrade.setCreated_by(existingGrade.getCreated_by() == null ? FACULTY_id : existingGrade.getCreated_by());
