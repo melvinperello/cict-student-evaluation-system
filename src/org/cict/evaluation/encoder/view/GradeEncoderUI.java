@@ -1021,12 +1021,7 @@ public class GradeEncoderUI {
             }
         }
 
-        if (openRestrictedAccess) {
-
-            /**
-             * Only Local Registrar and Co-Registrars are allowed to
-             * re-evaluate.
-             */
+        if (this.openRestrictedAccess) {
             boolean isAllowed = false;
             AccountFacultyMapping allowedUser = null;
             if (Access.isDeniedIfNotFrom(
@@ -1043,11 +1038,12 @@ public class GradeEncoderUI {
                 // allowed user
                 isAllowed = true;
             }
-
+            //------------------------------------------------------------------
             if (!isAllowed) {
                 this.showWarningNotification("Access Denied", "Cannot update grade with INC and Failed.");
-                return;
+                return; // do not execute below code
             }
+            //------------------------------------------------------------------
         }
 
         SpreadSheetGradeEncoder encodeGrade = Evaluator.instance().createGradeEncoder();
@@ -1071,37 +1067,21 @@ public class GradeEncoderUI {
             // two reasons this will be cancelled
             System.out.println("SUBJECTS NOT FOUND");
             System.out.println("FAILED TO FIND SUBJECT IN CURRICULUM");
-            Mono.fx().alert()
-                    .createError()
-                    .setHeader("Transaction Failed")
-                    .setMessage("Please Try Again.")
-                    .showAndWait();
+            MessageBox.showError("Failed", "Please try again.");
         });
 
         encodeGrade.whenFailed(() -> {
             // when insertion failed
-            Mono.fx().alert()
-                    .createError()
-                    .setHeader("Transaction Failed")
-                    .setMessage("Cannot insert or update new values from the database.")
-                    .showAndWait();
+            MessageBox.showError("Failed", "Cannot insert or update new values from the database.");
 //            Mono.fx().getParentStage(this.notificationPane).close();
         });
 
         encodeGrade.whenSuccess(() -> {
             if (encodeGrade.isAlreadyPosted()) {
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Done")
-                        .setMessage("No Changes Where Made.")
-                        .showAndWait();
+                MessageBox.showInformation("Done", "No Changes Where Made.");
                 Mono.fx().getParentStage(this.notificationPane).close();
             } else {
-                Mono.fx().alert()
-                        .createInfo()
-                        .setHeader("Done")
-                        .setMessage("Grades successfully posted.")
-                        .showAndWait();
+                MessageBox.showInformation("Done", "Grades successfully posted.");
                 Mono.fx().getParentStage(this.notificationPane).close();
             }
 
