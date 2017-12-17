@@ -18,6 +18,20 @@
             <Image url="@img/subject.png" />
          </image>
       </ImageView>
+      <VBox alignment="CENTER">
+         <children>
+            <Label prefHeight="21.0" prefWidth="16.0" text="ID" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label accessibleText="id" alignment="CENTER" prefHeight="21.0" prefWidth="35.0" text="1" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
             <Label accessibleText="subject_code" text="SOCSCI 223" textFill="WHITE">
@@ -30,7 +44,7 @@
       </VBox>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Label contentDisplay="TOP" graphicTextGap="0.0" text="Units" textFill="WHITE">
+            <Label contentDisplay="TOP" graphicTextGap="0.0" text="Lab" textFill="WHITE">
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -39,7 +53,25 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label accessibleText="units" text="1.0" textFill="WHITE">
+            <Label accessibleText="lab" text="1.0" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="10.0">
+         <children>
+            <Label contentDisplay="TOP" graphicTextGap="0.0" text="Lec" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/lec.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label accessibleText="lec" text="1.0" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

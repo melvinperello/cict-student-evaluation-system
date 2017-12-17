@@ -287,10 +287,17 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
         ImageView img = searchAccessibilityText(prereqRow, "img");   
         Label lbl_code = searchAccessibilityText(prereqRow, "subject_code");
         Label lbl_descriptive_title = searchAccessibilityText(prereqRow, "descriptive_title");
-        Label lbl_units = searchAccessibilityText(prereqRow, "units");
+        Label lbl_lab = searchAccessibilityText(prereqRow, "lab");        
         Label lbl_typee = searchAccessibilityText(prereqRow, "type");
         Label lbl_subtypee = searchAccessibilityText(prereqRow, "subtype");
         Button btn_remove = searchAccessibilityText(prereqRow, "btn_remove");
+        
+        Label lbl_lec = searchAccessibilityText(prereqRow, "lec");        
+        Label lbl_id = searchAccessibilityText(prereqRow, "id");
+        
+        lbl_id.setText(subject.getId().toString());
+        lbl_lab.setText(subject.getLab_units().toString());
+        lbl_lec.setText(subject.getLec_units().toString());
         
         if(mode.equalsIgnoreCase("P")) {
             img.setImage(SimpleImage.make("update2.org.cict.layout.subjects.img", "p.png"));       
@@ -298,9 +305,7 @@ public class SubjectPrerequisiteController extends SceneFX implements Controller
             img.setImage(SimpleImage.make("update2.org.cict.layout.subjects.img", "c.png"));       
         }
         lbl_code.setText(subject.getCode());
-        lbl_descriptive_title.setText(subject.getDescriptive_title());
-        Double totalUnits = (subject.getLab_units() + subject.getLec_units());  
-        lbl_units.setText(totalUnits + "");
+        lbl_descriptive_title.setText(subject.getDescriptive_title());  
         lbl_typee.setText(subject.getType());
         lbl_subtypee.setText(subject.getSubtype());
         

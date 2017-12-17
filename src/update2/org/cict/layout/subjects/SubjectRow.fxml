@@ -32,6 +32,20 @@
             </Label>
          </children>
       </VBox>
+      <VBox alignment="CENTER" prefHeight="69.0" prefWidth="47.0">
+         <children>
+            <Label accessibleText="id" text="ID">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbl_id" accessibleText="id" alignment="CENTER" prefHeight="21.0" prefWidth="45.0" text="1" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
       <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
          <children>
             <Label contentDisplay="TOP" graphicTextGap="0.0" text="Lec">

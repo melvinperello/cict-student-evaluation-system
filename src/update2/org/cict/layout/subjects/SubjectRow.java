@@ -57,6 +57,9 @@ public class SubjectRow extends MonoLauncher {
     private Label lbl_type;
 
     @FXML
+    private Label lbl_id;
+    
+    @FXML
     private JFXButton btn_more_info;
 
     @FXML
@@ -100,6 +103,10 @@ public class SubjectRow extends MonoLauncher {
 
     public JFXButton getBtn_remove() {
         return btn_remove;
+    }
+
+    public Label getLbl_id() {
+        return lbl_id;
     }
     
 }
