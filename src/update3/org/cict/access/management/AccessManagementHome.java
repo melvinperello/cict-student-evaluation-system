@@ -312,7 +312,10 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     private void database(String request) {
         int res = 1;
         String title = "";
+        String path = null;
+        boolean isBackUp = false;
         if(request.equalsIgnoreCase("BACK_UP")) {
+            isBackUp = true;
             DirectoryChooser directoryChooser = new DirectoryChooser();
             File selectedDirectory = directoryChooser.showDialog(this.getStage());
             if(selectedDirectory==null) {
@@ -321,14 +324,13 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             }
             SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_yyyy_hh_mm_s_a");
             String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
-            System.out.println(filename);
-            String path = selectedDirectory.getAbsolutePath() + "\\" + filename + /*12_17_2017_04_51_21_PM*/".monosync";
+            path = selectedDirectory.getAbsolutePath() + "\\" + filename + ".monosync";
             res = BackUpAndRestore.backup(
                     PublicConstants.getServerIP(),
                     PublicConstants.getDATABASE_USERNAME(),
                     PublicConstants.getDATABASE_PASSWORD(),
                     PublicConstants.getDATABASE_NAME(),
-                    path );
+                    path);
             title = "Back Up Database";
         } else if(request.equalsIgnoreCase("RESTORE")) {
             FileChooser fileChooser = new FileChooser();
@@ -343,30 +345,40 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     PublicConstants.getServerIP(),
                     PublicConstants.getDATABASE_USERNAME(),
                     PublicConstants.getDATABASE_PASSWORD(),
-                    file.getAbsolutePath()
-            );
+                    file.getAbsolutePath());
             title = "Restore Database";
         }
         if(res == 0) {
-            // success
-            Notifications.create().title(title)
-                    .text("Successful Transaction!")
-                    .showInformation();
+            // success 
+            if(isBackUp) {
+                // when back up, double check if file size is not 0
+                // before concluding it is successful
+                File fileBackUp = new File(path);
+                if((fileBackUp.length() / 1024) == 0) {
+                    Notifications.create().title(title)
+                            .text("Please try again later.")
+                            .showWarning();
+                    return;
+                }
+            }
+            Mono.fx().alert().createInfo()
+                    .setHeader(title)
+                    .setMessage("Successful Transaction!").show();
         } else if(res == 1) {
             // path error
-            Notifications.create().title(title)
-                    .text("Something is wrong with the path.")
-                    .showError();
+            Mono.fx().alert().createError()
+                    .setHeader(title)
+                    .setMessage("Something is wrong with the path.").show();
         } else if(res == 2) {
             // sql error
-            Notifications.create().title(title)
-                    .text("An SQL error occured. Please try again later.")
-                    .showError();
+            Mono.fx().alert().createError()
+                    .setHeader(title)
+                    .setMessage("An SQL error occured. Please try again later.").show();
         } else {
             // unknown error
-            Notifications.create().title(title)
-                    .text("Unknown error occured. Please try again later.")
-                    .showError();
+            Mono.fx().alert().createError()
+                    .setHeader(title)
+                    .setMessage("Unknown error occured. Please try again later.").show();
         }
     }
     
