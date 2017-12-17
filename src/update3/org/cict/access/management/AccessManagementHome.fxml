@@ -165,6 +165,24 @@
                         <Insets left="-120.0" />
                      </padding>
                   </JFXButton>
+                  <JFXButton fx:id="btn_view_backup_restore" graphicTextGap="20.0" layoutX="10.0" layoutY="280.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Back Up &amp; Restore" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/icons8-database-administrator-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-55.0" />
+                     </padding>
+                  </JFXButton>
                </children>
             </VBox>
             <StackPane HBox.hgrow="ALWAYS">
@@ -322,7 +340,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_admin" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_admin" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -829,6 +847,109 @@
                            <VBox.margin>
                               <Insets bottom="10.0" right="20.0" />
                            </VBox.margin>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_backup_restore" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/icons8-database-administrator-50.png" />
+                                 </image>
+                              </ImageView>
+                              <Label maxWidth="1.7976931348623157E308" text="Back Up &amp; Restore" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets right="20.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <VBox spacing="10.0">
+                           <children>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="In a system, database back up is an important part of securing the data and for other instances. Here you can save the file by choosing a folder or location where it will be stored." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton fx:id="btn_back_up" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Back Up Database" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/icons8-data-backup-50.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="In some cases, restoring the previous saved database is a need. You will use the &quot;.monosync&quot; extension file only to proceed restoration process." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <JFXButton fx:id="btn_restore" graphicTextGap="10.0" prefWidth="320.0" style="-fx-border-color: white;" text="Restore Database" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/icons8-database-restore-50.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </JFXButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="20.0" />
+                           </padding>
                         </VBox>
                      </children>
                      <padding>

@@ -39,22 +39,27 @@ import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.bsu.cict.tools.BackUpAndRestore;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
+import org.cict.PublicConstants;
 import org.cict.ThreadMill;
 import org.cict.accountmanager.AccountManager;
 import org.cict.accountmanager.Logout;
 import org.cict.accountmanager.faculty.FacultyInformation;
 import org.cict.authentication.authenticator.CollegeFaculty;
-import org.cict.authentication.authenticator.SystemProperties;
 import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import sys.org.cict.layout.home.system_variables.SystemValues;
@@ -179,6 +184,18 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     @FXML
     private Label lbl_cluster_admin;
     
+    //-----------------------
+    @FXML
+    private JFXButton btn_view_backup_restore;
+    
+    @FXML
+    private JFXButton btn_back_up;
+    
+    @FXML
+    private JFXButton btn_restore;
+    @FXML
+    private VBox vbox_backup_restore;
+    
     public AccessManagementHome() {
         //
     }
@@ -234,6 +251,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             vbox_local_registrar.setVisible(false);
             vbox_co_registrar.setVisible(false);
             vbox_evaluators.setVisible(false);
+            vbox_backup_restore.setVisible(false);
             whatView.setVisible(true);
         }, vbox_system, vbox_admin, vbox_assistant_admin, vbox_local_registrar,
                 vbox_co_registrar, vbox_evaluators);
@@ -271,6 +289,85 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         this.systemAdminEvents();
 
         this.localRegistrarEvents();
+        
+        //---------------
+        // added back up and restore
+        super.addClickEvent(btn_view_backup_restore, () -> {
+            this.changeView(vbox_backup_restore);
+        });
+        this.backUpRestoreEvents();
+        //
+        
+    }
+    
+    private void backUpRestoreEvents() {
+        super.addClickEvent(btn_back_up, () -> {
+            this.database("BACK_UP");
+        });
+        super.addClickEvent(btn_restore, () -> {
+            this.database("RESTORE");
+        });
+    }
+    
+    private void database(String request) {
+        int res = 1;
+        String title = "";
+        if(request.equalsIgnoreCase("BACK_UP")) {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            File selectedDirectory = directoryChooser.showDialog(this.getStage());
+            if(selectedDirectory==null) {
+                // no directory selected
+                return;
+            }
+            SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_yyyy_hh_mm_s_a");
+            String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
+            System.out.println(filename);
+            String path = selectedDirectory.getAbsolutePath() + "\\" + filename + /*12_17_2017_04_51_21_PM*/".monosync";
+            res = BackUpAndRestore.backup(
+                    PublicConstants.getServerIP(),
+                    PublicConstants.getDATABASE_USERNAME(),
+                    PublicConstants.getDATABASE_PASSWORD(),
+                    PublicConstants.getDATABASE_NAME(),
+                    path );
+            title = "Back Up Database";
+        } else if(request.equalsIgnoreCase("RESTORE")) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Monosync File");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Monosync File", "*.monosync"));
+            File file = fileChooser.showOpenDialog(this.getStage());
+            if(file==null) {
+                // no file selected
+                return;
+            }
+            res = BackUpAndRestore.restore(
+                    PublicConstants.getServerIP(),
+                    PublicConstants.getDATABASE_USERNAME(),
+                    PublicConstants.getDATABASE_PASSWORD(),
+                    file.getAbsolutePath()
+            );
+            title = "Restore Database";
+        }
+        if(res == 0) {
+            // success
+            Notifications.create().title(title)
+                    .text("Successful Transaction!")
+                    .showInformation();
+        } else if(res == 1) {
+            // path error
+            Notifications.create().title(title)
+                    .text("Something is wrong with the path.")
+                    .showError();
+        } else if(res == 2) {
+            // sql error
+            Notifications.create().title(title)
+                    .text("An SQL error occured. Please try again later.")
+                    .showError();
+        } else {
+            // unknown error
+            Notifications.create().title(title)
+                    .text("Unknown error occured. Please try again later.")
+                    .showError();
+        }
     }
     
     private void systemAccountEvents() {

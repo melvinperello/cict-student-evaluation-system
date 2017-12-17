@@ -262,4 +262,20 @@ public class PublicConstants {
         Integer res = Database.connect().system_variables().insert(defaultValue);
         return (res.equals(-1));
     }
+    
+    private static String DATABASE_USERNAME = "root";
+    private static String DATABASE_PASSWORD= "root";
+    private static String DATABASE_NAME= "cictems";
+
+    public static String getDATABASE_USERNAME() {
+        return DATABASE_USERNAME;
+    }
+
+    public static String getDATABASE_PASSWORD() {
+        return DATABASE_PASSWORD;
+    }
+
+    public static String getDATABASE_NAME() {
+        return DATABASE_NAME;
+    }
 }
