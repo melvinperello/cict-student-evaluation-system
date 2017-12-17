@@ -35,6 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javax.swing.JOptionPane;
+import org.bsu.cict.alerts.MessageBox;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
@@ -247,6 +248,7 @@ public class GradeEncoderUI {
             try {
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                     String rating = this.treeTableView.getSelectionModel().getSelectedItem().getValue().rating.get();
+
                     this.enterGrade(rating);
                 }
             } catch (Exception e) {
@@ -845,11 +847,7 @@ public class GradeEncoderUI {
         subject = null;
         TablePosition cellFocusPosition = this.spreadSheet.getSelectionModel().getFocusedCell();
         if (cellFocusPosition.getRow() == -1) {
-            Mono.fx().alert()
-                    .createWarning()
-                    .setHeader("Invalid Selection")
-                    .setMessage("Please select the [FINAL] column.")
-                    .show();
+            MessageBox.showWarning("Invalid Selection", "Please select the [FINAL] column.");
             return;
         }
         if (isTheSame(rating, cellFocusPosition)) {
@@ -860,13 +858,35 @@ public class GradeEncoderUI {
             int focusRow = (cellFocusPosition.getRow());
             int focusCol = (cellFocusPosition.getColumn());
             if (focusCol != this.finalCol) {
-                Mono.fx().alert()
-                        .createWarning()
-                        .setHeader("Invalid Selection")
-                        .setMessage("Please select the [FINAL] column.")
-                        .show();
+                MessageBox.showWarning("Invalid Selection", "Please select the [FINAL] column.");
                 return;
             }
+            //------------------------------------------------------------------
+            // Replacement block for the unsed code block
+            // @date 12/17/2017
+            // @author Jhon Melvin
+            SpreadsheetCell testCell = this.spreadSheetGrid.getRows()
+                    .get(focusRow).get(this.finalCol);
+            if (testCell.isEditable()) {
+                this.setToDefaultCell(focusRow);
+                this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
+            } else {
+                MessageBox.showWarning("Not Editable", "The current selection is not for editting please skip this.");
+            }
+            // End of replacement code
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            if (true) {
+                return;
+            }
+            // Disregard below code.
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            /**
+             * UNUSED COdE BLOCK
+             */
             // validate pre req here
             String subjectCode = this.spreadSheetGrid.getRows().get(cellFocusPosition.getRow()).get(cellFocusPosition.getColumn() - 3).getText();
             logs("SELECTED " + subjectCode);
@@ -875,6 +895,7 @@ public class GradeEncoderUI {
                     .active()
                     .all();
 
+            //------------------------------------------------------------------
             for (SubjectMapping temp : subjects) {
                 CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
                         .eq(DB.curriculum_subject().SUBJECT_id, temp.getId())
@@ -891,7 +912,7 @@ public class GradeEncoderUI {
                 validate.studentCICT_id = studentMap.getCict_id();
                 validate.subjectID = subject.getId();
                 validate.setOnSuccess(onSuccess -> {
-                    setToDefaultCell(focusRow);
+                    setToDefaultCell(focusRow); // do not look
                     this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                 });
                 validate.setOnCancel(onCancel -> {
@@ -916,10 +937,10 @@ public class GradeEncoderUI {
                                 + "Verified For S/N: " + studentMap.getId() + ", " + studentMap.getLast_name() + ".\n"
                                 + "Requires: " + prereqs);
                     } else if (validate.isNoSectionOffered()) {
-                        setToDefaultCell(focusRow);
+                        setToDefaultCell(focusRow); // do not look
                         this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                     } else {
-                        setToDefaultCell(focusRow);
+                        setToDefaultCell(focusRow); // do not look
                         this.spreadSheetGrid.setCellValue(focusRow, focusCol, rating);
                     }
                 });
@@ -927,12 +948,10 @@ public class GradeEncoderUI {
             } else {
                 logs("SUBJECT IS NULL");
             }
+            //------------------------------------------------------------------
+            // END OF UNUSED COdE BLOcK
         } catch (Exception e) {
-            Mono.fx().alert()
-                    .createError()
-                    .setMessage("Cannot encode this grade.")
-                    .show();
-//            JOptionPane.showMessageDialog(null, "Cannot encode this grade.", "Error", JOptionPane.ERROR_MESSAGE);
+            MessageBox.showError("Failed", "Cannot encode this grade.");
         }
     }
 

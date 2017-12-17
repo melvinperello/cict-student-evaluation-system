@@ -1690,20 +1690,26 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        checkGrade.transact();
     }
 
+    /**
+     * Do not use this function
+     * @param mode
+     * @deprecated
+     */
+    @Deprecated
     private void onShowGradeEncoderForRegular(String mode) {
-        GradeEncoderController controller = new GradeEncoderController(mode, this.currentStudent,
-                this.subjectsWithNoGrade.get(0),
-                "");
-        Mono.fx().create()
-                .setPackageName("org.cict.evaluation.encoder")
-                .setFxmlDocument("GradeEncoder")
-                .makeFX()
-                .setController(controller)
-                .makeScene()
-                .makeStageApplication()
-                .stageMaximized(true)
-                .stageShow();
-        setView("home");
+//        GradeEncoderController controller = new GradeEncoderController(mode, this.currentStudent,
+//                this.subjectsWithNoGrade.get(0),
+//                "");
+//        Mono.fx().create()
+//                .setPackageName("org.cict.evaluation.encoder")
+//                .setFxmlDocument("GradeEncoder")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStageApplication()
+//                .stageMaximized(true)
+//                .stageShow();
+//        setView("home");
     }
 
     /**
@@ -1737,18 +1743,18 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     @Deprecated
     private void onShowStudentInfo() {
-        this.vbox_studentOptions.setVisible(false);
-        InfoStudentController controller = new InfoStudentController(this.currentStudent);
-        Mono.fx().create()
-                .setPackageName("org.cict.evaluation.student.info")
-                .setFxmlDocument("InfoStudent")
-                .makeFX()
-                .setController(controller)
-                .makeScene()
-                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
-                .stageResizeable(false)
-                .stageShow();
-        setView("home");
+//        this.vbox_studentOptions.setVisible(false);
+//        InfoStudentController controller = new InfoStudentController(this.currentStudent);
+//        Mono.fx().create()
+//                .setPackageName("org.cict.evaluation.student.info")
+//                .setFxmlDocument("InfoStudent")
+//                .makeFX()
+//                .setController(controller)
+//                .makeScene()
+//                .makeStageWithOwner(Mono.fx().getParentStage(lblName))
+//                .stageResizeable(false)
+//                .stageShow();
+//        setView("home");
     }
 
     private void onShowHistory() {

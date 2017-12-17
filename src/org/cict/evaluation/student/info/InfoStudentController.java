@@ -44,10 +44,12 @@ import org.cict.evaluation.student.StudentValues;
 import org.controlsfx.control.Notifications;
 
 /**
+ * Do not use this class.
  *
  * @author Joemar
  */
-public class InfoStudentController implements ControllerFX{
+@Deprecated
+public class InfoStudentController implements ControllerFX {
 
     @FXML
     private Label btn_infoHistory;
@@ -85,15 +87,15 @@ public class InfoStudentController implements ControllerFX{
     private Button btn_creditUnits;
     @FXML
     private Button btn_delete;
-    
+
     private StudentMapping CURRENT_STUDENT;
     private InfoStudent infoStudent = new InfoStudent();
     private StudentValues studentValues = new StudentValues();
-    
+
     public InfoStudentController(StudentMapping currentStudent) {
         this.CURRENT_STUDENT = currentStudent;
     }
-    
+
     @Override
     public void onInitialization() {
         infoStudent.setCmbEnrollmentType(cmb_etype);
@@ -104,27 +106,27 @@ public class InfoStudentController implements ControllerFX{
         this.setAllEditable(Boolean.FALSE);
         addTextFieldFilters();
     }
-    
+
     private void addTextFieldFilters() {
         StringFilter textId = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
                     }
                 });
         textId.clone().setTextSource(txt_studnum).applyFilter();
-        
+
         StringFilter textName = TextInputFilters.string()
                 .setFilterMode(StringFilter.LETTER_SPACE)
                 .setMaxCharacters(100)
                 .setNoLeadingTrailingSpaces(false)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
@@ -134,26 +136,26 @@ public class InfoStudentController implements ControllerFX{
         textName.clone().setTextSource(txt_lastname).applyFilter();
         textName.clone().setTextSource(txt_middlename).applyFilter();
         textName.clone().setTextSource(txt_section).applyFilter();
-        
+
         StringFilter textGroup = TextInputFilters.string()
                 .setFilterMode(StringFilter.DIGIT)
                 .setMaxCharacters(11)
                 .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
                     }
                 });
         textGroup.clone().setTextSource(txt_group).applyFilter();
-        
+
         StringFilter textAdYear = TextInputFilters.string()
                 .setFilterMode(StringFilter.DIGIT)
                 .setMaxCharacters(50)
                 .setNoLeadingTrailingSpaces(true)
-                .setFilterManager(filterManager->{
-                    if(!filterManager.isValid()) {
+                .setFilterManager(filterManager -> {
+                    if (!filterManager.isValid()) {
                         Mono.fx().alert().createWarning().setHeader("Warning")
                                 .setMessage(filterManager.getMessage())
                                 .show();
@@ -166,7 +168,7 @@ public class InfoStudentController implements ControllerFX{
     public void onEventHandling() {
         this.buttonEvents();
     }
-    
+
     private void buttonEvents() {
         this.editSaveEvent();
         btn_delete.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent e) -> {
@@ -176,7 +178,7 @@ public class InfoStudentController implements ControllerFX{
             this.onRemove();
         });
     }
-    
+
     private void setAllEditable(Boolean answer) {
         txt_firstname.setEditable(answer);
         txt_group.setEditable(answer);
@@ -191,8 +193,9 @@ public class InfoStudentController implements ControllerFX{
         cmb_gender.setDisable(!answer);
         cmb_yrlvl.setDisable(!answer);
     }
-    
+
     boolean close;
+
     private void setValues() {
         try {
             lbl_cictid.setText(CURRENT_STUDENT.getCict_id().toString());
@@ -228,7 +231,7 @@ public class InfoStudentController implements ControllerFX{
             } catch (NullPointerException r) {
             }
             try {
-                this.cmb_yrlvl.getSelectionModel().select(CURRENT_STUDENT.getYear_level()-1);
+                this.cmb_yrlvl.getSelectionModel().select(CURRENT_STUDENT.getYear_level() - 1);
             } catch (NullPointerException l) {
             }
             close = false;
@@ -236,11 +239,11 @@ public class InfoStudentController implements ControllerFX{
             close = true;
         }
     }
-    
+
     public String removeExtraSpace(String str) {
         return MonoString.removeExtraSpace(str);
     }
-    
+
     public void setComboBoxValue(String value, ComboBox cmb) {
         ObservableList cmb_items = cmb.getItems();
         for (int i = 0; i < cmb_items.size(); i++) {
@@ -250,22 +253,22 @@ public class InfoStudentController implements ControllerFX{
             }
         }
     }
-    
+
     private void onRemove() {
         int res = Mono.fx().alert()
                 .createConfirmation()
                 .setHeader("Remove Student")
-                .setMessage("Are you sure you want to remove " +
-                        CURRENT_STUDENT.getId() + " from the list?")
+                .setMessage("Are you sure you want to remove "
+                        + CURRENT_STUDENT.getId() + " from the list?")
                 .confirmYesNo();
-        
+
         if (res == 1) {
             this.CURRENT_STUDENT.setActive(0);
-            if(Database.connect().student().update(this.CURRENT_STUDENT)) {
+            if (Database.connect().student().update(this.CURRENT_STUDENT)) {
                 Notifications.create()
                         .title("Removed Successfully")
-                        .text("Student number " + this.CURRENT_STUDENT.getId() + 
-                                " is successfully removed.")
+                        .text("Student number " + this.CURRENT_STUDENT.getId()
+                                + " is successfully removed.")
                         .showInformation();
             }
         }
@@ -274,7 +277,7 @@ public class InfoStudentController implements ControllerFX{
     public void onClose() {
         Mono.fx().getParentStage(btn_delete).close();
     }
-    
+
     private void editSaveEvent() {
         this.setAllEditable(false);
         btn_editsave.setText("Edit");
@@ -287,7 +290,7 @@ public class InfoStudentController implements ControllerFX{
             changeEditButtonEvent();
         });
     }
-    
+
     private void changeEditButtonEvent() {
         btn_editsave.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent d) -> {
             updateStudent();
