@@ -376,11 +376,11 @@ public class SearchSubjectController extends SceneFX implements ControllerFX {
         Button btn_select = searchAccessibilityText(programRow, "btn_select");
 
         addClickEvent(btn_select, ()-> {
-            if(MODE_setting.equalsIgnoreCase("CURRICULUM"))
+            if(MODE_setting.equalsIgnoreCase("CURRICULUM")) {
                 addToCurriculum(subject);
-            else if(MODE_setting.equalsIgnoreCase("SUBJECT_pre-req")) 
+            } else if(MODE_setting.equalsIgnoreCase("SUBJECT_pre-req")) {
                 addAsPreReq(subject);
-            else if(MODE_setting.equalsIgnoreCase("SUBJECT_co-req")) {
+            } else if(MODE_setting.equalsIgnoreCase("SUBJECT_co-req")) {
                 addAsCoReq(subject);
             }
         });

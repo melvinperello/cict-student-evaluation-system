@@ -270,6 +270,7 @@ public class SubjectRepositoryController extends SceneFX implements ControllerFX
 //                .pullOutLayout();
         SubjectRow rowFX = M.load(SubjectRow.class);
         
+        rowFX.getLbl_id().setText(subject.getId().toString());
         
         Label lbl_code = rowFX.getLbl_subject_code(); //searchAccessibilityText(programRow, "subject_code");
         Label lbl_descriptive_title = rowFX.getLbl_descriptive_title(); //searchAccessibilityText(programRow, "descriptive_title");
