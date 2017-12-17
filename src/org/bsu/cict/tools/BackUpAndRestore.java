@@ -23,11 +23,11 @@
  */
 package org.bsu.cict.tools;
 
+import com.jhmvin.commandline.CommandLine;
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.CodeSource;
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
 
 /**
  *
@@ -36,54 +36,113 @@ import javax.swing.JOptionPane;
 public class BackUpAndRestore {
 
     public static void main(String[] args) {
-        Backupdbtosql();
+//        int res = BackUpAndRestore.backup(
+//                "127.0.0.1",
+//                "root",
+//                "root",
+//                "cictems",
+//                "D:\\12_17_2017_04_51_21_PM.monosync"
+//        );
+//        // 0 for success
+//        // 1 for path error
+//        // 2 for SQL error
+//        System.out.println("DATABASE BACKUP RESULT: " + res);
+
+        int restoreRes = BackUpAndRestore.restore(
+                "127.0.0.1",
+                "root",
+                "root",
+                "D:\\12_17_2017_04_51_21_PM.monosync"
+        );
+
+        System.out.println("REStOrE RESULT: " + restoreRes);
+
     }
 
-    public static void Backupdbtosql() {
+    /**
+     * Get the Jar absolute location
+     *
+     * @return
+     * @throws URISyntaxException
+     */
+    private static String getJarPath() throws URISyntaxException {
+        CodeSource codeSource = BackUpAndRestore.class.getProtectionDomain().getCodeSource();
+        File jarFile = new File(codeSource.getLocation().toURI().getPath());
+        String jarDir = jarFile.getParentFile().getParentFile().getPath();
+        return jarDir;
+    }
 
+    /**
+     * Backup the current data.
+     *
+     * @param host the database server can be local host or remote host.
+     * @param user
+     * @param password
+     * @param database database name
+     * @param savePath where to save the file
+     * @return 0 for success 1 for invalid path 2 for SQL error.
+     */
+    public static int backup(
+            String host,
+            String user,
+            String password,
+            String database,
+            String savePath
+    ) {
         try {
+            String jarDir = BackUpAndRestore.getJarPath();
 
-            /*NOTE: Getting path to the Jar file being executed*/
- /*NOTE: YourImplementingClass-> replace with the class executing the code*/
-            CodeSource codeSource = BackUpAndRestore.class.getProtectionDomain().getCodeSource();
-            File jarFile = new File(codeSource.getLocation().toURI().getPath());
-            String jarDir = jarFile.getParentFile().getPath();
+            ArrayList<String> commands = new ArrayList<>();
+            commands.add("pushd " + jarDir);
+            commands.add("cd " + "maria-tools");
+            commands.add("mysqldump.exe --host=" + host + " --user=" + user + " --password=" + password + " --add-drop-database  --databases " + database + " > " + savePath);
 
-
-            /*NOTE: Creating Database Constraints*/
-            String dbName = "cictems";
-            String dbUser = "root";
-            String dbPass = "root";
-
-            /*NOTE: Creating Path Constraints for folder saving*/
- /*NOTE: Here the backup folder is created for saving inside it*/
-            String folderPath = jarDir + "\\backup";
-
-            /*NOTE: Creating Folder if it does not exist*/
-            File f1 = new File(folderPath);
-            f1.mkdir();
-
-            /*NOTE: Creating Path Constraints for backup saving*/
- /*NOTE: Here the backup is saved in a folder called backup with the name backup.sql*/
-            String savePath = "\"" + jarDir + "\\backup\\" + "backup.sql\"";
-            savePath = "C:\\Users\\Jhon Melvin\\Desktop\\asd\\backup.sql";
-            /*NOTE: Used to create a cmd command*/
-            String executeCmd = "mysqldump -u" + dbUser + " -p" + dbPass + " --database " + dbName + " -r " + savePath;
-
-            /*NOTE: Executing the command here*/
-            Process runtimeProcess = Runtime.getRuntime().exec(executeCmd);
-            int processComplete = runtimeProcess.waitFor();
-
-            /*NOTE: processComplete=0 if correctly executed, will contain other values if not*/
-            if (processComplete == 0) {
-                System.out.println("Backup Complete");
-            } else {
-                System.out.println("Backup Failure");
+            String a = CommandLine.multipleCommand(commands);
+            ArrayList<String> result = CommandLine.run(a);
+            if (result.size() == 1) {
+                if (result.get(0).equalsIgnoreCase("Exit Code: 0")) {
+                    return 0; // success
+                }
             }
-
-        } catch (URISyntaxException | IOException | InterruptedException ex) {
-            ex.printStackTrace();
-           // JOptionPane.showMessageDialog(null, "Error at Backuprestore" + ex.getMessage());
+        } catch (URISyntaxException e) {
+            return 1; // uri syntax
         }
+        return 2; // others
     }
+
+    /**
+     *
+     * @param host Host on where to restore the data.
+     * @param user
+     * @param pass
+     * @param backUpLocation location of the backup file.
+     * @return
+     */
+    public static int restore(
+            String host,
+            String user,
+            String pass,
+            String backUpLocation
+    ) {
+        try {
+            String jarDir = BackUpAndRestore.getJarPath();
+
+            ArrayList<String> commands = new ArrayList<>();
+            commands.add("pushd " + jarDir);
+            commands.add("cd " + "maria-tools");
+            commands.add("mysql.exe --host " + host + " --user=" + user + " --password=" + pass + " < " + backUpLocation);
+
+            String a = CommandLine.multipleCommand(commands);
+            ArrayList<String> result = CommandLine.run(a);
+            if (result.size() == 1) {
+                if (result.get(0).equalsIgnoreCase("Exit Code: 0")) {
+                    return 0; // success
+                }
+            }
+        } catch (URISyntaxException e) {
+            return 1; // uri syntax
+        }
+        return 2; // others
+    }
+
 }
