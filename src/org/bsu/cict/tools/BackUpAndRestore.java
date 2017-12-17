@@ -69,6 +69,7 @@ public class BackUpAndRestore {
         CodeSource codeSource = BackUpAndRestore.class.getProtectionDomain().getCodeSource();
         File jarFile = new File(codeSource.getLocation().toURI().getPath());
         String jarDir = jarFile.getParentFile().getParentFile().getPath();
+        System.out.println("JAR LOCATION: " + jarDir);
         return jarDir;
     }
 
