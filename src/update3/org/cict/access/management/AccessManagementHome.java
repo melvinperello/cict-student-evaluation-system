@@ -353,8 +353,14 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             if(isBackUp) {
                 // when back up, double check if file size is not 0
                 // before concluding it is successful
+                boolean notSaved = true;
                 File fileBackUp = new File(path);
-                if((fileBackUp.length() / 1024) == 0) {
+                if(fileBackUp.exists()) {
+                    if((fileBackUp.length() / 1024) == 0) {
+                        notSaved = false;
+                    }
+                }
+                if(notSaved) {
                     Notifications.create().title(title)
                             .text("Please try again later.")
                             .showWarning();
