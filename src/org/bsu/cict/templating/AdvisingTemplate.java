@@ -191,9 +191,17 @@ public class AdvisingTemplate {
         this.secondCopy = secondCopy ? "SECOND COPY" : "";
     }
 
+    //--------------------------------------------------------------------------
+    private String savePath;
+
+    public void setSavePath(String savePath) {
+        this.savePath = savePath;
+    }
+
+    //--------------------------------------------------------------------------
     public void stampTemplate() throws DocumentException, IOException {
         PdfReader reader = new PdfReader(ADVISING_ACROFORM);
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream("C:\\Users\\Jhon Melvin\\Desktop\\asd.pdf"));
+        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(this.savePath));
         AcroFields form = stamper.getAcroFields();
         //----------------------------------------------------------------------
         // check states
@@ -274,6 +282,7 @@ public class AdvisingTemplate {
             //------------------------------------------------------------------
             a.setSecondCopy(false);
             //------------------------------------------------------------------
+            a.setSavePath("C:\\Users\\Jhon Melvin\\Desktop\\asd.pdf");
             // stamp
             a.stampTemplate();
         } catch (DocumentException | IOException e) {
