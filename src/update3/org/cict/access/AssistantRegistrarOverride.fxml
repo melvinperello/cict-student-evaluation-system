@@ -25,7 +25,7 @@
                <children>
                   <Label fx:id="lbl_mobile_number" text="Loading..." textFill="WHITE">
                      <font>
-                        <Font name="System Bold" size="13.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
                </children>
@@ -38,12 +38,12 @@
                <children>
                   <Label text="Reference Number:" textFill="WHITE" wrapText="true">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
                   <Label fx:id="lbl_ref_number" text="Loading..." textFill="WHITE" wrapText="true">
                      <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
                </children>
@@ -52,10 +52,13 @@
                <children>
                   <Label text="Enter the OTP:" textFill="WHITE" wrapText="true">
                      <font>
-                        <Font name="System Bold" size="16.0" />
+                        <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txt_otp" prefHeight="29.0" prefWidth="160.0" />
+                  <TextField fx:id="txt_otp" alignment="CENTER" prefHeight="29.0" prefWidth="160.0">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextField>
                </children>
             </HBox>
             <VBox alignment="CENTER" spacing="10.0">
