@@ -357,6 +357,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                 File fileBackUp = new File(path);
                 if(fileBackUp.exists()) {
                     if((fileBackUp.length() / 1024) == 0) {
+                    } else {
                         notSaved = false;
                     }
                 }
