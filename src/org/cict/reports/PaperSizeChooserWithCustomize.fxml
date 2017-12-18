@@ -57,7 +57,7 @@
       </HBox>
       <VBox alignment="CENTER">
          <children>
-            <JFXButton fx:id="btn_cancel" prefHeight="33.0" prefWidth="464.0" style="-fx-border-color: white;" text="Cancel" textFill="WHITE">
+            <JFXButton fx:id="btn_cancel" prefHeight="33.0" prefWidth="464.0" style="-fx-border-color: white; -fx-background-color: #FE3939;" text="Cancel" textFill="WHITE">
                <font>
                   <Font size="15.0" />
                </font>
