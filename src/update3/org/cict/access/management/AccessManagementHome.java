@@ -225,7 +225,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                 .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR)
                 .active(Order.asc(DB.account_faculty().id)).first();
         if(localRegistrar != null) {
-            lbl_cluster_local_reg.setText(admin.getAssigned_cluster()==null? "No Cluster Assigned" : (admin.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+            lbl_cluster_local_reg.setText(localRegistrar.getAssigned_cluster()==null? "No Cluster Assigned" : (localRegistrar.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
         } else {
             lbl_cluster_local_reg.setText("NO LOCAL REGISTRAR FOUND");
         }
