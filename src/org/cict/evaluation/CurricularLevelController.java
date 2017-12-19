@@ -285,7 +285,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
          *
          */
         try {
-            firstYr = cla.getAnnualAssessment(1);
+            AssessmentResults firstYr = cla.getAnnualAssessment(1);
             hbox_1progress.setPrefWidth(firstYr.getAcquiredPercentage() * BAR_MAX);
             if ((firstYr.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is1stYrCompleted = true;
@@ -304,7 +304,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
 
         try {
-            secYear = cla.getAnnualAssessment(2);
+            AssessmentResults secYear = cla.getAnnualAssessment(2);
             hbox_2_progess.setPrefWidth(secYear.getAcquiredPercentage() * BAR_MAX);
             if ((secYear.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is2ndYrCompleted = true;
@@ -323,7 +323,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
 
         try {
-            thirdYr = cla.getAnnualAssessment(3);
+            AssessmentResults thirdYr = cla.getAnnualAssessment(3);
             hbox_3_progress.setPrefWidth(thirdYr.getAcquiredPercentage() * BAR_MAX);
             if ((thirdYr.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is3rdYrCompleted = true;
@@ -343,7 +343,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
 
         try {
-            fourthYr = cla.getAnnualAssessment(4);
+            AssessmentResults fourthYr = cla.getAnnualAssessment(4);
             hbox_4_progress.setPrefWidth(fourthYr.getAcquiredPercentage() * BAR_MAX);
             if ((fourthYr.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is4thYrCompleted = true;
@@ -685,10 +685,6 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
     }
     
-    private AssessmentResults firstYr;
-    private AssessmentResults secYear;
-    private AssessmentResults thirdYr;
-    private AssessmentResults fourthYr;
     //-----------------------
     // exports grade as xml file
     private void exportGrades() {
