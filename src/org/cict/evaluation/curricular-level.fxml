@@ -19,17 +19,15 @@
          <children>
             <HBox alignment="CENTER_LEFT" layoutX="65.0" layoutY="22.0" prefHeight="60.0" prefWidth="344.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
+                  <ImageView fx:id="imgvw_export_grades" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@src/img/currical_level.png" />
+                     </image>
+                  </ImageView>
                   <Label maxWidth="1.7976931348623157E308" prefHeight="53.0" prefWidth="381.0" text="Curricular Level" textFill="WHITE" HBox.hgrow="ALWAYS">
                      <font>
                         <Font size="36.0" />
                      </font>
-                     <graphic>
-                        <ImageView fx:id="imgvw_export_grades" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@src/img/currical_level.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
                   </Label>
                   <StackPane prefHeight="70.0" prefWidth="288.0">
                      <HBox.margin>

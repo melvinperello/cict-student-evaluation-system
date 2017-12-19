@@ -450,8 +450,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         this.changeYearLevelEvents();
         
         // exports grade for encoding purposes
-        imgvw_export_grades.addEventHandler(MouseEvent.MOUSE_CLICKED, (a)->{
-            System.out.println("DBL CLICKED REGISTERED");
+        super.addDoubleClickEvent(imgvw_export_grades, ()->{
             this.exportGrades();
         });
     }
@@ -757,6 +756,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         eg.setExportStudent(student);
         eg.setExportGrade(grade);
         eg.create();
+        Mono.fx().snackbar().showSuccess(application_pane, "Student's XML file expoted");
     }
     
     private ExportGrade createExportGrade(SubjectMapping subject, GradeMapping acquiredGrade) {
