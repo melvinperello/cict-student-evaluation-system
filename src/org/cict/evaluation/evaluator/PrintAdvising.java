@@ -41,9 +41,12 @@ import com.jhmvin.fx.async.Transaction;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import org.bsu.cict.templating.AdvisingTemplate;
 import org.cict.authentication.authenticator.SystemProperties;
+import org.cict.reports.ReportsDirectory;
 import org.cict.reports.ReportsUtility;
 import org.cict.reports.advisingslip.AdvisingSlip;
+import static org.cict.reports.advisingslip.AdvisingSlip.SAVE_DIRECTORY;
 import org.cict.reports.advisingslip.AdvisingSlipData;
 
 /**
@@ -194,9 +197,147 @@ public class PrintAdvising extends Transaction {
         return true;
     }
 
+    public final static String SAVE_DIRECTORY = "reports/advising";
+    private String RESULT;
+    public String document;
+    
     @Override
     protected void after() {
+        this.newModifiedPrinting();
+    }
+    
+    private void newModifiedPrinting() {
+        /**
+         * Check if the report save directory is already existing and
+         * created if not this will try to create the needed directories.
+         */
+        boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
 
+        if (!isCreated) {
+            // some error message that the directory is not created
+            System.err.println("Directory is not created.");
+            return;
+        }
+        //------------------------------------------------------------------
+        //------------------------------------------------------------------
+        try {
+            SimpleDateFormat date_format = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
+            /**
+             * Preserve the date of the evaluation.
+             */
+            String date_now = date_format.format(this.evaluation.getEvaluation_date());
+            document = (studentNumber + "_"
+                    + Mono.orm()
+                            .getServerTime()
+                            .getCalendar()
+                            .getTimeInMillis());
+            String studentMajor = (major==null? "": major);
+
+            AdvisingTemplate a = new AdvisingTemplate();
+            a.setStudentNo(student.getId());
+            a.setFullName((student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "": student.getMiddle_name())).toUpperCase(Locale.ENGLISH));
+            a.setCourse( course==null? "":course.getName());
+            a.setDate(date_now);
+            a.setAcademicYear(term.getSchool_year());
+            a.setAcademicTerm(term.getSemester_regular().toString());
+            a.setCampus((student.getCampus()==null? "MAIN" : student.getCampus()));
+            if (type.equalsIgnoreCase(OLD)) {
+                a.setChecked(AdvisingTemplate.CheckType.OLD);
+            } else if (type.equalsIgnoreCase(NEW)) {
+                a.setChecked(AdvisingTemplate.CheckType.NEW);
+            } else if (type.equalsIgnoreCase(REGULAR)) {
+                a.setChecked(AdvisingTemplate.CheckType.REGULAR);
+            } else if (type.equalsIgnoreCase(IRREGULAR)) {
+                a.setChecked(AdvisingTemplate.CheckType.IRREGULAR);
+            }
+            //------------------------------------------------------------------
+            ArrayList<String> codes = new ArrayList<>();
+            ArrayList<String> titles = new ArrayList<>();
+            ArrayList<String> sec = new ArrayList<>();
+            ArrayList<String> lec = new ArrayList<>();
+            ArrayList<String> lab = new ArrayList<>();
+            double subjectCount = 0.0, 
+                    totalLab = 0.0, 
+                    totalLec = 0.0;
+            for (JoinTables join : subjectInformation) {
+                SubjectMapping subject = join.info;
+                LoadSectionMapping section = join.section;
+                
+                /**
+                 * code added 8/28/17 by: joemar
+                 */
+                String sectionName = "";
+                try {
+                    if (section.getYear_level() != 0) {
+                        AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(section.getACADPROG_id());
+                        if(apMap!=null){
+                            sectionName = apMap.getCode() + " ";
+                        }
+                        sectionName += section.getYear_level().toString()
+                                + section.getSection_name()
+                                + " - G" + (section.get_group()==null? "":section.get_group().toString());
+                    } else {
+                        sectionName = section.getSection_name();
+                    }
+                } catch (NullPointerException b) {
+                    sectionName = section.getSection_name();
+                }
+                
+                codes.add(subject.getCode());
+                // limit to 28 characters to dis avoid overflow.
+                titles.add(this.limitString(subject.getDescriptive_title(), 28));
+                sec.add(sectionName);
+                lec.add(Double.toString(subject.getLec_units()));
+                lab.add(Double.toString(subject.getLab_units()));
+                subjectCount++;
+                totalLab += subject.getLab_units();
+                totalLec += subject.getLec_units();
+            }
+            a.setTableCodes(codes);
+            a.setTableTitle(titles);
+            a.setTableSection(sec);
+            a.setTableLec(lec);
+            a.setTableLab(lab);
+            //------------------------------------------------------------------
+            a.setSubjectCount(subjectCount + "");
+            a.setLecUnits(totalLec + "");
+            a.setLabUnits(totalLab + "");
+            a.setAdviser(evaluator.getLast_name() + ", " + evaluator.getFirst_name());
+            //------------------------------------------------------------------
+
+            PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
+                    .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
+                    .eq(DB.print_logs().title, "ADVISING SLIP")
+                    .eq(DB.print_logs().EVALUATION_id, evaluation.getId())
+                    .active().first();
+            boolean secondCopy = false;
+            if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADVISING SLIP", "EVALUATION", (logs!=null)? "REPRINT" : "INITIAL", evaluation.getId().toString())){
+                secondCopy = (logs!=null);
+            } else {
+                System.err.println("PRINT LOGS NOT SAVED");
+                return;
+            } 
+            //------------------------------------------------------------------
+            a.setSecondCopy(secondCopy);
+            //------------------------------------------------------------------
+            RESULT = SAVE_DIRECTORY + "/" + document + ".pdf";
+            a.setSavePath(RESULT);
+            // stamp
+            a.stampTemplate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private String limitString(String str, int countMax) {
+        if(str.length()>countMax) {
+            return str.substring(0, countMax-1);
+        } else {
+            return str;
+        }
+    }
+
+    private void oldPrinting() {
         //SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
         SimpleDateFormat date_format = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
         /**
@@ -214,23 +355,6 @@ public class PrintAdvising extends Transaction {
         slip.INFO_TERM = term.getSemester_regular().toString();
         slip.INFO_CAMPUS = (student.getCampus()==null? "MAIN" : student.getCampus());
 
-        /**
-         * Code added 8/2/17 ********************
-         *
-         */
-//        Integer admission_yr = Integer.valueOf(student.getAdmission_year());
-//        Integer current_yr = Integer.valueOf(term.getSchool_year().split("-")[0]);
-//        if(current_yr>admission_yr)
-//            slip.INFO_OLD = true;
-//        else 
-//            slip.INFO_NEW = true;
-//        String enrollment_type = student.getEnrollment_type();
-//        if(enrollment_type.equalsIgnoreCase("regular"))
-//            slip.INFO_REGULAR = true;
-//        else
-//            slip.INFO_IRREGULAR = true;
-        // MODIFIED: 9/5/17
-        // by: Joemar
         if (type.equalsIgnoreCase(OLD)) {
             slip.INFO_OLD = true;
         } else if (type.equalsIgnoreCase(NEW)) {
@@ -240,9 +364,6 @@ public class PrintAdvising extends Transaction {
         } else if (type.equalsIgnoreCase(IRREGULAR)) {
             slip.INFO_IRREGULAR = true;
         }
-        /**
-         * END************************************
-         */
 
         // student
         slip.INFO_STUD_NUM = student.getId();
@@ -304,5 +425,4 @@ public class PrintAdvising extends Transaction {
         }
         slip.print(secondCopy);
     }
-
 }

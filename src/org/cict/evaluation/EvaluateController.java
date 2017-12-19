@@ -1246,6 +1246,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .makeScene()
                     .makeStageApplication()
                     .stageResizeable(false)
+                    .stageUndecorated(true)
                     .stageCenter()
                     .stageShowAndWait();
 
