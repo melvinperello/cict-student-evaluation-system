@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" prefHeight="334.0" prefWidth="524.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" alignment="CENTER" prefHeight="409.0" prefWidth="470.0" style="-fx-background-color: #4EAAFD;" stylesheets="@../../evaluation/button-hover_1.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="68.0" prefWidth="524.0" style="-fx-background-color: #5E9CE9;">
+      <VBox alignment="CENTER" prefHeight="112.0" prefWidth="470.0">
          <children>
-            <Label layoutX="10.0" layoutY="55.0" text="Please choose a desired type for the student." textFill="WHITE" textOverrun="CLIP">
+            <Label layoutX="10.0" layoutY="55.0" text="Please choose a desired type for the student." textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
                <font>
-                  <Font size="18.0" />
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+            <Label text="The selected will reflect in the student's advising slip." textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
                </font>
             </Label>
          </children>
          <VBox.margin>
-            <Insets />
+            <Insets left="20.0" right="20.0" />
          </VBox.margin>
-         <padding>
-            <Insets left="20.0" />
-         </padding>
       </VBox>
-      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="10.0" minWidth="10.0" prefHeight="250.0" prefWidth="524.0" spacing="15.0" VBox.vgrow="ALWAYS">
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="10.0" minWidth="10.0" prefHeight="250.0" prefWidth="524.0" spacing="15.0">
          <children>
-            <Button fx:id="btn_old" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="335.0" style="-fx-background-color: #4A89D9; -fx-text-fill: #fff;" text="Old" VBox.vgrow="ALWAYS">
+            <JFXButton fx:id="btn_old" maxWidth="1.7976931348623157E308" prefHeight="47.0" prefWidth="420.0" text=" Old" textFill="WHITE" VBox.vgrow="ALWAYS">
                <font>
-                  <Font size="19.0" />
+                  <Font size="21.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="28.0" fitWidth="31.0" opacity="0.89" pickOnBounds="true" preserveRatio="true">
@@ -38,10 +40,10 @@
                      </image>
                   </ImageView>
                </graphic>
-            </Button>
-            <Button fx:id="btn_new" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="335.0" style="-fx-background-color: #4A89D9; -fx-text-fill: #fff;" text="New" VBox.vgrow="ALWAYS">
+            </JFXButton>
+            <JFXButton fx:id="btn_new" layoutX="10.0" layoutY="30.0" maxWidth="1.7976931348623157E308" prefHeight="47.0" prefWidth="420.0" text=" New" textFill="WHITE">
                <font>
-                  <Font size="19.0" />
+                  <Font size="21.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="28.0" fitWidth="31.0" opacity="0.89" pickOnBounds="true" preserveRatio="true">
@@ -50,10 +52,10 @@
                      </image>
                   </ImageView>
                </graphic>
-            </Button>
-            <Button fx:id="btn_reg" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="335.0" style="-fx-background-color: #4A89D9; -fx-text-fill: #fff;" text="Regular" VBox.vgrow="ALWAYS">
+            </JFXButton>
+            <JFXButton fx:id="btn_reg" layoutX="10.0" layoutY="92.0" maxWidth="1.7976931348623157E308" prefHeight="47.0" prefWidth="420.0" text=" Regular" textFill="WHITE">
                <font>
-                  <Font size="19.0" />
+                  <Font size="21.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="44.0" fitWidth="44.0" opacity="0.89" pickOnBounds="true" preserveRatio="true">
@@ -62,10 +64,10 @@
                      </image>
                   </ImageView>
                </graphic>
-            </Button>
-            <Button fx:id="btn_irreg" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="335.0" style="-fx-background-color: #4A89D9; -fx-text-fill: #fff;" text="Irregular" VBox.vgrow="ALWAYS">
+            </JFXButton>
+            <JFXButton fx:id="btn_irreg" layoutX="10.0" layoutY="154.0" maxWidth="1.7976931348623157E308" prefHeight="47.0" prefWidth="420.0" text=" Irregular" textFill="WHITE">
                <font>
-                  <Font size="19.0" />
+                  <Font size="21.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="31.0" fitWidth="37.0" opacity="0.89" pickOnBounds="true" preserveRatio="true">
@@ -74,10 +76,10 @@
                      </image>
                   </ImageView>
                </graphic>
-            </Button>
+            </JFXButton>
          </children>
          <padding>
-            <Insets bottom="20.0" left="70.0" right="70.0" top="20.0" />
+            <Insets bottom="20.0" top="20.0" />
          </padding>
       </VBox>
    </children>
