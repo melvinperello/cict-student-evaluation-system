@@ -214,7 +214,7 @@ public class GradeExportModule {
     /**
      * Create the XML file.
      */
-    private void create() {
+    public /*private*/ void create() {
         try {
             this.createXMLDocument();
             this.addContents();

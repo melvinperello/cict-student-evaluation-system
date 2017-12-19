@@ -23,8 +23,10 @@
  */
 package org.cict.evaluation;
 
+import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.Database;
+import app.lazy.models.GradeMapping;
 import app.lazy.models.MapFactory;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import app.lazy.models.StudentMapping;
@@ -37,6 +39,8 @@ import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.events.MonoClick;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -44,10 +48,15 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import org.apache.commons.lang3.text.WordUtils;
+import javafx.stage.DirectoryChooser;
+import org.bsu.cict.dev.exportgrades.ExportGrade;
+import org.bsu.cict.dev.exportgrades.ExportStudent;
+import org.bsu.cict.dev.exportgrades.GradeExportModule;
+import static org.bsu.cict.dev.exportgrades.GradeExportModule.createdDate;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
@@ -138,6 +147,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_4th;
+    
+    @FXML
+    private ImageView imgvw_export_grades;
 
     public CurricularLevelController(StudentMapping studentMap) {
         STUDENT_current = studentMap;
@@ -271,7 +283,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
          *
          */
         try {
-            AssessmentResults firstYr = cla.getAnnualAssessment(1);
+            firstYr = cla.getAnnualAssessment(1);
             hbox_1progress.setPrefWidth(firstYr.getAcquiredPercentage() * BAR_MAX);
             if ((firstYr.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is1stYrCompleted = true;
@@ -290,7 +302,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
 
         try {
-            AssessmentResults secYear = cla.getAnnualAssessment(2);
+            secYear = cla.getAnnualAssessment(2);
             hbox_2_progess.setPrefWidth(secYear.getAcquiredPercentage() * BAR_MAX);
             if ((secYear.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is2ndYrCompleted = true;
@@ -309,7 +321,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
 
         try {
-            AssessmentResults thirdYr = cla.getAnnualAssessment(3);
+            thirdYr = cla.getAnnualAssessment(3);
             hbox_3_progress.setPrefWidth(thirdYr.getAcquiredPercentage() * BAR_MAX);
             if ((thirdYr.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is3rdYrCompleted = true;
@@ -329,7 +341,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
 
         try {
-            AssessmentResults fourthYr = cla.getAnnualAssessment(4);
+            fourthYr = cla.getAnnualAssessment(4);
             hbox_4_progress.setPrefWidth(fourthYr.getAcquiredPercentage() * BAR_MAX);
             if ((fourthYr.getAcquiredPercentage() * BAR_MAX) >= 100.0) {
                 is4thYrCompleted = true;
@@ -436,6 +448,12 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         });
         
         this.changeYearLevelEvents();
+        
+        // exports grade for encoding purposes
+        imgvw_export_grades.addEventHandler(MouseEvent.MOUSE_CLICKED, (a)->{
+            System.out.println("DBL CLICKED REGISTERED");
+            this.exportGrades();
+        });
     }
     
     //--------------------------------------
@@ -664,5 +682,99 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         if (!Database.connect().student().update(STUDENT_current)) {
             System.out.println("STUDENT NOT UPDATED");
         }
+    }
+    
+    private AssessmentResults firstYr;
+    private AssessmentResults secYear;
+    private AssessmentResults thirdYr;
+    private AssessmentResults fourthYr;
+    //-----------------------
+    // exports grade as xml file
+    private void exportGrades() {
+        // fill up the following
+        ExportStudent student = new ExportStudent();
+        
+        if(STUDENT_current.getCURRICULUM_id() != null) {
+            CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(STUDENT_current.getCURRICULUM_id());
+            student.setCurriculumID(STUDENT_current.getCURRICULUM_id().toString());
+            student.setCurriculumCode(curriculum.getName());
+            
+            AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
+            student.setProgramCode(apMap.getCode());
+        } else {
+            student.setCurriculumCode("null");
+            student.setCurriculumID("null");
+            student.setProgramCode("null");
+        }
+        
+        student.setFirstName(STUDENT_current.getFirst_name());
+        student.setGroup(STUDENT_current.get_group().toString());
+        student.setLastName(STUDENT_current.getLast_name());
+        student.setMiddleName(STUDENT_current.getMiddle_name());
+        student.setSection(STUDENT_current.getSection());
+        student.setStudentNumber(STUDENT_current.getId());
+        student.setYearLevel(STUDENT_current.getYear_level().toString());
+        
+        // and arraylist of all the grades of that student
+        ArrayList<ExportGrade> grade = new ArrayList<>();
+        for(SubjectAssessmentDetials sa1 : firstYr.getAcquiredSubjects()) {
+            SubjectMapping subject = sa1.getSubjectDetails();
+            GradeMapping acquiredGrade = sa1.getGradeDetails();
+            grade.add(createExportGrade(subject, acquiredGrade));
+        }
+        for(SubjectAssessmentDetials sa2 : secYear.getAcquiredSubjects()) {
+            SubjectMapping subject = sa2.getSubjectDetails();
+            GradeMapping acquiredGrade = sa2.getGradeDetails();
+            grade.add(createExportGrade(subject, acquiredGrade));
+        }
+        for(SubjectAssessmentDetials sa3 : thirdYr.getAcquiredSubjects()) {
+            SubjectMapping subject = sa3.getSubjectDetails();
+            GradeMapping acquiredGrade = sa3.getGradeDetails();
+            grade.add(createExportGrade(subject, acquiredGrade));
+        }
+        for(SubjectAssessmentDetials sa4 : fourthYr.getAcquiredSubjects()) {
+            SubjectMapping subject = sa4.getSubjectDetails();
+            GradeMapping acquiredGrade = sa4.getGradeDetails();
+            grade.add(createExportGrade(subject, acquiredGrade));
+        }
+        
+        // get the directory where to save the xml file
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(this.getStage());
+        if(selectedDirectory==null) {
+            // no directory selected
+            return;
+        }
+        String filename = (STUDENT_current.getYear_level()==null? "" : STUDENT_current.getYear_level().toString()) + 
+                (STUDENT_current.getSection()==null? "" : STUDENT_current.getSection()) + "_" +
+                (STUDENT_current.get_group()==null? "" : "G" + STUDENT_current.get_group()) + "_" +
+                (STUDENT_current.getId()) + "_" +
+                (STUDENT_current.getLast_name());
+        String path = selectedDirectory.getAbsolutePath() + "\\" + filename + ".xml";
+        
+        GradeExportModule eg = new GradeExportModule();
+        eg.setSavePath(path);
+        eg.setExportStudent(student);
+        eg.setExportGrade(grade);
+        eg.create();
+    }
+    
+    private ExportGrade createExportGrade(SubjectMapping subject, GradeMapping acquiredGrade) {
+        ExportGrade eGrade = new ExportGrade();
+        eGrade.setActive("1");
+        eGrade.setCreatedDate(acquiredGrade.getCreated_date().toString());
+        eGrade.setCredit(acquiredGrade.getCredit().toString());
+        eGrade.setCreditMethod(acquiredGrade.getCredit_method());
+        eGrade.setDescription(acquiredGrade.getReason_for_update());
+        eGrade.setGradeID(acquiredGrade.getId().toString());
+        eGrade.setIncExpireDate(acquiredGrade.getInc_expire().toString());
+        eGrade.setPosted(acquiredGrade.getPosted().toString());
+        eGrade.setRating(acquiredGrade.getRating());
+        eGrade.setRemarks(acquiredGrade.getRemarks());
+        eGrade.setState(acquiredGrade.getGrade_state());
+        eGrade.setSubjectCode(subject.getCode());
+        eGrade.setSubjectID(subject.getId().toString());
+        eGrade.setSubjectTitle(subject.getDescriptive_title());
+        return eGrade;
     }
 }
