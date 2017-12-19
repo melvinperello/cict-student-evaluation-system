@@ -40,24 +40,23 @@ import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
-import com.melvin.mono.fx.events.MonoClick;
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import org.bsu.cict.dev.exportgrades.ExportGrade;
 import org.bsu.cict.dev.exportgrades.ExportStudent;
 import org.bsu.cict.dev.exportgrades.GradeExportModule;
-import static org.bsu.cict.dev.exportgrades.GradeExportModule.createdDate;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
@@ -748,15 +747,16 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         Mono.fx().snackbar().showSuccess(application_pane, "Exported Student's Grade as XML file");
     }
     
+    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ExportGrade createExportGrade(SubjectMapping subject, GradeMapping acquiredGrade) {
         ExportGrade eGrade = new ExportGrade();
         eGrade.setActive(acquiredGrade.getActive()==null? "null" : acquiredGrade.getActive().toString());
-        eGrade.setCreatedDate(acquiredGrade.getCreated_date()==null? "null" : acquiredGrade.getCreated_date().toString());
+        eGrade.setCreatedDate(acquiredGrade.getCreated_date()==null? "null" : formatter.format(acquiredGrade.getCreated_date()));
         eGrade.setCredit(acquiredGrade.getCredit()==null? "null" : acquiredGrade.getCredit().toString());
         eGrade.setCreditMethod(acquiredGrade.getCredit_method()==null? "null" : acquiredGrade.getCredit_method());
         eGrade.setDescription(acquiredGrade.getReason_for_update()==null? "null" : acquiredGrade.getReason_for_update());
         eGrade.setGradeID(acquiredGrade.getId().toString());
-        eGrade.setIncExpireDate(acquiredGrade.getInc_expire()==null? "null" : acquiredGrade.getInc_expire().toString());
+        eGrade.setIncExpireDate(acquiredGrade.getInc_expire()==null? "null" : formatter.format(acquiredGrade.getInc_expire()));
         eGrade.setPosted(acquiredGrade.getPosted()==null? "null" : acquiredGrade.getPosted().toString());
         eGrade.setRating(acquiredGrade.getRating());
         eGrade.setRemarks(acquiredGrade.getRemarks());
