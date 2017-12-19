@@ -38,6 +38,9 @@ import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -324,6 +327,19 @@ public class PrintAdvising extends Transaction {
             a.setSavePath(RESULT);
             // stamp
             a.stampTemplate();
+            
+            /* -------- run the created pdf */
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File myFile = new File(RESULT);
+                    Desktop.getDesktop().open(myFile);
+                } catch (IOException ex) {
+                    // no application registered for PDFs
+                }
+            }
+            /**
+             * ****************** end run
+             */
         } catch (Exception e) {
             e.printStackTrace();
         }
