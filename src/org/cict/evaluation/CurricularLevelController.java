@@ -25,6 +25,7 @@ package org.cict.evaluation;
 
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.CurriculumMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.GradeMapping;
 import app.lazy.models.MapFactory;
@@ -64,6 +65,7 @@ import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.SubjectAssessmentDetials;
 import org.cict.evaluation.encoder.MissingRecordController;
 import org.controlsfx.control.Notifications;
+import org.hibernate.criterion.Order;
 import update3.org.cict.access.Access;
 import update3.org.cict.access.SystemOverriding;
 
@@ -716,25 +718,16 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         
         // and arraylist of all the grades of that student
         ArrayList<ExportGrade> grade = new ArrayList<>();
-        for(SubjectAssessmentDetials sa1 : firstYr.getAcquiredSubjects()) {
-            SubjectMapping subject = sa1.getSubjectDetails();
-            GradeMapping acquiredGrade = sa1.getGradeDetails();
-            grade.add(createExportGrade(subject, acquiredGrade));
-        }
-        for(SubjectAssessmentDetials sa2 : secYear.getAcquiredSubjects()) {
-            SubjectMapping subject = sa2.getSubjectDetails();
-            GradeMapping acquiredGrade = sa2.getGradeDetails();
-            grade.add(createExportGrade(subject, acquiredGrade));
-        }
-        for(SubjectAssessmentDetials sa3 : thirdYr.getAcquiredSubjects()) {
-            SubjectMapping subject = sa3.getSubjectDetails();
-            GradeMapping acquiredGrade = sa3.getGradeDetails();
-            grade.add(createExportGrade(subject, acquiredGrade));
-        }
-        for(SubjectAssessmentDetials sa4 : fourthYr.getAcquiredSubjects()) {
-            SubjectMapping subject = sa4.getSubjectDetails();
-            GradeMapping acquiredGrade = sa4.getGradeDetails();
-            grade.add(createExportGrade(subject, acquiredGrade));
+        
+        // get all grades of the student
+        ArrayList<GradeMapping> allGrades = Mono.orm().newSearch(Database.connect().grade())
+                .eq(DB.grade().STUDENT_id, STUDENT_current.getCict_id())
+                .execute(Order.asc(DB.grade().id)).all();
+        if(allGrades != null) {
+            for(GradeMapping eachGrade : allGrades) {
+                SubjectMapping subject = Database.connect().subject().getPrimary(eachGrade.getSUBJECT_id());
+                grade.add(createExportGrade(subject, eachGrade));
+            }
         }
         
         // get the directory where to save the xml file
@@ -756,19 +749,19 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         eg.setExportStudent(student);
         eg.setExportGrade(grade);
         eg.create();
-        Mono.fx().snackbar().showSuccess(application_pane, "Student's XML file expoted");
+        Mono.fx().snackbar().showSuccess(application_pane, "Exported Student's Grade as XML file");
     }
     
     private ExportGrade createExportGrade(SubjectMapping subject, GradeMapping acquiredGrade) {
         ExportGrade eGrade = new ExportGrade();
-        eGrade.setActive("1");
-        eGrade.setCreatedDate(acquiredGrade.getCreated_date().toString());
-        eGrade.setCredit(acquiredGrade.getCredit().toString());
-        eGrade.setCreditMethod(acquiredGrade.getCredit_method());
-        eGrade.setDescription(acquiredGrade.getReason_for_update());
+        eGrade.setActive(acquiredGrade.getActive()==null? "null" : acquiredGrade.getActive().toString());
+        eGrade.setCreatedDate(acquiredGrade.getCreated_date()==null? "null" : acquiredGrade.getCreated_date().toString());
+        eGrade.setCredit(acquiredGrade.getCredit()==null? "null" : acquiredGrade.getCredit().toString());
+        eGrade.setCreditMethod(acquiredGrade.getCredit_method()==null? "null" : acquiredGrade.getCredit_method());
+        eGrade.setDescription(acquiredGrade.getReason_for_update()==null? "null" : acquiredGrade.getReason_for_update());
         eGrade.setGradeID(acquiredGrade.getId().toString());
-        eGrade.setIncExpireDate(acquiredGrade.getInc_expire().toString());
-        eGrade.setPosted(acquiredGrade.getPosted().toString());
+        eGrade.setIncExpireDate(acquiredGrade.getInc_expire()==null? "null" : acquiredGrade.getInc_expire().toString());
+        eGrade.setPosted(acquiredGrade.getPosted()==null? "null" : acquiredGrade.getPosted().toString());
         eGrade.setRating(acquiredGrade.getRating());
         eGrade.setRemarks(acquiredGrade.getRemarks());
         eGrade.setState(acquiredGrade.getGrade_state());
@@ -777,4 +770,5 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         eGrade.setSubjectTitle(subject.getDescriptive_title());
         return eGrade;
     }
+    
 }
