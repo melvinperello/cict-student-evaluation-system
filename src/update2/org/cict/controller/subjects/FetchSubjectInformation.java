@@ -51,7 +51,7 @@ public class FetchSubjectInformation extends Transaction{
     private ArrayList<SubjectMapping> coreqs = new ArrayList<>();
     private ArrayList<CurriculumMapping> curriculums;
     private Integer CURRICULUM_id;
-    private Date REMOVED_DATE = Mono.orm().getServerTime().getDateWithFormat();
+    private Date REMOVED_DATE;// = Mono.orm().getServerTime().getDateWithFormat();
     
     public void setCurriculumID(Integer id) {
         this.CURRICULUM_id = id;
@@ -112,11 +112,18 @@ public class FetchSubjectInformation extends Transaction{
                             .first();
                     if(subjectPreReq != null) {
                         prereqs.add(subjectPreReq);
+                    } else {
+                        // if no active subject found, set inactive
+                        crlMap.setActive(0);
+                        crlMap.setRemoved_by(null); // when removed by is null, means done by the system itself
+                        REMOVED_DATE = Mono.orm().getServerTime().getDateWithFormat();
+                        crlMap.setRemoved_date(REMOVED_DATE);
+                        Database.connect().curriculum_requisite_line().update(crlMap);
                     }
             }
-        } else
+        } else {
             logs("NO PRE-REQUISITE FOUND FOR SUBJECT ID: " + this.subjectID);
-        
+        }
         
         /**
          * CO-REQUISITE ******************************************************
@@ -135,6 +142,13 @@ public class FetchSubjectInformation extends Transaction{
                             .first();
                     if(coreqs != null) {
                         coreqs.add(subjectPreReq);
+                    } else {
+                        // if no active subject found, set inactive
+                        creMap.setActive(0);
+                        creMap.setRemoved_by(null); // when removed by is null, means done by the system itself
+                        REMOVED_DATE = Mono.orm().getServerTime().getDateWithFormat();
+                        creMap.setRemoved_date(REMOVED_DATE);
+                        Database.connect().curriculum_requisite_line().update(creMap);
                     }
             }
         } else
