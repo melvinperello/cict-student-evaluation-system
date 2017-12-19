@@ -136,12 +136,12 @@ public class FetchSubjectInformation extends Transaction{
                 .all();
         if(creMaps != null) {
             for(CurriculumRequisiteExtMapping creMap: creMaps){
-                    SubjectMapping subjectPreReq = Mono.orm().newSearch(Database.connect().subject())
+                    SubjectMapping subjectCoReq = Mono.orm().newSearch(Database.connect().subject())
                             .eq(DB.subject().id, creMap.getSUBJECT_id_req())
                             .active()
                             .first();
-                    if(coreqs != null) {
-                        coreqs.add(subjectPreReq);
+                    if(subjectCoReq != null) {
+                        coreqs.add(subjectCoReq);
                     } else {
                         // if no active subject found, set inactive
                         creMap.setActive(0);
