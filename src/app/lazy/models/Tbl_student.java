@@ -31,7 +31,6 @@ public final String section = "section";
 public final String _group = "_group";
 public final String has_profile = "has_profile";
 public final String enrollment_type = "enrollment_type";
-public final String admission_year = "admission_year";
 public final String college = "college";
 public final String campus = "campus";
 public final String residency = "residency";

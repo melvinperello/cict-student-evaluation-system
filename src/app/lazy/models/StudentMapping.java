@@ -41,7 +41,6 @@ private java.lang.String section;
 private java.lang.Integer _group;
 private java.lang.Integer has_profile;
 private java.lang.String enrollment_type;
-private java.lang.String admission_year;
 private java.lang.String college;
 private java.lang.String campus;
 private java.lang.String residency;
@@ -196,15 +195,6 @@ public void setEnrollment_type(java.lang.String fieldEnrollmentType) {
 	this.enrollment_type = fieldEnrollmentType;
 }
 
-@Column(name = "admission_year", nullable = true, length = 50)
-public java.lang.String getAdmission_year() {
-	return this.admission_year;
-}
-
-public void setAdmission_year(java.lang.String fieldAdmissionYear) {
-	this.admission_year = fieldAdmissionYear;
-}
-
 @Column(name = "college", nullable = true, length = 50)
 public java.lang.String getCollege() {
 	return this.college;
@@ -356,7 +346,6 @@ copyMe.section = this.section;
 copyMe._group = this._group;
 copyMe.has_profile = this.has_profile;
 copyMe.enrollment_type = this.enrollment_type;
-copyMe.admission_year = this.admission_year;
 copyMe.college = this.college;
 copyMe.campus = this.campus;
 copyMe.residency = this.residency;

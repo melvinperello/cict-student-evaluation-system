@@ -49,9 +49,6 @@
 <property name="enrollment_type" type="java.lang.String">
 <column name="enrollment_type" length="50"/>
 </property>
-<property name="admission_year" type="java.lang.String">
-<column name="admission_year" length="50"/>
-</property>
 <property name="college" type="java.lang.String">
 <column name="college" length="50"/>
 </property>

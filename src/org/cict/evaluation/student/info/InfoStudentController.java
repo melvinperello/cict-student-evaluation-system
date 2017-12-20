@@ -199,10 +199,10 @@ public class InfoStudentController implements ControllerFX {
     private void setValues() {
         try {
             lbl_cictid.setText(CURRENT_STUDENT.getCict_id().toString());
-            try {
-                txt_admissionYear.setText(CURRENT_STUDENT.getAdmission_year());
-            } catch (NullPointerException e) {
-            }
+//            try {
+//                txt_admissionYear.setText(CURRENT_STUDENT.getAdmission_year());
+//            } catch (NullPointerException e) {
+//            }
             txt_firstname.setText(CURRENT_STUDENT.getFirst_name());
             try {
                 txt_group.setText(CURRENT_STUDENT.get_group().toString());
