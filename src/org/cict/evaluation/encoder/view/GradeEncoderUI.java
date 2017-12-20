@@ -15,9 +15,6 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.jhmvin.Mono;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -32,11 +29,8 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javax.swing.JOptionPane;
 import org.bsu.cict.alerts.MessageBox;
-import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.assessment.AssessmentResults;
 import org.cict.evaluation.assessment.CurricularLevelAssesor;
 import org.cict.evaluation.encoder.SpreadSheetGradeEncoder;
@@ -980,12 +974,16 @@ public class GradeEncoderUI {
      * <@Posting>
      * all methods that concerns the posting of the grade and verification
      */
+    private static int UNPASSED_COUNT;
+
     /**
-     * requires the button control that will invoke the post action
+     * requires the button control that will invoke the post action, verify the
+     * sheet.
      *
      * @param btnPost
      */
-    public void verifySheet(Button btnPost) {
+    public void verifySheet(Button btnPost, int unPassed) {
+        this.UNPASSED_COUNT = unPassed;
         int row = this.spreadSheet.getGrid().getRowCount();
         Task<Void> task = verificationProcess(row);
         task.setOnScheduled(event -> {
@@ -994,6 +992,22 @@ public class GradeEncoderUI {
         task.setOnSucceeded(event -> {
             btnPost.setDisable(false);
             this.spreadSheet.setEditable(true);
+            //------------------------------------------------------------------
+            /**
+             * If an unpassed subject was changed to passed open restrcited
+             * access.
+             */
+            System.out.println("CHECKED UNPASSED COUNT: " + CHECK_UNPASSED_COUNT);
+            System.out.println("UNPASSED COUNT: " + UNPASSED_COUNT);
+            if (UNPASSED_COUNT != 0) {
+                System.out.println("TEST TO OPEN RESTRCTION");
+                if (this.CHECK_UNPASSED_COUNT != this.UNPASSED_COUNT) {
+                    System.out.println("OPEN RESTRICTION");
+                    this.openRestrictedAccess = true;
+                }
+            }
+            //------------------------------------------------------------------
+
             this.notifyUser(this.verficationResult, btnPost);
         });
         task.setOnRunning(event -> {
@@ -1030,7 +1044,9 @@ public class GradeEncoderUI {
                 /**
                  * Check if the user was granted permission by the registrar.
                  */
+                //--------------------------------------------------------------
                 allowedUser = Access.isAllowedToRevoke();
+                //--------------------------------------------------------------
                 if (allowedUser != null) {
                     isAllowed = true;
                 }
@@ -1105,6 +1121,58 @@ public class GradeEncoderUI {
     }
 
     /**
+     * if a grade that is not passed is updated.
+     *
+     * @param x
+     * @param cellRemark
+     * @deprecated
+     */
+    @Deprecated
+    private void joemarOpenRestricted(int x, String cellRemark) {
+        // verify if grade is already posted with failed/inc
+        String cellCode = spreadSheetGrid.getRows().get(x).get(codeCol).getText();
+        System.out.print("VERIFYING IF ALREADY POSTED: ");
+        System.out.println(cellCode);
+        //----------------------------------------------------------
+        ArrayList<SubjectMapping> subjects = Mono.orm().newSearch(Database.connect().subject())
+                .eq(DB.subject().code, cellCode)
+                .active()
+                .all();
+        //----------------------------------------------------------
+        SubjectMapping temp_subject = null;
+        //----------------------------------------------------------
+        for (SubjectMapping temp : subjects) {
+            CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
+                    .eq(DB.curriculum_subject().SUBJECT_id, temp.getId())
+                    .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
+                    .active()
+                    .first();
+            if (csMap != null) {
+                temp_subject = temp;
+                break;
+            }
+        }
+        //----------------------------------------------------------
+        if (temp_subject != null) {
+            GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
+                    .eq(DB.grade().STUDENT_id, CICT_id)
+                    .eq(DB.grade().SUBJECT_id, temp_subject.getId())
+                    .active(Order.desc(DB.grade().id)).first();
+            if (grade != null) {
+                if (grade.getRemarks().equalsIgnoreCase("FAILED") || grade.getRemarks().equalsIgnoreCase("INCOMPLETE")) {
+                    if (!cellRemark.equalsIgnoreCase(grade.getRemarks())) {
+                        openRestrictedAccess = true;
+                    }
+                }
+            } else {
+                System.out.println("GRADE IS NULL");
+            }
+        } else {
+            System.out.println("TEMP SUBJECT IS NULL");
+        }
+    }
+
+    /**
      *
      * @param rowCount
      * @return returns the task created
@@ -1114,6 +1182,13 @@ public class GradeEncoderUI {
             // inner class variables
             int x;
             int errorCount = 0;
+
+            //------------------------------------------------------------------
+            // there is already a defined unpassed count when the grade was wrtten
+            // if this unpassed count and the latter do  not match
+            // it means that the user has updated it to passing.
+            int unpassedCount = 0;
+            //------------------------------------------------------------------
 
             @Override
             public Void call() throws Exception {
@@ -1126,49 +1201,14 @@ public class GradeEncoderUI {
                     String cellText = spreadSheetGrid.getRows().get(x).get(finalCol).getText();
                     String cellRemark = spreadSheetGrid.getRows().get(x).get(remarkCol).getText();
                     //----------------------------------------------------------
+                    if ((!cellRemark.equalsIgnoreCase("PASSED")) && (!cellRemark.isEmpty())) {
+                        System.out.println("UNPASSED SUBJECt");
+                        this.unpassedCount++;
+                    }
+                    //----------------------------------------------------------
                     // MUST BE REMOVED
                     //----------------------------------------------------------
-                    // verify if grade is already posted with failed/inc
-                    String cellCode = spreadSheetGrid.getRows().get(x).get(codeCol).getText();
-                    System.out.print("VERIFYING IF ALREADY POSTED: ");
-                    System.out.println(cellCode);
-                    //----------------------------------------------------------
-                    ArrayList<SubjectMapping> subjects = Mono.orm().newSearch(Database.connect().subject())
-                            .eq(DB.subject().code, cellCode)
-                            .active()
-                            .all();
-                    //----------------------------------------------------------
-                    SubjectMapping temp_subject = null;
-                    //----------------------------------------------------------
-                    for (SubjectMapping temp : subjects) {
-                        CurriculumSubjectMapping csMap = Mono.orm().newSearch(Database.connect().curriculum_subject())
-                                .eq(DB.curriculum_subject().SUBJECT_id, temp.getId())
-                                .eq(DB.curriculum_subject().CURRICULUM_id, CURRICULUM_id)
-                                .active()
-                                .first();
-                        if (csMap != null) {
-                            temp_subject = temp;
-                            break;
-                        }
-                    }
-                    //----------------------------------------------------------
-                    if (temp_subject != null) {
-                        GradeMapping grade = Mono.orm().newSearch(Database.connect().grade())
-                                .eq(DB.grade().STUDENT_id, CICT_id)
-                                .eq(DB.grade().SUBJECT_id, temp_subject.getId())
-                                .active(Order.desc(DB.grade().id)).first();
-                        if (grade != null) {
-                            if (grade.getRemarks().equalsIgnoreCase("FAILED") || grade.getRemarks().equalsIgnoreCase("INCOMPLETE")) {
-                                if (!cellRemark.equalsIgnoreCase(grade.getRemarks())) {
-                                    openRestrictedAccess = true;
-                                }
-                            }
-                        } else {
-                            System.out.println("GRADE IS NULL");
-                        }
-                    } else {
-                        System.out.println("TEMP SUBJECT IS NULL");
-                    }
+                    // joemarOpenRestricted(x, cellRemark);
                     //----------------------------------------------------------
                     // <MUST BE REMOVED>
                     //----------------------------------------------------------
@@ -1197,7 +1237,7 @@ public class GradeEncoderUI {
 
                 }
                 // sends the result outside this anonymous class
-                verficationResult(this.errorCount);
+                verficationResult(this.errorCount, this.unpassedCount);
                 return null;
             }
         };
@@ -1240,14 +1280,16 @@ public class GradeEncoderUI {
     }
 
     private int verficationResult = 0;
+    private int CHECK_UNPASSED_COUNT = 0;
 
     /**
      * gets the value of the result from the task
      *
      * @param count
      */
-    private void verficationResult(int count) {
+    private void verficationResult(int count, int unpass) {
         this.verficationResult = count;
+        this.CHECK_UNPASSED_COUNT = unpass;
     }
 
     //-------------------------------------------

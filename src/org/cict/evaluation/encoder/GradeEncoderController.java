@@ -115,7 +115,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
     private ArrayList<SubjectMapping> subjectsToEncode;
     private String TITLE;
 //    private String MODE;
-    private Integer CURRICULUM_id, yearLevel, semester;
+    private Integer /*CURRICULUM_id,*/ yearLevel, semester;
 
     public GradeEncoderController(StudentMapping student, ArrayList<SubjectMapping> subjectsToEncode, String title) {
         //----------------------------------------------------------------------
@@ -239,7 +239,9 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
             pnl_spreadsheet.getChildren().add(spv);
             //------------------------------------------------------------------
             // this will decide if the POST button will be enabled.
+            // write already encoded grades.
             this.writeEncodedGrades();
+            //------------------------------------------------------------------
             //------------------------------------------------------------------
             super.cursorDefault();
             this.changeView(pnl_spreadsheet);
@@ -279,7 +281,7 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
 
             if (choice == 1) {
 //                this.gei.setPnl_spreadsheet(this.pnl_spreadsheet);
-                this.gei.verifySheet(btnPost);
+                this.gei.verifySheet(btnPost, this.unPassedCount);
             }
         });
 
@@ -307,7 +309,16 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
         }
     }
 
+    private int unPassedCount;
+
+    /**
+     * When a subject already has a grade write it in the spreadsheet. if
+     * already passed editable is false.
+     */
     private void writeEncodedGrades() {
+        //----------------------------------------------------------------------
+        this.unPassedCount = 0;
+        //----------------------------------------------------------------------
         // enable the post button
         this.btnPost.setDisable(false);
         // disable first value filtering to write notes
@@ -338,7 +349,11 @@ public final class GradeEncoderController extends SceneFX implements ControllerF
                     } else {
                         // make the cell updatable
                         row.get(3).setEditable(true);
-
+                        //------------------------------------------------------
+                        // this is a marking that there is an updatable grade
+                        if (!remarks.isEmpty()) {
+                            unPassedCount++;
+                        }
                         //------------------------------------------------------
 //                        // check if the remarks is failed or inc
 //                        if (remarks.equalsIgnoreCase("FAILED") || remarks.equalsIgnoreCase("INCOMPLETE")) {

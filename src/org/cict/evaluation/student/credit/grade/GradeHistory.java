@@ -271,17 +271,24 @@ public class GradeHistory extends SceneFX implements ControllerFX {
             }
 
             lbl_reason.setText(description);
+            //------------------------------------------------------------------
             //// updater
             String updater = "No Data";
             if (grade.getUpdated_by() != null) {
                 updater = getFacultyName(grade.getUpdated_by());
+            } else {
+                updater = getFacultyName(grade.getCreated_by());
             }
+            //------------------------------------------------------------------
             lbl_editor.setText(updater);
             // update date
             String update_date = "No Data";
             if (grade.getUpdated_date() != null) {
                 update_date = dateFormat.format(grade.getUpdated_date());
+            } else {
+                update_date = dateFormat.format(grade.getCreated_date());
             }
+            //------------------------------------------------------------------
             lbl_date.setText(update_date);
             //------------------------------------------------------------------
 
