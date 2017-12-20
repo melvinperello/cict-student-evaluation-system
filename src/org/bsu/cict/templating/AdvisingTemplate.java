@@ -4,10 +4,12 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.bsu.cict.alerts.MessageBox;
 
 /**
  *
@@ -200,6 +202,15 @@ public class AdvisingTemplate {
 
     //--------------------------------------------------------------------------
     public void stampTemplate() throws DocumentException, IOException {
+        //----------------------------------------------------------------------
+        // check existence
+        File template = new File(ADVISING_ACROFORM);
+        if (!template.exists()) {
+            MessageBox.showError("No Template", ADVISING_ACROFORM + " was not found in the local directory.");
+            return;
+        }
+        //----------------------------------------------------------------------
+
         PdfReader reader = new PdfReader(ADVISING_ACROFORM);
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(this.savePath));
         AcroFields form = stamper.getAcroFields();
