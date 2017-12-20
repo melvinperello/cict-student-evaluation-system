@@ -51,6 +51,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.bsu.cict.alerts.MessageBox;
 import org.bsu.cict.tools.BackUpAndRestore;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
@@ -165,67 +166,67 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_evaluator_no_found;
-    
+
     @FXML
     private JFXButton btn_system_values;
-    
+
     @FXML
     private JFXButton btn_show_override_logs;
-    
+
     @FXML
     private JFXButton btn_change_cluster_admin;
-    
+
     @FXML
     private JFXButton btn_change_cluster_local_reg;
-    
+
     @FXML
     private Label lbl_cluster_local_reg;
-    
+
     @FXML
     private Label lbl_cluster_admin;
-    
+
     //-----------------------
     @FXML
     private JFXButton btn_view_backup_restore;
-    
+
     @FXML
     private JFXButton btn_back_up;
-    
+
     @FXML
     private JFXButton btn_restore;
     @FXML
     private VBox vbox_backup_restore;
-    
+
     public AccessManagementHome() {
         //
     }
 
     private LinkedSettingsMapping currentLinkedSettings;
     private AccountFacultyMapping currentAccount;
-    
+
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
 
         this.changeView(vbox_system);
-        
+
         currentLinkedSettings = Mono.orm().newSearch(Database.connect().linked_settings())
                 .eq(DB.linked_settings().mark, "ALIVE").active(Order.desc(DB.linked_settings().id)).first();
-    
+
         AccountFacultyMapping admin = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().access_level, Access.ACCESS_ADMIN)
                 .active(Order.asc(DB.account_faculty().id)).first();
-        if(admin != null) {
-            lbl_cluster_admin.setText(admin.getAssigned_cluster()==null? "No Cluster Assigned" : (admin.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+        if (admin != null) {
+            lbl_cluster_admin.setText(admin.getAssigned_cluster() == null ? "No Cluster Assigned" : (admin.getAssigned_cluster().equals(3) ? "C1: " + currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
         } else {
             lbl_cluster_admin.setText("NO ADMIN FOUND");
         }
-        
+
         AccountFacultyMapping localRegistrar = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR)
                 .active(Order.asc(DB.account_faculty().id)).first();
-        if(localRegistrar != null) {
-            lbl_cluster_local_reg.setText(localRegistrar.getAssigned_cluster()==null? "No Cluster Assigned" : (localRegistrar.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+        if (localRegistrar != null) {
+            lbl_cluster_local_reg.setText(localRegistrar.getAssigned_cluster() == null ? "No Cluster Assigned" : (localRegistrar.getAssigned_cluster().equals(3) ? "C1: " + currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
         } else {
             lbl_cluster_local_reg.setText("NO LOCAL REGISTRAR FOUND");
         }
@@ -289,7 +290,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         this.systemAdminEvents();
 
         this.localRegistrarEvents();
-        
+
         //---------------
         // added back up and restore
         super.addClickEvent(btn_view_backup_restore, () -> {
@@ -297,9 +298,9 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         });
         this.backUpRestoreEvents();
         //
-        
+
     }
-    
+
     private void backUpRestoreEvents() {
         super.addClickEvent(btn_back_up, () -> {
             this.database("BACK_UP");
@@ -308,17 +309,17 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             this.database("RESTORE");
         });
     }
-    
+
     private void database(String request) {
         int res = 1;
         String title = "";
         String path = null;
         boolean isBackUp = false;
-        if(request.equalsIgnoreCase("BACK_UP")) {
+        if (request.equalsIgnoreCase("BACK_UP")) {
             isBackUp = true;
             DirectoryChooser directoryChooser = new DirectoryChooser();
             File selectedDirectory = directoryChooser.showDialog(this.getStage());
-            if(selectedDirectory==null) {
+            if (selectedDirectory == null) {
                 // no directory selected
                 return;
             }
@@ -332,12 +333,12 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     PublicConstants.getDATABASE_NAME(),
                     path);
             title = "Back Up Database";
-        } else if(request.equalsIgnoreCase("RESTORE")) {
+        } else if (request.equalsIgnoreCase("RESTORE")) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open Monosync File");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Monosync File", "*.monosync"));
             File file = fileChooser.showOpenDialog(this.getStage());
-            if(file==null) {
+            if (file == null) {
                 // no file selected
                 return;
             }
@@ -348,20 +349,20 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     file.getAbsolutePath());
             title = "Restore Database";
         }
-        if(res == 0) {
+        if (res == 0) {
             // success 
-            if(isBackUp) {
+            if (isBackUp) {
                 // when back up, double check if file size is not 0
                 // before concluding it is successful
                 boolean notSaved = true;
                 File fileBackUp = new File(path);
-                if(fileBackUp.exists()) {
-                    if((fileBackUp.length() / 1024) == 0) {
+                if (fileBackUp.exists()) {
+                    if ((fileBackUp.length() / 1024) == 0) {
                     } else {
                         notSaved = false;
                     }
                 }
-                if(notSaved) {
+                if (notSaved) {
                     Notifications.create().title(title)
                             .text("Please try again later.")
                             .showWarning();
@@ -371,16 +372,16 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             Mono.fx().alert().createInfo()
                     .setHeader(title)
                     .setMessage("Successful Transaction!").show();
-        } else if(res == 1) {
+        } else if (res == 1) {
             // path error
             Mono.fx().alert().createError()
                     .setHeader(title)
                     .setMessage("Something is wrong with the path.").show();
-        } else if(res == 2) {
-            // sql error
-            Mono.fx().alert().createError()
-                    .setHeader(title)
-                    .setMessage("An SQL error occured. Please try again later.").show();
+        } else if (res == 2) {
+            /**
+             * This may failed when there is a space in the directory.
+             */
+            MessageBox.showError("Failed", "Failed to execute operation. This may be caused by the Operating System requiring administrative rights, or there is an invalid path character.");
         } else {
             // unknown error
             Mono.fx().alert().createError()
@@ -388,7 +389,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .setMessage("Unknown error occured. Please try again later.").show();
         }
     }
-    
+
     private void systemAccountEvents() {
         super.addClickEvent(btn_create_system_admin, () -> {
             if (this.isGranted("Access Denied. Not A System Account.", Access.ACCESS_SYSTEM)) {
@@ -431,12 +432,12 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                 }
             }
         });
-        
-        super.addClickEvent(btn_system_values, ()->{
+
+        super.addClickEvent(btn_system_values, () -> {
             this.onShowSystemVariables();
         });
-        
-        super.addClickEvent(btn_change_cluster_admin, ()->{
+
+        super.addClickEvent(btn_change_cluster_admin, () -> {
             this.onChangeClusterOf(Access.ACCESS_ADMIN, lbl_cluster_admin);
         });
     }
@@ -467,18 +468,18 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                 }
             }
         });
-        
-        super.addClickEvent(btn_show_override_logs, ()->{
+
+        super.addClickEvent(btn_show_override_logs, () -> {
             if (this.isGranted("Access Denied. You Are Not Authorized.", Access.ACCESS_LOCAL_REGISTRAR, Access.ACCESS_ADMIN, Access.ACCESS_ASST_ADMIN, Access.ACCESS_CO_REGISTRAR)) {
                 this.onShowOverrideLogs();
             }
         });
-        
-        super.addClickEvent(btn_change_cluster_local_reg, ()->{
+
+        super.addClickEvent(btn_change_cluster_local_reg, () -> {
             this.onChangeClusterOf(Access.ACCESS_LOCAL_REGISTRAR, lbl_cluster_local_reg);
         });
     }
-    
+
     private void onShowOverrideLogs() {
         OverrideLogs overrideLogs = M.load(OverrideLogs.class);
         overrideLogs.onDelayedStart(); // do not put database transactions on startUp
@@ -636,29 +637,29 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             lbl_bulsu_id.setText(each.getBulsuID());
             lbl_dept.setText((each.getDepartment().isEmpty() ? "NOT SET" : each.getDepartment()));
             lbl_name.setText(each.getFullName());
-            
-            super.addClickEvent(rowFX.getBtn_change_cluster(), ()->{
+
+            super.addClickEvent(rowFX.getBtn_change_cluster(), () -> {
                 FacultyInformation info = (FacultyInformation) row.getRowMetaData().get(KEY_MORE_INFO);
                 FacultyRow fx = (FacultyRow) row.getRowMetaData().get("FX");
                 Integer res = this.getCluster(true, info.getAccountFacultyMapping());
-                if(res==null) {
+                if (res == null) {
                     Notifications.create().title("No Current Session")
                             .text("You can create a session in Linked System.\n"
                                     + " then click New Session.").showWarning();
                     return;
                 }
-                if(res.equals(1)) {
-                    fx.getLbl_cluster_name().setText(info.getAccountFacultyMapping().getAssigned_cluster()==null? "No Cluster Assigned" : (info.getAccountFacultyMapping().getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+                if (res.equals(1)) {
+                    fx.getLbl_cluster_name().setText(info.getAccountFacultyMapping().getAssigned_cluster() == null ? "No Cluster Assigned" : (info.getAccountFacultyMapping().getAssigned_cluster().equals(3) ? "C1: " + currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
                     Notifications.create().darkStyle()
                             .title("Successfully Updated")
                             .text("Cluster of the faculty is updated\n"
                                     + "successfully.").showInformation();
                 }
             });
-            
+
             AccountFacultyMapping afMap = each.getAccountFacultyMapping();
-            rowFX.getLbl_cluster_name().setText(afMap.getAssigned_cluster()==null? "No Cluster Assigned" : (afMap.getAssigned_cluster().equals(1)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
-            
+            rowFX.getLbl_cluster_name().setText(afMap.getAssigned_cluster() == null ? "No Cluster Assigned" : (afMap.getAssigned_cluster().equals(1) ? "C1: " + currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+
             super.addClickEvent(btn_remove, () -> {
                 this.onRemove(row, accessLevelShown, tblFaculty);
             });
@@ -684,20 +685,21 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         // attach to parent variable name in scene builder
         simpleTableView.setParentOnScene(parent);
     }
-    
+
     // -----------------------------------------------------------
     // ADMIN CREATOR
     // -----------------------------------------
     private void createNewAdmin() {
         ArrayList<AccountFacultyMapping> afMaps = this.getCurrentAdmin();
-        if(afMaps!=null) {
+        if (afMaps != null) {
             int res = Mono.fx().alert().createConfirmation()
                     .setMessage("There is an existing active Administrator. This will remove his/her administrative rights.")
                     .confirmCustom("Continue", "Cancel");
-            if(res!=1)
+            if (res != 1) {
                 return;
+            }
         }
-        
+
         CreateSystemAdmin create = M.load(CreateSystemAdmin.class);
         try {
             create.getCurrentStage().showAndWait();
@@ -708,7 +710,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             a.showAndWait();
         }
     }
-    
+
     // -----------------------------------------------------------------
     // RESET ADMIN PASSWORD
     // --------------------------------------
@@ -716,10 +718,10 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         AccountFacultyMapping afMap = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().access_level, Access.ACCESS_ADMIN)
                 .active().first();
-        if(afMap==null) {
+        if (afMap == null) {
             Mono.fx().alert().createWarning()
-                .setMessage("No System Administrator Account found. Create a new one first by clicking Create System Administrator.")
-                .show();
+                    .setMessage("No System Administrator Account found. Create a new one first by clicking Create System Administrator.")
+                    .show();
             return;
         }
         ResetAdminPassword create = M.load(ResetAdminPassword.class);
@@ -795,16 +797,17 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     // -------------------------------------------------
     private void reclaimAdminRights() {
         FacultyMapping selectedFaculty = selectFaculty("This will reclaim the rights of the previous admin and transfer the authority to the selected faculty. Continue?");
-        if(selectedFaculty==null)
+        if (selectedFaculty == null) {
             return;
-        
+        }
+
         ArrayList<AccountFacultyMapping> afMaps = this.getCurrentAdmin();
-        if(afMaps!=null) {
-            for(AccountFacultyMapping afMap: afMaps) {
+        if (afMaps != null) {
+            for (AccountFacultyMapping afMap : afMaps) {
                 FacultyInformation info = new FacultyInformation(afMap);
                 info.getFacultyMapping().setDesignation(Access.ACCESS_FACULTY);
                 afMap.setAccess_level(Access.ACCESS_FACULTY);
-                
+
                 if (!Database.connect().account_faculty().update(afMap)
                         || !Database.connect().faculty().update(info.getFacultyMapping())) {
                     Notifications.create().darkStyle()
@@ -817,7 +820,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         }
         FacultyInformation infoNewAdmin = new FacultyInformation(selectedFaculty);
         AccountFacultyMapping afMapNewAdmin = infoNewAdmin.getAccountFacultyMapping();
-        
+
         if (afMapNewAdmin.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
@@ -826,7 +829,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showError();
             return;
         }
-        
+
         afMapNewAdmin.setAccess_level(Access.ACCESS_ADMIN);
         selectedFaculty.setDesignation(Access.ACCESS_ADMIN);
         if (!Database.connect().account_faculty().update(afMapNewAdmin)
@@ -842,16 +845,16 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .text("New System Administrator is assigned.")
                     .showInformation();
         }
-        
+
     }
-    
+
     private ArrayList<AccountFacultyMapping> getCurrentAdmin() {
         ArrayList<AccountFacultyMapping> afMaps = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().access_level, Access.ACCESS_ADMIN)
                 .active().all();
         return afMaps;
     }
-    
+
     private void assignSystemAdmin() {
         FacultyMapping selectedFaculty = selectFaculty("This will remove your authority of being a System Administrator and change it into Faculty. Account will automatically logout after. Do you still want to continue?");
         if (selectedFaculty == null) {
@@ -864,7 +867,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return;
         }
-        
+
         if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_ADMIN)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
@@ -873,7 +876,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showError();
             return;
         }
-        
+
         afMap.setAccess_level(Access.ACCESS_ADMIN);
         selectedFaculty.setDesignation(Access.ACCESS_ADMIN);
         if (Database.connect().account_faculty().update(afMap)
@@ -963,7 +966,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 //                    .showWarning();
 //            return;
 //        }
-        
+
         if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_LOCAL_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
@@ -976,22 +979,22 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         AccountFacultyMapping currentLocalRegistrar = Mono.orm().newSearch(Database.connect().account_faculty())
                 .eq(DB.account_faculty().access_level, Access.ACCESS_LOCAL_REGISTRAR)
                 .active(Order.asc(DB.account_faculty().id)).first();
-        if(currentLocalRegistrar != null) {
+        if (currentLocalRegistrar != null) {
             int res = Mono.fx().alert().createConfirmation()
                     .setMessage("There is an existing Local Registrar account. This action will make the said account into Faculty access level. Continue?")
                     .confirmYesNo();
-            if(res==-1) {
+            if (res == -1) {
                 return;
-            } 
+            }
             currentLocalRegistrar.setAccess_level(Access.ACCESS_FACULTY);
             updatedDetails = Database.connect().account_faculty().update(currentLocalRegistrar);
         }
-        
-        if(updatedDetails) {
+
+        if (updatedDetails) {
             afMap.setAccess_level(Access.ACCESS_LOCAL_REGISTRAR);
             updatedDetails = Database.connect().account_faculty().update(afMap);
         }
-        
+
         if (updatedDetails) {
             Notifications.create().darkStyle()
                     .title("Assigned Successfully")
@@ -1006,30 +1009,31 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     }
 
     private Integer getCluster(boolean save, AccountFacultyMapping afMap) {
-        if(currentLinkedSettings==null) 
+        if (currentLinkedSettings == null) {
             return null;
-        boolean cluster2Closed = currentLinkedSettings.getFloor_4_name()==null;
+        }
+        boolean cluster2Closed = currentLinkedSettings.getFloor_4_name() == null;
         boolean invalid = true;
         Integer choosen = null;
-        while(invalid) {
+        while (invalid) {
             int res = Mono.fx().alert().createConfirmation()
                     .setHeader("Assign Cluster")
                     .setMessage("Please choose a cluster for the faculty selected.")
-                    .confirmCustom("Cluster 1: "+ currentLinkedSettings.getFloor_3_name(), "Cluster 2: " + (cluster2Closed? "CLOSED" : currentLinkedSettings.getFloor_4_name()));
-            if(cluster2Closed && res==-1) {
+                    .confirmCustom("Cluster 1: " + currentLinkedSettings.getFloor_3_name(), "Cluster 2: " + (cluster2Closed ? "CLOSED" : currentLinkedSettings.getFloor_4_name()));
+            if (cluster2Closed && res == -1) {
             } else {
                 invalid = false;
             }
-            choosen = res==-1? 4 : 3;
+            choosen = res == -1 ? 4 : 3;
         }
-        if(save) {
+        if (save) {
             afMap.setAssigned_cluster(choosen);
             boolean res = Database.connect().account_faculty().update(afMap);
-            return (res? 1: -1);
+            return (res ? 1 : -1);
         }
         return choosen;
     }
-    
+
     private boolean assignAsstRegistrar() {
         FacultyMapping selectedFaculty = selectFaculty(null);
         if (selectedFaculty == null) {
@@ -1042,7 +1046,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return false;
         }
-        
+
         if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_CO_REGISTRAR)) {
             Notifications.create().darkStyle()
                     .title("No Changes Made")
@@ -1051,7 +1055,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showError();
             return false;
         }
-        
+
         afMap.setAccess_level(Access.ACCESS_CO_REGISTRAR);
         selectedFaculty.setDesignation(Access.ACCESS_CO_REGISTRAR);
         if (Database.connect().account_faculty().update(afMap)
@@ -1082,7 +1086,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         if (afMap == null) {
             return false;
         }
-        
+
         Integer clusterNumber = this.getCluster(false, afMap);
         if (afMap.getAccess_level().equalsIgnoreCase(Access.ACCESS_EVALUATOR) && afMap.getAssigned_cluster().equals(clusterNumber)) {
             Notifications.create().darkStyle()
@@ -1092,7 +1096,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .showError();
             return false;
         }
-        
+
         afMap.setAccess_level(Access.ACCESS_EVALUATOR);
         afMap.setAssigned_cluster(clusterNumber);
         selectedFaculty.setDesignation(Access.ACCESS_EVALUATOR);
@@ -1190,9 +1194,8 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     private void relaunchLogin() {
         MainApplication.launchLogin();
     }
-    
+
     //-----------------------------------
-    
     private void onShowSystemVariables() {
         SystemValues systemValues = M.load(SystemValues.class);
         systemValues.onDelayedStart(); // do not put database transactions on startUp
@@ -1204,22 +1207,22 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             a.showAndWait();
         }
     }
-    
+
     private void onChangeClusterOf(String access, Label lbl) {
         currentAccount = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
-        if(!currentAccount.getAccess_level().equalsIgnoreCase(access)) {
+        if (!currentAccount.getAccess_level().equalsIgnoreCase(access)) {
             Mono.fx().snackbar().showError(application_root, "Not Authorized To Change This Cluster");
             return;
         }
         Integer res = this.getCluster(true, currentAccount);
-        if(res==null) {
+        if (res == null) {
             Notifications.create().title("No Current Session")
                     .text("You can create a session in Linked System.\n"
                             + " then click New Session.").showWarning();
             return;
         }
-        if(res.equals(1)) {
-            lbl.setText(currentAccount.getAssigned_cluster()==null? "No Cluster Assigned" : (currentAccount.getAssigned_cluster().equals(3)? "C1: "+currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
+        if (res.equals(1)) {
+            lbl.setText(currentAccount.getAssigned_cluster() == null ? "No Cluster Assigned" : (currentAccount.getAssigned_cluster().equals(3) ? "C1: " + currentLinkedSettings.getFloor_3_name() : "C2: " + currentLinkedSettings.getFloor_4_name()));
             Notifications.create().darkStyle()
                     .title("Successfully Updated")
                     .text("Cluster of the faculty is updated\n"

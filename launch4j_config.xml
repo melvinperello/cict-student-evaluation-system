@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\Jhon Melvin\Documents\NetBeansProjects\Enrollment-Evaluation-Management-System\dist\Enrollment-Evaluation-Management-System.jar</jar>
-  <outfile>C:\Users\Jhon Melvin\Documents\NetBeansProjects\Enrollment-Evaluation-Management-System\dist\evaluation.exe</outfile>
+  <jar>C:\Users\Jhon Melvin\Documents\NetBeansProjects\cict-student-evaluation-system\dist\cict-student-evaluation-system.jar</jar>
+  <outfile>C:\Users\Jhon Melvin\Documents\NetBeansProjects\cict-student-evaluation-system\dist\CICT Student Evaluation System.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Users\Jhon Melvin\Documents\NetBeansProjects\Enrollment-Evaluation-Management-System\ms_icon.ico</icon>
+  <icon>C:\Users\Jhon Melvin\Documents\NetBeansProjects\cict-student-evaluation-system\ms_icon.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
