@@ -23,6 +23,7 @@
  */
 package update.org.cict.controller.adding.subjectviewer;
 
+import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
@@ -36,7 +37,6 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -47,11 +47,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.cict.PublicConstants;
-import org.controlsfx.control.Notifications;
 import update.org.cict.controller.adding.AddSubjectSuggestion;
 import update.org.cict.controller.adding.SearchSection;
 import update.org.cict.controller.adding.SubjectInformationHolder;
-import update3.org.cict.access.SystemOverriding;
 
 /**
  *
@@ -86,14 +84,14 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
     @FXML
     private VBox vbox_subjectList;
     
-    private String studentNumber;
+    private StudentMapping student;
     private ArrayList<SubjectInformationHolder> suggestedSubject;
     private ArrayList<ArrayList<Object>> sectionSearched;
     private final static String KEY_MORE_INFO = "MORE_INFO";
     private Integer CURRICULUM_id;
     
-    public void setStudentNumber(String studNum, Integer curriculum_id) {
-        this.studentNumber = studNum;
+    public void setStudent(StudentMapping studNum, Integer curriculum_id) {
+        this.student = studNum;
         CURRICULUM_id = curriculum_id;
     }
     
@@ -151,7 +149,7 @@ public class AddingSubjects extends SceneFX implements ControllerFX{
     
     private void onSearchStart() {
         AddSubjectSuggestion search = new AddSubjectSuggestion();
-        search.studentNumber = this.studentNumber;
+        search.student = this.student;
 //        this.hbox_search.setVisible(true);
 //        this.hbox_no_result.setVisible(false);
         

@@ -256,24 +256,25 @@ public class ChangeSubjectSuggestion extends Transaction {
                 .newSearch(Database.connect().load_group())
                 .eq(DB.load_group().SUBJECT_id, subjectWithNoGrade.getId())
                 .active().all();
-        System.out.println("SUBJECT_id " + subjectWithNoGrade.getId() + " " + loadGrps.size());
         LoadSectionMapping loadSection = null;
-        for (int i = 0; i < loadGrps.size(); i++) {
-            /**
-             * check open section
-             */
-            loadSection = Mono.orm().newSearch(Database.connect().load_section())
-                    .eq(DB.load_section().id, loadGrps.get(i).getLOADSEC_id())
-                    //.eq(DB.load_section().state, "OPEN")
-                    .active()
-                    .first();
-            System.out.println("LOAD SECTION ID " + loadGrps.get(i).getLOADSEC_id());
-            // return only one instance, any of the sections 
-            if (loadSection != null) {
-                log("2");
-                return loadSection;
-            } else {
-                log("1");
+        if(loadGrps != null) {
+            for (int i = 0; i < loadGrps.size(); i++) {
+                /**
+                 * check open section
+                 */
+                loadSection = Mono.orm().newSearch(Database.connect().load_section())
+                        .eq(DB.load_section().id, loadGrps.get(i).getLOADSEC_id())
+                        //.eq(DB.load_section().state, "OPEN")
+                        .active()
+                        .first();
+                System.out.println("LOAD SECTION ID " + loadGrps.get(i).getLOADSEC_id());
+                // return only one instance, any of the sections 
+                if (loadSection != null) {
+                    log("2");
+                    return loadSection;
+                } else {
+                    log("1");
+                }
             }
         }
         return loadSection;

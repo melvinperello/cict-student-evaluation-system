@@ -1623,7 +1623,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
             allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
 
             AddingSubjects addingSubjects = new AddingSubjects();
-            addingSubjects.setStudentNumber(studentSearched.getId(), studentSearched.getCURRICULUM_id());
+            addingSubjects.setStudent(studentSearched, studentSearched.getCURRICULUM_id());
 
             Stage add_stage = Mono.fx().create()
                     .setPackageName("update.org.cict.layout.adding_changing.adding")

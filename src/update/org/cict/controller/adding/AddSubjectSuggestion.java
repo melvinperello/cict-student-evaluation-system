@@ -47,9 +47,9 @@ import org.hibernate.criterion.Order;
  */
 public class AddSubjectSuggestion extends Transaction {
 
-    public String studentNumber;
+//    public String studentNumber;
 
-    private StudentMapping student;
+    public StudentMapping student;
     private AcademicTermMapping acadTerm;
     private ArrayList<CurriculumSubjectMapping> subjects;
     private ArrayList<SubjectInformationHolder> suggestedSubjects = new ArrayList<>();
@@ -59,11 +59,11 @@ public class AddSubjectSuggestion extends Transaction {
         /**
          * Get student information.
          */
-        student = Mono.orm()
-                .newSearch(Database.connect().student())
-                .eq(DB.student().id, studentNumber)
-                .active()
-                .first();
+//        student = Mono.orm()
+//                .newSearch(Database.connect().student())
+//                .eq(DB.student().id, studentNumber)
+//                .active()
+//                .first();
 
         /**
          * Check Student.
