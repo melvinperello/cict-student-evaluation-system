@@ -51,7 +51,8 @@ public class ChooseTypeController extends SceneFX implements ControllerFX {
     private JFXButton btn_reg;
 
     @FXML
-    private Button btn_irreg;
+    private JFXButton btn_irreg;
+    
     private Integer ACADTERM_id;
     private String STUDENT_id;
 
