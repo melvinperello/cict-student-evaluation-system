@@ -23,6 +23,7 @@
  */
 package org.cict.reports.advisingslip;
 
+import artifacts.MonoString;
 import com.jfoenix.controls.JFXButton;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
@@ -96,7 +97,7 @@ public class ChooseTypeController extends SceneFX implements ControllerFX {
         PrintAdvising slip = Evaluator.instance().printAdvising();
         slip.studentNumber = this.STUDENT_id;
         slip.academicTerm = this.ACADTERM_id;
-        slip.type = selected;
+        slip.type = MonoString.removeExtraSpace(selected);
         slip.transact();
         isPrinting = true;
         /**

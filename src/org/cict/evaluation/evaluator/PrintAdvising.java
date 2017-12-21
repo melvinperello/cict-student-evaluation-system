@@ -245,6 +245,7 @@ public class PrintAdvising extends Transaction {
             a.setAcademicYear(term.getSchool_year());
             a.setAcademicTerm(term.getSemester_regular().toString());
             a.setCampus((student.getCampus()==null? "MAIN" : student.getCampus()));
+            System.out.println(type);
             if (type.equalsIgnoreCase(OLD)) {
                 a.setChecked(AdvisingTemplate.CheckType.OLD);
             } else if (type.equalsIgnoreCase(NEW)) {
