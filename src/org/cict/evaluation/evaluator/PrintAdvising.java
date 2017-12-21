@@ -206,6 +206,7 @@ public class PrintAdvising extends Transaction {
     
     @Override
     protected void after() {
+//        this.oldPrinting();
         this.newModifiedPrinting();
     }
     

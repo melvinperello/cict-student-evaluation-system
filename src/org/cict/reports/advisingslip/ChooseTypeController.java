@@ -23,6 +23,7 @@
  */
 package org.cict.reports.advisingslip;
 
+import com.jfoenix.controls.JFXButton;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import javafx.fxml.FXML;
@@ -41,13 +42,13 @@ public class ChooseTypeController extends SceneFX implements ControllerFX {
     private VBox application_root;
 
     @FXML
-    private Button btn_old;
+    private JFXButton btn_old;
 
     @FXML
-    private Button btn_new;
+    private JFXButton btn_new;
 
     @FXML
-    private Button btn_reg;
+    private JFXButton btn_reg;
 
     @FXML
     private Button btn_irreg;
