@@ -36,12 +36,19 @@ import app.lazy.models.StudentMapping;
 import app.lazy.models.SubjectMapping;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
+import org.bsu.cict.templating.AddingTemplate;
 import org.cict.PublicConstants;
 import org.cict.authentication.authenticator.SystemProperties;
+import static org.cict.evaluation.evaluator.PrintAdvising.SAVE_DIRECTORY;
+import org.cict.reports.ReportsDirectory;
 import org.cict.reports.ReportsUtility;
 import org.hibernate.criterion.Order;
 import update.org.cict.reports.add_change_form.AddChangeForm;
@@ -235,63 +242,9 @@ public class PrintAddingChangingForm extends Transaction{
                         .getServerTime()
                         .getCalendar()
                         .getTimeInMillis();
-        AddChangeForm addChangeForm = new AddChangeForm(filename);
-        addChangeForm.STUDENT_NUMBER = student.getId();
-        addChangeForm.STUDENT_NAME = studentFullName;
-        addChangeForm.STUDENT_SECTION = section;
-        addChangeForm.COLLEGE_DEAN = PublicConstants.getSystemVar_RECOMMENDNG_APPRVL().toString();//"ENGR. NOEMI REYES";
-        addChangeForm.REGISTRAR = PublicConstants.getSystemVar_REGISTRAR().toString(); //"LEILANI M. LIZARDO";
-        addChangeForm.DATE = date_now;
-        addChangeForm.STUDENT_CURRENT_UNITS = String.valueOf(getCurrentUnits());
-        boolean canPrint = false;
-        for(SubjectInformationHolder currentSubjectHolder: alteredSubjects) {
-            SubjectMapping subjectMapp = currentSubjectHolder.getSubjectMap();
-            String subjectCode = subjectMapp.getCode();
-            String subjectSection = currentSubjectHolder.getFullSectionName();
-            LoadGroupMapping lgMap_changed = currentSubjectHolder.getLoadGroup_changed();
-            
-            String subjectCode_from = "";
-            String subjectSection_from = ""; 
-            String units_from = "";
-            if(lgMap_changed != null) {
-                SubjectMapping subjectMap_changed = Mono.orm()
-                        .newSearch(Database.connect().subject())
-                        .eq(DB.subject().id, lgMap_changed.getSUBJECT_id())
-                        .execute()
-                        .first();
-                subjectCode_from = subjectMap_changed.getCode();
-                LoadSectionMapping lsMap_changed = Mono.orm().newSearch(Database.connect().load_section())
-                        .eq(DB.load_section().id, lgMap_changed.getLOADSEC_id())
-                        .execute(Order.desc(DB.load_section().id))
-                        .first();
-                subjectSection_from = currentSubjectHolder.getFullSectionNameOfChanged();
-                units_from = String.valueOf(subjectMap_changed.getLab_units() + subjectMap_changed.getLec_units());
-            }
-            String totalUnits = String.valueOf((subjectMapp.getLec_units() + subjectMapp.getLab_units()));
-            String[] subjectData = {subjectCode, subjectSection, totalUnits, subjectCode_from, subjectSection_from, units_from};
-            addChangeForm.STUDENT_SUBJECTS.add(subjectData);
-            addChangeForm.IS_ADDED = isAdded;
-            addChangeForm.IS_CHANGED = isChanged;
-//            addChangeForm.REGISTRAR = "LEILANI M. LIZARDO";
-            canPrint = true;
-        }
-        if(canPrint){
-            PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
-                    .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
-                    .eq(DB.print_logs().title, "ADDING & CHANGING LETTER")
-                    .eq(DB.print_logs().EVALUATION_id, this.evaluationID)
-                    .active().first();
-            boolean secondCopy = false;
-            if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADDING & CHANGING LETTER", "ADDING & CHANGING", (logs!=null)? "REPRINT" : "INITIAL", this.evaluationID.toString())) {
-                secondCopy = (logs!=null);
-            } else {
-                System.err.println("PRINT LOGS NOT SAVED");
-                return;
-            }
-            addChangeForm.print(secondCopy);
-        } else {
-            System.out.println("Nothing to print");
-        }
+//        this.oldPrinting(filename, studentFullName, section, date_now);
+        this.newPrinting(filename, studentFullName, section, date_now);
+        
     }
     
     private double getCurrentUnits() {
@@ -319,5 +272,168 @@ public class PrintAddingChangingForm extends Transaction{
                 totalCurrentUnits += (subjectMap.getLec_units() + subjectMap.getLab_units());
         }
         return totalCurrentUnits;
+    }
+    
+
+    private final static String SAVE_DIRECTORY = "reports/adding";
+    private String RESULT;
+    private void newPrinting(String filename, String studentFullName, String section, Date date_now) {
+        /**
+         * Check if the report save directory is already existing and
+         * created if not this will try to create the needed directories.
+         */
+        boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
+
+        if (!isCreated) {
+            // some error message that the directory is not created
+            System.err.println("Directory is not created.");
+            return;
+        }
+        //------------------------------------------------------------------
+        //------------------------------------------------------------------
+        SimpleDateFormat formatter = new SimpleDateFormat("MMMMM dd, YYYY");
+        AddingTemplate a = new AddingTemplate();
+        // head
+        a.setDate(formatter.format(date_now));
+        a.setTotalUnits(String.valueOf(getCurrentUnits()));
+        // body
+        ArrayList<AddingTemplate.TableData> data = new ArrayList<>();
+        boolean canPrint = false;
+        for(SubjectInformationHolder currentSubjectHolder: alteredSubjects) {
+            SubjectMapping subjectMapp = currentSubjectHolder.getSubjectMap();
+            String subjectCode = subjectMapp.getCode();
+            String subjectSection = currentSubjectHolder.getFullSectionName();
+            LoadGroupMapping lgMap_changed = currentSubjectHolder.getLoadGroup_changed();
+            
+            String subjectCode_from = null;
+            String subjectSection_from = null; 
+            String units_from = null;
+            if(lgMap_changed != null) {
+                SubjectMapping subjectMap_changed = Mono.orm()
+                        .newSearch(Database.connect().subject())
+                        .eq(DB.subject().id, lgMap_changed.getSUBJECT_id())
+                        .execute()
+                        .first();
+                subjectCode_from = subjectMap_changed.getCode();
+                LoadSectionMapping lsMap_changed = Mono.orm().newSearch(Database.connect().load_section())
+                        .eq(DB.load_section().id, lgMap_changed.getLOADSEC_id())
+                        .execute(Order.desc(DB.load_section().id))
+                        .first();
+                subjectSection_from = currentSubjectHolder.getFullSectionNameOfChanged();
+                units_from = String.valueOf(subjectMap_changed.getLab_units() + subjectMap_changed.getLec_units());
+            }
+            String totalUnits = String.valueOf((subjectMapp.getLec_units() + subjectMapp.getLab_units()));
+            data.add(new AddingTemplate.TableData((subjectCode_from==null? "" : subjectCode_from + "-") + subjectCode, (subjectSection_from==null? "" : subjectSection_from + "-") + subjectSection, (units_from==null? "" : units_from + "-") +totalUnits));
+            
+            a.setCheckBoxAdd(isAdded);
+            a.setCheckBoxChange(isChanged);
+            canPrint = true;
+        }
+        if(canPrint){
+            PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
+                    .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
+                    .eq(DB.print_logs().title, "ADDING & CHANGING LETTER")
+                    .eq(DB.print_logs().EVALUATION_id, this.evaluationID)
+                    .active().first();
+            boolean secondCopy = false;
+            if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADDING & CHANGING LETTER", "ADDING & CHANGING", (logs!=null)? "REPRINT" : "INITIAL", this.evaluationID.toString())) {
+                secondCopy = (logs!=null);
+            } else {
+                System.err.println("PRINT LOGS NOT SAVED");
+                return;
+            }
+//            addChangeForm.print(secondCopy);
+        } else {
+            System.out.println("Nothing to print");
+        }
+        a.setGroupData(data);
+        // foot
+        a.setFullName(studentFullName);
+        a.setCourseYearSection(section);
+        a.setStudentNumber(student.getId());
+        a.setDean(PublicConstants.getSystemVar_RECOMMENDNG_APPRVL().toString());
+        a.setRegistrar(PublicConstants.getSystemVar_REGISTRAR().toString());
+        //------------------------------------------------------------------
+        RESULT = SAVE_DIRECTORY + "/" + filename + ".pdf";
+        a.setSavePath(RESULT);
+        try {
+            a.stampTemplate();
+            
+            
+            /* -------- run the created pdf */
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File myFile = new File(RESULT);
+                    Desktop.getDesktop().open(myFile);
+                } catch (IOException ex) {
+                    // no application registered for PDFs
+                }
+            }
+            /**
+             * ****************** end run
+             */
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void oldPrinting(String filename, String studentFullName, String section, Date date_now) {
+        AddChangeForm addChangeForm = new AddChangeForm(filename);
+        addChangeForm.STUDENT_NUMBER = student.getId();
+        addChangeForm.STUDENT_NAME = studentFullName;
+        addChangeForm.STUDENT_SECTION = section;
+        addChangeForm.COLLEGE_DEAN = PublicConstants.getSystemVar_RECOMMENDNG_APPRVL().toString();//"ENGR. NOEMI REYES";
+        addChangeForm.REGISTRAR = PublicConstants.getSystemVar_REGISTRAR().toString(); //"LEILANI M. LIZARDO";
+        addChangeForm.DATE = date_now;
+        addChangeForm.STUDENT_CURRENT_UNITS = String.valueOf(getCurrentUnits());
+        boolean canPrint = false;
+        for(SubjectInformationHolder currentSubjectHolder: alteredSubjects) {
+        addChangeForm.STUDENT_CURRENT_UNITS = String.valueOf(getCurrentUnits());
+            SubjectMapping subjectMapp = currentSubjectHolder.getSubjectMap();
+            String subjectCode = subjectMapp.getCode();
+            String subjectSection = currentSubjectHolder.getFullSectionName();
+            LoadGroupMapping lgMap_changed = currentSubjectHolder.getLoadGroup_changed();
+            
+            String subjectCode_from = "";
+            String subjectSection_from = ""; 
+            String units_from = "";
+            if(lgMap_changed != null) {
+                SubjectMapping subjectMap_changed = Mono.orm()
+                        .newSearch(Database.connect().subject())
+                        .eq(DB.subject().id, lgMap_changed.getSUBJECT_id())
+                        .execute()
+                        .first();
+                subjectCode_from = subjectMap_changed.getCode();
+                LoadSectionMapping lsMap_changed = Mono.orm().newSearch(Database.connect().load_section())
+                        .eq(DB.load_section().id, lgMap_changed.getLOADSEC_id())
+                        .execute(Order.desc(DB.load_section().id))
+                        .first();
+                subjectSection_from = currentSubjectHolder.getFullSectionNameOfChanged();
+                units_from = String.valueOf(subjectMap_changed.getLab_units() + subjectMap_changed.getLec_units());
+            }
+            String totalUnits = String.valueOf((subjectMapp.getLec_units() + subjectMapp.getLab_units()));
+            String[] subjectData = {subjectCode, subjectSection, totalUnits, subjectCode_from, subjectSection_from, units_from};
+            addChangeForm.STUDENT_SUBJECTS.add(subjectData);
+            addChangeForm.IS_ADDED = isAdded;
+            addChangeForm.IS_CHANGED = isChanged;
+            canPrint = true;
+        }
+        if(canPrint){
+            PrintLogsMapping logs = Mono.orm().newSearch(Database.connect().print_logs())
+                    .eq(DB.print_logs().STUDENT_id, this.student.getCict_id())
+                    .eq(DB.print_logs().title, "ADDING & CHANGING LETTER")
+                    .eq(DB.print_logs().EVALUATION_id, this.evaluationID)
+                    .active().first();
+            boolean secondCopy = false;
+            if(ReportsUtility.savePrintLogs(this.student.getCict_id(), "ADDING & CHANGING LETTER", "ADDING & CHANGING", (logs!=null)? "REPRINT" : "INITIAL", this.evaluationID.toString())) {
+                secondCopy = (logs!=null);
+            } else {
+                System.err.println("PRINT LOGS NOT SAVED");
+                return;
+            }
+            addChangeForm.print(secondCopy);
+        } else {
+            System.out.println("Nothing to print");
+        }
     }
 }
