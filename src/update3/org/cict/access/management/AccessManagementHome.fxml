@@ -920,7 +920,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </ImageView>
-                                    <Label text="In some cases, restoring the previous saved database is a need. You will use the &quot;.monosync&quot; extension file only to proceed restoration process." wrapText="true">
+                                    <Label text="In some cases, restoring the previous saved database is a need. You can only use the exported Monosync File with an extension of &quot;.monosync&quot; to proceed restoration process." wrapText="true">
                                        <font>
                                           <Font size="16.0" />
                                        </font>

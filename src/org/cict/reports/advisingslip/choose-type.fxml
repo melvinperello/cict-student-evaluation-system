@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="application_root" alignment="CENTER" prefHeight="409.0" prefWidth="470.0" style="-fx-background-color: #4EAAFD;" stylesheets="@../../evaluation/button-hover_1.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="application_root" alignment="CENTER" prefHeight="409.0" prefWidth="470.0" style="-fx-background-color: #1F4F7F;" stylesheets="@../../evaluation/button-hover_1.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" prefHeight="112.0" prefWidth="470.0">
          <children>
