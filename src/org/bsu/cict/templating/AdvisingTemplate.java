@@ -32,11 +32,18 @@ public class AdvisingTemplate {
     private final static String CHK_IRREGULAR = "chk_irregular";
     //--------------------------------------------------------------------------
     // Table Fields
-    private final static String DAT_CODES = "dat_codes";
-    private final static String DAT_TITLE = "dat_title";
-    private final static String DAT_SECTION = "dat_section";
-    private final static String DAT_LEC = "dat_lec";
-    private final static String DAT_LAB = "dat_lab";
+//    private final static String DAT_CODES = "dat_codes";
+//    private final static String DAT_TITLE = "dat_title";
+//    private final static String DAT_SECTION = "dat_section";
+//    private final static String DAT_LEC = "dat_lec";
+//    private final static String DAT_LAB = "dat_lab";
+
+    private final static String PREFIX_CODES = "Subject CodeRow";
+    private final static String PREFIX_TITLE = "Subject Descriptive TitleRow";
+    private final static String PREFIX_SECTION = "SectionRow";
+    private final static String PREFIX_LEC = "Lecture UnitsRow";
+    private final static String PREFIX_LAB = "Laboratory UnitsRow";
+
     //--------------------------------------------------------------------------
     // Remarks Count
     private final static String SUBJECT_COUNT = "subject_count";
@@ -48,7 +55,7 @@ public class AdvisingTemplate {
     private final static String SECOND_COPY = "second_copy";
     //--------------------------------------------------------------------------
     // TEMPLATE SOURCE
-    private final static String ADVISING_ACROFORM = "templates/ADVISING_SLIP_TEMPLATE.pdf";
+    private final static String ADVISING_ACROFORM = "templates/ADVISING_SLIP_TEMPLATE_V2.pdf";
     //--------------------------------------------------------------------------
     // fillable fields
     // upper
@@ -64,11 +71,16 @@ public class AdvisingTemplate {
     private String chkRegular;
     private String chkIrregular;
     //--------------------------------------------------------------------------
-    private String tableCodes;
-    private String tableTitle;
-    private String tableSection;
-    private String tableLab;
-    private String tableLec;
+//    private String tableCodes;
+//    private String tableTitle;
+//    private String tableSection;
+//    private String tableLab;
+//    private String tableLec;
+    private ArrayList<String> codeList;
+    private ArrayList<String> titleList;
+    private ArrayList<String> sectionList;
+    private ArrayList<String> labList;
+    private ArrayList<String> lecList;
     //--------------------------------------------------------------------------
     private String subjectCount;
     private String lecUnits;
@@ -154,23 +166,28 @@ public class AdvisingTemplate {
     }
 
     public void setTableCodes(ArrayList<String> codeList) {
-        this.tableCodes = formatList(codeList);
+        this.codeList = codeList;
+//        this.tableCodes = formatList(codeList);
     }
 
     public void setTableTitle(ArrayList<String> titleList) {
-        this.tableTitle = formatList(titleList);
+        this.titleList = titleList;
+//        this.tableTitle = formatList(titleList);
     }
 
     public void setTableSection(ArrayList<String> sectionList) {
-        this.tableSection = formatList(sectionList);
+        this.sectionList = sectionList;
+//        this.tableSection = formatList(sectionList);
     }
 
     public void setTableLab(ArrayList<String> labList) {
-        this.tableLab = formatList(labList);
+        this.labList = labList;
+//        this.tableLab = formatList(labList);
     }
 
     public void setTableLec(ArrayList<String> lecList) {
-        this.tableLec = formatList(lecList);
+        this.lecList = lecList;
+//        this.tableLec = formatList(lecList);
     }
 
     public void setSubjectCount(String subjectCount) {
@@ -236,11 +253,43 @@ public class AdvisingTemplate {
         form.setField(CHK_REGULAR, this.chkRegular);
         form.setField(CHK_IRREGULAR, this.chkIrregular);
         //----------------------------------------------------------------------
-        form.setField(DAT_CODES, this.tableCodes);
-        form.setField(DAT_TITLE, this.tableTitle);
-        form.setField(DAT_SECTION, this.tableSection);
-        form.setField(DAT_LAB, this.tableLab);
-        form.setField(DAT_LEC, this.tableLec);
+//        form.setField(DAT_CODES, this.tableCodes);
+//        form.setField(DAT_TITLE, this.tableTitle);
+//        form.setField(DAT_SECTION, this.tableSection);
+//        form.setField(DAT_LAB, this.tableLab);
+//        form.setField(DAT_LEC, this.tableLec);
+        for (int counter = 1; counter <= this.codeList.size(); counter++) {
+            try {
+                form.setField(PREFIX_CODES + String.valueOf(counter), this.codeList.get((counter - 1)));
+            } catch (IndexOutOfBoundsException e) {
+                // ignore
+            }
+            try {
+                form.setField(PREFIX_TITLE + String.valueOf(counter), this.titleList.get((counter - 1)));
+            } catch (IndexOutOfBoundsException e) {
+                // ignore
+            }
+            try {
+                form.setField(PREFIX_SECTION + String.valueOf(counter), this.sectionList.get((counter - 1)));
+            } catch (IndexOutOfBoundsException e) {
+                // ignore
+            }
+            try {
+                form.setField(PREFIX_LEC + String.valueOf(counter), this.lecList.get((counter - 1)));
+            } catch (IndexOutOfBoundsException e) {
+                // ignore
+            }
+            try {
+                form.setField(PREFIX_LAB + String.valueOf(counter), this.labList.get((counter - 1)));
+            } catch (IndexOutOfBoundsException e) {
+                // ignore
+            }
+
+            // max cols is 12
+            if (counter > 12) {
+                break;
+            }
+        }
         //----------------------------------------------------------------------
         form.setField(SUBJECT_COUNT, this.subjectCount);
         form.setField(LEC_UNITS, this.lecUnits);
@@ -275,7 +324,7 @@ public class AdvisingTemplate {
             for (int x = 0; x < 10; x++) {
                 codes.add("MATH 113");
                 // limit to 28 characters to dis avoid overflow.
-                titles.add("POLITICS AND GOVERNANCE WIT");
+                titles.add("POLITICS AND GOVERNANCE WITH PHILIPPINE CONSTITUTIONS");
                 sec.add("BSIT 4H-G2");
                 lec.add("2.0");
                 lab.add("1.0");
