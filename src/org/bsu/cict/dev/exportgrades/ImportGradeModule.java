@@ -67,6 +67,17 @@ public class ImportGradeModule {
         this.doc.getDocumentElement().normalize();
     }
 
+    private ExportStudent importedStudentData;
+    private ArrayList<ExportGrade> importedGradeData;
+
+    public ExportStudent getImportedStudentData() {
+        return importedStudentData;
+    }
+
+    public ArrayList<ExportGrade> getImportedGradeData() {
+        return importedGradeData;
+    }
+
     public void readContents() {
         // get the root node
         NodeList rootNode = this.doc.getElementsByTagName("students");
@@ -75,33 +86,79 @@ public class ImportGradeModule {
         }
         // elements from the root node
         ArrayList<Element> students = getChildElements(rootNode);
-        if (students.size() == 0) {
+        if (students.isEmpty()) {
             // no elements
             return;
         }
         // get the student nodes
         ArrayList<Element> student = getChildElements(students.get(0).getChildNodes());
         // no student element
-        if (student.size() == 0) {
+        if (student.isEmpty()) {
             return;
         }
         // now the student element
         Element studentElement = student.get(0);
-        System.out.println(studentElement.getAttribute("lastName"));
+        // get the student information
+        ExportStudent importStudentData = new ExportStudent();
+        importStudentData.setStudentNumber(studentElement.getAttribute(GradeExportModule.studentNumber));
+        importStudentData.setLastName(studentElement.getAttribute(GradeExportModule.lastName));
+        importStudentData.setFirstName(studentElement.getAttribute(GradeExportModule.firstName));
+        importStudentData.setMiddleName(studentElement.getAttribute(GradeExportModule.middleName));
+        importStudentData.setCurriculumID(studentElement.getAttribute(GradeExportModule.curriculumID));
+        importStudentData.setCurriculumCode(studentElement.getAttribute(GradeExportModule.curriculumCode));
+        importStudentData.setProgramCode(studentElement.getAttribute(GradeExportModule.programCode));
+        //
+        importStudentData.setPrepID(studentElement.getAttribute(GradeExportModule.prepID));
+        importStudentData.setPrepCode(studentElement.getAttribute(GradeExportModule.prepCode));
+        importStudentData.setPrepProgramCode(studentElement.getAttribute(GradeExportModule.prepProgramCode));
+        //
+        importStudentData.setYearLevel(studentElement.getAttribute(GradeExportModule.yearLevel));
+        importStudentData.setSection(studentElement.getAttribute(GradeExportModule.section));
+        importStudentData.setGroup(studentElement.getAttribute(GradeExportModule.group));
+        //----------------------------------------------------------------------
 
         ArrayList<Element> grades = getChildElements(studentElement.getChildNodes());
-        if (grades.size() == 0) {
+        if (grades.isEmpty()) {
             // no grades
             return;
         }
         //
+        ArrayList<ExportGrade> gradeData = new ArrayList<>();
         for (Element grade : grades) {
-            System.out.println(grade.getAttribute("subjectTitle"));
+            ExportGrade gradeInfo = new ExportGrade();
+            gradeInfo.setGradeID(grade.getAttribute(GradeExportModule.gradeID));
+            gradeInfo.setSubjectID(grade.getAttribute(GradeExportModule.subjectID));
+            gradeInfo.setSubjectCode(grade.getAttribute(GradeExportModule.subjectCode));
+            gradeInfo.setSubjectTitle(grade.getAttribute(GradeExportModule.subjectTitle));
+            //------------------------
+            gradeInfo.setRating(grade.getAttribute(GradeExportModule.rating));
+            gradeInfo.setRemarks(grade.getAttribute(GradeExportModule.remarks));
+            gradeInfo.setCredit(grade.getAttribute(GradeExportModule.credit));
+            gradeInfo.setCreditMethod(grade.getAttribute(GradeExportModule.creditMethod));
+            gradeInfo.setPosted(grade.getAttribute(GradeExportModule.posted));
+            gradeInfo.setIncExpireDate(grade.getAttribute(GradeExportModule.incExpireDate));
+            gradeInfo.setDescription(grade.getAttribute(GradeExportModule.description));
+            gradeInfo.setCreatedDate(grade.getAttribute(GradeExportModule.createdDate));
+            gradeInfo.setState(grade.getAttribute(GradeExportModule.state));
+            gradeInfo.setActive(grade.getAttribute(GradeExportModule.active));
+            // add to list
+            gradeData.add(gradeInfo);
         }
+
+        //----------------------------------------------------------------------
+        this.importedStudentData = importStudentData;
+        this.importedGradeData = gradeData;
+        //----------------------------------------------------------------------
 
     }
 
-    public ArrayList<Element> getChildElements(NodeList nodeList) {
+    /**
+     * get elements from a node list.
+     *
+     * @param nodeList
+     * @return
+     */
+    private ArrayList<Element> getChildElements(NodeList nodeList) {
         ArrayList<Element> elements = new ArrayList<>();
 
         for (int x = 0; x < nodeList.getLength(); x++) {
@@ -120,6 +177,12 @@ public class ImportGradeModule {
         try {
             a.readXMLDocument();
             a.readContents();
+            // after reading you can now fetch vaues
+            ExportStudent student = a.getImportedStudentData();
+            ArrayList<ExportGrade> grades = a.getImportedGradeData();
+            for (ExportGrade grade : grades) {
+                System.out.println(grade.getSubjectCode());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

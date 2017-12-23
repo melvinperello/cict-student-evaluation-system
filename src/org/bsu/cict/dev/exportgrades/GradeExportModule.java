@@ -57,7 +57,11 @@ public class GradeExportModule {
     public static final String curriculumID = "curriculumID";
     public static final String curriculumCode = "curriculumCode";
     public static final String programCode = "programCode";
-    public static final String curriculumProgram = "curriculumProgram";
+    //------------------------
+    public static final String prepID = "prepID";
+    public static final String prepCode = "prepCode";
+    public static final String prepProgramCode = "prepProgramCode";
+    //------------------------
     public static final String yearLevel = "yearLevel";
     public static final String section = "section";
     public static final String group = "group";
@@ -144,6 +148,11 @@ public class GradeExportModule {
         this.addAttribute(childElement, curriculumID, exportStudent.getCurriculumID());
         this.addAttribute(childElement, curriculumCode, exportStudent.getCurriculumCode());
         this.addAttribute(childElement, programCode, exportStudent.getProgramCode());
+        //
+        this.addAttribute(childElement, prepID, exportStudent.getPrepID());
+        this.addAttribute(childElement, prepCode, exportStudent.getPrepCode());
+        this.addAttribute(childElement, prepProgramCode, exportStudent.getPrepProgramCode());
+        //
         this.addAttribute(childElement, yearLevel, exportStudent.getYearLevel());
         this.addAttribute(childElement, section, exportStudent.getSection());
         this.addAttribute(childElement, group, exportStudent.getGroup());
@@ -227,7 +236,7 @@ public class GradeExportModule {
     public static void main(String[] args) {
         // fill up the following
         ExportStudent student = new ExportStudent();
-        
+
         // and arraylist of all the grades of that student
         ArrayList<ExportGrade> grade = new ArrayList<>();
 

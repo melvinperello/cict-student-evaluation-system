@@ -37,9 +37,38 @@ public class ExportStudent {
     private String curriculumID;
     private String curriculumCode;
     private String programCode;
+    //
+    private String prepID;
+    private String prepCode;
+    private String prepProgramCode;
+    //
     private String yearLevel;
     private String section;
     private String group;
+
+    public String getPrepID() {
+        return prepID;
+    }
+
+    public void setPrepID(String prepID) {
+        this.prepID = prepID;
+    }
+
+    public String getPrepCode() {
+        return prepCode;
+    }
+
+    public void setPrepCode(String prepCode) {
+        this.prepCode = prepCode;
+    }
+
+    public String getPrepProgramCode() {
+        return prepProgramCode;
+    }
+
+    public void setPrepProgramCode(String prepProgramCode) {
+        this.prepProgramCode = prepProgramCode;
+    }
 
     public String getStudentNumber() {
         return studentNumber;
