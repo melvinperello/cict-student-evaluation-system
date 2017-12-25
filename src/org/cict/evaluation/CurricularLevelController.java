@@ -148,7 +148,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_4th;
-    
+
     @FXML
     private ImageView imgvw_export_grades;
 
@@ -164,16 +164,16 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         bindScene(application_pane);
         chkbx_disable_ai.setSelected(!PublicConstants.DISABLE_ASSISTANCE);
         this.showAssessment();
-        
+
         //---------------------------------------
         cmb_year_level.getItems().add("First Year");
         cmb_year_level.getItems().add("Second Year");
         cmb_year_level.getItems().add("Third Year");
         cmb_year_level.getItems().add("Fourth Year");
-        cmb_year_level.getSelectionModel().select((STUDENT_current.getYear_level()-1));
-    
+        cmb_year_level.getSelectionModel().select((STUDENT_current.getYear_level() - 1));
+
         lbl_year_level.setText(cmb_year_level.getSelectionModel().getSelectedItem());
-        
+
         hbox_main_update.setVisible(true);
         hbox_update.setVisible(false);
     }
@@ -204,7 +204,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
                 //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         };
-        assessTx.setOnStart(onStart->{
+        assessTx.setOnStart(onStart -> {
             btn_1st.setDisable(true);
             btn_2nd.setDisable(true);
             btn_3rd.setDisable(true);
@@ -444,51 +444,52 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
 //        Mono.fx().key(KeyCode.ENTER).release(application_pane, () -> {
 //            Mono.fx().getParentStage(application_pane).close();
 //        });
-        chkbx_disable_ai.selectedProperty().addListener((a)->{
+        chkbx_disable_ai.selectedProperty().addListener((a) -> {
             PublicConstants.DISABLE_ASSISTANCE = !chkbx_disable_ai.isSelected();
         });
-        
+
         this.changeYearLevelEvents();
-        
+
         // exports grade for encoding purposes
-        super.addDoubleClickEvent(imgvw_export_grades, ()->{
+        super.addDoubleClickEvent(imgvw_export_grades, () -> {
             this.exportGrades();
         });
     }
-    
+
     //--------------------------------------
     private Integer index;
+
     private void changeYearLevelEvents() {
-        
-        this.addClickEvent(btn_change_yr, ()-> {
+
+        this.addClickEvent(btn_change_yr, () -> {
             PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
-            Animate.fade(hbox_main_update, 150, ()->{
+            Animate.fade(hbox_main_update, 150, () -> {
                 hbox_main_update.setVisible(false);
                 hbox_update.setVisible(true);
             }, hbox_update);
         });
-        
-        this.addClickEvent(btn_save_changes, ()->{
+
+        this.addClickEvent(btn_save_changes, () -> {
             PublicConstants.DISABLE_ASSISTANCE = chkbx_disable_ai.isSelected();
             index = cmb_year_level.getSelectionModel().getSelectedIndex();
             Integer studentYrLvl = STUDENT_current.getYear_level();
             String message = "";
             boolean invalid = false;
-            index+=1;
-            if(index < studentYrLvl) {
+            index += 1;
+            if (index < studentYrLvl) {
                 invalid = true;
                 message = "We prohibit changing the year level of\n"
                         + "the student backward. Please ask your local\n"
                         + "registrar for assistance.";
-            } else if(index.equals(studentYrLvl+1)) {
+            } else if (index.equals(studentYrLvl + 1)) {
                 // valid
-            }else if(index > studentYrLvl) {
+            } else if (index > studentYrLvl) {
                 invalid = true;
                 message = "Changing the year level twice or more\n"
                         + "is not allowed, just one step at a time.\n"
                         + "If that so, please ask your local registrar for assistance.";
             }
-            if(invalid) {
+            if (invalid) {
                 Notifications.create().title("Warning")
                         .position(Pos.BOTTOM_RIGHT)
                         .text(message
@@ -509,6 +510,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
     }
 
     private boolean allowOverride = false;
+
     private void systemOverride(String type) {
         Object[] result = Access.isEvaluationOverride(allowOverride, SystemOverriding.getACRONYM(15, type));
         boolean ok = (boolean) result[0];
@@ -534,7 +536,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             //-----------------
             map.setAttachment_file(fileName);
             //------------
-                
+
             int id = Database.connect().system_override_logs().insert(map);
             if (id <= 0) {
                 Mono.fx().snackbar().showError(application_pane, "Something went wrong please try again.");
@@ -543,20 +545,20 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             }
         }
     }
-    
+
     private boolean updatedYearLevel() {
         String yearLevel = cmb_year_level.getSelectionModel().getSelectedItem();
-        Animate.fade(hbox_update, 150, ()->{
+        Animate.fade(hbox_update, 150, () -> {
             hbox_update.setVisible(false);
             hbox_main_update.setVisible(true);
         }, hbox_main_update);
 
-        if(Objects.equals(index, STUDENT_current.getYear_level())) {
+        if (Objects.equals(index, STUDENT_current.getYear_level())) {
             return false;
         }
         lbl_year_level.setText(yearLevel);
         STUDENT_current.setYear_level(index);
-        if(!Database.connect().student().update(STUDENT_current)) {
+        if (!Database.connect().student().update(STUDENT_current)) {
             System.out.println("NOT SAVED");
             Notifications.create().title("Failed")
                     .text("Please check your connection to the server.").showError();
@@ -564,8 +566,7 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         }
         return true;
     }
-    
-    
+
     //------------------------------------------------
     private void logs(String str) {
         if (false) {
@@ -683,18 +684,18 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             System.out.println("STUDENT NOT UPDATED");
         }
     }
-    
+
     //-----------------------
     // exports grade as xml file
     private void exportGrades() {
         // fill up the following
         ExportStudent student = new ExportStudent();
-        
-        if(STUDENT_current.getCURRICULUM_id() != null) {
+
+        if (STUDENT_current.getCURRICULUM_id() != null) {
             CurriculumMapping curriculum = Database.connect().curriculum().getPrimary(STUDENT_current.getCURRICULUM_id());
             student.setCurriculumID(STUDENT_current.getCURRICULUM_id().toString());
             student.setCurriculumCode(curriculum.getName());
-            
+
             AcademicProgramMapping apMap = Database.connect().academic_program().getPrimary(curriculum.getACADPROG_id());
             student.setProgramCode(apMap.getCode());
         } else {
@@ -702,7 +703,22 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             student.setCurriculumID("null");
             student.setProgramCode("null");
         }
-        
+
+        //----------------------------------------------------------------------
+        // added prep information
+        if (STUDENT_current.getPREP_id() != null) {
+            CurriculumMapping prep = Database.connect().curriculum().getPrimary(STUDENT_current.getPREP_id());
+            student.setPrepID(STUDENT_current.getPREP_id().toString());
+            student.setPrepCode(prep.getName());
+            AcademicProgramMapping prepProgram = Database.connect().academic_program().getPrimary(prep.getACADPROG_id());
+            student.setPrepProgramCode(prepProgram.getCode());
+        } else {
+            student.setCurriculumCode("null");
+            student.setCurriculumID("null");
+            student.setProgramCode("null");
+        }
+        //----------------------------------------------------------------------
+
         student.setFirstName(STUDENT_current.getFirst_name());
         student.setGroup(STUDENT_current.get_group().toString());
         student.setLastName(STUDENT_current.getLast_name());
@@ -710,35 +726,35 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         student.setSection(STUDENT_current.getSection());
         student.setStudentNumber(STUDENT_current.getId());
         student.setYearLevel(STUDENT_current.getYear_level().toString());
-        
+
         // and arraylist of all the grades of that student
         ArrayList<ExportGrade> grade = new ArrayList<>();
-        
+
         // get all grades of the student
         ArrayList<GradeMapping> allGrades = Mono.orm().newSearch(Database.connect().grade())
                 .eq(DB.grade().STUDENT_id, STUDENT_current.getCict_id())
                 .execute(Order.asc(DB.grade().id)).all();
-        if(allGrades != null) {
-            for(GradeMapping eachGrade : allGrades) {
+        if (allGrades != null) {
+            for (GradeMapping eachGrade : allGrades) {
                 SubjectMapping subject = Database.connect().subject().getPrimary(eachGrade.getSUBJECT_id());
                 grade.add(createExportGrade(subject, eachGrade));
             }
         }
-        
+
         // get the directory where to save the xml file
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(this.getStage());
-        if(selectedDirectory==null) {
+        if (selectedDirectory == null) {
             // no directory selected
             return;
         }
-        String filename = (STUDENT_current.getYear_level()==null? "" : STUDENT_current.getYear_level().toString()) + 
-                (STUDENT_current.getSection()==null? "" : STUDENT_current.getSection()) + "_" +
-                (STUDENT_current.get_group()==null? "" : "G" + STUDENT_current.get_group()) + "_" +
-                (STUDENT_current.getId()) + "_" +
-                (STUDENT_current.getLast_name());
+        String filename = (STUDENT_current.getYear_level() == null ? "" : STUDENT_current.getYear_level().toString())
+                + (STUDENT_current.getSection() == null ? "" : STUDENT_current.getSection()) + "_"
+                + (STUDENT_current.get_group() == null ? "" : "G" + STUDENT_current.get_group()) + "_"
+                + (STUDENT_current.getId()) + "_"
+                + (STUDENT_current.getLast_name());
         String path = selectedDirectory.getAbsolutePath() + "\\" + filename + ".xml";
-        
+
         GradeExportModule eg = new GradeExportModule();
         eg.setSavePath(path);
         eg.setExportStudent(student);
@@ -746,18 +762,19 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         eg.create();
         Mono.fx().snackbar().showSuccess(application_pane, "Exported Student's Grade as XML file");
     }
-    
+
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     private ExportGrade createExportGrade(SubjectMapping subject, GradeMapping acquiredGrade) {
         ExportGrade eGrade = new ExportGrade();
-        eGrade.setActive(acquiredGrade.getActive()==null? "null" : acquiredGrade.getActive().toString());
-        eGrade.setCreatedDate(acquiredGrade.getCreated_date()==null? "null" : formatter.format(acquiredGrade.getCreated_date()));
-        eGrade.setCredit(acquiredGrade.getCredit()==null? "null" : acquiredGrade.getCredit().toString());
-        eGrade.setCreditMethod(acquiredGrade.getCredit_method()==null? "null" : acquiredGrade.getCredit_method());
-        eGrade.setDescription(acquiredGrade.getReason_for_update()==null? "null" : acquiredGrade.getReason_for_update());
+        eGrade.setActive(acquiredGrade.getActive() == null ? "null" : acquiredGrade.getActive().toString());
+        eGrade.setCreatedDate(acquiredGrade.getCreated_date() == null ? "null" : formatter.format(acquiredGrade.getCreated_date()));
+        eGrade.setCredit(acquiredGrade.getCredit() == null ? "null" : acquiredGrade.getCredit().toString());
+        eGrade.setCreditMethod(acquiredGrade.getCredit_method() == null ? "null" : acquiredGrade.getCredit_method());
+        eGrade.setDescription(acquiredGrade.getReason_for_update() == null ? "null" : acquiredGrade.getReason_for_update());
         eGrade.setGradeID(acquiredGrade.getId().toString());
-        eGrade.setIncExpireDate(acquiredGrade.getInc_expire()==null? "null" : formatter.format(acquiredGrade.getInc_expire()));
-        eGrade.setPosted(acquiredGrade.getPosted()==null? "null" : acquiredGrade.getPosted().toString());
+        eGrade.setIncExpireDate(acquiredGrade.getInc_expire() == null ? "null" : formatter.format(acquiredGrade.getInc_expire()));
+        eGrade.setPosted(acquiredGrade.getPosted() == null ? "null" : acquiredGrade.getPosted().toString());
         eGrade.setRating(acquiredGrade.getRating());
         eGrade.setRemarks(acquiredGrade.getRemarks());
         eGrade.setState(acquiredGrade.getGrade_state());
@@ -766,5 +783,5 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
         eGrade.setSubjectTitle(subject.getDescriptive_title());
         return eGrade;
     }
-    
+
 }
