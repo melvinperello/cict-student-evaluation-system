@@ -35,6 +35,7 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.GradeMapping;
+import app.lazy.models.LinkedSettingsMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
@@ -273,21 +274,48 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     private void queEvents() {
         // initialize 3 labels
-        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
-        Integer clusterNumber = afMap.getAssigned_cluster();
 
         // default is call next.
         this.queView(this.vbox_que_call_next);
 
+        /**
+         * Invoke Call Next Button.
+         */
         this.btn_que_call_next.setOnMouseClicked(click -> {
             this.queView(vbox_que_finish);
             click.consume(); // end event
         });
 
+        /**
+         * Invoke Finish Button.
+         */
         this.btn_que_finish.setOnMouseClicked(click -> {
             this.queView(vbox_que_call_next);
             click.consume(); // end event
         });
+    }
+
+    /**
+     * Get the current active linked settings and marked as alive.
+     *
+     * @return
+     */
+    private LinkedSettingsMapping getCurrentLinkedSettings() {
+        LinkedSettingsMapping linkSettingsMap = Mono.orm()
+                .newSearch(Database.connect().linked_settings())
+                .eq(DB.linked_settings().mark, "ALIVE")
+                .active(Order.desc(DB.linked_settings().id))
+                .first();
+        return linkSettingsMap;
+    }
+
+    /**
+     * Get the faculty current assigned cluster.
+     */
+    private Integer getFacultyFloorAssignment() {
+        AccountFacultyMapping accounfFacultyMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        Integer clusterNumber = accounfFacultyMap.getAssigned_cluster();
+        return clusterNumber;
     }
 
     /**
