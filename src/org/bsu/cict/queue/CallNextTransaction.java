@@ -29,6 +29,7 @@ import app.lazy.models.LinkedPilaMapping;
 import app.lazy.models.StudentMapping;
 import com.jhmvin.Mono;
 import java.util.Date;
+import javax.inject.Inject;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.bsu.cict.threads.DataTransaction;
 import org.hibernate.criterion.Order;
@@ -39,7 +40,19 @@ import org.hibernate.criterion.Order;
  */
 public class CallNextTransaction extends DataTransaction {
 
+    @Inject
     private Integer floorAssignment;
+    @Inject
+    private Integer linkedSessionID;
+
+    /**
+     * The current linked Session.
+     *
+     * @param linkedSessionID
+     */
+    public void setLinkedSessionID(Integer linkedSessionID) {
+        this.linkedSessionID = linkedSessionID;
+    }
 
     /**
      * set what floor to call.
@@ -86,9 +99,10 @@ public class CallNextTransaction extends DataTransaction {
         this.withNext = false;
         //----------------------------------------------------------------------
         LinkedPilaMapping nextCalled = Mono.orm().newSearch(Database.connect().linked_pila())
-                .eq(DB.linked_pila().floor_assignment, floorAssignment)
+                .eq(DB.linked_pila().floor_assignment, this.floorAssignment)
                 .eq(DB.linked_pila().status, "INLINE")
                 .eq(DB.linked_pila().remarks, "NONE")
+                .eq(DB.linked_pila().SETTINGS_id, this.linkedSessionID)
                 .active(Order.desc(DB.linked_pila().id))
                 .first();
         //----------------------------------------------------------------------
