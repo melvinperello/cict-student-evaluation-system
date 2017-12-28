@@ -492,6 +492,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             // set invisible when no active schedule of back up
             this.hbox_autobackup_info_user.setVisible(false);
             this.chkbx_enable_autobackup.setSelected(false);
+            this.vbox_autobackup_feature.setDisable(true);
             return;
         }
         
