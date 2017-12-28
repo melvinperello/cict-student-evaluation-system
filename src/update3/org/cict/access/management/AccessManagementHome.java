@@ -29,6 +29,7 @@ import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import app.lazy.models.LinkedSettingsMapping;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -42,9 +43,12 @@ import com.melvin.mono.fx.bootstrap.M;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -194,8 +198,38 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_restore;
+    
     @FXML
     private VBox vbox_backup_restore;
+    
+    @FXML
+    private JFXCheckBox chkbx_enable_autobackup;
+    
+    @FXML
+    private VBox vbox_autobackup_feature;
+    
+    @FXML
+    private ComboBox cmb_autobackup_time;
+    
+    @FXML
+    private JFXButton btn_apply_autobackup;
+    
+    @FXML
+    private JFXButton btn_cancel_autobackup;
+    
+    @FXML
+    private HBox hbox_autobackup_info_user;
+    
+    @FXML
+    private Label lbl_time_auto;
+    
+    @FXML
+    private Label lbl_create_by_auto;
+    
+    @FXML
+    private Label lbl_created_date_auto;
+    
+
 
     public AccessManagementHome() {
         //
@@ -230,6 +264,8 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         } else {
             lbl_cluster_local_reg.setText("NO LOCAL REGISTRAR FOUND");
         }
+        
+        this.autoBackUp();
     }
 
     /**
@@ -307,6 +343,13 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         });
         super.addClickEvent(btn_restore, () -> {
             this.database("RESTORE");
+        });
+        this.chkbx_enable_autobackup.selectedProperty().addListener((a)->{
+            boolean isSelected = chkbx_enable_autobackup.isSelected();
+            if(!isSelected) {
+                // set all into inactive in backup schedule table
+            }
+            this.vbox_autobackup_feature.setDisable(!isSelected);
         });
     }
 
@@ -388,6 +431,38 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .setHeader(title)
                     .setMessage("Unknown error occured. Please try again later.").show();
         }
+    }
+    
+    private void autoBackUp() {
+        // insert time from 00:00 to 23:59
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+
+        Calendar end = Calendar.getInstance();
+        end.set(Calendar.HOUR_OF_DAY, 23);
+        end.set(Calendar.MINUTE, 60);
+        cmb_autobackup_time.getItems().clear();
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        do {
+            cmb_autobackup_time.getItems().add(format.format(calendar.getTime()));
+            calendar.add(Calendar.MINUTE, 1);
+        } while (calendar.getTime().before(end.getTime()));
+        cmb_autobackup_time.getSelectionModel().selectFirst();
+        
+        this.latestBackUpSchedule();
+    }
+    
+    private void latestBackUpSchedule() {
+        
+        // set invisible when no active schedule of back up
+        this.hbox_autobackup_info_user.setVisible(false);
+        
+        // set details if there is existing then set visible
+        this.lbl_time_auto.setText("TIME HERE");
+        this.lbl_create_by_auto.setText("USER HERE");
+        this.lbl_created_date_auto.setText("DATETIME HERE" + ".");
+        this.hbox_autobackup_info_user.setVisible(true);
     }
 
     private void systemAccountEvents() {

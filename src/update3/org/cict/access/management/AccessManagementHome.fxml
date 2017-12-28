@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -946,6 +948,104 @@
                                     <Insets bottom="10.0" top="10.0" />
                                  </padding>
                               </HBox>
+                              <JFXCheckBox fx:id="chkbx_enable_autobackup" checkedColor="WHITE" text="Enable Automatic Backup" textFill="WHITE" unCheckedColor="WHITE">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="-7.0" />
+                                 </VBox.margin>
+                              </JFXCheckBox>
+                              <HBox layoutX="40.0" layoutY="162.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/Next%20page_64px_1.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label text="This feature will allow the authorized user to set time when to execute automatic back up of the database in daily basis." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <VBox fx:id="vbox_autobackup_feature" alignment="CENTER_LEFT">
+                                 <children>
+                                    <ComboBox fx:id="cmb_autobackup_time" prefHeight="25.0" prefWidth="271.0" />
+                                    <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="764.0" spacing="10.0">
+                                       <children>
+                                          <JFXButton fx:id="btn_apply_autobackup" graphicTextGap="10.0" prefHeight="21.0" prefWidth="130.0" style="-fx-border-color: white;" text="Apply" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                             <graphic>
+                                                <ImageView fitHeight="21.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/User%20Shield_32px.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </JFXButton>
+                                          <JFXButton fx:id="btn_cancel_autobackup" graphicTextGap="10.0" layoutX="377.0" layoutY="20.0" prefHeight="17.0" prefWidth="130.0" style="-fx-border-color: white;" text="Cancel" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                             <graphic>
+                                                <ImageView fitHeight="25.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@images/Close%20Window_32px.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </JFXButton>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </padding>
+                                    </HBox>
+                                    <HBox fx:id="hbox_autobackup_info_user" spacing="2.0">
+                                       <children>
+                                          <Label layoutX="46.0" layoutY="10.0" text="Automatically back up in ">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lbl_time_auto" layoutX="82.0" layoutY="10.0" text="17:00">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text=" by ">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lbl_create_by_auto" text="Joemar Dela Cruz">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="10.0" layoutY="10.0" text=" created on ">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="lbl_created_date_auto" layoutX="81.0" layoutY="10.0" text="Date here">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="20.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="100.0" />
+                                 </VBox.margin>
+                              </VBox>
                            </children>
                            <padding>
                               <Insets left="30.0" top="20.0" />
