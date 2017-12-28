@@ -24,10 +24,12 @@
 package update3.org.cict.access.management;
 
 import app.lazy.models.AccountFacultyMapping;
+import app.lazy.models.BackupScheduleMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.FacultyMapping;
 import app.lazy.models.LinkedSettingsMapping;
+import app.lazy.models.utils.FacultyUtility;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
@@ -209,13 +211,10 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     private VBox vbox_autobackup_feature;
     
     @FXML
-    private ComboBox cmb_autobackup_time;
+    private ComboBox<String> cmb_autobackup_time;
     
     @FXML
     private JFXButton btn_apply_autobackup;
-    
-    @FXML
-    private JFXButton btn_cancel_autobackup;
     
     @FXML
     private HBox hbox_autobackup_info_user;
@@ -348,9 +347,41 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             boolean isSelected = chkbx_enable_autobackup.isSelected();
             if(!isSelected) {
                 // set all into inactive in backup schedule table
+                this.setAllBackUpSchedInactive();
+                this.setLatestBackUpSchedule();
             }
             this.vbox_autobackup_feature.setDisable(!isSelected);
         });
+        super.addClickEvent(btn_apply_autobackup, ()->{
+            this.applyNewBackUpSchedule();
+        });
+    }
+    
+    private void setAllBackUpSchedInactive() {
+        ArrayList<BackupScheduleMapping> allActive = Mono.orm().newSearch(Database.connect().backup_schedule())
+                .active(Order.desc(DB.backup_schedule().id)).all();
+        if(allActive != null) {
+            for(BackupScheduleMapping each : allActive) {
+                each.setActive(0);
+                Database.connect().backup_schedule().update(each);
+            }
+        }
+    }
+    
+    private void applyNewBackUpSchedule() {
+        this.setAllBackUpSchedInactive();
+        BackupScheduleMapping newSchedule = new BackupScheduleMapping();
+        newSchedule.setActive(1);
+        newSchedule.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
+        newSchedule.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
+        newSchedule.setTime(cmb_autobackup_time.getSelectionModel().getSelectedItem());
+        int res = Database.connect().backup_schedule().insert(newSchedule);
+        if(res != -1 || res != 0) {
+            this.setLatestBackUpSchedule();
+            Mono.fx().snackbar().showSuccess(application_root, "Applied new back up time schedule.");
+        } else {
+            Mono.fx().snackbar().showError(application_root, "Failed to apply. Try again later.");
+        }
     }
 
     private void database(String request) {
@@ -450,18 +481,27 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         } while (calendar.getTime().before(end.getTime()));
         cmb_autobackup_time.getSelectionModel().selectFirst();
         
-        this.latestBackUpSchedule();
+        this.setLatestBackUpSchedule();
     }
     
-    private void latestBackUpSchedule() {
+    private void setLatestBackUpSchedule() {
+        BackupScheduleMapping current = Mono.orm().newSearch(Database.connect().backup_schedule())
+                .active(Order.desc(DB.backup_schedule().id)).first();
         
-        // set invisible when no active schedule of back up
-        this.hbox_autobackup_info_user.setVisible(false);
+        if(current == null) {
+            // set invisible when no active schedule of back up
+            this.hbox_autobackup_info_user.setVisible(false);
+            this.chkbx_enable_autobackup.setSelected(false);
+            return;
+        }
         
-        // set details if there is existing then set visible
-        this.lbl_time_auto.setText("TIME HERE");
-        this.lbl_create_by_auto.setText("USER HERE");
-        this.lbl_created_date_auto.setText("DATETIME HERE" + ".");
+        // set details and set selected chkbx if there is existing then set visible
+        this.chkbx_enable_autobackup.setSelected(true);
+        
+        this.lbl_time_auto.setText(current.getTime());
+        this.lbl_create_by_auto.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(current.getCreated_by())));
+        SimpleDateFormat format = new SimpleDateFormat("MMMMM dd, yyyy hh:mm:ss a");
+        this.lbl_created_date_auto.setText(format.format(current.getCreated_date()) + ".");
         this.hbox_autobackup_info_user.setVisible(true);
     }
 

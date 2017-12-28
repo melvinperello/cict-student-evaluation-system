@@ -972,7 +972,7 @@
                               </HBox>
                               <VBox fx:id="vbox_autobackup_feature" alignment="CENTER_LEFT">
                                  <children>
-                                    <ComboBox fx:id="cmb_autobackup_time" prefHeight="25.0" prefWidth="271.0" />
+                                    <ComboBox fx:id="cmb_autobackup_time" prefHeight="25.0" prefWidth="130.0" />
                                     <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="764.0" spacing="10.0">
                                        <children>
                                           <JFXButton fx:id="btn_apply_autobackup" graphicTextGap="10.0" prefHeight="21.0" prefWidth="130.0" style="-fx-border-color: white;" text="Apply" textFill="WHITE">
@@ -983,18 +983,6 @@
                                                 <ImageView fitHeight="21.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
                                                       <Image url="@images/User%20Shield_32px.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                          </JFXButton>
-                                          <JFXButton fx:id="btn_cancel_autobackup" graphicTextGap="10.0" layoutX="377.0" layoutY="20.0" prefHeight="17.0" prefWidth="130.0" style="-fx-border-color: white;" text="Cancel" textFill="WHITE">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                             <graphic>
-                                                <ImageView fitHeight="25.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@images/Close%20Window_32px.png" />
                                                    </image>
                                                 </ImageView>
                                              </graphic>

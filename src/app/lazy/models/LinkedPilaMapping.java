@@ -37,6 +37,8 @@ private java.lang.String course;
 private java.lang.String imei;
 private java.util.Date request_accepted;
 private java.util.Date request_called;
+private java.lang.String called_by;
+private java.lang.String called_on_terminal;
 private java.util.Date request_validity;
 private java.lang.Integer floor_assignment;
 private java.lang.Integer floor_number;
@@ -101,7 +103,7 @@ public void setNOTIFIED(java.lang.Integer fieldNotified) {
 	this.NOTIFIED = fieldNotified;
 }
 
-@Column(name = "conforme", nullable = true, length = 50)
+@Column(name = "conforme", nullable = true, length = 100)
 public java.lang.String getConforme() {
 	return this.conforme;
 }
@@ -110,7 +112,7 @@ public void setConforme(java.lang.String fieldConforme) {
 	this.conforme = fieldConforme;
 }
 
-@Column(name = "course", nullable = true, length = 50)
+@Column(name = "course", nullable = true, length = 100)
 public java.lang.String getCourse() {
 	return this.course;
 }
@@ -119,7 +121,7 @@ public void setCourse(java.lang.String fieldCourse) {
 	this.course = fieldCourse;
 }
 
-@Column(name = "imei", nullable = true, length = 50)
+@Column(name = "imei", nullable = true, length = 80)
 public java.lang.String getImei() {
 	return this.imei;
 }
@@ -146,6 +148,24 @@ public java.util.Date getRequest_called() {
 
 public void setRequest_called(java.util.Date fieldRequestCalled) {
 	this.request_called = fieldRequestCalled;
+}
+
+@Column(name = "called_by", nullable = true, length = 100)
+public java.lang.String getCalled_by() {
+	return this.called_by;
+}
+
+public void setCalled_by(java.lang.String fieldCalledBy) {
+	this.called_by = fieldCalledBy;
+}
+
+@Column(name = "called_on_terminal", nullable = true, length = 100)
+public java.lang.String getCalled_on_terminal() {
+	return this.called_on_terminal;
+}
+
+public void setCalled_on_terminal(java.lang.String fieldCalledOnTerminal) {
+	this.called_on_terminal = fieldCalledOnTerminal;
 }
 
 @Column(name = "request_validity", nullable = true, length = 19)
@@ -230,6 +250,8 @@ copyMe.course = this.course;
 copyMe.imei = this.imei;
 copyMe.request_accepted = this.request_accepted;
 copyMe.request_called = this.request_called;
+copyMe.called_by = this.called_by;
+copyMe.called_on_terminal = this.called_on_terminal;
 copyMe.request_validity = this.request_validity;
 copyMe.floor_assignment = this.floor_assignment;
 copyMe.floor_number = this.floor_number;

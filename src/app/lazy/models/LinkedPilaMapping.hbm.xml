@@ -23,19 +23,25 @@
 <column name="NOTIFIED" length="10"/>
 </property>
 <property name="conforme" type="java.lang.String">
-<column name="conforme" length="50"/>
+<column name="conforme" length="100"/>
 </property>
 <property name="course" type="java.lang.String">
-<column name="course" length="50"/>
+<column name="course" length="100"/>
 </property>
 <property name="imei" type="java.lang.String">
-<column name="imei" length="50"/>
+<column name="imei" length="80"/>
 </property>
 <property name="request_accepted" type="java.util.Date">
 <column name="request_accepted" length="19"/>
 </property>
 <property name="request_called" type="java.util.Date">
 <column name="request_called" length="19"/>
+</property>
+<property name="called_by" type="java.lang.String">
+<column name="called_by" length="100"/>
+</property>
+<property name="called_on_terminal" type="java.lang.String">
+<column name="called_on_terminal" length="100"/>
 </property>
 <property name="request_validity" type="java.util.Date">
 <column name="request_validity" length="19"/>

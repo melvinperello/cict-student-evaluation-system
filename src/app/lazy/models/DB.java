@@ -25,6 +25,12 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_announcements announcements = new Tbl_announcements();
     public static Tbl_announcements announcements() {
         return announcements;
+    }private final static Tbl_backup_logs backup_logs = new Tbl_backup_logs();
+    public static Tbl_backup_logs backup_logs() {
+        return backup_logs;
+    }private final static Tbl_backup_schedule backup_schedule = new Tbl_backup_schedule();
+    public static Tbl_backup_schedule backup_schedule() {
+        return backup_schedule;
     }private final static Tbl_curriculum curriculum = new Tbl_curriculum();
     public static Tbl_curriculum curriculum() {
         return curriculum;

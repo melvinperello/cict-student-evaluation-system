@@ -38,6 +38,12 @@ return new AccountStudentMapping();
 public AnnouncementsMapping announcements() {
 return new AnnouncementsMapping();
 }
+public BackupLogsMapping backup_logs() {
+return new BackupLogsMapping();
+}
+public BackupScheduleMapping backup_schedule() {
+return new BackupScheduleMapping();
+}
 public CurriculumMapping curriculum() {
 return new CurriculumMapping();
 }
