@@ -242,6 +242,66 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         cronThreadQueue.start();
     }
+    //--------------------------------------------------------------------------
+    @FXML
+    private Label lbl_que_cluster;
+
+    @FXML
+    private Label lbl_que_cluster_name;
+
+    @FXML
+    private Label lbl_que_terminal;
+
+    @FXML
+    private VBox vbox_que_call_next;
+
+    @FXML
+    private JFXButton btn_que_call_next;
+
+    @FXML
+    private VBox vbox_que_finish;
+
+    @FXML
+    private JFXButton btn_que_finish;
+
+    @FXML
+    private VBox vbox_que_load;
+
+    /**
+     * This is to initialize the controls of the queue system. this method
+     * should be called once in the initialization block.
+     */
+    private void queEvents() {
+        // initialize 3 labels
+        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        Integer clusterNumber = afMap.getAssigned_cluster();
+
+        // default is call next.
+        this.queView(this.vbox_que_call_next);
+
+        this.btn_que_call_next.setOnMouseClicked(click -> {
+            this.queView(vbox_que_finish);
+            click.consume(); // end event
+        });
+
+        this.btn_que_finish.setOnMouseClicked(click -> {
+            this.queView(vbox_que_call_next);
+            click.consume(); // end event
+        });
+    }
+
+    /**
+     * Switch between queue views.
+     *
+     * @param queView
+     */
+    private void queView(VBox queView) {
+        vbox_que_call_next.setVisible(false);
+        vbox_que_finish.setVisible(false);
+        vbox_que_load.setVisible(false);
+
+        queView.setVisible(true);
+    }
 
     //--------------------------------------------------------------------------
     public EvaluateController() {
@@ -302,6 +362,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        }, vbox_waiting_queue, vbox_list);
 //        createQueueTable();
         allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
+
+        /**
+         * Initialize queue events.
+         */
+        this.queEvents();
     }
 
     /**
