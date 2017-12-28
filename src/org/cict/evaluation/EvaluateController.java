@@ -179,21 +179,71 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     private JFXButton btn_home;
 
     @FXML
+    private ImageView img_profile;
+
+    //--------------------------------------------------------------------------
+    @FXML
+    @Deprecated
     private AnchorPane anchor_main1;
 
     @FXML
+    @Deprecated
     private VBox vbox_list;
 
     @FXML
-    private ImageView img_profile;
-
-    @FXML
+    @Deprecated
     private Label lbl_total_queue;
 
     @FXML
+    @Deprecated
     private VBox vbox_waiting_queue;
 
-    
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    /**
+     * Queue of student.
+     */
+    @Deprecated
+    private SimpleTable studentTable = new SimpleTable();
+    @Deprecated
+    private CronThread cronThreadQueue;
+
+    /**
+     * Refreshes the table for calling next.
+     */
+    @Deprecated
+    private void createQueueTable() {
+        cronThreadQueue = new CronThread("evaluation_queue");
+        cronThreadQueue.setInterval(3000);
+        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        Integer clusterNumber = afMap.getAssigned_cluster();
+        cronThreadQueue.setTask(() -> {
+            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
+            if (result) {
+                Mono.fx().thread().wrap(() -> {
+                    Animate.fade(vbox_list, 150, () -> {
+                        vbox_waiting_queue.setVisible(false);
+                        vbox_list.setVisible(true);
+                    }, vbox_waiting_queue, vbox_list);
+                });
+            } else {
+                Mono.fx().thread().wrap(() -> {
+                    Animate.fade(vbox_waiting_queue, 150, () -> {
+                        lbl_total_queue.setText("0");
+                        vbox_list.setVisible(false);
+                        vbox_waiting_queue.setVisible(true);
+                    }, vbox_waiting_queue, vbox_list);
+                });
+            }
+            if (ThreadMill.searching) {
+                this.searchStudent();
+                this.vbox_list.setDisable(true);
+            }
+        });
+        cronThreadQueue.start();
+    }
+
+    //--------------------------------------------------------------------------
     public EvaluateController() {
         //
     }
@@ -245,13 +295,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             Evaluator.mouseDropSubject(currentStudent, MAX_UNITS, unitCount, vbox_subjects, anchor_right);
         });
 
-        Animate.fade(vbox_waiting_queue, 150, () -> {
-            vbox_waiting_queue.setVisible(false);
-            vbox_list.setVisible(false);
-            vbox_waiting_queue.setVisible(true);
-        }, vbox_waiting_queue, vbox_list);
-        createQueueTable();
-
+//        Animate.fade(vbox_waiting_queue, 150, () -> {
+//            vbox_waiting_queue.setVisible(false);
+//            vbox_list.setVisible(false);
+//            vbox_waiting_queue.setVisible(true);
+//        }, vbox_waiting_queue, vbox_list);
+//        createQueueTable();
         allowOverride = Access.isGrantedIf(Access.ACCESS_LOCAL_REGISTRAR);
     }
 
@@ -318,7 +367,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.hideDropDownEvents();
 
         super.addClickEvent(btn_home, () -> {
-            cronThreadQueue.stop();
+            //cronThreadQueue.stop();
             Home.callHome(this);
         });
 
@@ -385,7 +434,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 return;
             }
             this.showChooseType(Evaluator.instance().getCurrentAcademicTerm().getId(), false);
-            
+
             //---------------
             // for retention
             this.retentionChecker();
@@ -803,7 +852,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 showAssistant();
             }
         }
-        
+
         //---------------
         // for retention
         this.retentionChecker();
@@ -1629,13 +1678,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //        });
 //        checkGrade.transact();
 //    }
+    @Deprecated
     private void onError() {
-        Mono.fx().alert()
-                .createWarning()
-                .setHeader("Evaluation")
-                .setMessage("We cannot process your request this moment. "
-                        + "Sorry for the inconvinience.")
-                .showAndWait();
+//        Mono.fx().alert()
+//                .createWarning()
+//                .setHeader("Evaluation")
+//                .setMessage("We cannot process your request this moment. "
+//                        + "Sorry for the inconvinience.")
+//                .showAndWait();
     }
 
     private ArrayList<ArrayList<SubjectMapping>> subjectsWithNoGrade;
@@ -1693,6 +1743,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     /**
      * Do not use this function
+     *
      * @param mode
      * @deprecated
      */
@@ -1811,45 +1862,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.vbox_studentOptions.setVisible(false);
     }
 
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
     /**
-     * Queue of student.
+     * display image on evaluation.
      */
-    private SimpleTable studentTable = new SimpleTable();
-    private CronThread cronThreadQueue;
-
-    private void createQueueTable() {
-        cronThreadQueue = new CronThread("evaluation_queue");
-        cronThreadQueue.setInterval(3000);
-        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
-        Integer clusterNumber = afMap.getAssigned_cluster();
-        cronThreadQueue.setTask(() -> {
-            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
-            if (result) {
-                Mono.fx().thread().wrap(() -> {
-                    Animate.fade(vbox_list, 150, () -> {
-                        vbox_waiting_queue.setVisible(false);
-                        vbox_list.setVisible(true);
-                    }, vbox_waiting_queue, vbox_list);
-                });
-            } else {
-                Mono.fx().thread().wrap(() -> {
-                    Animate.fade(vbox_waiting_queue, 150, () -> {
-                        lbl_total_queue.setText("0");
-                        vbox_list.setVisible(false);
-                        vbox_waiting_queue.setVisible(true);
-                    }, vbox_waiting_queue, vbox_list);
-                });
-            }
-            if (ThreadMill.searching) {
-                this.searchStudent();
-                this.vbox_list.setDisable(true);
-            }
-        });
-        cronThreadQueue.start();
-    }
-
     private void setImageView() {
         StudentProfileMapping spMap = null;
         if (this.currentStudent.getHas_profile().equals(1)) {
@@ -2118,19 +2133,22 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             return true;
         }
     }
-    
+
+    /**
+     * Runs the retention checker.
+     */
     private void retentionChecker() {
         FailedGradeChecker checker = new FailedGradeChecker();
         checker.setStudent(currentStudent);
         checker.setDocument(ReportsUtility.createShortDocument());
-        checker.whenCancelled(()->{
+        checker.whenCancelled(() -> {
             Notifications.create().darkStyle()
                     .title("Warning")
                     .text(checker.getLog()).showWarning();
         });
-        checker.whenSuccess(()->{
-            if(checker.getLog()==null) {
-            } else if(checker.getLog().equalsIgnoreCase("PRINTING")) {
+        checker.whenSuccess(() -> {
+            if (checker.getLog() == null) {
+            } else if (checker.getLog().equalsIgnoreCase("PRINTING")) {
                 Notifications.create().darkStyle()
                         .title("Failed Grade Found")
                         .text("Printing the retention letter for the student.").showWarning();

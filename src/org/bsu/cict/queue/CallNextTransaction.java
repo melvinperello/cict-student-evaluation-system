@@ -29,6 +29,7 @@ import app.lazy.models.LinkedPilaMapping;
 import app.lazy.models.StudentMapping;
 import com.jhmvin.Mono;
 import java.util.Date;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.bsu.cict.threads.DataTransaction;
 import org.hibernate.criterion.Order;
 
@@ -36,7 +37,6 @@ import org.hibernate.criterion.Order;
  *
  * @author Jhon Melvin
  */
-@Deprecated
 public class CallNextTransaction extends DataTransaction {
 
     private Integer floorAssignment;
@@ -63,10 +63,20 @@ public class CallNextTransaction extends DataTransaction {
         return withNext;
     }
 
+    /**
+     * Linked pila information of the student.
+     *
+     * @return
+     */
     public LinkedPilaMapping getNextCalled() {
         return nextCalled;
     }
 
+    /**
+     * Student information.
+     *
+     * @return
+     */
     public StudentMapping getStudent() {
         return student;
     }
