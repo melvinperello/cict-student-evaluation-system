@@ -43,9 +43,13 @@ import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -211,7 +215,13 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     private VBox vbox_autobackup_feature;
     
     @FXML
-    private ComboBox<String> cmb_autobackup_time;
+    private ComboBox<String> cmb_autobackup_hr;
+    
+    @FXML
+    private ComboBox<String> cmb_autobackup_min;
+    
+    @FXML
+    private ComboBox<String> cmb_autobackup_a;
     
     @FXML
     private JFXButton btn_apply_autobackup;
@@ -374,7 +384,23 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         newSchedule.setActive(1);
         newSchedule.setCreated_by(CollegeFaculty.instance().getFACULTY_ID());
         newSchedule.setCreated_date(Mono.orm().getServerTime().getDateWithFormat());
-        newSchedule.setTime(cmb_autobackup_time.getSelectionModel().getSelectedItem());
+        
+        int hr = (Integer.parseInt(cmb_autobackup_hr.getSelectionModel().getSelectedItem()));
+        int min = (Integer.parseInt(cmb_autobackup_min.getSelectionModel().getSelectedItem()));
+        String a = cmb_autobackup_a.getSelectionModel().getSelectedItem();
+        
+        String time = null;
+        try {
+            time = this.convert12hrTo24hr(hr, min, a);
+        } catch (ParseException ex) {
+            Logger.getLogger(AccessManagementHome.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(time == null) {
+            Mono.fx().snackbar().showInfo(application_root, "Please try again later.");
+            return;
+        }
+        newSchedule.setTime(time);
+        
         int res = Database.connect().backup_schedule().insert(newSchedule);
         if(res != -1 || res != 0) {
             this.setLatestBackUpSchedule();
@@ -466,20 +492,39 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     
     private void autoBackUp() {
         // insert time from 00:00 to 23:59
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-
-        Calendar end = Calendar.getInstance();
-        end.set(Calendar.HOUR_OF_DAY, 23);
-        end.set(Calendar.MINUTE, 60);
-        cmb_autobackup_time.getItems().clear();
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.HOUR_OF_DAY, 0);
+//        calendar.set(Calendar.MINUTE, 0);
+//
+//        Calendar end = Calendar.getInstance();
+//        end.set(Calendar.HOUR_OF_DAY, 23);
+//        end.set(Calendar.MINUTE, 60);
+//        cmb_autobackup_hr.getItems().clear();
+//        cmb_autobackup_min.getItems().clear();
+//        
+//        SimpleDateFormat format = new SimpleDateFormat("hh");
+//        SimpleDateFormat format2 = new SimpleDateFormat("mm");
+        int ctrHr = 01;
+        Integer ctrMin = 00;    
         do {
-            cmb_autobackup_time.getItems().add(format.format(calendar.getTime()));
-            calendar.add(Calendar.MINUTE, 1);
-        } while (calendar.getTime().before(end.getTime()));
-        cmb_autobackup_time.getSelectionModel().selectFirst();
+            cmb_autobackup_hr.getItems().add(ctrHr + "");
+            ctrHr++;
+        } while (ctrHr != 13);
+        
+        DecimalFormat formatter = new DecimalFormat("00");
+        do {
+            String strMin = formatter.format(ctrMin);
+            cmb_autobackup_min.getItems().add(strMin);
+            ctrMin++;
+        } while (!ctrMin.equals(60));
+        cmb_autobackup_hr.getSelectionModel().selectFirst();
+        cmb_autobackup_min.getSelectionModel().selectFirst();
+        
+        
+        cmb_autobackup_a.getItems().clear();
+        cmb_autobackup_a.getItems().add("AM");
+        cmb_autobackup_a.getItems().add("PM");
+        cmb_autobackup_a.getSelectionModel().selectFirst();
         
         this.setLatestBackUpSchedule();
     }
@@ -498,8 +543,10 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         
         // set details and set selected chkbx if there is existing then set visible
         this.chkbx_enable_autobackup.setSelected(true);
+        String[] split = current.getTime().split(":");
+        String time = this.convert24hrTo12hr(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+        this.lbl_time_auto.setText(time);
         
-        this.lbl_time_auto.setText(current.getTime());
         this.lbl_create_by_auto.setText(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(current.getCreated_by())));
         SimpleDateFormat format = new SimpleDateFormat("MMMMM dd, yyyy hh:mm:ss a");
         this.lbl_created_date_auto.setText(format.format(current.getCreated_date()) + ".");
@@ -1344,6 +1391,44 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     .text("Cluster of the faculty is updated\n"
                             + "successfully.").showInformation();
         }
+    }
+    
+    public static void main(String[] args) throws ParseException, ParseException {
+        // from 24 hr into 12 hr
+//        Date date = new Date();
+//        SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+//        date.setHours(24);
+//        date.setMinutes(00);
+//        System.out.println(format.format(date));
+
+        // 12 hr into 24 hr
+        String a = "PM";
+        int hr = 4;
+        int min = 00;
+        String time = hr +":" + min + " " + a; 
+        SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+        Date date = parseFormat.parse(time);
+        System.out.println(parseFormat.format(date) + " = " + displayFormat.format(date));
+        
+    }
+    
+    private String convert12hrTo24hr(int hr, int min, String a) throws ParseException {
+        String time = hr +":" + min + " " + a; 
+        SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+        Date date = parseFormat.parse(time);
+        System.out.println(parseFormat.format(date) + " = " + displayFormat.format(date));
+        return displayFormat.format(date);
+    }
+    
+    private String convert24hrTo12hr(int hr, int min) {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+        date.setHours(hr);
+        date.setMinutes(min);
+        System.out.println(format.format(date));
+        return format.format(date);
     }
 
 }

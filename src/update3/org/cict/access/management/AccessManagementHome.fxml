@@ -972,10 +972,28 @@
                               </HBox>
                               <VBox fx:id="vbox_autobackup_feature" alignment="CENTER_LEFT">
                                  <children>
-                                    <ComboBox fx:id="cmb_autobackup_time" prefHeight="25.0" prefWidth="130.0" />
+                                    <HBox>
+                                       <children>
+                                          <Label prefHeight="17.0" prefWidth="72.0" text="Hour" />
+                                          <Label prefHeight="17.0" prefWidth="90.0" text="Minute" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <HBox spacing="10.0">
+                                       <children>
+                                          <ComboBox fx:id="cmb_autobackup_hr" prefHeight="25.0" prefWidth="61.0" />
+                                          <ComboBox fx:id="cmb_autobackup_min" prefHeight="25.0" prefWidth="77.0" />
+                                          <ComboBox fx:id="cmb_autobackup_a" layoutX="96.0" layoutY="10.0" prefHeight="25.0" prefWidth="73.0" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                    </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="764.0" spacing="10.0">
                                        <children>
-                                          <JFXButton fx:id="btn_apply_autobackup" graphicTextGap="10.0" prefHeight="21.0" prefWidth="130.0" style="-fx-border-color: white;" text="Apply" textFill="WHITE">
+                                          <JFXButton fx:id="btn_apply_autobackup" graphicTextGap="10.0" prefHeight="33.0" prefWidth="228.0" style="-fx-border-color: white;" text="Apply" textFill="WHITE">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>
