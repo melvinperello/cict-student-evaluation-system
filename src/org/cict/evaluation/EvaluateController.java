@@ -358,7 +358,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.searchStudent();
         });
         // allow search 
-        caller.setAllowSearch(false);
+        caller.setAllowSearch(true);
         // ok
         caller.queEvents();
     }

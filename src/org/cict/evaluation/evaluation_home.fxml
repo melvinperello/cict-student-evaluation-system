@@ -508,7 +508,7 @@
                                                 <Image url="@queue_img/next_logo.png" />
                                              </image>
                                           </ImageView>
-                                          <Label text="Your terminal is free and can service the next student." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                          <Label text="Your terminal is free and can serve the next student." textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>
@@ -557,7 +557,7 @@
                                                 <Image url="@queue_img/default_loader128.gif" />
                                              </image>
                                           </ImageView>
-                                          <Label text="Calling Next Student" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                          <Label text="Loading" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>

@@ -182,7 +182,7 @@ public class CallerObject {
          * Invoke Finish Button.
          */
         this.btn_que_finish.setOnMouseClicked(click -> {
-            this.queView(vbox_que_call_next);
+            this.onFinishCurrentQueue();
             click.consume(); // end event
         });
     }
@@ -366,15 +366,45 @@ public class CallerObject {
         this.currentPila = cnt.getNextCalled();
         Platform.runLater(() -> {
             this.txtStudentNumber.setText(this.currentPila.getConforme());
+            //------------------------------------------------------------------
+            // change view
             this.queView(vbox_que_finish);
+            //------------------------------------------------------------------
             // run search
             this.searchEvent.run();
         });
         //------------------------------------------------------
     }
 
+    /**
+     * Mark the current transaction as done.
+     */
     private void onFinishCurrentQueue() {
-        
+        FinishCurrentTransaction fct = new FinishCurrentTransaction();
+        fct.setLinkedPilaID(this.currentPila.getId());
+        this.queView(vbox_que_load); // show loading
+        // disable button before calling
+        this.btnFind.setDisable(true);
+        fct.start((Exception e) -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            // change view
+            this.queView(vbox_que_call_next);
+            //------------------------------------------------------------------
+            //------------------------------------------------------------------
+            if (this.allowSearch) {
+                // if search is allowed re enable
+                Platform.runLater(() -> {
+                    this.btnFind.setDisable(false);
+                });
+            }
+        });
+
     }
 
 }
