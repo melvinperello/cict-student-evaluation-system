@@ -222,6 +222,12 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     @FXML
     private ComboBox<String> cmb_module;
             
+    // back up logs
+    @FXML
+    private JFXButton btn_backup_logs;
+    
+    @FXML
+    private VBox vbox_backup_logs_main;
             
     private LoaderView loaderView;
     private FailView failView;
@@ -366,6 +372,11 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         
         this.printLogsEvents();
+        
+        
+        super.addClickEvent(btn_backup_logs, ()->{
+            this.changeView(vbox_backup_logs_main);
+        });
     }
     
     private ArrayList<String> dateList = new ArrayList<>();
@@ -1044,8 +1055,9 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             vbox_eval_main.setVisible(false);
             vbox_pres_main.setVisible(false);
             vbox_print_logs_main.setVisible(false);
+            vbox_backup_logs_main.setVisible(false);
             node.setVisible(true);
-        }, vbox_eval_main, vbox_pres_main, vbox_print_logs_main);
+        }, vbox_eval_main, vbox_pres_main, vbox_print_logs_main, vbox_backup_logs_main);
     }
     
     //-----------------------------------------

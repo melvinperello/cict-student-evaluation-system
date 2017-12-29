@@ -167,7 +167,7 @@
                         <Insets left="-120.0" />
                      </padding>
                   </JFXButton>
-                  <JFXButton fx:id="btn_view_backup_restore" graphicTextGap="20.0" layoutX="10.0" layoutY="280.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Back Up &amp; Restore" textFill="WHITE">
+                  <JFXButton fx:id="btn_view_backup_restore" graphicTextGap="20.0" layoutX="10.0" layoutY="280.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Backup &amp; Restore" textFill="WHITE">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -864,7 +864,7 @@
                                     <Image url="@images/icons8-database-administrator-50.png" />
                                  </image>
                               </ImageView>
-                              <Label maxWidth="1.7976931348623157E308" text="Back Up &amp; Restore" HBox.hgrow="ALWAYS">
+                              <Label maxWidth="1.7976931348623157E308" text="Backup &amp; Restore" HBox.hgrow="ALWAYS">
                                  <font>
                                     <Font size="30.0" />
                                  </font>
@@ -970,49 +970,11 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <VBox fx:id="vbox_autobackup_feature" alignment="CENTER_LEFT">
+                              <VBox>
                                  <children>
-                                    <HBox>
-                                       <children>
-                                          <Label prefHeight="17.0" prefWidth="72.0" text="Hour" />
-                                          <Label prefHeight="17.0" prefWidth="90.0" text="Minute" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox spacing="10.0">
-                                       <children>
-                                          <ComboBox fx:id="cmb_autobackup_hr" prefHeight="25.0" prefWidth="61.0" />
-                                          <ComboBox fx:id="cmb_autobackup_min" prefHeight="25.0" prefWidth="77.0" />
-                                          <ComboBox fx:id="cmb_autobackup_a" layoutX="96.0" layoutY="10.0" prefHeight="25.0" prefWidth="73.0" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="5.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="764.0" spacing="10.0">
-                                       <children>
-                                          <JFXButton fx:id="btn_apply_autobackup" graphicTextGap="10.0" prefHeight="33.0" prefWidth="228.0" style="-fx-border-color: white;" text="Apply" textFill="WHITE">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                             <graphic>
-                                                <ImageView fitHeight="21.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@images/User%20Shield_32px.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                          </JFXButton>
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="10.0" top="10.0" />
-                                       </padding>
-                                    </HBox>
                                     <HBox fx:id="hbox_autobackup_info_user" spacing="2.0">
                                        <children>
-                                          <Label layoutX="46.0" layoutY="10.0" text="Automatically back up in ">
+                                          <Label layoutX="46.0" layoutY="10.0" text="Automatic backup every ">
                                              <font>
                                                 <Font size="13.0" />
                                              </font>
@@ -1022,7 +984,7 @@
                                                 <Font name="System Bold" size="13.0" />
                                              </font>
                                           </Label>
-                                          <Label text=" by ">
+                                          <Label text=". Requested by ">
                                              <font>
                                                 <Font size="13.0" />
                                              </font>
@@ -1044,9 +1006,51 @@
                                           </Label>
                                        </children>
                                        <VBox.margin>
-                                          <Insets bottom="10.0" top="20.0" />
+                                          <Insets bottom="5.0" />
                                        </VBox.margin>
                                     </HBox>
+                                    <VBox fx:id="vbox_autobackup_feature" alignment="CENTER_LEFT">
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Label prefHeight="17.0" prefWidth="72.0" text="Hour" />
+                                                <Label prefHeight="17.0" prefWidth="90.0" text="Minute" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox spacing="10.0">
+                                             <children>
+                                                <ComboBox fx:id="cmb_autobackup_hr" prefHeight="25.0" prefWidth="61.0" />
+                                                <ComboBox fx:id="cmb_autobackup_min" prefHeight="25.0" prefWidth="77.0" />
+                                                <ComboBox fx:id="cmb_autobackup_a" layoutX="96.0" layoutY="10.0" prefHeight="25.0" prefWidth="73.0" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="5.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="764.0" spacing="10.0">
+                                             <children>
+                                                <JFXButton fx:id="btn_apply_autobackup" graphicTextGap="10.0" prefHeight="33.0" prefWidth="228.0" style="-fx-border-color: white;" text="Apply" textFill="WHITE">
+                                                   <font>
+                                                      <Font size="15.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="21.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@images/User%20Shield_32px.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                </JFXButton>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" top="10.0" />
+                                             </padding>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
                                  </children>
                                  <VBox.margin>
                                     <Insets left="100.0" />

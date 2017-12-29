@@ -149,6 +149,24 @@
                         <Insets left="-90.0" />
                      </padding>
                   </JFXButton>
+                  <JFXButton fx:id="btn_backup_logs" graphicTextGap="20.0" layoutX="10.0" layoutY="226.0" maxWidth="1.7976931348623157E308" prefHeight="44.0" prefWidth="396.0" text="Backup Logs" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/icons8-bulleted-list-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <padding>
+                        <Insets left="-70.0" />
+                     </padding>
+                  </JFXButton>
                </children>
             </VBox>
             <StackPane HBox.hgrow="ALWAYS">
@@ -392,7 +410,7 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="vbox_print_logs_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="vbox_print_logs_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" visible="false">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -514,6 +532,137 @@
                               <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="834.0" AnchorPane.bottomAnchor="5.0">
                                  <children>
                                     <Label fx:id="lbl_result_print_logs">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="vbox_backup_logs_main" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fx:id="img_icon_eval_main11" fitHeight="40.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                 <image>
+                                    <Image url="@images/eval.png" />
+                                 </image>
+                              </ImageView>
+                              <Label maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="319.0" text="Backup Logs" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="691.0" spacing="10.0">
+                                 <children>
+                                    <Label text="Mode:">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="cmb_mode_backup" prefHeight="29.0" prefWidth="115.0" promptText="Select" styleClass="metro-combo-box">
+                                       <HBox.margin>
+                                          <Insets right="20.0" />
+                                       </HBox.margin>
+                                    </ComboBox>
+                                    <ComboBox fx:id="cmb_backup_faculty_search" prefHeight="37.0" prefWidth="98.0" promptText="Select" styleClass="metro-combo-box" />
+                                    <JFXTextField fx:id="txt_faculty_search_backup" focusColor="#f2f2f2" prefHeight="29.0" prefWidth="223.0" promptText="Search faculty here" style="-fx-text-fill: white;" unFocusColor="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXTextField>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                        <VBox prefHeight="84.0" prefWidth="914.0" spacing="10.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../update3/org/cict/my_account/images/right_bullet.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <Label text="List of all the backup action of both system and the faculty." wrapText="true">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="790.0" spacing="10.0">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                       <children>
+                                          <Label text="From: " wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_from_backup" prefHeight="33.0" prefWidth="159.0" promptText="No Date Available" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                       <children>
+                                          <Label text="To: " wrapText="true">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <ComboBox fx:id="cmb_to_backup" prefHeight="33.0" prefWidth="159.0" promptText="No Date Available" styleClass="metro-combo-box" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="117.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <JFXButton fx:id="btn_filter_backup" prefHeight="33.0" prefWidth="182.0" style="-fx-border-color: #fff; -fx-background-color: #1BA261;" text="Filter" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="btn_print_backup" prefHeight="33.0" prefWidth="136.0" style="-fx-border-color: #fff;" text="Print Result" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="30.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                        <AnchorPane prefHeight="393.0" prefWidth="809.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="40.0" top="5.0" />
+                           </VBox.margin>
+                           <children>
+                              <StackPane fx:id="stack_backup" layoutX="1.0" layoutY="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <VBox fx:id="vbox_backup_table" prefHeight="265.0" prefWidth="813.0" styleClass="metro-table" stylesheets="@metro-ui-table.css">
+                                       <StackPane.margin>
+                                          <Insets bottom="30.0" />
+                                       </StackPane.margin>
+                                    </VBox>
+                                 </children>
+                              </StackPane>
+                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="834.0" AnchorPane.bottomAnchor="5.0">
+                                 <children>
+                                    <Label fx:id="lbl_result_backup">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
