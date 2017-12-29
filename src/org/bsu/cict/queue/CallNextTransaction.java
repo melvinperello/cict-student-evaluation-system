@@ -39,11 +39,23 @@ import org.hibernate.criterion.Order;
  * @author Jhon Melvin
  */
 public class CallNextTransaction extends DataTransaction {
-
+    
     @Inject
     private Integer floorAssignment;
     @Inject
     private Integer linkedSessionID;
+    @Inject
+    private String terminalName;
+    @Inject
+    private String callerName;
+    
+    public void setTerminalName(String terminalName) {
+        this.terminalName = terminalName;
+    }
+    
+    public void setCallerName(String callerName) {
+        this.callerName = callerName;
+    }
 
     /**
      * The current linked Session.
@@ -62,7 +74,7 @@ public class CallNextTransaction extends DataTransaction {
     public void setFloorAssignment(Integer floorAssignment) {
         this.floorAssignment = floorAssignment;
     }
-
+    
     private LinkedPilaMapping nextCalled;
     private StudentMapping student;
     private boolean withNext;
@@ -85,15 +97,15 @@ public class CallNextTransaction extends DataTransaction {
         return nextCalled;
     }
 
-    /**
-     * Student information.
-     *
-     * @return
-     */
-    public StudentMapping getStudent() {
-        return student;
-    }
-
+//    /**
+//     * Student information.
+//     *
+//     * @return
+//     */
+//    public StudentMapping getStudent() {
+//        return student;
+//    }
+    
     @Override
     public void transaction() {
         this.withNext = false;
@@ -112,6 +124,8 @@ public class CallNextTransaction extends DataTransaction {
         //----------------------------------------------------------------------
         Date currentDate = Mono.orm().getServerTime().getDateWithFormat();
         nextCalled.setStatus("CALLED");
+        nextCalled.setCalled_by(this.callerName);
+        nextCalled.setCalled_on_terminal(this.terminalName);
         nextCalled.setRequest_called(currentDate);
         nextCalled.setRequest_validity(currentDate);
         boolean updated = Database.connect().linked_pila().update(nextCalled);
@@ -122,18 +136,18 @@ public class CallNextTransaction extends DataTransaction {
         //----------------------------------------------------------------------
         // refresh values
         nextCalled = Database.connect().linked_pila().getPrimary(nextCalled.getId());
-
+        
         if (nextCalled == null) {
             return;
         }
-
-        StudentMapping student = Database.connect()
-                .student().getPrimary(nextCalled.getSTUDENT_id());
-
+        
+//        StudentMapping student = Database.connect()
+//                .student().getPrimary(nextCalled.getSTUDENT_id());
+        
         this.nextCalled = nextCalled;
-        this.student = student;
+        //this.student = student;
         this.withNext = true;
-
+        
     }
-
+    
 }

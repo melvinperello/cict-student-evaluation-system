@@ -29,7 +29,6 @@ import org.bsu.cict.threads.DataTransaction;
  *
  * @author Jhon Melvin
  */
-@Deprecated
 public class FinishCurrentTransaction extends DataTransaction {
 
     @Override
