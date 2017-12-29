@@ -353,7 +353,7 @@ public class FacultyMainController extends SceneFX implements ControllerFX {
         print.setDocumentFormat(doc, customized);
         print.columnNames = newColNames;
         print.ROW_DETAILS = rowData;
-        print.fileName = "faculty_list_" + cmb_sort.getSelectionModel().getSelectedItem().toLowerCase();
+        print.fileName = "Faculty Result List " + cmb_sort.getSelectionModel().getSelectedItem().toLowerCase();
 
         print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
         print.reportOtherDetail = reportDescription;

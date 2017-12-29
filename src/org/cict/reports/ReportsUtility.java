@@ -149,7 +149,7 @@ public class ReportsUtility {
         
         System.out.println("numColumns " + numColumns);
         
-        if(numColumns<0) {
+        if(numColumns==0) {
             return null;
         }
         
@@ -187,12 +187,17 @@ public class ReportsUtility {
                 } catch (IndexOutOfBoundsException e) {
                 }
             } 
-            for (int j = 0; j < rowData.size(); j++) {
+            for (int j = 0; j < customized.size(); j++) {
                 if(customized.get(j) != null) {
                     Boolean isChecked = (Boolean) customized.get(j)[0];
                     if(isChecked != null && isChecked) {
+                        System.out.println("ADDED " + rowData.get(i)[j] + " IN THE TABLE");
                         tbl_stud.addCell(createSimpleCell(rowData.get(i)[j], font6Plain, 0, true, false, 4f, false));
+                    } else {
+                        System.out.println("NOT ADDED " + rowData.get(i)[j] + " IN THE TABLE");
                     }
+                } else {
+                    System.out.println("ITS NULL " + rowData.get(i)[j]);
                 }
             }
         }
