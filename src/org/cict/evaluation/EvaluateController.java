@@ -35,6 +35,7 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.GradeMapping;
+import app.lazy.models.LinkedSettingsMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
@@ -59,6 +60,8 @@ import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.bsu.cict.alerts.MessageBox;
+import org.bsu.cict.queue.CallNextTransaction;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.ThreadMill;
@@ -273,21 +276,150 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     private void queEvents() {
         // initialize 3 labels
-        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
-        Integer clusterNumber = afMap.getAssigned_cluster();
 
         // default is call next.
         this.queView(this.vbox_que_call_next);
 
+        /**
+         * Invoke Call Next Button.
+         */
         this.btn_que_call_next.setOnMouseClicked(click -> {
-            this.queView(vbox_que_finish);
+            this.callNextOnQueue();
             click.consume(); // end event
         });
 
+        /**
+         * Invoke Finish Button.
+         */
         this.btn_que_finish.setOnMouseClicked(click -> {
             this.queView(vbox_que_call_next);
             click.consume(); // end event
         });
+    }
+
+    /**
+     * Invoke the event for calling the next student in line.
+     *
+     * this must refresh the faculty floor assignment and linked settings so
+     * that it can monitor changes in the following tables.
+     */
+    private void callNextOnQueue() {
+        Integer facultyFloorAssignment = this.getFacultyFloorAssignment();
+
+        if (facultyFloorAssignment == null) {
+            // no cluster assignment display
+            this.lbl_que_cluster.setText("n / a");
+            // since there is no floor assignment the cluster name cannot be 
+            this.lbl_que_cluster_name.setText("n / a");
+
+            Mono.fx().alert().createWarning()
+                    .setTitle("System")
+                    .setHeader("Unassigned")
+                    .setMessage("You are not yet assigned to any cluster.")
+                    .showAndWait();
+
+            return;
+        } else {
+            // if there is an assigned floor
+            if (facultyFloorAssignment == 3 || facultyFloorAssignment == 4) {
+                // it mus only be between this 2 number
+                String clusterLabel = (facultyFloorAssignment == 3 ? "1" : "2");
+                /**
+                 * Cluster Assignment now set.
+                 */
+                this.lbl_que_cluster.setText(clusterLabel);
+                /**
+                 * Get its name.
+                 */
+                LinkedSettingsMapping currentLinked = this.getCurrentLinkedSettings();
+                if (currentLinked == null) {
+                    MessageBox.showWarning("Offline", "The Queue System is offline.");
+                } else {
+                    String clusterNameLabel = (facultyFloorAssignment == 3
+                            ? currentLinked.getFloor_3_name()
+                            : currentLinked.getFloor_4_name());
+
+                    if (clusterNameLabel == null) {
+                        clusterNameLabel = "n / a";
+                    }
+                    /**
+                     * Name now set.
+                     */
+                    this.lbl_que_cluster_name.setText(clusterNameLabel);
+
+                    //----------------------------------------------------------
+                    // All Details Ready, can now execute call next.
+                    CallNextTransaction cnt = new CallNextTransaction();
+                    // setters are now properly placed
+                    cnt.setFloorAssignment(facultyFloorAssignment);
+                    cnt.setLinkedSessionID(currentLinked.getId());
+                    // 2 more needs to be set terminal name and caller name
+                    cnt.start((Exception e) -> {
+                        if (e != null) {
+                            e.printStackTrace();
+                            MessageBox.showError("Failed", "Cannot retrieve queue, please try again.");
+                            return;
+                        }
+
+                        if (!cnt.isWithNext()) {
+                            Platform.runLater(() -> {
+                                Mono.fx().alert().createInfo()
+                                        .setTitle("System")
+                                        .setHeader("Empty")
+                                        .setMessage("There are no students in the queue")
+                                        .showAndWait();
+                            });
+                            return;
+                        }
+                        Platform.runLater(() -> {
+                            Mono.fx().alert().createInfo()
+                                    .setTitle("System")
+                                    .setHeader("Call")
+                                    .setMessage("asdasdasd.")
+                                    .showAndWait();
+                        });
+                    });
+
+                    //----------------------------------------------------------
+                }
+
+            } else {
+                // no cluster assignment display
+                this.lbl_que_cluster.setText("n / a");
+                // since there is no floor assignment the cluster name cannot be 
+                this.lbl_que_cluster_name.setText("n / a");
+                Mono.fx().alert().createError()
+                        .setTitle("System")
+                        .setHeader("ERROR")
+                        .setMessage("You are assigned to an invalid cluster.")
+                        .showAndWait();
+                return;
+            }
+        }
+
+    }
+
+    /**
+     * Get the current active linked settings and marked as alive.
+     *
+     * @return
+     */
+    private LinkedSettingsMapping getCurrentLinkedSettings() {
+        LinkedSettingsMapping linkSettingsMap = Mono.orm()
+                .newSearch(Database.connect().linked_settings())
+                .eq(DB.linked_settings().mark, "ALIVE")
+                .active(Order.desc(DB.linked_settings().id))
+                .first();
+        return linkSettingsMap;
+    }
+
+    /**
+     * Get the faculty current assigned cluster.
+     */
+    private Integer getFacultyFloorAssignment() {
+        AccountFacultyMapping accounfFacultyMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        Integer clusterNumber = accounfFacultyMap.getAssigned_cluster();
+        return clusterNumber;
     }
 
     /**
