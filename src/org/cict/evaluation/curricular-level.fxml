@@ -74,6 +74,25 @@
          <children>
             <VBox>
                <children>
+                  <HBox spacing="20.0">
+                     <children>
+                        <Label fx:id="lbl_student_number" text="2014115487">
+                           <font>
+                              <Font name="System Bold" size="22.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbl_student_name" text="DAZO ARLEALYN ASUNCION">
+                           <font>
+                              <Font name="System Bold" size="22.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbl_student_section" text="( 4HG2 )">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                   <Label fx:id="lbl_curriculum" text="BSIT PREP - BSIT">
                      <font>
                         <Font size="19.0" />
@@ -193,7 +212,7 @@
                <children>
                   <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label prefHeight="200.0" text="Please select the year level of the student." wrapText="true">
+                        <Label prefHeight="200.0" text="Select Year Level for Encoding" wrapText="true">
                            <font>
                               <Font size="20.0" />
                            </font>

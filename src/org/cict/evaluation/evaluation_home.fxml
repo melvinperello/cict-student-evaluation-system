@@ -451,7 +451,7 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <VBox spacing="5.0">
+                        <VBox fx:id="vbox_lbl_container" spacing="5.0">
                            <children>
                               <HBox alignment="CENTER_LEFT" spacing="10.0">
                                  <children>

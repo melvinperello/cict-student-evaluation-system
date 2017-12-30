@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -416,40 +417,202 @@
             </JFXButton>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="anchor_main" layoutX="8.0" layoutY="73.0" prefHeight="639.0" prefWidth="306.0" AnchorPane.leftAnchor="0.0">
+      <StackPane layoutY="73.0" AnchorPane.leftAnchor="0.0">
          <children>
-            <StackPane layoutY="40.0" prefHeight="573.0" prefWidth="304.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0">
+            <AnchorPane fx:id="anchor_main" prefHeight="639.0" prefWidth="306.0" visible="false">
                <children>
-                  <VBox fx:id="vbox_list" prefHeight="623.0" prefWidth="290.0" spacing="3.0">
-                     <StackPane.margin>
-                        <Insets bottom="5.0" />
-                     </StackPane.margin></VBox>
-                  <VBox fx:id="vbox_waiting_queue" alignment="BOTTOM_LEFT" prefHeight="532.0" prefWidth="285.0">
+                  <StackPane layoutY="40.0" prefHeight="573.0" prefWidth="304.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="40.0">
                      <children>
-                        <Label text="Waiting..." textFill="#37474f">
-                           <font>
-                              <Font size="19.0" />
-                           </font>
-                        </Label>
-                        <Line endX="100.0" startX="-100.0" />
+                        <VBox fx:id="vbox_list" prefHeight="623.0" prefWidth="290.0" spacing="3.0">
+                           <StackPane.margin>
+                              <Insets bottom="5.0" />
+                           </StackPane.margin>
+                        </VBox>
+                        <VBox fx:id="vbox_waiting_queue" alignment="BOTTOM_LEFT" prefHeight="532.0" prefWidth="285.0">
+                           <children>
+                              <Label text="Waiting..." textFill="#37474f">
+                                 <font>
+                                    <Font size="19.0" />
+                                 </font>
+                              </Label>
+                              <Line endX="100.0" startX="-100.0" />
+                           </children>
+                           <StackPane.margin>
+                              <Insets bottom="5.0" left="15.0" top="10.0" />
+                           </StackPane.margin>
+                        </VBox>
                      </children>
-                     <StackPane.margin>
-                        <Insets bottom="5.0" left="15.0" top="10.0" />
-                     </StackPane.margin>
+                  </StackPane>
+                  <Label layoutX="45.0" layoutY="14.0" text="Student Queue" textFill="#37474f" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="17.0" layoutY="592.0" text="Total Enrollee On Queue:" />
+                  <Label fx:id="lbl_total_queue" layoutX="153.0" layoutY="592.0" text="10" />
+               </children>
+               <padding>
+                  <Insets bottom="20.0" />
+               </padding>
+            </AnchorPane>
+            <VBox fx:id="vboxRevisedNextQue" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #35BA9B;">
+               <children>
+                  <VBox VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <ImageView fitHeight="55.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../update4/org/cict/linked_manager/images/Connect%20Develop_96px_2.png" />
+                                 </image>
+                              </ImageView>
+                              <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label text="Linked Queue" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="23.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="CICT Student Evaluation System" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox fx:id="vbox_lbl_container" spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                 <children>
+                                    <Label maxWidth="-Infinity" prefWidth="70.0" text="CLUSTER" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="lbl_que_cluster" text="1" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                 <children>
+                                    <Label maxWidth="-Infinity" prefWidth="70.0" text="NAME" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="lbl_que_cluster_name" text="3RDFLR@IT8" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                 <children>
+                                    <Label maxWidth="-Infinity" prefWidth="70.0" text="TERMINAL" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="lbl_que_terminal" text="MELVIN-PC" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <StackPane>
+                                 <children>
+                                    <VBox fx:id="vbox_que_call_next" alignment="CENTER" spacing="10.0">
+                                       <children>
+                                          <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../../org/cict/evaluation/queue_img/next_logo.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label text="Your terminal is free and can serve the next student." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXButton fx:id="btn_que_call_next" prefWidth="120.0" style="-fx-border-color: white; -fx-background-color: #4A89D9;" text="Call Next" textFill="WHITE">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </JFXButton>
+                                       </children>
+                                    </VBox>
+                                    <VBox fx:id="vbox_que_finish" alignment="CENTER" spacing="10.0" visible="false">
+                                       <children>
+                                          <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../../org/cict/evaluation/queue_img/busy.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label text="Currently Evaluating Student" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="Click Finish if you are done evaluating the student, or if the student is not present." textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXButton fx:id="btn_que_finish" prefWidth="120.0" style="-fx-border-color: white; -fx-background-color: #EB5463;" text="Finish" textFill="WHITE">
+                                             <font>
+                                                <Font size="20.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </JFXButton>
+                                       </children>
+                                    </VBox>
+                                    <VBox fx:id="vbox_que_load" alignment="CENTER" spacing="10.0" visible="false">
+                                       <children>
+                                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../../org/cict/evaluation/queue_img/default_loader128.gif" />
+                                             </image>
+                                          </ImageView>
+                                          <Label text="Loading" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </StackPane>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="40.0" />
+                           </VBox.margin>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                     </VBox.margin>
                   </VBox>
                </children>
-            </StackPane>
-            <Label layoutX="45.0" layoutY="14.0" text="Student Queue" textFill="#37474f" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Label>
-            <Label layoutX="17.0" layoutY="592.0" text="Total Enrollee On Queue:" />
-            <Label fx:id="lbl_total_queue" layoutX="153.0" layoutY="592.0" text="10" />
+               <StackPane.margin>
+                  <Insets top="5.0" />
+               </StackPane.margin>
+            </VBox>
          </children>
-         <padding>
-            <Insets bottom="20.0" />
-         </padding>
-      </AnchorPane>
+      </StackPane>
    </children>
 </AnchorPane>

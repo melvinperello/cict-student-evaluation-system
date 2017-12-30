@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Objects;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.bsu.cict.queue.CallerObject;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
@@ -126,15 +127,53 @@ public class AddingHome extends SceneFX implements ControllerFX {
     private JFXButton btn_checklist;
     @FXML
     private ImageView img_profile;
+
+    @Deprecated
     @FXML
     private AnchorPane anchor_main1;
+
+    @Deprecated
     @FXML
     private VBox vbox_list;
+
+    @Deprecated
     @FXML
     private Label lbl_total_queue;
+
+    @Deprecated
     @FXML
     private VBox vbox_waiting_queue;
 
+    //--------------------------------------------------------------------------
+    @FXML
+    private Label lbl_que_cluster;
+
+    @FXML
+    private Label lbl_que_cluster_name;
+
+    @FXML
+    private Label lbl_que_terminal;
+
+    @FXML
+    private VBox vbox_que_call_next;
+
+    @FXML
+    private VBox vbox_lbl_container;
+
+    @FXML
+    private JFXButton btn_que_call_next;
+
+    @FXML
+    private VBox vbox_que_finish;
+
+    @FXML
+    private JFXButton btn_que_finish;
+
+    @FXML
+    private VBox vbox_que_load;
+
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     private StudentMapping studentSearched;
 
     private ArrayList<SubjectInformationHolder> originalList = new ArrayList<>();
@@ -160,12 +199,47 @@ public class AddingHome extends SceneFX implements ControllerFX {
         vbox_studentOptions.setVisible(false);
         anchor_preview.setVisible(false);
 
-        Animate.fade(vbox_waiting_queue, 150, () -> {
-            vbox_waiting_queue.setVisible(false);
-            vbox_list.setVisible(false);
-            vbox_waiting_queue.setVisible(true);
-        }, vbox_waiting_queue, vbox_list);
-        createQueueTable();
+//        Animate.fade(vbox_waiting_queue, 150, () -> {
+//            vbox_waiting_queue.setVisible(false);
+//            vbox_list.setVisible(false);
+//            vbox_waiting_queue.setVisible(true);
+//        }, vbox_waiting_queue, vbox_list);
+//        createQueueTable();
+        //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+        /**
+         * Initialize queue events.
+         */
+        CallerObject caller = new CallerObject();
+        // side controls
+        // labels
+        caller.setLbl_que_terminal(lbl_que_terminal);
+        caller.setLbl_que_cluster_name(lbl_que_cluster_name);
+        caller.setLbl_que_cluster(lbl_que_cluster);
+        caller.setVbox_lbl_container(vbox_lbl_container);
+        // the 3 view call next load and finish must contain in stack view
+        caller.setVbox_que_call_next(vbox_que_call_next);
+        caller.setVbox_que_finish(vbox_que_finish);
+        caller.setVbox_que_load(vbox_que_load);
+        // button inside vbox_que_call_next
+        caller.setBtn_que_call_next(btn_que_call_next);
+        // the button inside vbox_que_finish
+        caller.setBtn_que_finish(btn_que_finish);
+        // main
+        // search field
+        caller.setTxtStudentNumber(txtStudentNumber);
+        // search button
+        caller.setBtnFind(btnFind);
+        // search action
+        caller.setSearchEvent(() -> {
+            this.onSearchStudent();
+        });
+        // allow search 
+        caller.setAllowSearch(true);
+        // ok
+        caller.queEvents();
+        //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
     }
 
     //--------------------------------------------------------------------------
@@ -173,37 +247,40 @@ public class AddingHome extends SceneFX implements ControllerFX {
     /**
      * Queue of student.
      */
+    @Deprecated
     private SimpleTable studentTable = new SimpleTable();
+    @Deprecated
     private CronThread cronThreadQueue;
 
+    @Deprecated
     private void createQueueTable() {
-        cronThreadQueue = new CronThread("adding_changing_queue");
-        cronThreadQueue.setInterval(3000);
-        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
-        Integer clusterNumber = afMap.getAssigned_cluster();
-        cronThreadQueue.setTask(() -> {
-            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
-            if (result) {
-                Mono.fx().thread().wrap(() -> {
-                    Animate.fade(vbox_list, 150, () -> {
-                        vbox_waiting_queue.setVisible(false);
-                        vbox_list.setVisible(true);
-                    }, vbox_waiting_queue, vbox_list);
-                });
-            } else {
-                Mono.fx().thread().wrap(() -> {
-                    Animate.fade(vbox_waiting_queue, 150, () -> {
-                        lbl_total_queue.setText("0");
-                        vbox_list.setVisible(false);
-                        vbox_waiting_queue.setVisible(true);
-                    }, vbox_waiting_queue, vbox_list);
-                });
-            }
-            if (ThreadMill.searching) {
-                this.onSearchStudent();
-            }
-        });
-        cronThreadQueue.start();
+//        cronThreadQueue = new CronThread("adding_changing_queue");
+//        cronThreadQueue.setInterval(3000);
+//        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+//        Integer clusterNumber = afMap.getAssigned_cluster();
+//        cronThreadQueue.setTask(() -> {
+//            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
+//            if (result) {
+//                Mono.fx().thread().wrap(() -> {
+//                    Animate.fade(vbox_list, 150, () -> {
+//                        vbox_waiting_queue.setVisible(false);
+//                        vbox_list.setVisible(true);
+//                    }, vbox_waiting_queue, vbox_list);
+//                });
+//            } else {
+//                Mono.fx().thread().wrap(() -> {
+//                    Animate.fade(vbox_waiting_queue, 150, () -> {
+//                        lbl_total_queue.setText("0");
+//                        vbox_list.setVisible(false);
+//                        vbox_waiting_queue.setVisible(true);
+//                    }, vbox_waiting_queue, vbox_list);
+//                });
+//            }
+//            if (ThreadMill.searching) {
+//                this.onSearchStudent();
+//            }
+//        });
+//        cronThreadQueue.start();
     }
 
     @Override
@@ -318,9 +395,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
         Document doc = null;
-        if(!printLegacy) {
+        if (!printLegacy) {
             doc = ReportsUtility.paperSizeChooser(this.getStage());
-            if(doc==null) {
+            if (doc == null) {
                 return;
             }
         }
@@ -349,7 +426,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
         if (!printLegacy) {
             printCheckList.setDocumentFormat(doc);
         }
-        if(ReportsUtility.savePrintLogs(this.studentSearched.getCict_id(), "CHECKLIST", "ADDING & CHANGING", "INITIAL")) {
+        if (ReportsUtility.savePrintLogs(this.studentSearched.getCict_id(), "CHECKLIST", "ADDING & CHANGING", "INITIAL")) {
             printCheckList.transact();
         }
     }
@@ -564,14 +641,14 @@ public class AddingHome extends SceneFX implements ControllerFX {
     }
 
     private void onBackToHome() {
-        cronThreadQueue.stop();
+//        cronThreadQueue.stop();
         Home.callHome(this);
     }
 
     private EvaluationMapping currentStudentEvaluationDetails;
 
     private void onSearchStudent() {
-        ThreadMill.searching = false;
+        //ThreadMill.searching = false;
         currentStudentEvaluationDetails = null;
 
         this.table.getChildren().clear();
@@ -1716,7 +1793,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
 
     private void printDeficiency() {
         Document doc = ReportsUtility.paperSizeChooser(this.getStage());
-        if(doc==null) {
+        if (doc == null) {
             return;
         }
         PrintDeficiency print = new PrintDeficiency();
@@ -1740,7 +1817,7 @@ public class AddingHome extends SceneFX implements ControllerFX {
                     .showInformation();
         });
         print.setDocumentFormat(doc);
-        if(ReportsUtility.savePrintLogs(this.studentSearched.getCict_id(), "DEFICIENCY REPORT", "ADDING & CHANGING", "INITIAL")) {
+        if (ReportsUtility.savePrintLogs(this.studentSearched.getCict_id(), "DEFICIENCY REPORT", "ADDING & CHANGING", "INITIAL")) {
             print.transact();
         }
     }

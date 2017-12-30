@@ -39,7 +39,7 @@ import org.hibernate.criterion.Order;
  * @author Jhon Melvin
  */
 public class CallNextTransaction extends DataTransaction {
-    
+
     @Inject
     private Integer floorAssignment;
     @Inject
@@ -48,11 +48,11 @@ public class CallNextTransaction extends DataTransaction {
     private String terminalName;
     @Inject
     private String callerName;
-    
+
     public void setTerminalName(String terminalName) {
         this.terminalName = terminalName;
     }
-    
+
     public void setCallerName(String callerName) {
         this.callerName = callerName;
     }
@@ -74,7 +74,7 @@ public class CallNextTransaction extends DataTransaction {
     public void setFloorAssignment(Integer floorAssignment) {
         this.floorAssignment = floorAssignment;
     }
-    
+
     private LinkedPilaMapping nextCalled;
     private StudentMapping student;
     private boolean withNext;
@@ -105,7 +105,6 @@ public class CallNextTransaction extends DataTransaction {
 //    public StudentMapping getStudent() {
 //        return student;
 //    }
-    
     @Override
     public void transaction() {
         this.withNext = false;
@@ -115,7 +114,7 @@ public class CallNextTransaction extends DataTransaction {
                 .eq(DB.linked_pila().status, "INLINE")
                 .eq(DB.linked_pila().remarks, "NONE")
                 .eq(DB.linked_pila().SETTINGS_id, this.linkedSessionID)
-                .active(Order.desc(DB.linked_pila().id))
+                .active(Order.asc(DB.linked_pila().id))
                 .first();
         //----------------------------------------------------------------------
         if (nextCalled == null) {
@@ -136,18 +135,17 @@ public class CallNextTransaction extends DataTransaction {
         //----------------------------------------------------------------------
         // refresh values
         nextCalled = Database.connect().linked_pila().getPrimary(nextCalled.getId());
-        
+
         if (nextCalled == null) {
             return;
         }
-        
+
 //        StudentMapping student = Database.connect()
 //                .student().getPrimary(nextCalled.getSTUDENT_id());
-        
         this.nextCalled = nextCalled;
         //this.student = student;
         this.withNext = true;
-        
+
     }
-    
+
 }

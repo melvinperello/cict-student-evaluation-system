@@ -95,89 +95,89 @@ public class ThreadMill {
         KEEP_ALIVE_THREAD = null;
     }
     
-    private static SimpleTable studentTable = null;
-    public static boolean searching = false;
-    public static boolean resfresh(VBox holder, TextField txtfieldSearch, Label labelTotal, Integer clusterNumber) {
-        ArrayList<LinkedEntranceMapping> leMaps;
-        if(clusterNumber==null) {
-            leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
-                    .eq(DB.linked_entrance().status, "NONE")
-                    .active(Order.asc(DB.linked_entrance().reference_id)).take(10);
-        } else {
-            System.out.println("clusterNumber " + clusterNumber);
-            leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
-                    .eq(DB.linked_entrance().status, "NONE")
-                    .eq(DB.linked_entrance().floor_assignment, clusterNumber)
-                    .active(Order.asc(DB.linked_entrance().reference_id)).take(10);
-        }
-        if(leMaps==null || leMaps.isEmpty()) {
-            return false;
-        }
-        
-        Mono.fx().thread().wrap(()->{
-            studentTable = new SimpleTable();
-            labelTotal.setText("");
-        });
-        for (int i = 0; i < leMaps.size(); i++) {
-            LinkedEntranceMapping leMap = leMaps.get(i);
-            createRow(leMap, txtfieldSearch, holder, labelTotal, clusterNumber);
-        }
-        SimpleTableView simpleTableView = new SimpleTableView();
-        simpleTableView.setFixedWidth(true);
-
-        Mono.fx().thread().wrap(()->{
-            simpleTableView.setTable(studentTable);
-            simpleTableView.setParentOnScene(holder);
-            labelTotal.setText(leMaps.size() + "");
-        });
-        return true;
-    }
+//    private static SimpleTable studentTable = null;
+//    public static boolean searching = false;
+//    public static boolean resfresh(VBox holder, TextField txtfieldSearch, Label labelTotal, Integer clusterNumber) {
+//        ArrayList<LinkedEntranceMapping> leMaps;
+//        if(clusterNumber==null) {
+//            leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
+//                    .eq(DB.linked_entrance().status, "NONE")
+//                    .active(Order.asc(DB.linked_entrance().reference_id)).take(10);
+//        } else {
+//            System.out.println("clusterNumber " + clusterNumber);
+//            leMaps = Mono.orm().newSearch(Database.connect().linked_entrance())
+//                    .eq(DB.linked_entrance().status, "NONE")
+//                    .eq(DB.linked_entrance().floor_assignment, clusterNumber)
+//                    .active(Order.asc(DB.linked_entrance().reference_id)).take(10);
+//        }
+//        if(leMaps==null || leMaps.isEmpty()) {
+//            return false;
+//        }
+//        
+//        Mono.fx().thread().wrap(()->{
+//            studentTable = new SimpleTable();
+//            labelTotal.setText("");
+//        });
+//        for (int i = 0; i < leMaps.size(); i++) {
+//            LinkedEntranceMapping leMap = leMaps.get(i);
+//            createRow(leMap, txtfieldSearch, holder, labelTotal, clusterNumber);
+//        }
+//        SimpleTableView simpleTableView = new SimpleTableView();
+//        simpleTableView.setFixedWidth(true);
+//
+//        Mono.fx().thread().wrap(()->{
+//            simpleTableView.setTable(studentTable);
+//            simpleTableView.setParentOnScene(holder);
+//            labelTotal.setText(leMaps.size() + "");
+//        });
+//        return true;
+//    }
     
-    private static void createRow(LinkedEntranceMapping leMap, TextField txtStudentNumber, VBox holder, Label labelTotal, Integer clusterNumber) {
-        SimpleTableRow row = new SimpleTableRow();
-        row.setRowHeight(70.0);
-        row.getRowMetaData().put("MAP", leMap);
-        QueueRow rowFX = M.load(QueueRow.class);
-        rowFX.getLbl_id().setText(leMap.getStudent_number());
-        rowFX.getLbl_name().setText(WordUtils.capitalizeFully(getStudentName(leMap.getStudent_number())));
-        rowFX.getLbl_number().setText(leMap.getReference_id() + "");
-        SimpleTableCell cellParent = new SimpleTableCell();
-        cellParent.setResizePriority(Priority.ALWAYS);
-        cellParent.setContent(rowFX.getApplicationRoot());
-        row.addCell(cellParent);
-        Mono.fx().thread().wrap(()->{
-            MonoClick.addClickEvent(row, ()->{
-                LinkedEntranceMapping selected = (LinkedEntranceMapping) row.getRowMetaData().get("MAP");
-                LinkedEntranceMapping selectedleMap = Database.connect().linked_entrance().getPrimary(selected.getReference_id());
-                if(selectedleMap==null || selectedleMap.getStatus().equalsIgnoreCase("DONE")) {
-                    Notifications.create().darkStyle().title("Done")
-                            .text("Selected student is already serving.")
-                            .showInformation();
-                    return;
-                }
-                selected.setStatus("DONE");
-                boolean res = Database.connect().linked_entrance().update(selected);
-                if(!res) {
-                    Notifications.create().darkStyle().title("Failed")
-                            .text("Please check your connectivity to the server.")
-                            .showError();
-                    return;
-                }
-                holder.setDisable(true);
-                txtStudentNumber.setText(selected.getStudent_number());
-                searching = true;
-                ThreadMill.resfresh(holder, txtStudentNumber, labelTotal, clusterNumber);
-            });
-            studentTable.addRow(row);
-        });
-    }
+//    private static void createRow(LinkedEntranceMapping leMap, TextField txtStudentNumber, VBox holder, Label labelTotal, Integer clusterNumber) {
+//        SimpleTableRow row = new SimpleTableRow();
+//        row.setRowHeight(70.0);
+//        row.getRowMetaData().put("MAP", leMap);
+//        QueueRow rowFX = M.load(QueueRow.class);
+//        rowFX.getLbl_id().setText(leMap.getStudent_number());
+//        rowFX.getLbl_name().setText(WordUtils.capitalizeFully(getStudentName(leMap.getStudent_number())));
+//        rowFX.getLbl_number().setText(leMap.getReference_id() + "");
+//        SimpleTableCell cellParent = new SimpleTableCell();
+//        cellParent.setResizePriority(Priority.ALWAYS);
+//        cellParent.setContent(rowFX.getApplicationRoot());
+//        row.addCell(cellParent);
+//        Mono.fx().thread().wrap(()->{
+//            MonoClick.addClickEvent(row, ()->{
+//                LinkedEntranceMapping selected = (LinkedEntranceMapping) row.getRowMetaData().get("MAP");
+//                LinkedEntranceMapping selectedleMap = Database.connect().linked_entrance().getPrimary(selected.getReference_id());
+//                if(selectedleMap==null || selectedleMap.getStatus().equalsIgnoreCase("DONE")) {
+//                    Notifications.create().darkStyle().title("Done")
+//                            .text("Selected student is already serving.")
+//                            .showInformation();
+//                    return;
+//                }
+//                selected.setStatus("DONE");
+//                boolean res = Database.connect().linked_entrance().update(selected);
+//                if(!res) {
+//                    Notifications.create().darkStyle().title("Failed")
+//                            .text("Please check your connectivity to the server.")
+//                            .showError();
+//                    return;
+//                }
+//                holder.setDisable(true);
+//                txtStudentNumber.setText(selected.getStudent_number());
+//                searching = true;
+//                ThreadMill.resfresh(holder, txtStudentNumber, labelTotal, clusterNumber);
+//            });
+//            studentTable.addRow(row);
+//        });
+//    }
     
-    private static String getStudentName(String studentNumber) {
-        StudentMapping student = Mono.orm().newSearch(Database.connect().student())
-                .eq(DB.student().id, studentNumber).active(Order.desc(DB.student().cict_id)).first();
-        if(student==null) {
-            return "";
-        }
-        return student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "" : student.getMiddle_name());
-    }
+//    private static String getStudentName(String studentNumber) {
+//        StudentMapping student = Mono.orm().newSearch(Database.connect().student())
+//                .eq(DB.student().id, studentNumber).active(Order.desc(DB.student().cict_id)).first();
+//        if(student==null) {
+//            return "";
+//        }
+//        return student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "" : student.getMiddle_name());
+//    }
 }

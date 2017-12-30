@@ -35,7 +35,6 @@ import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.EvaluationMapping;
 import app.lazy.models.GradeMapping;
-import app.lazy.models.LinkedSettingsMapping;
 import app.lazy.models.LoadGroupMapping;
 import app.lazy.models.LoadSectionMapping;
 import app.lazy.models.MapFactory;
@@ -60,22 +59,18 @@ import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.bsu.cict.alerts.MessageBox;
-import org.bsu.cict.queue.CallNextTransaction;
 import org.bsu.cict.queue.CallerObject;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
-import org.cict.evaluation.encoder.GradeEncoderController;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.evaluator.SearchStudent;
 import org.cict.evaluation.evaluator.SubjectValidation;
 import org.cict.evaluation.moving_up.MovingUpController;
 import org.cict.evaluation.sectionviewer.SectionsController;
 import org.cict.evaluation.student.credit.CreditController;
-import org.cict.evaluation.student.info.InfoStudentController;
 import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.management.registrar.Registrar;
 import org.cict.management.registrar.RevokeEvaluation;
@@ -97,91 +92,91 @@ import update5.org.cict.student.layout.CurriculumChooser;
  * @author Jhon Melvin
  */
 public class EvaluateController extends SceneFX implements ControllerFX {
-    
+
     @FXML
     private AnchorPane anchor_evaluate;
-    
+
     @FXML
     private AnchorPane anchor_right;
-    
+
     @FXML
     private JFXButton btnFind;
-    
+
     @FXML
     private TextField txtStudentNumber;
-    
+
     @FXML
     private AnchorPane anchor_preview;
-    
+
     @FXML
     private AnchorPane anchor_studentInfo;
-    
+
     @FXML
     private Label lblName;
-    
+
     @FXML
     private Label lblCourseSection;
-    
+
     @FXML
     private JFXButton btn_studentOptions;
-    
+
     @FXML
     private ScrollPane scroll_subjects;
-    
+
     @FXML
     private JFXButton btnEvaluate;
-    
+
     @FXML
     private Label lbl_subjectTotal;
-    
+
     @FXML
     private Label lbl_unitsTotal;
-    
+
     @FXML
     private VBox vbox_studentOptions;
-    
+
     @FXML
     private JFXButton btnHistory;
-    
+
     @FXML
     private JFXButton btn_checklist;
-    
+
     @FXML
     private JFXButton btn_encoding;
-    
+
     @FXML
     private JFXButton btn_deficiency;
-    
+
     @FXML
     private JFXButton btnCreditUnits;
-    
+
     @FXML
     private AnchorPane anchor_results;
-    
+
     @FXML
     private HBox hbox_search;
-    
+
     @FXML
     private HBox hbox_loading;
-    
+
     @FXML
     private HBox hbox_none;
-    
+
     @FXML
     private HBox hbox_already;
-    
+
     @FXML
     private JFXButton btn_already_print;
-    
+
     @FXML
     private JFXButton btn_already_evaluate;
-    
+
     @FXML
     private JFXButton btn_winSection;
-    
+
     @FXML
     private JFXButton btn_home;
-    
+
     @FXML
     private ImageView img_profile;
 
@@ -189,15 +184,15 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     @FXML
     @Deprecated
     private AnchorPane anchor_main1;
-    
+
     @FXML
     @Deprecated
     private VBox vbox_list;
-    
+
     @FXML
     @Deprecated
     private Label lbl_total_queue;
-    
+
     @FXML
     @Deprecated
     private VBox vbox_waiting_queue;
@@ -217,57 +212,60 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      */
     @Deprecated
     private void createQueueTable() {
-        cronThreadQueue = new CronThread("evaluation_queue");
-        cronThreadQueue.setInterval(3000);
-        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
-        Integer clusterNumber = afMap.getAssigned_cluster();
-        cronThreadQueue.setTask(() -> {
-            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
-            if (result) {
-                Mono.fx().thread().wrap(() -> {
-                    Animate.fade(vbox_list, 150, () -> {
-                        vbox_waiting_queue.setVisible(false);
-                        vbox_list.setVisible(true);
-                    }, vbox_waiting_queue, vbox_list);
-                });
-            } else {
-                Mono.fx().thread().wrap(() -> {
-                    Animate.fade(vbox_waiting_queue, 150, () -> {
-                        lbl_total_queue.setText("0");
-                        vbox_list.setVisible(false);
-                        vbox_waiting_queue.setVisible(true);
-                    }, vbox_waiting_queue, vbox_list);
-                });
-            }
-            if (ThreadMill.searching) {
-                this.searchStudent();
-                this.vbox_list.setDisable(true);
-            }
-        });
-        cronThreadQueue.start();
+//        cronThreadQueue = new CronThread("evaluation_queue");
+//        cronThreadQueue.setInterval(3000);
+//        AccountFacultyMapping afMap = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+//        Integer clusterNumber = afMap.getAssigned_cluster();
+//        cronThreadQueue.setTask(() -> {
+//            boolean result = ThreadMill.resfresh(vbox_list, txtStudentNumber, lbl_total_queue, clusterNumber);
+//            if (result) {
+//                Mono.fx().thread().wrap(() -> {
+//                    Animate.fade(vbox_list, 150, () -> {
+//                        vbox_waiting_queue.setVisible(false);
+//                        vbox_list.setVisible(true);
+//                    }, vbox_waiting_queue, vbox_list);
+//                });
+//            } else {
+//                Mono.fx().thread().wrap(() -> {
+//                    Animate.fade(vbox_waiting_queue, 150, () -> {
+//                        lbl_total_queue.setText("0");
+//                        vbox_list.setVisible(false);
+//                        vbox_waiting_queue.setVisible(true);
+//                    }, vbox_waiting_queue, vbox_list);
+//                });
+//            }
+//            if (ThreadMill.searching) {
+//                this.searchStudent();
+//                this.vbox_list.setDisable(true);
+//            }
+//        });
+//        cronThreadQueue.start();
     }
     //--------------------------------------------------------------------------
     @FXML
     private Label lbl_que_cluster;
-    
+
     @FXML
     private Label lbl_que_cluster_name;
-    
+
     @FXML
     private Label lbl_que_terminal;
-    
+
     @FXML
     private VBox vbox_que_call_next;
-    
+
+    @FXML
+    private VBox vbox_lbl_container;
+
     @FXML
     private JFXButton btn_que_call_next;
-    
+
     @FXML
     private VBox vbox_que_finish;
-    
+
     @FXML
     private JFXButton btn_que_finish;
-    
+
     @FXML
     private VBox vbox_que_load;
 
@@ -278,7 +276,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 
     // Maximum allowed units
     private final static Double MAX_UNITS = PublicConstants.MAX_UNITS;
-    
+
     private void log(Object message) {
         boolean logging = true;
         if (logging) {
@@ -297,7 +295,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      * Controller Initialization.
      */
     private boolean allowOverride = false;
-    
+
     @Override
     public void onInitialization() {
         //----------------------------------------------------------------------
@@ -340,6 +338,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         caller.setLbl_que_terminal(lbl_que_terminal);
         caller.setLbl_que_cluster_name(lbl_que_cluster_name);
         caller.setLbl_que_cluster(lbl_que_cluster);
+        caller.setVbox_lbl_container(vbox_lbl_container);
         // the 3 view call next load and finish must contain in stack view
         caller.setVbox_que_call_next(vbox_que_call_next);
         caller.setVbox_que_finish(vbox_que_finish);
@@ -394,7 +393,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         lbl_subjectTotal.setText(subjectCount.toString());
         lbl_unitsTotal.setText(unitCount.toString());
     }
-    
+
     private void checkEvaluationService(Runnable runMe) {
         Integer evaluation_service = SystemProperties.instance().getCurrentAcademicTerm().getEvaluation_service();
         if (evaluation_service == null) {
@@ -424,7 +423,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     @Override
     public void onEventHandling() {
         this.hideDropDownEvents();
-        
+
         super.addClickEvent(btn_home, () -> {
             //cronThreadQueue.stop();
             Home.callHome(this);
@@ -499,7 +498,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.retentionChecker();
             //---------------
         });
-        
+
         super.addClickEvent(btn_already_evaluate, () -> {
             // RE-EVALUATE Student.
             this.hideDropDown();
@@ -513,7 +512,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.printDeficiency();
         });
     }
-    
+
     private void printDeficiency() {
         Document doc = ReportsUtility.paperSizeChooser(this.getStage());
         if (doc == null) {
@@ -555,14 +554,14 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             print.transact();
         }
     }
-    
+
     private void onShowMovingUp() {
-        
+
         if (!Access.enterTransactionPin(this.getStage())) {
             Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
             return;
         }
-        
+
         FetchCurriculumInfo fetch = new FetchCurriculumInfo();
         fetch.student = currentStudent;
         fetch.whenStarted(() -> {
@@ -599,7 +598,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         fetch.transact();
     }
-    
+
     private void onShowMoving_up(ArrayList<CurriculumMapping> results) {
         MovingUpController controller = new MovingUpController(currentStudent, results);
         Mono.fx().create()
@@ -626,27 +625,27 @@ public class EvaluateController extends SceneFX implements ControllerFX {
      *
      */
     class FetchCurriculumInfo extends Transaction {
-        
+
         public StudentMapping student;
-        
+
         private boolean ladderized = false;
-        
+
         public boolean isLadderized() {
             return ladderized;
         }
-        
+
         private ArrayList<CurriculumMapping> curriculum_pre = new ArrayList<>();
-        
+
         public ArrayList<CurriculumMapping> getCurriculumPre() {
             return curriculum_pre;
         }
-        
+
         private String log;
-        
+
         public String getLog() {
             return log;
         }
-        
+
         @Override
         protected boolean transaction() {
             if (student == null) {
@@ -686,11 +685,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
             return true;
         }
-        
+
         @Override
         protected void after() {
         }
-        
+
     }
 
     /**
@@ -706,7 +705,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         this.hbox_search.setVisible(false); // search
         this.hbox_none.setVisible(false); // no results
         this.hbox_already.setVisible(false);
-        
+
         vbox_studentOptions.setVisible(false);
         //vbox_settings.setVisible(false);
 
@@ -716,18 +715,18 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 this.hbox_search.setVisible(true); // search
                 this.btnFind.setDisable(false);
                 break;
-            
+
             case "search":
                 this.anchor_results.setVisible(true);
                 this.hbox_loading.setVisible(true); // search
                 this.btnFind.setDisable(true);
                 break;
-            
+
             case "no_results":
                 this.anchor_results.setVisible(true);
                 this.hbox_none.setVisible(true); // search
                 break;
-            
+
             case "preview":
                 anchor_evaluate.setDisable(false);
                 this.anchor_preview.setVisible(true);
@@ -781,7 +780,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         FLAG_ALREADY_EVALUATED = false;
         FLAG_CROSS_ENROLLEE = false;
         btn_encoding.setDisable(false);
-        ThreadMill.searching = false;
+        //ThreadMill.searching = false;
     }
 
     /**
@@ -802,20 +801,20 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         } else {
             countSearch = 0;
         }
-        
+
         setView("search");
-        
+
         SearchStudent search = new SearchStudent();
         search.studentNumber = txtStudentNumber.getText().trim();
-        
+
         search.setOnSuccess(event -> {
             this.onSearchSuccess(search);
         });
-        
+
         search.setOnFailure(event -> {
             setView("no_results");
         });
-        
+
         search.setOnCancel(event -> {
             this.onSearchCancelled(search);
         });
@@ -847,12 +846,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             setView("no_results");
             return;
         }
-        
+
         if (FLAG_ALREADY_EVALUATED) {
             setView("already");
             return;
         }
-        
+
         System.out.println("@EvaluateController: Search Success");
 
         //----------------------------------------------------------------------
@@ -982,7 +981,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         // current curriculum
         CurriculumMapping curriculum = Database.connect()
                 .curriculum().getPrimary(currentStudent.getCURRICULUM_id());
-        
+
         if (curriculum == null) {
             System.err.println("Curriculum Was Not Found !");
             return;
@@ -1040,9 +1039,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         }
         //----------------------------------------------------------------------
         printCheckList(printLegacy, curriculum.getId(), null);
-        
+
     }
-    
+
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
@@ -1068,12 +1067,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         if (!printLegacy) {
             printCheckList.setDocumentFormat(ReportsUtility.paperSizeChooser(this.getStage()));
         }
-        
+
         if (ReportsUtility.savePrintLogs(this.currentStudent.getCict_id(), "CHECKLIST", "EVALUATION", "INITIAL")) {
             printCheckList.transact();
         }
     }
-    
+
     private void hideDropDownEvents() {
         txtStudentNumber.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
             this.hideDropDown();
@@ -1105,7 +1104,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .setTitle("Confirmation")
                 .setMessage("Are you sure you want to continue ?")
                 .confirmYesNo();
-        
+
         if (res != 1) {
             return;
         }
@@ -1128,12 +1127,12 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // allowed user
             isAllowed = true;
         }
-        
+
         if (!isAllowed) {
             Mono.fx().snackbar().showError(application_root, "You Are Not Allowed To Re-evaluate Students.");
             return;
         }
-        
+
         RevokeEvaluation revoked_evaluation = Registrar.instance().createRevokeEvaluation();
         revoked_evaluation.cict_id = currentStudent.getCict_id();
         if (allowedUser == null) {
@@ -1156,10 +1155,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // cancelled is called upon error.
         });
         revoked_evaluation.whenFailed(() -> {
-            
+
         });
         revoked_evaluation.whenSuccess(() -> {
-            
+
         });
         revoked_evaluation.whenFinished(() -> {
             GenericLoadingShow.instance().hide();
@@ -1174,7 +1173,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             setView("home");
             this.searchStudent();
         });
-        
+
         revoked_evaluation.setRestTime(500);
         revoked_evaluation.transact();
     }
@@ -1225,7 +1224,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             // make chouces
             if (choice == 1) {
                 SectionsController sectionController = new SectionsController();
-                
+
                 Mono.fx().create()
                         .setPackageName("org.cict.evaluation.sectionviewer")
                         .setFxmlDocument("section_viewer")
@@ -1235,9 +1234,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                         .makeStage()
                         .stageResizeable(false)
                         .stageShow();
-                
+
                 sectionController.searchCallBack("Suggestions For " + txtStudentNumber.getText().trim());
-                
+
                 return;
             }
         }
@@ -1277,7 +1276,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             }
         }
         evaluateTask.subjects = toInsert;
-        
+
         evaluateTask.whenStarted(() -> {
             GenericLoadingShow.instance().show();
         });
@@ -1295,7 +1294,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             GenericLoadingShow.instance().hide();
             setView("home");
         });
-        
+
         evaluateTask.setRestTime(500);
         evaluateTask.transact();
     }
@@ -1357,17 +1356,17 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     .stageUndecorated(true)
                     .stageCenter()
                     .stageShowAndWait();
-            
+
             evaluationMap.setPrint_type(controller.getSelected() == null ? "NOT_SET" : controller.getSelected().toUpperCase());
             Database.connect().evaluation().update(evaluationMap);
         }
-        
+
         if (controller.isPrinting()) {
             String text = "Printing Evaluation Slip";
             if (isNew) {
                 text = "Evaluated Successfully, printing Evaluation Slip";
             }
-            
+
             Notifications.create()
                     .title("Success (" + controller.getSelected() + " Student)")
                     .text(text)
@@ -1393,7 +1392,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         return controller.getStudent();
     }
-    
+
     private void showFirstAssistant() {
         anchor_evaluate.setDisable(true);
         setView("home");
@@ -1410,7 +1409,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageCenter()
                 .stageShowAndWait();
     }
-    
+
     private void showAssistant() {
         AssistantController controller = new AssistantController(currentStudent);
         Mono.fx().create()
@@ -1426,7 +1425,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageShowAndWait();
         currentStudent.setYear_level(controller.getNewYearLevel());
     }
-    
+
     private void onShowCurricularLevel() {
         CurricularLevelController controller = new CurricularLevelController(this.currentStudent);
         Mono.fx().create()
@@ -1486,7 +1485,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         previewTk.whenFailed(() -> {
             log("EvaluateController: Failed Loading Preview.");
         });
-        
+
         previewTk.whenFinished(() -> {
             // done
             log("EvaluateController: Finished Loading Preview.");
@@ -1514,7 +1513,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 // IF CROSS ENROLLEE DO NOT PROCEED BELOW CODE
                 return;
             }
-            
+
             try {
                 // students section
                 String section = this.currentStudent.getYear_level()
@@ -1527,17 +1526,17 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             } catch (Exception e) {
                 this.lblCourseSection.setText("No Data");
             }
-            
+
             btn_encoding.setDisable((this.currentStudent.getPREP_id() != null));
         });
     }
-    
+
     private static String currentSection;
-    
+
     public static String getSection() {
         return currentSection;
     }
-    
+
     private void loadPreview() {
         // load details
         this.loadStudentDetails();
@@ -1545,7 +1544,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         Platform.runLater(() -> {
             this.vbox_subjects.getChildren().clear();
         });
-        
+
         log(" $showPreview: started");
         /**
          * If the student has no assigned sections or no matches have found.
@@ -1566,9 +1565,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     isOkToAdd(x);
                 }
             }
-            
+
         }
-        
+
         Mono.fx().thread().wrap(() -> {
             lbl_subjectTotal.setText(subjectCount.toString());
             lbl_unitsTotal.setText(unitCount.toString());
@@ -1578,7 +1577,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //                        .showInformation();
 //            }
         });
-        
+
     }
 
     /**
@@ -1599,9 +1598,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         sv.loadGroupID = studentLoadGroup.get(x).getId();
         sv.loadSecID = studentLoadGroup.get(x).getLOADSEC_id();
         sv.subjectID = studentSubject.get(x).getId();
-        
+
         sv.validate();
-        
+
         log(" $isOkToAdd: verified");
         if (sv.isEligibleToTake()) {
             log(" $isOkToAdd: student is eligible");
@@ -1665,11 +1664,11 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                             .showInfo(anchor_right, subjects.code.getText() + " Has Been Removed.");
                 }
             });
-            
+
             Mono.fx().thread().wrap(() -> {
                 vbox_subjects.getChildren().add(subjects);
             });
-            
+
         } catch (IndexOutOfBoundsException a) {
             log(" $isOkToAdd: IndexOutOfBoundsException");
         }
@@ -1746,9 +1745,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //                        + "Sorry for the inconvinience.")
 //                .showAndWait();
     }
-    
+
     private ArrayList<ArrayList<SubjectMapping>> subjectsWithNoGrade;
-    
+
     @Deprecated
     /**
      * All encoding features are now in the curricular level assessor.
@@ -1867,7 +1866,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
 //                .stageShow();
 //        setView("home");
     }
-    
+
     private void onShowHistory() {
         this.vbox_studentOptions.setVisible(false);
         StudentHistoryController controller = new StudentHistoryController(this.currentStudent,
@@ -1883,10 +1882,10 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 .stageMaximized(true)
                 .stageShow();
     }
-    
+
     private void onShowInputMode() {
         this.vbox_studentOptions.setVisible(false);
-        
+
         if (this.FLAG_CROSS_ENROLLEE) {
             Mono.fx().snackbar().showInfo(application_root, "Cross Enrollees cannot credit any subjects.");
             return;
@@ -1915,7 +1914,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             this.searchStudent();
         }
     }
-    
+
     private void hideDropDown() {
         //this.vbox_settings.setVisible(false);
         this.vbox_studentOptions.setVisible(false);
@@ -1944,7 +1943,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     //-----------------------------
     // override over stay
     private boolean allowOverStay = false;
-    
+
     private void goLang(String type) {
         Object[] result = Access.isEvaluationOverride(allowOverride, SystemOverriding.getACRONYM(15, type));
         boolean ok = (boolean) result[0];
@@ -1957,7 +1956,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
             map.setExecuted_date(Mono.orm().getServerTime().getDateWithFormat());
             map.setAcademic_term(SystemProperties.instance().getCurrentAcademicTerm().getId());
             String conforme = currentStudent.getLast_name() + ", ";
-            
+
             conforme += currentStudent.getFirst_name();
             if (currentStudent.getMiddle_name() != null) {
                 conforme += " ";
@@ -2002,7 +2001,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         if (selected == null) {
             return false;
         }
-        
+
         if (!Access.enterTransactionPin(this.getStage())) {
             Mono.fx().snackbar().showError(application_root, "Transaction Request Denied");
             return false;
@@ -2013,7 +2012,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         //----------------------------
         return true;
     }
-    
+
     private CurriculumMapping selectCurriculum(String message) {
         CurriculumChooser curriculumChooser = M.load(CurriculumChooser.class);
         curriculumChooser.setStudentID(currentStudent.getCict_id());
@@ -2052,7 +2051,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         //------------------------------------------
         return selected;
     }
-    
+
     private void processReassignment(Integer curriculum_id) {
         TransactGrades transact = new TransactGrades();
         transact.student_id = currentStudent.getCict_id();
@@ -2085,9 +2084,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         });
         transact.transact();
     }
-    
+
     class TransactGrades extends Transaction {
-        
+
         public Integer curriculum_id;
         public Integer student_id;
         //----------------------------------------------------------------------
@@ -2172,7 +2171,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                 System.out.println(log);
                 return false;
             }
-            
+
             ArrayList<EvaluationMapping> oldEvaluationDetails = Mono.orm().newSearch(Database.connect().evaluation())
                     .eq(DB.evaluation().STUDENT_id, student_id)
                     .active().all();
@@ -2187,7 +2186,7 @@ public class EvaluateController extends SceneFX implements ControllerFX {
                     }
                 }
             }
-            
+
             dataTransaction.commit();
             return true;
         }

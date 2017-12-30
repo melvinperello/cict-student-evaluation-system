@@ -64,6 +64,13 @@ public class CallerObject {
     @Inject
     private VBox vbox_que_load;
 
+    @Inject
+    private VBox vbox_lbl_container;
+
+    public void setVbox_lbl_container(VBox vbox_lbl_container) {
+        this.vbox_lbl_container = vbox_lbl_container;
+    }
+
     public void setLbl_que_cluster(Label lbl_que_cluster) {
         this.lbl_que_cluster = lbl_que_cluster;
     }
@@ -162,6 +169,10 @@ public class CallerObject {
      */
     public void queEvents() {
         lbl_que_terminal.setText(this.terminalName);
+
+        //----------------------------------------------------------------------
+        vbox_lbl_container.setVisible(false);
+        //----------------------------------------------------------------------
         // if search is not allowed disable search button
         if (!this.allowSearch) {
             this.btnFind.setDisable(true);
@@ -230,6 +241,7 @@ public class CallerObject {
      * that it can monitor changes in the following tables.
      */
     private void callNextOnQueue() {
+        vbox_lbl_container.setVisible(true);
         //--------------------------------------------------------------
         Integer facultyFloorAssignment = this.getFacultyFloorAssignment();
         //--------------------------------------------------------------

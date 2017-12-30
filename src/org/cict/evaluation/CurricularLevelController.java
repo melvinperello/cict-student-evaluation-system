@@ -152,6 +152,17 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
     @FXML
     private ImageView imgvw_export_grades;
 
+    //--------------------------------------------------------------------------
+    @FXML
+    private Label lbl_student_number;
+
+    @FXML
+    private Label lbl_student_name;
+
+    @FXML
+    private Label lbl_student_section;
+    //--------------------------------------------------------------------------
+
     public CurricularLevelController(StudentMapping studentMap) {
         STUDENT_current = studentMap;
     }
@@ -162,6 +173,31 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
     @Override
     public void onInitialization() {
         bindScene(application_pane);
+
+        //----------------------------------------------------------------------
+        if (STUDENT_current.getId() != null) {
+            lbl_student_number.setText(STUDENT_current.getId());
+        }
+        String name = "";
+        if (STUDENT_current.getLast_name() != null) {
+            name = name.concat(STUDENT_current.getLast_name());
+        }
+        if (STUDENT_current.getFirst_name() != null) {
+            name = name.concat(" " + STUDENT_current.getFirst_name());
+        }
+        lbl_student_name.setText(name);
+
+        if (STUDENT_current.getYear_level() != null && STUDENT_current.getSection() != null && STUDENT_current.get_group() != null) {
+            lbl_student_section.setText(
+                    "( "
+                    + String.valueOf(STUDENT_current.getYear_level())
+                    + String.valueOf(STUDENT_current.getSection()) + "-G"
+                    + String.valueOf(STUDENT_current.get_group())
+                    + " )"
+            );
+        }
+
+        //----------------------------------------------------------------------
         chkbx_disable_ai.setSelected(!PublicConstants.DISABLE_ASSISTANCE);
         this.showAssessment();
 

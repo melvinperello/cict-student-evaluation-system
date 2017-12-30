@@ -163,7 +163,7 @@ public class CreateNewSessionTransaction extends Transaction {
             // transfer the current inline students from the new session
             // day 1 200  students left (#800 - #1000)
             // transfer them to the next session day 2
-            if(inline_students != null || !inline_students.isEmpty()) {
+            if(inline_students != null) {
                 for (LinkedPilaMapping transfering : inline_students) {
                     if (transfering.getFloor_assignment().equals(3)) {
                         try {
