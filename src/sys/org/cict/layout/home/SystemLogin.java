@@ -105,76 +105,81 @@ public class SystemLogin extends MonoLauncher {
     }
 
     private void bootHibernate() {
-//        HibernateLauncher startHibernate = Authenticator
-//                .instance()
-//                .createHibernateLauncher();
 
-        this.vbox_loading.setVisible(true);
-        this.vbox_login.setVisible(false);
-        this.removeEnterEvent();
-        Thread revBootHibernate = new Thread(() -> {
-            // try connection
-            Database.connect();
+//        this.vbox_loading.setVisible(true);
+//        this.vbox_login.setVisible(false);
+//        this.removeEnterEvent();
+//        Thread revBootHibernate = new Thread(() -> {
+//            // try connection
+//            Database.connect();
+//
+//            // check connection
+//            if (Mono.orm().getSessionFactory() == null) {
+//                // no connection
+//                Platform.runLater(() -> {
+//                    Mono.fx().alert().createError().setTitle("No Connection")
+//                            .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
+//                            .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
+//                            .showAndWait();
+////                MainApplication.die(0);
+//                });
+//                return;
+//            }
+//
+//            this.addEnterEvent();
+//            this.autoCreateSystemVariables();
+//
+//            Platform.runLater(() -> {
+//                Animate.fade(vbox_loading, 150, () -> {
+//                    this.vbox_loading.setVisible(false);
+//                    this.vbox_login.setVisible(true);
+//                }, vbox_login);
+//            });
+//
+//        });
+//
+//        revBootHibernate.start();
+//------------------------------------------------------------------------------    
+        HibernateLauncher startHibernate = Authenticator
+                .instance()
+                .createHibernateLauncher();
 
-            // check connection
+        startHibernate.whenStarted(() -> {
+            this.vbox_loading.setVisible(true);
+            this.vbox_login.setVisible(false);
+            this.removeEnterEvent();
+        });
+        startHibernate.whenCancelled(() -> {
+            System.out.println("ERROR");
+        });
+        startHibernate.whenFailed(() -> {
+            System.out.println("CANCELLED");
+        });
+        startHibernate.whenSuccess(() -> {
+//            this.vbox_loading.setVisible(false);
+//            this.vbox_login.setVisible(true);
+
+        });
+        startHibernate.whenFinished(() -> {
+            this.addEnterEvent();
             if (Mono.orm().getSessionFactory() == null) {
                 // no connection
-                Platform.runLater(() -> {
-                    Mono.fx().alert().createError().setTitle("No Connection")
-                            .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
-                            .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
-                            .showAndWait();
+                Mono.fx().alert().createError().setTitle("No Connection")
+                        .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
+                        .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
+                        .showAndWait();
 //                MainApplication.die(0);
-                });
-                return;
-            }
-
-            this.addEnterEvent();
-            this.autoCreateSystemVariables();
-
-            Platform.runLater(() -> {
+            } else {
                 Animate.fade(vbox_loading, 150, () -> {
                     this.vbox_loading.setVisible(false);
                     this.vbox_login.setVisible(true);
                 }, vbox_login);
-            });
+                this.autoCreateSystemVariables();
+            }
 
         });
 
-        revBootHibernate.start();
-//        startHibernate.whenStarted(() -> {
-//            this.vbox_loading.setVisible(true);
-//            this.vbox_login.setVisible(false);
-//            this.removeEnterEvent();
-//        });
-//        startHibernate.whenCancelled(() -> {
-//            System.out.println("ERROR");
-//        });
-//        startHibernate.whenFailed(() -> {
-//            System.out.println("CANCELLED");
-//        });
-//        startHibernate.whenSuccess(() -> {
-////            this.vbox_loading.setVisible(false);
-////            this.vbox_login.setVisible(true);
-//            this.autoCreateSystemVariables();
-//            Animate.fade(vbox_loading, 150, () -> {
-//                this.vbox_loading.setVisible(false);
-//                this.vbox_login.setVisible(true);
-//            }, vbox_login);
-//        });
-//        startHibernate.whenFinished(() -> {
-//            this.addEnterEvent();
-//            if (Mono.orm().getSessionFactory() == null) {
-//                // no connection
-//                Mono.fx().alert().createError().setTitle("No Connection")
-//                        .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
-//                        .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
-//                        .showAndWait();
-////                MainApplication.die(0);
-//            }
-//        });
-//
-//        startHibernate.transact();
+        startHibernate.transact();
     }
 
     //--------------------------------------------------------------------------

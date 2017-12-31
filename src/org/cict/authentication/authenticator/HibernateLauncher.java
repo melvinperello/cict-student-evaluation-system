@@ -37,7 +37,13 @@ public class HibernateLauncher extends Transaction {
 
     @Override
     protected boolean transaction() {
-        Database.connect();
+        try {
+            Database.connect();
+        } catch (Exception e) {
+            //
+            System.err.println("HIBERNATE LAUNCHER FAILED TO TEST CONNECTION");
+        }
+
         Platform.runLater(() -> {
             GenericLoadingShow.instance();
         });
