@@ -23,6 +23,7 @@
  */
 package org.cict;
 
+import app.lazy.models.BackupScheduleMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
@@ -278,4 +279,10 @@ public class PublicConstants {
     public static String getDATABASE_NAME() {
         return DATABASE_NAME;
     }
+    
+    //--------------------
+    // for auto backup purpose
+    public static String BACKUP_TIME = "";
+    
+    
 }

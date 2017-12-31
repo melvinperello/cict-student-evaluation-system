@@ -24,6 +24,8 @@
 package sys.org.cict.layout.home;
 
 import app.lazy.models.AccountFacultySessionMapping;
+import app.lazy.models.BackupScheduleMapping;
+import app.lazy.models.DB;
 import app.lazy.models.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -34,7 +36,14 @@ import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -438,12 +447,47 @@ public class SystemLogin extends MonoLauncher {
             }
         });
         ThreadMill.threads().KEEP_ALIVE_THREAD.start();
+        
+        /**
+         * get value for backup time
+         */
+        BackupScheduleMapping backupSched = Mono.orm().newSearch(Database.connect().backup_schedule())
+                .active(Order.desc(DB.backup_schedule().id)).first();
+        if(backupSched != null) {
+            PublicConstants.BACKUP_TIME = backupSched.getTime();
+        } else {
+            PublicConstants.BACKUP_TIME = "";
+        }
+        
+        /**
+         * create thread for backup watcher
+         */
+        ThreadMill.threads().BACKUP_WATCHER.setTask(()->{
+            DateFormat df = new SimpleDateFormat("HH:mm");
+            try {
+                Date backupTime = df.parse(PublicConstants.BACKUP_TIME);
+                Date current = new Date();
+                Date currentTime = df.parse(current.getHours() + ":" + current.getMinutes());
+                
+                System.out.println("BACKUP: " + df.format(backupTime));
+                System.out.println("CURRENT: " + df.format(currentTime));
+                System.out.println(new Date());
+
+                if(currentTime.after(backupTime) || currentTime.equals(backupTime)) {
+                    System.out.println("BACK UP HERE");
+                }
+            } catch (ParseException ex) {
+                Logger.getLogger(SystemLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        ThreadMill.threads().BACKUP_WATCHER.start();
+        
         /**
          * Show window.
          */
         showMainEvaluation();
     }
-
+    
     private void requestFocus(Node control) {
         Stage stage = Mono.fx().getParentStage(control);
         stage.requestFocus();

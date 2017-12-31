@@ -76,6 +76,8 @@ public class ThreadMill {
         this.KEEP_ALIVE_THREAD = new CronTimer("loginkeep-alive");
         this.KEEP_ALIVE_THREAD.setInterval(30000); // 30 secs
         // add more threads here
+        this.BACKUP_WATCHER = new CronTimer("BACKUP_WATCHER");
+        this.BACKUP_WATCHER.setInterval(2000); // 2 secs
     }
 
     /**
@@ -180,4 +182,9 @@ public class ThreadMill {
 //        }
 //        return student.getLast_name() + ", " + student.getFirst_name() + " " + (student.getMiddle_name()==null? "" : student.getMiddle_name());
 //    }
+    
+    /**
+     * thread for auto backup
+     */
+    public CronTimer BACKUP_WATCHER;
 }
