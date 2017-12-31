@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -104,43 +105,76 @@ public class SystemLogin extends MonoLauncher {
     }
 
     private void bootHibernate() {
-        HibernateLauncher startHibernate = Authenticator
-                .instance()
-                .createHibernateLauncher();
+//        HibernateLauncher startHibernate = Authenticator
+//                .instance()
+//                .createHibernateLauncher();
 
-        startHibernate.whenStarted(() -> {
-            this.vbox_loading.setVisible(true);
-            this.vbox_login.setVisible(false);
-            this.removeEnterEvent();
-        });
-        startHibernate.whenCancelled(() -> {
-            System.out.println("ERROR");
-        });
-        startHibernate.whenFailed(() -> {
-            System.out.println("CANCELLED");
-        });
-        startHibernate.whenSuccess(() -> {
-//            this.vbox_loading.setVisible(false);
-//            this.vbox_login.setVisible(true);
-            this.autoCreateSystemVariables();
-            Animate.fade(vbox_loading, 150, () -> {
-                this.vbox_loading.setVisible(false);
-                this.vbox_login.setVisible(true);
-            }, vbox_login);
-        });
-        startHibernate.whenFinished(() -> {
-            this.addEnterEvent();
+        this.vbox_loading.setVisible(true);
+        this.vbox_login.setVisible(false);
+        this.removeEnterEvent();
+        Thread revBootHibernate = new Thread(() -> {
+            // try connection
+            Database.connect();
+
+            // check connection
             if (Mono.orm().getSessionFactory() == null) {
                 // no connection
-                Mono.fx().alert().createError().setTitle("No Connection")
-                        .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
-                        .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
-                        .showAndWait();
+                Platform.runLater(() -> {
+                    Mono.fx().alert().createError().setTitle("No Connection")
+                            .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
+                            .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
+                            .showAndWait();
 //                MainApplication.die(0);
+                });
+                return;
             }
+
+            this.addEnterEvent();
+            this.autoCreateSystemVariables();
+
+            Platform.runLater(() -> {
+                Animate.fade(vbox_loading, 150, () -> {
+                    this.vbox_loading.setVisible(false);
+                    this.vbox_login.setVisible(true);
+                }, vbox_login);
+            });
+
         });
 
-        startHibernate.transact();
+        revBootHibernate.start();
+//        startHibernate.whenStarted(() -> {
+//            this.vbox_loading.setVisible(true);
+//            this.vbox_login.setVisible(false);
+//            this.removeEnterEvent();
+//        });
+//        startHibernate.whenCancelled(() -> {
+//            System.out.println("ERROR");
+//        });
+//        startHibernate.whenFailed(() -> {
+//            System.out.println("CANCELLED");
+//        });
+//        startHibernate.whenSuccess(() -> {
+////            this.vbox_loading.setVisible(false);
+////            this.vbox_login.setVisible(true);
+//            this.autoCreateSystemVariables();
+//            Animate.fade(vbox_loading, 150, () -> {
+//                this.vbox_loading.setVisible(false);
+//                this.vbox_login.setVisible(true);
+//            }, vbox_login);
+//        });
+//        startHibernate.whenFinished(() -> {
+//            this.addEnterEvent();
+//            if (Mono.orm().getSessionFactory() == null) {
+//                // no connection
+//                Mono.fx().alert().createError().setTitle("No Connection")
+//                        .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
+//                        .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
+//                        .showAndWait();
+////                MainApplication.die(0);
+//            }
+//        });
+//
+//        startHibernate.transact();
     }
 
     //--------------------------------------------------------------------------
@@ -299,11 +333,11 @@ public class SystemLogin extends MonoLauncher {
 //                            .setMessage(validateLogin.getAuthenticatorMessage())
 //                            .showAndWait();
                     showMessage("info", "Authentication Gateway", "Authentication Failed", validateLogin.getAuthenticatorMessage());
-                    if(!validateLogin.isAccountExisting()) {
+                    if (!validateLogin.isAccountExisting()) {
                         txt_username.setText("");
                         txt_password.setText("");
                         this.requestFocus(txt_username);
-                    } else if(validateLogin.isWrongPassword()) {
+                    } else if (validateLogin.isWrongPassword()) {
                         txt_password.setText("");
                         this.requestFocus(txt_password);
                     }
@@ -447,33 +481,33 @@ public class SystemLogin extends MonoLauncher {
             }
         });
         ThreadMill.threads().KEEP_ALIVE_THREAD.start();
-        
+
         /**
          * get value for backup time
          */
         BackupScheduleMapping backupSched = Mono.orm().newSearch(Database.connect().backup_schedule())
                 .active(Order.desc(DB.backup_schedule().id)).first();
-        if(backupSched != null) {
+        if (backupSched != null) {
             PublicConstants.BACKUP_TIME = backupSched.getTime();
         } else {
             PublicConstants.BACKUP_TIME = "";
         }
-        
+
         /**
          * create thread for backup watcher
          */
-        ThreadMill.threads().BACKUP_WATCHER.setTask(()->{
+        ThreadMill.threads().BACKUP_WATCHER.setTask(() -> {
             DateFormat df = new SimpleDateFormat("HH:mm");
             try {
                 Date backupTime = df.parse(PublicConstants.BACKUP_TIME);
                 Date current = new Date();
                 Date currentTime = df.parse(current.getHours() + ":" + current.getMinutes());
-                
+
                 System.out.println("BACKUP: " + df.format(backupTime));
                 System.out.println("CURRENT: " + df.format(currentTime));
                 System.out.println(new Date());
 
-                if(currentTime.after(backupTime) || currentTime.equals(backupTime)) {
+                if (currentTime.after(backupTime) || currentTime.equals(backupTime)) {
                     System.out.println("BACK UP HERE");
                 }
             } catch (ParseException ex) {
@@ -481,13 +515,13 @@ public class SystemLogin extends MonoLauncher {
             }
         });
         ThreadMill.threads().BACKUP_WATCHER.start();
-        
+
         /**
          * Show window.
          */
         showMainEvaluation();
     }
-    
+
     private void requestFocus(Node control) {
         Stage stage = Mono.fx().getParentStage(control);
         stage.requestFocus();
@@ -514,7 +548,7 @@ public class SystemLogin extends MonoLauncher {
         forgotFx.onDelayedStart();
         forgotStage.show();
     }
-    
+
     private void autoCreateSystemVariables() {
         PublicConstants.getSystemVar_BULSU_TEL();
         PublicConstants.getSystemVar_FTP_PASSWORD();
