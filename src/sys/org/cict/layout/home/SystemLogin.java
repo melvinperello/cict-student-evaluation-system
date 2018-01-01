@@ -36,6 +36,7 @@ import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
+import java.io.File;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,8 +51,12 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.bsu.cict.alerts.MessageBox;
+import org.bsu.cict.tools.BackUpAndRestore;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.PublicConstants;
@@ -61,6 +66,9 @@ import org.cict.authentication.authenticator.Authenticator;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
+import org.cict.reports.ReportsDirectory;
+import static org.cict.reports.result.PrintResult.SAVE_DIRECTORY;
+import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.access.Access;
@@ -475,6 +483,7 @@ public class SystemLogin extends MonoLauncher {
 
                 if(currentTime.after(backupTime) || currentTime.equals(backupTime)) {
                     System.out.println("BACK UP HERE");
+                    this.autoBackup();
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(SystemLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -486,6 +495,87 @@ public class SystemLogin extends MonoLauncher {
          * Show window.
          */
         showMainEvaluation();
+    }
+    
+    public final static String SAVE_DIRECTORY = "auto backup/";
+    private void autoBackup() {
+        int res = 1;
+        String title = "";
+        String path = null;
+        boolean isBackUp = false;
+        isBackUp = true;
+        
+        SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_yyyy");
+        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
+        
+        String doc = filename + ".monosync" + "_" + Mono.orm().getServerTime().getCalendar().getTimeInMillis();
+
+        String RESULT = SAVE_DIRECTORY + "/" + doc;
+
+        //------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------
+        /**
+         * Check if the report save directory is already existing and created if
+         * not this will try to create the needed directories.
+         */
+        boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
+
+        if (!isCreated) {
+            // some error message that the directory is not created
+            System.err.println("Directory is not created.");
+            return;
+        }
+        //------------------------------------------------------------------
+        //------------------------------------------------------------------
+
+        path = RESULT;
+        res = BackUpAndRestore.backup(
+                PublicConstants.getServerIP(),
+                PublicConstants.getDATABASE_USERNAME(),
+                PublicConstants.getDATABASE_PASSWORD(),
+                PublicConstants.getDATABASE_NAME(),
+                path);
+        title = "Automatic Back Up";
+         
+        if (res == 0) {
+            // success 
+            if (isBackUp) {
+                // when back up, double check if file size is not 0
+                // before concluding it is successful
+                boolean notSaved = true;
+                File fileBackUp = new File(path);
+                if (fileBackUp.exists()) {
+                    if ((fileBackUp.length() / 1024) == 0) {
+                    } else {
+                        notSaved = false;
+                    }
+                }
+                if (notSaved) {
+                    Notifications.create().title(title)
+                            .text("Please try again later.")
+                            .showWarning();
+                    return;
+                }
+            }
+            Mono.fx().alert().createInfo()
+                    .setHeader(title)
+                    .setMessage("Successful Transaction!").show();
+        } else if (res == 1) {
+            // path error
+            Mono.fx().alert().createError()
+                    .setHeader(title)
+                    .setMessage("Something is wrong with the path.").show();
+        } else if (res == 2) {
+            /**
+             * This may failed when there is a space in the directory.
+             */
+            MessageBox.showError("Failed", "Failed to execute operation. This may be caused by the Operating System requiring administrative rights, or there is an invalid path character.");
+        } else {
+            // unknown error
+            Mono.fx().alert().createError()
+                    .setHeader(title)
+                    .setMessage("Unknown error occured. Please try again later.").show();
+        }
     }
     
     private void requestFocus(Node control) {
