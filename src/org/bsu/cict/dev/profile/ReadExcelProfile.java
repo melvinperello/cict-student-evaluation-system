@@ -1,5 +1,6 @@
 package org.bsu.cict.dev.profile;
 
+import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
 import app.lazy.models.StudentProfileMapping;
@@ -10,8 +11,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -25,6 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.Session;
 
 /**
  * A Class to import student information from the spreadsheet.
@@ -56,6 +61,7 @@ public class ReadExcelProfile {
      * Reserved column for inserting remarks.
      */
     private final static int COL_REMARKS = 13;
+    private final static int COL_DB = 14;
 
     /**
      * Excel Headers.
@@ -76,6 +82,40 @@ public class ReadExcelProfile {
         "GUARDIAN ADDRESS"
     };
 
+    @Inject
+    private Integer verifiedBy;
+
+    // results
+    private boolean stamped = false;
+    private String stampedLocation;
+
+    /**
+     * If the clone was successfully Saved.
+     *
+     * @return
+     */
+    public boolean isStamped() {
+        return stamped;
+    }
+
+    /**
+     * Location of the clone.
+     *
+     * @return
+     */
+    public String getStampedLocation() {
+        return stampedLocation;
+    }
+
+    /**
+     * Faculty That Logged in to verify.
+     *
+     * @param verifiedBy
+     */
+    public void setVerifiedBy(Integer verifiedBy) {
+        this.verifiedBy = verifiedBy;
+    }
+
     /**
      * Default Constructor.
      */
@@ -84,20 +124,30 @@ public class ReadExcelProfile {
     }
 
     public static void main(String[] args) {
+        Database.connect();
         ReadExcelProfile reader = new ReadExcelProfile();
+        reader.setVerifiedBy(null);
         try {
             reader.readExcelFile("C:\\Users\\Jhon Melvin\\Desktop\\4A-G1.xlsx");
         } catch (IOException e) {
-            // cant open
+            // cant open or save
             e.printStackTrace();
         } catch (ReadExcelProfile.InvalidSpreadSheetHeaderException he) {
             // invalid header
             he.printStackTrace();
         }
+        System.out.println(reader.isStamped());
+        System.out.println(reader.getStampedLocation());
 
     }
 
+    /**
+     * Excel Path.
+     */
+    private String savePath;
+
     public void readExcelFile(String path) throws InvalidSpreadSheetHeaderException, IOException {
+        this.savePath = path;
         this.open(path);
         this.selectFirstSheet();
         this.checkHeaders();
@@ -115,6 +165,7 @@ public class ReadExcelProfile {
      * @throws IOException
      */
     private void open(String filePath) throws IOException {
+        this.stamped = false;
         FileInputStream file = null;
         try {
             // open the file
@@ -140,13 +191,29 @@ public class ReadExcelProfile {
      * @param filePath
      * @throws IOException
      */
-    public void save() throws IOException {
-        // create a file
-        FileOutputStream saveFile = new FileOutputStream("C:\\Users\\Jhon Melvin\\Desktop\\file.xlsx");
-        // write this excel instance to file.
-        this.spreadSheet.write(saveFile);
-        // close the file
-        saveFile.close();
+    public void save() {
+        String saveFilePath = this.savePath.substring(0, this.savePath.length() - (5));
+        saveFilePath += ("_STAMP_" + String.valueOf(Calendar.getInstance().getTimeInMillis()) + ".xlsx");
+        FileOutputStream saveFile = null;
+        try {
+            // create a file
+            saveFile = new FileOutputStream(saveFilePath);
+            // write this excel instance to file.
+            this.spreadSheet.write(saveFile);
+            // close the file
+            this.stamped = true;
+            this.stampedLocation = saveFilePath;
+        } catch (IOException ee) {
+            this.stamped = false;
+        } finally {
+            try {
+                if (saveFile != null) {
+                    saveFile.close();
+                }
+            } catch (IOException e) {
+                // ignore closing exception
+            }
+        }
     }
 
     /**
@@ -240,6 +307,8 @@ public class ReadExcelProfile {
     private final static int[] RGB_ERROR = new int[]{247, 108, 131};
     private final static int[] RGB_FINE = new int[]{97, 221, 187};
 
+    private final static int[] RGB_UPDATE = new int[]{116, 177, 244};
+
     /**
      * Read the contents of the excel file.
      */
@@ -255,7 +324,9 @@ public class ReadExcelProfile {
             for (int col = 0; col <= LAST_COLUMN; col++) {
                 XSSFCell currentCol = currentRow.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                 if (currentCol == null) {
+
                     createRemarksColumn(currentRow, "Contains Blank Field", RGB_ERROR);
+                    createDBColumn(currentRow, "SKIPPED", RGB_ERROR);
                     continue rowLoop; // skip this blank cell
                 }
                 String cellValue = this.getCellStringValue(currentCol);
@@ -265,6 +336,7 @@ public class ReadExcelProfile {
                 if (remarks.equalsIgnoreCase("OK")) {
                     createRemarksColumn(currentRow, "VALIDATED", RGB_FINE);
                 } else {
+                    createDBColumn(currentRow, "SKIPPED", RGB_ERROR);
                     createRemarksColumn(currentRow, remarks, RGB_ERROR);
                     continue rowLoop;
                 }
@@ -274,17 +346,36 @@ public class ReadExcelProfile {
             //------------------------------------------------------------------
             // Insert To Database
             //------------------------------------------------------------------
-            this.insertToDb();
+            String res = this.insertToDb();
+            if (res.equalsIgnoreCase("INSERTED")) {
+                createDBColumn(currentRow, res, RGB_FINE);
+            } else if (res.equalsIgnoreCase("UPDATED")) {
+                createDBColumn(currentRow, res, RGB_UPDATE);
+            } else {
+                createDBColumn(currentRow, res, RGB_ERROR);
+            }
         }
     }
 
     /**
      * Insert Current Row to Database.
      */
-    public void insertToDb() {
+    public String insertToDb() {
         final Date sysDate = Mono.orm().getServerTime().getDateWithFormat();
 
-        StudentMapping studentMap = new StudentMapping();
+        boolean exist = true;
+        // check if Existing
+        StudentMapping studentMap = Mono.orm()
+                .newSearch(Database.connect().student())
+                .eq(DB.student().id, this.studentProfile.getStudentNumber())
+                .execute()
+                .first();
+
+        if (studentMap == null) {
+            studentMap = new StudentMapping();
+            exist = false;
+        }
+
         studentMap.setId(this.studentProfile.getStudentNumber());
         studentMap.setLast_name(this.studentProfile.getLastName());
         studentMap.setFirst_name(this.studentProfile.getFirstName());
@@ -294,14 +385,100 @@ public class ReadExcelProfile {
         studentMap.set_group(Integer.valueOf(this.studentProfile.getGroup()));
         //----------------------------------------------------------------------
         studentMap.setHas_profile(1);
-        studentMap.setGender(null);
+        // studentMap.setGender(null);
         studentMap.setCreated_by("PROFILE UPLOAD");
         studentMap.setCreated_date(sysDate);
         studentMap.setUpdated_by("PROFILE UPLOAD");
         studentMap.setUpdated_date(sysDate);
+        //
+        studentMap.setVerfied_by(this.verifiedBy);
+        studentMap.setVerification_date(sysDate);
+        studentMap.setVerified(1);
         //----------------------------------------------------------------------
         StudentProfileMapping studentProfile = new StudentProfileMapping();
+        studentProfile.setStudent_address(this.studentProfile.getAddress());
+        studentProfile.setMobile(this.studentProfile.getMobile());
+        studentProfile.setEmail(this.studentProfile.getEmail());
+        studentProfile.setIce_name(this.studentProfile.getGuardian());
+        studentProfile.setIce_contact(this.studentProfile.getGuardianMobile());
+        studentProfile.setIce_address(this.studentProfile.getGuardianAddress());
+        //
+        studentProfile.setProfile_picture("NONE");
+        studentProfile.setZipcode("3000");
+        studentProfile.setFloor_assignment(null);
+        //----------------------------------------------------------------------
+        Session localSession = null;
+        org.hibernate.Transaction dataTx = null;
+        try {
+            localSession = Mono.orm().openSession();
+            dataTx = localSession.beginTransaction();
+        } catch (Exception e) {
+            // call fail
+            return "Database Failure";
+        }
 
+        //----------------------------------------------------------------------
+        if (exist) {
+            Boolean updateRes = Database.connect().student().transactionalSingleUpdate(localSession, studentMap);
+            // deactivate all profile
+            if (!updateRes) {
+                // FAIL CALL
+                dataTx.rollback();
+                return "Update Failed";
+            }
+
+            ArrayList<StudentProfileMapping> activeProfile = Mono.orm()
+                    .newSearch(Database.connect().student_profile())
+                    .eq(DB.student_profile().STUDENT_id, studentMap.getCict_id())
+                    .active()
+                    .all();
+
+            boolean existProfileRes = true;
+            if (activeProfile != null) {
+                for (StudentProfileMapping existProfile : activeProfile) {
+                    existProfile.setActive(0);
+                    Boolean res = Database.connect().student().transactionalSingleUpdate(localSession, existProfile);
+                    if (!res) {
+                        existProfileRes = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!existProfileRes) {
+                // call fail
+                dataTx.rollback();
+                return "Update Failed";
+            }
+            //------------------------------------------------------------------
+            studentProfile.setSTUDENT_id(studentMap.getCict_id());
+            int profileRes = Database.connect().student_profile().transactionalInsert(localSession, studentProfile);
+            if (profileRes <= 0) {
+                // call fail
+                dataTx.rollback();
+                return "Update Failed";
+            }
+
+            dataTx.commit();
+            return "UPDATED";
+        }
+
+        int insertRes = Database.connect().student().transactionalInsert(localSession, studentMap);
+        if (insertRes <= 0) {
+            // call fail
+            dataTx.rollback();
+            return "Insert Failed";
+        }
+        studentProfile.setSTUDENT_id(insertRes);
+        int profileRes = Database.connect().student_profile().transactionalInsert(localSession, studentProfile);
+        if (profileRes <= 0) {
+            // call fail
+            dataTx.rollback();
+            return "Insert Failed";
+        }
+
+        dataTx.commit();
+        return "INSERTED";
     }
 
     /**
@@ -313,6 +490,12 @@ public class ReadExcelProfile {
      */
     private void createRemarksColumn(XSSFRow currentRow, String remarks, int[] color) {
         XSSFCell remarksCell = currentRow.createCell(COL_REMARKS);
+        remarksCell.setCellValue(remarks);
+        this.setCellColor(remarksCell, color);
+    }
+
+    private void createDBColumn(XSSFRow currentRow, String remarks, int[] color) {
+        XSSFCell remarksCell = currentRow.createCell(COL_DB);
         remarksCell.setCellValue(remarks);
         this.setCellColor(remarksCell, color);
     }
@@ -631,7 +814,7 @@ public class ReadExcelProfile {
         }
 
         public void setStudentNumber(String studentNumber) {
-            this.studentNumber = charLimit(studentNumber, 50);
+            this.studentNumber = charLimit(studentNumber, 50).toUpperCase(Locale.ENGLISH);
         }
 
         public String getLastName() {
@@ -639,7 +822,7 @@ public class ReadExcelProfile {
         }
 
         public void setLastName(String lastName) {
-            this.lastName = charLimit(lastName, 100);
+            this.lastName = charLimit(lastName, 100).toUpperCase(Locale.ENGLISH);
         }
 
         public String getFirstName() {
@@ -647,7 +830,7 @@ public class ReadExcelProfile {
         }
 
         public void setFirstName(String firstName) {
-            this.firstName = charLimit(firstName, 100);
+            this.firstName = charLimit(firstName, 100).toUpperCase(Locale.ENGLISH);
         }
 
         public String getMiddleName() {
@@ -655,7 +838,7 @@ public class ReadExcelProfile {
         }
 
         public void setMiddleName(String middleName) {
-            this.middleName = charLimit(middleName, 100);
+            this.middleName = charLimit(middleName, 100).toUpperCase(Locale.ENGLISH);
         }
 
         public String getYear() {
@@ -671,7 +854,7 @@ public class ReadExcelProfile {
         }
 
         public void setSection(String section) {
-            this.section = section;
+            this.section = section.toUpperCase(Locale.ENGLISH);
         }
 
         public String getGroup() {
@@ -687,7 +870,7 @@ public class ReadExcelProfile {
         }
 
         public void setAddress(String address) {
-            this.address = charLimit(address, 300);
+            this.address = charLimit(address, 300).toUpperCase(Locale.ENGLISH);
         }
 
         public String getMobile() {
@@ -711,7 +894,7 @@ public class ReadExcelProfile {
         }
 
         public void setGuardian(String guardian) {
-            this.guardian = charLimit(guardian, 100);
+            this.guardian = charLimit(guardian, 100).toUpperCase(Locale.ENGLISH);
         }
 
         public String getGuardianMobile() {
@@ -727,7 +910,7 @@ public class ReadExcelProfile {
         }
 
         public void setGuardianAddress(String guardianAddress) {
-            this.guardianAddress = charLimit(guardianAddress, 300);
+            this.guardianAddress = charLimit(guardianAddress, 300).toUpperCase(Locale.ENGLISH);
         }
 
     } // end of profile class
