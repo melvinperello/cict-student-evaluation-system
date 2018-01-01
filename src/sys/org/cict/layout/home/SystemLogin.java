@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -112,6 +113,41 @@ public class SystemLogin extends MonoLauncher {
     }
 
     private void bootHibernate() {
+
+//        this.vbox_loading.setVisible(true);
+//        this.vbox_login.setVisible(false);
+//        this.removeEnterEvent();
+//        Thread revBootHibernate = new Thread(() -> {
+//            // try connection
+//            Database.connect();
+//
+//            // check connection
+//            if (Mono.orm().getSessionFactory() == null) {
+//                // no connection
+//                Platform.runLater(() -> {
+//                    Mono.fx().alert().createError().setTitle("No Connection")
+//                            .setHeader("Server " + PublicConstants.getServerIP() + " Unreachable")
+//                            .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
+//                            .showAndWait();
+////                MainApplication.die(0);
+//                });
+//                return;
+//            }
+//
+//            this.addEnterEvent();
+//            this.autoCreateSystemVariables();
+//
+//            Platform.runLater(() -> {
+//                Animate.fade(vbox_loading, 150, () -> {
+//                    this.vbox_loading.setVisible(false);
+//                    this.vbox_login.setVisible(true);
+//                }, vbox_login);
+//            });
+//
+//        });
+//
+//        revBootHibernate.start();
+//------------------------------------------------------------------------------    
         HibernateLauncher startHibernate = Authenticator
                 .instance()
                 .createHibernateLauncher();
@@ -130,11 +166,7 @@ public class SystemLogin extends MonoLauncher {
         startHibernate.whenSuccess(() -> {
 //            this.vbox_loading.setVisible(false);
 //            this.vbox_login.setVisible(true);
-            this.autoCreateSystemVariables();
-            Animate.fade(vbox_loading, 150, () -> {
-                this.vbox_loading.setVisible(false);
-                this.vbox_login.setVisible(true);
-            }, vbox_login);
+
         });
         startHibernate.whenFinished(() -> {
             this.addEnterEvent();
@@ -145,7 +177,14 @@ public class SystemLogin extends MonoLauncher {
                         .setMessage("Please check your connection then try again or change your server, just click Server's IP.")
                         .showAndWait();
 //                MainApplication.die(0);
+            } else {
+                Animate.fade(vbox_loading, 150, () -> {
+                    this.vbox_loading.setVisible(false);
+                    this.vbox_login.setVisible(true);
+                }, vbox_login);
+                this.autoCreateSystemVariables();
             }
+
         });
 
         startHibernate.transact();
@@ -307,11 +346,11 @@ public class SystemLogin extends MonoLauncher {
 //                            .setMessage(validateLogin.getAuthenticatorMessage())
 //                            .showAndWait();
                     showMessage("info", "Authentication Gateway", "Authentication Failed", validateLogin.getAuthenticatorMessage());
-                    if(!validateLogin.isAccountExisting()) {
+                    if (!validateLogin.isAccountExisting()) {
                         txt_username.setText("");
                         txt_password.setText("");
                         this.requestFocus(txt_username);
-                    } else if(validateLogin.isWrongPassword()) {
+                    } else if (validateLogin.isWrongPassword()) {
                         txt_password.setText("");
                         this.requestFocus(txt_password);
                     }
@@ -455,127 +494,45 @@ public class SystemLogin extends MonoLauncher {
             }
         });
         ThreadMill.threads().KEEP_ALIVE_THREAD.start();
-        
+
         /**
          * get value for backup time
          */
         BackupScheduleMapping backupSched = Mono.orm().newSearch(Database.connect().backup_schedule())
                 .active(Order.desc(DB.backup_schedule().id)).first();
-        if(backupSched != null) {
+        if (backupSched != null) {
             PublicConstants.BACKUP_TIME = backupSched.getTime();
         } else {
             PublicConstants.BACKUP_TIME = "";
         }
-        
+
         /**
          * create thread for backup watcher
          */
-        ThreadMill.threads().BACKUP_WATCHER.setTask(()->{
+        ThreadMill.threads().BACKUP_WATCHER.setTask(() -> {
             DateFormat df = new SimpleDateFormat("HH:mm");
             try {
                 Date backupTime = df.parse(PublicConstants.BACKUP_TIME);
                 Date current = new Date();
                 Date currentTime = df.parse(current.getHours() + ":" + current.getMinutes());
-                
+
                 System.out.println("BACKUP: " + df.format(backupTime));
                 System.out.println("CURRENT: " + df.format(currentTime));
                 System.out.println(new Date());
 
-                if(currentTime.after(backupTime) || currentTime.equals(backupTime)) {
+                if (currentTime.after(backupTime) || currentTime.equals(backupTime)) {
                     System.out.println("BACK UP HERE");
-                    this.autoBackup();
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(SystemLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         ThreadMill.threads().BACKUP_WATCHER.start();
-        
+
         /**
          * Show window.
          */
         showMainEvaluation();
-    }
-    
-    public final static String SAVE_DIRECTORY = "auto backup/";
-    private void autoBackup() {
-        int res = 1;
-        String title = "";
-        String path = null;
-        boolean isBackUp = false;
-        isBackUp = true;
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_yyyy");
-        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
-        
-        String doc = filename + ".monosync" + "_" + Mono.orm().getServerTime().getCalendar().getTimeInMillis();
-
-        String RESULT = SAVE_DIRECTORY + "/" + doc;
-
-        //------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------
-        /**
-         * Check if the report save directory is already existing and created if
-         * not this will try to create the needed directories.
-         */
-        boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
-
-        if (!isCreated) {
-            // some error message that the directory is not created
-            System.err.println("Directory is not created.");
-            return;
-        }
-        //------------------------------------------------------------------
-        //------------------------------------------------------------------
-
-        path = RESULT;
-        res = BackUpAndRestore.backup(
-                PublicConstants.getServerIP(),
-                PublicConstants.getDATABASE_USERNAME(),
-                PublicConstants.getDATABASE_PASSWORD(),
-                PublicConstants.getDATABASE_NAME(),
-                path);
-        title = "Automatic Back Up";
-         
-        if (res == 0) {
-            // success 
-            if (isBackUp) {
-                // when back up, double check if file size is not 0
-                // before concluding it is successful
-                boolean notSaved = true;
-                File fileBackUp = new File(path);
-                if (fileBackUp.exists()) {
-                    if ((fileBackUp.length() / 1024) == 0) {
-                    } else {
-                        notSaved = false;
-                    }
-                }
-                if (notSaved) {
-                    Notifications.create().title(title)
-                            .text("Please try again later.")
-                            .showWarning();
-                    return;
-                }
-            }
-            Mono.fx().alert().createInfo()
-                    .setHeader(title)
-                    .setMessage("Successful Transaction!").show();
-        } else if (res == 1) {
-            // path error
-            Mono.fx().alert().createError()
-                    .setHeader(title)
-                    .setMessage("Something is wrong with the path.").show();
-        } else if (res == 2) {
-            /**
-             * This may failed when there is a space in the directory.
-             */
-            MessageBox.showError("Failed", "Failed to execute operation. This may be caused by the Operating System requiring administrative rights, or there is an invalid path character.");
-        } else {
-            // unknown error
-            Mono.fx().alert().createError()
-                    .setHeader(title)
-                    .setMessage("Unknown error occured. Please try again later.").show();
-        }
     }
     
     private void requestFocus(Node control) {
@@ -604,7 +561,7 @@ public class SystemLogin extends MonoLauncher {
         forgotFx.onDelayedStart();
         forgotStage.show();
     }
-    
+
     private void autoCreateSystemVariables() {
         PublicConstants.getSystemVar_BULSU_TEL();
         PublicConstants.getSystemVar_FTP_PASSWORD();
