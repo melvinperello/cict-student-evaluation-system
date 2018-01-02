@@ -25,6 +25,7 @@ package org.cict.reports;
 
 import app.lazy.models.AcademicProgramMapping;
 import app.lazy.models.AcademicTermMapping;
+import app.lazy.models.BackupLogsMapping;
 import app.lazy.models.CurriculumMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
@@ -228,6 +229,37 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     
     @FXML
     private VBox vbox_backup_logs_main;
+    
+    @FXML
+    private ComboBox<String> cmb_from_backup;
+    
+    @FXML
+    private ComboBox<String> cmb_to_backup;
+            
+    @FXML
+    private ComboBox<String> cmb_backup_faculty_search;
+            
+    @FXML
+    private JFXTextField txt_faculty_search_backup;
+            
+    @FXML
+    private StackPane stack_backup;
+    
+    @FXML
+    private ComboBox<String> cmb_mode_backup;
+            
+    @FXML
+    private JFXButton btn_print_backup;
+    
+    @FXML
+    private JFXButton btn_filter_backup;
+    
+    @FXML
+    private Label lbl_result_backup; 
+    
+    @FXML
+    private VBox vbox_backup_table;
+            
             
     private LoaderView loaderView;
     private FailView failView;
@@ -240,6 +272,11 @@ public class ReportsMain extends SceneFX implements ControllerFX {
     private LoaderView loaderView3;
     private FailView failView3;
     private EmptyView emptyView3;
+    
+    private LoaderView loaderView4;
+    private FailView failView4;
+    private EmptyView emptyView4;
+    
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
@@ -255,6 +292,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         this.loaderView3 = new LoaderView(stack_print_logs);
         this.failView3 = new FailView(stack_print_logs);
         this.emptyView3 = new EmptyView(stack_print_logs);
+        
+        this.loaderView4 = new LoaderView(stack_backup);
+        this.failView4 = new FailView(stack_backup);
+        this.emptyView4 = new EmptyView(stack_backup);
         
         cmb_sort_status_eval.getItems().clear();
         cmb_sort_status_eval.getItems().add("Accepted");
@@ -305,6 +346,17 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         cmb_module.getItems().add("Faculty");
         cmb_module.getItems().add("Access Controls");
         cmb_module.getSelectionModel().selectFirst();
+        
+        cmb_backup_faculty_search.getItems().clear();
+        cmb_backup_faculty_search.getItems().add("Name");
+        cmb_backup_faculty_search.getItems().add("BulSU ID");
+        cmb_backup_faculty_search.getSelectionModel().selectFirst();
+        
+        cmb_mode_backup.getItems().clear();
+        cmb_mode_backup.getItems().add("Automatic");
+        cmb_mode_backup.getItems().add("Manual");
+        cmb_mode_backup.getSelectionModel().selectFirst();
+        
     }
 
     @Override
@@ -365,18 +417,15 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             this.changeView(vbox_print_logs_main);
         });
         
-        super.addClickEvent(btn_filter_print_logs, ()->{
-            cmbChanged = false;
-            btn_print_print_logs.setDisable(false);
-            this.onSearchFaculty(txt_faculty_search_print_logs.getText(), cmb_print_logs_faculty_search_vis1.getSelectionModel().getSelectedItem());
-        });
-        
         this.printLogsEvents();
         
         
         super.addClickEvent(btn_backup_logs, ()->{
+            this.setViewInBackupLogs();
             this.changeView(vbox_backup_logs_main);
         });
+        
+        this.backupLogsEvents();
     }
     
     private ArrayList<String> dateList = new ArrayList<>();
@@ -707,7 +756,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         }
     }
     
-    private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", PRES_LIST = "President's Lister", DEANS_LIST = "Dean's Lister", PRINT_LOGS = "Print Logs";
+    private String EVALUATION = "EVALUATION", ADD_CHANGE = "ADDING & CHANGING", PRES_LIST = "President's Lister", DEANS_LIST = "Dean's Lister", PRINT_LOGS = "Print Logs", BACKUP_LOGS = "Backup Logs";
     private ArrayList<EvaluationMapping> results;
     private void fetchResult(JFXButton button, ArrayList<FacultyMapping> facultyRes) {
         System.out.println(MODE);
@@ -1046,6 +1095,10 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         this.loaderView3.detach();
         this.failView3.detach();
         this.emptyView3.detach();
+        
+        this.loaderView4.detach();
+        this.failView4.detach();
+        this.emptyView4.detach();
     }
     
     private void changeView(Node node) {
@@ -1367,6 +1420,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             }
             if(MODE.equalsIgnoreCase(PRINT_LOGS)) {
                 this.fetchPrintLogsTable(facultyResults);
+            } else if(MODE.equalsIgnoreCase(BACKUP_LOGS)) {
+                this.fetchBackupLogsTable(facultyResults);
             } else {
                 this.fetchResult(MODE.equalsIgnoreCase(EVALUATION)? btn_evaluation : btn_adding_changing, facultyResults);
             }
@@ -1623,6 +1678,13 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_print_print_logs, ()->{
             this.printPrintLogsResult();
         });
+        
+        super.addClickEvent(btn_filter_print_logs, ()->{
+            cmbChanged = false;
+            btn_print_print_logs.setDisable(false);
+            this.onSearchFaculty(txt_faculty_search_print_logs.getText(), cmb_print_logs_faculty_search_vis1.getSelectionModel().getSelectedItem());
+        });
+        
     }
     
     
@@ -1722,6 +1784,352 @@ public class ReportsMain extends SceneFX implements ControllerFX {
         });
         print.whenFinished(() -> {
             btn_print_print_logs.setDisable(false);
+            super.cursorDefault();
+        });
+        //----------------------------------------------------------------------
+        if(ReportsUtility.savePrintLogs(null, title.toUpperCase(), "REPORTS", "INITIAL")) {
+            print.transact();
+        } else {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        }
+    }
+    
+    
+    //---------------------------------------------------------------
+    // BACKUP LOGS
+    //-------------------------------------
+    private ArrayList<BackupLogsMapping> backupLogsView = new ArrayList<>();
+    private void setViewInBackupLogs() {
+        MODE = BACKUP_LOGS;
+        SimpleTask setter = new SimpleTask("set_backup_logs_view");
+        setter.setTask(()->{
+            BackupLogsMapping start = Mono.orm().newSearch(Database.connect().backup_logs())
+                    .active(Order.asc(DB.backup_logs().id)).first();
+            BackupLogsMapping end = Mono.orm().newSearch(Database.connect().backup_logs())
+                    .active(Order.desc(DB.backup_logs().id)).first();
+            
+            dateStorage.clear();
+            dateList.clear();
+            List<Date> dates = new ArrayList<Date>();
+            try {
+                if(end==null && start==null) {
+                    Mono.fx().thread().wrap(()->{
+                        cmb_from_backup.setDisable(true);
+                        cmb_to_backup.setDisable(true);
+                    });
+                    return;
+                }
+                Date endDate = formatter_plain.parse(end.getTime_executed().toString());//DateUtils.addDays(formatter_plain.parse(end.getEvaluation_date().toString()), 1);
+                Date startDate = formatter_plain.parse(start.getTime_executed().toString());
+
+                long interval = 24*1000 * 60 * 60; // 1 hour in millis
+                long endTime = endDate.getTime(); // create your endtime here, possibly using Calendar or Date
+                long curTime = startDate.getTime();
+                while (curTime <= endTime) {
+                    dates.add(new Date(curTime));
+                    curTime += interval;
+                }
+
+                for(int i=0;i<dates.size();i++){
+                    Date lDate = dates.get(i);
+                    String ds = formatter_display.format(lDate); 
+                    dateList.add(ds);
+                    HashMap<String,Date> nameDate = new HashMap<>();
+                    nameDate.put(ds, dates.get(i));
+                    dateStorage.add(nameDate);
+                }
+
+                Mono.fx().thread().wrap(()->{
+                    cmb_from_backup.getItems().clear();
+                    cmb_to_backup.getItems().clear();
+
+                    cmb_from_backup.getItems().addAll(dateList); 
+                    cmb_to_backup.getItems().addAll(dateList);
+
+                    cmb_from_backup.getSelectionModel().selectFirst();
+                    cmb_to_backup.getSelectionModel().selectLast();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        setter.whenStarted(()->{
+            this.detachAll();
+            this.loaderView3.setMessage("Loading Required Data");
+            this.loaderView3.attach();
+        });
+        setter.whenFailed(()->{});
+        setter.whenSuccess(()->{
+            this.setComboBoxLimit(cmb_from_backup, cmb_to_backup, 0);
+            this.onSearchFaculty(txt_faculty_search_backup.getText(), cmb_backup_faculty_search.getSelectionModel().getSelectedItem());
+        });
+        setter.whenFinished(()->{
+            this.detachAll();
+        });
+        setter.start();
+    }
+    
+    private void backupLogsEvents() {
+        cmb_from_backup.valueProperty().addListener((a)->{
+            cmbChanged = true;
+        });
+        cmb_mode_backup.valueProperty().addListener((a)->{
+            cmbChanged = true;
+        });
+        cmb_to_backup.valueProperty().addListener((a)->{
+            cmbChanged = true;
+        });
+        super.addClickEvent(btn_print_backup, ()->{
+            this.printBackupLogsResult();
+        });
+        
+        super.addClickEvent(btn_filter_backup, ()->{
+            cmbChanged = false;
+            btn_print_backup.setDisable(false);
+            this.onSearchFaculty(txt_faculty_search_backup.getText(), cmb_backup_faculty_search.getSelectionModel().getSelectedItem());
+        });
+    }
+    
+    
+    private void fetchBackupLogsTable(ArrayList<FacultyMapping> facultyResults) {
+        if(cmb_from_backup.getItems().isEmpty()) {
+            lbl_result_backup.setText("");
+            this.emptyView4.setMessage("No Result Found");
+            this.emptyView4.getButton().setVisible(false);
+            this.emptyView4.attach();
+            this.backupLogsView.clear();
+            return;
+        }
+        String from_str = cmb_from_backup.getSelectionModel().getSelectedItem();
+        String to_str = cmb_to_backup.getSelectionModel().getSelectedItem();
+        Date from = null, to = null;
+        int count = 0;
+        for(int i=0; i<dateList.size(); i++) {
+            String each = dateList.get(i);
+            if(from_str.equalsIgnoreCase(each)) {
+                from = dateStorage.get(i).get(from_str);
+                count++;
+            }
+            if(to_str.equalsIgnoreCase(each)) {
+                to = dateStorage.get(i).get(to_str);
+                to = DateUtils.addDays(to,1);
+                count++;
+            }
+            if(count==2) {
+                break;
+            }
+        }   
+        cmbChanged = false;
+        typePrint = cmb_mode_backup.getSelectionModel().getSelectedItem();
+        System.out.println("FROM: " + from + " | TO: " + to);
+        FetchBackupLog fetch = new FetchBackupLog();
+        fetch.facultyResult = facultyResults;
+        fetch.from = from;
+        fetch.to = to;
+        fetch.backup_mode = typePrint.equalsIgnoreCase("Automatic")? "AUTO" : typePrint.toUpperCase();
+
+        fetch.whenStarted(()->{
+            this.detachAll();
+            this.loaderView4.setMessage("Loading Backup Logs Result");
+            this.loaderView4.attach();
+        });
+        fetch.whenCancelled(()->{});
+        fetch.whenSuccess(()->{
+            this.detachAll();
+            if(fetch.result==null || fetch.result.isEmpty()) {
+                lbl_result_backup.setText("");
+                this.emptyView4.setMessage("No Result Found");
+                this.emptyView4.getButton().setVisible(false);
+                this.emptyView4.attach();
+                this.backupLogsView.clear();
+            } else {
+                //create table here
+                int res = fetch.result.size();
+                lbl_result_print_logs.setText("Total result"+(res>1? "s" : "")+" found: " + res);
+                
+                this.backupLogsView = fetch.result;
+                this.createBackupLogsTable(backupLogsView);
+            }
+        });
+        fetch.whenFinished(()->{});
+        fetch.transact();
+    }
+    
+    private void createBackupLogsTable(ArrayList<BackupLogsMapping> results) {
+        this.detachAll();
+//        previewAchievers = results;
+        SimpleTable logsTable = new SimpleTable();
+        logsTable.getChildren().clear();
+        for(BackupLogsMapping each: results) {
+            SimpleTableRow row = new SimpleTableRow();
+            row.setRowHeight(70.0);
+            ReportsRow rowFX = M.load(ReportsRow.class);
+            rowFX.getLbl_date().setText(dateFormat.format(each.getTime_executed()));
+            rowFX.getLbl_student_name().setText(WordUtils.capitalizeFully(FacultyUtility.getFacultyName(FacultyUtility.getFaculty(each.getExecuted_with()))));
+            rowFX.getLbl_faculty().setText(each.getExecuted_on());
+            rowFX.getLbl_type().setText(each.getBackup_result());
+            rowFX.getLbl_year_level().setText((each.getBackup_mode()));
+            
+//            row.getRowMetaData().put("MORE_INFO", each);
+
+            SimpleTableCell cellParent = new SimpleTableCell();
+            cellParent.setResizePriority(Priority.ALWAYS);
+            cellParent.setContent(rowFX.getApplicationRoot());
+
+            row.addCell(cellParent);
+            logsTable.addRow(row);
+        }
+        
+        SimpleTableView simpleTableView = new SimpleTableView();
+        simpleTableView.setTable(logsTable);
+        simpleTableView.setFixedWidth(true);
+
+        simpleTableView.setParentOnScene(vbox_backup_table);
+    }
+    
+    public class FetchBackupLog extends Transaction{
+        
+        public Date from;
+        public Date to;
+        public ArrayList<FacultyMapping> facultyResult;
+        public String backup_mode;
+        
+        private ArrayList<BackupLogsMapping> result;
+        @Override
+        protected boolean transaction() {
+            if(facultyResult==null || facultyResult.isEmpty()) {
+            } else {
+                result = new ArrayList<>();
+                for(FacultyMapping faculty : facultyResult) {
+                    ArrayList<BackupLogsMapping> temp_results = Mono.orm().newSearch(Database.connect().backup_logs())
+                            .between(DB.backup_logs().time_executed, from, to)
+                            .eq(DB.backup_logs().executed_with, faculty.getId())
+                            .eq(DB.backup_logs().backup_mode, backup_mode)
+                            .active(Order.asc(DB.backup_logs().time_executed)).all();
+                    
+                    if(temp_results!=null) {
+                        System.out.println("temp_results : " + temp_results.size());
+//                      result.addAll(temp_results);
+                        outLoop:
+                        for(BackupLogsMapping each : temp_results) {
+                            boolean exist = false;
+                            innerLoop:
+                            for(BackupLogsMapping res : result) {
+                                if(each.getId().equals(res.getId())) {
+                                    exist = true;
+                                    break innerLoop;
+                                }
+                            }
+                            if(!exist) {
+                                result.add(each);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+    }
+    
+    private void printBackupLogsResult() {
+        if(cmbChanged) {
+            int res =  Mono.fx().alert()
+                    .createConfirmation().setHeader("Not Yet Filtered")
+                    .setMessage("The result to be printed are not yet filtered with the given dates above. Do you still want to print?")
+                    .confirmYesNo();
+            if(res==-1)
+                return;
+        }
+        ArrayList<String[]> rowData = new ArrayList<>();
+        if(backupLogsView==null || backupLogsView.isEmpty()) {
+            Mono.fx().snackbar().showError(application_root, "No Result To Print");
+            btn_print_backup.setDisable(true);
+            return;
+        }
+        
+        String[] colNames = new String[]{"Date & Time Executed","User", "Terminal", "Mode", "Status"};
+        String[] colDescprtion = new String[] {"Date & time when the automatic backup take place.","Faculty who uses the system when the backup happened.", "Contains the IP address, Mac address and PC name.", "Either AUTO for automatic and MANUAL for manual mode backup.", "Result of the request for backup."};
+        //--------------
+        ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(this.getStage(), colNames, colDescprtion);
+        Document doc = (Document) colDetails.get(0);
+        if(doc==null) {
+            return;
+        }
+        HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
+        ArrayList<String> newColNames = new ArrayList<>();
+        for (int i = 0; i < customized.size(); i++) {
+            Object[] details = customized.get(i);
+            if(details != null) {
+                Boolean isChecked = (Boolean) details[0];
+                if(isChecked) {
+                    newColNames.add((String) details[1]);
+                }
+            }
+        }
+        //
+        
+        BackupLogsMapping ref = null;
+        for (int i = 0; i < this.backupLogsView.size(); i++) {
+            BackupLogsMapping result = backupLogsView.get(i);
+            ref = result;
+            String[] row = new String[]{(i+1)+".  "+  ReportsUtility.formatter_mm.format(result.getTime_executed()),
+                WordUtils.capitalizeFully((FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getExecuted_with())))), 
+                WordUtils.capitalizeFully(result.getExecuted_on()), 
+                WordUtils.capitalizeFully(result.getBackup_mode()), 
+                (result.getBackup_result())};
+            rowData.add(row);
+        }
+        
+        String title = "BACKUP LOGS - " + (this.typePrint.equalsIgnoreCase("AUTO")? "AUTOMATIC" : this.typePrint).toUpperCase();
+        PrintResult print = new PrintResult();
+        print.setDocumentFormat(doc, customized);
+        print.columnNames = newColNames;//colNames;
+        print.ROW_DETAILS = rowData;
+        String dateToday = formatter_filename.format(Mono.orm().getServerTime().getDateWithFormat());
+        print.fileName = title.toUpperCase() + "_" + dateToday;
+        String fr = cmb_from_eval_main.getSelectionModel().getSelectedItem();
+        String to = cmb_to_eval_main.getSelectionModel().getSelectedItem();
+        SimpleDateFormat month = new SimpleDateFormat("MMMMM");
+        AcademicTermMapping selected = cmb_term_eval.getSelectionModel().getSelectedItem();
+//        print.reportTitleIntro = selected.getSchool_year() + " " + selected.getSemester();
+        if(cmbChanged) {
+//            print.reportDescription += "";
+        } else if(fr==null || to==null || ref==null || ref.getTime_executed()==null) {
+            print.reportOtherDetail = "As of " + formatter_display.format(Mono.orm().getServerTime().getDateWithFormat());
+        } else if(fr.equalsIgnoreCase(to)) {
+            print.reportOtherDetail = ""+ formatter_display.format(ref.getTime_executed());
+         } else
+            print.reportOtherDetail = "From " + fr + " to " + to;
+        
+        print.reportTitleHeader = title;
+        print.whenStarted(() -> {
+            btn_print_backup.setDisable(true);
+            super.cursorWait();
+        });
+        print.whenCancelled(() -> {
+            Notifications.create()
+                    .title("Request Cancelled")
+                    .text("Sorry for the inconviniece.")
+                    .showWarning();
+        });
+        print.whenFailed(() -> {
+            Notifications.create()
+                    .title("Request Failed")
+                    .text("Something went wrong. Sorry for the inconviniece.")
+                    .showInformation();
+        });
+        print.whenSuccess(() -> {
+            btn_print_backup.setDisable(false);
+            Notifications.create()
+                    .title("Printing Results")
+                    .text("Please wait a moment.")
+                    .showInformation();
+        });
+        print.whenFinished(() -> {
+            btn_print_backup.setDisable(false);
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
