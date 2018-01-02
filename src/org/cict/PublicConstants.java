@@ -23,7 +23,7 @@
  */
 package org.cict;
 
-import app.lazy.models.BackupScheduleMapping;
+import app.lazy.models.BackupLogsMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
 import app.lazy.models.StudentMapping;
@@ -32,6 +32,7 @@ import artifacts.ConfigurationManager;
 import com.jhmvin.Mono;
 import com.jhmvin.orm.SQL;
 import com.melvin.java.properties.PropertyFile;
+import java.util.Date;
 import java.util.Properties;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.hibernate.criterion.Criterion;
@@ -284,5 +285,44 @@ public class PublicConstants {
     // for auto backup purpose
     public static String BACKUP_TIME = "";
     
+    
+    public static Integer addBackupLog(String mode, String result, Date date) {
+        BackupLogsMapping log = new BackupLogsMapping();
+        log.setActive(1);
+        log.setBackup_mode(mode);
+        log.setBackup_result(result);
+        log.setExecuted_on(getIP_address() + "@" + getMAC_address() + "@" + Mono.sys().getTerminal());
+        log.setExecuted_with(CollegeFaculty.instance().getFACULTY_ID());
+        log.setTime_executed(date);
+        return Database.connect().backup_logs().insert(log);
+    }
+    
+    public static String getIP_address() {
+        String[] ip_array = Mono.sys().getIP().split("%");
+        String ip_address = "";
+        for(String eachIP : ip_array) {
+            if(eachIP.isEmpty()) {
+            } else {
+                String[] mac_array = eachIP.split("@");
+                ip_address = mac_array[0];
+                break;
+            }
+        }
+        return ip_address;
+    }
+    
+    public static String getMAC_address() {
+        String[] ip_array = Mono.sys().getIP().split("%");
+        String mac_address = "";
+        for(String eachIP : ip_array) {
+            if(eachIP.isEmpty()) {
+            } else {
+                String[] mac_array = eachIP.split("@");
+                mac_address = mac_array[1];
+                break;
+            }
+        }
+        return mac_address;
+    }
     
 }

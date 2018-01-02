@@ -61,6 +61,8 @@ import org.bsu.cict.tools.BackUpAndRestore;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.PublicConstants;
+import static org.cict.PublicConstants.getIP_address;
+import static org.cict.PublicConstants.getMAC_address;
 import org.cict.ThreadMill;
 import org.cict.accountmanager.forgotpassword.SystemForgot;
 import org.cict.authentication.authenticator.Authenticator;
@@ -522,6 +524,7 @@ public class SystemLogin extends MonoLauncher {
                 
                 if (currentTime.after(backupTime) || currentTime.equals(backupTime)) {
                     System.out.println("BACK UP HERE");
+                    this.autoBackup();
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(SystemLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -534,6 +537,85 @@ public class SystemLogin extends MonoLauncher {
          */
         showMainEvaluation();
     }
+    
+    
+    public final static String SAVE_DIRECTORY = "reports/results";
+    private void autoBackup() {
+        int res = 1;
+        String title = "";
+        String path = null;
+        SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_yyyy_hh_mm_s_a");
+        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat() + "@" + PublicConstants.getIP_address() + "@" + PublicConstants.getMAC_address() + "@" + Mono.sys().getTerminal());
+
+
+        //------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------
+        /**
+         * Check if the report save directory is already existing and created if
+         * not this will try to create the needed directories.
+         */
+        boolean isCreated = ReportsDirectory.check(SAVE_DIRECTORY);
+
+        if (!isCreated) {
+            // some error message that the directory is not created
+            System.err.println("Directory is not created.");
+            return;
+        }
+        //------------------------------------------------------------------
+        //------------------------------------------------------------------
+
+        path = SAVE_DIRECTORY + "\\" + filename + ".monosync";
+        res = BackUpAndRestore.backup(
+                PublicConstants.getServerIP(),
+                PublicConstants.getDATABASE_USERNAME(),
+                PublicConstants.getDATABASE_PASSWORD(),
+                PublicConstants.getDATABASE_NAME(),
+                path);
+        title = "Back Up Database";
+        
+        if (res == 0) {
+//            when back up, double check if file size is not 0
+//            before concluding it is successful
+           boolean notSaved = true;
+           File fileBackUp = new File(path);
+           if (fileBackUp.exists()) {
+               if ((fileBackUp.length() / 1024) == 0) {
+               } else {
+                   notSaved = false;
+               }
+           }
+           if (notSaved) {
+               PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
+               Notifications.create().title(title)
+                       .text("Please try again later.")
+                       .showWarning();
+               return;
+           }
+            PublicConstants.addBackupLog("AUTO", "SUCCESS", new Date());
+            Mono.fx().alert().createInfo()
+                    .setHeader(title)
+                    .setMessage("Successful Transaction!").show();
+        } else if (res == 1) {
+            // path error
+            PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
+            Mono.fx().alert().createError()
+                    .setHeader(title)
+                    .setMessage("Something is wrong with the path.").show();
+        } else if (res == 2) {
+            /**
+             * This may failed when there is a space in the directory.
+             */
+            PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
+            MessageBox.showError("Failed", "Failed to execute operation. This may be caused by the Operating System requiring administrative rights, or there is an invalid path character.");
+        } else {
+            // unknown error
+            PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
+            Mono.fx().alert().createError()
+                    .setHeader(title)
+                    .setMessage("Unknown error occured. Please try again later.").show();
+        }
+    }
+   
     
     private void requestFocus(Node control) {
         Stage stage = Mono.fx().getParentStage(control);
