@@ -45,8 +45,12 @@ import com.jhmvin.orm.SQL;
 import com.jhmvin.orm.Searcher;
 import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -61,9 +65,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.lang3.text.WordUtils;
+import org.bsu.cict.alerts.MessageBox;
+import org.bsu.cict.dev.profile.ReadExcelProfile;
+import org.cict.GenericLoadingShow;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.reports.ReportsUtility;
 import org.cict.reports.result.PrintResult;
@@ -137,10 +146,13 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
 
     @FXML
     private JFXButton btn_new_student;
-            
+
     @FXML
     private JFXButton btn_new_student1;
-            
+
+    @FXML
+    private JFXButton btnImportStudent;
+
     @Override
     public void onInitialization() {
         super.bindScene(application_root);
@@ -151,7 +163,84 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             vbox_home.setVisible(true);
         }, vbox_home, vbox_result);
         this.setComboBox();
+        // import
+        this.importProfiles();
     }
+
+    /**
+     * method that adds import student functionality.
+     */
+    private void importProfiles() {
+        this.btnImportStudent.setOnMouseClicked(e -> {
+            this.importStudentModule();
+            e.consume();
+        });
+    }
+
+    private void importStudentModule() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Excel File", "*.xlsx")
+        );
+        File excelFile = fileChooser.showOpenDialog(this.getStage());
+        if (excelFile == null) {
+            //
+            MessageBox.showWarning("Canceled", "Import Operation Canceled");
+            return;
+        }
+        //----------------------------------------------------------------------
+        // if file is not null
+        final ReadExcelProfile reader = new ReadExcelProfile();
+        // set faculty id
+        reader.setVerifiedBy(CollegeFaculty.instance().getFACULTY_ID());
+
+        Thread readerThread = new Thread(() -> {
+            Platform.runLater(() -> {
+                GenericLoadingShow.instance().show();
+            });
+            try {
+                // no catch try
+                try {
+                    reader.readExcelFile(excelFile.getAbsolutePath());
+                } finally {
+                    Platform.runLater(() -> {
+                        GenericLoadingShow.instance().hide();
+                    });
+                }
+                // if no exception
+                if (reader.isStamped()) {
+                    // if successfully cloned.
+                    if (Desktop.isDesktopSupported()) {
+                        File stampedFile = new File(reader.getStampedLocation());
+                        try {
+                            MessageBox.showInformation("Profile Import", "The Student Profiles was succesfully imported. A Stamped Excel File will be opened for you to review.");
+                            Desktop.getDesktop().open(stampedFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            MessageBox.showInformation("Profile Import", "Student Profiles Successfully Imported. The system cannot open the stamped file you can open it manually for review at: " + stampedFile.getAbsolutePath());
+                        }
+                    } else {
+                        // desktop not supported.
+                        MessageBox.showInformation("Profile Import", "Student Profiles Successfully Imported. The system cannot open the stamped file you can open it manually for review at: " + reader.getStampedLocation());
+                    }
+                } else {
+                    MessageBox.showError("Profile Import", "The Importing Process has failed.");
+                }
+            } catch (IOException e) {
+                // cant open or save
+                MessageBox.showError("Error", "Cannot open the selected file.");
+            } catch (ReadExcelProfile.InvalidSpreadSheetHeaderException he) {
+                // invalid header
+                MessageBox.showError("Invalid Header", he.getMessage());
+            }
+
+        });
+        readerThread.setDaemon(true);
+        readerThread.setName("ExcelImportRead");
+        readerThread.start();
+    }
+
     private final String NAME = "NAME", STUDENT_NUM = "STUDENT NUMBER", ACAD_PROG = "ACADEMIC PROGRAM";
     private String SELECTED_mode = this.STUDENT_NUM;
     private Boolean isEnrolledSelected = false;
@@ -202,14 +291,14 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_print, () -> {
             this.printResult();
         });
-        super.addClickEvent(btn_new_student, ()->{
+        super.addClickEvent(btn_new_student, () -> {
             this.addNewStudent();
         });
-        super.addClickEvent(btn_new_student1, ()->{
+        super.addClickEvent(btn_new_student1, () -> {
             this.addNewStudent();
         });
     }
-    
+
     private void addNewStudent() {
         CreateNewStudent curriculumChooser = M.load(CreateNewStudent.class);
         curriculumChooser.onDelayedStart(); // do not put database transactions on startUp
@@ -225,6 +314,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
 
     private boolean isFiltered = false;
     private String previousReportDetail;
+
     private void printResult() {
         if (students == null || students.isEmpty()) {
             Notifications.create()
@@ -233,27 +323,27 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
                     .showWarning();
             return;
         }
-        String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name", "Section"};        
+        String[] colNames = new String[]{"Student Number", "Last Name", "First Name", "Middle Name", "Section"};
         String[] colDescprtion = new String[]{"Student number.", "Last name.", "First name.", "Middle name.", "Section of the student."};
         //--------------
         ArrayList<Object> colDetails = ReportsUtility.paperSizeChooserwithCustomize(Mono.fx().getParentStage(application_root), colNames, colDescprtion);
         Document doc = (Document) colDetails.get(0);
-        if(doc==null) {
+        if (doc == null) {
             return;
         }
         HashMap<Integer, Object[]> customized = (HashMap<Integer, Object[]>) colDetails.get(1);
         ArrayList<String> newColNames = new ArrayList<>();
         for (int i = 0; i < customized.size(); i++) {
             Object[] details = customized.get(i);
-            if(details != null) {
+            if (details != null) {
                 Boolean isChecked = (Boolean) details[0];
-                if(isChecked) {
+                if (isChecked) {
                     newColNames.add((String) details[1]);
                 }
             }
         }
         //
-        
+
         ArrayList<String[]> rowData = new ArrayList<>();
         for (int i = 0; i < students.size(); i++) {
             StudentMapping result = students.get(i);
@@ -261,7 +351,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             String[] row = new String[]{(i + 1) + ".  " + result.getId(),
                 WordUtils.capitalizeFully(info.getStudentMapping().getLast_name()),
                 WordUtils.capitalizeFully(info.getStudentMapping().getFirst_name()),
-                info.getStudentMapping().getMiddle_name()==null? "" : WordUtils.capitalizeFully(info.getStudentMapping().getMiddle_name()),
+                info.getStudentMapping().getMiddle_name() == null ? "" : WordUtils.capitalizeFully(info.getStudentMapping().getMiddle_name()),
                 info.getSection()};
             rowData.add(row);
         }
@@ -271,9 +361,10 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
         print.ROW_DETAILS = rowData;
         print.fileName = "student_list_" + searchWord.toLowerCase();
         print.reportTitleIntro = SystemProperties.instance().getCurrentTermString();
-        if(isFiltered)
-            previousReportDetail = "Student Search Result For " + searchWord.toUpperCase() + (chkbx_onlyEnrolled.isSelected() && isFiltered? " (Enrolled Student"+(students.size()>1? "s" : "")+")" : "");
-        print.reportOtherDetail = previousReportDetail==null? "Student Search Result For " + searchWord.toUpperCase() : previousReportDetail;
+        if (isFiltered) {
+            previousReportDetail = "Student Search Result For " + searchWord.toUpperCase() + (chkbx_onlyEnrolled.isSelected() && isFiltered ? " (Enrolled Student" + (students.size() > 1 ? "s" : "") + ")" : "");
+        }
+        print.reportOtherDetail = previousReportDetail == null ? "Student Search Result For " + searchWord.toUpperCase() : previousReportDetail;
         print.reportTitleHeader = "Student Result List";
         print.whenStarted(() -> {
             btn_print.setDisable(true);
@@ -303,7 +394,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             super.cursorDefault();
         });
         //----------------------------------------------------------------------
-        if(ReportsUtility.savePrintLogs(null, "Student Result List".toUpperCase(), "STUDENTS", "INITIAL")) {
+        if (ReportsUtility.savePrintLogs(null, "Student Result List".toUpperCase(), "STUDENTS", "INITIAL")) {
             print.transact();
         }
     }
@@ -380,7 +471,7 @@ public class StudentHomeController extends SceneFX implements ControllerFX {
             vbox_no_result.setVisible(false);
             tableStudent.getChildren().clear();
             vbox_list.setVisible(false);
-            
+
             btn_home1.setDisable(true);
         });
         fetch.whenRunning(() -> {

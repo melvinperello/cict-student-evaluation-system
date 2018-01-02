@@ -124,21 +124,40 @@ public class ReadExcelProfile {
     }
 
     public static void main(String[] args) {
-        Database.connect();
-        ReadExcelProfile reader = new ReadExcelProfile();
-        reader.setVerifiedBy(null);
-        try {
-            reader.readExcelFile("C:\\Users\\Jhon Melvin\\Desktop\\4A-G1.xlsx");
-        } catch (IOException e) {
-            // cant open or save
-            e.printStackTrace();
-        } catch (ReadExcelProfile.InvalidSpreadSheetHeaderException he) {
-            // invalid header
-            he.printStackTrace();
-        }
-        System.out.println(reader.isStamped());
-        System.out.println(reader.getStampedLocation());
+        // contains the IP STRING
+        String ipString = Mono.sys().getIP();
 
+        // ip array is split using the percent sign
+        // a computer can have multiple ip address
+        String[] ip_array = ipString.split("%");
+        for (String eachIP : ip_array) {
+            if (eachIP.isEmpty()) {
+                // if empty skip this
+                continue;
+            }
+            System.out.println(eachIP);
+            // the mac address is divided with this part
+            String[] mac_array = eachIP.split("@");
+            String ip_address = mac_array[0];
+            System.out.println(ip_address);
+            String mac_address = mac_array[1];
+            System.out.println(mac_address);
+        }
+
+//        Database.connect();
+//        ReadExcelProfile reader = new ReadExcelProfile();
+//        reader.setVerifiedBy(null);
+//        try {
+//            reader.readExcelFile("C:\\Users\\Jhon Melvin\\Desktop\\4A-G1.xlsx");
+//        } catch (IOException e) {
+//            // cant open or save
+//            e.printStackTrace();
+//        } catch (ReadExcelProfile.InvalidSpreadSheetHeaderException he) {
+//            // invalid header
+//            he.printStackTrace();
+//        }
+//        System.out.println(reader.isStamped());
+//        System.out.println(reader.getStampedLocation());
     }
 
     /**
