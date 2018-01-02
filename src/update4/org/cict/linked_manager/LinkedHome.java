@@ -165,6 +165,9 @@ public class LinkedHome extends SceneFX implements ControllerFX {
 
     @FXML
     private VBox vbox_announce_list;
+    
+    @FXML
+    private JFXButton btn_remove_all;
 
     @Override
     public void onInitialization() {
@@ -242,6 +245,27 @@ public class LinkedHome extends SceneFX implements ControllerFX {
         btn_pause_1.setDisable(lsMap==null);
         btn_pause_2.setDisable(lsMap==null);
         
+        super.addClickEvent(this.btn_remove_all, ()->{
+            boolean allDone = true;
+            for(StudentAccountInfo info : this.lst_marshalls) {
+                if(!this.forceLogout(info.getLatestSession()) || !info.remove()) {
+                    allDone = false;
+                }
+            }
+            String title = "", msg = "";
+            if(allDone) {
+                title = "Removed Successfully";
+                msg = "All student marshalls are removed.";
+            } else {
+                title = "Remove Failed";
+                msg = "Please check your connection\n"
+                            + "to the server.";
+            }
+            Notifications.create().darkStyle()
+                    .title(title)
+                    .text(msg)
+                    .showInformation();
+        });
     }
     
     private void pausedClicked(JFXButton button, String number) {
@@ -287,9 +311,11 @@ public class LinkedHome extends SceneFX implements ControllerFX {
                 vbox_no_marshall_found.setVisible(false);
                 vbox_list.setVisible(true);
             }, vbox_list);
+            this.btn_remove_all.setDisable(false);
             createTable(fetch.getResults());
         });
         fetch.whenCancelled(() -> {
+            this.btn_remove_all.setDisable(true);
             Animate.fade(vbox_list, 150, () -> {
                 vbox_list.setVisible(false);
                 vbox_no_marshall_found.setVisible(true);
@@ -333,9 +359,10 @@ public class LinkedHome extends SceneFX implements ControllerFX {
     }
 
     private SimpleTable marshallTable = new SimpleTable();
-
+    private ArrayList<StudentAccountInfo> lst_marshalls;
     private void createTable(ArrayList<StudentAccountInfo> lst_info) {
         marshallTable.getChildren().clear();
+        this.lst_marshalls = lst_info;
         for (StudentAccountInfo info : lst_info) {
             createRow(marshallTable, info);
         }
@@ -424,23 +451,23 @@ public class LinkedHome extends SceneFX implements ControllerFX {
             StudentAccountInfo info = (StudentAccountInfo) row.getRowMetaData().get("MORE_INFO");
             // update session
             LinkedMarshallSessionMapping lmsMap = info.getLatestSession();
-            lmsMap.setSession_end(Mono.orm().getServerTime().getDateWithFormat());
-            lmsMap.setStatus("OFFLINE");
-            //
-            if (Database.connect().linked_marshall_session().update(lmsMap)) {
-                Notifications.create().darkStyle()
-                        .title("Logout Successfully")
-                        .text("Student marshall is logout from"
-                                + "\nhis/her previous login.")
-                        .showInformation();
+            boolean loggedOut = forceLogout(lmsMap);
+            String title = "", msg = "";
+            if(loggedOut) {
+                title = "Logout Successfully";
+                msg = "Student marshall is logout from"
+                            + "\nhis/her previous login.";
             } else {
-                Notifications.create().darkStyle()
-                        .title("Logout Failed")
-                        .text("Please check your connection\n"
-                                + "to the server.")
-                        .showError();
+                title = "Logout Failed";
+                msg = "Please check your connection\n"
+                            + "to the server.";
             }
-            rowFX.getBtn_force_logout().setDisable(true);
+            
+            Notifications.create().darkStyle()
+                    .title(title)
+                    .text(msg)
+                    .showInformation();
+            rowFX.getBtn_force_logout().setDisable(loggedOut);
         });
         //---------------------------
 
@@ -452,6 +479,12 @@ public class LinkedHome extends SceneFX implements ControllerFX {
 
         row.addCell(cellParent);
         marshallTable.addRow(row);
+    }
+    
+    private boolean forceLogout(LinkedMarshallSessionMapping lmsMap) {
+        lmsMap.setSession_end(Mono.orm().getServerTime().getDateWithFormat());
+        lmsMap.setStatus("OFFLINE");
+        return (Database.connect().linked_marshall_session().update(lmsMap));
     }
 
     class FetchMarshall extends Transaction {
