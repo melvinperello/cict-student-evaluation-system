@@ -96,7 +96,7 @@ public class BackUpAndRestore {
             ArrayList<String> commands = new ArrayList<>();
             commands.add("pushd " + jarDir);
             commands.add("cd " + "maria-tools");
-            commands.add("mysqldump.exe --host=" + host + " --user=" + user + " --password=" + password + " --add-drop-database  --databases " + database + " > " + savePath);
+            commands.add("mysqldump.exe --host=" + host + " --user=" + user + " --password=" + password + " --add-drop-database  --databases " + database + " > \"" + savePath + "\"");
 
             String a = CommandLine.multipleCommand(commands);
             ArrayList<String> result = CommandLine.run(a);
@@ -131,7 +131,7 @@ public class BackUpAndRestore {
             ArrayList<String> commands = new ArrayList<>();
             commands.add("pushd " + jarDir);
             commands.add("cd " + "maria-tools");
-            commands.add("mysql.exe --host " + host + " --user=" + user + " --password=" + pass + " < " + backUpLocation);
+            commands.add("mysql.exe --host " + host + " --user=" + user + " --password=" + pass + " < \"" + backUpLocation + "\"");
 
             String a = CommandLine.multipleCommand(commands);
             ArrayList<String> result = CommandLine.run(a);
