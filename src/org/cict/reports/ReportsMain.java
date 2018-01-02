@@ -1948,7 +1948,7 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             } else {
                 //create table here
                 int res = fetch.result.size();
-                lbl_result_print_logs.setText("Total result"+(res>1? "s" : "")+" found: " + res);
+                lbl_result_backup.setText("Total result"+(res>1? "s" : "")+" found: " + res);
                 
                 this.backupLogsView = fetch.result;
                 this.createBackupLogsTable(backupLogsView);
@@ -2077,8 +2077,8 @@ public class ReportsMain extends SceneFX implements ControllerFX {
             ref = result;
             String[] row = new String[]{(i+1)+".  "+  ReportsUtility.formatter_mm.format(result.getTime_executed()),
                 WordUtils.capitalizeFully((FacultyUtility.getFacultyName(FacultyUtility.getFaculty(result.getExecuted_with())))), 
-                WordUtils.capitalizeFully(result.getExecuted_on()), 
-                WordUtils.capitalizeFully(result.getBackup_mode()), 
+                (result.getExecuted_on()), 
+                (result.getBackup_mode()), 
                 (result.getBackup_result())};
             rowData.add(row);
         }
