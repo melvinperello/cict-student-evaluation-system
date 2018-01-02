@@ -27,12 +27,15 @@ import app.lazy.models.AccountFacultySessionMapping;
 import app.lazy.models.BackupScheduleMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
+import static artifacts.ConfigurationManager.EVALUATION_PROP;
+import static artifacts.ConfigurationManager.PROP_HOST_IP;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.notify.AlertMessage;
 import com.jhmvin.transitions.Animate;
+import com.melvin.java.properties.PropertyFile;
 import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
@@ -43,6 +46,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -525,6 +529,7 @@ public class SystemLogin extends MonoLauncher {
                 if (currentTime.after(backupTime) || currentTime.equals(backupTime)) {
                     System.out.println("BACK UP HERE");
                     this.autoBackup();
+                    ThreadMill.threads().BACKUP_WATCHER.stop();
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(SystemLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -539,14 +544,37 @@ public class SystemLogin extends MonoLauncher {
     }
     
     
-    public final static String SAVE_DIRECTORY = "reports/results";
+    public final static String SAVE_DIRECTORY = "auto_backup";
     private void autoBackup() {
+        
+        // before continuing the back up process, check first if
+        // there is a backup.properties file exiting
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyy");
+        if(isBackupPropertiesExisting()) {
+            // check if the date saved here is not equal today
+            // then continue back up
+            
+            Properties property = PropertyFile.getPropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath());
+            String val = property.getProperty("lastBackup");
+            if (val == null) {
+                PropertyFile.writePropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath(), "lastBackup", format.format(new Date()));
+            } else {
+                if(val.equalsIgnoreCase(format.format(new Date()))) {
+                    // if date today and last backup are equal, do not proceed
+                    System.out.println(val);
+                    return;
+                }
+            }
+        } else {
+            // if no saved found, just continue backup
+        }
+        
         int res = 1;
         String title = "";
         String path = null;
         SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_yyyy_hh_mm_s_a");
-        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat() + "@" + PublicConstants.getIP_address() + "@" + PublicConstants.getMAC_address() + "@" + Mono.sys().getTerminal());
-
+        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat()) + "@" + PublicConstants.getIP_address() + "@" + PublicConstants.getMAC_address() + "@" + Mono.sys().getTerminal();
+        System.out.println(filename);
 
         //------------------------------------------------------------------------------
         //------------------------------------------------------------------------------
@@ -592,6 +620,7 @@ public class SystemLogin extends MonoLauncher {
                return;
            }
             PublicConstants.addBackupLog("AUTO", "SUCCESS", new Date());
+            PropertyFile.writePropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath(), "lastBackup", format.format(new Date()));
             Mono.fx().alert().createInfo()
                     .setHeader(title)
                     .setMessage("Successful Transaction!").show();
@@ -657,5 +686,19 @@ public class SystemLogin extends MonoLauncher {
         PublicConstants.getSystemVar_Noted_By();
         PublicConstants.getSystemVar_LocalRegistrar1();
         PublicConstants.getSystemVar_LocalRegistrar2();
+    }
+    
+    
+    private boolean isBackupPropertiesExisting() {
+        if (!PublicConstants.BACKUP_PROP.exists()) {
+            try {
+                boolean file_created = PublicConstants.BACKUP_PROP.createNewFile();
+                return false;
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 }

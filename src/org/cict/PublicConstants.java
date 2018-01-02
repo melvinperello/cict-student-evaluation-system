@@ -32,6 +32,7 @@ import artifacts.ConfigurationManager;
 import com.jhmvin.Mono;
 import com.jhmvin.orm.SQL;
 import com.melvin.java.properties.PropertyFile;
+import java.io.File;
 import java.util.Date;
 import java.util.Properties;
 import org.cict.authentication.authenticator.CollegeFaculty;
@@ -286,7 +287,15 @@ public class PublicConstants {
     public static String BACKUP_TIME = "";
     
     
+    public static final File BACKUP_PROP = new File("last_backup.properties");
     public static Integer addBackupLog(String mode, String result, Date date) {
+        if(mode.equalsIgnoreCase("AUTO")) {
+            if(result.equalsIgnoreCase("FAILED")) {
+                if(BACKUP_PROP.exists()) {
+                    BACKUP_PROP.delete();
+                }
+            }
+        }
         BackupLogsMapping log = new BackupLogsMapping();
         log.setActive(1);
         log.setBackup_mode(mode);
