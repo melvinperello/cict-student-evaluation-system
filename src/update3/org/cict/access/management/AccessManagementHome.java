@@ -464,11 +464,13 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
                     }
                 }
                 if (notSaved) {
+                    PublicConstants.addBackupLog("MANUAL", "FAILED", new Date());
                     Notifications.create().title(title)
                             .text("Please try again later.")
                             .showWarning();
                     return;
                 }
+                PublicConstants.addBackupLog("MANUAL", "SUCCESS", new Date());
             }
             Mono.fx().alert().createInfo()
                     .setHeader(title)
@@ -478,16 +480,25 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
             Mono.fx().alert().createError()
                     .setHeader(title)
                     .setMessage("Something is wrong with the path.").show();
+            if(isBackUp) {
+                PublicConstants.addBackupLog("MANUAL", "FAILED", new Date());
+            }
         } else if (res == 2) {
             /**
              * This may failed when there is a space in the directory.
              */
             MessageBox.showError("Failed", "Failed to execute operation. This may be caused by the Operating System requiring administrative rights, or there is an invalid path character.");
+            if(isBackUp) {
+                PublicConstants.addBackupLog("MANUAL", "FAILED", new Date());
+            }
         } else {
             // unknown error
             Mono.fx().alert().createError()
                     .setHeader(title)
                     .setMessage("Unknown error occured. Please try again later.").show();
+            if(isBackUp) {
+                PublicConstants.addBackupLog("MANUAL", "FAILED", new Date());
+            }
         }
     }
     
