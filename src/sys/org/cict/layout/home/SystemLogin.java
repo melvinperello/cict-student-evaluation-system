@@ -27,8 +27,6 @@ import app.lazy.models.AccountFacultySessionMapping;
 import app.lazy.models.BackupScheduleMapping;
 import app.lazy.models.DB;
 import app.lazy.models.Database;
-import static artifacts.ConfigurationManager.EVALUATION_PROP;
-import static artifacts.ConfigurationManager.PROP_HOST_IP;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -40,7 +38,6 @@ import com.melvin.mono.fx.MonoLauncher;
 import com.melvin.mono.fx.bootstrap.M;
 import com.melvin.mono.fx.events.MonoClick;
 import java.io.File;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,24 +46,20 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javax.swing.filechooser.FileSystemView;
 import org.bsu.cict.alerts.MessageBox;
 import org.bsu.cict.tools.BackUpAndRestore;
 import org.cict.GenericLoadingShow;
 import org.cict.MainApplication;
 import org.cict.PublicConstants;
-import static org.cict.PublicConstants.getIP_address;
-import static org.cict.PublicConstants.getMAC_address;
 import org.cict.ThreadMill;
 import org.cict.accountmanager.forgotpassword.SystemForgot;
 import org.cict.authentication.authenticator.Authenticator;
@@ -74,8 +67,6 @@ import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.HibernateLauncher;
 import org.cict.authentication.authenticator.ValidateLogin;
 import org.cict.reports.ReportsDirectory;
-import static org.cict.reports.result.PrintResult.SAVE_DIRECTORY;
-import org.controlsfx.control.Notifications;
 import org.hibernate.criterion.Order;
 import update.org.cict.controller.home.Home;
 import update3.org.cict.access.Access;
@@ -544,7 +535,7 @@ public class SystemLogin extends MonoLauncher {
     }
     
     
-    public final static String SAVE_DIRECTORY = "auto_backup";
+    public final static String SAVE_DIRECTORY = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
     private void autoBackup() {
         
         // before continuing the back up process, check first if
@@ -571,9 +562,9 @@ public class SystemLogin extends MonoLauncher {
         
         int res = 1;
         String title = "";
-        String path = null;
-        SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_yyyy_hh_mm_s_a");
-        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat()) + "@" + PublicConstants.getIP_address() + "@" + PublicConstants.getMAC_address() + "@" + Mono.sys().getTerminal();
+        SimpleDateFormat formatter = new SimpleDateFormat("MMddyyyyhhmmsa");
+//        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
+        String filename = (formatter.format(Mono.orm().getServerTime().getDateWithFormat()) + "@" + PublicConstants.getIP_address() + "@" + PublicConstants.getMAC_address() + "@" + Mono.sys().getTerminal()).replace(".", "").replace("-", "");
         System.out.println(filename);
 
         //------------------------------------------------------------------------------
@@ -592,15 +583,17 @@ public class SystemLogin extends MonoLauncher {
         //------------------------------------------------------------------
         //------------------------------------------------------------------
 
-        path = SAVE_DIRECTORY + "\\" + filename + ".monosync";
+        File selectedDirectory = new File(SAVE_DIRECTORY);
+        
+        String path = selectedDirectory.getAbsolutePath() + "\\" + filename + ".monosync";
         res = BackUpAndRestore.backup(
                 PublicConstants.getServerIP(),
                 PublicConstants.getDATABASE_USERNAME(),
                 PublicConstants.getDATABASE_PASSWORD(),
                 PublicConstants.getDATABASE_NAME(),
                 path);
-        title = "Back Up Database";
-        
+        title = "Automatic Backup";
+        System.out.println(path);
         if (res == 0) {
 //            when back up, double check if file size is not 0
 //            before concluding it is successful
@@ -614,22 +607,16 @@ public class SystemLogin extends MonoLauncher {
            }
            if (notSaved) {
                PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
-               Notifications.create().title(title)
-                       .text("Please try again later.")
-                       .showWarning();
+               MessageBox.showError(title, "Please try again later.");
                return;
            }
             PublicConstants.addBackupLog("AUTO", "SUCCESS", new Date());
             PropertyFile.writePropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath(), "lastBackup", format.format(new Date()));
-            Mono.fx().alert().createInfo()
-                    .setHeader(title)
-                    .setMessage("Successful Transaction!").show();
+            MessageBox.showInformation(title, "Successful Transaction!");
         } else if (res == 1) {
             // path error
             PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
-            Mono.fx().alert().createError()
-                    .setHeader(title)
-                    .setMessage("Something is wrong with the path.").show();
+            MessageBox.showError(title, "Something is wrong with the path.");
         } else if (res == 2) {
             /**
              * This may failed when there is a space in the directory.
@@ -639,9 +626,7 @@ public class SystemLogin extends MonoLauncher {
         } else {
             // unknown error
             PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
-            Mono.fx().alert().createError()
-                    .setHeader(title)
-                    .setMessage("Unknown error occured. Please try again later.").show();
+            MessageBox.showError(title, "Unknown error occured. Please try again later.");
         }
     }
    
