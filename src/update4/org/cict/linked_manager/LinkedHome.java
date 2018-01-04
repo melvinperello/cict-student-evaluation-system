@@ -254,6 +254,7 @@ public class LinkedHome extends SceneFX implements ControllerFX {
             }
             String title = "", msg = "";
             if(allDone) {
+                this.marshallTable.getChildren().clear();
                 title = "Removed Successfully";
                 msg = "All student marshalls are removed.";
             } else {
