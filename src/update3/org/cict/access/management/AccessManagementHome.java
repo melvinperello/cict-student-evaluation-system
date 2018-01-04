@@ -31,7 +31,6 @@ import app.lazy.models.FacultyMapping;
 import app.lazy.models.LinkedSettingsMapping;
 import app.lazy.models.utils.FacultyUtility;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
 import com.jhmvin.Mono;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
@@ -52,6 +51,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -209,7 +209,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
     private VBox vbox_backup_restore;
     
     @FXML
-    private JFXCheckBox chkbx_enable_autobackup;
+    private CheckBox chkbx_enable_autobackup;
     
     @FXML
     private VBox vbox_autobackup_feature;
