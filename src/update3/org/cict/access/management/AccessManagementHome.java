@@ -403,7 +403,7 @@ public class AccessManagementHome extends SceneFX implements ControllerFX {
         
         int res = Database.connect().backup_schedule().insert(newSchedule);
         if(res != -1 || res != 0) {
-            PublicConstants.BACKUP_TIME = time;
+//            PublicConstants.BACKUP_TIME = time;
             this.setLatestBackUpSchedule();
             Mono.fx().snackbar().showSuccess(application_root, "Applied new back up time schedule.");
         } else {

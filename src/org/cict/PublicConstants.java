@@ -33,6 +33,8 @@ import com.jhmvin.Mono;
 import com.jhmvin.orm.SQL;
 import com.melvin.java.properties.PropertyFile;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import org.cict.authentication.authenticator.CollegeFaculty;
@@ -284,7 +286,8 @@ public class PublicConstants {
     
     //--------------------
     // for auto backup purpose
-    public static String BACKUP_TIME = "";
+//    public static String BACKUP_TIME = "";
+    public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     
     
     public static final File BACKUP_PROP = new File("last_backup.properties");

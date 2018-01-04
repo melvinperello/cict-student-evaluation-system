@@ -23,29 +23,7 @@
  */
 package org.cict;
 
-import app.lazy.models.AccountFacultyMapping;
-import app.lazy.models.DB;
-import app.lazy.models.Database;
-import app.lazy.models.LinkedEntranceMapping;
-import app.lazy.models.StudentMapping;
-import com.jhmvin.Mono;
 import com.jhmvin.fx.async.CronTimer;
-import com.jhmvin.fx.controls.simpletable.SimpleTable;
-import com.jhmvin.fx.controls.simpletable.SimpleTableCell;
-import com.jhmvin.fx.controls.simpletable.SimpleTableRow;
-import com.jhmvin.fx.controls.simpletable.SimpleTableView;
-import com.melvin.mono.fx.bootstrap.M;
-import com.melvin.mono.fx.events.MonoClick;
-import java.util.ArrayList;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import org.apache.commons.lang3.text.WordUtils;
-import org.cict.authentication.authenticator.CollegeFaculty;
-import org.cict.evaluation.QueueRow;
-import org.controlsfx.control.Notifications;
-import org.hibernate.criterion.Order;
 
 /**
  *
@@ -77,7 +55,7 @@ public class ThreadMill {
         this.KEEP_ALIVE_THREAD.setInterval(30000); // 30 secs
         // add more threads here
         this.BACKUP_WATCHER = new CronTimer("BACKUP_WATCHER");
-        this.BACKUP_WATCHER.setInterval(2000); // 2 secs
+        this.BACKUP_WATCHER.setInterval(600000); // 10 mins
     }
 
     /**

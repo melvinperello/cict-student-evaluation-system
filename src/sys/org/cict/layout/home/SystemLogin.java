@@ -492,35 +492,43 @@ public class SystemLogin extends MonoLauncher {
         });
         ThreadMill.threads().KEEP_ALIVE_THREAD.start();
 
-        /**
-         * get value for backup time
-         */
-        BackupScheduleMapping backupSched = Mono.orm().newSearch(Database.connect().backup_schedule())
-                .active(Order.desc(DB.backup_schedule().id)).first();
-        if (backupSched != null) {
-            PublicConstants.BACKUP_TIME = backupSched.getTime();
-        } else {
-            PublicConstants.BACKUP_TIME = "";
-        }
+            /**
+             * get value for backup time
+             */
+//            BackupScheduleMapping backupSched = Mono.orm().newSearch(Database.connect().backup_schedule())
+//                .active(Order.desc(DB.backup_schedule().id)).first();
+//        if (backupSched != null) {
+//            PublicConstants.BACKUP_TIME = backupSched.getTime();
+//        } else {
+//            PublicConstants.BACKUP_TIME = "";
+//        }
 
         /**
          * create thread for backup watcher
          */
         ThreadMill.threads().BACKUP_WATCHER.setTask(() -> {
-            DateFormat df = new SimpleDateFormat("HH:mm");
+            /**
+             * get value for backup time
+             */
+            BackupScheduleMapping backupSched = Mono.orm().newSearch(Database.connect().backup_schedule())
+                .active(Order.desc(DB.backup_schedule().id)).first();
+            if(backupSched == null) {
+                System.out.println("NO ACTIVE BACKUP SCHEDULE");
+                return;
+            }
             try {
-                Date backupTime = df.parse(PublicConstants.BACKUP_TIME);
+                Date backupTime = PublicConstants.TIME_FORMAT.parse(backupSched.getTime());
                 Date current = new Date();
-                Date currentTime = df.parse(current.getHours() + ":" + current.getMinutes());
+                Date currentTime = PublicConstants.TIME_FORMAT.parse(current.getHours() + ":" + current.getMinutes());
 
-                System.out.println("BACKUP: " + df.format(backupTime));
-                System.out.println("CURRENT: " + df.format(currentTime));
+                System.out.println("BACKUP: " + PublicConstants.TIME_FORMAT.format(backupTime));
+                System.out.println("CURRENT: " + PublicConstants.TIME_FORMAT.format(currentTime));
                 System.out.println(new Date());
                 
                 if (currentTime.after(backupTime) || currentTime.equals(backupTime)) {
                     System.out.println("BACK UP HERE");
-                    this.autoBackup();
-                    ThreadMill.threads().BACKUP_WATCHER.stop();
+                    this.autoBackup(backupSched.getId());
+//                    ThreadMill.threads().BACKUP_WATCHER.stop();
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(SystemLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -536,7 +544,7 @@ public class SystemLogin extends MonoLauncher {
     
     
     public final static String SAVE_DIRECTORY = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-    private void autoBackup() {
+    private void autoBackup(Integer id) {
         
         // before continuing the back up process, check first if
         // there is a backup.properties file exiting
@@ -546,26 +554,32 @@ public class SystemLogin extends MonoLauncher {
             // then continue back up
             
             Properties property = PropertyFile.getPropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath());
-            String val = property.getProperty("lastBackup");
-            if (val == null) {
-                PropertyFile.writePropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath(), "lastBackup", format.format(new Date()));
+            String id_val = property.getProperty("id");
+            String lastBackup = property.getProperty("lastBackup");
+            
+            if (lastBackup == null) {
             } else {
-                if(val.equalsIgnoreCase(format.format(new Date()))) {
-                    // if date today and last backup are equal, do not proceed
-                    System.out.println(val);
-                    return;
+                if(lastBackup.equalsIgnoreCase(format.format(new Date()))) {
+                    // if date today and last backup are equal
+                    // and id is equal to the id_val of the backup.properties, do not proceed
+                    if(id_val != null && id_val.equalsIgnoreCase(id.toString())) {
+                        System.out.println("ALREADY BACKUP "+lastBackup);
+                        return;
+                    }
                 }
             }
+            // update the info of the backup.properties every run of the auto backup
+            PropertyFile.writePropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath(), "lastBackup", format.format(new Date()));
+            PropertyFile.writePropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath(), "id", id.toString());
         } else {
             // if no saved found, just continue backup
         }
         
         int res = 1;
-        String title = "";
         SimpleDateFormat formatter = new SimpleDateFormat("MMddyyyyhhmmsa");
 //        String filename = formatter.format(Mono.orm().getServerTime().getDateWithFormat());
         String filename = (formatter.format(Mono.orm().getServerTime().getDateWithFormat()) + "@" + PublicConstants.getIP_address() + "@" + PublicConstants.getMAC_address() + "@" + Mono.sys().getTerminal()).replace(".", "").replace("-", "");
-        System.out.println(filename);
+        System.out.println("FILENAME: " + filename);
 
         //------------------------------------------------------------------------------
         //------------------------------------------------------------------------------
@@ -592,8 +606,8 @@ public class SystemLogin extends MonoLauncher {
                 PublicConstants.getDATABASE_PASSWORD(),
                 PublicConstants.getDATABASE_NAME(),
                 path);
-        title = "Automatic Backup";
-        System.out.println(path);
+        String title = "Automatic Backup";
+        System.out.println("PATH: " + path);
         if (res == 0) {
 //            when back up, double check if file size is not 0
 //            before concluding it is successful
@@ -606,25 +620,30 @@ public class SystemLogin extends MonoLauncher {
                }
            }
            if (notSaved) {
+               System.out.println("FAILED1");
                PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
                MessageBox.showError(title, "Please try again later.");
                return;
            }
+            System.out.println("SUCCESS");
             PublicConstants.addBackupLog("AUTO", "SUCCESS", new Date());
             PropertyFile.writePropertyFile(PublicConstants.BACKUP_PROP.getAbsolutePath(), "lastBackup", format.format(new Date()));
             MessageBox.showInformation(title, "Successful Transaction!");
         } else if (res == 1) {
             // path error
+            System.out.println("FAILED2");
             PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
             MessageBox.showError(title, "Something is wrong with the path.");
         } else if (res == 2) {
             /**
              * This may failed when there is a space in the directory.
              */
+            System.out.println("FAILED3");
             PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
             MessageBox.showError("Failed", "Failed to execute operation. This may be caused by the Operating System requiring administrative rights, or there is an invalid path character.");
         } else {
             // unknown error
+            System.out.println("FAILED4");
             PublicConstants.addBackupLog("AUTO", "FAILED", new Date());
             MessageBox.showError(title, "Unknown error occured. Please try again later.");
         }
@@ -678,7 +697,7 @@ public class SystemLogin extends MonoLauncher {
         if (!PublicConstants.BACKUP_PROP.exists()) {
             try {
                 boolean file_created = PublicConstants.BACKUP_PROP.createNewFile();
-                return false;
+                return file_created;
             } catch (Exception e) {
                 return false;
             }
