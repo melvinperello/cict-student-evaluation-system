@@ -119,6 +119,12 @@ return new OtpGeneratorMapping();
 public PrintLogsMapping print_logs() {
 return new PrintLogsMapping();
 }
+public RetentionPolicyMapping retention_policy() {
+return new RetentionPolicyMapping();
+}
+public RetentionSubjectMapping retention_subject() {
+return new RetentionSubjectMapping();
+}
 public StudentMapping student() {
 return new StudentMapping();
 }

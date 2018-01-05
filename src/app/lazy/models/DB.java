@@ -106,6 +106,12 @@ public class DB {private final static Tbl_academic_program academic_program = ne
     }private final static Tbl_print_logs print_logs = new Tbl_print_logs();
     public static Tbl_print_logs print_logs() {
         return print_logs;
+    }private final static Tbl_retention_policy retention_policy = new Tbl_retention_policy();
+    public static Tbl_retention_policy retention_policy() {
+        return retention_policy;
+    }private final static Tbl_retention_subject retention_subject = new Tbl_retention_subject();
+    public static Tbl_retention_subject retention_subject() {
+        return retention_subject;
     }private final static Tbl_student student = new Tbl_student();
     public static Tbl_student student() {
         return student;

@@ -3,7 +3,6 @@ package app.lazy.models;
 
 import com.jhmvin.Mono;
 import com.jhmvin.orm.MonoModels;
-import org.cict.PublicConstants;
 
 
 public class Database {
@@ -50,6 +49,8 @@ private MonoModels tbl_load_section;
 private MonoModels tbl_load_subject;
 private MonoModels tbl_otp_generator;
 private MonoModels tbl_print_logs;
+private MonoModels tbl_retention_policy;
+private MonoModels tbl_retention_subject;
 private MonoModels tbl_student;
 private MonoModels tbl_student_course_history;
 private MonoModels tbl_student_data_history;
@@ -60,7 +61,7 @@ private MonoModels tbl_system_variables;
 private void setup() {
 Mono.orm().setConnectionDriverClass("org.mariadb.jdbc.Driver");
 Mono.orm().setConnectionProvider("jdbc:mariadb");
-Mono.orm().setHost(PublicConstants.getServerIP());
+Mono.orm().setHost("127.0.0.1");
 Mono.orm().setPort(3306);
 Mono.orm().setDatabaseName("cictems");
 Mono.orm().setDatabaseUser("root");
@@ -70,9 +71,6 @@ Mono.orm().setShowLogs(false);
 // c3p0 settings
 Mono.orm().setC3p0_max(5);
 Mono.orm().setC3p0_min(3);
-//Mono.orm().setC3p0_timeout(300);
-//Mono.orm().setC3p0_max_statements(0);
-//Mono.orm().setC3p0_idle_period(0);
 // mapping information
 Mono.orm().setMappingsLocation("app/lazy/models/");
 Mono.orm().addMappings("AcademicProgramMapping");
@@ -143,6 +141,10 @@ Mono.orm().addMappings("OtpGeneratorMapping");
 this.tbl_otp_generator = Mono.orm().createModel(OtpGeneratorMapping.class);
 Mono.orm().addMappings("PrintLogsMapping");
 this.tbl_print_logs = Mono.orm().createModel(PrintLogsMapping.class);
+Mono.orm().addMappings("RetentionPolicyMapping");
+this.tbl_retention_policy = Mono.orm().createModel(RetentionPolicyMapping.class);
+Mono.orm().addMappings("RetentionSubjectMapping");
+this.tbl_retention_subject = Mono.orm().createModel(RetentionSubjectMapping.class);
 Mono.orm().addMappings("StudentMapping");
 this.tbl_student = Mono.orm().createModel(StudentMapping.class);
 Mono.orm().addMappings("StudentCourseHistoryMapping");
@@ -260,6 +262,12 @@ return tbl_otp_generator;
 }
 public MonoModels print_logs() {
 return tbl_print_logs;
+}
+public MonoModels retention_policy() {
+return tbl_retention_policy;
+}
+public MonoModels retention_subject() {
+return tbl_retention_subject;
 }
 public MonoModels student() {
 return tbl_student;

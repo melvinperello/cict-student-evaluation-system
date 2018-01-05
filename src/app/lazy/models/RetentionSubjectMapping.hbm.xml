@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.RetentionSubjectMapping" table="retention_subject" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="retention_id" type="java.lang.Integer">
+<column name="retention_id" length="10"/>
+</property>
+<property name="subject_code" type="java.lang.String">
+<column name="subject_code" length="50"/>
+</property>
+<property name="subject_title" type="java.lang.String">
+<column name="subject_title" length="50"/>
+</property>
+<property name="units" type="java.lang.String">
+<column name="units" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>

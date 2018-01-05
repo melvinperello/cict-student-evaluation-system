@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.RetentionPolicyMapping" table="retention_policy" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="STUDENT_id" type="java.lang.Integer">
+<column name="STUDENT_id" length="10"/>
+</property>
+<property name="section" type="java.lang.String">
+<column name="section" length="50"/>
+</property>
+<property name="CURRICULUM_id" type="java.lang.Integer">
+<column name="CURRICULUM_id" length="10"/>
+</property>
+<property name="year_level" type="java.lang.String">
+<column name="year_level" length="50"/>
+</property>
+<property name="semester" type="java.lang.String">
+<column name="semester" length="50"/>
+</property>
+<property name="academic_year" type="java.lang.String">
+<column name="academic_year" length="50"/>
+</property>
+<property name="academic_semester" type="java.lang.String">
+<column name="academic_semester" length="50"/>
+</property>
+<property name="verification_date" type="java.util.Date">
+<column name="verification_date" length="19"/>
+</property>
+<property name="verified_by" type="java.lang.Integer">
+<column name="verified_by" length="10"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>
