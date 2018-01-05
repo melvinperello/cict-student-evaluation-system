@@ -115,7 +115,7 @@
                               </Label>
                            </children>
                         </HBox>
-                        <VBox fx:id="vbox_studentOptions" alignment="CENTER_LEFT" prefHeight="308.0" prefWidth="182.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="100.0">
+                        <VBox fx:id="vbox_studentOptions" alignment="CENTER_LEFT" prefHeight="338.0" prefWidth="182.0" style="-fx-background-color: #FFFFFF; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <JFXButton fx:id="btnHistory" graphicTextGap="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@button-hover.css" text="History        " textFill="#414852">
                                  <graphic>
@@ -188,6 +188,21 @@
                                  <VBox.margin>
                                     <Insets left="1.0" right="1.0" />
                                  </VBox.margin>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_retention" graphicTextGap="10.0" layoutX="11.0" layoutY="256.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@button-hover.css" text="Retention" textFill="#414852">
+                                 <graphic>
+                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@src/img/icons8-high-priority-50.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="-17.0" />
+                                 </padding>
                               </JFXButton>
                            </children>
                         </VBox>

@@ -51,7 +51,6 @@ import com.jhmvin.fx.async.SimpleTask;
 import com.jhmvin.fx.async.Transaction;
 import com.jhmvin.fx.controls.simpletable.SimpleTable;
 import com.jhmvin.fx.display.SceneFX;
-import com.jhmvin.transitions.Animate;
 import com.melvin.mono.fx.bootstrap.M;
 import java.util.List;
 import javafx.application.Platform;
@@ -62,13 +61,13 @@ import javafx.stage.StageStyle;
 import org.bsu.cict.queue.CallerObject;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
-import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.authentication.authenticator.SystemProperties;
 import org.cict.evaluation.evaluator.PrintChecklist;
 import org.cict.evaluation.evaluator.SearchStudent;
 import org.cict.evaluation.evaluator.SubjectValidation;
 import org.cict.evaluation.moving_up.MovingUpController;
+import org.cict.evaluation.retention.RetentionHistory;
 import org.cict.evaluation.sectionviewer.SectionsController;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
@@ -180,6 +179,9 @@ public class EvaluateController extends SceneFX implements ControllerFX {
     @FXML
     private ImageView img_profile;
 
+    @FXML
+    private JFXButton btn_retention;
+            
     //--------------------------------------------------------------------------
     @FXML
     @Deprecated
@@ -511,6 +513,23 @@ public class EvaluateController extends SceneFX implements ControllerFX {
         super.addClickEvent(btn_deficiency, () -> {
             this.printDeficiency();
         });
+        
+        super.addClickEvent(btn_retention, () -> {
+            this.viewRetentionHistory();
+        });
+    }
+    
+    private void viewRetentionHistory() {
+        RetentionHistory r = M.load(RetentionHistory.class);
+        System.out.println(this.currentStudent.getId());
+        r.setStudent(this.currentStudent);
+        r.onDelayedStart();
+        try {
+            r.getCurrentStage().show();
+        } catch (NullPointerException e) {
+            Stage a = r.createChildStage(super.getStage());
+            a.show();
+        }
     }
 
     private void printDeficiency() {

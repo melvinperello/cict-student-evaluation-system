@@ -749,9 +749,9 @@ public class CurricularLevelController extends SceneFX implements ControllerFX {
             AcademicProgramMapping prepProgram = Database.connect().academic_program().getPrimary(prep.getACADPROG_id());
             student.setPrepProgramCode(prepProgram.getCode());
         } else {
-            student.setCurriculumCode("null");
-            student.setCurriculumID("null");
-            student.setProgramCode("null");
+            student.setPrepCode("null");
+            student.setPrepID("null");
+            student.setPrepProgramCode("null");
         }
         //----------------------------------------------------------------------
 
