@@ -213,9 +213,9 @@ public class Access {
     
     public static boolean enterTransactionPin(Stage parentStage) {
         boolean result = false;
-        AccountFacultyMapping user = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+//        AccountFacultyMapping user = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
         TransactionPin enterPin = M.load(TransactionPin.class);
-        enterPin.setUser(user);
+//        enterPin.setUser(user);
         enterPin.onDelayedStart(); // do not put database transactions on startUp
         try {
             enterPin.getCurrentStage().showAndWait();

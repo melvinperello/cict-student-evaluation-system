@@ -24,6 +24,7 @@
 package update3.org.cict.access;
 
 import app.lazy.models.AccountFacultyMapping;
+import app.lazy.models.Database;
 import com.izum.fx.textinputfilters.StringFilter;
 import com.izum.fx.textinputfilters.TextInputFilters;
 import com.jfoenix.controls.JFXButton;
@@ -36,6 +37,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.cict.authentication.authenticator.CollegeFaculty;
 import org.controlsfx.control.Notifications;
 
 /**
@@ -58,9 +60,9 @@ public class TransactionPin extends MonoLauncher{
     
     private AccountFacultyMapping user;
 
-    public void setUser(AccountFacultyMapping user) {
-        this.user = user;
-    }
+//    public void setUser(AccountFacultyMapping user) {
+//        this.user = user;
+//    }
     
     private void requestFocus(Node control) {
         Stage stage = Mono.fx().getParentStage(control);
@@ -70,6 +72,8 @@ public class TransactionPin extends MonoLauncher{
     
     @Override
     public void onStartUp() {
+        this.user = Database.connect().account_faculty().getPrimary(CollegeFaculty.instance().getACCOUNT_ID());
+        
         this.filter();
 //        this.requestFocus(txt_pin);
         
@@ -101,16 +105,19 @@ public class TransactionPin extends MonoLauncher{
     }
     
     private void onEnter() {
-        if(user!=null) {
+        if(user != null) {
             String pin = Mono.security().hashFactory().hash_sha512(txt_pin.getText());
             result = (pin.equals(user.getTransaction_pin()));
+            System.out.println(pin);
+            System.out.println(user.getTransaction_pin());
             if(!result) {
                 Mono.fx().alert().createWarning().setHeader("Wrong Pin")
                         .setMessage("Please enter your transaction pin correctly.")
                         .show();
                 txt_pin.setText("");
-            } else
+            } else {
                 Mono.fx().getParentStage(btn_close).close();
+            }
         } 
     }
     
