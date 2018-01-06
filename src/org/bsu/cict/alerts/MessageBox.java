@@ -1,6 +1,9 @@
 package org.bsu.cict.alerts;
 
+import com.jhmvin.Mono;
+import com.jhmvin.fx.notify.AlertMessage;
 import java.util.Locale;
+import javafx.application.Platform;
 import javax.swing.JOptionPane;
 
 /**
@@ -74,8 +77,31 @@ public class MessageBox {
      * @param messageType
      */
     private static void createSwingMessage(String title, String message, int messageType) {
-        String body = HTML_START + HTML_CONTENT + message + HTML_END;
-        MessageBox.show(title, body, messageType);
+//        String body = HTML_START + HTML_CONTENT + message + HTML_END;
+//        MessageBox.show(title, body, messageType);
+        AlertMessage alert;
+        switch (messageType) {
+            case JOptionPane.INFORMATION_MESSAGE:
+                alert = Mono.fx().alert().createInfo()
+                        .setTitle("Information");
+                break;
+            case JOptionPane.ERROR_MESSAGE:
+                alert = Mono.fx().alert().createError()
+                        .setTitle("Error");
+                break;
+            case JOptionPane.WARNING_MESSAGE:
+                alert = Mono.fx().alert().createWarning()
+                        .setTitle("Error");
+                break;
+            default:
+                alert = Mono.fx().alert().createInfo()
+                        .setTitle("Information");
+        }
+        Platform.runLater(() -> {
+            alert.setHeader(title)
+                    .setMessage(message)
+                    .showAndWait();
+        });
     }
 
     /**
@@ -86,16 +112,16 @@ public class MessageBox {
      * @param option
      * @return
      */
-    private static int createSwingConfirm(String title, String message, int option) {
-        String body = HTML_START + HTML_CONTENT + message + HTML_END;
-        //----------------------------------------------------------------------
-        // add to space padding for title.
-        title = titlePadding + title;
-        //----------------------------------------------------------------------
-        return JOptionPane.showConfirmDialog(null, body, title,
-                option,
-                JOptionPane.QUESTION_MESSAGE);
-    }
+//    private static int createSwingConfirm(String title, String message, int option) {
+//        String body = HTML_START + HTML_CONTENT + message + HTML_END;
+//        //----------------------------------------------------------------------
+//        // add to space padding for title.
+//        title = titlePadding + title;
+//        //----------------------------------------------------------------------
+//        return JOptionPane.showConfirmDialog(null, body, title,
+//                option,
+//                JOptionPane.QUESTION_MESSAGE);
+//    }
 
     /**
      * Show information message.
@@ -144,9 +170,9 @@ public class MessageBox {
      * @param message
      * @return 0 and 1 for Yes or No Respectively.
      */
-    public static int showConfirmation(String title, String message) {
-        return createSwingConfirm(title, message, JOptionPane.YES_NO_OPTION);
-    }
+//    public static int showConfirmation(String title, String message) {
+//        return createSwingConfirm(title, message, JOptionPane.YES_NO_OPTION);
+//    }
 
     /**
      * Confirmation with cancel.
@@ -155,8 +181,8 @@ public class MessageBox {
      * @param message
      * @return values 0, 1 and 2 respectively with YES, NO, CANCEL.
      */
-    public static int showConfirmationCancelable(String title, String message) {
-        return createSwingConfirm(title, message, JOptionPane.YES_NO_CANCEL_OPTION);
-    }
+//    public static int showConfirmationCancelable(String title, String message) {
+//        return createSwingConfirm(title, message, JOptionPane.YES_NO_CANCEL_OPTION);
+//    }
 
 }

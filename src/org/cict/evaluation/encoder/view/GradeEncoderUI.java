@@ -1094,6 +1094,7 @@ public class GradeEncoderUI {
 
         encodeGrade.whenSuccess(() -> {
             if (encodeGrade.isAlreadyPosted()) {
+                
                 MessageBox.showInformation("Done", "No Changes Where Made.");
                 Mono.fx().getParentStage(this.notificationPane).close();
             } else {

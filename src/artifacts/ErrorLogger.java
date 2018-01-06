@@ -50,7 +50,7 @@ public class ErrorLogger {
         el.setErrorThread(t);
         el.printError();
         el.writeToText();
-        MessageBox.showError("Fatal Error","A system error has occured. The error details was saved in your local log files.");
+        JOptionPane.showMessageDialog(null, "A system error has occured. The error details was saved in your local log files.", "Fatal Error", JOptionPane.ERROR_MESSAGE);
         //JOptionPane.showMessageDialog(null, "A System Error Has Occured.\nThe error was saved in your local log files for information,\nthe system needs to be terminated.", "ERROR", JOptionPane.ERROR_MESSAGE);
         // TERMINATES THE APPLCATION FORCIBLY.
        // Runtime.getRuntime().halt(0);
