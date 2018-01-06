@@ -115,7 +115,7 @@ public class RetentionHistory extends MonoLauncher{
     
     private void createTable(ArrayList<RetentionPolicyMapping> retentionPolicies) {
         
-        SimpleTable tblFaculty = new SimpleTable();
+        SimpleTable tblRetentionPolicy = new SimpleTable();
         for(RetentionPolicyMapping each : retentionPolicies) {
             SimpleTableRow row = new SimpleTableRow();
             row.setRowHeight(77.0);
@@ -135,6 +135,7 @@ public class RetentionHistory extends MonoLauncher{
                 RetentionRowDetails r = M.load(RetentionRowDetails.class);
                 r.setCurriculum((CurriculumMapping) map[1]);
                 r.setRetentionPolicy((RetentionPolicyMapping) map[0]);
+                r.setStudent(student);
                 r.onDelayedStart();
                 try {
                     r.getCurrentStage().show();
@@ -155,11 +156,11 @@ public class RetentionHistory extends MonoLauncher{
             cellParent.setContentAsPane(rowFX.getApplicationRoot());
 
             row.addCell(cellParent);
-            tblFaculty.addRow(row);
+            tblRetentionPolicy.addRow(row);
         }
         
         SimpleTableView simpleTableView = new SimpleTableView();
-        simpleTableView.setTable(tblFaculty);
+        simpleTableView.setTable(tblRetentionPolicy);
         simpleTableView.setFixedWidth(true);
         simpleTableView.setParentOnScene(vbox_table);
     }

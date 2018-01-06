@@ -173,7 +173,7 @@ public class FailedGradeChecker extends Transaction{
         return true;
     }
 
-    private static final String[] numNames = {
+    public static final String[] numNames = {
         "",
         " One",
         " Two",
