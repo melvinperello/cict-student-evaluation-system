@@ -213,7 +213,8 @@ public class FailedGradeChecker extends Transaction{
                     .eq(DB.retention_policy().academic_semester, currentAcadTerm.getSemester())
                     .eq(DB.retention_policy().academic_year, currentAcadTerm.getSchool_year())
                     .eq(DB.retention_policy().section, section)
-                    .eq(DB.retention_policy().semester, prevAcadTerm.getSemester())
+                    .eq(DB.retention_policy().prev_school_year, prevAcadTerm.getSchool_year())
+                    .eq(DB.retention_policy().prev_semester, prevAcadTerm.getSemester())
                     .eq(DB.retention_policy().year_level, this.getYearLevel(year))
                     .active(Order.desc(DB.retention_policy().id)).first();
             if(existing == null) {
@@ -225,7 +226,8 @@ public class FailedGradeChecker extends Transaction{
                 retentionPolicy.setCURRICULUM_id(curriculum.getId());
                 retentionPolicy.setSTUDENT_id(this.student.getCict_id());
                 retentionPolicy.setSection(section);
-                retentionPolicy.setSemester(prevAcadTerm.getSemester());
+                retentionPolicy.setPrev_semester(prevAcadTerm.getSemester());
+                retentionPolicy.setPrev_school_year(prevAcadTerm.getSchool_year());
                 retentionPolicy.setVerified_by(CollegeFaculty.instance().getFACULTY_ID());
                 retentionPolicy.setYear_level(this.getYearLevel(year));
                 int retentionPolicy_id = Database.connect().retention_policy().insert(retentionPolicy);

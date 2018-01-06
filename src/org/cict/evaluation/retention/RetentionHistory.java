@@ -147,8 +147,8 @@ public class RetentionHistory extends MonoLauncher{
             });
             
             rowFX.getLbl_yearlvl().setText(each.getYear_level());
-            rowFX.getLbl_semester().setText(each.getSemester());
-            System.out.println(each.getYear_level() + " | " + each.getSemester());
+            rowFX.getLbl_semester().setText(each.getPrev_semester());
+            System.out.println(each.getYear_level() + " | " + each.getPrev_semester());
 
             row.getRowMetaData().put("MAP", new Object[] {each, curriculum});
             SimpleTableCell cellParent = new SimpleTableCell();

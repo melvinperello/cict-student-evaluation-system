@@ -31,7 +31,8 @@ private java.lang.Integer STUDENT_id;
 private java.lang.String section;
 private java.lang.Integer CURRICULUM_id;
 private java.lang.String year_level;
-private java.lang.String semester;
+private java.lang.String prev_school_year;
+private java.lang.String prev_semester;
 private java.lang.String academic_year;
 private java.lang.String academic_semester;
 private java.util.Date verification_date;
@@ -85,13 +86,22 @@ public void setYear_level(java.lang.String fieldYearLevel) {
 	this.year_level = fieldYearLevel;
 }
 
-@Column(name = "semester", nullable = true, length = 50)
-public java.lang.String getSemester() {
-	return this.semester;
+@Column(name = "prev_school_year", nullable = true, length = 50)
+public java.lang.String getPrev_school_year() {
+	return this.prev_school_year;
 }
 
-public void setSemester(java.lang.String fieldSemester) {
-	this.semester = fieldSemester;
+public void setPrev_school_year(java.lang.String fieldPrevSchoolYear) {
+	this.prev_school_year = fieldPrevSchoolYear;
+}
+
+@Column(name = "prev_semester", nullable = true, length = 50)
+public java.lang.String getPrev_semester() {
+	return this.prev_semester;
+}
+
+public void setPrev_semester(java.lang.String fieldPrevSemester) {
+	this.prev_semester = fieldPrevSemester;
 }
 
 @Column(name = "academic_year", nullable = true, length = 50)
@@ -152,7 +162,8 @@ copyMe.STUDENT_id = this.STUDENT_id;
 copyMe.section = this.section;
 copyMe.CURRICULUM_id = this.CURRICULUM_id;
 copyMe.year_level = this.year_level;
-copyMe.semester = this.semester;
+copyMe.prev_school_year = this.prev_school_year;
+copyMe.prev_semester = this.prev_semester;
 copyMe.academic_year = this.academic_year;
 copyMe.academic_semester = this.academic_semester;
 copyMe.verification_date = this.verification_date;

@@ -19,8 +19,11 @@
 <property name="year_level" type="java.lang.String">
 <column name="year_level" length="50"/>
 </property>
-<property name="semester" type="java.lang.String">
-<column name="semester" length="50"/>
+<property name="prev_school_year" type="java.lang.String">
+<column name="prev_school_year" length="50"/>
+</property>
+<property name="prev_semester" type="java.lang.String">
+<column name="prev_semester" length="50"/>
 </property>
 <property name="academic_year" type="java.lang.String">
 <column name="academic_year" length="50"/>

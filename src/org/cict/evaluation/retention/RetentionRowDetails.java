@@ -156,7 +156,7 @@ public class RetentionRowDetails extends MonoLauncher{
         if(retentionSubjects!=null || !retentionSubjects.isEmpty()) {
             for(RetentionSubjectMapping eachSubject: retentionSubjects){
                 SimpleTableRow row = new SimpleTableRow();
-                row.setRowHeight(77.0);
+                row.setRowHeight(50.0);
                 
                 RetentionDetailsSubjectRow rowFX = M.load(RetentionDetailsSubjectRow.class);
                 rowFX.getLbl_code().setText(eachSubject.getSubject_code());
@@ -205,8 +205,8 @@ public class RetentionRowDetails extends MonoLauncher{
         retention.DEAN = PublicConstants.getSystemVar_Noted_By().toString();
         retention.SERVER_DATE = retentionPolicy.getVerification_date();
         retention.NUMBER_OF_FAILED_SUBJECTS = failedGrades;
-        retention.PREV_SCHOOL_YEAR = this.retentionPolicy.getAcademic_year();
-        retention.PREV_SEMESTER = (retentionPolicy.getAcademic_semester().equals("FIRST SEMESTER")? "1st" : (retentionPolicy.getAcademic_semester().equalsIgnoreCase("SECOND SEMESTER")? "2nd" : retentionPolicy.getAcademic_semester()));
+        retention.PREV_SCHOOL_YEAR = this.retentionPolicy.getPrev_school_year();
+        retention.PREV_SEMESTER = (retentionPolicy.getPrev_semester().equals("FIRST SEMESTER")? "1st" : (retentionPolicy.getPrev_semester().equalsIgnoreCase("SECOND SEMESTER")? "2nd" : retentionPolicy.getPrev_semester()));
         
         String localReg1 = PublicConstants.getSystemVar_LocalRegistrar1().toString();
         String localReg2 = PublicConstants.getSystemVar_LocalRegistrar2().toString();
