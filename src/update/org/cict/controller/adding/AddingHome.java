@@ -25,6 +25,7 @@ import com.jhmvin.fx.controls.simpletable.SimpleTableView;
 import com.jhmvin.fx.display.ControllerFX;
 import com.jhmvin.fx.display.SceneFX;
 import com.jhmvin.transitions.Animate;
+import com.melvin.mono.fx.bootstrap.M;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -50,12 +51,12 @@ import org.bsu.cict.queue.CallerObject;
 import org.cict.GenericLoadingShow;
 import org.cict.PublicConstants;
 import org.cict.SubjectClassification;
-import org.cict.ThreadMill;
 import org.cict.authentication.authenticator.CollegeFaculty;
 import org.cict.evaluation.CoRequisiteFilter;
 import org.cict.evaluation.CurricularLevelController;
 import org.cict.evaluation.FirstAssistantController;
 import org.cict.evaluation.evaluator.PrintChecklist;
+import org.cict.evaluation.retention.RetentionHistory;
 import org.cict.evaluation.student.credit.CreditController;
 import org.cict.evaluation.student.history.StudentHistoryController;
 import org.cict.reports.ReportsUtility;
@@ -172,6 +173,9 @@ public class AddingHome extends SceneFX implements ControllerFX {
     @FXML
     private VBox vbox_que_load;
 
+    @FXML
+    private JFXButton btn_retention;
+    
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     private StudentMapping studentSearched;
@@ -349,8 +353,25 @@ public class AddingHome extends SceneFX implements ControllerFX {
         this.addClickEvent(btn_checklist, () -> {
             printChecklist();
         });
+        
+        super.addClickEvent(btn_retention, () -> {
+            this.viewRetentionHistory();
+        });
     }
 
+    private void viewRetentionHistory() {
+        RetentionHistory r = M.load(RetentionHistory.class);
+        System.out.println(this.studentSearched.getId());
+        r.setStudent(this.studentSearched);
+        r.onDelayedStart();
+        try {
+            r.getCurrentStage().show();
+        } catch (NullPointerException e) {
+            Stage a = r.createChildStage(super.getStage());
+            a.show();
+        }
+    }
+    
     private Boolean FLAG_CROSS_ENROLLEE;
 
     private void printChecklist() {

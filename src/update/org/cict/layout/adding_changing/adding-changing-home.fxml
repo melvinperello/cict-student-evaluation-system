@@ -141,7 +141,7 @@
                               </Label>
                            </children>
                         </HBox>
-                        <VBox fx:id="vbox_studentOptions" alignment="CENTER_LEFT" prefHeight="257.0" prefWidth="182.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" stylesheets="@adding-table.css" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="100.0">
+                        <VBox fx:id="vbox_studentOptions" alignment="CENTER_LEFT" prefHeight="287.0" prefWidth="182.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" stylesheets="@adding-table.css" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="100.0">
                            <children>
                               <JFXButton fx:id="btnHistory" graphicTextGap="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@button-hover.css" text="History        " textFill="WHITE">
                                  <graphic>
@@ -190,7 +190,7 @@
                               </JFXButton>
                               <JFXButton fx:id="btnCreditUnits" graphicTextGap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@button-hover.css" text="Grades        " textFill="WHITE" VBox.vgrow="ALWAYS">
                                  <graphic>
-                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="36.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@img/Exam_64px.png" />
                                        </image>
@@ -202,6 +202,18 @@
                                  <VBox.margin>
                                     <Insets left="1.0" right="1.0" />
                                  </VBox.margin>
+                              </JFXButton>
+                              <JFXButton fx:id="btn_retention" graphicTextGap="10.0" layoutX="11.0" layoutY="202.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="63.0" prefWidth="200.0" stylesheets="@button-hover.css" text="Retention  " textFill="WHITE">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@img/icons8-high-priority-50.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
                               </JFXButton>
                            </children>
                         </VBox>

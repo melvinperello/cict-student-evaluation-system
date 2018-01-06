@@ -160,7 +160,7 @@ public class RetentionRowDetails extends MonoLauncher{
                 
                 RetentionDetailsSubjectRow rowFX = M.load(RetentionDetailsSubjectRow.class);
                 rowFX.getLbl_code().setText(eachSubject.getSubject_code());
-                rowFX.getLbl_title().setText(eachSubject.getSubject_code());
+                rowFX.getLbl_title().setText(eachSubject.getSubject_title());
                 rowFX.getLbl_units().setText(eachSubject.getUnits());
                 
                 SimpleTableCell cellParent = new SimpleTableCell();
