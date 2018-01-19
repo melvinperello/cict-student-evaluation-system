@@ -198,8 +198,20 @@ public class BITCT {
         /**
          * STUDENT INFO
          */
-        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Plain, getShortenedDetail(this.name, 40), font7Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT NO: ", font7Plain, getShortenedDetail(this.studentNo, 47), font7Plain, "", true), false, true));
+        
+        boolean underlne = true;
+        if (name.isEmpty()) {
+            name = "__________________________________________";
+            underlne = false;
+        }
+        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Plain, getShortenedDetail(this.name, 40), font7Plain, "", underlne), false, true));
+        
+        boolean underle = true;
+        if (studentNo.isEmpty()) {
+            studentNo = "__________________________________________";
+            underle = false;
+        }
+        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT NO: ", font7Plain, getShortenedDetail(this.studentNo, 47), font7Plain, "", underle), false, true));
         
         boolean u = true;
         if (address==null || address.isEmpty()) {
