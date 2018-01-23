@@ -244,8 +244,8 @@ public class BSIT1516 {
         /**
          * STUDENT INFO
          */
-        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font8Plain, getShortenedDetail(this.name, 40), font8Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font8Plain, getShortenedDetail(this.studentNo, 47), font8Plain, "", true), false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font8Plain, this.name.isEmpty()? "_____________________________________" : getShortenedDetail(this.name, 40), font8Plain, "", !this.name.isEmpty()), false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font8Plain,  this.studentNo.isEmpty()? "_____________________________________" : getShortenedDetail(this.studentNo, 47), font8Plain, "", !this.studentNo.isEmpty()), false, true));
         boolean u = true;
         if (address == null || address.isEmpty()) {
             u = false;

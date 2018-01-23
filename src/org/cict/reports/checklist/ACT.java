@@ -159,9 +159,9 @@ public class ACT {
         /**
          * STUDENT INFO
          */
-        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Bold, getShortenedDetail(this.name, 40), font7Plain, "", true), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font7Bold, getShortenedDetail(this.studentNo.isEmpty()? "________________________________________" : studentNo, 47), font7Plain, "", !studentNo.contains("_")), false, true));
-        tbl_stud.addCell(createCellWithObject(getTitleContent("COURSE YR, SEC & GRP: ", font7Bold, getShortenedDetail(this.courseYrSecGrp.isEmpty()? "________________________________________" : this.courseYrSecGrp, 39), font7Plain, "", !courseYrSecGrp.contains("_")), false, false));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("NAME: ", font7Bold, this.name.isEmpty()? "_____________________________________": getShortenedDetail(this.name, 40), font7Plain, "", !this.name.isEmpty()), false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("STUDENT #: ", font7Bold, getShortenedDetail(this.studentNo.isEmpty()? "________________________________________" : studentNo, 47), font7Plain, "", !studentNo.contains("")), false, true));
+        tbl_stud.addCell(createCellWithObject(getTitleContent("COURSE YR, SEC & GRP: ", font7Bold, getShortenedDetail(this.courseYrSecGrp.isEmpty()? "___________________________________" : this.courseYrSecGrp, 39), font7Plain, "", !courseYrSecGrp.contains("")), false, false));
         tbl_stud.addCell(createCellWithObject(new Chunk(""), false, true));
 
         return tbl_stud;

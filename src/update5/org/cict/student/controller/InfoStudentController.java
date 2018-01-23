@@ -483,10 +483,6 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
     }
 
     private void printCheckList(Boolean printLegacy, Integer curriculum_ID, Integer prep_id) {
-        Document doc = ReportsUtility.paperSizeChooser(this.getStage());
-        if(doc==null) {
-            return;
-        }
         PrintChecklist printCheckList = new PrintChecklist();
         printCheckList.printLegacy = printLegacy;
         printCheckList.CICT_id = CURRENT_STUDENT.getCict_id();
@@ -509,6 +505,10 @@ public class InfoStudentController extends SceneFX implements ControllerFX {
                     .text("Something went wrong, sorry for the inconvinience.").showWarning();
         });
         if (!printLegacy) {
+            Document doc = ReportsUtility.paperSizeChooser(this.getStage());
+            if(doc==null) {
+                return;
+            }   
             printCheckList.setDocumentFormat(doc);
         }
         if(ReportsUtility.savePrintLogs(this.CURRENT_STUDENT.getCict_id(), "CHECKLIST", "STUDENTS", "INITIAL")) {
