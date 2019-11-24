@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.SystemOverrideLogsMapping" table="system_override_logs" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="category" type="java.lang.String">
+<column name="category" length="50"/>
+</property>
+<property name="description" type="java.lang.String">
+<column name="description" length="50"/>
+</property>
+<property name="executed_by" type="java.lang.Integer">
+<column name="executed_by" length="10"/>
+</property>
+<property name="executed_date" type="java.util.Date">
+<column name="executed_date" length="19"/>
+</property>
+<property name="academic_term" type="java.lang.Integer">
+<column name="academic_term" length="10"/>
+</property>
+<property name="conforme" type="java.lang.String">
+<column name="conforme" length="50"/>
+</property>
+<property name="conforme_type" type="java.lang.String">
+<column name="conforme_type" length="50"/>
+</property>
+<property name="conforme_id" type="java.lang.Integer">
+<column name="conforme_id" length="10"/>
+</property>
+<property name="attachment_file" type="java.lang.String">
+<column name="attachment_file" length="60"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

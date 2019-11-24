@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.LinkedTelemetryMapping" table="linked_telemetry" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="class_name" type="java.lang.String">
+<column name="class_name" length="50"/>
+</property>
+<property name="method_name" type="java.lang.String">
+<column name="method_name" length="50"/>
+</property>
+<property name="line" type="java.lang.String">
+<column name="line" length="50"/>
+</property>
+<property name="classification" type="java.lang.String">
+<column name="classification" length="50"/>
+</property>
+<property name="exception_type" type="java.lang.String">
+<column name="exception_type" length="50"/>
+</property>
+<property name="description" type="java.lang.String">
+<column name="description" length="200"/>
+</property>
+<property name="student_number" type="java.lang.String">
+<column name="student_number" length="30"/>
+</property>
+<property name="student_name" type="java.lang.String">
+<column name="student_name" length="100"/>
+</property>
+<property name="version" type="java.lang.String">
+<column name="version" length="100"/>
+</property>
+<property name="build" type="java.lang.String">
+<column name="build" length="100"/>
+</property>
+<property name="model" type="java.lang.String">
+<column name="model" length="100"/>
+</property>
+<property name="board" type="java.lang.String">
+<column name="board" length="100"/>
+</property>
+<property name="brand" type="java.lang.String">
+<column name="brand" length="100"/>
+</property>
+<property name="hardware" type="java.lang.String">
+<column name="hardware" length="100"/>
+</property>
+<property name="manufacturer" type="java.lang.String">
+<column name="manufacturer" length="100"/>
+</property>
+<property name="serial" type="java.lang.String">
+<column name="serial" length="100"/>
+</property>
+<property name="date_submitted" type="java.util.Date">
+<column name="date_submitted" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

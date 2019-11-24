@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.EvaluationMapping" table="evaluation" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="STUDENT_id" type="java.lang.Integer">
+<column name="STUDENT_id" length="10"/>
+</property>
+<property name="ACADTERM_id" type="java.lang.Integer">
+<column name="ACADTERM_id" length="10"/>
+</property>
+<property name="FACULTY_id" type="java.lang.Integer">
+<column name="FACULTY_id" length="10"/>
+</property>
+<property name="adding_reference_id" type="java.lang.Integer">
+<column name="adding_reference_id" length="10"/>
+</property>
+<property name="evaluation_date" type="java.util.Date">
+<column name="evaluation_date" length="19"/>
+</property>
+<property name="year_level" type="java.lang.Integer">
+<column name="year_level" length="10"/>
+</property>
+<property name="type" type="java.lang.String">
+<column name="type" length="50"/>
+</property>
+<property name="remarks" type="java.lang.String">
+<column name="remarks" length="50"/>
+</property>
+<property name="print_type" type="java.lang.String">
+<column name="print_type" length="50"/>
+</property>
+<property name="cancelled_by" type="java.lang.Integer">
+<column name="cancelled_by" length="10"/>
+</property>
+<property name="cancelled_date" type="java.util.Date">
+<column name="cancelled_date" length="19"/>
+</property>
+<property name="check_mode" type="java.lang.String">
+<column name="check_mode" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

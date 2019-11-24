@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="application_root" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="70.0" prefWidth="200.0" style="-fx-background-color: #414852; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);" stylesheets="@home.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #2E333F;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../res/bulsu-logo.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView cache="true" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../res/CICT.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <VBox id="vertical_separator">
+                           <HBox.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox>
+                     <children>
+                        <Label stylesheets="@../../../../../../Enrollment-Evaluation-Management-System/src/sys/org/cict/layout/home/home.css" text="Bulacan State University">
+                           <font>
+                              <Font name="Courier New" size="20.0" />
+                           </font>
+                        </Label>
+                        <Label text="COLLEGE OF INFORMATION AND COMMUNICATIONS TECHNOLOGY">
+                           <font>
+                              <Font name="Courier New" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label text="CICT Student Evaluation System">
+                           <font>
+                              <Font name="Courier New" size="17.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <HBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </VBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
+                     <children>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../res/ms_logo.jpg" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="Powered by" />
+                              <Label text="Monosync Studio PH">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label text="v 1.0 build  12312017" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets left="20.0" />
+               </padding>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <StackPane layoutX="1.0" layoutY="71.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0">
+         <children>
+            <VBox fx:id="vbox_main">
+               <children>
+                  <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="TOP_CENTER" style="-fx-background-color: #46CDAC; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: white;" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="cluster_1_name" alignment="TOP_LEFT" graphicTextGap="10.0" text="CLUSTER 1" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="30.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../res/floor_room.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                              <HBox>
+                                 <children>
+                                    <VBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label prefWidth="190.0" text="Now Calling" textFill="WHITE">
+                                             <font>
+                                                <Font name="System Bold" size="28.0" />
+                                             </font>
+                                          </Label>
+                                          <Label maxHeight="45.0" prefHeight="45.0" prefWidth="190.0" text="Please Proceed to the evaluation room" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <padding>
+                                          <Insets left="10.0" right="10.0" />
+                                       </padding>
+                                    </VBox>
+                                    <Label fx:id="lbl_3" alignment="TOP_LEFT" ellipsisString="." text="0" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="System Bold" size="80.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="-10.0" top="-10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox VBox.vgrow="NEVER">
+                                 <children>
+                                    <VBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="Next to be called please be ready." textFill="WHITE">
+                                             <font>
+                                                <Font size="25.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <padding>
+                                          <Insets left="10.0" right="20.0" />
+                                       </padding>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <VBox fx:id="vbox_table_left" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <stylesheets>
+                                    <URL value="@style.css" />
+                                    <URL value="@metro-ui-table.css" />
+                                 </stylesheets>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: #5E9CE9; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); -fx-border-color: white;" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="cluster_2_name" alignment="TOP_LEFT" graphicTextGap="10.0" text="CLUSTER 2" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="30.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../res/floor_room.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                              <HBox VBox.vgrow="NEVER">
+                                 <children>
+                                    <VBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label prefWidth="190.0" text="Now Calling" textFill="WHITE">
+                                             <font>
+                                                <Font name="System Bold" size="28.0" />
+                                             </font>
+                                          </Label>
+                                          <Label maxHeight="45.0" prefHeight="45.0" prefWidth="190.0" text="Please Proceed to the evaluation room" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <padding>
+                                          <Insets left="10.0" right="10.0" />
+                                       </padding>
+                                    </VBox>
+                                    <Label fx:id="lbl_4" alignment="TOP_LEFT" ellipsisString="." text="0" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="80.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="-10.0" top="-10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <VBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <Label text="Next to be called please be ready." textFill="WHITE">
+                                       <font>
+                                          <Font size="25.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets left="10.0" right="20.0" />
+                                 </padding>
+                              </VBox>
+                              <VBox fx:id="vbox_table_right" prefHeight="200.0" prefWidth="100.0" styleClass="metro-table" VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <stylesheets>
+                                    <URL value="@style.css" />
+                                    <URL value="@metro-ui-table.css" />
+                                 </stylesheets>
+                              </VBox>
+                              <HBox />
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </VBox>
+                        <VBox maxWidth="300.0" prefWidth="300.0" style="-fx-background-color: #2E333F; -fx-border-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+                           <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label graphicTextGap="10.0" text="ANNOUNCEMENT" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                       <graphic>
+                                          <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../res/announce.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <VBox fx:id="vbox_announce_body">
+                                 <children>
+                                    <HBox alignment="CENTER">
+                                       <children>
+                                          <Label fx:id="lbl_announcement_title" alignment="CENTER" text="Ang Pag-ibig Sa Tinubuan Lupa" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="20.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets top="20.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER">
+                                       <children>
+                                          <Label fx:id="lbl_announcement_body" alignment="CENTER" text="Aling pag-ibig pa ang hihigit kayaSa pagkadalisay at pagkadakilaGaya ng pag-ibig sa tinub’ang lupa?Aling pag-ibig pa? Wala na nga, wala. Ulit-ulitin mang basahin ng isipAt isa-isahing talastasing pilitAng salita’t buhay na limbag at titikNg sangkatauhan ito’y namamasid.Banal na Pag-ibig! Pag ikaw ang nukalSa tapat na puso ng sino’t alinman,Imbi’t taong-gubat, maralita’t mangmang,Nagiging dakila at iginagalang.Pagpupuring lubos ang palaging hangadSa bayan ng taong may dangal na ingat" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets top="20.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER">
+                                       <children>
+                                          <Label fx:id="lbl_announcement_time" text="12:49 PM 11/19/2017" textFill="WHITE">
+                                             <font>
+                                                <Font name="System Bold" size="15.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                                 <padding>
+                                    <Insets left="20.0" right="20.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="vbox_loading" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white;" visible="false">
+               <children>
+                  <ImageView fitHeight="400.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../res/pencil_loading.gif" />
+                     </image>
+                  </ImageView>
+               </children></VBox>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.LinkedEntranceMapping" table="linked_entrance" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="reference_id" type="java.lang.Integer">
+<column name="reference_id"/>
+<generator class="identity"/>
+</id>
+<property name="student_number" type="java.lang.String">
+<column name="student_number" length="50"/>
+</property>
+<property name="name" type="java.lang.String">
+<column name="name" length="50"/>
+</property>
+<property name="status" type="java.lang.String">
+<column name="status" length="50"/>
+</property>
+<property name="faculty_name" type="java.lang.String">
+<column name="faculty_name" length="50"/>
+</property>
+<property name="floor_assignment" type="java.lang.Integer">
+<column name="floor_assignment" length="10"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>

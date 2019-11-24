@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MonoForms | Numbering Form</title>
+    <link rel="icon" href="img/monosync_logo.jpg" type="image/png">
+    <!--JQuery-->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/additional-methods.js"></script>
+    <script type="text/javascript" src="js/jquery.serialize-object.min.js"></script>
+    <script type="text/javascript" src="js/qrcode.min.js"></script>
+	<script type="text/javascript" src="js/download.js"></script>
+    <!--Bootstrap Material-->
+    <link rel="stylesheet" href="css/bootstrap-material-design.min.css">
+    <!--YOUR STYLE-->
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <!-- Material Design fonts
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
+
+</head>
+<body>
+<br><br><br>
+<div class="container col-lg-7"
+     style="font-family: Montserrat; border-radius: 1px; background-color:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    <div class="row">
+        <div class="col-lg-6"><br>
+            <h1>MonoForms</h1>
+            <h5>Minified. Simplified.</h5>
+        </div>
+        <div class="col-lg-6 text-right" style="padding-top:8%">
+            <button id="btn_main" class="btn btn-raised btn-primary"> Home</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+            <hr/>
+        </div>
+    </div>
+    <form id="frm_numbering">
+        <div class="row">
+
+            <div class="col-lg-6">
+                <div class="form-group label-floating">
+                    <label class="control-label" for="txt_student_number">Student Number (Required)</label>
+                    <input class="form-control" id="txt_student_number" name="txt_student_number" type="text">
+                    <p class="help-block" style="font-size:8pt">Please fill up your complete Student ID. e.g.
+                        2014100282</p>
+                </div>
+                <div class="text-right">
+                    <button type="button" id="btn_generate" class="btn btn-raised btn-primary ">Get Code</button>
+                    <br>
+                </div>
+                <!--Message-->
+                <br>
+                <div class="alert alert-info">
+                    <strong>Hi There!</strong> You can already create a request code so that when you approach a marshall it will be scanned in a jiffy. You can also save your code by clicking the image.
+                </div>
+                <!--Message-->
+            </div>
+
+            <div  class="col-lg-6" id="generated_form">
+                <label>Numbering QR Code</label><br>
+                <!--QR CODE-->
+                <div id="div_qrcode" style="margin-top:15px;"></div>
+                <label style = "color: #0b3251">Click The Image To Download</label>
+            </div>
+        </div>
+    </form>
+
+    <!--CODE HANDLER----------------------------------------------------------->
+    <script type="text/javascript" src="js_code/numbering_form_js.js"></script>
+    <!--CODE HANDLER----------------------------------------------------------->
+
+    <div class="row">
+        <div class="container">
+            <hr/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 text-right" id="sub" style="font-family: Montserrat; font-size: 8pt;">
+            <p>MonoForms Version 1.0 | Monosync Studio PH | 2017 | "Innovating Possibilities."</p>
+        </div>
+    </div>
+    <br>
+</div>
+<br><br>
+
+<!-- jQuery first, then tether, then Bootstrap Material Design JS. -->
+<script type="text/javascript" src="js/tether.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-material-design.iife.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script type="text/javascript" src="js/ie10-viewport-bug-workaround.js"></script>
+
+<script>
+    $('body').bootstrapMaterialDesign();
+</script>
+</body>
+</html>

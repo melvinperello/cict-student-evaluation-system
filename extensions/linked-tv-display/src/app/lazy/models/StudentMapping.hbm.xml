@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.StudentMapping" table="student" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="cict_id" type="java.lang.Integer">
+<column name="cict_id"/>
+<generator class="identity"/>
+</id>
+<property name="id" type="java.lang.String">
+<column name="id" length="50"/>
+</property>
+<property name="CURRICULUM_id" type="java.lang.Integer">
+<column name="CURRICULUM_id" length="10"/>
+</property>
+<property name="curriculum_assignment" type="java.util.Date">
+<column name="curriculum_assignment" length="19"/>
+</property>
+<property name="PREP_id" type="java.lang.Integer">
+<column name="PREP_id" length="10"/>
+</property>
+<property name="prep_assignment" type="java.util.Date">
+<column name="prep_assignment" length="19"/>
+</property>
+<property name="last_name" type="java.lang.String">
+<column name="last_name" length="100"/>
+</property>
+<property name="first_name" type="java.lang.String">
+<column name="first_name" length="100"/>
+</property>
+<property name="middle_name" type="java.lang.String">
+<column name="middle_name" length="100"/>
+</property>
+<property name="gender" type="java.lang.String">
+<column name="gender" length="100"/>
+</property>
+<property name="year_level" type="java.lang.Integer">
+<column name="year_level" length="10"/>
+</property>
+<property name="section" type="java.lang.String">
+<column name="section" length="100"/>
+</property>
+<property name="_group" type="java.lang.Integer">
+<column name="_group" length="10"/>
+</property>
+<property name="has_profile" type="java.lang.Integer">
+<column name="has_profile" length="10"/>
+</property>
+<property name="enrollment_type" type="java.lang.String">
+<column name="enrollment_type" length="50"/>
+</property>
+<property name="college" type="java.lang.String">
+<column name="college" length="50"/>
+</property>
+<property name="campus" type="java.lang.String">
+<column name="campus" length="50"/>
+</property>
+<property name="residency" type="java.lang.String">
+<column name="residency" length="50"/>
+</property>
+<property name="class_type" type="java.lang.String">
+<column name="class_type" length="50"/>
+</property>
+<property name="university" type="java.lang.String">
+<column name="university" length="50"/>
+</property>
+<property name="created_by" type="java.lang.String">
+<column name="created_by" length="100"/>
+</property>
+<property name="created_date" type="java.util.Date">
+<column name="created_date" length="19"/>
+</property>
+<property name="updated_by" type="java.lang.String">
+<column name="updated_by" length="100"/>
+</property>
+<property name="updated_date" type="java.util.Date">
+<column name="updated_date" length="19"/>
+</property>
+<property name="verified" type="java.lang.Integer">
+<column name="verified" length="10"/>
+</property>
+<property name="verification_date" type="java.util.Date">
+<column name="verification_date" length="19"/>
+</property>
+<property name="verfied_by" type="java.lang.Integer">
+<column name="verfied_by" length="10"/>
+</property>
+<property name="last_evaluation_term" type="java.lang.Integer">
+<column name="last_evaluation_term" length="10"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

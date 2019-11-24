@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MonoForms | Profiling Form</title>
+    <link rel="icon" href="img/monosync_logo.jpg" type="image/png">
+    <!--JQuery-->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/additional-methods.js"></script>
+    <script type="text/javascript" src="js/jquery.serialize-object.min.js"></script>
+    <script type="text/javascript" src="js/qrcode.min.js"></script>
+    <script type="text/javascript" src="js/download.js"></script>
+    <!--Bootstrap Material-->
+    <link rel="stylesheet" href="css/bootstrap-material-design.min.css">
+    <!--YOUR STYLE-->
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <!-- Material Design fonts
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
+</head>
+<body>
+<br><br><br>
+<div class="container col-lg-7"
+     style="font-family: Montserrat; border-radius: 1px; background-color:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    <div class="row">
+        <div class="col-lg-6"><br>
+            <h1>MonoForms</h1>
+            <h5>Minified. Simplified.</h5>
+        </div>
+        <div class="col-lg-6 text-right" style="padding-top:8%">
+            <button id="btn_main" class="btn btn-raised btn-primary">Home</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+
+        </div>
+    </div>
+    <form id="frm_profiling">
+
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <br>
+                <div class="card card-outline-danger text-center">
+                    <div class="card-block">
+                        <blockquote class="card-blockquote">
+                            <p>STUDENT'S INFORMATION</p>
+                            <div style="font-size: 10px">Based on BulSU-OP-CICT-03F1 <i> Revision: 0</i></div>
+                        </blockquote>
+                    </div>
+                </div>
+
+                <br>
+                <p class="text-right" style="font-size:8pt">Note: Fields with <span
+                        style="color: #E67441">asterisks(*)</span> are required.</p>
+            </div>
+            <!--NAME-->
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="control-label" for="txt_student_number">Student Number*</label>
+                    <input class="form-control" id="txt_student_number" name="txt_student_number"
+                           placeholder="e.g. 2014100282" type="text">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="txt_last_name">Last Name*</label>
+                    <input class="form-control" id="txt_last_name" name="txt_last_name" placeholder="e.g. Dela Cruz"
+                           type="text">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="txt_first_name">First Name*</label>
+                    <input class="form-control" id="txt_first_name" name="txt_first_name" placeholder="e.g. Juan"
+                           type="text">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="txt_middle_name">Middle Name</label>
+                    <input class="form-control" id="txt_middle_name" name="txt_middle_name" placeholder="e.g. Santos"
+                           type="text">
+                </div>
+            </div>
+            <!--NAME-->
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="control-label" for="txt_contact_no">Contact no.*</label>
+                    <input class="form-control" id="txt_contact_no" name="txt_contact_no" placeholder="e.g. 09437083011"
+                           type="text">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="txt_email">E-mail Address*</label>
+                    <input class="form-control" id="txt_email" name="txt_email"
+                           placeholder="e.g. juandelacruz@gamil.com" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="radio_gender" class="control-label">Gender*</label><br>
+                    <div class="col-md-10" id="radio_gender">
+                        <div class="radio radio-primary">
+                            <label style="color: black;">
+                                <input type="radio" name="gender" value="MALE">
+                                Male
+                            </label>
+                        </div>
+                        <div class="radio radio-primary">
+                            <label style="color: black;">
+                                <input type="radio" name="gender" value="FEMALE">
+                                Female
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--New Address Info-->
+            <div class="col-lg-8">
+                <div class="form-group">
+                    <label class="control-label" for="txt_student_address">Address*</label>
+                    <input class="form-control" id="txt_student_address" name="txt_student_address"
+                           placeholder="e.g. #07 National Road Cut-Cot, Pulilan, Bulacan " type="text"><br/>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label class="control-label" for="txt_zipcode">Zipcode</label>
+                    <input class="form-control" id="txt_zipcode" name="txt_zipcode" placeholder="e.g. 3005" type="text">
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <!--Address Information-->
+        <!--<div class="row">-->
+            <!--<div class="col-lg-12 text-center">-->
+                <!--<hr>-->
+                <!--Address Information-->
+                <!--<hr>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;Left Side&ndash;&gt;-->
+            <!--<div class="col-lg-6">-->
+                <!--<div class="form-group">-->
+                    <!--<label class="control-label" for="txt_house_no">House/Blk/Lot*</label>-->
+                    <!--<input class="form-control" id="txt_house_no" name="txt_house_no" placeholder="e.g. 03" type="text">-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label class="control-label" for="txt_street">Street/Road*</label>-->
+                    <!--<input class="form-control" id="txt_street" name="txt_street" placeholder="e.g. St. Palayan"-->
+                           <!--type="text">-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label class="control-label" for="txt_brgy">Barangay*</label>-->
+                    <!--<input class="form-control" id="txt_brgy" name="txt_brgy" placeholder="e.g. Paltao" type="text">-->
+                <!--</div>-->
+
+            <!--</div>-->
+            <!--&lt;!&ndash;Right Side&ndash;&gt;-->
+            <!--<div class="col-lg-6">-->
+                <!--<div class="form-group">-->
+                    <!--<label class="control-label" for="txt_city">City/District*</label>-->
+                    <!--<input class="form-control" id="txt_city" name="txt_city" placeholder="e.g. Pulilan" type="text">-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label class="control-label" for="txt_province">Province*</label>-->
+                    <!--<input class="form-control" id="txt_province" name="txt_province" placeholder="e.g. Bulacan"-->
+                           <!--type="text">-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                    <!--<label class="control-label" for="txt_zipcode">Zipcode</label>-->
+                    <!--<input class="form-control" id="txt_zipcode" name="txt_zipcode" placeholder="e.g. 3005" type="text">-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--Address Information-->
+
+
+        <div class="row">
+            <div class="col-lg-12 text-center" id="title">
+                <hr>
+                GUARDIAN'S INFORMATION
+                <hr>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="control-label" for="txt_ice_name">Full Name*</label>
+                    <input class="form-control" id="txt_ice_name" name="txt_ice_name" placeholder="e.g. Mario Dela Cruz"
+                           type="text">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="control-label" for="txt_ice_contact">Contact No.*</label>
+                    <input class="form-control" id="txt_ice_contact" name="txt_ice_contact"
+                           placeholder="e.g. 09228575766" type="text">
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label class="control-label" for="txt_ice_address">Address*</label>
+                    <input class="form-control" id="txt_ice_address" name="txt_ice_address"
+                           placeholder="e.g. #07 National Road Cut-Cot, Pulilan, Bulacan " type="text"><br/>
+                    <!--Check box of same as my address-->
+                    <div class="checkbox">
+                        <label style="color: black;"><input type="checkbox" value="" id="chk_add">Same as my
+                            address</label>
+                    </div>
+                    <!--Check box of same as my address-->
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center" id="title">
+                <hr>
+                FLOOR ASSIGNMENT
+                <hr>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="radio_flr" class="control-label">Floor Assignment</label><br>
+                    <div class="col-md-10" id="radio_flr">
+                        <div class="radio radio-primary">
+                            <label style="color: black;">
+                                <input type="radio" name="txt_floor" value="3">
+                                Cluster 1
+                            </label>
+                        </div>
+                        <div class="radio radio-primary">
+                            <label style="color: black;">
+                                <input type="radio" name="txt_floor" value="4">
+                                Cluster 2
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 text-right" style="padding-right: 5%">
+            <button type="button" id="btn_submit" class="btn btn-raised btn-primary"> Get Code</button>
+        </div>
+    </form>
+
+    <!--Message popup when not valid-->
+    <div hidden id="msg_box" class="text-justify">
+        <div class="alert alert-danger">
+            <strong>Please Recheck!</strong> Please recheck your entries.
+        </div>
+    </div>
+    <!--Message pop up ends here-->
+    <div class="row" id="generated_form">
+        <div class="container">
+            <hr/>
+        </div>
+        <div class="col-lg-6 text-center">
+            <label>Profiling QR Code</label><br>
+            <!---->
+            <div id="div_qrcode" style="margin-top:15px;"></div>
+            <label style="color: #0b3251">Click The Image To Download</label>
+            <!---->
+        </div>
+        <div class="col-lg-6 text-center"><br>
+            <!--<i class="material-icons" style="font-size:45pt">new_releases</i><br>-->
+            <img src="icons/new.png" alt="">
+            <h3>REMINDER</h3>
+            <p id="sub">Next Step: Approach any marshall(SWITS/ACTS officers) to scan your qrcode and to save your
+                student profile into the database. Then fill up the numbering form to proceed with the evaluation.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+            <hr/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 text-right" style="font-family: Montserrat; font-size: 8pt;">
+            <p>MonoForms Version 1.0 | Monosync Studio PH | 2017 | "Innovating Possibilities."</p>
+        </div>
+    </div>
+    <br>
+</div>
+<br><br>
+
+<!--CODE HANDLER----------------------------------------------------------->
+<script type="text/javascript" src="js_code/profile_form_js.js"></script>
+<!--CODE HANDLER----------------------------------------------------------->
+
+<!-- jQuery first, then tether, then Bootstrap Material Design JS. -->
+<script type="text/javascript" src="js/tether.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-material-design.iife.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script type="text/javascript" src="js/ie10-viewport-bug-workaround.js"></script>
+
+<script>
+    $('body').bootstrapMaterialDesign();
+</script>
+</body>
+</html>

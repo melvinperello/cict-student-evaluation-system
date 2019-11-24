@@ -1,0 +1,106 @@
+/* Extra Small Devices, Phones */
+@media only screen and (min-width : 180px) {
+  #span_404{
+    font-size:120px; font-weight: bold;
+  }
+  #span_sub_one{
+    font-size:30px; font-family:Segoe UI; font-weight: bold;color:#B2B2B2;
+  }
+  #span_sub_two{
+    font-size:10pt; font-family: Segoe UI Light;
+    padding-left: 3%;
+  }
+}
+
+@media only screen and (min-width : 300px) {
+#span_404{
+  font-size:150px;
+}
+#span_sub_one{
+  font-size:30px;
+}
+#span_sub_two{
+  font-size:10pt;
+  padding-left: 5%;
+}
+}
+
+@media only screen and (min-width : 320px) {
+  #span_404{
+    font-size:160px;
+  }
+  #span_sub_one{
+    font-size:30px;
+  }
+  #span_sub_two{
+    font-size:10pt;
+    padding-left: 10%;
+  }
+}
+
+@media only screen and (min-width : 400px) {
+  #span_404{
+    font-size:180px;
+  }
+}
+
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 568px){
+  #span_404{
+    font-size:220px;
+  }
+  #span_sub_two{
+    font-size:10pt;
+    padding-left: 3%;
+  }
+}
+
+@media only screen and (min-width : 768px) {
+  #span_404{
+    font-size:190px;
+  }
+  #span_one{
+    padding-top: 50px;
+  }
+  #span_sub_one{
+    font-size:50px;
+  }
+  #span_sub_two{
+    font-size:23pt;
+  }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+  #span_404{
+    font-size:200px;
+  }
+  #span_one{
+    padding-top: 50px;
+  }
+  #span_sub_one{
+    font-size:55px;
+  }
+  #span_sub_two{
+    font-size:30pt;
+  }
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+  #span_404{
+    font-size:250px;
+  }
+  #span_one{
+    padding-top: 50px;
+  }
+  #span_sub_one{
+    font-size:70px;
+  }
+  #span_sub_two{
+    font-size:30pt;
+  }
+}
+
+/*------------*/

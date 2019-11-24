@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.OtpGeneratorMapping" table="otp_generator" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="code" type="java.lang.String">
+<column name="code" length="150"/>
+</property>
+<property name="date_created" type="java.util.Date">
+<column name="date_created" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>

@@ -1,0 +1,86 @@
+/*@media only screen and (min-width : 180px) {
+#navz{
+  background-color: rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #EEEEEE;
+  padding: 0%;
+}
+.nav-item{
+  text-align: center;
+}
+}
+
+@media only screen and (min-width : 768px) {
+  #navz{
+    background-color: transparent;
+    border-bottom: none;
+  }
+  .nav-item{
+    text-align: right;
+  }
+}*/
+
+.icon{
+  border: 1px solid #EEEEEE;
+}
+
+.nav-link{
+  color: black;
+  font-weight: bolder;
+  /*text-shadow: 1px 1px #666666;*/
+}
+
+.nav-link:hover{
+  color: #CE6F2D;
+  text-decoration: underline;
+}
+
+.navbar {
+    padding: 20px;
+    -webkit-transition: background .5s ease-in-out,padding .5s ease-in-out;
+    -moz-transition: background .5s ease-in-out,padding .5s ease-in-out;
+    transition: background .5s ease-in-out,padding .5s ease-in-out;
+}
+
+.navbar-transparent{
+    background-color: transparent;
+    border: 0;
+}
+
+.navbar-darker{
+  /*background-color: rgba(255, 255, 255, 0.6);*/
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  background-color: white;
+  border-bottom: 1px solid #EEEEEE;
+}
+.navbar-gray{
+  background-color: rgba(255, 255, 255, 0.6);
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  /*background-color: white;*/
+  /*border-bottom: 1px solid #EEEEEE;*/
+}
+
+#logo_main{
+  -webkit-transition: ease 1s;
+}
+
+#anno_title{
+  font-weight: bolder; color: white; text-shadow: 5px 5px #AD4728;
+}
+
+/*@media screen and (max-width: 420px) and (min-width: 320px) {
+    #anno_title {
+        color:red;
+    }
+}*/
+
+/*@media screen and (max-width: 280px) and (min-width: 80px) {
+    #anno_title {
+        font-size: 19pt;
+    }
+}*/
+
+@media screen and (max-width: 400px) and (max-width: 400px) {
+    #anno_title {
+        font-size: 22pt;
+    }
+}

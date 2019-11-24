@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.LinkedSettingsMapping" table="linked_settings" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="floor_3_max" type="java.lang.Integer">
+<column name="floor_3_max" length="10"/>
+</property>
+<property name="floor_4_max" type="java.lang.Integer">
+<column name="floor_4_max" length="10"/>
+</property>
+<property name="floor_3_name" type="java.lang.String">
+<column name="floor_3_name" length="50"/>
+</property>
+<property name="floor_4_name" type="java.lang.String">
+<column name="floor_4_name" length="50"/>
+</property>
+<property name="floor_3_last" type="java.lang.Integer">
+<column name="floor_3_last" length="10"/>
+</property>
+<property name="floor_4_last" type="java.lang.Integer">
+<column name="floor_4_last" length="10"/>
+</property>
+<property name="floor_3_cut" type="java.lang.Integer">
+<column name="floor_3_cut" length="10"/>
+</property>
+<property name="floor_4_cut" type="java.lang.Integer">
+<column name="floor_4_cut" length="10"/>
+</property>
+<property name="created_by" type="java.lang.Integer">
+<column name="created_by" length="10"/>
+</property>
+<property name="created_date" type="java.util.Date">
+<column name="created_date" length="19"/>
+</property>
+<property name="mark" type="java.lang.String">
+<column name="mark" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

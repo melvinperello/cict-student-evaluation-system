@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.LinkedPilaMapping" table="linked_pila" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="ACADTERM_id" type="java.lang.Integer">
+<column name="ACADTERM_id" length="10"/>
+</property>
+<property name="STUDENT_id" type="java.lang.Integer">
+<column name="STUDENT_id" length="10"/>
+</property>
+<property name="ACCOUNT_id" type="java.lang.Integer">
+<column name="ACCOUNT_id" length="10"/>
+</property>
+<property name="SETTINGS_id" type="java.lang.Integer">
+<column name="SETTINGS_id" length="10"/>
+</property>
+<property name="NOTIFIED" type="java.lang.Integer">
+<column name="NOTIFIED" length="10"/>
+</property>
+<property name="conforme" type="java.lang.String">
+<column name="conforme" length="100"/>
+</property>
+<property name="course" type="java.lang.String">
+<column name="course" length="100"/>
+</property>
+<property name="imei" type="java.lang.String">
+<column name="imei" length="80"/>
+</property>
+<property name="request_accepted" type="java.util.Date">
+<column name="request_accepted" length="19"/>
+</property>
+<property name="request_called" type="java.util.Date">
+<column name="request_called" length="19"/>
+</property>
+<property name="called_by" type="java.lang.String">
+<column name="called_by" length="100"/>
+</property>
+<property name="called_on_terminal" type="java.lang.String">
+<column name="called_on_terminal" length="100"/>
+</property>
+<property name="request_validity" type="java.util.Date">
+<column name="request_validity" length="19"/>
+</property>
+<property name="floor_assignment" type="java.lang.Integer">
+<column name="floor_assignment" length="10"/>
+</property>
+<property name="floor_number" type="java.lang.Integer">
+<column name="floor_number" length="10"/>
+</property>
+<property name="cluster_name" type="java.lang.String">
+<column name="cluster_name" length="50"/>
+</property>
+<property name="status" type="java.lang.String">
+<column name="status" length="50"/>
+</property>
+<property name="remarks" type="java.lang.String">
+<column name="remarks" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

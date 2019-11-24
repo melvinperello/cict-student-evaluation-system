@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.AccountFacultyMapping" table="account_faculty" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="FACULTY_id" type="java.lang.Integer">
+<column name="FACULTY_id" length="10"/>
+</property>
+<property name="assigned_cluster" type="java.lang.Integer">
+<column name="assigned_cluster" length="10"/>
+</property>
+<property name="username" type="java.lang.String">
+<column name="username" length="50"/>
+</property>
+<property name="password" type="java.lang.String">
+<column name="password" length="150"/>
+</property>
+<property name="transaction_pin" type="java.lang.String">
+<column name="transaction_pin" length="150"/>
+</property>
+<property name="recovery_question" type="java.lang.String">
+<column name="recovery_question" length="50"/>
+</property>
+<property name="recovery_answer" type="java.lang.String">
+<column name="recovery_answer" length="150"/>
+</property>
+<property name="access_level" type="java.lang.String">
+<column name="access_level" length="200"/>
+</property>
+<property name="blocked_count" type="java.lang.Integer">
+<column name="blocked_count" length="10"/>
+</property>
+<property name="disabled_since" type="java.util.Date">
+<column name="disabled_since" length="19"/>
+</property>
+<property name="wrong_count" type="java.lang.Integer">
+<column name="wrong_count" length="10"/>
+</property>
+<property name="blocked_until" type="java.util.Date">
+<column name="blocked_until" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

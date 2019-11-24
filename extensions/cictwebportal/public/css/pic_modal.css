@@ -1,0 +1,11 @@
+.modal-transition {
+  transition: all 0.3s 0.12s;
+  transform: translateY(-10%);
+  opacity: 0;
+}
+
+.ui-widget-overlay{
+  background: black;
+  opacity: .30;
+  filter: Alpha(Opacity=30);
+}

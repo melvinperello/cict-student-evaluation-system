@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1100.0" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../res/Next%20page_96px_2.png" />
+         </image>
+      </ImageView>
+      <Label accessibleText="lbl_number" text="# 142" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="38.0" />
+         </font>
+      </Label>
+      <Label accessibleText="lbl_name" text="2014113844" textFill="WHITE">
+         <font>
+            <Font size="35.0" />
+         </font>
+         <padding>
+            <Insets left="30.0" />
+         </padding>
+      </Label>
+   </children>
+   <padding>
+      <Insets left="20.0" />
+   </padding>
+</HBox>

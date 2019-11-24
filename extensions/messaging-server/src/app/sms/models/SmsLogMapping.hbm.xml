@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.sms.models.SmsLogMapping" table="sms_log" catalog="sms_server" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="gateway_id" type="java.lang.String">
+<column name="gateway_id" length="150"/>
+</property>
+<property name="message_uuid" type="java.lang.String">
+<column name="message_uuid" length="200"/>
+</property>
+<property name="date" type="java.util.Date">
+<column name="date" length="19"/>
+</property>
+<property name="recipient" type="java.lang.String">
+<column name="recipient" length="50"/>
+</property>
+<property name="dispatch_date" type="java.util.Date">
+<column name="dispatch_date" length="19"/>
+</property>
+<property name="message_status" type="java.lang.String">
+<column name="message_status" length="50"/>
+</property>
+<property name="failure_cause" type="java.lang.String">
+<column name="failure_cause" length="100"/>
+</property>
+<property name="message_body" type="java.lang.String">
+<column name="message_body" length="160"/>
+</property>
+<property name="pdu_data" type="java.lang.String">
+<column name="pdu_data" length="200"/>
+</property>
+<property name="entry_date" type="java.util.Date">
+<column name="entry_date" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>

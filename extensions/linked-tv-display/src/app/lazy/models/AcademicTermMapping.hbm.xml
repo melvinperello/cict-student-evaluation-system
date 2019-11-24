@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.AcademicTermMapping" table="academic_term" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="school_year" type="java.lang.String">
+<column name="school_year" length="50"/>
+</property>
+<property name="semester" type="java.lang.String">
+<column name="semester" length="50"/>
+</property>
+<property name="semester_regular" type="java.lang.Integer">
+<column name="semester_regular" length="10"/>
+</property>
+<property name="current" type="java.lang.Integer">
+<column name="current" length="10"/>
+</property>
+<property name="evaluation_service" type="java.lang.Integer">
+<column name="evaluation_service" length="10"/>
+</property>
+<property name="es_updater" type="java.lang.Integer">
+<column name="es_updater" length="10"/>
+</property>
+<property name="es_update_date" type="java.util.Date">
+<column name="es_update_date" length="19"/>
+</property>
+<property name="adding_service" type="java.lang.Integer">
+<column name="adding_service" length="10"/>
+</property>
+<property name="as_updater" type="java.lang.Integer">
+<column name="as_updater" length="10"/>
+</property>
+<property name="as_update_date" type="java.util.Date">
+<column name="as_update_date" length="19"/>
+</property>
+<property name="encoding_service" type="java.lang.Integer">
+<column name="encoding_service" length="10"/>
+</property>
+<property name="ens_updater" type="java.lang.Integer">
+<column name="ens_updater" length="10"/>
+</property>
+<property name="ens_update_date" type="java.util.Date">
+<column name="ens_update_date" length="19"/>
+</property>
+<property name="type" type="java.lang.String">
+<column name="type" length="50"/>
+</property>
+<property name="approval_state" type="java.lang.String">
+<column name="approval_state" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

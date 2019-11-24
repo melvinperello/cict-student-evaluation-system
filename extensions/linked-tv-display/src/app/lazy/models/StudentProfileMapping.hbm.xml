@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.StudentProfileMapping" table="student_profile" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="STUDENT_id" type="java.lang.Integer">
+<column name="STUDENT_id" length="10"/>
+</property>
+<property name="floor_assignment" type="java.lang.Integer">
+<column name="floor_assignment" length="10"/>
+</property>
+<property name="profile_picture" type="java.lang.String">
+<column name="profile_picture" length="60"/>
+</property>
+<property name="student_address" type="java.lang.String">
+<column name="student_address" length="300"/>
+</property>
+<property name="zipcode" type="java.lang.String">
+<column name="zipcode" length="100"/>
+</property>
+<property name="mobile" type="java.lang.String">
+<column name="mobile" length="50"/>
+</property>
+<property name="email" type="java.lang.String">
+<column name="email" length="100"/>
+</property>
+<property name="ice_name" type="java.lang.String">
+<column name="ice_name" length="100"/>
+</property>
+<property name="ice_address" type="java.lang.String">
+<column name="ice_address" length="150"/>
+</property>
+<property name="ice_contact" type="java.lang.String">
+<column name="ice_contact" length="50"/>
+</property>
+<property name="created_date" type="java.util.Date">
+<column name="created_date" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

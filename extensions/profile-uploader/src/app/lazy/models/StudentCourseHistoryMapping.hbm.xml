@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.StudentCourseHistoryMapping" table="student_course_history" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="student_id" type="java.lang.Integer">
+<column name="student_id" length="10"/>
+</property>
+<property name="curriculum_id" type="java.lang.Integer">
+<column name="curriculum_id" length="10"/>
+</property>
+<property name="curriculum_assigment" type="java.util.Date">
+<column name="curriculum_assigment" length="19"/>
+</property>
+<property name="prep_id" type="java.lang.Integer">
+<column name="prep_id" length="10"/>
+</property>
+<property name="prep_assignment" type="java.util.Date">
+<column name="prep_assignment" length="19"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>

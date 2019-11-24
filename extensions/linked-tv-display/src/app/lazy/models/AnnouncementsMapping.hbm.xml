@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.AnnouncementsMapping" table="announcements" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="title" type="java.lang.String">
+<column name="title" length="50"/>
+</property>
+<property name="message" type="java.lang.String">
+<column name="message" length="300"/>
+</property>
+<property name="date" type="java.util.Date">
+<column name="date" length="19"/>
+</property>
+<property name="announced_by" type="java.lang.Integer">
+<column name="announced_by" length="10"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

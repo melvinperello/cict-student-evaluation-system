@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.AccountFacultyAttemptMapping" table="account_faculty_attempt" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="try_id" type="java.lang.Integer">
+<column name="try_id"/>
+<generator class="identity"/>
+</id>
+<property name="account_id" type="java.lang.Integer">
+<column name="account_id" length="10"/>
+</property>
+<property name="time" type="java.util.Date">
+<column name="time" length="19"/>
+</property>
+<property name="ip_address" type="java.lang.String">
+<column name="ip_address" length="200"/>
+</property>
+<property name="pc_name" type="java.lang.String">
+<column name="pc_name" length="50"/>
+</property>
+<property name="pc_username" type="java.lang.String">
+<column name="pc_username" length="50"/>
+</property>
+<property name="os_version" type="java.lang.String">
+<column name="os_version" length="50"/>
+</property>
+<property name="platform" type="java.lang.String">
+<column name="platform" length="50"/>
+</property>
+<property name="result" type="java.lang.String">
+<column name="result" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.BackupLogsMapping" table="backup_logs" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="id" type="java.lang.Integer">
+<column name="id"/>
+<generator class="identity"/>
+</id>
+<property name="time_executed" type="java.util.Date">
+<column name="time_executed" length="19"/>
+</property>
+<property name="backup_result" type="java.lang.String">
+<column name="backup_result" length="50"/>
+</property>
+<property name="executed_with" type="java.lang.Integer">
+<column name="executed_with" length="10"/>
+</property>
+<property name="executed_on" type="java.lang.String">
+<column name="executed_on" length="50"/>
+</property>
+<property name="backup_mode" type="java.lang.String">
+<column name="backup_mode" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="3"/>
+</property>
+</class>
+</hibernate-mapping>

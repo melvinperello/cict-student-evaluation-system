@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="app.lazy.models.AccountFacultySessionMapping" table="account_faculty_session" catalog="cictems" dynamic-update="true" dynamic-insert="true">
+<id name="session_id" type="java.lang.Integer">
+<column name="session_id"/>
+<generator class="identity"/>
+</id>
+<property name="FACULTY_account_id" type="java.lang.Integer">
+<column name="FACULTY_account_id" length="10"/>
+</property>
+<property name="session_start" type="java.util.Date">
+<column name="session_start" length="19"/>
+</property>
+<property name="keep_alive" type="java.util.Date">
+<column name="keep_alive" length="19"/>
+</property>
+<property name="ip_address" type="java.lang.String">
+<column name="ip_address" length="200"/>
+</property>
+<property name="pc_name" type="java.lang.String">
+<column name="pc_name" length="50"/>
+</property>
+<property name="pc_username" type="java.lang.String">
+<column name="pc_username" length="50"/>
+</property>
+<property name="os" type="java.lang.String">
+<column name="os" length="50"/>
+</property>
+<property name="session_end" type="java.util.Date">
+<column name="session_end" length="19"/>
+</property>
+<property name="platform" type="java.lang.String">
+<column name="platform" length="50"/>
+</property>
+<property name="active" type="java.lang.Integer">
+<column name="active" length="10"/>
+</property>
+</class>
+</hibernate-mapping>

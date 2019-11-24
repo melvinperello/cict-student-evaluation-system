@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  }
+body {
+  height: 100vh;
+  width: 100%;
+  background-color: white;
+  background-image: linear-gradient(-50deg, #009688 50%, transparent 50%);
+  }
+  .container-table {
+    display: table;
+    width: 100%;
+  }
+  .vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  #sub{
+    font-size: 10pt;
+    font-family: Segoe UI Light;
+  }
+  #sub_1{
+    font-size: 10pt;
+    font-family: Montserrat;
+    font-weight: bolder;
+  }
+  .control-label{
+    color: black;
+  }
+  label.error{
+    color: #DD4E41;
+	font-size: 8pt;
+  }
+  
+
+
+input::-webkit-input-placeholder {
+color: #bfbfbf !important;
+}
+ 
+input:-moz-placeholder { /* Firefox 18- */
+color: #bfbfbf !important;  
+}
+ 
+input::-moz-placeholder {  /* Firefox 19+ */
+color: #bfbfbf !important;  
+}
+ 
+input:-ms-input-placeholder {  
+color: #bfbfbf !important;  
+}
+
+@font-face {
+    font-family: 'Segoe UI Light';
+    src: url('fonts/Segoe UI Light.ttf');
+}
+
+@font-face {
+    font-family: 'Segoe UI Reg';
+    src: url('fonts/Segoe UI Reg.ttf');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/montserrat-v10-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Montserrat Regular'), local('Montserrat-Regular'),
+       url('fonts/montserrat-v10-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('fonts/montserrat-v10-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('fonts/montserrat-v10-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('fonts/montserrat-v10-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('fonts/montserrat-v10-latin-regular.svg#Montserrat') format('svg'); /* Legacy iOS */
+}

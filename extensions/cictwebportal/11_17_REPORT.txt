@@ -1,0 +1,92 @@
+REPORT: 11.17.2017
+------------------------------------
+-GRADES based on eval history**
+	if subject failed color red**
+	-not counted on total computation**
+	if there is/are unposted grades total computation not calculated**
+	TOTAL COMPUTATION:
+		-gwa** 
+			-total ratings/number of subjects? **
+		-total units**
+		-total units earned**
+-SCHEDULE
+	-layout with colspan**
+	-sort sunday to monday**
+	-convert 24-time format**
+	-display instructor **
+		-if null. display nothing**
+	-display correct section and course**
+	-display correct current AY**
+-CLEAR INTERVAL	
+	-on all buttons** di ko makita sinasabi mo..
+-CHECKED ON MULTIPLE CLICKED IF APPENDED SEVERAL TIMES
+	-schedule**
+	-grades**
+-ENROLLMENT HISTORY
+	-Displays all record**
+	-green if accpeted**
+	-reg id from eval id.
+	-COMPLETE ALL INFO
+	
+-used single line if else statement on some**	
+-sa sequrity question dapat pa password type** 
+-middle name. minlength:1**
+-review all filters**
+-Monoforms record- check if existing kung oo, copy info**
+-required fields with asterisks* **
+
+student number e.g sa profiling 2014chorva**
+sa house no pwede dapat pwede dash**
+street dapat di na require**
+ung sa city/district**
+
+placeholders**
+if student profile is not yet completed
+	-checked schedule, grade, history**
+recheck validation fields**
+None checked**
+Change static room ass in registration**
+admission year wala na dapat**
+
+-EXTERNAL ROUTE-android
+	waiting number
+		-setinterval**
+		-room*
+		-id**
+		-qr code**
+		-desiggn*
+		-external link**
+		-stop setinterval/clearInterval**		
+		-time format accpeted and expiration**
+		-null in called at expiration**	
+		
+Footer Monosync Studio PH "Innovating Possibilities" **
+Change static room ass in registration**
+Change static room ass in settings**
+Linked app load before showing and grade.**
+	
+-----------------------------------------
+DI PA TAPOS: 
+
+REDESIGN WEBSITE!
+-feature photos of cict
+-use bootstrap 4
+-add more offline websites
+
+-recheck all routes in postman
+-##multipe insertion 
+-##try catch ka palaigi sa php para alam kung saan ung error
+-recheck kada query check if may nafetch
+-AYUSIN CODE STRUCTURE
+-burahin hindi importanteng inamag na
+
+-grades pdf
+-grades: progress bar
+
+-medyo ayusin magulong code sa summary
+
+sort time of schedule per day.
+check null value sa table ng grade
+complete enrollment history
+pag wala pa sya sched o grade ano lalabs
+ayusin mga sentence ng validation at remove pag focus dun sa pinindot nya
