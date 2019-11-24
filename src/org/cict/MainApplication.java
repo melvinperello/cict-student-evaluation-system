@@ -58,7 +58,8 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-    	// JDK-13 Incompatible
+        //TODO: JDK-11-FIX
+        System.out.println("//TODO: JDK-11-FIX -> FUNCTION DISABLED = HostServicesFactory");
         //this.HOST_SERVICE = HostServicesFactory.getInstance(this);
         
     	
