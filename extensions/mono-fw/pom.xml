@@ -1,0 +1,151 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- The Basics -->
+	<groupId>com.melvinperello</groupId>
+	<artifactId>monofw</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<packaging>jar</packaging>
+	
+	
+		
+	<repositories>
+		<repository>
+			<id>local</id>
+			<url>file://${basedir}/local-repo</url>
+		</repository>
+	</repositories>
+	
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk14</artifactId>
+			<version>1.64</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.2.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.reflections</groupId>
+		    <artifactId>reflections</artifactId>
+		    <version>0.9.11</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.jfoenix</groupId>
+		    <artifactId>jfoenix</artifactId>
+		    <version>8.0.8</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javafx</groupId>
+			<artifactId>jfxrt</artifactId>
+			<version>jdk1.8.0_231</version>
+		</dependency>
+
+
+	</dependencies>
+	
+
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<plugins>
+
+			<!-- download source code in Eclipse, best practice -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+				</configuration>
+			</plugin>
+
+			<!-- Set a JDK compiler level -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+			<!-- Make this jar executable -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+				  <!-- DO NOT include log4j.properties file in your Jar -->
+				  <excludes>
+					<exclude>**/log4j.properties</exclude>
+				  </excludes>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+
+
+	<!-- More Project Information -->
+	<name>Monosync Framework</name>
+	<description>Monosync Java Framework</description>
+	<inceptionYear>2017</inceptionYear>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>manual</distribution>
+			<comments>MIT License</comments>
+		</license>
+	</licenses>
+	<organization>
+		<name>Monosync</name>
+		<url>https://www.facebook.com/monosyncstudioph</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>melvinperello</id>
+			<name>Melvin Perello</name>
+			<email>melvinperello@gmail.com</email>
+			<organization>Monosync</organization>
+			<organizationUrl>https://www.facebook.com/monosyncstudioph</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>Asia/Singapore</timezone>
+		</developer>
+	</developers>
+</project>

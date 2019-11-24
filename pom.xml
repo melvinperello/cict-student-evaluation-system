@@ -1,0 +1,234 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- The Basics -->
+	<groupId>com.monosync</groupId>
+	<artifactId>cictses</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<packaging>jar</packaging>
+	
+	<repositories>
+		<repository>
+			<id>local</id>
+			<url>file://${basedir}/local-repo</url>
+		</repository>
+	</repositories>
+	
+	<dependencies>
+		<!-- com.melvinperello:mono-fw -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk14</artifactId>
+			<version>1.64</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.2.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.reflections</groupId>
+		    <artifactId>reflections</artifactId>
+		    <version>0.9.11</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.jfoenix</groupId>
+		    <artifactId>jfoenix</artifactId>
+		    <version>8.0.8</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.9</version>
+		</dependency>
+
+
+		<!-- LOCAL -->
+		<dependency>
+			<groupId>javafx</groupId>
+			<artifactId>jfxrt</artifactId>
+			<version>jdk1.8.0_231</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.melvinperello</groupId>
+			<artifactId>monofw</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+	
+		<!-- current -->
+		
+		
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itextpdf</artifactId>
+		    <version>5.5.13</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.controlsfx</groupId>
+		    <artifactId>controlsfx</artifactId>
+		    <version>8.40.12</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.6</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.mashape.unirest</groupId>
+		    <artifactId>unirest-java</artifactId>
+		    <version>1.4.9</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>commons-net</groupId>
+		    <artifactId>commons-net</artifactId>
+		    <version>3.6</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.inject</groupId>
+		    <artifactId>javax.inject</artifactId>
+		    <version>1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>commons-validator</groupId>
+		    <artifactId>commons-validator</artifactId>
+		    <version>1.6</version>
+		</dependency>
+
+
+
+
+
+
+
+
+	</dependencies>
+	
+
+
+	<build>
+		<finalName>cictses</finalName>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<plugins>
+
+			<!-- download source code in Eclipse, best practice -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+				</configuration>
+			</plugin>
+
+			<!-- Set a JDK compiler level -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+			 <groupId>org.apache.maven.plugins</groupId>
+			 <artifactId>maven-assembly-plugin</artifactId>
+			 <version>3.2.0</version>
+			 <configuration>
+			   <archive>
+				<manifest>
+				  <mainClass>org.cict.MainApplication</mainClass>
+				</manifest>
+			   </archive>
+			   <descriptorRefs>
+				<descriptorRef>jar-with-dependencies</descriptorRef>
+			   </descriptorRefs>
+			 </configuration>
+			 <executions>
+			    <execution>
+				 <id>make-assembly</id> <!-- this is used for inheritance merges -->
+				 <phase>package</phase> <!-- bind to the packaging phase -->
+				 <goals>
+				   <goal>single</goal>
+				 </goals>
+			    </execution>
+			  </executions>
+		    </plugin>
+			
+	
+
+		</plugins>
+	</build>
+
+
+
+	<!-- More Project Information -->
+	<name>CICT Student Evaluation Student</name>
+	<description>CICT Student Evaluation Student</description>
+	<inceptionYear>2017</inceptionYear>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>manual</distribution>
+			<comments>MIT License</comments>
+		</license>
+	</licenses>
+	<organization>
+		<name>Monosync</name>
+		<url>https://www.facebook.com/monosyncstudioph</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>melvinperello</id>
+			<name>Melvin Perello</name>
+			<email>melvinperello@gmail.com</email>
+			<organization>Monosync</organization>
+			<organizationUrl>https://www.facebook.com/monosyncstudioph</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>Asia/Singapore</timezone>
+		</developer>
+		<developer>
+			<id>joemardc</id>
+			<name>Joema de la Cruz</name>
+			<email>joemardc@gmail.com</email>
+			<organization>Monosync</organization>
+			<organizationUrl>https://www.facebook.com/monosyncstudioph</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>Asia/Singapore</timezone>
+		</developer>
+	</developers>
+</project>

@@ -58,8 +58,11 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.HOST_SERVICE = HostServicesFactory.getInstance(this);
-        Mono.version();
+    	// JDK-13 Incompatible
+        //this.HOST_SERVICE = HostServicesFactory.getInstance(this);
+        
+    	
+    	Mono.version();
         // Destroy the default stage.
         stage = null;
         launchLogin();

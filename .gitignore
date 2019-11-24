@@ -7,3 +7,8 @@ nbproject/project.properties
 /temp/
 /configuration/
 /error_logs/
+/target/
+.classpath
+.project
+/.settings/
+/nbproject/
