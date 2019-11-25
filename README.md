@@ -1,21 +1,111 @@
 # CICT Student Evaluation System
 
+The study was created with the purpose of developing a software entitled “CICT Student Evaluation System”. The proponents aim to improve the current system in a way that it adopts the new technologies available today. The enhanced system is composed of three parts: an evaluation system, a web portal, and an Android application.  These three parts combined make the transactions flow easier and smoother.
+ 
+The developed evaluation system is going to help ease the management of evaluation per student. It also provides additional functionalities such as giving suggestions on the outstanding students, class monitoring, on-screen display of the list of subjects that can be taken within the maximum units per semester and will prompt messages if the student has reached the maximum load of units. 
 
-*Integrated with Monosync Framework*
+Students are now able to fill up and update their student information on the web portal, which is be known as the CICT Local Web Portal. This way, the information is saved on the database and can be retrieved whenever needed. This paves a way for the start of paperless transaction for the college. Students are also able to view their grades on the web portal.
 
+The Android Application, conveniently named CICT Linked – “Connection without lines”, is developed for the sole purpose of managing the student queues during the evaluation. This provides order and eliminates the possibility of other students cutting in line. 
+
+
+### Monosync Framework Integration
+
+**Frameworks are not allowed in any projects, so I was forced to compile and create one.**
+
+I created this for my final project at Bulacan State University College of Information and Communications Technology This project is the compilation of all the tools that I have used in the said project.
+
+This framework is necessary to allow reusability of code through out the development scope across multiple developers.
+
+**Hibernate ORM Wrapper Classes**
+
+- Hibernate Wrapper and Code Generation
+
+- Creates a simplified abstractions and configuration for Hibernate
+
+- Simple to use ORM Methods
+
+- [Visit Hibernate Website For More Information About Hibernate ORM](http://hibernate.org/orm/)
+
+**Java FX Initialization Wrapper**
+
+- Easy to use FXML loader
+
+- Highly Maintanable code with FXML
+
+**Dependencies**
+
+> You can view the **pom.xml** for dependency list.
+
+
+## Java 1.8 (Stable Runtime)
+
+- This application was built with Oracle **Java 1.8 update 40** (2017)
+
+- Tested on **Java 1.8 update 232** and was running fine. (2019)
+
+
+### CICT-SES Desktop Application (Main System)
+
+
+*CICT-SES Desktop Application* contains the following modules:
+
+- Evaluation
+
+- Adding / Changing of Subjects
+
+- Faculty Hub
+
+- Account Settings
+
+- Reports
+
+- Academic Term Configuration
+
+- Academic Programs
+
+- Student Management
+
+- Section Management
+
+- Faculty Management
+
+- Access Controls
+
+- Linked System (Control Panel)
+
+This is the main application in the CICT Student Evaluation System.
+
+
+**Preview (Home)**
+
+
+[![Image](https://raw.githubusercontent.com/melvinperello/cict-student-evaluation-system/master/preview-img/cict-ses-home.PNG)](https://raw.githubusercontent.com/melvinperello/cict-student-evaluation-system/master/preview-img/cict-ses-home.PNG)
+
+
+**Updates**
+
+- Converted from Ant to Maven dependency management.
+
+**Build Instructions**
+
+```java
+git clone https://github.com/melvinperello/cict-student-evaluation-system.git
+cd cict-student-evaluation-system
+mvn -U clean install
+cd target
+java -jar cictses-jar-with-dependencies.jar
+```
 
 **Contributors**
 
-- Melvin Perello
+- Melvin Perello (@jhmvin / @melvinperello)
 
-- Joemar de la Cruz
+- Joemar de la Cruz (@joemardc)
 
-Converted from **Ant Build** to **Maven Build**
-
-### Java 1.9+ Migration Initiative (Cancelled)
+## Java 1.9+ Migration Initiative (Cancelled)
 
 Runtime Upgrade from **Java 1.8** to **Java 1.9 +**
-
 
 | Runtime   | Issue           			 |
 | --------- |-------------------------------------------------------------|
@@ -25,26 +115,26 @@ Runtime Upgrade from **Java 1.8** to **Java 1.9 +**
 | Java 1.10 | ControlsFX Incompatibility.    					    |
 | Java 1.09 | ControlsFX Incompatibility.    					    |
 
-
 **JFoenix Java 1.12 Incompatibility**
 
-
-JFoenix will only work with JDK 11.0.2. See Link -> https://stackoverflow.com/questions/55889654/illegalaccessexception-for-jfxtextfield-with-java-sdk-12
-
-
-Open JDK Archive https://jdk.java.net/archive/
-
-Open JDK 11.0.2 (build 11.0.2+9) https://download.java.net/java/ga/jdk11/openjdk-11_windows-x64_bin.zip
-
-Open JavaFX Download Page https://gluonhq.com/products/javafx/
-
-Open JavaFX Windows SDK 11.0.2 http://gluonhq.com/download/javafx-11-0-2-sdk-windows/
+> JFoenix will only work with JDK 11.0.2. See Link -> https://stackoverflow.com/questions/55889654/illegalaccessexception-for-jfxtextfield-with-java-sdk-12
 
 
+** JDK 9+ Links**
+
+- Open JDK Archive https://jdk.java.net/archive/
+
+- Open JDK 11.0.2 (build 11.0.2+9) https://download.java.net/java/ga/jdk11/openjdk-11_windows-x64_bin.zip
+
+- Open JavaFX Download Page https://gluonhq.com/products/javafx/
+
+- Open JavaFX Windows SDK 11.0.2 http://gluonhq.com/download/javafx-11-0-2-sdk-windows/
 
 **How to run with Modulearized Java**
-
 
 ```java
 java --module-path "C:\dev\bin\javafx-sdk-11.0.2\lib" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base,javafx.media -jar cictses-jar-with-dependencies.jar
 ```
+
+Cheers,
+Melvin
