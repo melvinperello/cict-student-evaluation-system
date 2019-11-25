@@ -84,6 +84,16 @@
 
 
 	<build>
+	
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>**/*.css</include>
+				</includes>
+			</resource>
+		</resources>
+		
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
 		<plugins>

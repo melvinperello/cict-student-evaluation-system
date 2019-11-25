@@ -468,9 +468,6 @@ public class SystemHome extends MonoLauncher {
      */
     private void changeRoot(ControllerFX controller, String packer, String fxml) {
 
-    	System.out.println("FXML: " + String.valueOf(fxml));
-    	System.out.println("packer: " + String.valueOf(packer));
-    	System.out.println("controller: " + String.valueOf(controller));
         Pane fxRoot = Mono.fx().create()
                 .setPackageName(packer)
                 .setFxmlDocument(fxml)

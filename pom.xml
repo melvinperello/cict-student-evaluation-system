@@ -153,6 +153,24 @@ FIX: ControlsFX Error: ControlsFX 8.40.9 requires at least Java Version 8 Update
 
 
 	<build>
+	
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>**/*.css</include>
+					<include>**/*.fxml</include>
+					<include>**/*.gif</include>
+					<include>**/*.xml</include>
+					<include>**/*.txt</include>
+					<include>**/*.jpg</include>
+					<include>**/*.jpeg</include>
+					<include>**/*.png</include>
+				</includes>
+			</resource>
+		</resources>
+	
+	
 		<finalName>cictses</finalName>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>

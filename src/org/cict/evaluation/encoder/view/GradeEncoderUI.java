@@ -481,9 +481,9 @@ public class GradeEncoderUI {
         SpreadsheetCell my_cell = SpreadsheetCellType.STRING.createCell(row, col, 1, 1, cellText);
         my_cell.setEditable(editable);
       //TODO: spreadsheet-stylesheet
-//        my_cell.setStyle(this.cellTextAlignmentCenter);
-//        /* Enables Text Wrapping by default */
-//        my_cell.setWrapText(true);
+        my_cell.setStyle(this.cellTextAlignmentCenter);
+        /* Enables Text Wrapping by default */
+        my_cell.setWrapText(true);
         return my_cell;
     }
 
@@ -511,7 +511,7 @@ public class GradeEncoderUI {
         /* Descriptive Title Column */
         SpreadsheetCell titleCell = this.rowCellFactory(row, this.titleCol, title, false);
       //TODO: spreadsheet-stylesheet
-        //        titleCell.setStyle("-fx-padding: 0 0 0 15;");
+                titleCell.setStyle("-fx-padding: 0 0 0 15;");
         gridRow.add(titleCell);
 
         gridRow.add(this.rowCellFactory(row, this.unitCol, units, false));
@@ -800,8 +800,8 @@ public class GradeEncoderUI {
     private void rowPaint(int row, String hexColor) {
         for (int x = 0; x < 5; x++) {
         	//TODO: spreadsheet-stylesheet
-//            String cell_style = this.spreadSheetGrid.getRows().get(row).get(x).getStyle();
-//            this.spreadSheetGrid.getRows().get(row).get(x).setStyle(cell_style += "-fx-background-color: " + hexColor + ";");
+            String cell_style = this.spreadSheetGrid.getRows().get(row).get(x).getStyle();
+            this.spreadSheetGrid.getRows().get(row).get(x).setStyle(cell_style += "-fx-background-color: " + hexColor + ";");
         }
     }
 
