@@ -15,7 +15,7 @@ LABEL Maintainer="Melvin Perello <melvinperello@gmail.com>" \
 # Install packages
 RUN apk --no-cache add php7 php7-fpm php7-mysqli php7-json php7-openssl php7-curl \
     php7-zlib php7-xml php7-phar php7-intl php7-dom php7-xmlreader php7-ctype php7-session \
-    php7-mbstring php7-gd nginx supervisor curl \
+    php7-mbstring php7-gd php7-tokenizer php7-pdo php7-bcmath nginx supervisor curl \
     unzip
 
 # Configure nginx
@@ -37,52 +37,39 @@ RUN chown -R nobody.nobody /run && \
   chown -R nobody.nobody /var/log/nginx
 
 # Setup document root
-RUN mkdir -p /var/www/html
-
-# Make the document root a volume
-# VOLUME /var/www/html
-
-# Switch to use a non-root user from here on
-USER nobody
-
-# Add application
+RUN 	mkdir -p /var/www/html && \
+	mkdir -p /var/www/html/cictmonoforms && \
+	mkdir -p /var/www/html/cictwebportal && \
+	mkdir -p /var/www/html/linked-php-api
+	
 WORKDIR /var/www/html
-# COPY --chown=nobody src/ /var/www/html/
+COPY --chown=nobody src/ /var/www/html/
 
-#-------------------------------
-# Install CICT-SES Projects
-#-------------------------------
-USER root
+# -------------------------------------
+# Extract Projects
+# -------------------------------------
+RUN 	unzip cictmonoforms.zip -d /var/www/html && \
+	unzip cictwebportal.zip -d /var/www/html && \
+	unzip linked-php-api.zip -d /var/www/html && \
+	rm -f /var/www/html/cictmonoforms.zip && \
+	rm -f /var/www/html/cictwebportal.zip && \
+	rm -f /var/www/html/linked-php-api.zip && \
+	chown -R nobody.nobody /var/www/html/cictmonoforms && \
+	chown -R nobody.nobody /var/www/html/cictwebportal && \
+	chown -R nobody.nobody /var/www/html/linked-php-api && \
+	chmod -R 755 /var/www/html/cictmonoforms && \
+	chmod -R 755 /var/www/html/cictwebportal && \
+	chmod -R 755 /var/www/html/linked-php-api && \
+	ls -la && \
+	ls -la /var/www/html/cictmonoforms && \
+	ls -la /var/www/html/cictwebportal && \
+	ls -la /var/www/html/linked-php-api
 
-#-------------------------------
-# INSTALL cictmonoforms
-#-------------------------------
-RUN mkdir -p /var/www/html/cictmonoforms
-COPY --chown=nobody cictmonoforms.zip /var/www/html/cictmonoforms.zip
-RUN unzip cictmonoforms.zip -d /var/www/html
-RUN chown -R nobody /var/www/html/cictmonoforms/
-
-#-------------------------------
-# INSTALL cictwebportal
-#-------------------------------
-RUN mkdir -p /var/www/html/cictwebportal
-COPY --chown=nobody cictwebportal.zip /var/www/html/cictwebportal.zip
-RUN unzip cictwebportal.zip -d /var/www/html
-RUN chown -R nobody /var/www/html/cictwebportal/
-
-#-------------------------------
-# INSTALL linked-php-api
-#-------------------------------
-RUN mkdir -p /var/www/html/linked-php-api
-COPY --chown=nobody linked-php-api.zip /var/www/html/linked-php-api.zip
-RUN unzip linked-php-api.zip -d /var/www/html
-RUN chown -R nobody /var/www/html/linked-php-api/
-
-
-
+# -------------------------------------
+# NOBODY
+# -------------------------------------
 # Switch to use a non-root user from here on
 USER nobody
-
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
