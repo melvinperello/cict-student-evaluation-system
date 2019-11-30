@@ -72,7 +72,7 @@ RUN 	unzip cictmonoforms.zip -d /var/www/html && \
 USER nobody
 
 # Expose the port nginx is reachable on
-EXPOSE 8080
+EXPOSE 8080 8081 8082
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
