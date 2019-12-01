@@ -9,9 +9,131 @@ Students are now able to fill up and update their student information on the web
 The Android Application, conveniently named CICT Linked – “Connection without lines”, is developed for the sole purpose of managing the student queues during the evaluation. This provides order and eliminates the possibility of other students cutting in line. 
 
 
-### Monosync Framework Integration
+### PHP7 (Web Runtime)
 
-**Frameworks are not allowed in any projects, so I was forced to compile and create one.**
+
+CICT-SES Extension projects was built using laravel.
+
+
+**Laravel** is a web application framework with expressive, elegant syntax. We’ve already laid the foundation — freeing you to create without sweating the small things. https://laravel.com/
+
+
+### WEB-01 CICT-SES Web Portal
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/cictwebportal
+
+
+**Preview (Web Portal)**
+
+
+[![Image](https://raw.githubusercontent.com/melvinperello/cict-student-evaluation-system/master/preview-img/cict-webportal.PNG)](https://raw.githubusercontent.com/melvinperello/cict-student-evaluation-system/master/preview-img/cict-webportal.PNG)
+
+
+### WEB-02 CICT-SES Mobile Linked PHP API
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/linked-php-api
+
+
+**Preview (Android App API)**
+
+```php
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+// chage to post
+//Route::get('linked/login/{username}/{password}/{imei}/{is_skipped}', "Authenticator@login");
+Route::post('linked/login', 'Authenticator@login');
+Route::get('linked/is_used/{imei}', "Authenticator@is_used");
+// chage to post
+//Route::get('linked/logout/{account_id}/{type}', "Authenticator@logout");
+Route::post('linked/logout', "Authenticator@logout");
+
+Route::get('linked/search/{student_number}', "Marshall@search");
+Route::post('linked/add_student', "Marshall@add_student");
+Route::post('linked/create_student', "Marshall@create_new_student");
+
+//
+// cict_id param
+Route::get('linked/check/{id}', "Marshall@check");
+Route::post('linked/entrance', 'Marshall@entrance_pass');
+
+
+// Student
+// cict_id param
+Route::get('linked/check_number/{cict_id}', 'Student@check_number');
+Route::post('linked/cancel_reference', 'Student@cancel_reference');
+
+// Mono Form
+Route::post('linked/monoforms/profile', 'MonoForms@mono_profile');
+
+//---------------------------------------------------------
+// settings at config/filesystems.php
+Route::get('linked/photo/{photo}', 'Media@get_photo');
+//----------------------------------------------------------
+#-----------------------------------------------------------
+# New Routes since 11/13/2017
+Route::post('linked/student/update', 'Marshall@update_student_info');
+Route::get('linked/student/update/fetch/{cict_id}', 'Marshall@fetch_update_information');
+
+```
+
+
+### WEB-03 CICT-SES GSM Server API
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/smsserver
+
+
+### WEB 04 CICT-SES Monoforms (Static Site QR Generator)
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/cictmonoforms
+
+
+[![Image](https://raw.githubusercontent.com/melvinperello/cict-student-evaluation-system/master/preview-img/cict-monoforms.PNG)](https://raw.githubusercontent.com/melvinperello/cict-student-evaluation-system/master/preview-img/cict-monoforms.PNG)
+
+
+### Docker
+The following extension projects has been integrated with docker.
+
+- WEB-01 CICT-SES Web Portal
+- WEB-02 CICT-SES Mobile Linked PHP API
+- WEB 04 CICT-SES Monoforms (Static Site QR Generator)
+
+```batch
+git clone https://github.com/melvinperello/cict-student-evaluation-system.git
+cd cict-student-evaluation-system\docker
+
+# build artifacts
+build.bat
+
+# build image
+docker build -t melvinperello/cictses:1.0 .
+
+# run image
+# you need to add your local machine ip as host with name windows.local in order for the container to connect to your local database running on port 3306
+docker run --add-host=windows.local:<local-ip> -p 8000:8080 -p 8001:8081 -p 8002:8082 melvinperello/cictses:1.0
+```
+
+
+### Java 1.8 (Stable Runtime)
+
+- This application was built with Oracle **Java 1.8 update 40** (2017)
+
+- Tested on **Java 1.8 update 232** and was running fine. (2019)
+
+
+### JAVA-01 Monosync Framework Integration
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/mono-fw
+
 
 I created this for my final project at Bulacan State University College of Information and Communications Technology This project is the compilation of all the tools that I have used in the said project.
 
@@ -33,19 +155,8 @@ This framework is necessary to allow reusability of code through out the develop
 
 - Highly Maintanable code with FXML
 
-**Dependencies**
 
-> You can view the **pom.xml** for dependency list.
-
-
-## Java 1.8 (Stable Runtime)
-
-- This application was built with Oracle **Java 1.8 update 40** (2017)
-
-- Tested on **Java 1.8 update 232** and was running fine. (2019)
-
-
-### CICT-SES Desktop Application (Main System)
+### JAVA-02 CICT-SES Application (Main/Desktop)
 
 
 *CICT-SES Desktop Application* contains the following modules:
@@ -97,11 +208,25 @@ cd target
 java -jar cictses-jar-with-dependencies.jar
 ```
 
-**Contributors**
+### JAVA-APP-03 CICT-SES Linked System (Auto-Caller)
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/linked-auto-caller
 
-- Melvin Perello (@jhmvin / @melvinperello)
 
-- Joemar de la Cruz (@joemardc)
+### JAVA-04 CICT-SES Linked System (TV Display)
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/linked-tv-display
+
+
+### JAVA-05 CICT-SES Linked System (Android)
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/Linked
+
+
+### JAVA-06 CICT-SES GSM Server
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/messaging-server
+
+
+### JAVA-07 CICT-SES Profile Uploader (ETL Extract Transform Load from Excel)
+https://github.com/melvinperello/cict-student-evaluation-system/tree/master/extensions/profile-uploader
+
 
 ## Java 1.9+ Migration Initiative (Cancelled)
 
@@ -120,7 +245,7 @@ Runtime Upgrade from **Java 1.8** to **Java 1.9 +**
 > JFoenix will only work with JDK 11.0.2. See Link -> https://stackoverflow.com/questions/55889654/illegalaccessexception-for-jfxtextfield-with-java-sdk-12
 
 
-** JDK 9+ Links**
+**JDK 9+ Links**
 
 - Open JDK Archive https://jdk.java.net/archive/
 

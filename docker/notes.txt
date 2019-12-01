@@ -1,0 +1,13 @@
+docker build -t melvinperello/cictses:1.0 .
+
+docker run --network="cictses" --ip 10.0.0.2 -p 8000:8080 -p 8001:8081 -p 8002:8082 melvinperello/cictses:1.0
+
+docker exec -it -u="root" dedb338f698b /bin/bash
+
+docker network create -d bridge --subnet 10.0.0.0/20 --gateway 10.0.0.1 cictses
+
+docker run --add-host=windows.local:192.168.1.8 -p 8000:8080 -p 8001:8081 -p 8002:8082 melvinperello/cictses:1.0
+
+
+https://serverfault.com/questions/652220/cant-connect-to-mysql-from-another-server
+https://mariadb.com/kb/en/library/configuring-mariadb-for-remote-client-access/

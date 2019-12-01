@@ -15,8 +15,14 @@ LABEL Maintainer="Melvin Perello <melvinperello@gmail.com>" \
 # Install packages
 RUN apk --no-cache add php7 php7-fpm php7-mysqli php7-json php7-openssl php7-curl \
     php7-zlib php7-xml php7-phar php7-intl php7-dom php7-xmlreader php7-ctype php7-session \
-    php7-mbstring php7-gd php7-tokenizer php7-pdo php7-bcmath nginx supervisor curl \
-    unzip
+    php7-mbstring php7-gd nginx supervisor curl \
+    unzip \
+    php7-tokenizer \
+    php7-pdo \
+    php7-bcmath \
+    bash \
+    php7-pdo_mysql &&\
+    rm -f /var/cache/apk/*
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -36,7 +42,9 @@ RUN chown -R nobody.nobody /run && \
   chown -R nobody.nobody /var/tmp/nginx && \
   chown -R nobody.nobody /var/log/nginx
 
-# Setup document root
+# -------------------------------------
+# Document Root
+# -------------------------------------
 RUN 	mkdir -p /var/www/html && \
 	mkdir -p /var/www/html/cictmonoforms && \
 	mkdir -p /var/www/html/cictwebportal && \
